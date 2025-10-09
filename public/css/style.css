@@ -1,0 +1,192 @@
+/* Applicaiton styles */
+a {
+    text-decoration: none;
+}
+.h1,.h2,.h3,.h4,.h5,.h6,h1,h2,h3,h4,h5,h6 {
+  margin-top:0;
+  margin-bottom:10px;
+  font-weight:700;
+  line-height:1.1;
+  color:var(--bs-heading-color)
+}
+.h1,h1 {
+  font-size:calc(1.35rem + 1.2vw)
+}
+@media (min-width:1200px) {
+  .h1,  h1 {
+    font-size:2.25rem
+  }
+}
+.h2,h2 {
+  font-size:calc(1.3122rem + .7464vw)
+}
+@media (min-width:1200px) {
+  .h2,  h2 {
+    font-size:1.872rem
+  }
+}
+.h3,h3 {
+  font-size:calc(1.2753rem + .3036vw)
+}
+@media (min-width:1200px) {
+  .h3,  h3 {
+    font-size:1.503rem
+  }
+}
+.h4,h4 {
+  font-size:1.125rem
+}
+.h5,h5 {
+  font-size:.936rem
+}
+.h6,h6 {
+  font-size:.765rem
+}
+.bi::before {
+    line-height: inherit;
+ }
+.table {
+    --bs-table-bg: transparent;
+}
+.table thead tr th a {
+    color: var(--bs-body-color);
+}
+.fs-sm {
+    font-size: 0.85rem;
+}
+/* Date picker */
+.datepicker-dropdown {
+    z-index: 9999 !important;
+ }
+
+/* Pre loader css start */
+.loader-logo {
+    background-image: url("../img/logo-loader.png");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 110px;
+}
+.loader-icon {
+    border-radius: 100%;
+    width: 165px;
+    height: 165px;
+    display: inline-block;
+    margin-bottom: 0 auto 25px;
+    position: relative;
+}
+.pre-loader {
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 4px solid transparent;
+    border-top-color: #86b614;
+    -webkit-animation: spin 1.5s linear infinite;
+    animation: spin 1.5s linear infinite;
+    z-index: 5;
+}
+.pre-loader:before {
+    content: "";
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    border-radius: 50%;
+    border: 4px solid transparent;
+    border-top-color: #3376BC;
+    -webkit-animation: spin 3s linear infinite;
+    animation: spin 3s linear infinite;
+}
+.pre-loader:after {
+    content: "";
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    right: 4px;
+    bottom: 4px;
+    border-radius: 50%;
+    border: 4px solid transparent;
+    border-top-color: #86B614;
+    -webkit-animation: spin 3.5s linear infinite;
+    animation: spin 3.5s linear infinite;
+}
+.pre-loader-position {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(255,255,255,0.5);
+    z-index: 9999;
+}
+
+@-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    transform: rotate(0deg); }
+
+  100% {
+    -webkit-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+    transform: rotate(360deg); } }
+@keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    transform: rotate(0deg); }
+
+  100% {
+    -webkit-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+    transform: rotate(360deg); } }
+@-webkit-keyframes slide {
+  0% {
+    -webkit-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    transform: rotate(0deg); }
+
+  100% {
+    -webkit-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+    transform: rotate(360deg); } 
+}
+/* loader css end */
+
+.bd-callout-info {
+  --bd-callout-color: var(--bs-info-text-emphasis);
+  --bd-callout-bg: var(--bs-info-bg-subtle);
+  --bd-callout-border: var(--bs-info-border-subtle);
+}
+.bd-callout {
+  --bs-link-color-rgb: var(--bd-callout-link);
+  --bs-code-color: var(--bd-callout-code-color);
+  padding: 1.25rem;
+  margin-top: 1.25rem;
+  margin-bottom: 1.25rem;
+  color: var(--bd-callout-color, inherit);
+  background-color: var(--bd-callout-bg, var(--bs-gray-100));
+  border-left: 0.25rem solid var(--bd-callout-border, var(--bs-gray-300));
+}
+/* Footer */
+.footer {
+    font-size: 0.85rem;
+}
+.footer .ver {
+    text-align: right;
+}
+@media (max-width:767.98px) {
+    .footer {
+        text-align: center !important;
+    }
+    .footer .ver {
+        text-align: center !important;
+    }
+}
