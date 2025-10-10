@@ -35,7 +35,7 @@ return new class extends Migration
             $table->double('potential')->nullable();
             $table->date('expected_date')->nullable();
             $table->foreignId('state_id')->nullable()->index()->constrained(table:'adm_state')->noActionOnDelete()->noActionOnUpdate();
-            $table->foreignId('cluster_id')->nullable()->index()->constrained(table:'adm_cluster')->noActionOnDelete()->noActionOnUpdate();
+            $table->foreignId('cluster_id')->nullable()->index()->constrained(table:'adm_clusters')->noActionOnDelete()->noActionOnUpdate();
             $table->foreignId('ga_id')->nullable()->index()->constrained(table:'adm_ga')->noActionOnDelete()->noActionOnUpdate();
             $table->foreignId('industrial_area_id')->nullable()->index()->constrained(table:'adm_industrial_areas')->noActionOnDelete()->noActionOnUpdate();
             $table->string('zone', length:225)->nullable();
@@ -43,7 +43,7 @@ return new class extends Migration
             $table->string('longitude', length:225)->nullable();
             $table->foreignId('ga_head')->nullable()->index()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();
             $table->foreignId('cluster_head')->nullable()->index()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();
-            $table->integer('category_id')->nullable()->index(); 
+            $table->integer('segment_id')->nullable()->index(); 
             $table->tinyInteger('pipeline_availability')->nullable();
             $table->text('notes')->nullable();
             $table->foreignId('stage')->nullable()->index()->constrained(table:'spot_status')->noActionOnDelete()->noActionOnUpdate();
