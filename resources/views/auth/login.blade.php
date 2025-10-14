@@ -66,17 +66,24 @@
                             <img src="{{ asset('img/logo.png') }}" alt="Logo" class="img-fluid">
                         </div>
                         <h1 class="fs-3 fw-semibold"><i class="bi bi-shield-lock"></i>&nbsp;Log In</h1>
-                        <form accept="{{ url('auth') }}" method="POST" enctype="multipart/form-data">
+                        <form accept="{{ url('login') }}" method="POST" enctype="multipart/form-data">
+                            @csrf
                             <div class="row mb-3">
-                                <label for="username" class="col-sm-3 col-form-label"><i class="bi bi-person"></i>&nbsp;Username</label>
+                                <label for="emp_id" class="col-sm-3 col-form-label"><i class="bi bi-person"></i>&nbsp;Employee ID</label>
                                 <div class="col-sm-9">
-                                    <input type="text" name="username" id="username" class="form-control">
+                                    <input type="text" name="emp_id" id="emp_id" class="form-control" value="{{ old('emp_id') }}">
+                                    @error('emp_id')
+                                        <small class="text-danger">{{ $message }}</small>
+                                    @enderror
                                 </div>
                             </div>
                             <div class="row mb-3">
                                 <label for="password" class="col-sm-3 col-form-label"><i class="bi bi-key"></i>&nbsp;Password</label>
                                 <div class="col-sm-9">
                                     <input type="text" name="password" id="password" class="form-control">
+                                    @error('password')
+                                        <small class="text-danger">{{ $message }}</small>
+                                    @enderror
                                 </div>
                             </div>
                             <div class="row">
