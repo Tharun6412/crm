@@ -97,6 +97,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('prospect_id')->nullable()->index()->constrained(table:'spot_prospects')->noActionOnDelete()->noActionOnUpdate();
             $table->foreignId('document_type_id')->nullable()->index()->constrained(table:'spot_document_types')->noActionOnDelete()->noActionOnUpdate();
+            $table->foreignId('doc_file_id')->nullable()->index()->constrained(table:'dc_files')->noActionOnDelete()->noActionOnUpdate();
             $table->integer('offer_count')->nullable();
             $table->string('file_name', length:225)->nullable();
             $table->text('path')->nullable();

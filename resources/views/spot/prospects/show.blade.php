@@ -6,6 +6,23 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
+            <div id="action-type">
+                @if ($type > 0)
+                    @switch($type)
+                        @case(1)
+                            @include('spot.prospects.status-history.edit')
+                        @break
+                        @case(8)
+                            @include('spot.prospects.documents.create')
+                            @break
+                        @case(2)
+                            
+                            @break
+                        @default
+                            
+                    @endswitch
+                @endif
+            </div>
             <div class="bd-callout bd-callout-primary bg-transparent card mt-0 border-primary mb-3">
                 <h4>Prospect Data&nbsp;-&nbsp;{{ $prospect->code }}</h4>
                 <div class="row">
@@ -187,9 +204,31 @@
                     </div>
                 </div>
             </div>
+            <div id="prospect-documents">
+                @include('spot.prospects.documents.list')
+            </div>
+            <div id="prospect-pipeline">
+                @include('spot.prospects.pipeline.list')
+            </div>
+            <div id="date-requests">
+                @include('spot.prospects.date-request.list')
+            </div>
+            <div id="status-history">
+                @include('spot.prospects.status-history.list')
+            </div>
+            <div id="comments">
+                @include('spot.prospects.comments')
+            </div>
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="bi bi-x"></i>&nbsp;Close</button>
         </div>
     </div>
 </div>
+@include('scripts.ajax-link', ['div' => 'action-type'])
+<script type="text/javascript">
+    $(document).on('click', '.ajax-link', function(e) {
+        e.preventDefault();
+        $(this).find('form :input:visible:first').focus();
+    });
+</script>

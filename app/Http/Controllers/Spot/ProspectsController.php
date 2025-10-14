@@ -8,13 +8,18 @@ use App\Models\Admin\FirmTypes;
 use App\Models\Admin\FuelTypes;
 use App\Models\Admin\Ga;
 use App\Models\Admin\IndustrialAreas;
+use App\Models\Spot\DocumentTypes;
 use App\Models\Spot\ProspectApproval;
+use App\Models\Spot\ProspectDocuments;
 use App\Models\Spot\ProspectPipeline;
 use App\Models\Spot\Prospects;
 use App\Models\Spot\ProspectStatusHistory;
+use App\Models\Spot\Status;
 use Carbon\Carbon;
+use Dom\DocumentType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class ProspectsController extends Controller
 {
@@ -167,10 +172,30 @@ class ProspectsController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Request $request, string $id)
     {
+        // print "<pre>"; print_r($request->all());
+        // print "<pre>"; print_r($id); exit;
         $prospect = Prospects::find($id);
-        return view('spot.prospects.show', ['prospect' => $prospect]);
+        $prospect_documents = ProspectDocuments::where('prospect_id', $id)->get();
+        $reload = $request->has('reload') ? true : false;
+        if($reload == true) {
+            switch($request->type) {
+                case 8:
+                    return view('spot.prospects.documents.list', [
+                        'prospect' => $prospect,
+                        'prospect_documents' => $prospect_documents
+                    ]);
+                    break;
+                default:
+                    echo "";    
+            }
+        }
+        return view('spot.prospects.show', [
+            'prospect' => $prospect, 
+            'type' => 0,
+            'prospect_documents' => $prospect_documents,
+        ]);
     }
 
     /**
@@ -270,5 +295,43 @@ class ProspectsController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    /**
+     * Status Update
+     */
+    public function editStatus(Request $request, $id)
+    {
+        $status_list = Status::where('type', 1)->where('parent', 0)->get();
+        $prospect = Prospects::find($id);
+        $prospect_documents = ProspectDocuments::where('prospect_id', $id)->get();
+        $sub_stages = Status::where('parent', $prospect->stage)->get();
+        if($request->type == "1") {
+            return view('spot.prospects.status-history.edit', [
+                'status_list' => $status_list,
+                'type' => 1,
+                'id' => $id,
+                'prospect' => $prospect,
+                'prospect_documents' => $prospect_documents,
+                'sub_stages' => $sub_stages,
+            ]);    
+        }
+        return view('spot.prospects.show', [
+            'status_list' => $status_list,
+            'type' => 1,
+            'id' => $id,
+            'prospect' => $prospect,
+            'prospect_documents' => $prospect_documents,
+            'sub_stages' => $sub_stages,
+        ]);
+    }
+
+    /**
+     * Get Sub Stages by Status ID
+     */
+    public function getSubStagesByStage(Request $request)
+    {
+        $sub_stages = Status::where('parent', $request->stage_id)->get();
+        return response()->json(['sub_stages' => $sub_stages]);
     }
 }

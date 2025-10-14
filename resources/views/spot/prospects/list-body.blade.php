@@ -113,12 +113,12 @@
                                         </a>
                                     </li>
                                     <li>
-                                        <a class="dropdown-item" href="javascript:void(0)" onclick="editStatus(230)">
+                                        <a class="dropdown-item link-modal" href="{{ url('spot/prospects/editStatus/'.$prospect->id) }}">
                                             <i class="bi bi-check2-circle"></i>&nbsp;Update Status
                                         </a>
                                     </li>
                                     <li>
-                                        <a class="dropdown-item" href="javascript:void(0)" onclick="manageDocs(230)">
+                                        <a class="dropdown-item link-modal" href="{{ url('spot/prospectDocument/create/'.$prospect->id) }}">
                                             <i class="bi bi-folder2-open"></i>&nbsp;Manage Documents
                                         </a>
                                     </li>
@@ -166,6 +166,5 @@
         </div>
     </div>
 </form>
-@include('scripts.link-modal')
 @include('scripts.ajax-form-search', ['form' => 'prospects'])
 
