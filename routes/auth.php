@@ -1,17 +1,11 @@
 <?php
+
+use App\Http\Middleware\ModuleAccess;
 use Illuminate\Support\Facades\Route;
 
-// Authenticated
-Route::middleware('auth')->group(function(){
-    Route::get('profile', [App\Http\Controllers\Auth\UserProfile::class, 'index'])->name('profile');
-    Route::get('profile/edit', [App\Http\Controllers\Auth\UserProfile::class, 'edit']);
-    Route::get('changePassword', [App\Http\Controllers\Auth\ChangePassword::class, 'index']);
-    Route::post('changePassword', [App\Http\Controllers\Auth\ChangePassword::class, 'store']);
-    Route::post('logout', [App\Http\Controllers\Auth\Authentication::class, 'destroy']);
-});
 // Guest access
 Route::middleware('guest')->group(function(){
-    Route::get('login', [App\Http\Controllers\Auth\Authentication::class, 'login'])->name('login');
+    Route::get('login', [App\Http\Controllers\Auth\Authentication::class, 'login'])->name('login')->middleware(ModuleAccess::class);
     Route::get('userLogin', [App\Http\Controllers\Auth\Authentication::class, 'index']);
     Route::post('login', [App\Http\Controllers\Auth\Authentication::class, 'store']);
     // Registration
@@ -28,4 +22,12 @@ Route::middleware('guest')->group(function(){
     Route::post('validateUserOtp/{id}', [App\Http\Controllers\Auth\ForgotPassword::class, 'validateUserOtp']);
     Route::get('reGeneratePassword', [App\Http\Controllers\Auth\ForgotPassword::class, 'reGeneratePassword']);
     Route::post('updatePassword/{id}', [App\Http\Controllers\Auth\ForgotPassword::class, 'updatePassword']);
+});
+// Authenticated
+Route::middleware('auth')->group(function(){
+    Route::get('profile', [App\Http\Controllers\Auth\UserProfile::class, 'index'])->name('profile');
+    Route::get('profile/edit', [App\Http\Controllers\Auth\UserProfile::class, 'edit']);
+    Route::get('changePassword', [App\Http\Controllers\Auth\ChangePassword::class, 'index']);
+    Route::post('changePassword', [App\Http\Controllers\Auth\ChangePassword::class, 'store']);
+    Route::post('logout', [App\Http\Controllers\Auth\Authentication::class, 'destroy']);
 });

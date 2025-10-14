@@ -36,7 +36,7 @@ class Authentication extends Controller
     public function store(AuthenticationRequest $request)
     {
         $request->authenticate();
-        $request->session()->regenerate();
+        session()->regenerate();
         
         //-- Get roles, role modules data and create a session
         // Get role_id, and role_ids from users

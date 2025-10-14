@@ -4,7 +4,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <title>Megha Gas&reg; @yield('title')</title>
+        <title>Megha Gas&reg; Portal @yield('title')</title>
         <link rel="shortcut icon" href="{{ asset('img/favicon.ico') }} " type="image/x-icon">
         <!-- CSS files -->
         <link rel="stylesheet" type="text/css" href="{{ asset('bootstrap-538/css/bootstrap.min.css') }}">
