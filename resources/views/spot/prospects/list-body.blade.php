@@ -108,7 +108,7 @@
                                         </a>
                                     </li>
                                     <li>
-                                        <a class="dropdown-item" href="javascript:void(0)" onclick="requestDate(230)">
+                                        <a class="dropdown-item link-modal" href="{{ url('spot/prospectDateChangeRequest/create/'.$prospect->id) }}">
                                             <i class="bi bi-info-circle"></i>&nbsp;Request For Date Change
                                         </a>
                                     </li>
@@ -123,17 +123,17 @@
                                         </a>
                                     </li>
                                     <li>
-                                        <a class="dropdown-item" href="javascript:void(0)" onclick="addComment(230)">
+                                        <a class="dropdown-item link-modal" href="{{ url('spot/prospects/'.$prospect->id) }}">
                                             <i class="bi bi-chat"></i>&nbsp;Add Comment
                                         </a>
                                     </li>
                                     <li>
-                                        <a class="dropdown-item" href="javascript:void(0)" onclick="hold(230,14)">
+                                        <a class="dropdown-item link-modal" href="{{ url('spot/prospects/holdStatus/'.$prospect->id) }}">
                                             <i class="bi bi-ban"></i>&nbsp;Hold
                                         </a>
                                     </li>
                                     <li>
-                                        <a class="dropdown-item" href="javascript:void(0)" onclick="cancel(230,15)">
+                                        <a class="dropdown-item link-modal" href="{{ url('spot/prospects/cancelStatus/'.$prospect->id) }}">
                                             <i class="bi bi-x-circle"></i>&nbsp;Cancel
                                         </a>
                                     </li>
@@ -166,5 +166,6 @@
         </div>
     </div>
 </form>
+@include('scripts.link-modal')
 @include('scripts.ajax-form-search', ['form' => 'prospects'])
 

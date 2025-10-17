@@ -6,6 +6,7 @@
             <a class="btn btn-sm btn-success ajax-link" href="{{ url('spot/prospects/editStatus/'.$prospect->id.'?type=1') }}"><i class="bi bi-check2-circle"></i>&nbsp;Add / Update Status</a>
         </div>
     </div>
+    <a class="visually-hidden" href="{{ url('spot/prospects/'.$prospect->id.'?reload=true&type=1') }}" data-custom-attr="value" id="reload-status">Hidden Link</a>
     <div class="table-responsive spot-table">
         <table class="table table-bordered table-hover table-sm table-striped mb-0">
             <thead>
@@ -22,15 +23,15 @@
                 @php
                     $i = 1;
                 @endphp
-                @if (isset($prospect_data['status_history']) and !empty($prospect_data['status_history']))
-                    @foreach ($prospect_data['status_history'] as $key => $history)
+                @if ($prospect_status_history->count() > 0)
+                    @foreach ($prospect_status_history as $history)
                         <tr>
                             <td class="text-center">{{ $i++ }}</td>
-                            <td class="align-middle"></td>
-                            <td class="align-middle"></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
+                            <td class="align-middle">{{ $history->status->name }}</td>
+                            <td class="align-middle">{{ $history->subStatus->name }}</td>
+                            <td>{{ $history->notes }}</td>
+                            <td>{{ $history->createdBy->first_name }}</td>
+                            <td>{{ $history->created_at->format('d-m-Y') }}</td>
                         </tr>
                     @endforeach
                 @else
@@ -40,3 +41,31 @@
         </table>
     </div>
 </div>
+@include('scripts.ajax-link', ['div' => 'action-type'])
+<script type="text/javascript">
+    // Industrial Area Based on GA
+    function getSubStagesByStage(stage)
+    {
+        let options = '<option value="">select sub stage</option>';
+        $.get("{{ url('spot/prospects/getSubStagesByStage') }}", {stage_id : stage}, function(data) {
+            $.each(data.sub_stages, function(index, stage){
+                options += `<option value="${stage.id}">${stage.name}</option>`;
+            });
+            $('#sub_stage_id').html(options);
+        });
+    }
+    // Get Status By Sub Stage Id
+    function getDetailsBySubStage(sub_stage, prospect_id) 
+    {
+        $.get("{{ url('spot/prospects/getDetailsBySubStage') }}", {sub_stage_id : sub_stage, prospect_id : prospect_id}, function(data) {
+            $('#subStages_body').html(data);
+        });
+    }
+    // Reload Status History
+    function reloadStatusHistory()
+    {
+        $.get($('#reload-status').attr('href'), function(data) {
+            $('#status-history').html(data);
+        });
+    }
+</script>

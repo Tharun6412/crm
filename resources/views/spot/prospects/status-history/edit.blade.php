@@ -1,8 +1,6 @@
-<form id="editstatus-form" class="form-horizontal" method="post">
-    <div class="bd-callout bd-callout-success bg-transparent card mt-0 border-success mb-3">
-        <div class="row mb-1">
-            
-        </div>
+<div class="bd-callout bd-callout-success bg-transparent card mt-0 border-success mb-3" id="edit-status-success">
+    <form id="edit-status-form" action="{{ url('spot/prospects/updateStatus/'.$id) }}"  class="form-horizontal" method="post" enctype="multipart/form-data">
+        @csrf
         <div class="row mb-1">
             <h5 class="modal-title">Prospect Status Update</h5>
             <label for="stage_id" class="col-form-label col-sm-4 text-end">Stage&nbsp;<span class="text-danger">*</span>&nbsp;:</label>
@@ -17,10 +15,9 @@
             </div>
         </div>
         <div class="row mb-1 ">
-                {{-- @include('spot.prospects.status-history.sub_stages') --}}
             <label for="sub_stage_id" class="col-form-label col-sm-4 text-end">Sub Stage&nbsp;<span class="text-danger">*</span>&nbsp;:</label>
             <div class="col-sm-6">
-                <select id="sub_stage_id" name="sub_stage_id" class="form-select form-select-sm">
+                <select id="sub_stage_id" name="sub_stage_id" class="form-select form-select-sm" onchange="getDetailsBySubStage(this.value, {{ $prospect->id }})">
                     <option value="">select sub stage</option>
                         @foreach ($sub_stages as $stage)
                             <option value="{{ $stage->id }}" @selected($stage->id == $prospect->sub_stage_id)>{{ $stage->name }}</option>
@@ -31,7 +28,7 @@
         </div>
         <div class="row mb-1">
             <div id="subStages_body">
-                {{-- @include('spot.prospects.status-history.sub_stages_details') --}}
+                @include('spot.prospects.status-history.sub_stage_details')
             </div>
         </div>
         <div class="row mb-2">
@@ -46,22 +43,11 @@
         <div class="row mb-0">
             <label class="col-form-label col-sm-4 text-end">&nbsp;</label>
             <div class="col-md-6">
-                <button type="button" class="btn btn-sm btn-success" onclick="updateStatus($('#sub_stage_info').val())"><i class="bi bi-save"></i>&nbsp;Update Status</button>
-                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal"><i class="bi bi-x-lg"></i>&nbsp;Close</button>
+                <button type="submit" class="btn btn-sm btn-success"><i class="bi bi-save"></i>&nbsp;Update Status</button>
+                <button type="button" class="btn btn-secondary btn-sm" onclick="$('#action-type').html('')"><i class="bi bi-x-lg"></i>&nbsp;Close</button>
             </div>
         </div>
-    </div>
-</form>
-<script type="text/javascript">
-    // Industrial Area Based on GA
-    function getSubStagesByStage(stage)
-    {
-        let options = '<option value="">select sub stage</option>';
-        $.get("{{ url('spot/prospects/getSubStagesByStage') }}", {stage_id : stage}, function(data) {
-            $.each(data.sub_stages, function(index, stage){
-                options += `<option value="${stage.id}">${stage.name}</option>`;
-            });
-            $('#sub_stage_id').html(options);
-        });
-    }
-</script>
+    </form>
+</div>
+@include('scripts.datepicker', ['list' => ['expected_date']])
+@include('scripts.ajax-file-submit', ['form' => 'edit-status', 'callback' => 'reloadStatusHistory()'])

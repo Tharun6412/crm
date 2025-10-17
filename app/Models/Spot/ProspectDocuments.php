@@ -3,6 +3,7 @@
 namespace App\Models\Spot;
 
 use App\Models\DocumentCentre\Documents;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -52,5 +53,13 @@ class ProspectDocuments extends Model
     public function file() : BelongsTo
     {
         return $this->belongsTo(Documents::class, 'doc_file_id')->withDefault();
+    }
+
+    /**
+     * Relation with User
+     */
+    public function createdBy() : BelongsTo
+    {
+        return $this->belongsTo(User::class, 'created_by')->withDefault();
     }
 }

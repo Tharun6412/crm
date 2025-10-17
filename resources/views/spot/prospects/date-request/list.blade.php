@@ -3,14 +3,23 @@
  * Date change requests
  */
 ?>
+<div id="date-request-approved">
+    @if (session('success'))
+        <div class="alert alert-success alert-dismissible fade show">
+            <strong><i class="bi bi-check2-circle"></i>&nbsp;Success</strong>&nbsp;{{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+</div>
 <div class="bd-callout bd-callout-primary bg-transparent card mt-0 border-primary mb-3">
     <div class="clearfix mb-2">
         <h4 class="float-start">Date Change Requests</h4>
-        <div class="float-end">
-            <button class="btn btn-success btn-sm" type="button" onclick="raiseRequestDate(<? print $prospect_data['id']; ?>)"><i class="bi bi-calendar-plus"></i>&nbsp;Add Request</button>
+        <div class="float-end">          
+            <a class="btn btn-sm btn-success ajax-link" href="{{ url('spot/prospectDateChangeRequest/create/'.$prospect->id.'?type=7') }}"><i class="bi bi-calender-plus"></i>&nbsp;Add Request</a>
         </div>
     </div>
-    @if (isset($prospect_data['date_change_history']) and !empty($prospect_data['date_change_history']))
+    <a class="visually-hidden" href="{{ url('spot/prospects/'.$prospect->id.'?reload=true&type=7') }}" data-custom-attr="value" id="reload-date-request">Hidden Link</a>
+    @if ($prospect_date_change_history->count() > 0)
         <div class="table-responsive spot-table">
             <table class="table table-bordered table-hover table-sm table-striped mb-0">
                 <thead>
@@ -28,43 +37,41 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <?
-                    $i = 1;
-                    foreach ($prospect_data['date_change_history'] as $key => $req) { ?>
+                    @php
+                        $i = 1;                        
+                    @endphp
+                    @foreach ($prospect_date_change_history as $history)
                         <tr>
                             <td class="text-center"><?= $i++; ?></td>
-                            <td class="align-middle" nowrap><?= date('d-m-Y', strtotime($req['cur_date'])); ?></td>
-                            <td class="align-middle" nowrap><?= date('d-m-Y', strtotime($req['new_date'])); ?></td>
+                            <td class="align-middle" nowrap>{{ $history->current_date?->format('d-m-Y') }}</td>
+                            <td class="align-middle" nowrap>{{ $history->new_date?->format('d-m-Y') }}</td>
                             <td class="text-center align-middle">
-                                <?
-                                    if ($req['status'] == 1) echo "<span class='badge text-success border border-success'><i class='bi bi-check'></i>&nbsp;Approved</span>";
-                                    else if ($req['status'] == 2) echo "<span class='badge text-danger border border-danger'><i class='bi bi-x'></i>&nbsp;Rejected</span>";
-                                    else echo "<span class='badge text-warning border border-warning'><i class='bi bi-pause-circle'></i>&nbsp;Pending</span>";
-                                ?>
+                                @switch($history->status)
+                                @case(1)
+                                <span class='badge text-success border border-success'><i class='bi bi-check'></i>&nbsp;Approved</span>
+                                @break
+                                @case(2)
+                                <span class='badge text-danger border border-danger'><i class='bi bi-check'></i>&nbsp;Rejected</span>
+                                @break
+                                @default
+                                <span class='badge text-warning border border-warning'><i class='bi bi-pause-circle'></i>&nbsp;Pending</span>
+                                @endswitch
                             </td>
-                            <td><?= $req['note']; ?></td>
-                            <td><?= $req['created_by_name']; ?></td>
-                            <td class="align-middle"><?= date('d-m-Y H:i', strtotime($req['created_at'])); ?></td>
-                            <td><?= $req['approved_by_name'] ?? '--'; ?></td>
-                            <td class="align-middle"><?= isset($req['approved_at']) ? date('d-m-Y H:i', strtotime($req['approved_at'])) : '--'; ?></td>
+                            <td>{{ $history->note }}</td>
+                            <td>{{ $history->createdBy->first_name }}</td>
+                            <td class="align-middle">{{ $history->created_at?->format('d-m-Y') }}</td>
+                            <td>{{ $history->approvedBy->first_name }}</td>
+                            <td class="align-middle">{{ $history->approved_at?->format('d-m-Y') }}</td>
                             <td nowrap>
-                                <? 
-                                // Check if the request status is 'requested' and if the logged role is 1 (Admin), 3 (GA Head), 4 (Cluster Head), or 5 (HO Sales)
-                                if ($req['status'] == 0  AND ($this->spotaccess->isAdmin() OR $this->spotaccess->isHoSales() OR $this->spotaccess->isClusterHead() OR $this->spotaccess->isGaHead())) { 
-                                    ?>
-                                    <a href="javascript:void(0);" onclick="approveDateRequest(<?= $req['id']; ?>, <? print $req['lead_id']; ?>);" class="btn btn-success btn-sm" title="Approve"><i class="bi bi-check-lg"></i></a>
-                                    <a href="javascript:void(0);" onclick="rejectDateRequest(<?= $req['id']; ?>, <? print $req['lead_id']; ?>);" class="btn btn-danger btn-sm" title="Reject"><i class="bi bi-x-lg"></i></a>
-                                    <?
-                                }
-                                else {
-                                    echo '--';
-                                }
-                                ?>
+                                @if($history->status == "0")
+                                <a href="javascript:void(0);" onclick="approveDateRequest('{{ $history->id }}', '{{ $history->prospect_id }}')" class="btn btn-success btn-sm" title="Approve"><i class="bi bi-check-lg"></i></a>
+                                <a href="javascript:void(0);" onclick="rejectDateRequest('{{ $history->id }}', '{{ $history->prospect_id }}')" class="btn btn-danger btn-sm" title="Reject"><i class="bi bi-x-lg"></i></a>
+                                @else
+                                {{ " " }}
+                                @endif
                             </td>
                         </tr>
-                        <?
-                    }
-                    ?>
+                    @endforeach
                 </tbody>
             </table>
         </div>
@@ -72,13 +79,28 @@
         <div class='alert alert-warning mb-0'>No records found!</div>
     @endif
 </div>
-<div id="date_chng_rqst_form">
-</div>
-
+@include('scripts.ajax-link', ['div' => 'action-type'])
 <script type="text/javascript">
-    $(document).ready(function() {
-        setTimeout(function(){
-            $('#alert_data').fadeOut();
-        }, 30000);
-    });
+// To Approve the request
+    function approveDateRequest(id, prospect_id)
+    {
+        if(confirm("Are you sure you want to approve the date request")) {
+            $.post("{{ url('spot/prospectDateChangeRequest/approve') }}", {_token: '{{ csrf_token() }}', id:id, prospect_id : prospect_id}, function(data) {
+                $.get($('#reload-date-request').attr('href'), function(data) {
+                    $('#date-request').html(data);
+                });
+            });
+        }
+    }
+    // TO Reject the request
+    function rejectDateRequest(id, prospect_id)
+    {
+        if(confirm("Are you sure you want to reject the date request")) {
+            $.post("{{ url('spot/prospectDateChangeRequest/reject') }}", {_token: '{{ csrf_token() }}', id:id, prospect_id : prospect_id}, function(data) {
+                $.get($('#reload-date-request').attr('href'), function(data) {
+                    $('#date-request').html(data);
+                });
+            });
+        }
+    }
 </script>

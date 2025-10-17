@@ -2,7 +2,9 @@
 
 namespace App\Models\Spot;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ProspectPipeline extends Model
 {
@@ -24,5 +26,22 @@ class ProspectPipeline extends Model
         'length',
         'status',
         'created_by',
+        'updated_by'
     ];
+
+    /**
+     * Relation with User
+     */
+    public function createdBy() : BelongsTo
+    {
+        return $this->belongsTo(User::class, 'created_by')->withDefault();
+    }
+
+    /**
+     * Relation with USer
+     */
+    public function updatedBy() : BelongsTo
+    {
+        return $this->belongsTo(User::class, 'updated_by')->withDefault();
+    }
 }

@@ -11,7 +11,6 @@
         @include('spot.prospects.list-body')
     </div>
 @endsection
-@include('scripts.link-modal')
 <script type="text/javascript">
     // Industrial Area Based on GA
     function getIndustrialAreaByGA(ga)

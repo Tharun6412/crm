@@ -3,8 +3,12 @@ namespace App\Http\Controllers\Spot;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\DocumentCentre\DocumentUpload;
 use App\Models\Spot\DocumentTypes;
+use App\Models\Spot\ProspectComments;
+use App\Models\Spot\ProspectDateChangeRequest;
 use App\Models\Spot\ProspectDocuments;
+use App\Models\Spot\ProspectPipeline;
 use App\Models\Spot\Prospects;
+use App\Models\Spot\ProspectStatusHistory;
 use Carbon\Carbon;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
@@ -26,6 +30,10 @@ class ProspectDocumentController extends Controller
         $document_types = DocumentTypes::all();
         $prospect = Prospects::find($id);
         $prospect_documents = ProspectDocuments::where('prospect_id', $id)->get();
+        $prospect_status_history = ProspectStatusHistory::where('prospect_id', $id)->get();
+        $prospect_date_change_history = ProspectDateChangeRequest::where('prospect_id',$id)->orderByDesc('id')->get();
+        $prospect_pipeline = ProspectPipeline::where('prospect_id', $id)->orderByDesc('id')->get();
+        $prospect_comments = ProspectComments::where('prospect_id', $id)->orderByDesc('id')->get();
         if($request->type == "8") {
             return view('spot.prospects.documents.create', [
                 'document_types' => $document_types,
@@ -33,6 +41,10 @@ class ProspectDocumentController extends Controller
                 'id' => $id,
                 'prospect' => $prospect,
                 'prospect_documents' => $prospect_documents,
+                'prospect_status_history' => $prospect_status_history,
+                'prospect_date_change_history' => $prospect_date_change_history,
+                'prospect_pipeline' => $prospect_pipeline,
+                'prospect_comments' => $prospect_comments,
             ]);    
         }
         return view('spot.prospects.show', [
@@ -41,6 +53,10 @@ class ProspectDocumentController extends Controller
             'id' => $id,
             'prospect' => $prospect,
             'prospect_documents' => $prospect_documents,
+            'prospect_status_history' => $prospect_status_history,
+            'prospect_date_change_history' => $prospect_date_change_history,
+            'prospect_pipeline' => $prospect_pipeline,
+            'prospect_comments' => $prospect_comments,
         ]);
     }
 

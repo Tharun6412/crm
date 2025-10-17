@@ -2,17 +2,19 @@
 
 namespace App\Models\Spot;
 
+use App\Models\DocumentCentre\Documents;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class ProspectStatusHistory extends Model
+class ProspectDateChangeRequest extends Model
 {
     /**
      * The table associated with the model
+     * 
      * @var string
      */
-    protected $table = 'spot_status_history';
+    protected $table = 'spot_prospect_date_change_history';
 
     /**
      * The attributes that are mass assignable
@@ -21,44 +23,48 @@ class ProspectStatusHistory extends Model
      */
     protected $fillable = [
         'prospect_id',
-        'status_id',
-        'sub_status_id',
-        'notes',
-        'created_at',
+        'current_date',
+        'new_date',
+        'note',
+        'status',
+        'win',
         'created_by',
+        'created_at',
+        'approved_by',
+        'approved_at',
     ];
+
     /**
      * @return casts
      */
     public function casts()
     {
         return [
+            'current_date' => 'datetime',
+            'new_date' => 'datetime',
             'created_at' => 'datetime',
+            'approved_at' => 'datetime',
         ];
     }
+
     /**
      * Timestamps False
      */
     public $timestamps= false;
-    /**
-     * Relation with Status
-     */
-    public function status():BelongsTo
-    {
-        return $this->belongsTo(Status::class, 'status_id')->withDefault();
-    }
-    /**
-     * Relation with Sub Status
-     */
-    public function subStatus(): BelongsTo
-    {
-        return $this->belongsTo(Status::class, 'sub_status_id')->withDefault();
-    }
+
     /**
      * Relation with User
      */
-    public function createdBy():BelongsTo
+    public function createdBy() : BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by')->withDefault();
+    }
+
+    /**
+     * Relation with User
+     */
+    public function approvedBy() : BelongsTo
+    {
+        return $this->belongsTo(User::class, 'approved_by')->withDefault();
     }
 }

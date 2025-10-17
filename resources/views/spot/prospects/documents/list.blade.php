@@ -14,7 +14,7 @@
         $i = 1;
     @endphp
     <a class="visually-hidden" href="{{ url('spot/prospects/'.$prospect->id.'?reload=true&type=8') }}" data-custom-attr="value" id="reload-form">Hidden Link</a>
-    @if (isset($prospect_documents) and !empty($prospect_documents))
+    @if ($prospect_documents->count() > 0)
         <div class="table-responsive spot-table">
             <table class="table table-bordered table-hover table-striped table-sm align-middle mb-0">
                 <thead>
@@ -34,15 +34,18 @@
                         <tr>
                             <td class="text-center">{{ $i++; }}</td>
                             <td class="text-center">
-                                <a href="{{ url('dc/documents/'.$document->doc_file_id) }}" title="{{ $document->file->file_name_original }}" target="_blank">{{ $document->file->doc_number }}</a>
+                                <a href="{{ url('dc/documents/'.$document->doc_file_id) }}" title="{{ $document->file->file_name_original }}" target="_blank"><i class="bi bi-file-earmark-pdf fs-5 text-danger"></i></a>
                             </td>
                             <td>{{ $document->documentType->name }}&nbsp;{{ $document->offer_count }}</td>
                             <td>
                                 {{ ($document->status == 1 and $document->win == 1) ? "win" : (($document->status == "1") ? "Approved" : ($document->status == "2" ? "Rejected" : '--')) }}
                             </td>
                             <td>{{ $document?->created_at }}</td>
-                            <td>{{ "1" }}</td>
-                            <td nowrap>EDIT</td>
+                            <td>{{ $document->createdBy->first_name }}</td>
+                            <td nowrap="">
+                                <a href="{{ url('dc/documents/'.$document->doc_file_id) }}" title="{{ $document->file->file_name_original }}" class="btn btn-sm btn-outline-primary" target="_blank"><i class="bi bi-file-earmark-pdf"></i></a>
+                                <a href="javascript:void(0)" class="btn btn-sm btn-outline-danger" title="Delete document"><i class="bi bi-trash"></i></a>
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>

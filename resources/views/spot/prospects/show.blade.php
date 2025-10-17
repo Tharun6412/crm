@@ -11,15 +11,16 @@
                     @switch($type)
                         @case(1)
                             @include('spot.prospects.status-history.edit')
-                        @break
+                            @break
+                        @case(7)
+                            @include('spot.prospects.date-request.edit')
+                            @break
                         @case(8)
                             @include('spot.prospects.documents.create')
                             @break
                         @case(2)
-                            
                             @break
                         @default
-                            
                     @endswitch
                 @endif
             </div>
@@ -210,7 +211,7 @@
             <div id="prospect-pipeline">
                 @include('spot.prospects.pipeline.list')
             </div>
-            <div id="date-requests">
+            <div id="date-request">
                 @include('spot.prospects.date-request.list')
             </div>
             <div id="status-history">
@@ -226,9 +227,4 @@
     </div>
 </div>
 @include('scripts.ajax-link', ['div' => 'action-type'])
-<script type="text/javascript">
-    $(document).on('click', '.ajax-link', function(e) {
-        e.preventDefault();
-        $(this).find('form :input:visible:first').focus();
-    });
-</script>
+
