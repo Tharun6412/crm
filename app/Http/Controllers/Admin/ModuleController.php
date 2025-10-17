@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Admin\Package;
 use App\Models\Admin\Module;
+use App\Models\Admin\ModuleAction;
 use App\Models\Admin\ModuleUrl;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -150,6 +151,48 @@ class ModuleController extends Controller
             }
             // print_r($new_urls);
             $insert_model = ModuleUrl::insert($new_urls);
+        }
+
+        /**
+         * Module actions
+         */
+        // Delete module Actions
+        $update_mod_actions = ($request->mod_act_slug) ? $request->mod_act_slug : [];
+        if($request->has('mod_act_del')) {
+            // Delete from database
+            try {
+                $delete_actions = ModuleAction::destroy($request->mod_act_del);
+                // Remove deleted elements from update array
+                $update_mod_actions = array_diff_key($request->mod_act_slug, $request->mod_act_del);
+            } catch (\Throwable $th) {
+                //throw $th;
+            }
+        }
+        // Update module Actions
+        if(sizeof($update_mod_actions) > 0) {
+            $update_actions = [];
+            foreach($update_mod_actions as $key => $slug) {
+                $update_actions[] = [
+                    'id' => $key,
+                    'action' => $request->mod_act_name[$key],
+                    'module_id' => $id,
+                    'slug' => $slug,
+                ];
+            }
+            // Update in database
+            $update_model = ModuleAction::upsert($update_actions, uniqueBy: ['id'], update: ['action', 'module_id', 'slug']);
+        }
+        // Add new module Actions
+        if($request->has('new_act_slug')) {
+            $new_actions = [];
+            foreach ($request->new_act_slug as $key => $slug) {
+                $new_actions[] = [
+                    'action' => $request->new_act_name[$key],
+                    'module_id' => $id,
+                    'slug' => $slug,
+                ];
+            }
+            $insert_model = ModuleAction::insert($new_actions);
         }
 
         // Response

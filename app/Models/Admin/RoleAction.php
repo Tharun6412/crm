@@ -23,4 +23,19 @@ class RoleAction extends Model
         'role_id',
         'module_action_id',
     ];
+
+    /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = false;
+
+    /**
+     * Module relationship
+     */
+    public function moduleAction(): BelongsTo
+    {
+        return $this->belongsTo(ModuleAction::class);
+    }
 }

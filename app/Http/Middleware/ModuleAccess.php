@@ -18,12 +18,13 @@ class ModuleAccess
     public function handle(Request $request, Closure $next): Response
     {
         // Check logged in user admin or super admin
-        if($this->isSuperAdmin($request) OR $this->isAdmin($request)) {
+        if(isSuperAdmin($request) OR isAdmin($request)) {
             // Access granted
         }
         else {
             // Get current module url
-            $currentUrl = '/' . $request->path();
+            // echo url()->current();
+            $currentUrl = ltrim(str_replace(url('/'), '', preg_replace('/\/?[0-9]/', '', $request->path())), '/');
             // Get Module id
             $module_data = Module::with('moduleActions')->whereHas('moduleUrls', function(Builder $query) use($currentUrl) {
                 $query->where('url', 'like', $currentUrl);
@@ -41,16 +42,15 @@ class ModuleAccess
             $module_actions = $module_data->moduleActions->pluck('id')->toArray();
             
             // User assigned module actions get from Session
-            $user_actions = [1, 2, 3, 4, 5, 6, 7, 8];
+            $user_actions = session('user')['module_actions'];
 
             // User assigned action on this module
             $user_module_actions = array_intersect($module_actions, $user_actions);
 
             // Check user has access to this module
             if(count($user_module_actions) > 0) {
-                // Access granted
-                // Assign all actions of current loading module to request to use in views
-                $request->attributes->set('user_module_actions', $module_data->moduleActions->whereIn('id', $user_module_actions)->pluck('slug')->toArray());
+                // Access granted & Assign all actions of current module to request to use in views
+                $request->merge(['user_module_actions' => $module_data->moduleActions->whereIn('id', $user_module_actions)->pluck('slug')->toArray()]);
             }
             else {
                 abort('403', 'Access denied');
@@ -58,21 +58,5 @@ class ModuleAccess
         }
 
         return $next($request);
-    }
-
-    /**
-     * Check super admin
-     */
-    public function isSuperAdmin(Request $request)
-    {
-        return false;
-    }
-
-    /**
-     * Check admin
-     */
-    public function isAdmin(Request $request)
-    {
-        return false;
     }
 }

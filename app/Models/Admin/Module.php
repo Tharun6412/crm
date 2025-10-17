@@ -70,4 +70,18 @@ class Module extends Model
     {
         return $this->hasMany(ModuleAction::class);
     }
+
+    /**
+     * Recursive active childs
+     */
+    public function recursiveActiveChilds()
+    {
+        // return $this->children()->with('recursiveActiveChilds')->where('status', 1)->whereIn('id', session()->get('user')['modules']);
+        $q = $this->children()->with('recursiveActiveChilds')->where('status', 1);
+        // Get only allocated modules
+        if(isAdmin() OR isSuperAdmin()){/* No action */} else {
+            $q->whereIn('id', session()->get('user')['modules']);
+        }
+        return $q->orderBy('position');
+    }
 }

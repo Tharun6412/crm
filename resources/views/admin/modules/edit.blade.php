@@ -1,5 +1,5 @@
 {{-- Module edit, modal view --}}
-<div class="modal-dialog modal-lg">
+<div class="modal-dialog modal-xl">
     <div class="modal-content">
         <div class="modal-header">
             <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Module - {{ $module->name }}</h1>
@@ -11,14 +11,14 @@
                 @csrf
                 @method('PUT')
                 <div class="row mb-2">
-                    <label for="name" class="col-sm-2 col-form-label">Name</label>
-                    <div class="col-sm-10">
+                    <label for="name" class="col-sm-2 col-form-label text-end">Module Name</label>
+                    <div class="col-sm-9">
                         <input type="text" name="name" id="name" class="form-control" value="{{ $module->name }}">
                     </div>
                 </div>
                 <div class="row mb-2">
-                    <label for="package_id" class="col-sm-2 col-form-label">Package</label>
-                    <div class="col-sm-10">
+                    <label for="package_id" class="col-sm-2 col-form-label text-end">Package</label>
+                    <div class="col-sm-9">
                         <select name="package_id" id="package_id" class="form-select">
                             <option value="">Select package</option>
                             @foreach ($packages as $item)
@@ -28,20 +28,20 @@
                     </div>
                 </div>
                 <div class="row mb-2">
-                    <label for="url" class="col-sm-2 col-form-label">URL</label>
-                    <div class="col-sm-10">
+                    <label for="url" class="col-sm-2 col-form-label text-end">Landing URL</label>
+                    <div class="col-sm-9">
                         <input type="text" name="url" id="url" class="form-control" value="{{ $module->url }}">
                     </div>
                 </div>
                 <div class="row mb-2">
-                    <label for="code" class="col-sm-2 col-form-label">Slug</label>
-                    <div class="col-sm-10">
+                    <label for="code" class="col-sm-2 col-form-label text-end">Slug</label>
+                    <div class="col-sm-9">
                         <input type="text" name="code" id="code" class="form-control" value="{{ $module->slug }}">
                     </div>
                 </div>
                 <div class="row mb-2">
-                    <label for="icon" class="col-sm-2 col-form-label">Icon</label>
-                    <div class="col-sm-10">
+                    <label for="icon" class="col-sm-2 col-form-label text-end">Icon</label>
+                    <div class="col-sm-9">
                         <div class="input-group">
                             <label for="" class="input-group-text"><i id="m-icon" class="bi {{ $module->icon }}"></i></label>
                             <input type="text" name="icon" id="icon" class="form-control" value="{{ $module->icon }}">
@@ -49,8 +49,8 @@
                     </div>
                 </div>
                 <div class="row mb-2">
-                    <label for="status" class="col-sm-2 col-form-label">Status</label>
-                    <div class="col-sm-10">
+                    <label for="status" class="col-sm-2 col-form-label text-end">Status</label>
+                    <div class="col-sm-9">
                         <select name="status" id="status" class="form-select">
                             <option value="0" {{ ($module->status == 0) ? 'selected' : '' }}>Disable</option>
                             <option value="1" {{ ($module->status == 1) ? 'selected' : '' }}>Enable</option>
@@ -58,40 +58,67 @@
                     </div>
                 </div>
                 <div class="row mb-2">
-                    <label for="position" class="col-sm-2 col-form-label">Position</label>
-                    <div class="col-sm-10">
+                    <label for="position" class="col-sm-2 col-form-label text-end">Position</label>
+                    <div class="col-sm-9">
                         <input type="text" name="position" id="position" class="form-control" value="{{ $module->position }}">
                     </div>
                 </div>
                 <div class="row mb-2">
-                    <label for="parent" class="col-sm-2 col-form-label">Parent</label>
-                    <div class="col-sm-10">
+                    <label for="parent" class="col-sm-2 col-form-label text-end">Parent</label>
+                    <div class="col-sm-9">
                         <input type="text" name="parent" id="parent" class="form-control" value="{{ $module->parent->id ?? '' }}">
                         <span class="form-text">{{ $module->parent->name ?? '' }}</span>
                     </div>
                 </div>
-                <div class="row mb-2">
-                    <label for="moduleUrls" class="col-sm-2 col-form-label">Module Urls</label>
-                    <div class="col-sm-10">
-                        @if ($module->moduleUrls->count() > 0)
-                            @foreach ($module->moduleUrls as $mod_url)
-                                <div class="row">
-                                    <div class="col">
-                                        <input type="text" name="module_name[{{ $mod_url->id }}]" class="form-control mb-1" value="{{ $mod_url->name }}" placeholder="Name">
-                                    </div>
-                                    <div class="col">
-                                        <div class="input-group">
-                                            <input type="text" name="module_url[{{ $mod_url->id }}]" class="form-control" value="{{ $mod_url->url }}" placeholder="URL">
-                                            <div class="input-group-text">
-                                                <input type="checkbox" name="delete_url[{{ $mod_url->id }}]" id="delete_url_{{ $mod_url->id }}" class="form-check-input" value="{{ $mod_url->id }}">&nbsp;<label for="delete_url_{{ $mod_url->id }}"><i class="bi bi-trash text-danger"></i></label>
+                <div class="bg-light py-2 mb-2">
+                    <div class="row mb-2">
+                        <label for="moduleActions" class="col-sm-2 col-form-label text-end">Module Actions</label>
+                        <div class="col-sm-9">
+                            @if ($module->moduleActions->count() > 0)
+                                @foreach ($module->moduleActions as $mod_act)
+                                    <div class="row">
+                                        <div class="col">
+                                            <input type="text" name="mod_act_name[{{ $mod_act->id }}]" class="form-control mb-1" value="{{ $mod_act->action }}" placeholder="Action name">
+                                        </div>
+                                        <div class="col">
+                                            <div class="input-group">
+                                                <input type="text" name="mod_act_slug[{{ $mod_act->id }}]" class="form-control" value="{{ $mod_act->slug }}" placeholder="Slug">
+                                                <div class="input-group-text">
+                                                    <input type="checkbox" name="mod_act_del[{{ $mod_act->id }}]" id="mod_act_del_{{ $mod_act->id }}" class="form-check-input" value="{{ $mod_act->id }}">&nbsp;<label for="mod_act_del_{{ $mod_act->id }}"><i class="bi bi-trash text-danger"></i></label>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            @endforeach
-                        @endif
-                        <div id="mod-new-urls"></div>
-                        <button type="button" class="btn btn-outline-info btn-sm" id="mod-new-url-btn"><i class="bi bi-plus"></i>&nbsp;Add new url</button>
+                                @endforeach
+                            @endif
+                            <div id="mod-new-acts"></div>
+                            <button type="button" class="btn btn-outline-info btn-sm" id="mod-new-act-btn"><i class="bi bi-plus"></i>&nbsp;Add new action</button>
+                        </div>
+                    </div>
+                    <div class="text-info"><hr></div>
+                    <div class="row">
+                        <label for="moduleUrls" class="col-sm-2 col-form-label text-end">Module Urls</label>
+                        <div class="col-sm-9">
+                            @if ($module->moduleUrls->count() > 0)
+                                @foreach ($module->moduleUrls as $mod_url)
+                                    <div class="row">
+                                        <div class="col">
+                                            <input type="text" name="module_name[{{ $mod_url->id }}]" class="form-control mb-1" value="{{ $mod_url->name }}" placeholder="Name">
+                                        </div>
+                                        <div class="col">
+                                            <div class="input-group">
+                                                <input type="text" name="module_url[{{ $mod_url->id }}]" class="form-control" value="{{ $mod_url->url }}" placeholder="URL">
+                                                <div class="input-group-text">
+                                                    <input type="checkbox" name="delete_url[{{ $mod_url->id }}]" id="delete_url_{{ $mod_url->id }}" class="form-check-input" value="{{ $mod_url->id }}">&nbsp;<label for="delete_url_{{ $mod_url->id }}"><i class="bi bi-trash text-danger"></i></label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            @endif
+                            <div id="mod-new-urls"></div>
+                            <button type="button" class="btn btn-outline-info btn-sm" id="mod-new-url-btn"><i class="bi bi-plus"></i>&nbsp;Add new url</button>
+                        </div>
                     </div>
                 </div>
                 <div id="mod-edit-error"></div>
@@ -121,6 +148,12 @@
         var c = 1;
         $("#mod-new-url-btn").click(function(e){
             $("#mod-new-urls").append('<div class="row" id="new_url_'+c+'"><div class="col"><input type="text" name="new_mod_name['+c+']" class="form-control mb-1" placeholder="Name"></div><div class="col"><div class="input-group"><input type="text" name="new_mod_url['+c+']" class="form-control" placeholder="URL"><button type="button" class="btn btn-danger" onclick="javascript:$(\'#new_url_'+c+'\').remove()"><i class="bi bi-trash"></i></button></div></div></div>');
+            c++;
+        });
+        // Add new Action
+        var a = 1;
+        $("#mod-new-act-btn").click(function(e){
+            $("#mod-new-acts").append('<div class="row" id="new_act_'+c+'"><div class="col"><input type="text" name="new_act_name['+c+']" class="form-control mb-1" placeholder="Action name"></div><div class="col"><div class="input-group"><input type="text" name="new_act_slug['+c+']" class="form-control" placeholder="Slug"><button type="button" class="btn btn-danger" onclick="javascript:$(\'#new_act_'+c+'\').remove()"><i class="bi bi-trash"></i></button></div></div></div>');
             c++;
         });
     });

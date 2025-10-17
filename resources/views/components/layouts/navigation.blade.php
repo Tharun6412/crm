@@ -14,7 +14,7 @@
                     <span>Dashboard</span>
                 </a>
             </li>
-            @isset($record)
+            @isset($modules)
                 @foreach ($modules as $module)
                     <li class="side-nav-item">
                         {{-- Recursive view load --}}
@@ -38,6 +38,12 @@
                     </li>
                 @endforeach
             @endisset ($modules)
+            <li class="side-nav-item">
+                <a href="{{ url('admin/modules') }}" class="side-nav-link">
+                    <i class="bi bi-gear"></i>
+                    <span>Module Administration</span>
+                </a>
+            </li>
             <li class="side-nav-item">
                 <a href="{{ url('public') }}" class="side-nav-link">
                     <i class="bi bi-megaphone"></i>

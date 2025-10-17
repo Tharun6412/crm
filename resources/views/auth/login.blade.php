@@ -80,7 +80,7 @@
                                 <div class="row mb-3">
                                     <label for="password" class="col-sm-4 col-form-label"><i class="bi bi-key"></i>&nbsp;Password</label>
                                     <div class="col-sm-8">
-                                        <input type="text" name="password" id="password" class="form-control">
+                                        <input type="password" name="password" id="password" class="form-control">
                                         @error('password')
                                             <small class="text-danger">{{ $message }}</small>
                                         @enderror

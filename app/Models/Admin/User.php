@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Admin;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -53,5 +54,13 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    /**
+     * Relation with User roles
+     */
+    public function roles(): HasMany
+    {
+        return $this->hasMany(UserRole::class);
     }
 }

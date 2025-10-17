@@ -1,12 +1,16 @@
 <?php
 
+use App\Http\Middleware\ModuleAccess;
 use App\Http\Middleware\RouteAccess;
 use Illuminate\Support\Facades\Route;
 
 // Admin routes
-Route::middleware(['guest'])->group(function() {
+Route::middleware(['auth'])->group(function() {
+    // User administration
+    Route::resource('users', App\Http\Controllers\Admin\UserController::class);
+    Route::resource('roles', App\Http\Controllers\Admin\RoleController::class)->middleware(ModuleAccess::class);
     // Module administration
     Route::get('modules/createSub/{id}', [App\Http\Controllers\Admin\ModuleController::class, 'createSub']);
-    Route::resource('modules', App\Http\Controllers\Admin\ModuleController::class);
+    Route::resource('modules', App\Http\Controllers\Admin\ModuleController::class)->middleware(ModuleAccess::class);
     Route::resource('packages', App\Http\Controllers\Admin\PackageController::class);
 });

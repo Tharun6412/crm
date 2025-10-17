@@ -5,8 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 // Guest access
 Route::middleware('guest')->group(function(){
-    Route::get('login', [App\Http\Controllers\Auth\Authentication::class, 'login'])->name('login')->middleware(ModuleAccess::class);
-    Route::get('userLogin', [App\Http\Controllers\Auth\Authentication::class, 'index']);
+    Route::get('login', [App\Http\Controllers\Auth\Authentication::class, 'login'])->name('login');
     Route::post('login', [App\Http\Controllers\Auth\Authentication::class, 'store']);
     // Registration
     Route::get('register', [App\Http\Controllers\Auth\UserRegistration::class, 'index'])->name('register');

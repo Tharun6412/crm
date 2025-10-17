@@ -8,7 +8,7 @@
 
 @section('page-content')
     <div>
-        <h3>Module Tree</h3>
+        <h3>Modules Tree</h3>
         {{-- Modules display --}}
         @if ($modules->isNotEmpty())
             <ul class="tree">

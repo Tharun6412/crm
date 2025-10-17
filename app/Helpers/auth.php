@@ -10,7 +10,7 @@ use Illuminate\Support\Number;
  */
 if(!function_exists('isSuperAdmin')) {
     function isSuperAdmin() {
-        if(session()->get('user')['role'] == 1 OR in_array(1, session()->get('user')['roles'])) {
+        if(in_array(1, session()->get('user')['roles'])) {
             return true;
         }
         else {
@@ -24,21 +24,7 @@ if(!function_exists('isSuperAdmin')) {
  */
 if(!function_exists('isAdmin')) {
     function isAdmin() {
-        if(session()->get('user')['role'] == 2 OR in_array(2, session()->get('user')['roles'])) {
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
-}
-
-/**
- * CEO role, A custom role ondemand
- */
-if(!function_exists('isCeo')) {
-    function isCeo() {
-        if(session()->get('user')['role'] == 3) {
+        if(in_array(2, session()->get('user')['roles'])) {
             return true;
         }
         else {
