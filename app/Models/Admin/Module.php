@@ -76,12 +76,45 @@ class Module extends Model
      */
     public function recursiveActiveChilds()
     {
-        // return $this->children()->with('recursiveActiveChilds')->where('status', 1)->whereIn('id', session()->get('user')['modules']);
-        $q = $this->children()->with('recursiveActiveChilds')->where('status', 1);
-        // Get only allocated modules
-        if(isAdmin() OR isSuperAdmin()){/* No action */} else {
-            $q->whereIn('id', session()->get('user')['modules']);
+        return $this->children()->with('recursiveActiveChilds')->where('status', 1)->orderBy('position');
+    }
+
+    /**
+     * Get from child or leaf element to parent
+     */
+    public static function getParentTree($moduleIds)
+    {
+        $modules = Module::whereIn('id', $moduleIds)->where('status', 1)->orderBy('position')->get();
+        $allModules = collect($modules);
+
+        foreach ($modules as $module) {
+            $parent = $module->parent;
+            while ($parent) {
+                $allModules->push($parent);
+                $parent = $parent->parent;
+            }
         }
-        return $q->orderBy('position');
+
+        // Remove duplicates
+        return $allModules->unique('id')->values();
+    }
+
+    /**
+     * Create module tree from custom modules
+     */
+    public static function buildModuleTree($modules)
+    {
+        $modules = $modules->keyBy('id');
+        $tree = [];
+
+        foreach ($modules as $module) {
+            if ($module->parent_id && isset($modules[$module->parent_id])) {
+                $modules[$module->parent_id]->children[] = $module;
+            } else {
+                $tree[] = $module;
+            }
+        }
+
+        return $tree;
     }
 }

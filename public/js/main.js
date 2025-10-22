@@ -31,6 +31,27 @@ function unLoadModal () {
 		$("body").css("overflow", "auto");
 	}
 }
+
+// Load Bootstrap Offcanvas
+function loadCanvas(data) {
+	var canvasD = '<div class="offcanvas offcanvas-end" tabindex="-1" id="mycanvas">' + data + '</div>';
+	$('body').append(canvasD);
+	var myCanvas = new bootstrap.Offcanvas($("#mycanvas"), {backdrop: 'static'});
+	myCanvas.show();
+	const canvasE = document.getElementById('mycanvas');
+	canvasE.addEventListener('hidden.bs.offcanvas', event => {
+		setTimeout(() => {
+			unLoadCanvas();
+		}, 300);
+	})
+}
+
+// Unload Bootstrap Offcanvas
+function unLoadCanvas () {
+	$("#mycanvas").remove();
+	$(".offcanvas-backdrop").remove();
+}
+
 // Pre Loader
 function preLoader() {
 	var pre_loader = '<div class="spinner"><div class="pre-loader-position"><span class="loader-icon loader-logo"><span class="pre-loader"></span></span></div></div>';
@@ -42,6 +63,7 @@ function closePreLoader() {
 	$('.spinner').remove();
 	$('body').css('pointer-events', 'visible');
 }
+
 $(function(){
 	// Loader for every Ajax request
 	$.ajaxSetup({

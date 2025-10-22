@@ -41,4 +41,12 @@ class Role extends Model
     {
         return $this->belongsToMany(ModuleAction::class, 'adm_role_actions', 'role_id', 'module_action_id');
     }
+
+    /**
+     * Relation with pivot table user_roles
+     */
+    public function users(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'adm_user_roles', 'role_id', 'user_id');
+    }
 }

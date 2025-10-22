@@ -38,16 +38,18 @@
                     </li>
                 @endforeach
             @endisset ($modules)
-            <li class="side-nav-item">
-                <a href="{{ url('admin/modules') }}" class="side-nav-link">
-                    <i class="bi bi-gear"></i>
-                    <span>Module Administration</span>
-                </a>
-            </li>
+            @if (isAdmin() OR isSuperAdmin())
+                <li class="side-nav-item">
+                    <a href="{{ url('admin/modules') }}" class="side-nav-link">
+                        <i class="bi bi-gear"></i>
+                        <span>Module Administration</span>
+                    </a>
+                </li>
+            @endif
             <li class="side-nav-item">
                 <a href="{{ url('public') }}" class="side-nav-link">
-                    <i class="bi bi-megaphone"></i>
-                    <span>Public</span>
+                    <i class="bi bi-question-circle"></i>
+                    <span>Help</span>
                 </a>
             </li>
         </ul>

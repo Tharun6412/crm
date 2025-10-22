@@ -3,15 +3,16 @@
 namespace App\Models\Admin;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class District extends Model
+class Ca extends Model
 {
     /**
      * The table associated with the model
      * 
      * @var string
      */
-    protected $table = 'adm_districts';
+    protected $table = 'adm_ca';
 
     /**
      * The attributes that are mass assignable
@@ -21,11 +22,8 @@ class District extends Model
     protected $fillable = [
         'code',
         'name',
-        'display_name',
-        'cluster_id',
-        'state_id',
         'ga_id',
+        'district_id',
         'status',
-        'created_by',
     ];
 }

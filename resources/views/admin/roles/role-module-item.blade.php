@@ -18,7 +18,7 @@
                 <span>
             @endforeach
         @else
-            <span>No actions defined!</span>
+            <span class="badge text-bg-light">No actions defined!</span>
         @endif
         
         {{-- Recursive display with view --}}

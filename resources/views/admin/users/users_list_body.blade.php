@@ -81,9 +81,21 @@
                 <td>{{ $user->email }}</td>
                 <td>{{ $user->mobile }}</td>
                 <td>
-                    @isset($user->ga->name)
-                        {{ $user->ga->code . '-' . $user->ga->name }}
-                    @endisset
+                    @if ($user->ga->count() > 0)
+                        @foreach ($user->ga as $ga)
+                            @if ($loop->iteration == 1)
+                                <div class="btn-group w-100">
+                                    <button type="button" class="btn btn-outline-secondary btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                        {{ $ga->code . '-' . $ga->name }}
+                                    </button>
+                                    <ul class="dropdown-menu">                
+                            @else
+                                <li class="dropdown-item"><i class="bi bi-check2-square"></i>&nbsp;{{ $ga->code . '-' . $ga->name }}</li>
+                            @endif
+                        @endforeach
+                            </ul>
+                        </div>
+                    @endif
                 </td>
                 <td>
                     @isset($user->department)
@@ -91,9 +103,21 @@
                     @endisset
                 </td>
                 <td>
-                    @isset($user->role->name)
-                        {{ $user->role->name }}
-                    @endisset
+                    @if ($user->roles->count() > 0)
+                        @foreach ($user->roles as $role)
+                            @if ($loop->iteration == 1)
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-outline-primary btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                        {{ $role->name }}
+                                    </button>
+                                    <ul class="dropdown-menu">                
+                            @else
+                                <li class="dropdown-item"><i class="bi bi-check2-square"></i>&nbsp;{{ $role->name }}</li>
+                            @endif
+                        @endforeach
+                            </ul>
+                        </div>
+                    @endif
                 </td>
                 <td>
                     @if ($user->ga_restriction)

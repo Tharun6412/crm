@@ -9,14 +9,14 @@
             <div class="row mb-2">
                 <label for="" class="col-sm-2 text-end">Emp ID:</label>
                 <div class="col-sm-4">{{ $user->emp_id }}</div>
-                <label for="" class="col-sm-2 text-end">Phone:</label>
-                <div class="col-sm-4">{{ $user->mobile }}</div>
-            </div>
-            <div class="row mb-2">
                 <label for="" class="col-sm-2 text-end">Email:</label>
                 <div class="col-sm-4">{{ $user->email }}</div>
-                <label for="" class="col-sm-2 text-end">DOB:</label>
-                <div class="col-sm-4">{{ (!empty($user->dob)) ? $user->dob->format('d.m.Y') : '-' }}</div>
+            </div>
+            <div class="row mb-2">
+                {{-- <label for="" class="col-sm-2 text-end">Phone:</label>
+                <div class="col-sm-4">{{ $user->mobile }}</div> --}}
+                {{-- <label for="" class="col-sm-2 text-end">DOB:</label>
+                <div class="col-sm-4">{{ (!empty($user->dob)) ? $user->dob->format('d.m.Y') : '-' }}</div> --}}
             </div>
             <div id="user-edit-success">
             <form action="{{ url('admin/users/' . $user->id) }}" method="POST" id="user-edit-form">
@@ -34,6 +34,16 @@
                     </div>
                 </div>
                 <div class="row mb-2">
+                    <label for="mobile" class="col-sm-2 col-form-label text-end">Phone</label>
+                    <div class="col-sm-4">
+                        <input type="text" name="mobile" id="mobile" class="form-control" value="{{ $user->mobile }}">
+                    </div>
+                    <label for="dob" class="col-sm-2 col-form-label text-end">DOB</label>
+                    <div class="col-sm-4">
+                        <input type="text" name="dob" id="dob" class="form-control" value="{{ (!empty($user->dob)) ? $user->dob->format('d-m-Y') : '' }}" placeholder="DD-MM-YYY">
+                    </div>
+                </div>
+                {{-- <div class="row mb-2">
                     <label for="ga_id" class="col-sm-2 col-form-label text-end">Geo Area</label>
                     <div class="col-sm-4">
                         <select name="ga_id" id="ga_id" class="form-select">
@@ -52,7 +62,7 @@
                             @endforeach
                         </select>
                     </div>
-                </div>
+                </div> --}}
                 <div class="row mb-3">
                     <label for="department_id" class="col-sm-2 col-form-label text-end">Department</label>
                     <div class="col-sm-4">
@@ -97,18 +107,40 @@
                 </div>
                 <div class="row">
                     <div class="col-sm-2 text-end">
-                        <h5>Additional roles</h5>
+                        <h5>Roles</h5>
                     </div>
                     <div class="col-sm-10">
                         <div class="row row-cols-3">
                             @php
-                                $user_roles = explode(',', $user->role_ids);
+                                $user_roles = $user->roles->pluck('id')->toArray();
                             @endphp
                             @foreach ($roles as $role)
                                 <div class="col">
                                     <div class="form-check">
-                                        <input type="checkbox" name="roles[{{ $role->id }}]" id="edit_role_{{ $role->id }}" class="form-check-input" value="{{ $role->id }}" @checked(in_array($role->id, $user_roles)) @disabled($user->role_id == $role->id)>
+                                        <input type="checkbox" name="roles[{{ $role->id }}]" id="edit_role_{{ $role->id }}" class="form-check-input" value="{{ $role->id }}" @checked(in_array($role->id, $user_roles))>
                                         <label for="edit_role_{{ $role->id }}" class="form-check-label">{{ $role->name }}</label>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                {{-- Geo Areas --}}
+                <div class="row">
+                    <div class="col-sm-2 text-end">
+                        <h5>Geo Areas</h5>
+                    </div>
+                    <div class="col-sm-10">
+                        <div class="row row-cols-3">
+                            @php
+                                $user_gas = $user->ga->pluck('id')->toArray();
+                            @endphp
+                            @foreach ($geo_areas as $ga)
+                                <div class="col">
+                                    <div class="form-check">
+                                        <input type="checkbox" name="geo_areas[{{ $ga->id }}]" id="edit_ga_{{ $ga->id }}" class="form-check-input" value="{{ $ga->id }}" @checked(in_array($ga->id, $user_gas))>
+                                        <label for="edit_ga_{{ $ga->id }}" class="form-check-label">{{ $ga->name }}</label>
                                     </div>
                                 </div>
                             @endforeach
@@ -128,3 +160,4 @@
     </div>
 </div>
 @include('scripts.ajax-form-submit', ['form' => 'user-edit'])
+@include('scripts.datepicker', ['list' => ['dob']])

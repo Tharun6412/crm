@@ -4,6 +4,8 @@ namespace App\Models\Admin;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -52,6 +54,7 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
+            'dob' => 'date',
             'password' => 'hashed',
         ];
     }
@@ -59,8 +62,24 @@ class User extends Authenticatable
     /**
      * Relation with User roles
      */
-    public function roles(): HasMany
+    public function department(): BelongsTo
     {
-        return $this->hasMany(UserRole::class);
+        return $this->belongsTo(Department::class);
+    }
+
+    /**
+     * Relation with roles table via pivote user_roles
+     */
+    public function roles(): BelongsToMany
+    {
+        return $this->belongsToMany(Role::class, 'adm_user_roles', 'user_id', 'role_id');
+    }
+
+    /**
+     * Relation with geo areas table via pivote user_ga
+     */
+    public function ga(): BelongsToMany
+    {
+        return $this->belongsToMany(Ga::class, 'adm_user_ga', 'user_id', 'ga_id');
     }
 }

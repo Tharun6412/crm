@@ -11,7 +11,7 @@ class State extends Model
      * 
      * @var string
      */
-    protected $table = 'adm_state';
+    protected $table = 'adm_states';
 
     /**
      * The attributes that are mass assignable

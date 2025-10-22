@@ -4,6 +4,7 @@ namespace App\Models\Admin;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Ga extends Model
 {
@@ -20,16 +21,14 @@ class Ga extends Model
      * @var array <int string>
      */
     protected $fillable = [
+        'code',
+        'name',
+        'hes_code',
         'state_id',
         'cluster_id',
-        'code',
-        'hes_code',
-        'code_backup',
-        'name',
-        'cng_counter',
         'status',
-        'added_at',
-        'added_by',
+        'position',
+        'created_at',
     ];
 
     /**
@@ -38,7 +37,7 @@ class Ga extends Model
     public function casts()
     {
         return [
-            'added_at' => 'datetime',
+            'created_at' => 'datetime',
         ];
     }
 
@@ -56,5 +55,13 @@ class Ga extends Model
     public function cluster(): BelongsTo
     {
         return $this->belongsTo(Cluster::class);
+    }
+
+    /**
+     * Relation with pivot table user_ga
+     */
+    public function user(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'adm_user_ga', 'ga_id', 'user_id');
     }
 }

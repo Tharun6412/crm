@@ -7,6 +7,7 @@ use App\Models\Admin\Department;
 use App\Models\Admin\Ga;
 use App\Models\Admin\Role;
 use App\Models\Admin\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\View\View;
@@ -33,13 +34,17 @@ class UserController extends Controller
             });
         })
         ->when($request->has('geo_area'), function($q) use($request) {
-            return $q->whereIn('ga_id', $request->geo_area);
+            $q->whereHas('ga', function($q) use($request) {
+                return $q->whereIn('ga_id', $request->geo_area);
+            });
         })
         ->when($request->has('departments'), function($q) use ($request) {
             return $q->whereIn('department_id', $request->departments);
         })
         ->when($request->has('roles'), function ($q) use($request) {
-            return $q->whereIn('role_id', $request->roles);
+            $q->whereHas('roles', function($q) use($request) {
+                return $q->whereIn('role_id', $request->roles);
+            });
         })
         ->when($request->has('status'), function($q) use($request) {
             return $q->whereIn('status', $request->status);
@@ -109,24 +114,42 @@ class UserController extends Controller
         $request->validate([
             'first_name' => 'required',
             'last_name' => 'required',
-            'role_id' => 'required',
+            'mobile' => 'required',
             'department_id' => 'required',
-            'ga_id' => 'required',
             'status' => 'required',
         ]);
 
         // Update
-        $update_user = User::where('id', $id)->update([
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
-            'role_id' => $request->role_id,
-            'role_ids' => ($request->has('roles')) ? implode(',', $request->roles) : null,
-            'department_id' => $request->department_id,
-            'ga_id' => $request->ga_id,
-            'status' => $request->status,
-            'cluster_restriction' => $request->cluster_restriction,
-            'ga_restriction' => $request->ga_restriction,
+        $user = User::findOrFail($id);
+        $user->first_name = $request->first_name;
+        $user->last_name = $request->last_name;
+        $user->mobile = $request->mobile;
+        $user->department_id = $request->department_id;
+        $user->status = $request->status;
+        $user->dob = ($request->dob) ? Carbon::createFromFormat('d-m-Y', $request->dob) : null;
+        $user->save();
+
+        // $update_user = User::where('id', $id)->update([
+        //     'first_name' => $request->first_name,
+        //     'last_name' => $request->last_name,
+        //     'mobile' => $request->mobile,
+        //     'department_id' => $request->department_id,
+        //     'status' => $request->status,
+        //     'dob' => ($request->dob) ? Carbon::createFromFormat('d-m-Y', $request->dob) : null,
+        //     // 'role_id' => $request->role_id,
+        //     // 'role_ids' => ($request->has('roles')) ? implode(',', $request->roles) : null,
+        //     // 'ga_id' => $request->ga_id,
+        //     // 'cluster_restriction' => $request->cluster_restriction,
+        //     // 'ga_restriction' => $request->ga_restriction,
+        // ]);
+
+        // Sync role actions
+        $validated = $request->validate([
+            'roles' => 'array',
+            'geo_areas' => 'array',
         ]);
+        $user->roles()->sync($validated['roles'] ?? []);
+        $user->ga()->sync($validated['geo_areas'] ?? []);
         
         // Response
         return response()->json(['success' => 'User details updated successfully!']);

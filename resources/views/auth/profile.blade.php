@@ -39,9 +39,7 @@
                     <dl class="d-flex">
                         <dt>Role:</dt>
                         <dd class="ps-2 mb-0">
-                            @isset($user->role->name)
-                                {{ $user->role->name }}
-                            @endisset
+                            {{ $user->roles->pluck('name') }}
                         </dd class="ps-2 mb-0">
                     </dl>
                     <dl class="d-flex">

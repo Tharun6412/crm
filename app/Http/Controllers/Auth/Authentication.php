@@ -41,7 +41,7 @@ class Authentication extends Controller
         // Get User roles and respective module actions
         $auth_user = Auth::user();
         // Get user roles
-        $roles = $auth_user->roles->pluck('role_id')->toArray();
+        $roles = $auth_user->roles->pluck('id')->toArray();
         // Get Module actions from roles
         $module_actions = RoleAction::whereIn('role_id', $roles)->get()->pluck('module_action_id')->toArray();
 

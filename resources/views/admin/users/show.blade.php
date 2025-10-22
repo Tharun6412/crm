@@ -32,9 +32,7 @@
                             <dl class="d-flex">
                                 <dt>Role:</dt>
                                 <dd class="ps-2 mb-0">
-                                    @isset($user->role->name)
-                                        {{ $user->role->name }}
-                                    @endisset
+                                        {{ $user->roles->pluck('name') }}
                                 </dd>
                             </dl>                            
                             <dl class="d-flex">
@@ -48,9 +46,7 @@
                             <dl class="d-flex">
                                 <dt>Geo area:</dt>
                                 <dd class="ps-2 mb-0">
-                                    @isset($user->ga->name)
-                                        {{ $user->ga->code . '-' . $user->ga->name }}
-                                    @endisset
+                                    {{ $user->ga->pluck("name") }}
                                 </dd>
                             </dl>
                             <dl class="d-flex">
