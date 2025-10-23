@@ -3,6 +3,7 @@
 namespace App\Models\Admin;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Module extends Model
@@ -34,7 +35,7 @@ class Module extends Model
     /**
      * Parent-child relationship
      */
-    public function parent()
+    public function parent(): BelongsTo
     {
         return $this->belongsTo(Module::class, 'parent_id');
     }
@@ -42,7 +43,7 @@ class Module extends Model
     /**
      * 
      */
-    public function children()
+    public function children(): HasMany
     {
         return $this->hasMany(Module::class, 'parent_id');
     }
@@ -53,6 +54,14 @@ class Module extends Model
     public function recursiveChilds()
     {
         return $this->children()->with('recursiveChilds')->orderBy('position');
+    }
+    
+    /**
+     * Recursive active childs
+    */
+    public function recursiveActiveChilds()
+    {
+        return $this->children()->with('recursiveActiveChilds')->where('status', 1)->orderBy('position');
     }
 
     /**
@@ -69,52 +78,5 @@ class Module extends Model
     public function moduleActions(): HasMany
     {
         return $this->hasMany(ModuleAction::class);
-    }
-
-    /**
-     * Recursive active childs
-     */
-    public function recursiveActiveChilds()
-    {
-        return $this->children()->with('recursiveActiveChilds')->where('status', 1)->orderBy('position');
-    }
-
-    /**
-     * Get from child or leaf element to parent
-     */
-    public static function getParentTree($moduleIds)
-    {
-        $modules = Module::whereIn('id', $moduleIds)->where('status', 1)->orderBy('position')->get();
-        $allModules = collect($modules);
-
-        foreach ($modules as $module) {
-            $parent = $module->parent;
-            while ($parent) {
-                $allModules->push($parent);
-                $parent = $parent->parent;
-            }
-        }
-
-        // Remove duplicates
-        return $allModules->unique('id')->values();
-    }
-
-    /**
-     * Create module tree from custom modules
-     */
-    public static function buildModuleTree($modules)
-    {
-        $modules = $modules->keyBy('id');
-        $tree = [];
-
-        foreach ($modules as $module) {
-            if ($module->parent_id && isset($modules[$module->parent_id])) {
-                $modules[$module->parent_id]->children[] = $module;
-            } else {
-                $tree[] = $module;
-            }
-        }
-
-        return $tree;
     }
 }

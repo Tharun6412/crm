@@ -4,6 +4,7 @@ namespace App\View\Components\Layouts;
 
 use App\Models\Admin\Module;
 use App\Models\Admin\ModuleAction;
+use App\Services\MenuBuilder;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
@@ -31,14 +32,9 @@ class Navigation extends Component
         else {
             // Get module Ids from module actions from session
             $module_ids = ModuleAction::selectRaw('DISTINCT(module_id)')->whereIn('id', session('user')['module_actions'])->pluck('module_id')->toArray();
-            $modules = [];
-            if($module_ids) {
-                $modules_p = Module::getParentTree($module_ids);
-                // dd($modules_p);
-                $modules = Module::buildModuleTree($modules_p);
-            }
+            $modules = MenuBuilder::build($module_ids);
         }
         // Response
-        return view('components.layouts.navigation', ['modules' => $modules]);
+        return view('components.layouts.user-navigation', ['modules' => $modules]);
     }
 }
