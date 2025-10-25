@@ -17,38 +17,31 @@ use Illuminate\Validation\Rule;
 
 class ProspectDateChangeRequestController extends Controller
 {
+    public function index(Request $request)
+    {
+        $date_requests = ProspectDateChangeRequest::orderBy('id', 'desc')->limit(50)->get();
+        return view('spot.prospects.date-request.list-body', ['date_requests' => $date_requests]);
+    }
+    /**
+     * To Create a Date Request
+     */
     public function create(Request $request, $id)
     {
         $prospect = Prospects::find($id);
-        $prospect_documents = ProspectDocuments::where('prospect_id', $id)->get();
-        $prospect_status_history = ProspectStatusHistory::where('prospect_id', $id)->get();
-        $prospect_date_change_history = ProspectDateChangeRequest::where('prospect_id',$id)->orderByDesc('id')->get();
         $active_requests = ProspectDateChangeRequest::where('prospect_id', $id)->where('status', 0)->latest()->first();
-        $prospect_pipeline = ProspectPipeline::where('prospect_id', $id)->orderByDesc('id')->get();
-        $prospect_comments = ProspectComments::where('prospect_id', $id)->orderByDesc('id')->get();
-        if($request->type == "7") {
+        if($request->type == "4") {
             return view('spot.prospects.date-request.edit', [
-                'type' => 7,
+                'type' => 4,
                 'id' => $id,
                 'prospect' => $prospect,
-                'prospect_documents' => $prospect_documents,
-                'prospect_status_history' => $prospect_status_history,
-                'prospect_date_change_history' => $prospect_date_change_history,
                 'active_requests' => $active_requests,
-                'prospect_pipeline' => $prospect_pipeline,
-                'prospect_comments' => $prospect_comments,
             ]);    
         }
         return view('spot.prospects.show', [
-            'type' => 7,
+            'type' => 4,
             'id' => $id,
             'prospect' => $prospect,
-            'prospect_documents' => $prospect_documents,
-            'prospect_status_history' => $prospect_status_history,
-            'prospect_date_change_history' => $prospect_date_change_history,
             'active_requests' => $active_requests,
-            'prospect_pipeline' => $prospect_pipeline,
-            'prospect_comments' => $prospect_comments,
         ]);
     }
 
@@ -127,8 +120,6 @@ class ProspectDateChangeRequestController extends Controller
      */
     public function reject(Request $request)
     {
-        // Get the Data By ID
-        $dateRequest = ProspectDateChangeRequest::find($request->id);
         // Update Date Request
         ProspectDateChangeRequest::where('id', $request->id)->update([
             'status' => 2,

@@ -2,8 +2,8 @@
 
 namespace App\Models\Spot;
 
+use App\Models\Admin\User;
 use App\Models\DocumentCentre\Documents;
-use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -50,4 +50,13 @@ class ProspectComments extends Model
     {
         return $this->belongsTo(User::class, 'created_by')->withDefault();
     }
+
+    /**
+     * Relation with Prospect
+     */
+    public function  prospects():BelongsTo
+    {
+        return $this->belongsTo(Prospects::class, 'prospect_id')->withDefault();
+    }
+
 }

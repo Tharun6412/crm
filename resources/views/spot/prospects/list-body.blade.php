@@ -1,3 +1,11 @@
+<div>
+    @if (session('success'))
+        <div class="alert alert-success alert-dismissible fade show">
+            <strong><i class="bi bi-check2-circle"></i>&nbsp;Success</strong>&nbsp;{{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+</div>
 <form id="prospects-search-form" action="{{ url('spot/prospects') }}" method="GET">
     <div class="d-flex align-items-center justify-content-between pb-2 flex-wrap">
         <div class="d-flex align-items-center gap-2 flex-wrap">
@@ -30,35 +38,54 @@
     <!-- Display prospects list -->
     <table class="table table-bordered page-sort">
         <thead>
-            <tr class="spot-table-bg">
+            <tr>
                 <th nowrap>S No.</th>
                 <th nowrap>
-                    <a href="javascript:void(0)">
-                        GA</a>
+                    <a href="{{ $prospects->appends(['sortBy' => 'ga_id','sortOr' => $sort_order_inverse])->url($prospects->currentPage()) }}">GA
+                        @if ($sort_by == 'ga_id')
+                            <i class="bi {{ $sort_icon }}"></i>
+                        @endif
+                    </a>
                 </th>
                 <th nowrap>
-                    <a href="javascript:void(0)">
+                    <a href="{{ $prospects->appends(['sortBy' => 'name','sortOr' => $sort_order_inverse])->url($prospects->currentPage()) }}">
                         Prospect Name
+                        @if ($sort_by == 'name')
+                            <i class="bi {{ $sort_icon }}"></i>
+                        @endif
                     </a>
                 </th>
                 <th nowrap>
-                    <a href="javascript:void(0)">
+                    <a href="{{ $prospects->appends(['sortBy' => 'industrial_area_id','sortOr' => $sort_order_inverse])->url($prospects->currentPage()) }}">
                         Industrial Area
+                        @if ($sort_by == 'industrial_area_id')
+                            <i class="bi {{ $sort_icon }}"></i>
+                        @endif
                     </a>
                 </th>
                 <th nowrap>
-                    <a href="javascript:void(0)">
+                    <a href="{{ $prospects->appends(['sortBy' => 'fuel_id','sortOr' => $sort_order_inverse])->url($prospects->currentPage()) }}">
                         Current Fuel
+                        @if ($sort_by == 'fuel_id')
+                            <i class="bi {{ $sort_icon }}"></i>
+                        @endif
                     </a>
                 </th>
                 <th class="text-end">
-                    <a href="javascript:void(0)">
+                    <a href="{{ $prospects->appends(['sortBy' => 'potential','sortOr' => $sort_order_inverse])->url($prospects->currentPage()) }}">
                         Natural Gas<br/>Potential (SCMD)
+                        @if ($sort_by == 'potential')
+                            <i class="bi {{ $sort_icon }}"></i>
+                        @endif
                     </a>
                 </th>
                 <th nowrap>
-                    <a href="javascript:void(0)">
-                        Gas service<br/>expected date</a>
+                    <a href="{{ $prospects->appends(['sortBy' => 'expected_date','sortOr' => $sort_order_inverse])->url($prospects->currentPage()) }}">
+                        Gas service<br/>expected date
+                        @if ($sort_by == 'expected_date')
+                            <i class="bi {{ $sort_icon }}"></i>
+                        @endif
+                    </a>
                 </th>
                 <th nowrap class="text-center">
                     <a href="javascript:void(0)">
@@ -69,8 +96,12 @@
                         Sub Stage</a>
                 </th>
                 <th nowrap class="text-center">
-                    <a href="javascript:void(0)">
-                        Last Status date</a>
+                    <a href="{{ $prospects->appends(['sortBy' => 'status_date','sortOr' => $sort_order_inverse])->url($prospects->currentPage()) }}">
+                        Last Status date
+                        @if ($sort_by == 'status_date')
+                            <i class="bi {{ $sort_icon }}"></i>
+                        @endif
+                    </a>
                 </th>
                 <th nowrap class="text-center">Actions</th>
             </tr>
@@ -87,7 +118,7 @@
                         <td>{{ $prospect->industrialArea->name }}</td>
                         <td>{{ $prospect->fuelType->name }}</td>
                         <td>{{ $prospect->potential }}</td>
-                        <td>{{ $prospect->expected_date->format('d-m-Y') }}</td>
+                        <td>{{ $prospect->expected_date?->format('d-m-Y') }}</td>
                         <td>{{ $prospect->stageType->name }}</td>
                         <td>{{ $prospect->subStage->name }}</td>
                         <td>{{ $prospect->status_date->format('d-m-Y') }}</td>
@@ -113,7 +144,7 @@
                                         </a>
                                     </li>
                                     <li>
-                                        <a class="dropdown-item link-modal" href="{{ url('spot/prospects/editStatus/'.$prospect->id) }}">
+                                        <a class="dropdown-item link-modal" href="{{ url('spot/prospectStatus/editStatus/'.$prospect->id) }}">
                                             <i class="bi bi-check2-circle"></i>&nbsp;Update Status
                                         </a>
                                     </li>
@@ -128,17 +159,17 @@
                                         </a>
                                     </li>
                                     <li>
-                                        <a class="dropdown-item link-modal" href="{{ url('spot/prospects/holdStatus/'.$prospect->id) }}">
+                                        <a class="dropdown-item link-modal" href="{{ url('spot/prospectStatus/hold/'.$prospect->id) }}">
                                             <i class="bi bi-ban"></i>&nbsp;Hold
                                         </a>
                                     </li>
                                     <li>
-                                        <a class="dropdown-item link-modal" href="{{ url('spot/prospects/cancelStatus/'.$prospect->id) }}">
+                                        <a class="dropdown-item link-modal" href="{{ url('spot/prospectStatus/cancel/'.$prospect->id) }}">
                                             <i class="bi bi-x-circle"></i>&nbsp;Cancel
                                         </a>
                                     </li>
                                     <li>
-                                        <a class="dropdown-item" href="javascript:void(0)" onclick="deleteProspectById(230)">
+                                        <a class="dropdown-item ajax-link-file-delete" href="{{ url('spot/prospects/'.$prospect->id) }}">
                                             <i class="bi bi-trash"></i>&nbsp;Delete
                                         </a>
                                     </li>
@@ -155,7 +186,21 @@
         </tbody>
     </table>
     <div class="row">
-        <div class="col-sm-6"></div>
+        <div class="col-sm-6">
+            <div class="row align-items-center g-1">
+                <div class="col-auto">
+                    <label for="form-label">Records</label>
+                </div>
+                <div class="col-auto">
+                    <select name="records" id="records" class="form-select" onchange="javascript:$('#prospects-search-form').submit();">
+                        <option value="10" @selected(request()->get('records') == 10)>10</option>
+                        <option value="20" @selected(request()->get('records') == 20)>20</option>
+                        <option value="50" @selected(request()->get('records') == 50)>50</option>
+                        <option value="100" @selected(request()->get('records') == 100)>100</option>
+                    </select>
+                </div>
+            </div>
+        </div>
         {{--  Reset pagination parameters for paginator --}}
         @php
             $prospects->appends(['sortBy' => $sort_by, 'sortOr' => $sort_order]);
@@ -168,4 +213,6 @@
 </form>
 @include('scripts.link-modal')
 @include('scripts.ajax-form-search', ['form' => 'prospects'])
+@include('scripts.ajax-link-file-delete')
+
 

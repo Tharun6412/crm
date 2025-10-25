@@ -3,7 +3,7 @@
     <div class="clearfix mb-2">
         <h4 class="float-start">Status History</h4>
         <div class="float-end">
-            <a class="btn btn-sm btn-success ajax-link" href="{{ url('spot/prospects/editStatus/'.$prospect->id.'?type=1') }}"><i class="bi bi-check2-circle"></i>&nbsp;Add / Update Status</a>
+            <a class="btn btn-sm btn-success ajax-link" href="{{ url('spot/prospectStatus/editStatus/'.$prospect->id.'?type=1') }}"><i class="bi bi-check2-circle"></i>&nbsp;Add / Update Status</a>
         </div>
     </div>
     <a class="visually-hidden" href="{{ url('spot/prospects/'.$prospect->id.'?reload=true&type=1') }}" data-custom-attr="value" id="reload-status">Hidden Link</a>
@@ -23,8 +23,8 @@
                 @php
                     $i = 1;
                 @endphp
-                @if ($prospect_status_history->count() > 0)
-                    @foreach ($prospect_status_history as $history)
+                @if ($prospect->statusHistory->count() > 0)
+                    @foreach ($prospect->statusHistory as $history)
                         <tr>
                             <td class="text-center">{{ $i++ }}</td>
                             <td class="align-middle">{{ $history->status->name }}</td>
@@ -47,7 +47,7 @@
     function getSubStagesByStage(stage)
     {
         let options = '<option value="">select sub stage</option>';
-        $.get("{{ url('spot/prospects/getSubStagesByStage') }}", {stage_id : stage}, function(data) {
+        $.get("{{ url('spot/prospectStatus/getSubStagesByStage') }}", {stage_id : stage}, function(data) {
             $.each(data.sub_stages, function(index, stage){
                 options += `<option value="${stage.id}">${stage.name}</option>`;
             });
@@ -57,7 +57,7 @@
     // Get Status By Sub Stage Id
     function getDetailsBySubStage(sub_stage, prospect_id) 
     {
-        $.get("{{ url('spot/prospects/getDetailsBySubStage') }}", {sub_stage_id : sub_stage, prospect_id : prospect_id}, function(data) {
+        $.get("{{ url('spot/prospectStatus/getDetailsBySubStage') }}", {sub_stage_id : sub_stage, prospect_id : prospect_id}, function(data) {
             $('#subStages_body').html(data);
         });
     }

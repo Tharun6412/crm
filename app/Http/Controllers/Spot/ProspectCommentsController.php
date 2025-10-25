@@ -10,6 +10,11 @@ use Illuminate\Support\Facades\Auth;
 class ProspectCommentsController extends Controller
 {
     // Index Method
+    public function index()
+    {
+        $comments = ProspectComments::orderBy('id', 'desc')->limit(50)->get();
+        return view('spot.prospects.comments.list', ['comments' => $comments]);
+    }
 
     /**
      * To insert a Comment

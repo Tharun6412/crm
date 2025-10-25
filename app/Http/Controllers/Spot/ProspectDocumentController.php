@@ -29,34 +29,18 @@ class ProspectDocumentController extends Controller
     {
         $document_types = DocumentTypes::all();
         $prospect = Prospects::find($id);
-        $prospect_documents = ProspectDocuments::where('prospect_id', $id)->get();
-        $prospect_status_history = ProspectStatusHistory::where('prospect_id', $id)->get();
-        $prospect_date_change_history = ProspectDateChangeRequest::where('prospect_id',$id)->orderByDesc('id')->get();
-        $prospect_pipeline = ProspectPipeline::where('prospect_id', $id)->orderByDesc('id')->get();
-        $prospect_comments = ProspectComments::where('prospect_id', $id)->orderByDesc('id')->get();
-        if($request->type == "8") {
+        if($request->type == "2") {
             return view('spot.prospects.documents.create', [
                 'document_types' => $document_types,
-                'type' => 8,
+                'type' => 2,
                 'id' => $id,
-                'prospect' => $prospect,
-                'prospect_documents' => $prospect_documents,
-                'prospect_status_history' => $prospect_status_history,
-                'prospect_date_change_history' => $prospect_date_change_history,
-                'prospect_pipeline' => $prospect_pipeline,
-                'prospect_comments' => $prospect_comments,
             ]);    
         }
         return view('spot.prospects.show', [
             'document_types' => $document_types,
-            'type' => 8,
+            'type' => 2,
             'id' => $id,
-            'prospect' => $prospect,
-            'prospect_documents' => $prospect_documents,
-            'prospect_status_history' => $prospect_status_history,
-            'prospect_date_change_history' => $prospect_date_change_history,
-            'prospect_pipeline' => $prospect_pipeline,
-            'prospect_comments' => $prospect_comments,
+            'prospect' => $prospect
         ]);
     }
 
@@ -80,5 +64,20 @@ class ProspectDocumentController extends Controller
         ]);
         // Session::flash('success', 'Document Details Added successfully');
         return response()->json(['success' => 'Document Details Added Successfully']);
+    }
+    /**
+     * To delete the Document
+     */
+    public function destroy($id)
+    {
+        $document = ProspectDocuments::find($id);
+        if($document)
+        {
+            // Unlinking the Document
+            DocumentUpload::delete($document->doc_file_id);
+            $document->delete();
+            Session::flash('doc_success', 'Record Deleted Successfully');
+            // return response()->json(['success' => 'Record Deleted Successfully']);
+        }
     }
 }

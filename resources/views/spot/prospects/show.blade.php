@@ -12,13 +12,17 @@
                         @case(1)
                             @include('spot.prospects.status-history.edit')
                             @break
-                        @case(7)
-                            @include('spot.prospects.date-request.edit')
-                            @break
-                        @case(8)
+                        @case(2)
                             @include('spot.prospects.documents.create')
                             @break
-                        @case(2)
+                        @case(4)
+                            @include('spot.prospects.date-request.edit')
+                            @break
+                        @case(6)
+                            @include('spot.prospects.status-history.hold')
+                            @break
+                        @case(7)
+                            @include('spot.prospects.status-history.cancel')
                             @break
                         @default
                     @endswitch
@@ -35,31 +39,28 @@
                                         <td width="270" class="text-end">Prospect Code</td>
                                         <td width="1%">:</td>
                                         <td>{{ $prospect->code }}</td>
-
                                     </tr>
                                     <tr>
                                         <td width="150" class="text-end">Prospect Name</td>
                                         <td width="1%">:</td>
                                         <td>{{ $prospect->name }}</td>
-
                                     </tr>
                                     <tr>
                                         <td class="text-end">Prospect Type</td>
                                         <td>:</td>
-                                        <td>{{ $prospect->segment_id }}</td>
-
+                                        @if (!empty($prospect->segment_id))
+                                            <td>{{ $prospect->segment_id == "1" ? "Commercial" : "Industrial" }}</td>
+                                        @endif
                                     </tr>
                                     <tr>
                                         <td class="text-end">Industrial Area</td>
                                         <td>:</td>
                                         <td>{{ $prospect->industrialArea->name }}</td>
-
                                     </tr>
                                     <tr>
                                         <td class="text-end">Zone (GA)</td>
                                         <td>:</td>
                                         <td>{{ $prospect->zone }}</td>
-
                                     </tr>
                                     <tr>
                                         <td class="text-end">Segment </td>
@@ -97,7 +98,7 @@
                                     <tr>
                                         <td class="text-end">Gas Service Expected Date</td>
                                         <td>:</td>
-                                        <td>{{ $prospect->expected_date->format('d-m-Y') }}</td>
+                                        <td>{{ $prospect->expected_date?->format('d-m-Y') }}</td>
                                     </tr>
                                     <tr>
                                         <td class="text-end">NG Pipeline available at the Industrial gate?</td>
@@ -218,7 +219,7 @@
                 @include('spot.prospects.status-history.list')
             </div>
             <div id="comments">
-                @include('spot.prospects.comments')
+                @include('spot.prospects.comments.comments')
             </div>
         </div>
         <div class="modal-footer">
@@ -226,5 +227,4 @@
         </div>
     </div>
 </div>
-@include('scripts.ajax-link', ['div' => 'action-type'])
 

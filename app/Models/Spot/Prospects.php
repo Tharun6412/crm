@@ -8,9 +8,10 @@ use App\Models\Admin\FuelTypes;
 use App\Models\Admin\Ga;
 use App\Models\Admin\IndustrialAreas;
 use App\Models\Admin\State;
-use App\Models\User;
+use App\Models\Admin\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Prospects extends Model
 {
@@ -39,7 +40,7 @@ class Prospects extends Model
         'notes',
         'stage',
         'sub_stage_id',
-        'status',
+        'status_id',
         'status_date',
         'created_by',
     ];
@@ -126,6 +127,45 @@ class Prospects extends Model
      */
     public function statusType():BelongsTo
     {
-        return $this->belongsTo(Status::class, 'status')->withDefault();
+        return $this->belongsTo(Status::class, 'status_id')->withDefault();
+    }
+
+    /**
+     * Prospect Documents Relation
+     */
+    public function documents():HasMany
+    {
+        return $this->hasMany(ProspectDocuments::class, 'prospect_id', 'id')->latest();
+    }
+
+    /**
+     * Prospect Date Change Requests
+     */
+    public function dateChangeHistory():HasMany
+    {
+        return $this->hasMany(ProspectDateChangeRequest::class, 'prospect_id', 'id')->latest();
+    }
+
+    /**
+     * Prospect Status Relation
+     */
+    public function statusHistory():HasMany
+    {
+        return $this->hasMany(ProspectStatusHistory::class, 'prospect_id', 'id')->latest();
+    }
+
+    /**
+     * Prospect Comments
+     */
+    public function commentsHistory():HasMany
+    {
+        return $this->hasMany(ProspectComments::class, 'prospect_id', 'id')->latest();
+    }
+    /**
+     * Prospect PipeLine
+     */
+    public function PipeLineHistory():HasMany
+    {
+        return $this->hasMany(ProspectPipeline::class, 'prospect_id', 'id')->latest();
     }
 }

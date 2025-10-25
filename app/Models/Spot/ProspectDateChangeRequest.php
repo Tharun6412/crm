@@ -3,7 +3,7 @@
 namespace App\Models\Spot;
 
 use App\Models\DocumentCentre\Documents;
-use App\Models\User;
+use App\Models\Admin\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -66,5 +66,13 @@ class ProspectDateChangeRequest extends Model
     public function approvedBy() : BelongsTo
     {
         return $this->belongsTo(User::class, 'approved_by')->withDefault();
+    }
+
+    /**
+     * Relation with prospects
+     */
+    public function prospects() : BelongsTo
+    {
+        return $this->belongsTo(Prospects::class, 'prospect_id')->withDefault();
     }
 }

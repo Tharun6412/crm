@@ -11,10 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
+        // Document types
+        Schema::create('dc_types', function (Blueprint $table) {
+            $table->id();
+            $table->string('name', length: 90);
+            $table->timestamps();
+        });
         // Documents
         Schema::create('dc_files', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('dc_type_id')->index()->nullable()->constrained(table: 'spot_document_types')->noActionOnUpdate()->noActionOnDelete();
+            $table->foreignId('dc_type_id')->index()->nullable()->constrained(table: 'dc_types')->noActionOnUpdate()->noActionOnDelete();
             $table->string('doc_number', length: 32)->nullable();
             $table->string('disk', length: 16)->nullable();
             $table->string('file_name_original', length: 225)->nullable();

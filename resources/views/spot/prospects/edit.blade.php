@@ -106,7 +106,7 @@
                         <label class="col-form-label col-sm-3 text-end">Expected date&nbsp;<span class="error text-danger"></span>&nbsp;:</label>
                         <div class="col-sm-8">
                             <div class="input-group input-group-sm">
-                                <input type="text" name="expected_date" id="expected_date" class="form-control" value="{{ $prospect->expected_date->format('d-m-Y') }}" placeholder="DD-MM-YYYY">
+                                <input type="text" name="expected_date" id="expected_date" class="form-control" value="{{ $prospect->expected_date?->format('d-m-Y') }}" placeholder="DD-MM-YYYY">
                                 <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
                             </div>
                         </div>

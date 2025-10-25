@@ -15,6 +15,7 @@ return new class extends Migration
         Schema::create('spot_roles', function(Blueprint $table) {
             $table->id();
             $table->string('name', length:225)->nullable();
+            $table->timestamps();
         });
         // Spot Status
         Schema::create('spot_status', function(Blueprint $table) {
@@ -34,7 +35,7 @@ return new class extends Migration
             $table->integer('unit_id')->nullable();
             $table->double('potential')->nullable();
             $table->date('expected_date')->nullable();
-            $table->foreignId('state_id')->nullable()->index()->constrained(table:'adm_state')->noActionOnDelete()->noActionOnUpdate();
+            $table->foreignId('state_id')->nullable()->index()->constrained(table:'adm_states')->noActionOnDelete()->noActionOnUpdate();
             $table->foreignId('cluster_id')->nullable()->index()->constrained(table:'adm_clusters')->noActionOnDelete()->noActionOnUpdate();
             $table->foreignId('ga_id')->nullable()->index()->constrained(table:'adm_ga')->noActionOnDelete()->noActionOnUpdate();
             $table->foreignId('industrial_area_id')->nullable()->index()->constrained(table:'adm_industrial_areas')->noActionOnDelete()->noActionOnUpdate();
@@ -48,7 +49,7 @@ return new class extends Migration
             $table->text('notes')->nullable();
             $table->foreignId('stage')->nullable()->index()->constrained(table:'spot_status')->noActionOnDelete()->noActionOnUpdate();
             $table->foreignId('sub_stage_id')->nullable()->index()->constrained(table:'spot_status')->noActionOnDelete()->noActionOnUpdate();
-            $table->foreignId('status')->nullable()->index()->constrained(table:'spot_status')->noActionOnDelete()->noActionOnUpdate();
+            $table->foreignId('status_id')->nullable()->index()->constrained(table:'spot_status')->noActionOnDelete()->noActionOnUpdate();
             $table->dateTime('status_date')->nullable();
             $table->foreignId('created_by')->nullable()->index()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();
             $table->timestamps();
@@ -99,8 +100,6 @@ return new class extends Migration
             $table->foreignId('document_type_id')->nullable()->index()->constrained(table:'spot_document_types')->noActionOnDelete()->noActionOnUpdate();
             $table->foreignId('doc_file_id')->nullable()->index()->constrained(table:'dc_files')->noActionOnDelete()->noActionOnUpdate();
             $table->integer('offer_count')->nullable();
-            $table->string('file_name', length:225)->nullable();
-            $table->text('path')->nullable();
             $table->tinyInteger('status')->nullable();
             $table->tinyInteger('win')->nullable();
             $table->dateTime('created_at')->nullable();
@@ -132,7 +131,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('ga_id')->nullable()->index()->constrained(table:'adm_ga')->noActionOnDelete()->noActionOnUpdate();
             $table->date('target_date')->nullable();
-            $table->tinyInteger('segment')->nullable();
+            $table->tinyInteger('segment_id')->nullable();
             $table->integer('target_quantity')->nullable();
             $table->double('target_value')->nullable();
         });
@@ -152,7 +151,7 @@ return new class extends Migration
     {
         Schema::dropIfExists('spot_prospect_users');
         Schema::dropIfExists('spot_prospect_targets');
-        Schema::dropIfExists('spot_prospect_status_history');
+        Schema::dropIfExists('spot_status_history');
         Schema::dropIfExists('spot_prospect_pipeline');
         Schema::dropIfExists('spot_prospect_documents');
         Schema::dropIfExists('spot_prospect_document_types');

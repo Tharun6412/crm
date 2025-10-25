@@ -11,10 +11,10 @@
         </div>
     @endif
 </div>
-<a class="visually-hidden" href="{{ url('spot/prospects/'.$prospect->id.'?reload=true&type=6') }}" data-custom-attr="value" id="reload-pipeline">Hidden Link</a>
+<a class="visually-hidden" href="{{ url('spot/prospects/'.$prospect->id.'?reload=true&type=3') }}" data-custom-attr="value" id="reload-pipeline">Hidden Link</a>
 <div class="bd-callout bd-callout-primary bg-transparent card mt-0 border-primary mb-3">
     <h4>Pipeline Details</h4>
-    @if ($prospect_pipeline->count() > 0)
+    @if ($prospect->pipeLineHistory->count() > 0)
         <div class="table-responsive spot-table">
             <table class="table table-bordered table-hover table-sm table-striped mb-0">
                 <thead>
@@ -34,7 +34,7 @@
                     @php
                         $i = 1;
                     @endphp
-                    @foreach ($prospect_pipeline as $pipeline)
+                    @foreach ($prospect->pipeLineHistory as $pipeline)
                         <tr>
                             <td class="text-center">{{ $i++ }}</td>
                             <td>{{ $pipeline->pipe_type == "1" ? "Steel Pipeline" : "MDPE Pipeline"}}</td>

@@ -2,9 +2,9 @@
 <a class="visually-hidden" href="{{ url('spot/prospects/'.$prospect->id.'?reload=true&type=5') }}" data-custom-attr="value" id="reload-comments">Hidden Link</a>
 <div class="bd-callout bd-callout-primary bg-transparent card mt-0 border-primary mb-3">
     <h4>Comments</h4>
-    @if ($prospect_comments->count() > 0)
+    @if ($prospect->commentsHistory->count() > 0)
         <ul class="list-group border-top-0">
-            @foreach ($prospect_comments as $comment)
+            @foreach ($prospect->commentsHistory as $comment)
                 <li class="list-group-item">
                     <div>
                         <a type="button" class="btn btn-link text-danger m-0 p-0" onclick="deleteComment('{{ $comment->id }}')">
@@ -20,7 +20,7 @@
         <div class="alert alert-secondary mb-0">No comments!</div>
     @endif
     <div class="border rounded p-3 mt-3">
-        <form action="{{ url('spot/prospectComments/store/'.$prospect->id) }}" id="prsp-comment-form" method="POST">
+        <form action="{{ url('spot/comments/store/'.$prospect->id) }}" id="prsp-comment-form" method="POST">
             @csrf
             <div class="form-floating mb-2">
                 <textarea name="comments" class="form-control" placeholder="Leave a comment here" id="comments"></textarea>
@@ -46,7 +46,7 @@
     // To Delete Comment By ID
     function deleteComment(id)
     {
-        $.post("{{ url('spot/prospectComments/destroy') }}/"+id, {_token:"{{ csrf_token() }}"}, function(data) {
+        $.post("{{ url('spot/comments/destroy') }}/"+id, {_token:"{{ csrf_token() }}"}, function(data) {
             reloadComments();
         });
     }

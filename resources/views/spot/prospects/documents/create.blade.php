@@ -31,12 +31,4 @@
     </form>
 </div>
 @include('scripts.ajax-file-submit', ['form' => 'add-doc', 'callback' => 'reloadDocForm()'])
-<script type="text/javascript">
-    function reloadDocForm()
-    {
-        $.get($('#reload-form').attr('href'), function(data) {
-            $('#prospect-documents').html(data);
-        });
-    }
-</script>
 

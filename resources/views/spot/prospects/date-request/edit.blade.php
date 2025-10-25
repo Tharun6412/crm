@@ -1,7 +1,7 @@
 <div>
     @if (empty($active_requests))
         <div class="bd-callout bd-callout-success bg-transparent card mt-0 border-success mb-3" id="date-request-success">
-            <form id="date-request-form" action="{{ url('spot/prospectDateChangeRequest/store/'.$prospect->id) }}" class="form-horizontal" method="post">
+            <form id="date-request-form" action="{{ url('spot/dateChangeRequest/store/'.$prospect->id) }}" class="form-horizontal" method="post">
                 @csrf
                 <div class="row mb-1">
                     <h5 class="modal-title">Request for date change</h5>

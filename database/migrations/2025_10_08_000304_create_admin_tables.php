@@ -14,50 +14,66 @@ return new class extends Migration
         // Cluster
         Schema::create('adm_clusters', function (Blueprint $table) {
             $table->id();
+            $table->string('code', length:16)->nullable();
             $table->string('name', length:225)->nullable();
-            $table->timestamps();
+            $table->string('description', length:120)->nullable();
+            $table->tinyInteger('status')->nullable();
         });
         // State
-        Schema::create('adm_state', function (Blueprint $table) {
+        Schema::create('adm_states', function (Blueprint $table) {
             $table->id();
             $table->string('name', length:100)->nullable();
-            $table->string('coordinates', length:225)->nullable();
-            $table->string('gst', length:225)->nullable();
-            $table->integer('tin')->nullable();
             $table->tinyInteger('status')->nullable();
-            $table->dateTime('created_at')->nullable();
-            $table->foreignId('created_by')->nullable()->index()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();
         });
         // GA
         Schema::create('adm_ga', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('state_id')->nullable()->index()->constrained(table:'adm_state')->noActionOnDelete()->noActionOnUpdate();
-            $table->foreignId('cluster_id')->nullable()->index()->constrained(table:'adm_clusters')->noActionOnDelete()->noActionOnUpdate();
             $table->string('code', length:50)->nullable();
-            $table->string('hes_code', length:20)->nullable();
-            $table->string('code_backup', length:20)->nullable();
             $table->string('name', length:225)->nullable();
-            $table->integer('cng_counter')->nullable();
+            $table->string('hes_code', length:20)->nullable();
+            $table->foreignId('state_id')->nullable()->index()->constrained(table:'adm_states')->noActionOnDelete()->noActionOnUpdate();
+            $table->foreignId('cluster_id')->nullable()->index()->constrained(table:'adm_clusters')->noActionOnDelete()->noActionOnUpdate();
             $table->integer('status')->nullable();
-            $table->integer('priority')->nullable();
-            $table->dateTime('added_at')->nullable();
-            $table->foreignId('added_by')->nullable()->index()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();
+            $table->integer('position')->nullable();
+            $table->dateTime('created_at')->nullable();
         });
         // District
-        Schema::create('adm_district', function (Blueprint $table) {
+        Schema::create('adm_districts', function (Blueprint $table) {
             $table->id();
+            $table->string('code', length:16)->nullable();
             $table->string('name', length:225)->nullable();
-            $table->string('ccavenue_name_meil', length:60)->nullable();
-            $table->string('ccavenue_name', length:100)->nullable();
             $table->string('display_name', length:225)->nullable();
-            $table->integer('code')->nullable();
-            $table->foreignId('state')->nullable()->index()->constrained(table:'adm_state')->noActionOnDelete()->noActionOnUpdate();
-            $table->foreignId('geo_area')->nullable()->index()->constrained(table:'adm_ga')->noActionOnDelete()->noActionOnUpdate();
-            $table->integer('status')->nullable();
-            $table->string('contact_no', length:100)->nullable();
-            $table->string('coordinates', length:225)->nullable();
+            $table->foreignId('cluster_id')->nullable()->index()->constrained(table:'adm_clusters')->noActionOnDelete()->noActionOnUpdate();
+            $table->foreignId('state_id')->nullable()->index()->constrained(table:'adm_states')->noActionOnDelete()->noActionOnUpdate();
+            $table->foreignId('ga_id')->nullable()->index()->constrained(table:'adm_ga')->noActionOnDelete()->noActionOnUpdate();
+            $table->tinyInteger('status')->nullable();
             $table->timestamps();
             $table->foreignId('created_by')->nullable()->index()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();
+        });
+        // CA
+        Schema::create('adm_ca', function(Blueprint $table) {
+            $table->id();
+            $table->string('code', length:120)->nullable();
+            $table->string('name', length:120)->nullable();
+            $table->foreignId('ga_id')->nullable()->index()->constrained(table:'adm_ga')->noActionOnDelete()->noActionOnUpdate();
+            $table->foreignId('district_id')->nullable()->index()->constrained(table:'adm_districts')->noActionOnDelete()->noActionOnUpdate();
+            $table->tinyInteger('status')->nullable();
+            $table->timestamps();
+        });
+        // Areas
+        Schema::create('adm_areas', function(Blueprint $table) {
+            $table->id();
+            $table->string('name', length:120)->nullable();
+            $table->foreignId('ca_id')->nullable()->index()->constrained(table:'adm_ca')->noActionOnDelete()->noActionOnUpdate();
+            $table->tinyInteger('status')->nullable();
+            $table->timestamps();
+        });
+
+        // Departments
+        Schema::create('adm_departments', function(Blueprint $table) {
+            $table->id();
+            $table->string('name', length:225)->nullable();
+            $table->timestamps();
         });
         // PNG Firm Types Alias Segments in leads
         Schema::create('adm_png_firm_types', function (Blueprint $table) {
@@ -86,6 +102,12 @@ return new class extends Migration
             $table->timestamps();
             $table->foreignId('created_by')->nullable()->index()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();
         });
+        // User Ga
+        Schema::create('adm_user_ga', function(Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->nullable()->index()->constrained(table: 'users')->noActionOnDelete()->noActionOnUpdate();
+            $table->foreignId('ga_id')->nullable()->index()->constrained(table:'adm_ga')->noActionOnDelete()->noActionOnUpdate();
+        });
     }
 
     /**
@@ -96,7 +118,11 @@ return new class extends Migration
         Schema::dropIfExists('adm_industrial_areas');
         Schema::dropIfExists('adm_png_fuel_types');
         Schema::dropIfExists('adm_png_firm_types');
-        Schema::dropIfExists('adm_district');
+        Schema::dropIfExists('adm_departments');
+        Schema::dropIfExists('adm_user_ga');
+        Schema::dropIfExists('adm_areas');
+        Schema::dropIfExists('adm_ca');
+        Schema::dropIfExists('adm_districts');
         Schema::dropIfExists('adm_ga');
         Schema::dropIfExists('adm_state');
         Schema::dropIfExists('adm_clusters');

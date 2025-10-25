@@ -2,7 +2,7 @@
 
 namespace App\Models\DocumentCentre;
 
-use App\Models\User;
+use App\Models\Admin\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 

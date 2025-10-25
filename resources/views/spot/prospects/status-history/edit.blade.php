@@ -1,5 +1,5 @@
 <div class="bd-callout bd-callout-success bg-transparent card mt-0 border-success mb-3" id="edit-status-success">
-    <form id="edit-status-form" action="{{ url('spot/prospects/updateStatus/'.$id) }}"  class="form-horizontal" method="post" enctype="multipart/form-data">
+    <form id="edit-status-form" action="{{ url('spot/prospectStatus/updateStatus/'.$id) }}"  class="form-horizontal" method="post" enctype="multipart/form-data">
         @csrf
         <div class="row mb-1">
             <h5 class="modal-title">Prospect Status Update</h5>
