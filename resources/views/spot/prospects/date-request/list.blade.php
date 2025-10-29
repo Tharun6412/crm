@@ -15,7 +15,7 @@
     <div class="clearfix mb-2">
         <h4 class="float-start">Date Change Requests</h4>
         <div class="float-end">          
-            <a class="btn btn-sm btn-success ajax-link" href="{{ url('spot/dateChangeRequest/create/'.$prospect->id.'?type=4') }}"><i class="bi bi-calender-plus"></i>&nbsp;Add Request</a>
+            <a class="btn btn-sm btn-success" id="add-date-request-link" href="{{ url('spot/dateChangeRequest/create/'.$prospect->id.'?type=4') }}"><i class="bi bi-calender-plus"></i>&nbsp;Add Request</a>
         </div>
     </div>
     <a class="visually-hidden" href="{{ url('spot/prospects/'.$prospect->id.'?reload=true&type=4') }}" data-custom-attr="value" id="reload-date-request">Hidden Link</a>
@@ -79,7 +79,7 @@
         <div class='alert alert-warning mb-0'>No records found!</div>
     @endif
 </div>
-@include('scripts.ajax-link', ['div' => 'action-type'])
+@include('scripts.ajax-link-id', ['mod' => 'add-date-request', 'div' => 'action-type'])
 <script type="text/javascript">
 // To Approve the request
     function approveDateRequest(id, prospect_id)

@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\Spot;
 
+use App\Exports\Spot\ProspectsExport;
 use App\Http\Controllers\Controller;
 use App\Models\Admin\Cluster;
-use App\Models\Admin\FirmTypes;
-use App\Models\Admin\FuelTypes;
+use App\Models\Admin\FirmType;
+use App\Models\Admin\FuelType;
 use App\Models\Admin\Ga;
-use App\Models\Admin\IndustrialAreas;
+use App\Models\Admin\IndustrialArea;
+use App\Models\Admin\Segment;
 use App\Models\Spot\ProspectApproval;
 use App\Models\Spot\ProspectComments;
 use App\Models\Spot\ProspectDateChangeRequest;
@@ -15,6 +17,7 @@ use App\Models\Spot\ProspectDocuments;
 use App\Models\Spot\ProspectPipeline;
 use App\Models\Spot\Prospects;
 use App\Models\Spot\ProspectStatusHistory;
+use App\Models\Spot\Status;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -31,18 +34,32 @@ class ProspectsController extends Controller
         $sortBy = ($request->get('sortBy')) ? $request->get('sortBy') : 'created_at';
         $sortOr = ($request->get('sortOr')) ? $request->get('sortOr') : 'desc';
         $records = ($request->get('records')) ? $request->get('records') : 10;
-
-        $query = Prospects::when($request->has('search_key'), function($q) use($request) {
+        $query = Prospects::with(['stage'])->when($request->has('search_key'), function($q) use($request) {
             $q->where(function($q) use($request) {
                 $q->where('name', 'like', '%'.$request->get('search_key').'%');
                 $q->orWhere('code', 'like', '%'.$request->get('search_key').'%');
             });
+        })->When($request->has('geo_area'), function($q) use($request) {
+            $q->whereIn('ga_id', $request->get('geo_area'));
+        })->When($request->has('industrial_area_id'), function($q) use($request) {
+            $q->whereIn('industrial_area_id', $request->get('industrial_area_id'));
+        })->When($request->has('fuel_id'), function($q) use($request) {
+            $q->whereIn('fuel_id', $request->get('fuel_id'));
+        })->when($request->has('stage_id'), function($q) use($request) {
+            $q->whereHas('stage', function($q2) use($request) {
+                $q2->whereIn('parent_id', $request->get('stage_id'));
+            });
+        })->When($request->has('sub_stage_id'), function($q) use($request) {
+            $q->whereIn('stage_id', $request->get('sub_stage_id'));
+        })->when((!empty($request->date_from) and !empty($request->date_to)), function($q) use($request) {
+            $q->whereBetween('expected_date', [Carbon::createFromFormat('d-m-Y', $request->date_from)->startOfDay()->toDateTimeString(), Carbon::createFromFormat('d-m-Y', $request->date_to)->endOfDay()->toDateTimeString()]);
         });
         $prospects = $query->orderBy($sortBy, $sortOr)->paginate($records)->withQueryString();
+        $stages = Status::where('type', 1)->where('parent_id', NULL)->get();
         if($request->ajax()) {
-            return view('spot.prospects.list-body', ['prospects' => $prospects]);
+            return view('spot.prospects.list-body', ['prospects' => $prospects, 'stages' => $stages]);
         }
-        return view('spot.prospects.list', ['prospects' => $prospects]);
+        return view('spot.prospects.list', ['prospects' => $prospects, 'stages' => $stages]);
     }
 
     /**
@@ -52,13 +69,15 @@ class ProspectsController extends Controller
     {
         $geo_areas = Ga::all();
         $clusters = Cluster::all();
-        $firm_types = FirmTypes::all();
-        $fuel_types = FuelTypes::all();
+        $firm_types = FirmType::all();
+        $fuel_types = FuelType::all();
+        $segments = Segment::all();
         return view('spot.prospects.create', [
             'geo_areas' => $geo_areas,
             'clusters' => $clusters,
             'firm_types' => $firm_types,
             'fuel_types' => $fuel_types,
+            'segments' => $segments,
             'industrial_areas' => [],
         ]);
     }
@@ -76,9 +95,9 @@ class ProspectsController extends Controller
             'fuel_id' => 'required',
             'industrial_area_id' => 'required',
         ]);
-        $stage = 1;
+        // $stage = 1;
         $status = 7;
-        $sub_stage_id =13;
+        $stage_id =13;
 
         $ga_val = Ga::find($request->ga_id); 
         // TO insert into the Vehicle
@@ -91,9 +110,8 @@ class ProspectsController extends Controller
             'potential' => $request->potential,
             'expected_date' =>  !empty($request->expected_date) ? Carbon::createFromFormat('d-m-Y', $request->expected_date) : null,
             'zone' => $request->zone,
+            'stage_id' => $stage_id,
             'status_id' => $status,
-            'stage' => $stage,
-            'sub_stage_id' => $sub_stage_id,
             'status_date' => Carbon::now(),
             'ga_id' => $request->ga_id,
             'state_id' => $ga_val['state_id'],
@@ -132,14 +150,13 @@ class ProspectsController extends Controller
                     );
                 }
                 if(!empty($pipe_ar)) {
-                    ProspectPipeline::upsert($pipe_ar, ['prospect_id', 'pipe_type'], ['length', 'status', 'created_by']);
+                    ProspectPipeline::upsert($pipe_ar, ['prospect_id', 'pipe_type', 'status'], ['length', 'status', 'created_by']);
                 }
             }
             // Insert into Status History
             ProspectStatusHistory::create([
                 'prospect_id'        => $add_prospect->id,
-                'status_id' => $stage,
-                'sub_status_id' => $sub_stage_id,
+                'stage_id' => $stage_id,
                 'notes'          => $request->notes,
                 'created_at'       => Carbon::now(),
                 'created_by'       => Auth::id(),
@@ -164,7 +181,7 @@ class ProspectsController extends Controller
      */
     public function getIndustrialAreaByGA(Request $request)
     {
-        $industrial_areas = IndustrialAreas::where('ga_id', $request->ga_id)->get();
+        $industrial_areas = IndustrialArea::where('ga_id', $request->ga_id)->get();
         return response()->json(['industrial_areas' => $industrial_areas]);
     }
     /**
@@ -222,9 +239,10 @@ class ProspectsController extends Controller
         $mdpe_pipe = ProspectPipeline::where('prospect_id', $id)->where('pipe_type', 2)->first();
         $geo_areas = Ga::all();
         $clusters = Cluster::all();
-        $firm_types = FirmTypes::all();
-        $fuel_types = FuelTypes::all();
-        $industrial_areas = IndustrialAreas::where('ga_id', $prospect->ga_id)->get();
+        $firm_types = FirmType::all();
+        $fuel_types = FuelType::all();
+        $segments = Segment::all();
+        $industrial_areas = IndustrialArea::where('ga_id', $prospect->ga_id)->get();
         return view('spot.prospects.edit', [
             'prospect' => $prospect,
             'geo_areas' => $geo_areas,
@@ -234,6 +252,7 @@ class ProspectsController extends Controller
             'industrial_areas' => $industrial_areas,
             'steel_pipe' => $steel_pipe,
             'mdpe_pipe' => $mdpe_pipe,
+            'segments' => $segments,
         ]);
     }
 
@@ -269,6 +288,7 @@ class ProspectsController extends Controller
             'pipeline_availability' => $request->pipeline_availability,
             'latitude' => $request->latitude,
             'longitude' => $request->longitude,
+            'updated_by' => Auth::id(),
         ]);
         // Pipeline Availability
         if ($request->pipeline_availability == 2) {
@@ -317,6 +337,14 @@ class ProspectsController extends Controller
         }
         Session::flash('success', 'Pipeline updated successfully');
         return response()->json(['success' => 'Pipeline Updated Successfully']);
+    }
+
+    /**
+     * To export the Prospects
+     */
+    public function prospectsExport(Request $request)
+    {
+        return (new ProspectsExport($request))->download('prospects_report'.now()->format('YmdHis').'.csv');
     }
 
     /**

@@ -3,10 +3,11 @@
 namespace App\Models\Spot;
 
 use App\Models\Admin\Cluster;
-use App\Models\Admin\FirmTypes;
-use App\Models\Admin\FuelTypes;
+use App\Models\Admin\FirmType;
+use App\Models\Admin\FuelType;
 use App\Models\Admin\Ga;
-use App\Models\Admin\IndustrialAreas;
+use App\Models\Admin\IndustrialArea;
+use App\Models\Admin\Segment;
 use App\Models\Admin\State;
 use App\Models\Admin\User;
 use Illuminate\Database\Eloquent\Model;
@@ -38,11 +39,11 @@ class Prospects extends Model
         'segment_id',
         'pipeline_availability',
         'notes',
-        'stage',
-        'sub_stage_id',
+        'stage_id',
         'status_id',
         'status_date',
         'created_by',
+        'updated_by',
     ];
 
     /**
@@ -79,11 +80,18 @@ class Prospects extends Model
     }
 
     /**
+     * Realtion with Segment
+     */
+    public function segment():BelongsTo
+    {
+        return $this->belongsTo(Segment::class, 'segment_id')->withDefault();
+    }
+    /**
      * Relation with Industrial Area
      */
     public function industrialArea() : BelongsTo
     {
-        return $this->belongsTo(IndustrialAreas::class, 'industrial_area_id')->withDefault();
+        return $this->belongsTo(IndustrialArea::class, 'industrial_area_id')->withDefault();
     }
 
     /**
@@ -91,14 +99,14 @@ class Prospects extends Model
      */
     public function firm():BelongsTo
     {
-        return $this->belongsTo(FirmTypes::class)->withDefault();
+        return $this->belongsTo(FirmType::class)->withDefault();
     }
     /**
      * Relation with FuelType
      */
     public function fuelType():BelongsTo
     {
-        return $this->belongsTo(FuelTypes::class, 'fuel_id')->withDefault();
+        return $this->belongsTo(FuelType::class, 'fuel_id')->withDefault();
     }
 
     /**
@@ -108,19 +116,20 @@ class Prospects extends Model
     {
         return $this->belongsTo(User::class, 'created_by')->withDefault();
     }
+
+    /**
+     * Relation with Updated By
+     */
+    public function updatedBy() : BelongsTo
+    {
+        return $this->belongsTo(User::class, 'updated_by')->withDefault();
+    }
     /**
      * Relation with Stage
      */
-    public function stageType():BelongsTo
+    public function stage():BelongsTo
     {
-        return $this->belongsTo(Status::class, 'stage')->withDefault();
-    }
-    /**
-     * Relation with Sub-Stage
-     */
-    public function subStage():BelongsTo
-    {
-        return $this->belongsTo(Status::class, 'sub_stage_id')->withDefault();
+        return $this->belongsTo(Status::class, 'stage_id')->withDefault();
     }
     /**
      * Relation with Status

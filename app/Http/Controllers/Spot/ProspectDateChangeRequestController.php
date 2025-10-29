@@ -2,18 +2,12 @@
 namespace App\Http\Controllers\Spot;
 
 use App\Http\Controllers\Controller;
-use App\Models\Spot\ProspectComments;
 use App\Models\Spot\ProspectDateChangeRequest;
-use App\Models\Spot\ProspectDocuments;
-use App\Models\Spot\ProspectPipeline;
 use App\Models\Spot\Prospects;
-use App\Models\Spot\ProspectStatusHistory;
 use Carbon\Carbon;
-use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Validation\Rule;
 
 class ProspectDateChangeRequestController extends Controller
 {
@@ -88,6 +82,13 @@ class ProspectDateChangeRequestController extends Controller
         if($status_val == 1) {
             $addDateRequest['approved_by'] = Auth::id();
             $addDateRequest['approved_at'] = Carbon::now();
+
+            // Update Prospect
+            Prospects::where('id', $id)->update([
+                'expected_date' => $new_date,
+                'updated_at' => Carbon::now(),
+                'updated_by' => Auth::id(),
+            ]);
         }
         ProspectDateChangeRequest::create($addDateRequest);
         return response()->json(['success' => 'Date Request updated Successfully']);
@@ -110,6 +111,7 @@ class ProspectDateChangeRequestController extends Controller
         Prospects::where('id', $request->prospect_id)->update([
             'expected_date' => Carbon::parse($dateRequest->new_date)->toDateString(),
             'updated_at' => Carbon::now(),
+            'updated_by' => Auth::id(),
         ]);
         Session::flash('success', 'Request approved successfully');
         return response()->json(['success' => 'Request Approved successfully']);

@@ -4,11 +4,7 @@ namespace App\Http\Controllers\Spot;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Controllers\DocumentCentre\DocumentUpload;
-use App\Models\Spot\DocumentTypes;
-use App\Models\Spot\ProspectComments;
-use App\Models\Spot\ProspectDateChangeRequest;
 use App\Models\Spot\ProspectDocuments;
-use App\Models\Spot\ProspectPipeline;
 use App\Models\Spot\Prospects;
 use App\Models\Spot\ProspectStatusHistory;
 use App\Models\Spot\Status;
@@ -22,9 +18,9 @@ class ProspectStatusController extends Controller
      */
     public function editStatus(Request $request, $id)
     {
-        $status_list = Status::where('type', 1)->where('parent', 0)->get();
+        $status_list = Status::where('type', 1)->where('parent_id', NULL)->get();
         $prospect = Prospects::find($id);
-        $sub_stages = Status::where('parent', $prospect->stage)->get();
+        $sub_stages = Status::where('parent_id', $prospect->stage->parent->id)->get();
         if($request->type == "1") {
             return view('spot.prospects.status-history.edit', [
                 'status_list' => $status_list,
@@ -48,10 +44,9 @@ class ProspectStatusController extends Controller
      */
     public function getSubStagesByStage(Request $request)
     {
-        $sub_stages = Status::where('parent', $request->stage_id)->get();
+        $sub_stages = Status::where('parent_id', $request->stage_id)->get();
         return response()->json(['sub_stages' => $sub_stages]);
     }
-
     /**
      * Get Status Info by Sub Stage ID
      */
@@ -112,8 +107,8 @@ class ProspectStatusController extends Controller
         }
         // Update Prospect Array Details
         $update_status_list = array(
-            'stage' => $request->stage_id,
-            'sub_stage_id' => $request->sub_stage_id,
+            // 'stage' => $request->stage_id,
+            'stage_id' => $request->sub_stage_id,
             'status_date' => Carbon::now(),
         );
         if($request->sub_stage_id == 17)
@@ -126,8 +121,7 @@ class ProspectStatusController extends Controller
             // Insert into Status History
             ProspectStatusHistory::create([
                 'prospect_id'        => $id,
-                'status_id' => $request->stage_id,
-                'sub_status_id' => $request->sub_stage_id,
+                'stage_id' => $request->sub_stage_id,
                 'notes'          => $request->notes,
                 'created_at'       => Carbon::now(),
                 'created_by'       => Auth::id(),
@@ -165,7 +159,7 @@ class ProspectStatusController extends Controller
     public function hold(Request $request, $id)
     {
         $prospect = Prospects::find($id);
-        if($request->type == "2") {
+        if($request->type == "6") {
             return view('spot.prospects.status-history.hold', [
                 'type' => 6,
                 'id' => $id,
@@ -194,7 +188,7 @@ class ProspectStatusController extends Controller
         // Insert into Status History
         ProspectStatusHistory::create([
             'prospect_id' => $id,
-            'status_id' => 11,
+            'stage_id' => 11,
             'notes' => $request->notes,
             'created_at' => Carbon::now(),
             'created_by' => Auth::id(),
@@ -236,7 +230,7 @@ class ProspectStatusController extends Controller
         // Insert into Status History
         ProspectStatusHistory::create([
             'prospect_id' => $id,
-            'status_id' => 12,
+            'stage_id' => 12,
             'notes' => $request->notes,
             'created_at' => Carbon::now(),
             'created_by' => Auth::id(),

@@ -22,7 +22,7 @@ return new class extends Migration
             $table->id();
             $table->string('name', length:225)->nullable();
             $table->integer('type')->nullable();
-            $table->integer('parent')->nullable();
+            $table->foreign('parent_id')->references('id')->on('spot_status')->onDelete(null);
         });
         // Spot Table
         Schema::create('spot_prospects', function (Blueprint $table) {
@@ -47,12 +47,12 @@ return new class extends Migration
             $table->integer('segment_id')->nullable()->index(); 
             $table->tinyInteger('pipeline_availability')->nullable();
             $table->text('notes')->nullable();
-            $table->foreignId('stage')->nullable()->index()->constrained(table:'spot_status')->noActionOnDelete()->noActionOnUpdate();
-            $table->foreignId('sub_stage_id')->nullable()->index()->constrained(table:'spot_status')->noActionOnDelete()->noActionOnUpdate();
+            $table->foreignId('stage_id')->nullable()->index()->constrained(table:'spot_status')->noActionOnDelete()->noActionOnUpdate();
             $table->foreignId('status_id')->nullable()->index()->constrained(table:'spot_status')->noActionOnDelete()->noActionOnUpdate();
             $table->dateTime('status_date')->nullable();
             $table->foreignId('created_by')->nullable()->index()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();
             $table->timestamps();
+            $table->foreignId('updated_by')->nullable()->index()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();
         });
 
         // Spot Approval
@@ -115,25 +115,28 @@ return new class extends Migration
             $table->timestamps();
             $table->foreignId('created_by')->nullable()->index()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();
             $table->foreignId('updated_by')->nullable()->index()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();
+            $table->unique(['prospect_id', 'pipe_type', 'status']);
         });
         // Spot Status History
-        Schema::create('spot_status_history', function (Blueprint $table) {
+        Schema::create('spot_prospect_status_history', function (Blueprint $table) {
             $table->id();
             $table->foreignId('prospect_id')->nullable()->index()->constrained(table:'spot_prospects')->noActionOnDelete()->noActionOnUpdate();
-            $table->foreignId('status_id')->nullable()->index()->constrained(table:'spot_status')->noActionOnDelete()->noActionOnUpdate();
-            $table->foreignId('sub_status_id')->nullable()->index()->constrained(table:'spot_status')->noActionOnDelete()->noActionOnUpdate();
+            $table->foreignId('stage_id')->nullable()->index()->constrained(table:'spot_status')->noActionOnDelete()->noActionOnUpdate();
             $table->text('notes')->nullable();
             $table->dateTime('created_at')->nullable();
             $table->foreignId('created_by')->nullable()->index()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();
         });
         // Spot Targets
-        Schema::create('spot_prospect_targets', function (Blueprint $table) {
+        Schema::create('spot_targets', function (Blueprint $table) {
             $table->id();
             $table->foreignId('ga_id')->nullable()->index()->constrained(table:'adm_ga')->noActionOnDelete()->noActionOnUpdate();
             $table->date('target_date')->nullable();
             $table->tinyInteger('segment_id')->nullable();
             $table->integer('target_quantity')->nullable();
             $table->double('target_value')->nullable();
+            $table->timestamps();
+            $table->foreignId('created_by')->nullable()->index()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();
+            $table->unique(['ga_id', 'target_date', 'segment_id']);
         });
         // Prospects and Users
         Schema::create('spot_prospect_users', function(Blueprint $table) {
@@ -150,8 +153,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('spot_prospect_users');
-        Schema::dropIfExists('spot_prospect_targets');
-        Schema::dropIfExists('spot_status_history');
+        Schema::dropIfExists('spot_targets');
+        Schema::dropIfExists('spot_prospect_status_history');
         Schema::dropIfExists('spot_prospect_pipeline');
         Schema::dropIfExists('spot_prospect_documents');
         Schema::dropIfExists('spot_prospect_document_types');

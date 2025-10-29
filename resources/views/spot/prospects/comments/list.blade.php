@@ -1,4 +1,4 @@
-{{-- Displaying Last 50 Comments --}}\
+{{-- Displaying Last 50 Comments --}}
 @extends('layouts.layout')
 
 @section('title', 'Comments')
@@ -14,7 +14,7 @@
                     <th>Prospect</th>
                     <th>Comment</th>
                     <th>By</th>
-                    <th>Comment Date</th>=Q 
+                    <th>Comment Date</th>
                 </tr>
             </thead>
             <tbody>

@@ -3,6 +3,8 @@
 namespace App\Models\Spot;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Status extends Model
 {
@@ -21,6 +23,22 @@ class Status extends Model
     protected $fillable = [
         'name',
         'type',
-        'parent',
+        'parent_id',
     ];
+
+    /**
+     * Parent Relation 
+     */
+    public function parent():BelongsTo
+    {
+        return $this->belongsTo(Status::class, 'parent_id')->withDefault();
+    }
+
+    /**
+     * Child Relation
+     */
+    public function children():HasMany
+    {
+        return $this->hasMany(Status::class, 'parent_id');
+    }
 }

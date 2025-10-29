@@ -7,6 +7,6 @@
 
 @section('page-content')
 <div id="dashboard-body">
-    @include('spot.prospects.dashboard.list-body')
+    @include('spot.dashboard.list-body')
 </div>
 @endsection

@@ -11,6 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
+        // Segments
+        Schema::create('adm_segments', function(Blueprint $table) {
+            $table->id();
+            $table->string('name', length:50)->nullable();
+        });
         // Cluster
         Schema::create('adm_clusters', function (Blueprint $table) {
             $table->id();
@@ -126,5 +131,6 @@ return new class extends Migration
         Schema::dropIfExists('adm_ga');
         Schema::dropIfExists('adm_state');
         Schema::dropIfExists('adm_clusters');
+        Schema::dropIfExists('adm_segments');
     }
 };

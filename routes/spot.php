@@ -9,7 +9,9 @@ Route::get('/', function () {
 // Prospects 
 Route::middleware(['auth', RouteAccess::class])->group(function() {
     Route::get('prospects/getIndustrialAreaByGA', [App\Http\Controllers\Spot\ProspectsController::class, 'getIndustrialAreaByGA']);
+    Route::post('prospects/updatePipeLine', [App\Http\Controllers\Spot\ProspectsController::class, 'updatePipeLine']);
     // Prospects 
+    Route::get('prospects/prospectsExport', [App\Http\Controllers\Spot\ProspectsController::class, 'prospectsExport']);
     Route::resource('prospects', App\Http\Controllers\Spot\ProspectsController::class);
     // Prospect Documents
     Route::get('prospectDocument/create/{id}', [App\Http\Controllers\Spot\ProspectDocumentController::class, 'create']);
@@ -35,6 +37,9 @@ Route::middleware(['auth', RouteAccess::class])->group(function() {
     Route::get('prospectStatus/cancel/{id}', [App\Http\Controllers\Spot\ProspectStatusController::class, 'cancel']);
     Route::post('prospectStatus/updateCancelStatus/{id}', [App\Http\Controllers\Spot\ProspectStatusController::class, 'updateCancelStatus']);
     Route::resource('prospectStatus', App\Http\Controllers\Spot\ProspectStatusController::class);
-    Route::resource('dashboard', App\Http\Controllers\Spot\Dashboard::class);
-    Route::resource('targets', App\Http\Controllers\Spot\ProspectTargets::class);
+    // Dashboard
+    Route::resource('dashboard', App\Http\Controllers\Spot\DashboardController::class);
+    // Targets
+    Route::post('targets/manageTargetData/{id}', [App\Http\Controllers\Spot\TargetsController::class, 'manageTargetData']);
+    Route::resource('targets', App\Http\Controllers\Spot\TargetsController::class);
 }); 

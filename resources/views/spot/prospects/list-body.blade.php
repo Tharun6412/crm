@@ -22,9 +22,12 @@
         </div>
         {{-- Right Section --}}
         <div class="d-flex align-items-center gap-2">
-                <a href="{{ url('spot/prospects/create') }}" class="btn btn-success btn-sm link-modal">
-                    <i class="bi bi-plus-lg"></i>&nbsp;Create
-                </a>
+            <a href="{{ url('spot/prospects/prospectsExport') }}?{{ http_build_query(request()->all()) }}" class="btn btn-secondary btn-sm">
+                <i class="bi bi-file-earmark-excel"></i>&nbsp;Export
+            </a>
+            <a href="{{ url('spot/prospects/create') }}" class="btn btn-success btn-sm link-modal">
+                <i class="bi bi-plus-lg"></i>&nbsp;Create
+            </a>
         </div>
     </div>
     {{-- Parameters for sorting By column and Order --}}
@@ -40,12 +43,8 @@
         <thead>
             <tr>
                 <th nowrap>S No.</th>
-                <th nowrap>
-                    <a href="{{ $prospects->appends(['sortBy' => 'ga_id','sortOr' => $sort_order_inverse])->url($prospects->currentPage()) }}">GA
-                        @if ($sort_by == 'ga_id')
-                            <i class="bi {{ $sort_icon }}"></i>
-                        @endif
-                    </a>
+                <th nowrap>GA
+                    <x-admin.ga-filter/>
                 </th>
                 <th nowrap>
                     <a href="{{ $prospects->appends(['sortBy' => 'name','sortOr' => $sort_order_inverse])->url($prospects->currentPage()) }}">
@@ -55,21 +54,11 @@
                         @endif
                     </a>
                 </th>
-                <th nowrap>
-                    <a href="{{ $prospects->appends(['sortBy' => 'industrial_area_id','sortOr' => $sort_order_inverse])->url($prospects->currentPage()) }}">
-                        Industrial Area
-                        @if ($sort_by == 'industrial_area_id')
-                            <i class="bi {{ $sort_icon }}"></i>
-                        @endif
-                    </a>
+                <th nowrap>Industrial Area     
+                    <x-admin.industrial-area-filter/>
                 </th>
-                <th nowrap>
-                    <a href="{{ $prospects->appends(['sortBy' => 'fuel_id','sortOr' => $sort_order_inverse])->url($prospects->currentPage()) }}">
-                        Current Fuel
-                        @if ($sort_by == 'fuel_id')
-                            <i class="bi {{ $sort_icon }}"></i>
-                        @endif
-                    </a>
+                <th nowrap>Current Fuel
+                    <x-admin.current-fuel-filter/>
                 </th>
                 <th class="text-end">
                     <a href="{{ $prospects->appends(['sortBy' => 'potential','sortOr' => $sort_order_inverse])->url($prospects->currentPage()) }}">
@@ -86,14 +75,13 @@
                             <i class="bi {{ $sort_icon }}"></i>
                         @endif
                     </a>
+                    <x-admin.date-filter/>
                 </th>
-                <th nowrap class="text-center">
-                    <a href="javascript:void(0)">
-                        Stage</a>
+                <th nowrap class="text-center">Stage
+                    <x-spot.stage-filter :stages="$stages"/>
                 </th>
-                <th nowrap class="text-center">
-                    <a href="javascript:void(0)">
-                        Sub Stage</a>
+                <th nowrap class="text-center">Sub Stage
+                    <x-spot.sub-stage-filter :stages="$stages"/>
                 </th>
                 <th nowrap class="text-center">
                     <a href="{{ $prospects->appends(['sortBy' => 'status_date','sortOr' => $sort_order_inverse])->url($prospects->currentPage()) }}">
@@ -119,8 +107,8 @@
                         <td>{{ $prospect->fuelType->name }}</td>
                         <td>{{ $prospect->potential }}</td>
                         <td>{{ $prospect->expected_date?->format('d-m-Y') }}</td>
-                        <td>{{ $prospect->stageType->name }}</td>
-                        <td>{{ $prospect->subStage->name }}</td>
+                        <td>{{ $prospect->stage->parent->name ?? '' }}</td>
+                        <td>{{ $prospect->stage->name }}</td>
                         <td>{{ $prospect->status_date->format('d-m-Y') }}</td>
                         <td>
                             <div class="dropdown">
@@ -139,7 +127,7 @@
                                         </a>
                                     </li>
                                     <li>
-                                        <a class="dropdown-item link-modal" href="{{ url('spot/prospectDateChangeRequest/create/'.$prospect->id) }}">
+                                        <a class="dropdown-item link-modal" href="{{ url('spot/dateChangeRequest/create/'.$prospect->id) }}">
                                             <i class="bi bi-info-circle"></i>&nbsp;Request For Date Change
                                         </a>
                                     </li>

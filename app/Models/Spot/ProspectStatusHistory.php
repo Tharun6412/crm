@@ -12,7 +12,7 @@ class ProspectStatusHistory extends Model
      * The table associated with the model
      * @var string
      */
-    protected $table = 'spot_status_history';
+    protected $table = 'spot_prospect_status_history';
 
     /**
      * The attributes that are mass assignable
@@ -21,8 +21,7 @@ class ProspectStatusHistory extends Model
      */
     protected $fillable = [
         'prospect_id',
-        'status_id',
-        'sub_status_id',
+        'stage_id',
         'notes',
         'created_at',
         'created_by',
@@ -43,16 +42,9 @@ class ProspectStatusHistory extends Model
     /**
      * Relation with Status
      */
-    public function status():BelongsTo
+    public function stage():BelongsTo
     {
-        return $this->belongsTo(Status::class, 'status_id')->withDefault();
-    }
-    /**
-     * Relation with Sub Status
-     */
-    public function subStatus(): BelongsTo
-    {
-        return $this->belongsTo(Status::class, 'sub_status_id')->withDefault();
+        return $this->belongsTo(Status::class, 'stage_id')->withDefault();
     }
     /**
      * Relation with User

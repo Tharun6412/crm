@@ -11,7 +11,7 @@
     <div class="clearfix mb-2">
         <h4 class="float-start">Documents</h4>
         <div class="float-end">
-            <a class="btn btn-sm btn-success ajax-link" href="{{ url('spot/prospectDocument/create/'.$prospect->id.'?type=2') }}"><i class="bi bi-file-earmark-plus"></i>&nbsp;Add Document</a>
+            <a class="btn btn-sm btn-success" id="add-doc-link" href="{{ url('spot/prospectDocument/create/'.$prospect->id.'?type=2') }}"><i class="bi bi-file-earmark-plus"></i>&nbsp;Add Document</a>
         </div>
     </div>
     @php
@@ -59,7 +59,8 @@
         <div class='alert alert-warning mb-0'>No records found!</div>
     @endif
 </div>
-@include('scripts.ajax-link', ['div' => 'action-type'])
+
+@include('scripts.ajax-link-id', ['mod' => 'add-doc', 'div' => 'action-type'])
 @include('scripts.ajax-link-file-delete', ['callback' => 'reloadDocForm()'])
 <script type="text/javascript">
     function reloadDocForm()

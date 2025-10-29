@@ -1,9 +1,10 @@
 {{-- Prospects Status History --}}
+<div id="add-status-history"></div>
 <div class="bd-callout bd-callout-primary bg-transparent card mt-0 border-primary mb-3">
     <div class="clearfix mb-2">
         <h4 class="float-start">Status History</h4>
         <div class="float-end">
-            <a class="btn btn-sm btn-success ajax-link" href="{{ url('spot/prospectStatus/editStatus/'.$prospect->id.'?type=1') }}"><i class="bi bi-check2-circle"></i>&nbsp;Add / Update Status</a>
+            <a class="btn btn-sm btn-success" id="add-status-link" href="{{ url('spot/prospectStatus/editStatus/'.$prospect->id.'?type=1') }}"><i class="bi bi-check2-circle"></i>&nbsp;Add / Update Status</a>
         </div>
     </div>
     <a class="visually-hidden" href="{{ url('spot/prospects/'.$prospect->id.'?reload=true&type=1') }}" data-custom-attr="value" id="reload-status">Hidden Link</a>
@@ -27,8 +28,8 @@
                     @foreach ($prospect->statusHistory as $history)
                         <tr>
                             <td class="text-center">{{ $i++ }}</td>
-                            <td class="align-middle">{{ $history->status->name }}</td>
-                            <td class="align-middle">{{ $history->subStatus->name }}</td>
+                            <td class="align-middle">{{ $history->stage->parent->name }}</td>
+                            <td class="align-middle">{{ $history->stage->name }}</td>
                             <td>{{ $history->notes }}</td>
                             <td>{{ $history->createdBy->first_name }}</td>
                             <td>{{ $history->created_at->format('d-m-Y') }}</td>
@@ -41,12 +42,13 @@
         </table>
     </div>
 </div>
-@include('scripts.ajax-link', ['div' => 'action-type'])
+@include('scripts.ajax-link-id', ['mod' => 'add-status', 'div' => 'add-status-history', 'cancel' => 'action-type'])
 <script type="text/javascript">
     // Industrial Area Based on GA
     function getSubStagesByStage(stage)
     {
         let options = '<option value="">select sub stage</option>';
+        $("#sub_stage_id").empty();
         $.get("{{ url('spot/prospectStatus/getSubStagesByStage') }}", {stage_id : stage}, function(data) {
             $.each(data.sub_stages, function(index, stage){
                 options += `<option value="${stage.id}">${stage.name}</option>`;

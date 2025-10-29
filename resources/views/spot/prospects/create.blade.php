@@ -21,16 +21,14 @@
                         </div>
                     </div>
                     <div class="row mb-2">
-                        <label for="segment_id" class="col-sm-3 col-form-label text-end">Segment<span>&nbsp;:</span></label>
-                        <div class="col-md-6">
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="segment_id" id="segment_id" value="1">
-                                <label class="form-check-label" for="category_1">Commercial</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="segment_id" id="segment_id" value="2">
-                                <label class="form-check-label" for="category_2">Industrial</label>
-                            </div>
+                        <label for="ga_id" class="col-sm-3 col-form-label text-end">Segment<span>&nbsp;:</span></label>
+                        <div class="col-sm-8">
+                            <select name='segment_id' id='segment_id' class="form-select">
+                                <option value=''>Select Segment</option>
+                                @foreach($segments as $segment)
+                                    <option value='{{ $segment->id }}'>{{ $segment->name }}</option>
+                                @endforeach
+                            </select>
                         </div>
                     </div>
                     <div class="row mb-2">

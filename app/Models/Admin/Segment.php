@@ -3,14 +3,14 @@
 namespace App\Models\Admin;
 
 use Illuminate\Database\Eloquent\Model;
-class FirmTypes extends Model
+class Segment extends Model
 {
     /**
      * The table associated with the model
      * 
      * @var string
      */
-    protected $table = 'adm_png_firm_types';
+    protected $table = 'adm_segments';
 
     /**
      * The attributes that are mass assignable
@@ -19,7 +19,5 @@ class FirmTypes extends Model
      */
     protected $fillable = [
         'name',
-        'status',
-        'created_by',
     ];
 }

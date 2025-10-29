@@ -3,18 +3,12 @@ namespace App\Http\Controllers\Spot;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\DocumentCentre\DocumentUpload;
 use App\Models\Spot\DocumentTypes;
-use App\Models\Spot\ProspectComments;
-use App\Models\Spot\ProspectDateChangeRequest;
 use App\Models\Spot\ProspectDocuments;
-use App\Models\Spot\ProspectPipeline;
 use App\Models\Spot\Prospects;
-use App\Models\Spot\ProspectStatusHistory;
 use Carbon\Carbon;
-use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Validation\Rule;
 
 class ProspectDocumentController extends Controller
 {

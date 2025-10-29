@@ -3,15 +3,14 @@
 namespace App\Models\Admin;
 
 use Illuminate\Database\Eloquent\Model;
-
-class FuelTypes extends Model
+class FirmType extends Model
 {
     /**
      * The table associated with the model
      * 
      * @var string
      */
-    protected $table = 'adm_png_fuel_types';
+    protected $table = 'adm_png_firm_types';
 
     /**
      * The attributes that are mass assignable
@@ -20,10 +19,7 @@ class FuelTypes extends Model
      */
     protected $fillable = [
         'name',
-        'position',
-        'spot',
-        'fuel_group',
-        'created_by',
         'status',
+        'created_by',
     ];
 }

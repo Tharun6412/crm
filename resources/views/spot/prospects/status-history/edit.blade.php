@@ -8,7 +8,7 @@
                 <select id="stage_id" name="stage_id" class="form-select form-select-sm" onchange="getSubStagesByStage(this.value)">
                     <option value="">select stage</option>
                         @foreach ($status_list as $type)
-                            <option value="{{ $type->id }}" @selected($type->id == $prospect->stage)>{{ $type->name }}</option>
+                            <option value="{{ $type->id }}" @selected($type->id == $prospect->stage->parent->id)>{{ $type->name }}</option>
                         @endforeach
                 </select>
                 <span class="text-danger" id="stage_id-error"></span>
@@ -20,7 +20,7 @@
                 <select id="sub_stage_id" name="sub_stage_id" class="form-select form-select-sm" onchange="getDetailsBySubStage(this.value, {{ $prospect->id }})">
                     <option value="">select sub stage</option>
                         @foreach ($sub_stages as $stage)
-                            <option value="{{ $stage->id }}" @selected($stage->id == $prospect->sub_stage_id)>{{ $stage->name }}</option>
+                            <option value="{{ $stage->id }}" @selected($stage->id == $prospect->stage->id)>{{ $stage->name }}</option>
                         @endforeach
                 </select>
                 <span class="text-danger" id="sub_stage_id-error"></span>

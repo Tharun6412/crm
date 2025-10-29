@@ -48,9 +48,7 @@
                                     <tr>
                                         <td class="text-end">Prospect Type</td>
                                         <td>:</td>
-                                        @if (!empty($prospect->segment_id))
-                                            <td>{{ $prospect->segment_id == "1" ? "Commercial" : "Industrial" }}</td>
-                                        @endif
+                                        <td>{{ $prospect->segment->name }}</td>
                                     </tr>
                                     <tr>
                                         <td class="text-end">Industrial Area</td>
@@ -151,12 +149,12 @@
                                     <tr>
                                         <td class="text-end">Stage</td>
                                         <td>:</td>
-                                        <td>{{ $prospect->stageType->name }}</td>
+                                        <td>{{ $prospect->stage->parent->name }}</td>
                                     </tr>
                                     <tr>
                                         <td class="text-end">Sub-stage</td>
                                         <td>:</td>
-                                        <td>{{ $prospect->substage->name }}</td>
+                                        <td>{{ $prospect->stage->name }}</td>
                                     </tr>
                                     <tr>
                                         <td width="210" class="text-end">Status</td>
