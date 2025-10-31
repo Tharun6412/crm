@@ -1,6 +1,6 @@
 <div>
     @php
-        $sub_stage_id_val = request()->has('sub_stage_id') ? request()->get('sub_stage_id') : $prospect->sub_stage_id; 
+        $sub_stage_id_val = request()->has('sub_stage_id') ? request()->get('sub_stage_id') : $prospect->stage_id; 
     @endphp
     @switch($sub_stage_id_val)
         @case(13)

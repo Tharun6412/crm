@@ -10,6 +10,7 @@ use App\Models\Admin\FuelType;
 use App\Models\Admin\Ga;
 use App\Models\Admin\IndustrialArea;
 use App\Models\Admin\Segment;
+use App\Models\Admin\User;
 use App\Models\Spot\ProspectApproval;
 use App\Models\Spot\ProspectComments;
 use App\Models\Spot\ProspectDateChangeRequest;
@@ -79,6 +80,7 @@ class ProspectsController extends Controller
             'fuel_types' => $fuel_types,
             'segments' => $segments,
             'industrial_areas' => [],
+            'users_list' => [],
         ]);
     }
 
@@ -90,9 +92,10 @@ class ProspectsController extends Controller
         $request->validate([
             'ga_id' => 'required',
             'name' => 'required',
+            'cluster_head' => 'required',
+            'ga_head' => 'required',
+            'sales_officer' => 'required',
             'segment_id' => 'required',
-            'firm_id' => 'required',
-            'fuel_id' => 'required',
             'industrial_area_id' => 'required',
         ]);
         // $stage = 1;
@@ -117,6 +120,9 @@ class ProspectsController extends Controller
             'state_id' => $ga_val['state_id'],
             'cluster_id' => $ga_val['cluster_id'],
             'industrial_area_id' => $request->industrial_area_id,
+            'cluster_head' => $request->cluster_head,
+            'ga_head' => $request->ga_head,
+            'sales_officer' => $request->sales_officer,
             'segment_id' => $request->segment_id,
             'notes' => $request->notes,
             'pipeline_availability' => $request->pipeline_availability,
@@ -179,10 +185,18 @@ class ProspectsController extends Controller
     /**
      * Get Industrial Area Based on GA
      */
-    public function getIndustrialAreaByGA(Request $request)
+    public function getDetailsByGA(Request $request)
     {
+        $users_list = User::select('id', 'first_name', 'last_name')->whereHas('ga', function($q) use($request) {
+            $q->where('ga_id', $request->ga_id);
+        })->whereHas('spotRoles', function($q) use($request) {
+            $q->whereIn('spot_role_id', [2,3,4]);
+        })->get();
         $industrial_areas = IndustrialArea::where('ga_id', $request->ga_id)->get();
-        return response()->json(['industrial_areas' => $industrial_areas]);
+        return view('spot.prospects.add-sub-form-list', [
+            'industrial_areas' => $industrial_areas,
+            'users_list' => $users_list,
+        ]);
     }
     /**
      * Display the specified resource.
@@ -242,6 +256,11 @@ class ProspectsController extends Controller
         $firm_types = FirmType::all();
         $fuel_types = FuelType::all();
         $segments = Segment::all();
+        $users_list = User::select('id', 'first_name', 'last_name')->whereHas('ga', function($q) use($prospect) {
+            $q->where('ga_id', $prospect->ga_id);
+        })->whereHas('spotRoles', function($q) {
+            $q->whereIn('spot_role_id', [2,3,4]);
+        })->get();
         $industrial_areas = IndustrialArea::where('ga_id', $prospect->ga_id)->get();
         return view('spot.prospects.edit', [
             'prospect' => $prospect,
@@ -253,6 +272,24 @@ class ProspectsController extends Controller
             'steel_pipe' => $steel_pipe,
             'mdpe_pipe' => $mdpe_pipe,
             'segments' => $segments,
+            'users_list' => $users_list,
+        ]);
+    }
+
+    /**
+     * Get Industrial Area Based on GA
+     */
+    public function getEditDetailsByGA(Request $request)
+    {
+        $users_list = User::select('id', 'first_name', 'last_name')->whereHas('ga', function($q) use($request) {
+            $q->where('ga_id', $request->ga_id);
+        })->whereHas('spotRoles', function($q) use($request) {
+            $q->whereIn('spot_role_id', [2,3,4]);
+        })->get();
+        $industrial_areas = IndustrialArea::where('ga_id', $request->ga_id)->get();
+        return view('spot.prospects.add-sub-form-list', [
+            'industrial_areas' => $industrial_areas,
+            'users_list' => $users_list,
         ]);
     }
 
@@ -264,9 +301,11 @@ class ProspectsController extends Controller
         $request->validate([
             'ga_id' => 'required',
             'name' => 'required',
+            'cluster_head' => 'required',
+            'ga_head' => 'required',
+            'sales_officer' => 'required',
             'segment_id' => 'required',
-            'firm_id' => 'required',
-            'fuel_id' => 'required',
+            'industrial_area_id' => 'required',
         ]);
         $ga_val = Ga::find($request->ga_id); 
         // TO UPdate into the Prospects
@@ -277,12 +316,15 @@ class ProspectsController extends Controller
             'fuel_consumption' => $request->fuel_consumption,
             'unit_id' => $request->unit_id,
             'potential' => $request->potential,
-            'expected_date' =>  Carbon::createFromFormat('d-m-Y', $request->expected_date) ?? null,
+            'expected_date' =>  !empty($request->expected_date) ? Carbon::createFromFormat('d-m-Y', $request->expected_date) : null,
             'zone' => $request->zone,
             'ga_id' => $request->ga_id,
             'state_id' => $ga_val['state_id'],
             'cluster_id' => $ga_val['cluster_id'],
             'industrial_area_id' => $request->industrial_area_id,
+            'cluster_head' => $request->cluster_head,
+            'ga_head' => $request->ga_head,
+            'sales_officer' => $request->sales_officer,
             'segment_id' => $request->segment_id,
             'notes' => $request->notes,
             'pipeline_availability' => $request->pipeline_availability,

@@ -28,7 +28,7 @@
                     @foreach ($prospect->statusHistory as $history)
                         <tr>
                             <td class="text-center">{{ $i++ }}</td>
-                            <td class="align-middle">{{ $history->stage->parent->name }}</td>
+                            <td class="align-middle">{{ $history->stage->parent->name ?? $history->stage->name }}</td>
                             <td class="align-middle">{{ $history->stage->name }}</td>
                             <td>{{ $history->notes }}</td>
                             <td>{{ $history->createdBy->first_name }}</td>
@@ -42,7 +42,7 @@
         </table>
     </div>
 </div>
-@include('scripts.ajax-link-id', ['mod' => 'add-status', 'div' => 'add-status-history', 'cancel' => 'action-type'])
+@include('scripts.ajax-link-id', ['mod' => 'add-status', 'div' => 'action-type'])
 <script type="text/javascript">
     // Industrial Area Based on GA
     function getSubStagesByStage(stage)

@@ -1,3 +1,6 @@
+@php
+    echo auth()->id();
+@endphp
 <div>
     @if (session('success'))
         <div class="alert alert-success alert-dismissible fade show">
@@ -134,6 +137,11 @@
                                     <li>
                                         <a class="dropdown-item link-modal" href="{{ url('spot/prospectStatus/editStatus/'.$prospect->id) }}">
                                             <i class="bi bi-check2-circle"></i>&nbsp;Update Status
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item link-modal" href="{{ url('spot/prospectStatus/gaApprove/'.$prospect->id) }}">
+                                            <i class="bi bi-check2-circle"></i>&nbsp;Ga Approval
                                         </a>
                                     </li>
                                     <li>

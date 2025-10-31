@@ -3,6 +3,8 @@
 namespace App\Models\Admin;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use App\Models\Spot\SpotRoles;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -28,12 +30,14 @@ class User extends Authenticatable
         'last_name',
         'status',
         'email_verified_at',
+        'mobile',
         'emp_id',
         'mobile_b',
         'gender',
         'dob',
         'image',
         'type',
+        'department_id'
     ];
     /**
      * The attributes that should be hidden for serialization.
@@ -81,5 +85,13 @@ class User extends Authenticatable
     public function ga(): BelongsToMany
     {
         return $this->belongsToMany(Ga::class, 'adm_user_ga', 'user_id', 'ga_id');
+    }
+
+    /**
+     * Relation with Spot Roles table via pivot spot_user_roles
+     */
+    public function spotRoles():BelongsToMany
+    {
+        return $this->belongsToMany(SpotRoles::class, 'spot_user_roles', 'user_id', 'spot_role_id');
     }
 }

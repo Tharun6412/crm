@@ -13,14 +13,10 @@
 @endsection
 <script type="text/javascript">
     // Industrial Area Based on GA
-    function getIndustrialAreaByGA(ga)
+    function getDetailsByGA(ga)
     {
-        let options = '<option value="">Select</option>';
-        $.get("{{ url('spot/prospects/getIndustrialAreaByGA') }}", {ga_id : ga}, function(data) {
-            $.each(data.industrial_areas, function(index, area){
-                options += `<option value="${area.id}">${area.name}</option>`;
-            });
-            $('#industrial_area_id').html(options);
+        $.get("{{ url('spot/prospects/getDetailsByGA') }}", {ga_id : ga}, function(data) {
+            $('#add-sub-form').html(data);
         });
     }
 </script>

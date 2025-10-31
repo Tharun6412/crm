@@ -25,7 +25,7 @@ class IndustrialAreaFilter extends Component
     {
         $industrial_areas = [];
         if(request()->has('geo_area')) {
-            $industrial_areas = IndustrialArea::where('ga_id', request()->geo_area)->get();
+            $industrial_areas = IndustrialArea::whereIn('ga_id', request()->geo_area)->get();
         }
         return view('components.admin.industrial-area-filter', ['industrial_areas' => $industrial_areas]);
     }

@@ -24,6 +24,9 @@
                         @case(7)
                             @include('spot.prospects.status-history.cancel')
                             @break
+                        @case(8)
+                            @include('spot.prospects.status-history.ga-approval')
+                            @break
                         @default
                     @endswitch
                 @endif
@@ -137,6 +140,21 @@
                                         <td class="text-end">State</td>
                                         <td>:</td>
                                         <td>{{ $prospect->state->name }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-end" width="270">Cluster Head</td>
+                                        <td width="1%">:</td>
+                                        <td>{{ $prospect->clusterHead->first_name }}&nbsp;{{ $prospect->clusterHead->last_name }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-end">GA Head</td>
+                                        <td>:</td>
+                                        <td>{{ $prospect->gaHead->first_name }}&nbsp;{{ $prospect->gaHead->last_name }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-end">Sales Officer</td>
+                                        <td>:</td>
+                                        <td>{{ $prospect->salesOfficer->first_name }}&nbsp;{{ $prospect->salesOfficer->last_name }}</td>
                                     </tr>
                                 </tbody>
                             </table>

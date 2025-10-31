@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Spot;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Controllers\DocumentCentre\DocumentUpload;
+use App\Models\Spot\ProspectApproval;
 use App\Models\Spot\ProspectDocuments;
 use App\Models\Spot\Prospects;
 use App\Models\Spot\ProspectStatusHistory;
@@ -21,21 +22,28 @@ class ProspectStatusController extends Controller
         $status_list = Status::where('type', 1)->where('parent_id', NULL)->get();
         $prospect = Prospects::find($id);
         $sub_stages = Status::where('parent_id', $prospect->stage->parent->id)->get();
+        if($prospect->stage_id == 22) {
+            $offer_type_docs = ProspectDocuments::where(['document_type_id' => 2, 'prospect_id' => $id, 'status' => 1])->get();
+        }
         if($request->type == "1") {
             return view('spot.prospects.status-history.edit', [
+                'sub_stage_id' => $prospect->stage_id,
                 'status_list' => $status_list,
                 'type' => 1,
                 'id' => $id,
                 'prospect' => $prospect,
                 'sub_stages' => $sub_stages,
+                'offer_type_docs' => $offer_type_docs ?? [],
             ]);    
         }
         return view('spot.prospects.show', [
+            'sub_stage_id' => $prospect->stage_id,
             'status_list' => $status_list,
             'type' => 1,
             'id' => $id,
             'prospect' => $prospect,
             'sub_stages' => $sub_stages,
+            'offer_type_docs' => $offer_type_docs ?? [],
         ]);
     }
 
@@ -236,5 +244,67 @@ class ProspectStatusController extends Controller
             'created_by' => Auth::id(),
         ]);
         return response()->json(['success' => 'Status updated Successfully']);
+    }
+
+    /**
+     * GA Head Approve
+     */
+    public function gaApprove(Request $request, $id)
+    {
+        $prospect = Prospects::find($id);
+        $offer_type_docs = ProspectDocuments::where(['document_type_id' => 2, 'prospect_id' => $id])->whereNULL('status')->get();
+        // dd($offer_type_docs->toRawSql());
+        return view('spot.prospects.show', [
+            'type' => 8,
+            'id' => $id,
+            'prospect' => $prospect,
+            'offer_type_docs' => $offer_type_docs,
+        ]); 
+    }
+
+    /**
+     * Ga Head Submit
+     */
+    public function gaHeadSubmit(Request $request , $id)
+    {
+        $request->validate([
+            'offer_document' => 'required',
+            'notes' =>'required',
+        ]);
+        if($request->has('reject_document') and $request->reject_document == "2") {
+            // Offer Rejected
+            // Update Documents and prospects
+            $updateDoc = ProspectDocuments::where('id', $request->offer_document)->update(['status' => 2]);
+            $updateProspectStatus = Prospects::where('id', $id)->update(['status_id' => 27]);
+            // Insert into Status History
+            ProspectStatusHistory::create([
+                'prospect_id' => $id,
+                'stage_id' => 9,
+                'notes' => $request->notes,
+                'created_at' => Carbon::now(),
+                'created_by' => Auth::id(),
+            ]);
+            return response()->json(['success' => 'Document rejected Successfully']);
+        }else {
+            // Update Prospect Document Status
+            $updateDoc = ProspectDocuments::where('id', $request->offer_document)->update(['status' => 1]);
+            // Update Prospects Table
+            $updateProspectStatus = Prospects::where('id', $id)->update(['status_id' => 9]);
+            // Insert into Status History
+            ProspectStatusHistory::create([
+                'prospect_id' => $id,
+                'stage_id' => 9,
+                'notes' => $request->notes,
+                'created_at' => Carbon::now(),
+                'created_by' => Auth::id(),
+            ]);
+            // Update Prospect Approval
+            ProspectApproval::where('prospect_id', $id)->where('status_id', 3)->update([
+                'status' => 1,
+                'created_by' => Auth::id(),
+                'created_at' => Carbon::now(),
+            ]);
+            return response()->json(['success' => 'Document approved Successfully']);
+        }
     }
 }

@@ -57,7 +57,7 @@ class TargetsController extends Controller
                     if(isset($value) and $value >= "0") {
                         $records[] = array(
                             'ga_id' => $id,
-                            'target_date' => Carbon::createFromFormat('m-Y', $target_date)->startOfMonth()->toDateString(),
+                            'target_date' => Carbon::createFromFormat('m-Y', trim($target_date))->startOfMonth()->toDateString(),
                             'segment_id' => $segment_id,
                             'target_value' => $value,
                             'created_by' => Auth::id(),

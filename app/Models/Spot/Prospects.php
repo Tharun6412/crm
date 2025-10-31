@@ -36,6 +36,7 @@ class Prospects extends Model
         'longitude',
         'ga_head',
         'cluster_head',
+        'sales_officer',
         'segment_id',
         'pipeline_availability',
         'notes',
@@ -123,6 +124,30 @@ class Prospects extends Model
     public function updatedBy() : BelongsTo
     {
         return $this->belongsTo(User::class, 'updated_by')->withDefault();
+    }
+
+    /**
+     * Relation with GA Head
+     */
+    public function gaHead() : BelongsTo
+    {
+        return $this->belongsTo(User::class, 'ga_head')->withDefault();
+    }
+
+    /**
+     * Relation with Cluster head
+     */
+    public function clusterHead():BelongsTo
+    {
+        return $this->belongsTo(User::class, 'cluster_head')->withDefault();
+    }
+
+    /**
+     * Relation with Sales Officer
+     */
+    public function salesOfficer():BelongsTo
+    {
+        return $this->belongsTo(User::class, 'sales_officer')->withDefault();
     }
     /**
      * Relation with Stage

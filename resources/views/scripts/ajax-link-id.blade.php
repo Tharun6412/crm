@@ -7,7 +7,6 @@
         $("#{{ $mod ?? 'none' }}-link").click(function(e){
             e.preventDefault();
             $.get($(this).attr('href'), function(data) {
-                $("#{{ $cancel ?? 'none' }}").html('');
                 $("#{{ $div ?? 'none' }}").html(data);
             });
         });

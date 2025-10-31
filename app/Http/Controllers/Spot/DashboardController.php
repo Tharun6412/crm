@@ -9,6 +9,7 @@ use App\Models\Spot\Status;
 use App\Models\Spot\Target;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
@@ -17,18 +18,37 @@ class DashboardController extends Controller
      */
     public function index(Request $request)
     {
-        // $data['stages'] = Status::where('type', 1)->where('parent', 0)->get();
-        // $data['prospects_data'] = Prospects::selectRaw('stage, count(stage) as stage_count, segment_id')->groupByRaw('segment_id, stage')->get();
-        // dd($data['prospect_counts']);
-        $data['prospects_data'] = [];
         $data['segments'] = Segment::whereIn('id', [2,3])->orderByDesc('id')->get();
-        $current_date = Carbon::now();
-        $data['target_year'] = $current_date->year;
+        $data['target_year'] = $request->target_year; //$current_date->year;
         $data['y_start'] = Carbon::create($data['target_year'], 4, 1);
         $data['y_end'] = $data['y_start']->copy()->addYear()->subMonth()->endOfMonth();
-        $data['targets'] = Target::select('segment_id', 'target_date', 'target_value')->whereBetween('target_date', [$data['y_start'], $data['y_end']])->get()->groupBy('segment_id')->map(function($segment_targets) {
-           return  $segment_targets->pluck('target_value', 'target_date');
-        });
+        // Monthly Targets Data
+        $data['targets_data'] = Target::select('segment_id', DB::raw('MONTH(target_date) as target_date'), DB::raw('SUM(target_value) as target_value'))
+            ->whereBetween('target_date', [$data['y_start'], $data['y_end']])
+            ->When($request->has('geo_area'), function($q) use($request) {
+                $q->whereIn('ga_id', $request->get('geo_area'));
+            })
+            ->groupBy('segment_id', DB::raw('MONTH(target_date)'))->get();
+        // Monthly Potential
+        $data['potential_data'] = Prospects::select('segment_id', DB::raw('MONTH(expected_date) as expected_month'), DB::raw('SUM(potential) as potential'))
+            ->whereBetween('expected_date', [$data['y_start'], $data['y_end']])
+            ->whereNotIn('status_id', [11,12,26])
+            ->When($request->has('geo_area'), function($q) use($request) {
+                $q->whereIn('ga_id', $request->get('geo_area'));
+            })
+            ->groupBy('segment_id', DB::raw('MONTH(expected_date)'))->get();
+        // Monthly Achieved
+        $data['achieved_data'] = Prospects::select('segment_id', DB::raw('MONTH(expected_date) as expected_month'), DB::raw('SUM(potential) as potential'))
+            ->whereBetween('expected_date', [$data['y_start'], $data['y_end']])
+            ->where('stage_id', 25)
+            ->whereNotIn('status_id', [11,12,26])
+            ->When($request->has('geo_area'), function($q) use($request) {
+                $q->whereIn('ga_id', $request->get('geo_area'));
+            })
+            ->groupBy('segment_id', DB::raw('MONTH(expected_date)'))->get();
+        if($request->ajax()) {
+            return view('spot.dashboard.list-body', $data);
+        }
         return view('spot.dashboard.list', $data);
     }
 }

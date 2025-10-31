@@ -9,10 +9,16 @@
         @endisset
     </button>
     <ul class="dropdown-menu bg-light">
-        <li class="dropdown-item">
-            <input type="checkbox" class="form-check-input" id="industrial_area_id_all">
-            <label for="industrial_area_id_all" class="form-check-label">All or clear</label>
-        </li>
+        @if(request()->geo_area)    
+            <li class="dropdown-item">
+                <input type="checkbox" class="form-check-input" id="industrial_area_id_all">
+                <label for="industrial_area_id_all" class="form-check-label">All or clear</label>
+            </li>
+        @else
+            <li class="dropdown-item">
+                <label>Please select GA</label>
+            </li>
+        @endif
         @php
             $industrial_area_checked = (request()->has('industrial_area_id')) ? request()->get('industrial_area_id') : [];
         @endphp

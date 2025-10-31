@@ -2,13 +2,13 @@
 
 use App\Http\Middleware\RouteAccess;
 use Illuminate\Support\Facades\Route;
-
 Route::get('/', function () {
     return view('welcome');
 });
 // Prospects 
 Route::middleware(['auth', RouteAccess::class])->group(function() {
-    Route::get('prospects/getIndustrialAreaByGA', [App\Http\Controllers\Spot\ProspectsController::class, 'getIndustrialAreaByGA']);
+    Route::get('prospects/getEditDetailsByGA', [App\Http\Controllers\Spot\ProspectsController::class, 'getEditDetailsByGA']);
+    Route::get('prospects/getDetailsByGA', [App\Http\Controllers\Spot\ProspectsController::class, 'getDetailsByGA']);
     Route::post('prospects/updatePipeLine', [App\Http\Controllers\Spot\ProspectsController::class, 'updatePipeLine']);
     // Prospects 
     Route::get('prospects/prospectsExport', [App\Http\Controllers\Spot\ProspectsController::class, 'prospectsExport']);
@@ -28,6 +28,8 @@ Route::middleware(['auth', RouteAccess::class])->group(function() {
     Route::post('comments/destroy/{id}', [App\Http\Controllers\Spot\ProspectCommentsController::class, 'destroy']);
     Route::resource('comments', App\Http\Controllers\Spot\ProspectCommentsController::class);
     // Status change
+    Route::get('prospectStatus/gaApprove/{id}', [App\Http\Controllers\Spot\ProspectStatusController::class, 'gaApprove']);
+    Route::post('prospectStatus/gaHeadSubmit/{id}', [App\Http\Controllers\Spot\ProspectStatusController::class, 'gaHeadSubmit']);
     Route::get('prospectStatus/editStatus/{id}', [App\Http\Controllers\Spot\ProspectStatusController::class, 'editStatus']);
     Route::post('prospectStatus/updateStatus/{id}', [App\Http\Controllers\Spot\ProspectStatusController::class, 'updateStatus']);
     Route::get('prospectStatus/getSubStagesByStage', [App\Http\Controllers\Spot\ProspectStatusController::class, 'getSubStagesByStage']);

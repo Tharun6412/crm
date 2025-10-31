@@ -11,9 +11,9 @@
                     @csrf
                     @method('PUT')
                     <div class="row mb-2">
-                        <label for="ga_id" class="col-sm-3 col-form-label text-end">Geo Area<span>&nbsp;:</span></label>
+                        <label for="ga_id" class="col-sm-3 col-form-label text-end">Geo Area&nbsp;<span class="error text-danger">*</span>&nbsp;:</label>
                         <div class="col-sm-8">
-                            <select name='ga_id' id='ga_id' class="form-select" onchange="getIndustrialAreaByGA(this.value)">
+                            <select name='ga_id' id='ga_id' class="form-select" onchange="getEditDetailsByGA(this.value)">
                                 <option value=''>Select GA</option>
                                 @foreach($geo_areas as $ga)
                                     <option value='{{ $ga->id }}' @selected($ga->id == $prospect->ga_id)>{{ $ga->name }}</option>
@@ -21,8 +21,17 @@
                             </select>
                         </div>
                     </div>
+                    <div id="edit-sub-form">
+                        @include('spot.prospects.edit-sub-form-list')
+                    </div>
                     <div class="row mb-2">
-                        <label for="ga_id" class="col-sm-3 col-form-label text-end">Segment<span>&nbsp;:</span></label>
+                        <label for="name" class="col-sm-3 col-form-label text-end">Name&nbsp;<span class="error text-danger">*</span>&nbsp;:</label>
+                        <div class="col-sm-8">
+                            <input type="text" name="name" id="name" class="form-control" placeholder="Enter Name" value="{{ $prospect->name }}">
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <label for="ga_id" class="col-sm-3 col-form-label text-end">Segment&nbsp;<span class="error text-danger">*</span>&nbsp;:</label>
                         <div class="col-sm-8">
                             <select name='segment_id' id='segment_id' class="form-select">
                                 <option value=''>Select Segment</option>
@@ -52,23 +61,6 @@
                                     <option value='{{ $fuel_type->id }}' @selected($fuel_type->id == $prospect->fuel_id)>{{ $fuel_type->name }}</option>
                                 @endforeach
                             </select>
-                        </div>
-                    </div>
-                    <div class="row mb-2">
-                        <label for="industrial_area_id" class="col-sm-3 col-form-label text-end">Industrial Area<span>&nbsp;:</span></label>
-                        <div class="col-sm-8">
-                            <select name='industrial_area_id' id='industrial_area_id' class="form-select">
-                                <option value=''>Select Industrial Area</option>
-                                @foreach($industrial_areas as $area)
-                                    <option value='{{ $area->id }}' @selected($area->id == $prospect->industrial_area_id)>{{ $area->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row mb-2">
-                        <label for="name" class="col-sm-3 col-form-label text-end">Name<span>&nbsp;:</span></label>
-                        <div class="col-sm-8">
-                            <input type="text" name="name" id="name" class="form-control" placeholder="Enter Name" value="{{ $prospect->name }}">
                         </div>
                     </div>
                     <div class="row mb-2">
@@ -196,14 +188,10 @@
         }
     });
     // Industrial Area Based on GA
-    function getIndustrialAreaByGA(ga)
+    function getEditDetailsByGA(ga)
     {
-        let options = '<option value="">Select</option>';
-        $.get("{{ url('spot/prospects/getIndustrialAreaByGA') }}", {ga_id : ga}, function(data) {
-            $.each(data.industrial_areas, function(index, area){
-                options += `<option value="${area.id}">${area.name}</option>`;
-            });
-            $('#industrial_area_id').html(options);
+        $.get("{{ url('spot/prospects/getEditDetailsByGA') }}", {ga_id : ga}, function(data) {
+            $('#edit-sub-form').html(data);
         });
     }
     // PipeLine Check Function
