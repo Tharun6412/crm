@@ -1,4 +1,12 @@
 @php
+	$geo_ids = request()->geo_area;
+	$prospect_list = [];
+	$prospect_sum = 0;
+	// Get Status Count List
+	foreach ($prospect_data as $status_id => $status_val) {
+		$prospect_list[$status_val->stage->parent->name] = $status_val->status_count;
+		$prospect_sum += $status_val->status_count;
+	}
 	// Targets
 	$targets = [];
 	foreach($targets_data as $id2 => $target) {
@@ -17,9 +25,46 @@
 	// print "<pre>"; print_r($targets);exit;
 @endphp
 <div class="row">
+	<div class="col-md-10"></div>
+	<div class="col-md-2">
+		<h3>Prospects</h3>
+		<div class="row">
+			@foreach ($status_list as $list)
+				<div class="col-6">
+					<div class="card text-center">
+						<div class="card-body">
+							<h5 style="white-space: nowrap;">{{ $list->name }}</h5>
+							<p class="fw-bold">{{ $prospect_list[$list->name] ?? 0 }}</p>
+						</div>
+					</div>
+					<br/>
+				</div>
+			@endforeach
+			<div class="col">
+				<div class="card">
+					<div class="card-body bg-info">
+						<h5 style="white-space: nowrap;">Totals</h5>
+						<p class="fw-bold">{{ $prospect_sum }}</p>
+					</div>
+				</div>
+				<br/>
+			</div>
+		</div>
+	</div>
+</div>
+<br/>
+<div class="row">
+	@php
+		if ($geo_ids) {
+            // render your component output as string
+            $ga_title = (new \App\View\Components\Admin\GaName($geo_ids))->render()->render();
+        } else {
+            $ga_title = '';
+        }
+	@endphp
 	@foreach ($segments as $segment)
 		<div class="col-sm-6 col-md-6">
-			<h3>{{ $segment->name }}</h3>
+			<h3>{{ $segment->name }}&nbsp;{{ $ga_title }}</h3>
 			<div class="table-responsive">
 				<table class="table table-bordered">
 					<thead>
@@ -64,7 +109,7 @@
 <div class="row">
 	@foreach ($segments as $segment)
 		<div class="col-sm-6 col-md-6">
-			<h3>{{ $segment->name }}</h3>
+			<h3>{{ $segment->name }}&nbsp;{{ $ga_title }}</h3>
 			<div class="table-responsive">
 				<table class="table table-bordered">
 					<thead>

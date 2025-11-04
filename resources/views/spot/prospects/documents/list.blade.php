@@ -11,7 +11,9 @@
     <div class="clearfix mb-2">
         <h4 class="float-start">Documents</h4>
         <div class="float-end">
-            <a class="btn btn-sm btn-success" id="add-doc-link" href="{{ url('spot/prospectDocument/create/'.$prospect->id.'?type=2') }}"><i class="bi bi-file-earmark-plus"></i>&nbsp;Add Document</a>
+            @if ($prospect->status_id != "11" and $prospect->status_id != "12")
+                <a class="btn btn-sm btn-success" id="add-doc-link" href="{{ url('spot/prospectDocument/create/'.$prospect->id.'?type=2') }}"><i class="bi bi-file-earmark-plus"></i>&nbsp;Add Document</a>
+            @endif
         </div>
     </div>
     @php

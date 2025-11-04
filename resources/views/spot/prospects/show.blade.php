@@ -1,5 +1,5 @@
 {{-- View Prospect Details --}}
-<div class="modal-dialog modal-xl">
+<div class="modal-dialog modal-fullscreen modal-dialog-scrollable">
     <div class="modal-content">
         <div class="modal-header">
             <h1 class="modal-title fs-5" id="exampleModalLabel">View Prospect Details</h1>

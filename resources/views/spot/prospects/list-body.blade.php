@@ -1,6 +1,3 @@
-@php
-    echo auth()->id();
-@endphp
 <div>
     @if (session('success'))
         <div class="alert alert-success alert-dismissible fade show">
@@ -124,51 +121,66 @@
                                             <i class="bi bi-info-circle"></i>&nbsp;View
                                         </a>
                                     </li>
-                                    <li>
-                                        <a class="dropdown-item link-modal" href="{{ url('spot/prospects/'.$prospect->id.'/edit') }}">
-                                            <i class="bi bi-pencil"></i>&nbsp;Edit
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item link-modal" href="{{ url('spot/dateChangeRequest/create/'.$prospect->id) }}">
-                                            <i class="bi bi-info-circle"></i>&nbsp;Request For Date Change
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item link-modal" href="{{ url('spot/prospectStatus/editStatus/'.$prospect->id) }}">
-                                            <i class="bi bi-check2-circle"></i>&nbsp;Update Status
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item link-modal" href="{{ url('spot/prospectStatus/gaApprove/'.$prospect->id) }}">
-                                            <i class="bi bi-check2-circle"></i>&nbsp;Ga Approval
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item link-modal" href="{{ url('spot/prospectDocument/create/'.$prospect->id) }}">
-                                            <i class="bi bi-folder2-open"></i>&nbsp;Manage Documents
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item link-modal" href="{{ url('spot/prospects/'.$prospect->id) }}">
-                                            <i class="bi bi-chat"></i>&nbsp;Add Comment
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item link-modal" href="{{ url('spot/prospectStatus/hold/'.$prospect->id) }}">
-                                            <i class="bi bi-ban"></i>&nbsp;Hold
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item link-modal" href="{{ url('spot/prospectStatus/cancel/'.$prospect->id) }}">
-                                            <i class="bi bi-x-circle"></i>&nbsp;Cancel
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item ajax-link-file-delete" href="{{ url('spot/prospects/'.$prospect->id) }}">
-                                            <i class="bi bi-trash"></i>&nbsp;Delete
-                                        </a>
-                                    </li>
+                                    @if ($prospect->status_id != "11" and $prospect->status_id != "12")    
+                                        @if ($prospect->status_id != 8 and $prospect->stage_id != 25)    
+                                            <li>
+                                                <a class="dropdown-item link-modal" href="{{ url('spot/prospects/'.$prospect->id.'/edit') }}">
+                                                    <i class="bi bi-pencil"></i>&nbsp;Edit
+                                                </a>
+                                            </li>
+                                        @endif
+                                        @if ($prospect->status_id != 8 and $prospect->stage_id != 25)    
+                                            <li>
+                                                <a class="dropdown-item link-modal" href="{{ url('spot/dateChangeRequest/create/'.$prospect->id) }}">
+                                                    <i class="bi bi-info-circle"></i>&nbsp;Request For Date Change
+                                                </a>
+                                            </li>
+                                        @endif
+                                        {{-- Same Condition as for edit --}}
+                                        @if($prospect->status_id != 8 and $prospect->stage_id != 25) 
+                                            <li>
+                                                <a class="dropdown-item link-modal" href="{{ url('spot/prospectStatus/editStatus/'.$prospect->id) }}">
+                                                    <i class="bi bi-check2-circle"></i>&nbsp;Update Status
+                                                </a>
+                                            </li>
+                                        @endif
+                                        @if ($prospect->status_id == "8")    
+                                            <li>
+                                                <a class="dropdown-item link-modal" href="{{ url('spot/prospectStatus/gaApprove/'.$prospect->id) }}">
+                                                    <i class="bi bi-check2-circle"></i>&nbsp;Ga Approval
+                                                </a>
+                                            </li>
+                                        @endif
+                                        @if ($prospect->stage_id != "25")    
+                                            <li>
+                                                <a class="dropdown-item link-modal" href="{{ url('spot/prospectDocument/create/'.$prospect->id) }}">
+                                                    <i class="bi bi-folder2-open"></i>&nbsp;Manage Documents
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item link-modal" href="{{ url('spot/prospects/'.$prospect->id) }}">
+                                                    <i class="bi bi-chat"></i>&nbsp;Add Comment
+                                                </a>
+                                            </li>
+                                        @endif
+                                        @if ($prospect->status_id != "8" and $prospect->stage_id != 25)    
+                                            <li>
+                                                <a class="dropdown-item link-modal" href="{{ url('spot/prospectStatus/hold/'.$prospect->id) }}">
+                                                    <i class="bi bi-ban"></i>&nbsp;Hold
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item link-modal" href="{{ url('spot/prospectStatus/cancel/'.$prospect->id) }}">
+                                                    <i class="bi bi-x-circle"></i>&nbsp;Cancel
+                                                </a>
+                                            </li>
+                                        @endif
+                                        <li>
+                                            <a class="dropdown-item ajax-link-file-delete" href="{{ url('spot/prospects/'.$prospect->id) }}">
+                                                <i class="bi bi-trash"></i>&nbsp;Delete
+                                            </a>
+                                        </li>
+                                    @endif
                                 </ul>
                             </div>
                         </td>

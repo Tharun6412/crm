@@ -4,7 +4,9 @@
     <div class="clearfix mb-2">
         <h4 class="float-start">Status History</h4>
         <div class="float-end">
-            <a class="btn btn-sm btn-success" id="add-status-link" href="{{ url('spot/prospectStatus/editStatus/'.$prospect->id.'?type=1') }}"><i class="bi bi-check2-circle"></i>&nbsp;Add / Update Status</a>
+            @if ($prospect->status_id != "11" AND $prospect->status_id != "12")
+                <a class="btn btn-sm btn-success" id="add-status-link" href="{{ url('spot/prospectStatus/editStatus/'.$prospect->id.'?type=1') }}"><i class="bi bi-check2-circle"></i>&nbsp;Add / Update Status</a>
+            @endif
         </div>
     </div>
     <a class="visually-hidden" href="{{ url('spot/prospects/'.$prospect->id.'?reload=true&type=1') }}" data-custom-attr="value" id="reload-status">Hidden Link</a>
@@ -42,7 +44,7 @@
         </table>
     </div>
 </div>
-@include('scripts.ajax-link-id', ['mod' => 'add-status', 'div' => 'action-type'])
+@include('scripts.ajax-link-id', ['mod' => 'add-status', 'div' => 'action-type', 'modal_scroll' => "$('.modal-body').scrollTop(0);"])
 <script type="text/javascript">
     // Industrial Area Based on GA
     function getSubStagesByStage(stage)

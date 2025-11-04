@@ -8,6 +8,8 @@
             e.preventDefault();
             $.get($(this).attr('href'), function(data) {
                 $("#{{ $div ?? 'none' }}").html(data);
+                // To Load in top of the screen
+                {{!! $modal_scroll ?? '' !!}}
             });
         });
     });

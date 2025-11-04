@@ -19,19 +19,21 @@
     @else
         <div class="alert alert-secondary mb-0">No comments!</div>
     @endif
-    <div class="border rounded p-3 mt-3">
-        <form action="{{ url('spot/comments/store/'.$prospect->id) }}" id="prsp-comment-form" method="POST">
-            @csrf
-            <div class="form-floating mb-2">
-                <textarea name="comments" class="form-control" placeholder="Leave a comment here" id="comments"></textarea>
-                {{-- <label for="floatingComments">Comment as {{ $this->session->userdata('emp')['firstname'] }} ({{ $this->session->userdata('emp')['user_name'] }})</label> --}}
-                <label for="floatingComments">Comment as Guest</label>
-                <div class="text-danger" id="comments-error"></div>
-                <div class="form-text text-end fst-italic">Maximum length of comment is 600 characters </div>
-            </div>
-            <button type="submit" class="btn btn-sm btn-success"><i class="bi bi-chat"></i>&nbsp;Add Comment</button>
-        </form>
-    </div>
+    @if ($prospect->status_id != "11" and $prospect->status_id != "12")
+        <div class="border rounded p-3 mt-3">
+            <form action="{{ url('spot/comments/store/'.$prospect->id) }}" id="prsp-comment-form" method="POST">
+                @csrf
+                <div class="form-floating mb-2">
+                    <textarea name="comments" class="form-control" placeholder="Leave a comment here" id="comments"></textarea>
+                    {{-- <label for="floatingComments">Comment as {{ $this->session->userdata('emp')['firstname'] }} ({{ $this->session->userdata('emp')['user_name'] }})</label> --}}
+                    <label for="floatingComments">Comment as Guest</label>
+                    <div class="text-danger" id="comments-error"></div>
+                    <div class="form-text text-end fst-italic">Maximum length of comment is 600 characters </div>
+                </div>
+                <button type="submit" class="btn btn-sm btn-success"><i class="bi bi-chat"></i>&nbsp;Add Comment</button>
+            </form>
+        </div>
+    @endif
 </div>
 @include('scripts.ajax-file-submit', ['form' => 'prsp-comment', 'callback' => 'reloadComments()'])
 <script type="text/javascript">

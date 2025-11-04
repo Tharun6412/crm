@@ -22,6 +22,13 @@ class DashboardController extends Controller
         $data['target_year'] = $request->target_year; //$current_date->year;
         $data['y_start'] = Carbon::create($data['target_year'], 4, 1);
         $data['y_end'] = $data['y_start']->copy()->addYear()->subMonth()->endOfMonth();
+        $data['status_list'] = Status::where('type', 1)->whereNull('parent_id')->get();
+        $data['prospect_data'] = Prospects::select('stage_id',DB::raw('COUNT(stage_id) as status_count'))
+            ->When($request->has('geo_area'), function($q) use($request) {
+                $q->whereIn('ga_id', $request->get('geo_area'));
+            })
+            ->groupBy('stage_id')->get();
+        // print "<pre>"; print_r($data['status_list']);
         // Monthly Targets Data
         $data['targets_data'] = Target::select('segment_id', DB::raw('MONTH(target_date) as target_date'), DB::raw('SUM(target_value) as target_value'))
             ->whereBetween('target_date', [$data['y_start'], $data['y_end']])

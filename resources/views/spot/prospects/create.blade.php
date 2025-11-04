@@ -197,4 +197,11 @@
             $('#mdpe_pipeline_div').addClass('d-none');
         }
     }
+    // Industrial Area Based on GA
+    function getDetailsByGA(ga)
+    {
+        $.get("{{ url('spot/prospects/getDetailsByGA') }}", {ga_id : ga}, function(data) {
+            $('#add-sub-form').html(data);
+        });
+    }
 </script>

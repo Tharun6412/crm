@@ -14,8 +14,10 @@
 <div class="bd-callout bd-callout-primary bg-transparent card mt-0 border-primary mb-3">
     <div class="clearfix mb-2">
         <h4 class="float-start">Date Change Requests</h4>
-        <div class="float-end">          
-            <a class="btn btn-sm btn-success" id="add-date-request-link" href="{{ url('spot/dateChangeRequest/create/'.$prospect->id.'?type=4') }}"><i class="bi bi-calender-plus"></i>&nbsp;Add Request</a>
+        <div class="float-end">
+            @if ($prospect->status_id != "11" and $prospect->status_id != "12")
+                <a class="btn btn-sm btn-success" id="add-date-request-link" href="{{ url('spot/dateChangeRequest/create/'.$prospect->id.'?type=4') }}"><i class="bi bi-calender-plus"></i>&nbsp;Add Request</a>
+            @endif    
         </div>
     </div>
     <a class="visually-hidden" href="{{ url('spot/prospects/'.$prospect->id.'?reload=true&type=4') }}" data-custom-attr="value" id="reload-date-request">Hidden Link</a>
