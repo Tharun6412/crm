@@ -105,6 +105,28 @@
                         </div>
                     </div>
                 </div>
+                {{-- Geo Areas --}}
+                <div class="row">
+                    <div class="col-sm-2 text-end">
+                        <h5>Geo Areas</h5>
+                    </div>
+                    <div class="col-sm-10">
+                        <div class="row row-cols-3">
+                            @php
+                                $user_gas = $user->ga->pluck('id')->toArray();
+                            @endphp
+                            @foreach ($geo_areas as $ga)
+                                <div class="col">
+                                    <div class="form-check">
+                                        <input type="checkbox" name="geo_areas[{{ $ga->id }}]" id="edit_ga_{{ $ga->id }}" class="form-check-input" value="{{ $ga->id }}" @checked(in_array($ga->id, $user_gas))>
+                                        <label for="edit_ga_{{ $ga->id }}" class="form-check-label">{{ $ga->name }}</label>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+                <hr>
                 <div class="row">
                     <div class="col-sm-2 text-end">
                         <h5>Roles</h5>
@@ -126,21 +148,21 @@
                     </div>
                 </div>
                 <hr>
-                {{-- Geo Areas --}}
+                {{-- SPot Roles --}}
                 <div class="row">
                     <div class="col-sm-2 text-end">
-                        <h5>Geo Areas</h5>
+                        <h5>SPot Roles</h5>
                     </div>
                     <div class="col-sm-10">
                         <div class="row row-cols-3">
                             @php
-                                $user_gas = $user->ga->pluck('id')->toArray();
+                                $user_spot_roles = $user->spotRoles->pluck('id')->toArray();
                             @endphp
-                            @foreach ($geo_areas as $ga)
+                            @foreach ($spot_roles as $role)
                                 <div class="col">
                                     <div class="form-check">
-                                        <input type="checkbox" name="geo_areas[{{ $ga->id }}]" id="edit_ga_{{ $ga->id }}" class="form-check-input" value="{{ $ga->id }}" @checked(in_array($ga->id, $user_gas))>
-                                        <label for="edit_ga_{{ $ga->id }}" class="form-check-label">{{ $ga->name }}</label>
+                                        <input type="checkbox" name="spot_roles[{{ $role->id }}]" id="edit_sp_role_{{ $role->id }}" class="form-check-input" value="{{ $role->id }}" @checked(in_array($role->id, $user_spot_roles))>
+                                        <label for="edit_sp_role_{{ $role->id }}" class="form-check-label">{{ $role->name }}</label>
                                     </div>
                                 </div>
                             @endforeach

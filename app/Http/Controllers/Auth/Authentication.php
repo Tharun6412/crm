@@ -40,15 +40,19 @@ class Authentication extends Controller
         
         // Get User roles and respective module actions
         $auth_user = Auth::user();
-        // Get user roles
+        // Get user Geo areas, Roles and SPot Roles
+        $gas = $auth_user->ga->pluck('id')->toArray();
         $roles = $auth_user->roles->pluck('id')->toArray();
+        $spot_roles = $auth_user->spotRoles->pluck('id')->toArray();
         // Get Module actions from roles
         $module_actions = RoleAction::whereIn('role_id', $roles)->get()->pluck('module_action_id')->toArray();
 
         // Create additional user session 
         $user = [
+            'gas' => $gas,
             'roles' => $roles,
             'module_actions' => $module_actions,
+            'spot_roles' => $spot_roles,
         ];
         session()->put('user', $user);
 

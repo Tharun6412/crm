@@ -155,6 +155,15 @@
                                         <i class="bi bi-key"></i>&nbsp;Reset Password
                                     </a>
                                 </li>
+                                <li>
+                                    <a class="dropdown-item link-modal" href="{{ url('admin/users/status/' . $user->id) }}">
+                                        @if ($user->status == 1)
+                                            <i class="bi bi-ban"></i>&nbsp;Inactive
+                                        @else
+                                            <i class="bi bi-check-circle"></i>&nbsp;Activate
+                                        @endif
+                                    </a>
+                                </li>
                             </ul>
                         </div>
                     </td>

@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Route;
 // Admin routes
 Route::middleware([ModuleAccess::class, 'auth'])->group(function() {
     // User administration
+    Route::get('users/status/{id}', [App\Http\Controllers\Admin\UserStatusController::class, 'edit']);
+    Route::put('users/status/{id}', [App\Http\Controllers\Admin\UserStatusController::class, 'update']);
     Route::resource('users', App\Http\Controllers\Admin\UserController::class);
     Route::resource('roles', App\Http\Controllers\Admin\RoleController::class);
     // Module administration

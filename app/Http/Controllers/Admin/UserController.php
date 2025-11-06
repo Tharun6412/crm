@@ -7,6 +7,7 @@ use App\Models\Admin\Department;
 use App\Models\Admin\Ga;
 use App\Models\Admin\Role;
 use App\Models\Admin\User;
+use App\Models\Spot\SpotRoles;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -93,15 +94,17 @@ class UserController extends Controller
         // Get user details
         $user = User::find($id);
         // Get additional data
-        $roles = Role::all();
-        $departments = Department::all();
         $geo_areas = Ga::all();
+        $departments = Department::all();
+        $roles = Role::all();
+        $spot_roles = SpotRoles::all();
 
         return view('admin.users.edit', [
             'user' => $user,
-            'roles' => $roles,
-            'departments' => $departments,
             'geo_areas' => $geo_areas,
+            'departments' => $departments,
+            'roles' => $roles,
+            'spot_roles' => $spot_roles,
         ]);
     }
 
@@ -125,31 +128,19 @@ class UserController extends Controller
         $user->last_name = $request->last_name;
         $user->mobile = $request->mobile;
         $user->department_id = $request->department_id;
-        $user->status = $request->status;
+        // $user->status = $request->status;
         $user->dob = ($request->dob) ? Carbon::createFromFormat('d-m-Y', $request->dob) : null;
         $user->save();
 
-        // $update_user = User::where('id', $id)->update([
-        //     'first_name' => $request->first_name,
-        //     'last_name' => $request->last_name,
-        //     'mobile' => $request->mobile,
-        //     'department_id' => $request->department_id,
-        //     'status' => $request->status,
-        //     'dob' => ($request->dob) ? Carbon::createFromFormat('d-m-Y', $request->dob) : null,
-        //     // 'role_id' => $request->role_id,
-        //     // 'role_ids' => ($request->has('roles')) ? implode(',', $request->roles) : null,
-        //     // 'ga_id' => $request->ga_id,
-        //     // 'cluster_restriction' => $request->cluster_restriction,
-        //     // 'ga_restriction' => $request->ga_restriction,
-        // ]);
-
-        // Sync role actions
+        // Sync Geo areas, roles and SPot roles with pivot relation
         $validated = $request->validate([
-            'roles' => 'array',
             'geo_areas' => 'array',
+            'roles' => 'array',
+            'spot_roles' => 'array',
         ]);
-        $user->roles()->sync($validated['roles'] ?? []);
         $user->ga()->sync($validated['geo_areas'] ?? []);
+        $user->roles()->sync($validated['roles'] ?? []);
+        $user->spotRoles()->sync($validated['spot_roles'] ?? []);;
         
         // Response
         return response()->json(['success' => 'User details updated successfully!']);

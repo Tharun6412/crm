@@ -104,6 +104,7 @@
                         </div>
                     </div>
                 </div>
+                @include('admin.users.status-history')
             </div>
         </div>
         <div class="modal-footer">

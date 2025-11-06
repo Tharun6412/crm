@@ -16,6 +16,7 @@ return new class extends Migration
             $table->id();
             $table->string('name', length:50)->nullable();
         });
+
         // Cluster
         Schema::create('adm_clusters', function (Blueprint $table) {
             $table->id();
@@ -24,12 +25,14 @@ return new class extends Migration
             $table->string('description', length:120)->nullable();
             $table->tinyInteger('status')->nullable();
         });
+
         // State
         Schema::create('adm_states', function (Blueprint $table) {
             $table->id();
             $table->string('name', length:100)->nullable();
             $table->tinyInteger('status')->nullable();
         });
+
         // GA
         Schema::create('adm_ga', function (Blueprint $table) {
             $table->id();
@@ -42,6 +45,7 @@ return new class extends Migration
             $table->integer('position')->nullable();
             $table->dateTime('created_at')->nullable();
         });
+
         // District
         Schema::create('adm_districts', function (Blueprint $table) {
             $table->id();
@@ -55,6 +59,7 @@ return new class extends Migration
             $table->timestamps();
             $table->foreignId('created_by')->nullable()->index()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();
         });
+
         // CA
         Schema::create('adm_ca', function(Blueprint $table) {
             $table->id();
@@ -65,6 +70,7 @@ return new class extends Migration
             $table->tinyInteger('status')->nullable();
             $table->timestamps();
         });
+
         // Areas
         Schema::create('adm_areas', function(Blueprint $table) {
             $table->id();
@@ -80,38 +86,18 @@ return new class extends Migration
             $table->string('name', length:225)->nullable();
             $table->timestamps();
         });
-        // PNG Firm Types Alias Segments in leads
-        Schema::create('adm_png_firm_types', function (Blueprint $table) {
-            $table->id();
-            $table->string('name', length:225)->nullable();
-            $table->tinyInteger('status')->nullable();
-            $table->timestamps();
-            $table->foreignId('created_by')->nullable()->index()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();
-        });
-        // PNG Fuel Types
-        Schema::create('adm_png_fuel_types', function (Blueprint $table) {
-            $table->id();
-            $table->string('name', length:225)->nullable();
-            $table->integer('position')->nullable();
-            $table->tinyInteger('spot')->nullable();
-            $table->integer('fuel_group')->nullable();
-            $table->timestamps();
-            $table->foreignId('created_by')->nullable()->index()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();
-            $table->integer('status')->nullable();
-        });
-        // Lead Industrial Areas
-        Schema::create('adm_industrial_areas', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('ga_id')->nullable()->index()->constrained(table:'adm_ga')->noActionOnDelete()->noActionOnUpdate();
-            $table->string('name', length:225)->nullable();
-            $table->timestamps();
-            $table->foreignId('created_by')->nullable()->index()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();
-        });
+
         // User Ga
         Schema::create('adm_user_ga', function(Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->nullable()->index()->constrained(table: 'users')->noActionOnDelete()->noActionOnUpdate();
             $table->foreignId('ga_id')->nullable()->index()->constrained(table:'adm_ga')->noActionOnDelete()->noActionOnUpdate();
+        });
+
+        // Alter User table department and ga_id
+        Schema::table('users', function(Blueprint $table) {
+            $table->foreignId('ga_id')->after('status')->nullable()->index()->constrained(table:'adm_ga')->noActionOnDelete()->noActionOnUpdate();
+            $table->foreignId('department_id')->after('ga_id')->nullable()->index()->constrained(table:'adm_departments')->noActionOnDelete()->noActionOnUpdate();
         });
     }
 
@@ -120,9 +106,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('adm_industrial_areas');
-        Schema::dropIfExists('adm_png_fuel_types');
-        Schema::dropIfExists('adm_png_firm_types');
+
         Schema::dropIfExists('adm_departments');
         Schema::dropIfExists('adm_user_ga');
         Schema::dropIfExists('adm_areas');

@@ -94,4 +94,12 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(SpotRoles::class, 'spot_user_roles', 'user_id', 'spot_role_id');
     }
+
+    /**
+     * Status history
+     */
+    public function statusHistory(): HasMany
+    {
+        return $this->hasMany(UserStatus::class);
+    }
 }

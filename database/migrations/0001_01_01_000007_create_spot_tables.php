@@ -17,14 +17,24 @@ return new class extends Migration
             $table->string('name', length:225)->nullable();
             $table->timestamps();
         });
+        
+        // SPot User roles
+        Schema::create('spot_user_roles', function(Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->nullable()->index()->constrained(table: 'users')->noActionOnDelete()->noActionOnUpdate();
+            $table->foreignId('spot_role_id')->nullable()->index()->constrained(table:'spot_roles')->noActionOnDelete()->noActionOnUpdate();
+        });
+
         // Spot Status
         Schema::create('spot_status', function(Blueprint $table) {
             $table->id();
             $table->string('name', length:225)->nullable();
             $table->integer('type')->nullable();
-            $table->foreign('parent_id')->references('id')->on('spot_status')->onDelete(null);
+            $table->foreignId('parent_id')->nullable()->constrained('spot_status')->onDelete(null);
+            $table->integer('position')->nullable();
         });
-        // Spot Table
+
+        // Spot prospects Table
         Schema::create('spot_prospects', function (Blueprint $table) {
             $table->id();
             $table->string('code', length:50)->nullable();
