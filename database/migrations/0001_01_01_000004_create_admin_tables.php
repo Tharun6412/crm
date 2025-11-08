@@ -14,31 +14,34 @@ return new class extends Migration
         // Segments
         Schema::create('adm_segments', function(Blueprint $table) {
             $table->id();
-            $table->string('name', length:50)->nullable();
+            $table->string('code', length: 4)->nullable();
+            $table->string('name', length: 20)->nullable();
         });
 
         // Cluster
         Schema::create('adm_clusters', function (Blueprint $table) {
             $table->id();
-            $table->string('code', length:16)->nullable();
-            $table->string('name', length:225)->nullable();
-            $table->string('description', length:120)->nullable();
-            $table->tinyInteger('status')->nullable();
+            $table->string('code', length: 16)->nullable();
+            $table->string('name', length: 60)->nullable();
+            $table->string('description', length:180)->nullable();
+            $table->boolean('display_status')->nullable();
+            $table->boolean('status')->nullable();
         });
-
+        
         // State
         Schema::create('adm_states', function (Blueprint $table) {
             $table->id();
-            $table->string('name', length:100)->nullable();
+            $table->string('code', length: 8)->nullable();
+            $table->string('name', length: 90)->nullable();
             $table->tinyInteger('status')->nullable();
         });
 
         // GA
         Schema::create('adm_ga', function (Blueprint $table) {
             $table->id();
-            $table->string('code', length:50)->nullable();
-            $table->string('name', length:225)->nullable();
-            $table->string('hes_code', length:20)->nullable();
+            $table->string('code', length: 50)->nullable();
+            $table->string('name', length: 225)->nullable();
+            $table->string('hes_code', length: 20)->nullable();
             $table->foreignId('state_id')->nullable()->index()->constrained(table:'adm_states')->noActionOnDelete()->noActionOnUpdate();
             $table->foreignId('cluster_id')->nullable()->index()->constrained(table:'adm_clusters')->noActionOnDelete()->noActionOnUpdate();
             $table->integer('status')->nullable();
@@ -52,8 +55,8 @@ return new class extends Migration
             $table->string('code', length:16)->nullable();
             $table->string('name', length:225)->nullable();
             $table->string('display_name', length:225)->nullable();
-            $table->foreignId('cluster_id')->nullable()->index()->constrained(table:'adm_clusters')->noActionOnDelete()->noActionOnUpdate();
             $table->foreignId('state_id')->nullable()->index()->constrained(table:'adm_states')->noActionOnDelete()->noActionOnUpdate();
+            $table->foreignId('cluster_id')->nullable()->index()->constrained(table:'adm_clusters')->noActionOnDelete()->noActionOnUpdate();
             $table->foreignId('ga_id')->nullable()->index()->constrained(table:'adm_ga')->noActionOnDelete()->noActionOnUpdate();
             $table->tinyInteger('status')->nullable();
             $table->timestamps();
@@ -76,7 +79,7 @@ return new class extends Migration
             $table->id();
             $table->string('name', length:120)->nullable();
             $table->foreignId('ca_id')->nullable()->index()->constrained(table:'adm_ca')->noActionOnDelete()->noActionOnUpdate();
-            $table->tinyInteger('status')->nullable();
+            $table->boolean('status')->nullable();
             $table->timestamps();
         });
 
@@ -84,6 +87,7 @@ return new class extends Migration
         Schema::create('adm_departments', function(Blueprint $table) {
             $table->id();
             $table->string('name', length:225)->nullable();
+            $table->boolean('status')->nullable();
             $table->timestamps();
         });
 
