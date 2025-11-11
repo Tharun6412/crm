@@ -309,11 +309,17 @@ class MasterDataSeeder extends Seeder
             ['id' => 1, 'name' => 'Super Admin', 'position' => 1, 'status' => 1],
             ['id' => 2, 'name' => 'Admin', 'position' => 2, 'status' => 1],
         ]);
-
+        
         // Users
         DB::table('users')->insert([
-            ['id' => 1, 'first_name' => 'super', 'last_name' => 'admin', 'email' => 'admin@gmail.com', 'email_verified_at' => null, 'password' => Hash::make('12345678'), 'emp_id' => 17001347, 'mobile' => 8106143535, 'mobile_b' => NULL, 'gender' => NULL, 'dob' => NULL, 'image' => NULL, 'type' => 1, 'status' => 1, 'department_id' => 1, 'remember_token' => NULL, 'created_at' => now(), 'updated_at' => now()],
-            ['id' => 2, 'first_name' => 'Megha', 'last_name' => 'admin', 'email' => 'meghaadmin@gmail.com', 'email_verified_at' => null, 'password' => Hash::make(12345678), 'emp_id' => 17001348, 'mobile' => 8106143456, 'mobile_b' => NULL, 'gender' => NULL, 'dob' => NULL, 'image' => NULL, 'type' => 1, 'status' => 1, 'department_id' => 1, 'remember_token' => NULL, 'created_at' => now(), 'updated_at' => now()],
+            ['id' => 1, 'first_name' => 'Super', 'last_name' => 'Admin', 'email' => 'superadmin@meghagas.com', 'email_verified_at' => null, 'password' => Hash::make('12345678'), 'emp_id' => 'superadmin', 'mobile' => '9999999999', 'mobile_b' => NULL, 'gender' => NULL, 'dob' => NULL, 'image' => NULL, 'type' => 1, 'status' => 1, 'department_id' => 18, 'remember_token' => NULL, 'created_at' => now(), 'updated_at' => now()],
+            ['id' => 2, 'first_name' => 'Admin', 'last_name' => 'Megha', 'email' => 'admin@meghagas.com.com', 'email_verified_at' => null, 'password' => Hash::make(12345678), 'emp_id' => 'admin', 'mobile' => '8888888888', 'mobile_b' => NULL, 'gender' => NULL, 'dob' => NULL, 'image' => NULL, 'type' => 1, 'status' => 1, 'department_id' => 18, 'remember_token' => NULL, 'created_at' => now(), 'updated_at' => now()],
+        ]);
+
+        // User roles
+        DB::table('adm_user_roles')->insert([
+            ['user_id' => 1, 'role_id' => 1],
+            ['user_id' => 2, 'role_id' => 2],
         ]);
     }
 }

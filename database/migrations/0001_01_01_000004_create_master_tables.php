@@ -98,6 +98,16 @@ return new class extends Migration
             $table->foreignId('ga_id')->nullable()->index()->constrained(table:'mst_gas')->noActionOnDelete()->noActionOnUpdate();
         });
 
+        // User status history
+        Schema::create('adm_user_status', function(Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->nullable()->index()->constrained(table: 'users')->noActionOnDelete()->noActionOnUpdate();
+            $table->boolean('status')->nullable();
+            $table->string('notes', length:225)->nullable();
+            $table->foreignId('created_by')->nullable()->index()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();
+            $table->timestamps();
+        });
+
         // Alter User table department and ga_id
         Schema::table('users', function(Blueprint $table) {
             $table->foreignId('ga_id')->after('status')->nullable()->index()->constrained(table:'mst_gas')->noActionOnDelete()->noActionOnUpdate();
@@ -110,8 +120,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-
         Schema::dropIfExists('mst_departments');
+        Schema::dropIfExists('adm_user_status');
         Schema::dropIfExists('adm_user_ga');
         Schema::dropIfExists('mst_areas');
         Schema::dropIfExists('mst_ca');
