@@ -39,16 +39,16 @@ return new class extends Migration
             $table->id();
             $table->string('code', length:50)->nullable();
             $table->string('name', length:225)->nullable();
-            $table->foreignId('firm_id')->nullable()->index()->constrained(table:'adm_png_firm_types')->noActionOnDelete()->noActionOnUpdate(); // COMMERCIAL DOMESTIC
-            $table->foreignId('fuel_id')->nullable()->index()->constrained(table:'adm_png_fuel_types')->noActionOnDelete()->noActionOnUpdate();
+            $table->foreignId('firm_id')->nullable()->index()->constrained(table:'mst_firm_types')->noActionOnDelete()->noActionOnUpdate(); // COMMERCIAL DOMESTIC
+            $table->foreignId('fuel_id')->nullable()->index()->constrained(table:'mst_fuel_types')->noActionOnDelete()->noActionOnUpdate();
             $table->string('fuel_consumption', length:225)->nullable();
             $table->integer('unit_id')->nullable();
             $table->double('potential')->nullable();
             $table->date('expected_date')->nullable();
-            $table->foreignId('state_id')->nullable()->index()->constrained(table:'adm_states')->noActionOnDelete()->noActionOnUpdate();
-            $table->foreignId('cluster_id')->nullable()->index()->constrained(table:'adm_clusters')->noActionOnDelete()->noActionOnUpdate();
-            $table->foreignId('ga_id')->nullable()->index()->constrained(table:'adm_ga')->noActionOnDelete()->noActionOnUpdate();
-            $table->foreignId('industrial_area_id')->nullable()->index()->constrained(table:'adm_industrial_areas')->noActionOnDelete()->noActionOnUpdate();
+            $table->foreignId('state_id')->nullable()->index()->constrained(table:'mst_states')->noActionOnDelete()->noActionOnUpdate();
+            $table->foreignId('cluster_id')->nullable()->index()->constrained(table:'mst_clusters')->noActionOnDelete()->noActionOnUpdate();
+            $table->foreignId('ga_id')->nullable()->index()->constrained(table:'mst_gas')->noActionOnDelete()->noActionOnUpdate();
+            $table->foreignId('industrial_area_id')->nullable()->index()->constrained(table:'mst_industrial_areas')->noActionOnDelete()->noActionOnUpdate();
             $table->string('zone', length:225)->nullable();
             $table->string('latitude', length:225)->nullable();
             $table->string('longitude', length:225)->nullable();
@@ -139,7 +139,7 @@ return new class extends Migration
         // Spot Targets
         Schema::create('spot_targets', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('ga_id')->nullable()->index()->constrained(table:'adm_ga')->noActionOnDelete()->noActionOnUpdate();
+            $table->foreignId('ga_id')->nullable()->index()->constrained(table:'mst_gas')->noActionOnDelete()->noActionOnUpdate();
             $table->date('target_date')->nullable();
             $table->tinyInteger('segment_id')->nullable();
             $table->integer('target_quantity')->nullable();

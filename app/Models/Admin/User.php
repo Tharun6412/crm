@@ -4,6 +4,8 @@ namespace App\Models\Admin;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
+use App\Models\Master\Department;
+use App\Models\Master\Ga;
 use App\Models\Spot\SpotRoles;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

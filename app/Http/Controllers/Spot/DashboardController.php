@@ -2,7 +2,7 @@
 namespace App\Http\Controllers\Spot;
 
 use App\Http\Controllers\Controller;
-use App\Models\Admin\Segment;
+use App\Models\Master\Segment;
 use App\Models\Spot\Prospects;
 use App\Models\Spot\ProspectStatusHistory;
 use App\Models\Spot\Status;
@@ -26,31 +26,47 @@ class DashboardController extends Controller
         $data['prospect_data'] = Prospects::select('stage_id',DB::raw('COUNT(stage_id) as status_count'))
             ->When($request->has('geo_area'), function($q) use($request) {
                 $q->whereIn('ga_id', $request->get('geo_area'));
+            })->when($request->has('cluster'), function($q) use($request) {
+                $q->whereHas('ga', function($q2) use($request) {
+                    $q2->whereIn('cluster_id', $request->get('cluster'));
+                });
             })
             ->groupBy('stage_id')->get();
         // print "<pre>"; print_r($data['status_list']);
         // Monthly Targets Data
-        $data['targets_data'] = Target::select('segment_id', DB::raw('MONTH(target_date) as target_date'), DB::raw('SUM(target_value) as target_value'))
+        $data['targets_data'] = Target::with(['ga'])->select('segment_id', DB::raw('MONTH(target_date) as target_date'), DB::raw('SUM(target_value) as target_value'))
             ->whereBetween('target_date', [$data['y_start'], $data['y_end']])
             ->When($request->has('geo_area'), function($q) use($request) {
                 $q->whereIn('ga_id', $request->get('geo_area'));
+            })->when($request->has('cluster'), function($q) use($request) {
+                $q->whereHas('ga', function($q2) use($request) {
+                    $q2->whereIn('cluster_id', $request->get('cluster'));
+                });
             })
             ->groupBy('segment_id', DB::raw('MONTH(target_date)'))->get();
         // Monthly Potential
-        $data['potential_data'] = Prospects::select('segment_id', DB::raw('MONTH(expected_date) as expected_month'), DB::raw('SUM(potential) as potential'))
+        $data['potential_data'] = Prospects::with(['ga'])->select('segment_id', DB::raw('MONTH(expected_date) as expected_month'), DB::raw('SUM(potential) as potential'))
             ->whereBetween('expected_date', [$data['y_start'], $data['y_end']])
             ->whereNotIn('status_id', [11,12,26])
             ->When($request->has('geo_area'), function($q) use($request) {
                 $q->whereIn('ga_id', $request->get('geo_area'));
+            })->when($request->has('cluster'), function($q) use($request) {
+                $q->whereHas('ga', function($q2) use($request) {
+                    $q2->whereIn('cluster_id', $request->get('cluster'));
+                });
             })
             ->groupBy('segment_id', DB::raw('MONTH(expected_date)'))->get();
         // Monthly Achieved
-        $data['achieved_data'] = Prospects::select('segment_id', DB::raw('MONTH(expected_date) as expected_month'), DB::raw('SUM(potential) as potential'))
+        $data['achieved_data'] = Prospects::with(['ga'])->select('segment_id', DB::raw('MONTH(expected_date) as expected_month'), DB::raw('SUM(potential) as potential'))
             ->whereBetween('expected_date', [$data['y_start'], $data['y_end']])
             ->where('stage_id', 25)
             ->whereNotIn('status_id', [11,12,26])
             ->When($request->has('geo_area'), function($q) use($request) {
                 $q->whereIn('ga_id', $request->get('geo_area'));
+            })->when($request->has('cluster'), function($q) use($request) {
+                $q->whereHas('ga', function($q2) use($request) {
+                    $q2->whereIn('cluster_id', $request->get('cluster'));
+                });
             })
             ->groupBy('segment_id', DB::raw('MONTH(expected_date)'))->get();
         if($request->ajax()) {

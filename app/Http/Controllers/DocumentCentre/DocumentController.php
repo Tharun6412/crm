@@ -20,7 +20,7 @@ class DocumentController extends Controller
         $documents = Documents::when($request->has('search_key'), function($q) use ($request) {
             $q->where(function($q) use($request) {
                 $q->where('doc_number', 'like', '%' . $request->search_key . '%');
-                $q->orWhere('file_name_original', 'like', '%' . $request->search_key . '%');
+                $q->orWhere('file_name', 'like', '%' . $request->search_key . '%');
                 $q->orWhereHas('createdBy', function($q) use ($request) {
                     $q->where('first_name', 'like', '%' . $request->search_key . '%');
                 });
@@ -57,25 +57,25 @@ class DocumentController extends Controller
         $file = Documents::find($id);
         if($file) {
             if(Storage::disk('s3')->exists($file->file_path)) {
-                $ext = strtolower(substr($file->file_name_original, -4));
+                $ext = strtolower(substr($file->file_name, -4));
                 if($ext == '.jpg' OR $ext == '.png' OR $ext == 'jpeg' OR $ext == '.gif') {
                     // Get file contents & view in browser
-                    $file_data = Storage::disk('s3')->get($file->file_path, $file->file_name_original);
+                    $file_data = Storage::disk('s3')->get($file->file_path, $file->file_name);
                     return response()->make($file_data, 200, [
                         'Content-Type' => 'image/jpeg',
-                        'Content-Disposition' => 'inline; filename="' . $file->file_name_original . '"'
+                        'Content-Disposition' => 'inline; filename="' . $file->file_name . '"'
                     ]);
                 }
                 else if($ext == '.pdf') {
                     // Get file contents & view in browser
-                    $file_data = Storage::disk('s3')->get($file->file_path, $file->file_name_original);
+                    $file_data = Storage::disk('s3')->get($file->file_path, $file->file_name);
                     return response()->make($file_data, 200, [
                         'Content-Type' => 'application/pdf',
-                        'Content-Disposition' => 'inline; filename="' . $file->file_name_original . '"'
+                        'Content-Disposition' => 'inline; filename="' . $file->file_name . '"'
                     ]);
                 }
                 else {
-                    return Storage::download($file->file_path, $file->file_name_original);
+                    return Storage::download($file->file_path, $file->file_name);
                 }
             }
             else {
@@ -96,7 +96,7 @@ class DocumentController extends Controller
         if($file) {
             if(Storage::disk('s3')->exists($file->file_path)) {
                 // return Storage::disk('s3')->download($file->file_path, $file->file_name_original);
-                return Storage::download($file->file_path, $file->file_name_original);
+                return Storage::download($file->file_path, $file->file_name);
             }
             else {
                 return view('utils.file-not-found');
@@ -139,11 +139,11 @@ class DocumentController extends Controller
             // Create a DB record in Document Centre package
             $dc_insert = Documents::create([
                 'disk' => 's3',
-                'dc_type_id' => $request->dc_type,
-                'file_name_original' => $file_name,
+                'file_type_id' => $request->dc_type,
+                'file_name' => $file_name,
                 'file_path' => $file_path,
                 'status' => 1,
-                'tag' => $request->tag,
+                'tags' => $request->tag,
                 'description' => $request->description,
                 'created_by' => Auth::id(),
             ]);

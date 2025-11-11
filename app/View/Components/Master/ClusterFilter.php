@@ -1,13 +1,13 @@
 <?php
 
-namespace App\View\Components\Admin;
+namespace App\View\Components\Master;
 
-use App\Models\Admin\Ga;
+use App\Models\Master\Cluster;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class GaFilter extends Component
+class ClusterFilter extends Component
 {
     /**
      * Create a new component instance.
@@ -22,8 +22,7 @@ class GaFilter extends Component
      */
     public function render(): View|Closure|string
     {
-        // Get all geo areas
-        $geo_areas = Ga::all();
-        return view('components.admin.ga-filter', ['geo_areas' => $geo_areas]);
+        $clusters = Cluster::all();
+        return view('components.master.cluster-filter', ['clusters' => $clusters]);
     }
 }

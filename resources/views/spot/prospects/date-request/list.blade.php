@@ -15,7 +15,7 @@
     <div class="clearfix mb-2">
         <h4 class="float-start">Date Change Requests</h4>
         <div class="float-end">
-            @if ($prospect->status_id != "11" and $prospect->status_id != "12")
+            @if (isInProgress($prospect->status_id))
                 <a class="btn btn-sm btn-success" id="add-date-request-link" href="{{ url('spot/dateChangeRequest/create/'.$prospect->id.'?type=4') }}"><i class="bi bi-calender-plus"></i>&nbsp;Add Request</a>
             @endif    
         </div>

@@ -1,18 +1,18 @@
 <?php
 
-namespace App\Models\Admin;
+namespace App\Models\Master;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class IndustrialArea extends Model
+class Ca extends Model
 {
     /**
      * The table associated with the model
      * 
      * @var string
      */
-    protected $table = 'adm_industrial_areas';
+    protected $table = 'mst_cas';
 
     /**
      * The attributes that are mass assignable
@@ -20,9 +20,11 @@ class IndustrialArea extends Model
      * @var array <int string>
      */
     protected $fillable = [
-        'ga_id',
+        'code',
         'name',
-        'created_by',
+        'ga_id',
+        'district_id',
+        'status',
     ];
 
     /**

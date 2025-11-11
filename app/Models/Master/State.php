@@ -1,16 +1,17 @@
 <?php
 
-namespace App\Models\Admin;
+namespace App\Models\Master;
 
 use Illuminate\Database\Eloquent\Model;
-class FirmType extends Model
+
+class State extends Model
 {
     /**
      * The table associated with the model
      * 
      * @var string
      */
-    protected $table = 'adm_png_firm_types';
+    protected $table = 'mst_states';
 
     /**
      * The attributes that are mass assignable
@@ -19,7 +20,5 @@ class FirmType extends Model
      */
     protected $fillable = [
         'name',
-        'status',
-        'created_by',
     ];
 }

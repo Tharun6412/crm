@@ -1,7 +1,7 @@
 <?php
 namespace App\Models\Spot;
 
-use App\Models\Admin\Ga;
+use App\Models\Master\Ga;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 

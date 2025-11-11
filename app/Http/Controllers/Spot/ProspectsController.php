@@ -4,12 +4,12 @@ namespace App\Http\Controllers\Spot;
 
 use App\Exports\Spot\ProspectsExport;
 use App\Http\Controllers\Controller;
-use App\Models\Admin\Cluster;
-use App\Models\Admin\FirmType;
-use App\Models\Admin\FuelType;
-use App\Models\Admin\Ga;
-use App\Models\Admin\IndustrialArea;
-use App\Models\Admin\Segment;
+use App\Models\Master\Cluster;
+use App\Models\Master\FirmType;
+use App\Models\Master\FuelType;
+use App\Models\Master\Ga;
+use App\Models\Master\IndustrialArea;
+use App\Models\Master\Segment;
 use App\Models\Admin\User;
 use App\Models\Spot\ProspectApproval;
 use App\Models\Spot\ProspectComments;
@@ -23,6 +23,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+require_once app_path('Helpers\spotauth.php');
 
 class ProspectsController extends Controller
 {
@@ -40,7 +41,8 @@ class ProspectsController extends Controller
                 $q->where('name', 'like', '%'.$request->get('search_key').'%');
                 $q->orWhere('code', 'like', '%'.$request->get('search_key').'%');
             });
-        })->When($request->has('geo_area'), function($q) use($request) {
+        })->where('status_id', '!=', 12)
+        ->When($request->has('geo_area'), function($q) use($request) {
             $q->whereIn('ga_id', $request->get('geo_area'));
         })->When($request->has('industrial_area_id'), function($q) use($request) {
             $q->whereIn('industrial_area_id', $request->get('industrial_area_id'));
@@ -55,6 +57,9 @@ class ProspectsController extends Controller
         })->when((!empty($request->date_from) and !empty($request->date_to)), function($q) use($request) {
             $q->whereBetween('expected_date', [Carbon::createFromFormat('d-m-Y', $request->date_from)->startOfDay()->toDateTimeString(), Carbon::createFromFormat('d-m-Y', $request->date_to)->endOfDay()->toDateTimeString()]);
         });
+        if(! (isSpotAdmin() OR isSpotGaHead() OR isSpotClusterHead())) {
+            $query->whereIn('ga_id', session()->get('user')['gas']);
+        } 
         $prospects = $query->orderBy($sortBy, $sortOr)->paginate($records)->withQueryString();
         $stages = Status::where('type', 1)->where('parent_id', NULL)->get();
         if($request->ajax()) {
@@ -99,8 +104,8 @@ class ProspectsController extends Controller
             'industrial_area_id' => 'required',
         ]);
         // $stage = 1;
-        $status = 7;
-        $stage_id =13;
+        $status = 31;
+        $stage_id =7;
 
         $ga_val = Ga::find($request->ga_id); 
         // TO insert into the Vehicle

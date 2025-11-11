@@ -36,6 +36,7 @@ Route::middleware(['auth', RouteAccess::class])->group(function() {
     Route::get('prospectStatus/getDetailsBySubStage', [App\Http\Controllers\Spot\ProspectStatusController::class, 'getDetailsBySubStage']);
     Route::get('prospectStatus/hold/{id}', [App\Http\Controllers\Spot\ProspectStatusController::class, 'hold']);
     Route::post('prospectStatus/updateHoldStatus/{id}', [App\Http\Controllers\Spot\ProspectStatusController::class, 'updateHoldStatus']);
+    Route::put('prospectStatus/unHold/{id}', [App\Http\Controllers\Spot\ProspectStatusController::class, 'unHold']);
     Route::get('prospectStatus/cancel/{id}', [App\Http\Controllers\Spot\ProspectStatusController::class, 'cancel']);
     Route::post('prospectStatus/updateCancelStatus/{id}', [App\Http\Controllers\Spot\ProspectStatusController::class, 'updateCancelStatus']);
     Route::resource('prospectStatus', App\Http\Controllers\Spot\ProspectStatusController::class);

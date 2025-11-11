@@ -8,6 +8,8 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+require_once app_path('Helpers/spotauth.php');
+
 
 class ProspectDateChangeRequestController extends Controller
 {

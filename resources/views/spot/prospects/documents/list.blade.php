@@ -11,7 +11,7 @@
     <div class="clearfix mb-2">
         <h4 class="float-start">Documents</h4>
         <div class="float-end">
-            @if ($prospect->status_id != "11" and $prospect->status_id != "12")
+            @if (isInProgress($prospect->status_id))
                 <a class="btn btn-sm btn-success" id="add-doc-link" href="{{ url('spot/prospectDocument/create/'.$prospect->id.'?type=2') }}"><i class="bi bi-file-earmark-plus"></i>&nbsp;Add Document</a>
             @endif
         </div>
@@ -40,16 +40,16 @@
                         <tr>
                             <td class="text-center">{{ $i++; }}</td>
                             <td class="text-center">
-                                <a href="{{ url('dc/documents/'.$document->doc_file_id) }}" title="{{ $document->file->file_name_original }}" target="_blank"><i class="bi bi-file-earmark-pdf fs-5 text-danger"></i></a>
+                                <a href="{{ url('dc/documents/'.$document->doc_file_id) }}" title="{{ $document->file->file_name }}" target="_blank"><i class="bi bi-file-earmark-pdf fs-5 text-danger"></i></a>
                             </td>
                             <td>{{ $document->documentType->name }}&nbsp;{{ $document->offer_count }}</td>
                             <td>
                                 {{ ($document->status == 1 and $document->win == 1) ? "win" : (($document->status == "1") ? "Approved" : ($document->status == "2" ? "Rejected" : '--')) }}
                             </td>
                             <td>{{ $document?->created_at }}</td>
-                            <td>{{ $document->createdBy->first_name }}</td>
+                            <td>{{ $document->createdBy->first_name }}&nbsp;{{ $document->createdBy->last_name }}</td>
                             <td nowrap="">
-                                <a href="{{ url('dc/documents/'.$document->doc_file_id) }}" title="{{ $document->file->file_name_original }}" class="btn btn-sm btn-outline-primary" target="_blank"><i class="bi bi-file-earmark-pdf"></i></a>
+                                <a href="{{ url('dc/documents/'.$document->doc_file_id) }}" title="{{ $document->file->file_name }}" class="btn btn-sm btn-outline-primary" target="_blank"><i class="bi bi-file-earmark-pdf"></i></a>
                                 <a class="btn btn-sm btn-outline-danger ajax-link-file-delete" href="{{ url('spot/prospectDocument/'.$document->id) }}" title="Delete document"><i class="bi bi-trash"></i></a>
                             </td>
                         </tr>

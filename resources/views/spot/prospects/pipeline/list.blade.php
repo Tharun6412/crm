@@ -67,10 +67,12 @@
 <script type="text/javascript">
     function compeltePipeline(id, prospect_id)
     {
-        $.post("{{ url('spot/prospects/updatePipeLine') }}", {_token : '{{ csrf_token() }}', id:id, prospect_id:prospect_id}, function(data) {
-            $.get($('#reload-pipeline').attr('href'), function(data) {
-                $('#prospect-pipeline').html(data);
+        if(confirm("Are you sure you want to mark it as complete")) {
+            $.post("{{ url('spot/prospects/updatePipeLine') }}", {_token : '{{ csrf_token() }}', id:id, prospect_id:prospect_id}, function(data) {
+                $.get($('#reload-pipeline').attr('href'), function(data) {
+                    $('#prospect-pipeline').html(data);
+                });
             });
-        });
+        }
     }
 </script>

@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Models\Admin;
+namespace App\Models\Master;
 
 use Illuminate\Database\Eloquent\Model;
 
-class District extends Model
+class Department extends Model
 {
     /**
      * The table associated with the model
      * 
      * @var string
      */
-    protected $table = 'adm_districts';
+    protected $table = 'mst_departments';
 
     /**
      * The attributes that are mass assignable
@@ -19,13 +19,6 @@ class District extends Model
      * @var array <int string>
      */
     protected $fillable = [
-        'code',
         'name',
-        'display_name',
-        'cluster_id',
-        'state_id',
-        'ga_id',
-        'status',
-        'created_by',
     ];
 }

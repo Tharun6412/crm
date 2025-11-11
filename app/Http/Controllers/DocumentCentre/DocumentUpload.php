@@ -13,7 +13,7 @@ class DocumentUpload extends Controller
     /**
      * Upload file from multiple modules
      */
-    static function upload($request, $package = 'mcgdpl')
+    static function upload($request, $package = 'crm')
     {
         // Validation
         $request->validate([
@@ -39,10 +39,10 @@ class DocumentUpload extends Controller
             // Create a DB record in Document Centre package
             $dc_insert = Documents::create([
                 'disk' => 's3',
-                'file_name_original' => $file_name,
+                'file_name' => $file_name,
                 'file_path' => $file_path,
                 'status' => 1,
-                'tag' => $request->tag,
+                'tags' => $request->tag,
                 'description' => $request->description,
                 'created_by' => Auth::id(),
             ]);

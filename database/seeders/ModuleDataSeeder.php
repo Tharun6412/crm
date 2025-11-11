@@ -14,8 +14,8 @@ class ModuleDataSeeder extends Seeder
     public function run(): void
     {
         // Modules
-        DB::table('spot_status')->insert([
-            ['id' => 1, 'name' => '', 'parent_id' => null, 'position' => 1],
-        ]);
+        // DB::table('spot_status')->insert([
+        //     ['id' => 1, 'name' => '', 'parent_id' => null, 'position' => 1],
+        // ]);
     }
 }

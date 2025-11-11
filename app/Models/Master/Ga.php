@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Models\Admin;
+namespace App\Models\Master;
 
+use App\Models\Admin\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -13,7 +14,7 @@ class Ga extends Model
      * 
      * @var string
      */
-    protected $table = 'adm_ga';
+    protected $table = 'mst_gas';
 
     /**
      * The attributes that are mass assignable

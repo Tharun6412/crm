@@ -11,7 +11,7 @@ class DocumentTypes extends Model
      * 
      * @var string
      */
-    protected $table = 'dc_types';
+    protected $table = 'dc_file_types';
 
     /**
      * The attributes that are mass assignable
@@ -20,5 +20,6 @@ class DocumentTypes extends Model
      */
     protected $fillable = [
         'name',
+        'type',
     ];
 }

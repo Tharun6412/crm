@@ -33,7 +33,7 @@ class DocumentBrowser extends Controller
         $val_rslt = $request->validate(['search_key' => 'required']);
 
         $dc_files = Documents::where('doc_number', 'like', '%' . $request->search_key . '%')
-            ->orWhere('file_name_original', 'like', '%' . $request->search_key . '%')
+            ->orWhere('file_name', 'like', '%' . $request->search_key . '%')
             ->limit(10)->get();
         return view('dc.browser.file_browser_result', ['dc_files' => $dc_files]);
     }
@@ -52,7 +52,7 @@ class DocumentBrowser extends Controller
             $dc_file_session[$dc_file->id] = [
                 'id' => $dc_file->id,
                 'doc_number' => $dc_file->doc_number,
-                'file_name' => $dc_file->file_name_original,
+                'file_name' => $dc_file->file_name,
                 'file_path' => $dc_file->file_path,
                 'upload' => 0,
             ];

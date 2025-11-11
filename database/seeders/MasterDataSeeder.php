@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class MasterDataSeeder extends Seeder
 {
@@ -14,15 +15,14 @@ class MasterDataSeeder extends Seeder
     public function run(): void
     {
         // Segments
-        DB::table('adm_segments')->insert([
+        DB::table('mst_segments')->insert([
             ['id' => 1, 'code' => 'DPNG', 'name' => 'Domestic'],
             ['id' => 2, 'code' => 'CPNG', 'name' => 'Commercial'],
             ['id' => 3, 'code' => 'IPNG', 'name' => 'Industrial'],
-            
         ]);
         
         // Clusters
-        DB::table('adm_clusters')->insert([
+        DB::table('mst_clusters')->insert([
             ['id' => 1, 'code' => 'AP&TS', 'name' => 'Andhra Pradesh & Telangana', 'description' => 'Andhra Pradesh, Telangana'],
             ['id' => 2, 'code' => 'TN', 'name' => 'Tamil Nadu', 'description' => 'Tamil Nadu'],
             ['id' => 3, 'code' => 'KA', 'name' => 'Karnataka', 'description' => 'Karnataka'],
@@ -32,7 +32,7 @@ class MasterDataSeeder extends Seeder
         ]);
 
         // States data
-        DB::table('adm_states')->insert([
+        DB::table('mst_states')->insert([
             ['id' => 1, 'name' => 'Andhra Pradesh', 'status' => 1],
             ['id' => 2, 'name' => 'Telangana', 'status' => 1],
             ['id' => 3, 'name' => 'Tamil Nadu', 'status' => 1],
@@ -46,7 +46,7 @@ class MasterDataSeeder extends Seeder
         ]);
         
         // GA
-        DB::table('adm_ga')->insert([
+        DB::table('mst_gas')->insert([
             ['id' => 1, 'code' => '1106', 'name' => 'Krishna GA', 'state_id' => 1, 'cluster_id' => 1, 'status' => 1, 'position' => 1],
             ['id' => 2, 'code' => '1173', 'name' => 'Nalgonda GA', 'state_id' => 2, 'cluster_id' => 1, 'status' => 1, 'position' => 2],
             ['id' => 3, 'code' => '1172', 'name' => 'Rangareddy GA', 'state_id' => 2, 'cluster_id' => 1, 'status' => 1, 'position' => 3],
@@ -75,7 +75,7 @@ class MasterDataSeeder extends Seeder
         ]);
 
         // Districts
-        DB::table('adm_districts')->insert([
+        DB::table('mst_districts')->insert([
             ['code'=> '', 'name' => 'Krishna', 'display_name' => '', 'state_id' => 1, 'cluster_id' => 1, 'ga_id' => 1, 'status' => 1],
             ['code'=> '', 'name' => 'NTR', 'display_name' => '', 'state_id' => 1, 'cluster_id' => 1, 'ga_id' => 1, 'status' => 1],
             ['code'=> '', 'name' => 'Eluru', 'display_name' => '', 'state_id' => 1, 'cluster_id' => 1, 'ga_id' => 1, 'status' => 1],
@@ -143,7 +143,7 @@ class MasterDataSeeder extends Seeder
         ]);
 
         // Departments
-        DB::table('adm_departments')->insert([
+        DB::table('mst_departments')->insert([
             ['id' => 1, 'name' => 'Finance and Accounts (F&A)', 'status' => 1],
             ['id' => 2, 'name' => 'Stores', 'status' => 1],
             ['id' => 3, 'name' => 'Execution', 'status' => 1],
@@ -164,10 +164,157 @@ class MasterDataSeeder extends Seeder
             ['id' => 18, 'name' => 'Administration', 'status' => 1],
         ]);
 
+        // Firm Types
+        DB::table('mst_firm_types')->insert([
+            ['id' => 1, 'name' => 'Food Processing Industries', 'status' => 1, 'created_at' => now()],
+            ['id' => 2, 'name' => 'Ceramic Industries', 'status' => 1, 'created_at' => now()],
+            ['id' => 3, 'name' => 'Glass Industries', 'status' => 1, 'created_at' => now()],
+            ['id' => 4, 'name' => 'Garment units and Export Houses', 'status' => 1, 'created_at' => now()],
+            ['id' => 5, 'name' => 'Pharmaceutical Companies', 'status' => 1, 'created_at' => now()],
+            ['id' => 6, 'name' => 'Chemical Industries', 'status' => 1, 'created_at' => now()],
+            ['id' => 7, 'name' => 'Metal Treatment Units', 'status' => 1, 'created_at' => now()],
+            ['id' => 8, 'name' => 'Galvanizing Industries', 'status' => 1, 'created_at' => now()],
+            ['id' => 9, 'name' => 'Beverage Manufacturing', 'status' => 1, 'created_at' => now()],
+            ['id' => 10, 'name' => 'Plastic Industries', 'status' => 1, 'created_at' => now()],
+            ['id' => 11, 'name' => 'FMC Goods Manufacturers', 'status' => 1, 'created_at' => now()],
+            ['id' => 12, 'name' => 'Oil Mills', 'status' => 1, 'created_at' => now()],
+            ['id' => 13, 'name' => 'Printing and Dyeing units', 'status' => 1, 'created_at' => now()],
+            ['id' => 14, 'name' => 'Others', 'status' => 1, 'created_at' => now()],
+        ]);
+
+        // Fuel Types
+        DB::table('mst_fuel_types')->insert([
+            ['id' => 1, 'name' => 'Electricity', 'position' => 12, 'spot' => 1, 'fuel_group' => 3, 'created_at' => now(), 'status' => 1],
+            ['id' => 2, 'name' => 'Coal', 'position' => 7, 'spot' => 1, 'fuel_group' => 3, 'created_at' => now(), 'status' => 1],
+            ['id' => 3, 'name' => 'Petrol', 'position' => NULL, 'spot' => 0, 'fuel_group' => NULL, 'created_at' => now(), 'status' => 1],
+            ['id' => 4, 'name' => 'LPG', 'position' => 1, 'spot' => 1, 'fuel_group' => 1, 'created_at' => now(), 'status' => 1],
+            ['id' => 5, 'name' => 'Diesel', 'position' => 4, 'spot' => 1, 'fuel_group' => 2, 'created_at' => now(), 'status' => 1],
+            ['id' => 6, 'name' => 'Kerosene', 'position' => NULL, 'spot' => 0, 'fuel_group' => NULL, 'created_at' => now(), 'status' => 1],
+            ['id' => 7, 'name' => 'Other', 'position' => NULL, 'spot' => 0, 'fuel_group' => NULL, 'created_at' => now(), 'status' => 1],
+            ['id' => 8, 'name' => 'Husk', 'position' => 11, 'spot' => 1, 'fuel_group' => 3, 'created_at' => now(), 'status' => 1],
+            ['id' => 9, 'name' => 'Bio Diesel', 'position' => NULL, 'spot' => 0, 'fuel_group' => NULL, 'created_at' => now(), 'status' => 1],
+            ['id' => 10, 'name' => 'HSD', 'position' => 5, 'spot' => 1, 'fuel_group' => 2, 'created_at' => now(), 'status' => 1],
+            ['id' => 11, 'name' => 'Wood', 'position' => 10, 'spot' => 1, 'fuel_group' => 3, 'created_at' => now(), 'status' => 1],
+            ['id' => 12, 'name' => 'FO', 'position' => 3, 'spot' => 1, 'fuel_group' => 2, 'created_at' => now(), 'status' => 1],
+            ['id' => 13, 'name' => 'General Coal', 'position' => NULL, 'spot' => 0, 'fuel_group' => NULL, 'created_at' => now(), 'status' => 1],
+            ['id' => 14, 'name' => 'Pet Coke', 'position' => 8, 'spot' => 1, 'fuel_group' => 3, 'created_at' => now(), 'status' => 1],
+            ['id' => 15, 'name' => 'Bitumious Coal', 'position' => NULL, 'spot' => 0, 'fuel_group' => NULL, 'created_at' => now(), 'status' => 1],
+            ['id' => 16, 'name' => 'Briquette', 'position' => 9, 'spot' => 1, 'fuel_group' => 3, 'created_at' => now(), 'status' => 1],
+            ['id' => 17, 'name' => 'LDO', 'position' => 6, 'spot' => 1, 'fuel_group' => 2, 'created_at' => now(), 'status' => 1],
+            ['id' => 18, 'name' => 'Natural Gas', 'position' => NULL, 'spot' => 0, 'fuel_group' => NULL, 'created_at' => now(), 'status' => 1],
+            ['id' => 19, 'name' => 'Propane', 'position' => 2, 'spot' => 1, 'fuel_group' => 1, 'created_at' => now(), 'status' => 1],
+        ]);
+
+
+        // Industrial Areas
+        DB::table('mst_industrial_areas')->insert([
+            ['id' => '1','ga_id' => '1','name' => 'Mallavalli','created_at' => NULL,'updated_at' => '2025-08-01 10:41:43','created_by' => NULL],
+            ['id' => '2','ga_id' => '1','name' => 'Surampalli','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '3','ga_id' => '1','name' => 'Gannavaram','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '4','ga_id' => '1','name' => 'Veerapanenigudem','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '5','ga_id' => '1','name' => 'Pedaavutapalli','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '6','ga_id' => '1','name' => 'Ravicherla','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '7','ga_id' => '1','name' => 'Ibrahimpatnam','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '8','ga_id' => '1','name' => 'Vedadri','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '9','ga_id' => '1','name' => 'Jaggaiahpeta','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '10','ga_id' => '1','name' => 'Jayanthipuram ','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '11','ga_id' => '1','name' => 'Akkireddy Gudem Musunuru','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '12','ga_id' => '1','name' => 'Katrenipalle Near Chillakallu','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '13','ga_id' => '1','name' => 'Balpulapadu','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '14','ga_id' => '1','name' => 'Mallavali','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '15','ga_id' => '1','name' => 'Mudinepalle','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '16','ga_id' => '1','name' => 'Nunna','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '17','ga_id' => '1','name' => 'Nuzivid','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '18','ga_id' => '1','name' => 'Ramavarapadu','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '19','ga_id' => '3','name' => 'Kondurg','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '20','ga_id' => '3','name' => 'Kothur IDA','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '21','ga_id' => '3','name' => 'Medchal Industrial Area','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '22','ga_id' => '3','name' => 'Genome Valley','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '23','ga_id' => '3','name' => 'Thimapur','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '24','ga_id' => '3','name' => 'Mahankal IDA','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '25','ga_id' => '3','name' => 'Kesaram','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '26','ga_id' => '3','name' => 'Rangapur','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '27','ga_id' => '3','name' => 'ATHWELLY','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '28','ga_id' => '3','name' => 'YELLAMPET IDA','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '29','ga_id' => '3','name' => 'Maheshwaram','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '30','ga_id' => '3','name' => 'Raviryala','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '31','ga_id' => '3','name' => 'Shadnagar','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '32','ga_id' => '3','name' => 'Chandanavalli','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '33','ga_id' => '6','name' => 'Polepally','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '34','ga_id' => '6','name' => 'Bodajanampet Village','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '35','ga_id' => '6','name' => 'Sankalmaddi','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '36','ga_id' => '6','name' => 'Raipalle','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '37','ga_id' => '6','name' => 'Balanagar','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '38','ga_id' => '2','name' => 'choutuppal','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '39','ga_id' => '2','name' => 'Kondamadugu','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '40','ga_id' => '2','name' => 'Bibinagar','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '41','ga_id' => '2','name' => 'Narketpally','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '42','ga_id' => '5','name' => 'Khanapuram','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '43','ga_id' => '4','name' => 'Gorrekunta','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '44','ga_id' => '4','name' => 'Madikonda','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '45','ga_id' => '12','name' => 'Honga Industrial Area','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '46','ga_id' => '12','name' => 'Auto Nagar Indl Area','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '47','ga_id' => '12','name' => 'Waghavade Indl Area','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '48','ga_id' => '12','name' => 'Navage Indl Area','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '49','ga_id' => '12','name' => 'Kanagla Indl Area','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '50','ga_id' => '12','name' => 'Udyambag Industrial Area','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '51','ga_id' => '12','name' => 'Machhe Industrial Area','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '52','ga_id' => '12','name' => 'In and around city','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '53','ga_id' => '13','name' => 'Vasanthanarsapura','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '54','ga_id' => '13','name' => 'Sira','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '55','ga_id' => '13','name' => 'Anthrasanahalli Industrial Area','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '56','ga_id' => '13','name' => 'Herihalli Industrial Area','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '57','ga_id' => '13','name' => 'Kunigal Industrial Area','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '58','ga_id' => '14','name' => 'Kudamalakunte Industrial Area','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '59','ga_id' => '22','name' => 'UPSIDC GAJRAULA','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '60','ga_id' => '23','name' => 'Industrial Estate Kasganj','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '61','ga_id' => '23','name' => 'In and around city','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '62','ga_id' => '21','name' => 'Indsutrial Area, Goindwal Sahib','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '63','ga_id' => '21','name' => 'Focal Point- Tarn Taran','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '64','ga_id' => '20','name' => 'In and around city','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '65','ga_id' => '7','name' => 'Cheeyar SIPCOT','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '66','ga_id' => '7','name' => 'Tindivanam SIPCOT','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '67','ga_id' => '10','name' => 'Perambalur-Trichy NH','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '68','ga_id' => '10','name' => 'SIDCO - Elambalur','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '69','ga_id' => '9','name' => 'SIDCO Industrial Estate, Dindigul','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '70','ga_id' => '8','name' => 'Viralimalai Industrail Area','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '71','ga_id' => '8','name' => 'SIDCO, Palaiyapatti','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '72','ga_id' => '8','name' => 'Papanasam, Tanjore','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '73','ga_id' => '19','name' => 'Maneri Industrial Area','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '74','ga_id' => '19','name' => 'Khamariya, Jabalpur','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '75','ga_id' => '19','name' => 'Richhai Industrial Area','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '76','ga_id' => '19','name' => 'Adhartal Industrial Area','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '77','ga_id' => '16','name' => 'Borgoan Industrial Area, Borgaon.','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '78','ga_id' => '17','name' => 'Sidguwan Industrial Area','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '79','ga_id' => '17','name' => 'Industrial State Dabar Vidisa','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '80','ga_id' => '16','name' => 'CHINCHALA MIDC','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '81','ga_id' => '16','name' => 'TADALI MIDC','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '82','ga_id' => '16','name' => 'MIDC, DEOLI','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '83','ga_id' => '16','name' => 'GUGHUS ROAD','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '84','ga_id' => '16','name' => 'MIDC, WARDHA','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '85','ga_id' => '16','name' => 'BHADRAVATI','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '86','ga_id' => '15','name' => 'In and around city','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '87','ga_id' => '3','name' => 'Shankarpalli','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '88','ga_id' => '3','name' => 'Elikatta','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '89','ga_id' => '3','name' => 'Nandigama','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '90','ga_id' => '3','name' => 'Akkinenigudem','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '91','ga_id' => '3','name' => ' penjarla,','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '92','ga_id' => '3','name' => 'Mekaguda','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '93','ga_id' => '3','name' => 'Kodicharla','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '94','ga_id' => '3','name' => 'Chatanpally','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+            ['id' => '95','ga_id' => '3','name' => 'Mokila','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
+        ]);
         // Roles
         DB::table('adm_roles')->insert([
             ['id' => 1, 'name' => 'Super Admin', 'position' => 1, 'status' => 1],
             ['id' => 2, 'name' => 'Admin', 'position' => 2, 'status' => 1],
         ]);
+
+        // Users
+        DB::table('users')->insert([
+            ['id' => 1, 'first_name' => 'super', 'last_name' => 'admin', 'email' => 'admin@gmail.com', 'email_verified_at' => null, 'password' => Hash::make('12345678'), 'emp_id' => 17001347, 'mobile' => 8106143535, 'mobile_b' => NULL, 'gender' => NULL, 'dob' => NULL, 'image' => NULL, 'type' => 1, 'status' => 1, 'department_id' => 1, 'remember_token' => NULL, 'created_at' => now(), 'updated_at' => now()],
+            ['id' => 2, 'first_name' => 'Megha', 'last_name' => 'admin', 'email' => 'meghaadmin@gmail.com', 'email_verified_at' => null, 'password' => Hash::make(12345678), 'emp_id' => 17001348, 'mobile' => 8106143456, 'mobile_b' => NULL, 'gender' => NULL, 'dob' => NULL, 'image' => NULL, 'type' => 1, 'status' => 1, 'department_id' => 1, 'remember_token' => NULL, 'created_at' => now(), 'updated_at' => now()],
+        ]);
     }
 }
+ 

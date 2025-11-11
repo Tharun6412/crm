@@ -1,18 +1,17 @@
 <?php
 
-namespace App\Models\Admin;
+namespace App\Models\Master;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Area extends Model
+class Cluster extends Model
 {
     /**
      * The table associated with the model
      * 
      * @var string
      */
-    protected $table = 'adm_areas';
+    protected $table = 'mst_clusters';
 
     /**
      * The attributes that are mass assignable
@@ -21,7 +20,5 @@ class Area extends Model
      */
     protected $fillable = [
         'name',
-        'ca_id',
-        'status',
     ];
 }

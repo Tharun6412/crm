@@ -21,8 +21,16 @@
             <div class="col-auto">
                 <div class="border rounded px-2 py-1">
                     <div class="d-flex justify-content-between align-items-center pt-1">
+                        <label class="fs-6 mx-1">Cluster</label>
+                        <x-master.cluster-filter class="pt-1" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-auto">
+                <div class="border rounded px-2 py-1">
+                    <div class="d-flex justify-content-between align-items-center pt-1">
                         <label class="fs-6 mx-1">GA</label>
-                        <x-admin.ga-filter class="pt-1" />
+                        <x-master.ga-filter class="pt-1" />
                     </div>
                 </div>
             </div>

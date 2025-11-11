@@ -1,13 +1,13 @@
 <?php
 
-namespace App\View\Components\Admin;
+namespace App\View\Components\Master;
 
-use App\Models\Admin\FuelType;
+use App\Models\Master\Department;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class CurrentFuelFilter extends Component
+class DepartmentFilter extends Component
 {
     /**
      * Create a new component instance.
@@ -22,7 +22,8 @@ class CurrentFuelFilter extends Component
      */
     public function render(): View|Closure|string
     {
-        $fuel_list = FuelType::all();
-        return view('components.admin.current-fuel-filter', ['fuel_list' => $fuel_list]);
+        // Get all departments
+        $departments = Department::all();
+        return view('components.master.department-filter', ['departments' => $departments]);
     }
 }

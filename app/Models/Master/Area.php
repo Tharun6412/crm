@@ -1,18 +1,18 @@
 <?php
 
-namespace App\Models\Admin;
+namespace App\Models\Master;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Ca extends Model
+class Area extends Model
 {
     /**
      * The table associated with the model
      * 
      * @var string
      */
-    protected $table = 'adm_ca';
+    protected $table = 'mst_areas';
 
     /**
      * The attributes that are mass assignable
@@ -20,10 +20,16 @@ class Ca extends Model
      * @var array <int string>
      */
     protected $fillable = [
-        'code',
         'name',
-        'ga_id',
-        'district_id',
+        'ca_id',
         'status',
     ];
+
+    /**
+     * Relation with CA
+     */
+    public function ca():BelongsTo
+    {
+        return $this->belongsTo(Ca::class, 'ca_id')->withDefault();
+    }
 }

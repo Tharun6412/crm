@@ -23,15 +23,16 @@
             </div>
         </div>
         <div class="row mb-2">
-            <label class="col-form-label col-sm-4 text-end">Reject Document&nbsp;:</label>
+            <label class="col-form-label col-sm-4 text-end">Approval Document&nbsp;:</label>
             <div class="col-md-6">
-                <input type="checkbox" name="reject_document" id="reject_document" value="2"/>
+                <input type="radio" name="approval_status" id="approval_status_1" value="1"/>Accepted
+                <input type="radio" name="approval_status" id="approval_status_2" value="2"/>Rejected
+                <br/><small class="text-danger" id="approval_status-error"></small>
             </div>
         </div>
         <div class="row">
             <div class="offset-md-4 col-md-6">
                 <button type="submit" class="btn btn-sm btn-success"><i class="bi bi-check-square"></i>&nbsp;Update</button>
-                {{-- <button type="submit" name="reject_document" value="2" class="btn btn-sm btn-danger"><i class="bi bi-x-square"></i>&nbsp;Reject</button> --}}
                 <button type="button" class="btn btn-secondary btn-sm" onclick="$('#action-type').html('')"><i class="bi bi-x-lg"></i>&nbsp;Close</button>
             </div>
         </div>

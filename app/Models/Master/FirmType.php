@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Models\Admin;
+namespace App\Models\Master;
 
 use Illuminate\Database\Eloquent\Model;
-class Segment extends Model
+class FirmType extends Model
 {
     /**
      * The table associated with the model
      * 
      * @var string
      */
-    protected $table = 'adm_segments';
+    protected $table = 'mst_firm_types';
 
     /**
      * The attributes that are mass assignable
@@ -19,5 +19,7 @@ class Segment extends Model
      */
     protected $fillable = [
         'name',
+        'status',
+        'created_by',
     ];
 }

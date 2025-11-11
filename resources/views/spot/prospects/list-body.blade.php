@@ -22,9 +22,11 @@
         </div>
         {{-- Right Section --}}
         <div class="d-flex align-items-center gap-2">
-            <a href="{{ url('spot/prospects/prospectsExport') }}?{{ http_build_query(request()->all()) }}" class="btn btn-secondary btn-sm">
-                <i class="bi bi-file-earmark-excel"></i>&nbsp;Export
-            </a>
+            @if ($prospects->count() > 0)    
+                <a href="{{ url('spot/prospects/prospectsExport') }}?{{ http_build_query(request()->all()) }}" class="btn btn-secondary btn-sm">
+                    <i class="bi bi-file-earmark-excel"></i>&nbsp;Export
+                </a>
+            @endif
             <a href="{{ url('spot/prospects/create') }}" class="btn btn-success btn-sm link-modal">
                 <i class="bi bi-plus-lg"></i>&nbsp;Create
             </a>
@@ -44,7 +46,7 @@
             <tr>
                 <th nowrap>S No.</th>
                 <th nowrap>GA
-                    <x-admin.ga-filter/>
+                    <x-master.ga-filter/>
                 </th>
                 <th nowrap>
                     <a href="{{ $prospects->appends(['sortBy' => 'name','sortOr' => $sort_order_inverse])->url($prospects->currentPage()) }}">
@@ -55,10 +57,10 @@
                     </a>
                 </th>
                 <th nowrap>Industrial Area     
-                    <x-admin.industrial-area-filter/>
+                    <x-master.industrial-area-filter/>
                 </th>
                 <th nowrap>Current Fuel
-                    <x-admin.current-fuel-filter/>
+                    <x-master.current-fuel-filter/>
                 </th>
                 <th class="text-end">
                     <a href="{{ $prospects->appends(['sortBy' => 'potential','sortOr' => $sort_order_inverse])->url($prospects->currentPage()) }}">
@@ -75,7 +77,7 @@
                             <i class="bi {{ $sort_icon }}"></i>
                         @endif
                     </a>
-                    <x-admin.date-filter/>
+                    <x-master.date-filter/>
                 </th>
                 <th nowrap class="text-center">Stage
                     <x-spot.stage-filter :stages="$stages"/>
@@ -83,6 +85,7 @@
                 <th nowrap class="text-center">Sub Stage
                     <x-spot.sub-stage-filter :stages="$stages"/>
                 </th>
+                <th npwrap>Status</th>
                 <th nowrap class="text-center">
                     <a href="{{ $prospects->appends(['sortBy' => 'status_date','sortOr' => $sort_order_inverse])->url($prospects->currentPage()) }}">
                         Last Status date
@@ -109,6 +112,7 @@
                         <td>{{ $prospect->expected_date?->format('d-m-Y') }}</td>
                         <td>{{ $prospect->stage->parent->name ?? '' }}</td>
                         <td>{{ $prospect->stage->name }}</td>
+                        <td>{{ $prospect->statusType->name }}</td>
                         <td>{{ $prospect->status_date->format('d-m-Y') }}</td>
                         <td>
                             <div class="dropdown">
@@ -121,37 +125,25 @@
                                             <i class="bi bi-info-circle"></i>&nbsp;View
                                         </a>
                                     </li>
-                                    @if ($prospect->status_id != "11" and $prospect->status_id != "12")    
-                                        @if ($prospect->status_id != 8 and $prospect->stage_id != 25)    
+                                    @if (checkProspectHold($prospect->status_id)) 
+                                        @if (isInProgress($prospect->status_id) AND (isSpotAdmin() OR isSpotGaHead() OR isSpotClusterHead() OR isSpotSalesofficer()) AND (in_array($prospect->ga_id, session()->get('user')['gas'])))    
                                             <li>
                                                 <a class="dropdown-item link-modal" href="{{ url('spot/prospects/'.$prospect->id.'/edit') }}">
                                                     <i class="bi bi-pencil"></i>&nbsp;Edit
                                                 </a>
                                             </li>
                                         @endif
-                                        @if ($prospect->status_id != 8 and $prospect->stage_id != 25)    
-                                            <li>
-                                                <a class="dropdown-item link-modal" href="{{ url('spot/dateChangeRequest/create/'.$prospect->id) }}">
-                                                    <i class="bi bi-info-circle"></i>&nbsp;Request For Date Change
-                                                </a>
-                                            </li>
-                                        @endif
-                                        {{-- Same Condition as for edit --}}
-                                        @if($prospect->status_id != 8 and $prospect->stage_id != 25) 
+                                        @if (isInProgress($prospect->status_id))    
                                             <li>
                                                 <a class="dropdown-item link-modal" href="{{ url('spot/prospectStatus/editStatus/'.$prospect->id) }}">
                                                     <i class="bi bi-check2-circle"></i>&nbsp;Update Status
                                                 </a>
                                             </li>
-                                        @endif
-                                        @if ($prospect->status_id == "8")    
                                             <li>
-                                                <a class="dropdown-item link-modal" href="{{ url('spot/prospectStatus/gaApprove/'.$prospect->id) }}">
-                                                    <i class="bi bi-check2-circle"></i>&nbsp;Ga Approval
+                                                <a class="dropdown-item link-modal" href="{{ url('spot/dateChangeRequest/create/'.$prospect->id) }}">
+                                                    <i class="bi bi-info-circle"></i>&nbsp;Request For Date Change
                                                 </a>
                                             </li>
-                                        @endif
-                                        @if ($prospect->stage_id != "25")    
                                             <li>
                                                 <a class="dropdown-item link-modal" href="{{ url('spot/prospectDocument/create/'.$prospect->id) }}">
                                                     <i class="bi bi-folder2-open"></i>&nbsp;Manage Documents
@@ -162,24 +154,41 @@
                                                     <i class="bi bi-chat"></i>&nbsp;Add Comment
                                                 </a>
                                             </li>
-                                        @endif
-                                        @if ($prospect->status_id != "8" and $prospect->stage_id != 25)    
+                                        @elseif (isRequestForApproval($prospect->status_id))
+                                            @if (isSpotAdmin() OR isSpotGaHead() OR isSpotClusterHead() OR isSpotSalesOfficer())    
+                                                <li>
+                                                    <a class="dropdown-item link-modal" href="{{ url('spot/prospectStatus/gaApprove/'.$prospect->id) }}">
+                                                        <i class="bi bi-check2-circle"></i>&nbsp;Ga Approval{{ $prospect->status_id }}
+                                                    </a>
+                                                </li>
+                                            @endif
                                             <li>
-                                                <a class="dropdown-item link-modal" href="{{ url('spot/prospectStatus/hold/'.$prospect->id) }}">
-                                                    <i class="bi bi-ban"></i>&nbsp;Hold
+                                                <a class="dropdown-item link-modal" href="{{ url('spot/prospects/'.$prospect->id) }}">
+                                                    <i class="bi bi-chat"></i>&nbsp;Add Comment
                                                 </a>
                                             </li>
-                                            <li>
-                                                <a class="dropdown-item link-modal" href="{{ url('spot/prospectStatus/cancel/'.$prospect->id) }}">
-                                                    <i class="bi bi-x-circle"></i>&nbsp;Cancel
-                                                </a>
-                                            </li>
+                                        @else
+                                            @if ($prospect->status_id == 35)    
+                                                <li>
+                                                    <a class="dropdown-item" id="unhold_status" href="{{ url('spot/prospectStatus/unHold/'.$prospect->id) }}">
+                                                        <i class="bi bi-ban"></i>&nbsp;UnHold
+                                                    </a>
+                                                </li>
+                                            @else
+                                                <li>
+                                                    <a class="dropdown-item link-modal" href="{{ url('spot/prospectStatus/hold/'.$prospect->id) }}">
+                                                        <i class="bi bi-ban"></i>&nbsp;Hold
+                                                    </a>
+                                                </li>
+                                                @if (isSpotAdmin() OR isSpotClusterHead())    
+                                                    <li>
+                                                        <a class="dropdown-item link-modal" href="{{ url('spot/prospectStatus/cancel/'.$prospect->id) }}">
+                                                            <i class="bi bi-x-circle"></i>&nbsp;Cancel/Delete
+                                                        </a>
+                                                    </li>
+                                                @endif
+                                            @endif
                                         @endif
-                                        <li>
-                                            <a class="dropdown-item ajax-link-file-delete" href="{{ url('spot/prospects/'.$prospect->id) }}">
-                                                <i class="bi bi-trash"></i>&nbsp;Delete
-                                            </a>
-                                        </li>
                                     @endif
                                 </ul>
                             </div>
@@ -221,6 +230,6 @@
 </form>
 @include('scripts.link-modal')
 @include('scripts.ajax-form-search', ['form' => 'prospects'])
-@include('scripts.ajax-link-file-delete')
+@include('scripts.ajax-link-id-change', ['mod' => 'unhold_status', 'msg' => 'Are you sure you want to unhold the status.'])
 
 

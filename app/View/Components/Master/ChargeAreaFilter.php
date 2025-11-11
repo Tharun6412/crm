@@ -1,8 +1,8 @@
 <?php
 
-namespace App\View\Components\Admin;
+namespace App\View\Components\Master;
 
-use App\Models\Pmc\ChargeArea;
+use App\Models\Master\Ca;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
@@ -22,12 +22,12 @@ class ChargeAreaFilter extends Component
      */
     public function render(): View|Closure|string
     {
-        $charge_areas = ChargeArea::all();
+        $charge_areas = Ca::all();
         // Pass the charge areas to the view
         if(request()->has('geo_area')) {
             $geo_area = request()->get('geo_area');
-            $charge_areas = ChargeArea::whereIn('ga_id', $geo_area)->get();
-            return view('components.admin.charge-area-filter', ['charge_areas' => $charge_areas]);
+            $charge_areas = Ca::whereIn('ga_id', $geo_area)->get();
+            return view('components.master.charge-area-filter', ['charge_areas' => $charge_areas]);
         } 
     }
 }

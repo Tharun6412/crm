@@ -1,17 +1,16 @@
 <?php
 
-namespace App\Models\Admin;
+namespace App\Models\Master;
 
 use Illuminate\Database\Eloquent\Model;
-
-class State extends Model
+class Segment extends Model
 {
     /**
      * The table associated with the model
      * 
      * @var string
      */
-    protected $table = 'adm_states';
+    protected $table = 'mst_segments';
 
     /**
      * The attributes that are mass assignable

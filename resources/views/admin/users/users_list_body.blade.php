@@ -62,8 +62,8 @@
                             @endif
                         </a>
                     </th>
-                    <th>Geo Area<x-admin.ga-filter/></th>
-                    <th>Department<x-admin.department-filter/></th>
+                    <th>Geo Area<x-master.ga-filter/></th>
+                    <th>Department<x-master.department-filter/></th>
                     <th>Role<x-admin.role-filter/></th>
                     <th>Access</th>
                     <th width="80" nowrap>Status<x-admin.status-filter name="status" :data="[1 => 'Active', 0 => 'Inactive']"/></th>

@@ -23,11 +23,11 @@ class Documents extends Model
     protected $fillable = [
         'doc_number',
         'disk',
-        'dc_type_id',
-        'file_name_original',
+        'file_type_id',
+        'file_name',
         'file_path',
         'url',
-        'tag',
+        'tags',
         'description',
         'status',
         'created_by',
@@ -38,7 +38,7 @@ class Documents extends Model
      */
     public function type(): BelongsTo
     {
-        return $this->belongsTo(DocumentTypes::class, 'dc_type_id');
+        return $this->belongsTo(DocumentTypes::class, 'file_type_id');
     }
 
     /**

@@ -2,13 +2,13 @@
 
 namespace App\Models\Spot;
 
-use App\Models\Admin\Cluster;
-use App\Models\Admin\FirmType;
-use App\Models\Admin\FuelType;
-use App\Models\Admin\Ga;
-use App\Models\Admin\IndustrialArea;
-use App\Models\Admin\Segment;
-use App\Models\Admin\State;
+use App\Models\Master\Cluster;
+use App\Models\Master\FirmType;
+use App\Models\Master\FuelType;
+use App\Models\Master\Ga;
+use App\Models\Master\IndustrialArea;
+use App\Models\Master\Segment;
+use App\Models\Master\State;
 use App\Models\Admin\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

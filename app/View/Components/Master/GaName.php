@@ -1,8 +1,8 @@
 <?php
 
-namespace App\View\Components\Admin;
+namespace App\View\Components\Master;
 
-use App\Models\Admin\Ga;
+use App\Models\Master\Ga;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
@@ -29,6 +29,6 @@ class GaName extends Component
     {
         // Get all geo areas
         $geo_areas = Ga::whereIn('id', $this->ga_ids)->get()->pluck('name');
-        return view('components.admin.ga-name', ['geo_areas' => $geo_areas]);
+        return view('components.master.ga-name', ['geo_areas' => $geo_areas]);
     }
 }

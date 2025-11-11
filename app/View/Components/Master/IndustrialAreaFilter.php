@@ -1,8 +1,8 @@
 <?php
 
-namespace App\View\Components\Admin;
+namespace App\View\Components\Master;
 
-use App\Models\Admin\IndustrialArea;
+use App\Models\Master\IndustrialArea;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
@@ -27,6 +27,6 @@ class IndustrialAreaFilter extends Component
         if(request()->has('geo_area')) {
             $industrial_areas = IndustrialArea::whereIn('ga_id', request()->geo_area)->get();
         }
-        return view('components.admin.industrial-area-filter', ['industrial_areas' => $industrial_areas]);
+        return view('components.master.industrial-area-filter', ['industrial_areas' => $industrial_areas]);
     }
 }

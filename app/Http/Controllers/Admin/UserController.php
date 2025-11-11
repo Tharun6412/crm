@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Admin\Department;
-use App\Models\Admin\Ga;
+use App\Models\Master\Department;
+use App\Models\Master\Ga;
 use App\Models\Admin\Role;
 use App\Models\Admin\User;
 use App\Models\Spot\SpotRoles;

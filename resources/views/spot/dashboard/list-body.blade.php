@@ -1,5 +1,11 @@
 @php
 	$geo_ids = request()->geo_area;
+	if ($geo_ids) {
+		// render your component output as string
+		$ga_title = (new \App\View\Components\Admin\GaName($geo_ids))->render()->render();
+	} else {
+		$ga_title = '';
+	}
 	$prospect_list = [];
 	$prospect_sum = 0;
 	// Get Status Count List
@@ -22,8 +28,10 @@
 	foreach($achieved_data as $id1 => $achieved_val) {
 		$achieved[$achieved_val->segment_id][str_pad($achieved_val->expected_month,2,0,STR_PAD_LEFT)] = $achieved_val->potential;
 	}
-	// print "<pre>"; print_r($targets);exit;
 @endphp
+@if (request()->geo_area)
+	<h3>&nbsp;{{ $ga_title }}</h3>
+@endif
 <div class="row">
 	<div class="col-md-10"></div>
 	<div class="col-md-2">
@@ -33,6 +41,7 @@
 				<div class="col-6">
 					<div class="card text-center">
 						<div class="card-body">
+							<i class="bi bi-search"></i>
 							<h5 style="white-space: nowrap;">{{ $list->name }}</h5>
 							<p class="fw-bold">{{ $prospect_list[$list->name] ?? 0 }}</p>
 						</div>
@@ -54,20 +63,12 @@
 </div>
 <br/>
 <div class="row">
-	@php
-		if ($geo_ids) {
-            // render your component output as string
-            $ga_title = (new \App\View\Components\Admin\GaName($geo_ids))->render()->render();
-        } else {
-            $ga_title = '';
-        }
-	@endphp
 	@foreach ($segments as $segment)
 		<div class="col-sm-6 col-md-6">
-			<h3>{{ $segment->name }}&nbsp;{{ $ga_title }}</h3>
+			<span class="fs-4">{{ $segment->name }}&nbsp;-&nbsp;Targets&nbsp;Vs&nbsp;Potential&nbsp;Vs&nbsp;Achieved&nbsp;[FY&nbsp;{{ $y_start->format('y') }}-{{ $y_start->format('y')+1 }}]</span>
 			<div class="table-responsive">
-				<table class="table table-bordered">
-					<thead>
+				<table class="table table-bordered table-striped table-hover table-success">
+					<thead class="bg-success">
 						<tr>
 							<th>Month</th>
 							<th class="text-end">Target (SCMD)</th>
@@ -109,10 +110,10 @@
 <div class="row">
 	@foreach ($segments as $segment)
 		<div class="col-sm-6 col-md-6">
-			<h3>{{ $segment->name }}&nbsp;{{ $ga_title }}</h3>
+			<span class="fs-4">{{ $segment->name }}&nbsp;-&nbsp;Targets&nbsp;Vs&nbsp;Potential&nbsp;Vs&nbsp;Achieved&nbsp;[FY&nbsp;{{ $y_start->format('y') }}-{{ $y_start->format('y')+1 }}]</span>
 			<div class="table-responsive">
-				<table class="table table-bordered">
-					<thead>
+				<table class="table table-bordered table-hover table-striped table-primary">
+					<thead class="bg-primary">
 						<tr>
 							<th class="text-center">Quarter</th>
 							<th class="text-end">Target (SCMD)</th>

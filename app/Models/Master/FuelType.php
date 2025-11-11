@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Models\Admin;
+namespace App\Models\Master;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Cluster extends Model
+class FuelType extends Model
 {
     /**
      * The table associated with the model
      * 
      * @var string
      */
-    protected $table = 'adm_clusters';
+    protected $table = 'mst_fuel_types';
 
     /**
      * The attributes that are mass assignable
@@ -20,5 +20,10 @@ class Cluster extends Model
      */
     protected $fillable = [
         'name',
+        'position',
+        'spot',
+        'fuel_group',
+        'created_by',
+        'status',
     ];
 }

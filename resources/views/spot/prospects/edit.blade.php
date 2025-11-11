@@ -134,8 +134,11 @@
                         <label class="col-form-label col-sm-3 text-end">Steel Pipeline&nbsp;<span class="error text-danger"></span>&nbsp;:</label>
                         <div class="col-sm-8">
                             <div class="input-group input-group-sm">
-                                <input type="text" name="steel_pipeline" id="steel_pipeline" class="form-control form-control-sm" placeholder="Enter Steel Pipeline in Kms" value="{{ $steel_pipe?->length }}">
+                                <input type="text" name="steel_pipeline" id="steel_pipeline" class="form-control form-control-sm" placeholder="Enter Steel Pipeline in Kms" value="{{ $steel_pipe?->length }}" @if ($steel_pipe?->status == "1") readonly @endif>
                                 <span class="input-group-text">Kms</span>
+                                @if ($steel_pipe?->status == "1")
+                                    <span class="text-success"><i class="bi bi-check2-circle"></i>Completed</span>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -143,8 +146,11 @@
                         <label class="col-form-label col-sm-3 text-end">MDPE Pipeline&nbsp;<span class="error text-danger"></span>&nbsp;:</label>
                         <div class="col-sm-8">
                             <div class="input-group input-group-sm">
-                                <input type="text" name="mdpe_pipeline" id="mdpe_pipeline" class="form-control form-control-sm" value="{{ $mdpe_pipe?->length }}" placeholder="Enter MDPE Pipeline in Kms">
+                                <input type="text" name="mdpe_pipeline" id="mdpe_pipeline" class="form-control form-control-sm" value="{{ $mdpe_pipe?->length }}" placeholder="Enter MDPE Pipeline in Kms" @if ($mdpe_pipe?->status == "1") readonly @endif>
                                 <span class="input-group-text">Kms</span>
+                                @if ($mdpe_pipe?->status == "1")
+                                    <span class="text-success"><i class="bi bi-check2-circle"></i>Completed</span>
+                                @endif
                             </div>
                         </div>
                     </div>

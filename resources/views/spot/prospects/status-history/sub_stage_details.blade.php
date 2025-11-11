@@ -3,17 +3,17 @@
         $sub_stage_id_val = request()->has('sub_stage_id') ? request()->get('sub_stage_id') : $prospect->stage_id; 
     @endphp
     @switch($sub_stage_id_val)
+        @case(7)
+        @case(8)
+        @case(9)
+        @case(10)
         @case(13)
         @case(14)
         @case(15)
-        @case(16)
-        @case(19)
-        @case(20)
-        @case(21)
             @break
-        @case(17)
-        @case(18)
-            @if ($sub_stage_id_val == 17)
+        @case(11)
+        @case(12)
+            @if ($sub_stage_id_val == 11)
                 <div class="row mb-1">
                     <label for="expected_date" class="col-form-label col-sm-4 text-end">
                         Expected Date <span class="text-danger">*</span>
@@ -38,7 +38,7 @@
                 </div>
             </div>
             @break
-        @case(22)
+        @case(16)
             <div class="row mb-1">
                 <label for="offer-document" class="col-form-label col-sm-4 text-end">
                     Offer Document <span class="text-danger">*</span>
@@ -47,7 +47,7 @@
                     <select name="offer-document" id="offer-document" class="form-select form-select-sm">
                         <option value="">Select Offer</option>
                         @foreach ($offer_type_docs as $doc_value)
-                            <option value="{{ $doc_value->id }}">Offer&nbsp;-&nbsp;{{ $doc_value->offer_count }}&nbsp;(<? echo $doc_value->file->file_name ?>)</option>
+                            <option value="{{ $doc_value->id }}">Offer&nbsp;-&nbsp;{{ $doc_value->offer_count }}&nbsp;({{ $doc_value->file->file_name_original }})</option>
                         @endforeach
                     </select>
                     <span class="text-danger" id="offer-document-error"></span>

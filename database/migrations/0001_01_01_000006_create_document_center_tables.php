@@ -12,23 +12,24 @@ return new class extends Migration
     public function up(): void
     {
         // Document types
-        Schema::create('dc_types', function (Blueprint $table) {
+        Schema::create('dc_file_types', function (Blueprint $table) {
             $table->id();
             $table->string('name', length: 90);
+            $table->integer('type')->nullable();
             $table->timestamps();
         });
         // Documents
         Schema::create('dc_files', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('dc_type_id')->index()->nullable()->constrained(table: 'dc_types')->noActionOnUpdate()->noActionOnDelete();
+            $table->foreignId('file_type_id')->index()->nullable()->constrained(table: 'dc_file_types')->noActionOnUpdate()->noActionOnDelete();
             $table->string('doc_number', length: 32)->nullable();
             $table->string('disk', length: 16)->nullable();
-            $table->string('file_name_original', length: 225)->nullable();
+            $table->string('file_name', length: 225)->nullable();
             $table->string('file_path', length: 225)->nullable();
             $table->string('url', length: 225)->nullable();
-            $table->tinyInteger('status')->nullable();
-            $table->string('tag', length:50)->nullable();
+            $table->string('tags', length:50)->nullable();
             $table->string('description', length:225)->nullable();
+            $table->tinyInteger('status')->nullable();
             $table->foreignId('created_by')->index()->nullable()->constrained('users')->noActionOnUpdate()->noActionOnDelete();
             $table->timestamps();
         });
@@ -41,5 +42,6 @@ return new class extends Migration
     {
         //
         Schema::dropIfExists('dc_files');
+        Schema::dropIfExists('dc_file_types');
     }
 };

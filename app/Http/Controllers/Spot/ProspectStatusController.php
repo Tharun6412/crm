@@ -11,6 +11,7 @@ use App\Models\Spot\ProspectStatusHistory;
 use App\Models\Spot\Status;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+require_once app_path('Helpers/spotauth.php');
 
 class ProspectStatusController extends Controller
 {
@@ -22,7 +23,7 @@ class ProspectStatusController extends Controller
         $status_list = Status::where('type', 1)->where('parent_id', NULL)->get();
         $prospect = Prospects::find($id);
         $sub_stages = Status::where('parent_id', $prospect->stage->parent->id)->get();
-        if($prospect->stage_id == 22) {
+        if($prospect->stage_id == 16) {
             $offer_type_docs = ProspectDocuments::where(['document_type_id' => 2, 'prospect_id' => $id, 'status' => 1])->get();
         }
         if($request->type == "1") {
@@ -63,7 +64,7 @@ class ProspectStatusController extends Controller
         $sub_stage_id = $request->sub_stage_id;
         $prospect_id = $request->prospect_id;
         $prospect = Prospects::find($prospect_id);
-        if($sub_stage_id == 22) {
+        if($sub_stage_id == 16) {
             $offer_type_docs = ProspectDocuments::where(['document_type_id' => 2, 'prospect_id' => $prospect_id, 'status' => 1])->get();
         }
         return view('spot.prospects.status-history.sub_stage_details', [
@@ -85,20 +86,20 @@ class ProspectStatusController extends Controller
             'notes' => 'required',
         ];
         switch($request->sub_stage_id) {
-            case 17 :
+            case 11 :
                 $rules['expected_date'] = 'required';
                 break;
-            case 22 :
-                $rules['offer_document'] = 'required';
+            case 16 :
+                $rules['offer-document'] = 'required';
                 break;
             default:
                 echo "";
         }
         $request->validate($rules);
         switch($request->sub_stage_id) {
-            case 17:
-            case 18:
-                $doc_type = $request->sub_stage_id == "17" ? 1 : 2;
+            case 11:
+            case 12:
+                $doc_type = $request->sub_stage_id == "11" ? 1 : 2;
                 $document_upload = DocumentUpload::upload($request, 'spot');
                 $doc_offer_count = ProspectDocuments::where('prospect_id', $id)->where('document_type_id', $doc_type)->count();
                 // To insert into the Prospect Documents
@@ -137,22 +138,22 @@ class ProspectStatusController extends Controller
 
             // Update status based on stage
             switch($request->sub_stage_id) {
-                case '22' : // Closure -> Win
+                case '16' : // Closure -> Win
                     ProspectDocuments::where('id', $request->offer_document)->update(['win' => 1]);
-                    $update_status = array('status_id' => 10);
+                    $update_status = array('status_id' => 31);
                     break;
-                case '23' : // Lose
-                    $update_status = array('status_id' => 26);
+                case '17' : // Lose
+                    $update_status = array('status_id' => 37);
                     break;
-                case '18' : //Offer
-                    $update_status = array('status_id' => 8);
+                case '12' : //Offer
+                    $update_status = array('status_id' => 32);
                     break;
-                case '24' : // Order -> Execution
-                case '25' : // Order -> Commission
-                    $update_status = array('status_id' => 10);
+                case '18' : // Order -> Execution
+                case '19' : // Order -> Commission
+                    $update_status = array('status_id' => 34);
                     break;
                 default :
-                    $update_status = array('status_id' => 7);
+                    $update_status = array('status_id' => 31);
             }
             // Status Update Query for Prospects 
             if($update_status['status_id'] > 0) {
@@ -191,12 +192,12 @@ class ProspectStatusController extends Controller
         ]);
         // Update the status in Prospects
         Prospects::where('id', $id)->update([
-            'status_id' => 11,
+            'status_id' => 35,
         ]);
         // Insert into Status History
         ProspectStatusHistory::create([
             'prospect_id' => $id,
-            'stage_id' => 11,
+            'stage_id' => 35,
             'notes' => $request->notes,
             'created_at' => Carbon::now(),
             'created_by' => Auth::id(),
@@ -233,12 +234,12 @@ class ProspectStatusController extends Controller
         ]);
         // Update the status in Prospects
         Prospects::where('id', $id)->update([
-            'status_id' => 12,
+            'status_id' => 36,
         ]);
         // Insert into Status History
         ProspectStatusHistory::create([
             'prospect_id' => $id,
-            'stage_id' => 12,
+            'stage_id' => 36,
             'notes' => $request->notes,
             'created_at' => Carbon::now(),
             'created_by' => Auth::id(),
@@ -253,7 +254,6 @@ class ProspectStatusController extends Controller
     {
         $prospect = Prospects::find($id);
         $offer_type_docs = ProspectDocuments::where(['document_type_id' => 2, 'prospect_id' => $id])->whereNULL('status')->get();
-        // dd($offer_type_docs->toRawSql());
         return view('spot.prospects.show', [
             'type' => 8,
             'id' => $id,
@@ -269,17 +269,18 @@ class ProspectStatusController extends Controller
     {
         $request->validate([
             'offer_document' => 'required',
-            'notes' =>'required',
+            'notes' => 'required',
+            'approval_status' => 'required',
         ]);
-        if($request->has('reject_document') and $request->reject_document == "2") {
+        if($request->has('approval_status') and $request->approval_status == "2") {
             // Offer Rejected
             // Update Documents and prospects
             $updateDoc = ProspectDocuments::where('id', $request->offer_document)->update(['status' => 2]);
-            $updateProspectStatus = Prospects::where('id', $id)->update(['status_id' => 27]);
+            $updateProspectStatus = Prospects::where('id', $id)->update(['status_id' => 31]);
             // Insert into Status History
             ProspectStatusHistory::create([
                 'prospect_id' => $id,
-                'stage_id' => 9,
+                'stage_id' => 38,
                 'notes' => $request->notes,
                 'created_at' => Carbon::now(),
                 'created_by' => Auth::id(),
@@ -289,11 +290,11 @@ class ProspectStatusController extends Controller
             // Update Prospect Document Status
             $updateDoc = ProspectDocuments::where('id', $request->offer_document)->update(['status' => 1]);
             // Update Prospects Table
-            $updateProspectStatus = Prospects::where('id', $id)->update(['status_id' => 9]);
+            $updateProspectStatus = Prospects::where('id', $id)->update(['status_id' => 31]);
             // Insert into Status History
             ProspectStatusHistory::create([
                 'prospect_id' => $id,
-                'stage_id' => 9,
+                'stage_id' => 33,
                 'notes' => $request->notes,
                 'created_at' => Carbon::now(),
                 'created_by' => Auth::id(),
@@ -306,5 +307,14 @@ class ProspectStatusController extends Controller
             ]);
             return response()->json(['success' => 'Document approved Successfully']);
         }
+    }
+
+    /**
+     * To Unhold the Status
+     */
+    public function unHold(Request $request, $id)
+    {
+        Prospects::where('id', $id)->update(['status_id' => 31]);
+        return response()->json(['msg' => 'Status updated successfully']);
     }
 }
