@@ -8,13 +8,18 @@ use Illuminate\Support\Facades\Route;
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
         web: __DIR__.'/../routes/web.php',
+        api: __DIR__.'/../routes/api/api.php',
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
-        then : function() {
+        then: function() {
+            // Web routes
             Route::middleware('web')->group(base_path('routes/auth.php'));
             Route::middleware('web')->prefix('admin')->group(base_path('routes/admin.php'));
             Route::middleware('web')->prefix('spot')->group(base_path('routes/spot.php'));
             Route::middleware('web')->prefix('dc')->group(base_path('routes/dc.php'));
+
+            // API routes
+            Route::middleware('api')->prefix('api/v1')->group((base_path('routes/api/v1/auth.php')));
         }
     )
     ->withMiddleware(function (Middleware $middleware): void {
