@@ -12,7 +12,7 @@ class Target extends Model
      * 
      * @var string
      */
-    protected $table = 'spot_targets';
+    protected $table = 'spt_targets';
 
     /**
      * The attributes that are mass assignable

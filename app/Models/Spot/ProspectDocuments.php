@@ -14,7 +14,7 @@ class ProspectDocuments extends Model
      * 
      * @var string
      */
-    protected $table = 'spot_prospect_documents';
+    protected $table = 'spt_prospect_documents';
 
     /**
      * The attributes that are mass assignable

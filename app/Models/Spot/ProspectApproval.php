@@ -11,7 +11,7 @@ class ProspectApproval extends Model
      * 
      * @var string
      */
-    protected $table = 'spot_prospect_approval';
+    protected $table = 'spt_prospect_approval';
 
     /**
      * The attributes that are mass assignable

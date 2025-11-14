@@ -14,7 +14,7 @@ class ProspectComments extends Model
      * 
      * @var string
      */
-    protected $table = 'spot_prospect_comments';
+    protected $table = 'spt_prospect_comments';
 
     /**
      * The attributes that are mass assignable

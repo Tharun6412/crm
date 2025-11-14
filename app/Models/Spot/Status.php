@@ -13,7 +13,7 @@ class Status extends Model
      * 
      * @var string
      */
-    protected $table = 'spot_status';
+    protected $table = 'spt_status';
 
     /**
      * The attributes that are mass assignable

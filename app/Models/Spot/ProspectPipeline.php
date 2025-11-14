@@ -13,7 +13,7 @@ class ProspectPipeline extends Model
      * 
      * @var string
      */
-    protected $table = 'spot_prospect_pipeline';
+    protected $table = 'spt_prospect_pipeline';
 
     /**
      * The attributes that are mass assignable

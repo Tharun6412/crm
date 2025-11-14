@@ -13,7 +13,7 @@ class SpotRoles extends Model
      * 
      * @var string
      */
-    protected $table = 'spot_roles';
+    protected $table = 'spt_roles';
 
     /**
      * The attributes that are mass assignable
@@ -29,6 +29,6 @@ class SpotRoles extends Model
      */
     public function spotUsers():BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'spot_user_roles', 'role_id', 'user_id');
+        return $this->belongsToMany(User::class, 'spt_user_roles', 'role_id', 'user_id');
     }
 }

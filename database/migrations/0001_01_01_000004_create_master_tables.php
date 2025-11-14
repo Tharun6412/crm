@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -91,27 +92,34 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // User Ga
-        Schema::create('adm_user_ga', function(Blueprint $table) {
+        // PNG Firm Types Alias Segments in leads
+        Schema::create('mst_firm_types', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->nullable()->index()->constrained(table: 'users')->noActionOnDelete()->noActionOnUpdate();
-            $table->foreignId('ga_id')->nullable()->index()->constrained(table:'mst_gas')->noActionOnDelete()->noActionOnUpdate();
-        });
-
-        // User status history
-        Schema::create('adm_user_status', function(Blueprint $table) {
-            $table->id();
-            $table->foreignId('user_id')->nullable()->index()->constrained(table: 'users')->noActionOnDelete()->noActionOnUpdate();
-            $table->boolean('status')->nullable();
-            $table->string('notes', length:225)->nullable();
-            $table->foreignId('created_by')->nullable()->index()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();
+            $table->string('name', length:225)->nullable();
+            $table->tinyInteger('status')->nullable();
             $table->timestamps();
+            $table->foreignId('created_by')->nullable()->index()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();
         });
 
-        // Alter User table department and ga_id
-        Schema::table('users', function(Blueprint $table) {
-            $table->foreignId('ga_id')->after('status')->nullable()->index()->constrained(table:'mst_gas')->noActionOnDelete()->noActionOnUpdate();
-            $table->foreignId('department_id')->after('ga_id')->nullable()->index()->constrained(table:'mst_departments')->noActionOnDelete()->noActionOnUpdate();
+        // PNG Fuel Types
+        Schema::create('mst_fuel_types', function (Blueprint $table) {
+            $table->id();
+            $table->string('name', length:225)->nullable();
+            $table->integer('position')->nullable();
+            $table->tinyInteger('spot')->nullable();
+            $table->integer('fuel_group')->nullable();
+            $table->timestamps();
+            $table->foreignId('created_by')->nullable()->index()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();
+            $table->integer('status')->nullable();
+        });
+
+        // Lead Industrial Areas
+        Schema::create('mst_industrial_areas', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('ga_id')->nullable()->index()->constrained(table:'mst_gas')->noActionOnDelete()->noActionOnUpdate();
+            $table->string('name', length:225)->nullable();
+            $table->timestamps();
+            $table->foreignId('created_by')->nullable()->index()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();
         });
     }
 
@@ -120,15 +128,17 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('mst_departments');
-        Schema::dropIfExists('adm_user_status');
-        Schema::dropIfExists('adm_user_ga');
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        Schema::dropIfExists('mst_firm_types');
+        Schema::dropIfExists('mst_fuel_types');
+        Schema::dropIfExists('mst_industrial_areas');
         Schema::dropIfExists('mst_areas');
-        Schema::dropIfExists('mst_ca');
+        Schema::dropIfExists('mst_cas');
         Schema::dropIfExists('mst_districts');
         Schema::dropIfExists('mst_gas');
-        Schema::dropIfExists('mst_state');
+        Schema::dropIfExists('mst_states');
         Schema::dropIfExists('mst_clusters');
         Schema::dropIfExists('mst_segments');
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
 };

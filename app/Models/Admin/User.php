@@ -95,7 +95,7 @@ class User extends Authenticatable
      */
     public function spotRoles():BelongsToMany
     {
-        return $this->belongsToMany(SpotRoles::class, 'spot_user_roles', 'user_id', 'spot_role_id');
+        return $this->belongsToMany(SpotRoles::class, 'spt_user_roles', 'user_id', 'spot_role_id');
     }
 
     /**

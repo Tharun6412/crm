@@ -12,7 +12,7 @@ class ProspectStatusHistory extends Model
      * The table associated with the model
      * @var string
      */
-    protected $table = 'spot_prospect_status_history';
+    protected $table = 'spt_prospect_status_history';
 
     /**
      * The attributes that are mass assignable

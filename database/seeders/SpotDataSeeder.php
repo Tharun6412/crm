@@ -14,7 +14,7 @@ class SpotDataSeeder extends Seeder
     public function run(): void
     {
         // Status
-        DB::table('spot_status')->insert([
+        DB::table('spt_status')->insert([
             ['id' => 1, 'name' => 'Suspect', 'type' => 1, 'parent_id' => null, 'position' => 1],
             ['id' => 2, 'name' => 'Prospect', 'type' => 1, 'parent_id' => null, 'position' => 2],
             ['id' => 3, 'name' => 'Approach', 'type' => 1, 'parent_id' => null, 'position' => 3],
@@ -45,7 +45,7 @@ class SpotDataSeeder extends Seeder
         ]);
 
         // Roles
-        DB::table('spot_roles')->insert([
+        DB::table('spt_roles')->insert([
             ['id' => 1, 'name' => 'Admin', 'created_at' => now(), 'updated_at' => now()],
             ['id' => 2, 'name' => 'Cluster Head', 'created_at' => now(), 'updated_at' => now()],
             ['id' => 3, 'name' => 'GA Head', 'created_at' => now(), 'updated_at' => now()],
@@ -55,7 +55,7 @@ class SpotDataSeeder extends Seeder
         ]);
 
         // Document Types
-        DB::table('spot_document_types')->insert([
+        DB::table('spt_document_types')->insert([
             ['id' => 1, 'name' => 'Load assesment sheet', 'created_at' => now(), 'created_by' => NULL],
             ['id' => 2, 'name' => 'Offer', 'created_at' => now(), 'created_by' => NULL],
             ['id' => 3, 'name' => 'GSA', 'created_at' => now(), 'created_by' => NULL],

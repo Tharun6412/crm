@@ -11,7 +11,7 @@ class DocumentTypes extends Model
      * 
      * @var string
      */
-    protected $table = 'spot_document_types';
+    protected $table = 'spt_document_types';
 
     /**
      * The attributes that are mass assignable

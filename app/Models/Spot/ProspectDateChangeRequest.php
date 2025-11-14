@@ -14,7 +14,7 @@ class ProspectDateChangeRequest extends Model
      * 
      * @var string
      */
-    protected $table = 'spot_prospect_date_change_history';
+    protected $table = 'spt_prospect_date_change_history';
 
     /**
      * The attributes that are mass assignable

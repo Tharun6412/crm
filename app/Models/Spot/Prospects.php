@@ -17,7 +17,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Prospects extends Model
 {
     // Table Name
-    protected $table = 'spot_prospects';
+    protected $table = 'spt_prospects';
     protected $fillable = [
         'code',
         'name',
