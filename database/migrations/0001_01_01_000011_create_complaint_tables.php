@@ -77,7 +77,7 @@ return new class extends Migration
             $table->foreignId('complaint_id')->index()->nullable()->constrained(table:'cmp_complaints')->noActionOnUpdate()->noActionOnDelete();
             $table->decimal('rating', total:8, places:3);
             $table->string('notes', length:225)->nullable();
-            $table->bigInteger('collected_by')->index()->nullable();
+            $table->bigInteger('collected_by')->index()->nullable()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();
             $table->string('link', length:120)->nullable();
             $table->timestamps();
         });

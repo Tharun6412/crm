@@ -52,6 +52,7 @@ return new class extends Migration
             $table->foreignId('gas_required_id')->nullable()->index()->constrained(table:'mst_cns_gas_required')->noActionOnDelete()->noActionOnUpdate();
             $table->foreignId('firm_type_id')->nullable()->index()->constrained(table:'mst_firm_types')->noActionOnDelete()->noActionOnUpdate();
             $table->foreignId('fuel_id')->nullable()->index()->constrained(table:'mst_fuel_types')->noActionOnDelete()->noActionOnUpdate();
+            $table->foreignId('segment_id')->nullable()->index()->constrained(table:'mst_segments')->noActionOnDelete()->noActionOnUpdate();
             $table->decimal('fuel_qty', 8, 3)->nullable();
             $table->decimal('peak_qty', 8, 3)->nullable();
             $table->integer('hours')->nullable();

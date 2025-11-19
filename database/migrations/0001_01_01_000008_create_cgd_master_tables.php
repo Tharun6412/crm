@@ -228,7 +228,7 @@ return new class extends Migration
             $table->timestamps();
         });
         // mst sd payment status
-        Schema::create('mst_sd_paymnent_status', function(Blueprint $table) {
+        Schema::create('mst_sd_payment_status', function(Blueprint $table) {
             $table->id();
             $table->string('name', length:60)->nullable(); //Low | Medium | High
             $table->timestamps();
@@ -260,7 +260,7 @@ return new class extends Migration
     {
         DB::statement('SET FOREIGN_KEY_CHECKS = 0;');
         Schema::dropIfExists('mst_sd_transaction_status');
-        Schema::dropIfExists('mst_sd_paymnent_status');
+        Schema::dropIfExists('mst_sd_payment_status');
         Schema::dropIfExists('mst_cmp_priorities');
         Schema::dropIfExists('mst_cmp_media');
         Schema::dropIfExists('mst_cmp_types');

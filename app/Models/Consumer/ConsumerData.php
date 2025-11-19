@@ -1,0 +1,33 @@
+<?php
+
+namespace App\Models\Consumer;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
+class ConsumerData extends Model
+{
+    /**
+     * The table associated with the model
+     * 
+     * @var string
+     */
+    protected $table = 'cns_consumers_data';
+
+    /**
+     * The attributes that are mass assignable
+     * 
+     * @var array <int string>
+     */
+    protected $fillable = [
+        'consumer_id',
+    ];
+
+    /**
+     * Relation with Consumer
+     */
+    public function consumer():BelongsTo
+    {
+        return $this->belongsTo(Consumer::class, 'consumer_id')->withDefault();
+    }
+}
