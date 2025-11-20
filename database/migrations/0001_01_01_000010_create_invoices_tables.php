@@ -231,7 +231,7 @@ return new class extends Migration
             $table->string('transaction_number', length:32)->nullable();
             $table->double('amount')->nullable();
             $table->integer('emi_no')->nullable();
-            $table->foreignId('status_id')->index()->nullable()->constrained(table:'mst_sd_paymnent_status')->noActionOnUpdate()->noActionOnDelete();
+            $table->foreignId('status_id')->index()->nullable()->constrained(table:'mst_sd_payment_status')->noActionOnUpdate()->noActionOnDelete();
             $table->foreignId('invoice_id')->index()->nullable()->constrained(table:'bil_invoices')->noActionOnUpdate()->noActionOnDelete();
             $table->double('balance')->nullable();
             $table->foreignId('created_by')->nullable()->index()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();
