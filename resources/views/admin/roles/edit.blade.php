@@ -29,7 +29,7 @@
                                 <label for="status_0" class="form-check-label">Disable</label>
                             </div>
                         </div>
-                        <div>
+                        <div class="mb-2">
                             <h4>Modules</h4>
                             @php
                                 // Create rights / module actions array from relational fn
@@ -38,6 +38,24 @@
                             <ul class="tree">
                                 @include('admin.roles.role-module-item', ['child_modules' => $modules])
                             </ul>
+                        </div>
+                        <div>
+                            <h4>APP Modules</h4>
+                            <div class="row g-2">
+                                @php
+                                    $role_app_modules = $role->appModules->pluck('id')->toArray();
+                                @endphp
+                                @foreach ($app_modules as $module)
+                                    <div class="col-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="{{ $module->id }}" name="app_modules[{{ $module->id }}]" value="{{ $module->id }}" @checked(in_array($module->id, $role_app_modules))>
+                                            <label class="form-check-label" for="{{ $module->id }}">
+                                                {{ $module->name }}
+                                            </label>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
                         </div>
                         <div id="role-edit-error"></div>
                         <div class="text-center">

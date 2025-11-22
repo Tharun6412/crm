@@ -42,7 +42,7 @@
                                 Actions
                             </button>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item disabled" href="#"><i class="bi bi-lightning"></i>&nbsp;View</a></li>
+                                <li><a class="dropdown-item link-canvas" href="{{ url('admin/roles/' . $role->id) }}"><i class="bi bi-lightning"></i>&nbsp;View</a></li>
                                 <li>
                                     {{-- Authenticated link --}}
                                     <x-auth.link class="dropdown-item link-modal" href="{{ url('admin/roles/' . $role->id . '/edit') }}" action="edit">
@@ -57,4 +57,5 @@
         </tbody>
     </table>
     @include('scripts.link-modal')
+    @include('scripts.link-canvas')
 @endsection

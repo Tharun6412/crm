@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Admin\AppModule;
 use App\Models\Admin\Module;
 use App\Models\Admin\Role;
 use Illuminate\Http\Request;
@@ -56,7 +57,9 @@ class RoleController extends Controller
      */
     public function show($id)
     {
-        // echo $id;
+        $role = Role::find($id);
+
+        return view('admin.roles.show', ['role' => $role]);
     }
 
     /**
@@ -66,10 +69,12 @@ class RoleController extends Controller
     {
         $role = Role::find($id);
         $modules = Module::with('recursiveChilds')->whereNull('parent_id')->orderBy('position')->get();
+        $app_modules = AppModule::all();
 
         return view('admin.roles.edit', [
             'role' => $role,
             'modules' => $modules,
+            'app_modules' => $app_modules,
         ]);
     }
 
@@ -93,9 +98,11 @@ class RoleController extends Controller
         // Sync role actions
         $validated = $request->validate([
             'rights' => 'array',
+            'app_modules' => 'array',
         ]);
         $role = Role::findOrFail($id);
         $role->actions()->sync($validated['rights'] ?? []);
+        $role->appModules()->sync($validated['app_modules'] ?? []);
 
         // Response
         return response()->json(['success' => 'Role details updated successfully!']);

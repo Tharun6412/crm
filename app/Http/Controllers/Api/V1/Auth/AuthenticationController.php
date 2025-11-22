@@ -28,12 +28,17 @@ class AuthenticationController extends Controller
         // Create a new token for API access
         $token = $user->createToken('api-token')->plainTextToken;
 
-        // Get user access modules
+        // Get user roles and app modules
+        $roles = $user->roles->pluck('id')->toArray();
+        $app_modules = $user->roles->flatMap(function ($role) {
+            return $role->appModules;
+        })->unique('id')->pluck('code')->toArray();
 
         return response()->json([
             'token' => $token,
             'user' => $user,
-            'modules' => [1, 2, 3, 4, 5],
+            'roles' => $roles,
+            'modules' => $app_modules,
         ]);
     }
 
