@@ -12,6 +12,14 @@ return new class extends Migration
      */
     public function up(): void
     {
+        // mst_titles
+        Schema::create('mst_titles', function(Blueprint $table) {
+            $table->id();
+            $table->string('name', length:100)->nullable();
+            $table->integer('type')->nullable();
+            $table->timestamps();
+        });
+
         // mst cns scheme payments
         Schema::create('mst_cns_scheme_payments', function(Blueprint $table) {
             $table->id();
@@ -29,6 +37,8 @@ return new class extends Migration
             $table->double('consumption')->nullable();
             $table->double('total_deposit')->nullable();
             $table->double('min_payment')->nullable();
+            $table->double('emi_amount')->nullable();
+            $table->double('rental_amount')->nullable();
             $table->foreignId('scheme_payment_id')->nullable()->index()->constrained(table:'mst_cns_scheme_payments')->noActionOnDelete()->noActionOnUpdate();
             $table->foreignId('created_by')->nullable()->index()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();
             $table->timestamps();

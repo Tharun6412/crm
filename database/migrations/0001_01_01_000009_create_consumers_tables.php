@@ -15,10 +15,13 @@ return new class extends Migration
         //Consumers Table
         Schema::create('cns_consumers', function(Blueprint $table) {
             $table->id();
+            $table->foreignId('segment_id')->nullable()->index()->constrained(table:'mst_segments')->noActionOnDelete()->noActionOnUpdate();
+            $table->string('t_crn', length:16)->index()->nullable();
             $table->string('crn', length:16)->index()->nullable();
+            $table->foreignId('title')->nullable()->index()->constrained(table:'mst_titles')->noActionOnDelete()->noActionOnUpdate();
             $table->string('fname', length:60)->nullable();
             $table->string('lname', length:60)->nullable();
-            $table->integer('cof')->nullable();
+            $table->foreignId('cof')->nullable()->index()->constrained(table:'mst_titles')->noActionOnDelete()->noActionOnUpdate();
             $table->string('cof_name', length:90)->nullable();
             $table->string('aadhar', length:16)->nullable();
             $table->string('pan', length:16)->nullable();
@@ -52,7 +55,6 @@ return new class extends Migration
             $table->foreignId('gas_required_id')->nullable()->index()->constrained(table:'mst_cns_gas_required')->noActionOnDelete()->noActionOnUpdate();
             $table->foreignId('firm_type_id')->nullable()->index()->constrained(table:'mst_firm_types')->noActionOnDelete()->noActionOnUpdate();
             $table->foreignId('fuel_id')->nullable()->index()->constrained(table:'mst_fuel_types')->noActionOnDelete()->noActionOnUpdate();
-            $table->foreignId('segment_id')->nullable()->index()->constrained(table:'mst_segments')->noActionOnDelete()->noActionOnUpdate();
             $table->decimal('fuel_qty', 8, 3)->nullable();
             $table->decimal('peak_qty', 8, 3)->nullable();
             $table->integer('hours')->nullable();
@@ -114,6 +116,7 @@ return new class extends Migration
             $table->double('consumption_deposit')->nullable();
             $table->double('total_deposit')->nullable();
             $table->decimal('emi_amount', total:8, places:2);
+            $table->decimal('rental_amount', total:8, places:2);
             $table->double('paid_deposit')->nullable();
             $table->double('balance')->nullable();
             $table->integer('status')->nullable();
