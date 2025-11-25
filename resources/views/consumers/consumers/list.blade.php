@@ -9,7 +9,7 @@
 
 @section('page-content')
     <div>
-        <form action="">
+        <form action="{{ url('consumers') }}" id="consumer-search-form" method="GET">
             <div class="row gx-1 mb-1">
                 <div class="col-auto">
                     <div class="input-group input-group-sm">
@@ -22,8 +22,14 @@
                 </div>
             </div>
         </form>
-        <div id="consumers-list">
+        <div id="consumer-list">
             @include('consumers.consumers.list-body')
         </div>
     </div>
 @endsection
+
+@once
+    @push('scripts')
+        @include('scripts.ajax-form-search', ['form' => 'consumer'])
+    @endpush
+@endonce
