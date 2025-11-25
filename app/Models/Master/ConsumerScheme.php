@@ -4,6 +4,8 @@ namespace App\Models\Master;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+
 
 class ConsumerScheme extends Model
 {
@@ -46,5 +48,13 @@ class ConsumerScheme extends Model
     public function schemePayment():BelongsTo
     {
         return $this->belongsTo(ConsumerSchemePayment::class, 'scheme_payment_id')->withDefault();
+    }
+
+    /**
+     * Has many relation with consumer schemes GA
+     */
+    public function schemesGa(): HasMany
+    {
+        return $this->hasMany(ConsumerSchemeGa::class, 'scheme_id');
     }
 }

@@ -18,7 +18,8 @@ return Application::configure(basePath: dirname(__DIR__))
             Route::middleware('web')->prefix('spot')->group(base_path('routes/spot.php'));
             Route::middleware('web')->prefix('dc')->group(base_path('routes/dc.php'));
             Route::middleware('web')->prefix('consumers')->group(base_path('routes/consumer.php'));
-
+            Route::middleware('web')->prefix('master')->group(base_path('routes/master.php'));
+            
             // API routes
             Route::middleware('api')->prefix('api/v1')->group((base_path('routes/api/v1/auth.php')));
         }
