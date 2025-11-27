@@ -321,6 +321,19 @@ class MasterDataSeeder extends Seeder
             ['user_id' => 1, 'role_id' => 1],
             ['user_id' => 2, 'role_id' => 2],
         ]);
+
+        // mst cns status
+        DB::table('mst_cns_status')->insert([
+            ['id' => '1','name' => 'TR','slug' => 'tr','created_at' => NULL,'updated_at' => NULL],
+            ['id' => '2','name' => 'Register','slug' => 'registered','created_at' => NULL,'updated_at' => NULL],
+            ['id' => '3','name' => 'Accept','slug' => 'accepted','created_at' => NULL,'updated_at' => NULL],
+            ['id' => '4','name' => 'Execute','slug' => 'executed','created_at' => NULL,'updated_at' => NULL],
+            ['id' => '5','name' => 'HSC','slug' => 'hsc','created_at' => NULL,'updated_at' => NULL],
+            ['id' => '6','name' => 'Activate','slug' => 'activated','created_at' => NULL,'updated_at' => NULL],
+            ['id' => '7','name' => 'TD','slug' => 'td','created_at' => NULL,'updated_at' => NULL],
+            ['id' => '8','name' => 'PD','slug' => 'pd','created_at' => NULL,'updated_at' => NULL],
+            ['id' => '9','name' => 'Reject','slug' => 'rejected','created_at' => NULL,'updated_at' => NULL]
+        ]);
     }
 }
  

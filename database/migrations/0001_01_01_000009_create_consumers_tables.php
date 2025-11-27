@@ -144,10 +144,10 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // cns district counter
-        Schema::create('cns_district_counter', function(Blueprint $table) {
+        // cns ca counter
+        Schema::create('cns_ca_counter', function(Blueprint $table) {
             $table->id();
-            $table->foreignId('district_id')->nullable()->index()->constrained(table:'mst_districts')->noActionOnDelete()->noActionOnUpdate();
+            $table->foreignId('ca_id')->nullable()->index()->constrained(table:'mst_cas')->noActionOnDelete()->noActionOnUpdate();
             $table->double('count')->nullable();
             $table->timestamps();
         });
@@ -165,7 +165,7 @@ return new class extends Migration
         Schema::dropIfExists('cns_meter_changes');
         Schema::dropIfExists('cns_consumer_meters');
         Schema::dropIfExists('cns_consumers_data');
-        Schema::dropIfExists('cns_district_counter');
+        Schema::dropIfExists('cns_ca_counter');
         Schema::dropIfExists('cns_consumers');
         DB::statement('SET FOREIGN_KEY_CHECKS = 1;');
     }

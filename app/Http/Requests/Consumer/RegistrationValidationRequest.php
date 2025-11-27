@@ -20,12 +20,16 @@ class RegistrationValidationRequest extends FormRequest
             'geo_area' => 'required',
             'district' => 'required',
             'charge_area' => 'required',
+            'email' => 'nullable|unique:cns_consumers,email|email:rfc,dns',
+            'scheme_id' => 'required',
             'title' => 'required',
-            'fname' => 'required',
-            'lname' => 'required',
-            'aadhar' => 'required',
-            'phone' => 'required',
-            'pincode' => 'required',
+            'fname' => 'required|label:FirstName|alpha_dash:ascii',
+            'lname' => 'required|alpha_dash:ascii',
+            'aadhar' => 'required|exact_length[12]|numeric|unique:cns_consumers,aadhar',
+            'phone' => 'required|exact_length[10]|numeric|unique:cns_consumers,phone',
+            'phone_alt' => 'nullable|unique:cns_consumers,phone_alt',
+            'pincode' => 'required|exact_length[6]|numeric',
+            'document_type.*' => 'required',
         ];
     }
 }

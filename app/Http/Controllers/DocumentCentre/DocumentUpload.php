@@ -56,6 +56,57 @@ class DocumentUpload extends Controller
     }
 
     /**
+     * Multiple Files Upload
+     */
+    static function uploadBulk($request, $package = 'crm')
+    {
+        // Validations
+        $request->validate([
+            'dc_file_list' => 'required|array',
+            'dc_file_list.*' => 'required|file|max:51200',
+            'tag' => 'max:30',
+            'description' => 'max:90',
+        ]);
+        $file_data = [];
+        if($request->file('dc_file_list')) {
+            foreach($request->dc_file_list as $key => $file) {
+                $file_name = $file->getClientOriginalName();
+                $upload_path = $package . '/' . date('ym');
+                // Upload to AWS S3 bucket only in production
+                if(config('app.env') == 'production') {
+                    // Upload file
+                    $file_path = Storage::disk('s3')->put($upload_path, $file);
+                }
+                else {
+                    $file_path = $file_name;
+                }
+                if(!empty($file)) {
+                    // Create a DB record in Document Centre package
+                    $dc_insert = Documents::create([
+                        'disk' => 's3',
+                        'file_name' => $file_name,
+                        'file_path' => $file_path,
+                        'status' => 1,
+                        'tags' => $request->tag,
+                        'description' => $request->description,
+                        'created_by' => Auth::id(),
+                    ]);
+                    $doc_number = 'DC' . str_pad($dc_insert->id, 9, '0', STR_PAD_LEFT);
+                    $dc_update = Documents::where('id', $dc_insert->id)->update(['doc_number' => $doc_number]);
+                    $file_data[] = [
+                        'file_id' => $dc_insert->id,
+                        'doc_number' => $doc_number,
+                    ]; 
+                }
+            }
+            return ['file_list' => $file_data];
+        }
+        else {
+            return ['file_list' => null];
+        }
+    }
+
+    /**
      * Delete file from external packages
      * @var int dc_file_id
      * @return array

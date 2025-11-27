@@ -1,18 +1,19 @@
 <?php
 
 namespace App\Models\Consumer;
-use App\Models\Master\District;
+
+use App\Models\Master\Ca;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class DistrictCounter extends Model
+class CaCounter extends Model
 {
     /**
      * The table associated with the model
      * 
      * @var string
      */
-    protected $table = 'cns_district_counter';
+    protected $table = 'cns_ca_counter';
 
     /**
      * The attributes that are mass assignable
@@ -20,15 +21,15 @@ class DistrictCounter extends Model
      * @var array <int string>
      */
     protected $fillable = [
-        'district_id',
+        'ca_id',
         'count',
     ];
 
     /**
-     * Relation with Consumer
+     * Relation with Charge Area
      */
-    public function district():BelongsTo
+    public function ca():BelongsTo
     {
-        return $this->belongsTo(District::class, 'district_id')->withDefault();
+        return $this->belongsTo(Ca::class, 'ca_id')->withDefault();
     }
 }

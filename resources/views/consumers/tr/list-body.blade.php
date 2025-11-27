@@ -64,11 +64,11 @@
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="actionDropdown">
                                     <li>
-                                        <a class="dropdown-item link-modal" href="{{ url('consumers/'.$consumer->id) }}">
+                                        <a class="dropdown-item" href="{{ url('consumers/'.$consumer->id) }}">
                                             <i class="bi bi-info-circle"></i>&nbsp;View
                                         </a>
                                         @if ($consumer->status_id == 1)    
-                                            <a class="dropdown-item link-modal" href="{{ url('consumers/register/getConsumerDepositDetails/'.$consumer->id) }}">
+                                            <a class="dropdown-item link-modal" href="{{ url('consumers/trPayment/'.$consumer->id.'/edit') }}">
                                                 <i class="bi bi-info-circle"></i>&nbsp;Pay Deposit
                                             </a>
                                         @endif

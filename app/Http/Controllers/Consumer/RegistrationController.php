@@ -1,12 +1,14 @@
 <?php
 namespace App\Http\Controllers\Consumer;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\DocumentCentre\DocumentUpload;
 use App\Http\Requests\Consumer\RegistrationValidationRequest;
 use App\Models\Admin\User;
 use App\Models\Consumer\Consumer;
 use App\Models\Consumer\ConsumerDocument;
 use App\Models\Consumer\ConsumersScheme;
 use App\Models\Consumer\ConsumersStatus;
+use App\Models\DocumentCentre\Documents;
 use App\Models\DocumentCentre\DocumentTypes;
 use App\Models\Master\Ca;
 use App\Models\Master\ConsumerGasRequired;
@@ -21,6 +23,8 @@ use App\Models\Master\Title;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
 
 class RegistrationController extends Controller
 {
@@ -54,7 +58,8 @@ class RegistrationController extends Controller
     public function getDistrictsByGa(Request $request)
     {
         $districts = District::where('ga_id', $request->ga_id)->get();
-        return response()->json(['districts' => $districts]);
+        $schemes = ConsumerSchemeGa::with(['scheme'])->where('ga_id', $request->ga_id)->get();
+        return response()->json(['districts' => $districts, 'schemes' => $schemes]);
     }
 
     /**
@@ -65,11 +70,21 @@ class RegistrationController extends Controller
         $charge_areas = Ca::where('district_id', $request->district_id)->get();
         return response()->json(['charge_areas' => $charge_areas]);
     }
+
+    /**
+     * Get Scheme Details By Scheme Id
+     */
+    public function getSchemeDetailsBySchemeId(Request $request)
+    {
+        $scheme_details = ConsumerScheme::find($request->scheme_id);
+        return response()->json(['scheme_details' => $scheme_details]);
+    }
     /**
      * Store ther Data
-     */
+    */
     public function store(RegistrationValidationRequest $request)
     {
+        // dd($request->all());
         // Data Preparation
         $add_consumer = Consumer::create([
             'segment_id' => 1,
@@ -95,7 +110,7 @@ class RegistrationController extends Controller
             'pincode' => $request->pincode,
             'lpg_connections' => $request->lpg_connections,
             'dcq' => $request->dcq,
-            'expected_date' => Carbon::createFromFormat('d-m-Y', $request->expected_date),
+            'expected_date' => !empty($request->expected_date) ? Carbon::createFromFormat('d-m-Y', $request->expected_date) : null,
             'distance' => $request->distance,
             'property_type' => $request->property_type,
             'owner_name' => $request->owner_name,
@@ -109,7 +124,7 @@ class RegistrationController extends Controller
             'created_by' => Auth::id(),
         ]);
         // Temporary CRN Generation
-        $crn_code = "T".$request->geo_area.$request->district.str_pad($add_consumer->id, 5,'0', STR_PAD_LEFT);
+        $crn_code = "TR".$request->geo_area.$request->charge_area.str_pad($add_consumer->id, 5,'0', STR_PAD_LEFT);
         Consumer::where('id', $add_consumer->id)->update(['t_crn' => $crn_code]);
         // Consumer Status History
         ConsumersStatus::create([
@@ -117,52 +132,38 @@ class RegistrationController extends Controller
             'status_id' => 1,
             'created_by' => Auth::id(),
         ]);
-        // Documents Data Preparation
-        $add_consumer_document = ConsumerDocument::create([
-            'consumer_id' => $add_consumer->id,
-            'status_id' => 1,
-            'doc_type_id' => 1,
-        ]);
         // Consumer Scheme Preparation
-        $add_consumer_scheme = ConsumersScheme::create([
-            'consumer_id' => $add_consumer->id,
-            'scheme_id' => 1,
-            'security_deposit' => 1000,
-            'consumption_deposit' => 500,
-            'total_deposit' => 1500,
-            'emi_amount' => null,
-            'paid_deposit' => 1500,
-            'balance' => 0,
-            'status' => 1,
-        ]);
+        if($request->has('scheme_id') and !empty($request->scheme_id)) {
+            $scheme_details = ConsumerScheme::find($request->scheme_id);
+            $add_consumer_scheme = ConsumersScheme::create([
+                'consumer_id' => $add_consumer->id,
+                'scheme_id' => $scheme_details->id,
+                'security_deposit' => $scheme_details->security,
+                'consumption_deposit' => $scheme_details->consumption,
+                'total_deposit' => $scheme_details->total_deposit,
+                'emi_amount' => $scheme_details->emi_amount,
+                'rental_amount' => $scheme_details->rental_amount,
+                'paid_deposit' => 0,
+                'balance' => $scheme_details->security + $scheme_details->consumption,
+                'status' => 0,
+            ]);
+        }
+        // Documents Data Preparation
+        if($request->has('document_type')) {
+            $documents_bulk = DocumentUpload::uploadBulk($request, 'domestic');
+            // print "<pre>"; print_r($documents_bulk);exit;
+            foreach($request->document_type as $key => $doc_type) {
+                $add_consumer_document = ConsumerDocument::create([
+                    'consumer_id' => $add_consumer->id,
+                    'status_id' => 1,
+                    'doc_type_id' => $doc_type,
+                    'file_id' => $documents_bulk['file_list'][$key]['file_id'],
+                ]);
+            }
+        }
         // Response Message
-        return response()->json(['success' => 'Consumer Created Successfully']);
-    }
-
-    /**
-     * To view Deposit Details
-     */
-    public function getConsumerDepositDetails(Request $request, $id)
-    {
-        $consumer = Consumer::find($id);
-        $payment_types = PaymentType::all();
-        $consumer_scheme = ConsumersScheme::with(['scheme'])->where('consumer_id', $id)->first();
-        return view('consumers.deposit-details.pay', [
-            'consumer' => $consumer,
-            'consumer_scheme' => $consumer_scheme,
-            'payment_types' => $payment_types,
-        ]);
-    }
-    /**
-     * After Pay Deposit
-     * @var char Consumer Number Generated
-     */
-    public function payDeposit(Request $request, $id)
-    {
-        $consumer = Consumer::where('id', $id)->get();
-        // Scheme Payment Updated
-        ConsumersScheme::where('consumer_id', $id)->update([
-            'paid_deposit' => 1
+        return response()->json([
+            'success' => 'Consumer Created Successfully.<br/>Go to&nbsp;<a href="'.url('consumers').'">Consumers List</a>'
         ]);
     }
 } 

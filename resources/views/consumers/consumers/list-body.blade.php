@@ -45,3 +45,4 @@
 <div>
     {{ $consumers->links('utils.paginator', ['modDiv' => 'consumers-list']) }}
 </div>
+@include('scripts.link-modal')
