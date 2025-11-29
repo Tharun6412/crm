@@ -102,7 +102,7 @@
                 <div class="col-md-3 col-sm-6 col-xs-12">
                     <div class="mb-3">
                         <label class="form-label">Aadhar number&nbsp;:&nbsp;</label><span class="text-danger">*</span>
-                        <input maxlength="12" name="aadhar" id="aadhar" class="form-control form-control-sm" placeholder="Aadhar Number" type="number"/>
+                        <input maxlength="12" name="aadhar" id="aadhar" class="form-control form-control-sm" placeholder="Aadhar Number" type="text"/>
                         <span class="text-danger" id="aadhar-error"></span>
                     </div>
                 </div>
@@ -111,7 +111,7 @@
                         <label class="form-label">Registered mobile&nbsp;:&nbsp;</label><span class="text-danger">*</span>
                         <div class="input-group input-group-sm">
                             <span class="input-group-text">+91</span>
-                            <input maxlength="10" type="number" name="phone" id="phone" class="form-control form-control-sm" placeholder="Mobile Number" aria-label="Mobile" aria-describedby="mobile"/>
+                            <input maxlength="10" type="text" name="phone" id="phone" class="form-control form-control-sm" placeholder="Mobile Number" aria-label="Mobile" aria-describedby="mobile"/>
                         </div>
                         <span class="text-danger" id="phone-error"></span>
                     </div>
@@ -121,7 +121,7 @@
                         <label class="form-label">Alternate contact number&nbsp;:&nbsp;</label>
                         <div class="input-group input-group-sm">
                             <span class="input-group-text">+91</span>
-                            <input maxlength="10" type="number" name="phone_alt" id="phone_alt" class="form-control form-control-sm" placeholder="Alternate Contact Number" aria-label="Alt Mobile" aria-describedby="alt_mobile"/>
+                            <input maxlength="10" type="text" name="phone_alt" id="phone_alt" class="form-control form-control-sm" placeholder="Alternate Contact Number" aria-label="Alt Mobile" aria-describedby="alt_mobile"/>
                         </div>
                         <span class="text-danger" id="phone_alt-error"></span>
                     </div>
@@ -215,9 +215,9 @@
                 <div class="col-md-3 col-sm-6 col-xs-12">
                     <div class="mb-3">
                         <label class="form-label" for="pincode">Pincode&nbsp;:&nbsp;</label><span class="text-danger">*</span>
-                        <input maxlength="6" name="pincode" id="pincode" class="form-control form-control-sm" placeholder="Pincode" type="number"/>
+                        <input maxlength="6" name="pincode" id="pincode" class="form-control form-control-sm" placeholder="Pincode" type="text"/>
+                        <span class="text-danger" id="pincode-error"></span>
                     </div>
-                    <span class="text-danger" id="pincode-error"></span>
                 </div>
             </div>
             <div class="cnsmr-details-title mt-2 mb-2">Additional details&nbsp;:</div>
@@ -369,7 +369,7 @@
             <div class="mb-3 mt-4">
                 <div class="text-end">
                     <button class="btn btn-success" type="submit"><i class="mdi mdi-check" aria-hidden="true">&nbsp;</i>Register domestic consumer</button>
-                    <a class="btn btn-warning" href="javascript:history.go(-1)"><i class="mdi mdi-chevron-left">&nbsp;</i>Back</a>
+                    <a class="btn btn-warning" href="{{ url('consumers') }}"><i class="mdi mdi-chevron-left">&nbsp;</i>Back</a>
                 </div>
             </div>
         </form>

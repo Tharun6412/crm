@@ -25,7 +25,7 @@
                         <td>{{ $consumer->segment->name }}</td>
                         <td>{{ $consumer->status->name }}</td>
                         <td>{{ $consumer->ga->name }}</td>
-                        <td></td>
+                        <td>{{ $consumer->scheme->scheme->name }}</td>
                         <td>{{ date('d.m.Y') }}</td>
                         <td>
                             @include('consumers.consumers.list-actions')

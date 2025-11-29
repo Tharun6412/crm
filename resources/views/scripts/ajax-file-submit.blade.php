@@ -29,8 +29,13 @@
                 },
                 error: function(data){
                     var errors = data.responseJSON.errors;
-                    $.each( errors, function( key, value ) {
-                        $('#'+key+'-error').html(value[0]);
+                    // $.each( errors, function( key, value ) {
+                    //     $('#'+key+'-error').html(value[0]);
+                    // });
+                    // New Approach for array validation
+                    $.each(errors, function(key, value) {
+                        let safeKey = key.replace(/\./g, '_');
+                        $('#' + safeKey + '-error').html(value[0]);
                     });
                 }
             });

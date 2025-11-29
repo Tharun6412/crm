@@ -21,7 +21,7 @@ class TRController extends Controller
                 $q->orWhere('fname', 'like', '%'.$request->get('search_key').'%');
                 $q->orWhere('lname', 'like', '%'.$request->get('search_key').'%');
             });
-        });
+        })->where('status_id', 1);
         $consumers = $query->orderBy($sortBy, $sortOr)->paginate($records)->withQueryString();
         if($request->ajax()) {
             return view('consumers.tr.list-body', [

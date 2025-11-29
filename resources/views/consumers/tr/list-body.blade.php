@@ -15,9 +15,9 @@
         {{-- Right Section --}}
         <div class="d-flex align-items-center gap-2">
             @if ($consumers->count() > 0)    
-                <a href="{{ url('consumers') }}?{{ http_build_query(request()->all()) }}" class="btn btn-secondary btn-sm">
+                {{-- <a href="{{ url('consumers') }}?{{ http_build_query(request()->all()) }}" class="btn btn-secondary btn-sm">
                     <i class="bi bi-file-earmark-excel"></i>&nbsp;Export
-                </a>
+                </a> --}}
             @endif
         </div>
     </div> 
@@ -38,7 +38,6 @@
                     <th class="text-nowrap">Name</th>
                     <th>Consumer Type</th>
                     <th>Status</th>
-                    <th>Status Date</th>
                     <th class="text-nowrap">Geo Area</th>
                     <th class="text-nowrap">District</th>
                     <th class="text-nowrap">Scheme Name</th>
@@ -54,10 +53,9 @@
                             <td>{{ $consumer->titleDisplay->name }}&nbsp;{{ $consumer->fname }}&nbsp;{{ $consumer->lname }}</td>
                             <td>{{ $consumer->segment->name }}</td>
                             <td>{{ $consumer->status->name }}</td>
-                            <td></td>
                             <td>{{ $consumer->ga->name }}</td>
                             <td>{{ $consumer->district->name }}</td>
-                            <td></td>
+                            <td>{{ $consumer->scheme->scheme->name }}</td>
                             <td class="dropdown">
                                 <button class="btn btn-sm btn-primary dropdown-toggle" type="button" id="actionDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                                     Actions
