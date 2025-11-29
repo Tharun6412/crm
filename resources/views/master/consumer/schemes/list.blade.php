@@ -5,7 +5,7 @@
 @section('page-title', 'SD Schemes')
 
 @section('page-content')
-    <div id="sd-schemes-list" class="current-page-reload">
+    <div id="schemes-list" class="current-page-reload">
         @include('master.consumer.schemes.list-body')
     </div>
 @endsection

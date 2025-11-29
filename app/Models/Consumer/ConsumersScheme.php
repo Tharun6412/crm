@@ -29,6 +29,7 @@ class ConsumersScheme extends Model
         'consumption_deposit',
         'total_deposit',
         'emi_amount',
+        'rental_amount',
         'paid_deposit',
         'balance',
         'status',

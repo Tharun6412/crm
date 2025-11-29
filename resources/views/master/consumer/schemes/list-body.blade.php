@@ -22,11 +22,6 @@
         </div>
         {{-- Right Section --}}
         <div class="d-flex align-items-center gap-2">
-            @if ($schemes->count() > 0)    
-                <a href="{{ url('master/consumer/schemes/schemesExport') }}?{{ http_build_query(request()->all()) }}" class="btn btn-secondary btn-sm">
-                    <i class="bi bi-file-earmark-excel"></i>&nbsp;Export
-                </a>
-            @endif
             <a href="{{ url('master/consumer/schemes/create') }}" class="btn btn-success btn-sm link-modal">
                 <i class="bi bi-plus-lg"></i>&nbsp;Create
             </a>
@@ -53,8 +48,9 @@
                         @endif
                     </a>
                 </th>
-                <th>Scheme Payment</th>
+                <th>Total Deposit Amount</th>
                 <th>Applicable GAs</th>
+                <th>Status</th>
                 <th nowrap class="text-center">Actions</th>
             </tr>
         </thead>
@@ -66,11 +62,26 @@
                         <td>
                             <a href="{{ url('master/consumer/schemes/'.$scheme->id) }}" class="link-canvas">{{ $scheme->name }}</a>
                         </td>
-                        <td>{{ $scheme->schemePayment->name }}</td>
+                        <td>{{ $scheme->total_deposit }}</td>
                         <td>{{ $scheme->schemesGa->pluck('ga.name')->implode(', ') }}</td>
+                        <td>@if ( $scheme->status == 1) <span class="badge bg-success">Enabled</span>
+                        @else <span class="badge bg-warning">Disabled</span>
+                        @endif</td>
                         <td>
-                            <a href="{{ url('master/consumer/schemes/'.$scheme->id) }}" class="btn btn-sm btn-info link-modal"><i class="bi bi-eye">&nbsp;</i>View</a>
-                            <a href="{{ url('master/consumer/schemes/'.$scheme->id) }}" class="btn btn-sm btn-primary link-modal"><i class="bi bi-pencil-square">&nbsp;</i>Edit</a>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Action
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a href="{{ url('master/consumer/schemes/'.$scheme->id) }}" class="dropdown-item link-canvas"><i class="bi bi-eye">&nbsp;</i>View</a></li>
+                                    <li><a href="{{ url('master/consumer/schemes/'.$scheme->id) }}/edit" class="dropdown-item link-modal"><i class="bi bi-pencil-square">&nbsp;</i>Edit</a></li>
+                                    <li>
+                                        @if ( $scheme->status == 1) <a class="dropdown-item" href="#">Disable</a>
+                                        @else <a class="dropdown-item" href="#">Enable</a>
+                                        @endif
+                                    </li>
+                                </ul>
+                            </div>
                         </td>
                     </tr>
                 @endforeach

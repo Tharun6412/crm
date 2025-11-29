@@ -371,6 +371,25 @@ class MasterDataSeeder extends Seeder
            ['id' => '5', 'name' => 'Meter Images', 'type' => '2'], 
            ['id' => '6', 'name' => 'HSC', 'type' => '3'], 
         ]);
+
+        // mst cns meter status
+        DB::table('mst_cns_meter_status')->insert([
+            ['id' => '1', 'name' => 'Active'],
+            ['id' => '2', 'name' => 'InActive'],
+        ]);
+
+        // mst Bill Invoice Type
+        DB::table('mst_bil_invoice_types')->insert([
+            ['id' => '1', 'name' => 'Service Invoice'],
+            ['id' => '2', 'name' => 'Gas Invoice'],
+        ]);
+
+        // mst bill status
+        DB::table('mst_bil_status')->insert([
+            ['id' => '1', 'name' => 'Paid'],
+            ['id' => '2', 'name' => 'Partially Paid'],
+            ['id' => '3', 'name' => 'Not Paid'],
+        ]);
     }
 }
  

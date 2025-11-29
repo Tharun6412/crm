@@ -39,6 +39,7 @@ return new class extends Migration
             $table->double('min_payment')->nullable();
             $table->double('emi_amount')->nullable();
             $table->double('rental_amount')->nullable();
+            $table->boolean('status')->default(1);
             $table->foreignId('scheme_payment_id')->nullable()->index()->constrained(table:'mst_cns_scheme_payments')->noActionOnDelete()->noActionOnUpdate();
             $table->foreignId('created_by')->nullable()->index()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();
             $table->timestamps();
@@ -48,6 +49,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('scheme_id')->nullable()->index()->constrained(table:'mst_cns_schemes')->noActionOnDelete()->noActionOnUpdate();
             $table->foreignId('ga_id')->nullable()->index()->constrained(table:'mst_gas')->noActionOnDelete()->noActionOnUpdate();
+            $table->unique(['scheme_id', 'ga_id']);
             $table->timestamps();
         });
 
@@ -123,6 +125,7 @@ return new class extends Migration
         Schema::create('mst_cns_status', function(Blueprint $table) {
             $table->id();
             $table->string('name', length:60)->nullable();
+            $table->string('slug', length:60)->nullable();
             $table->timestamps();
         });
         // mst cns meter status

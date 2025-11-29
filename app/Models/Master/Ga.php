@@ -65,4 +65,12 @@ class Ga extends Model
     {
         return $this->belongsToMany(User::class, 'adm_user_ga', 'ga_id', 'user_id');
     }
+
+    /**
+     * Belongs to many relations with schemes
+     */
+    // public function schemes(): BelongsToMany
+    // {
+    //     return $this->belongsToMany(ConsumerScheme::class, 'mst_cns_scheme_ga', 'ga_id', 'scheme_id');
+    // }
 }

@@ -5,6 +5,8 @@ namespace App\Models\Master;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+
 
 
 class ConsumerScheme extends Model
@@ -30,6 +32,8 @@ class ConsumerScheme extends Model
         'consumption',
         'total_deposit',
         'min_payment',
+        'emi_amount',
+        'rental_amount',
         'scheme_payment_id',
         'created_by',
     ];
@@ -56,5 +60,22 @@ class ConsumerScheme extends Model
     public function schemesGa(): HasMany
     {
         return $this->hasMany(ConsumerSchemeGa::class, 'scheme_id');
+    }
+
+    /**
+     * 
+     * Belongs to Many relation with GA
+     */
+    public function gas(): BelongsToMany
+    {
+        return $this->belongsToMany(Ga::class, 'mst_cns_scheme_ga', 'scheme_id', 'ga_id');
+    }
+
+    /**
+     * Relation with Users 
+     */
+    public function createdBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class,'created_by');
     }
 }
