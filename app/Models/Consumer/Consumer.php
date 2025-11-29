@@ -19,6 +19,7 @@ use App\Models\Master\Title;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Consumer extends Model
 {
@@ -221,5 +222,21 @@ class Consumer extends Model
     public function status() :BelongsTo
     {
         return $this->belongsTo(ConsumerStatus::class, 'status_id')->withDefault();
+    }
+    
+    /**
+     * Relation with Meter
+     */
+    public function meter(): HasOne
+    {
+        return $this->hasOne(ConsumerMeter::class, 'consumer_id', 'id');
+    }
+
+    /**
+     * Relation with scheme
+     */
+    public function scheme(): HasOne
+    {
+        return $this->hasOne(ConsumersScheme::class, 'consumer_id', 'id');
     }
 }

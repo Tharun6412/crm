@@ -123,6 +123,7 @@
                             <span class="input-group-text">+91</span>
                             <input maxlength="10" type="number" name="phone_alt" id="phone_alt" class="form-control form-control-sm" placeholder="Alternate Contact Number" aria-label="Alt Mobile" aria-describedby="alt_mobile"/>
                         </div>
+                        <span class="text-danger" id="phone_alt-error"></span>
                     </div>
                 </div>
             </div>
@@ -409,6 +410,8 @@
                 $('#registration').html(data.scheme_details.registration);
                 $('#consumption').html(data.scheme_details.consumption);
                 $('#min_payment').html(data.scheme_details.min_payment);
+                $('#emi_amount').html(data.scheme_details.emi_amount);
+                $('#rental_amount').html(data.scheme_details.rental_amount);
             }
             $('#scheme_data').removeClass('d-none');
         });

@@ -41,13 +41,13 @@ class TRPaymentController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $consumer_scheme = ConsumersScheme::where('consumer_id', $id)->first();
         $request->validate([
-            'amount' => 'required',
+            'amount' => ['required', 'numeric', 'gt:0', 'min:' . $consumer_scheme->scheme->min_payment],
             'payment_type' => 'required',
             'transaction_no' => 'required',
             'notes' => 'nullable',
         ]);
-        $consumer_scheme = ConsumersScheme::where('consumer_id', $id)->first();
         $district_code = $consumer_scheme->consumer->district->code;
         $segment_type = $consumer_scheme->consumer->segment_id;
         $ca_code = $consumer_scheme->consumer->ca->code;

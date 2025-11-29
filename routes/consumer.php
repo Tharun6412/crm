@@ -21,6 +21,7 @@ Route::middleware(['auth'])->group(function() {
     Route::resource('activation', App\Http\Controllers\Consumer\ActivationController::class);
     Route::resource('temporaryDisconnect', App\Http\Controllers\Consumer\TemporaryDisconnectController::class);
     Route::resource('permanentDisconnect', App\Http\Controllers\Consumer\PermanentDisconnectController::class);
+    Route::resource('refund', App\Http\Controllers\Consumer\RefundController::class);
 
     Route::get('/{id}', [App\Http\Controllers\Consumer\ConsumerController::class, 'show'])->whereNumber('id');
     Route::get('/{status:slug?}', [App\Http\Controllers\Consumer\ConsumerController::class, 'index']);

@@ -25,10 +25,10 @@ class RegistrationValidationRequest extends FormRequest
             'title' => 'required',
             'fname' => 'required|label:FirstName|alpha_dash:ascii',
             'lname' => 'required|alpha_dash:ascii',
-            'aadhar' => 'required|exact_length[12]|numeric|unique:cns_consumers,aadhar',
-            'phone' => 'required|exact_length[10]|numeric|unique:cns_consumers,phone',
-            'phone_alt' => 'nullable|unique:cns_consumers,phone_alt',
-            'pincode' => 'required|exact_length[6]|numeric',
+            'aadhar' => 'required|digits:12|numeric|unique:cns_consumers,aadhar',
+            'phone' => 'required|digits:10|numeric|unique:cns_consumers,phone',
+            'phone_alt' => 'nullable|digits:10|unique:cns_consumers,phone_alt',
+            'pincode' => 'required|digits:6|numeric',
             'document_type.*' => 'required',
         ];
     }

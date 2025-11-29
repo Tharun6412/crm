@@ -24,9 +24,9 @@
                 <h4 class="mt-3 fw-semibold text-decoration-underline">Scheme Details</h4>
                 <dl class="row">
                     <dt class="col-sm-3">Scheme</dt>
-                    <dd class="col-sm-9">-</dd>
+                    <dd class="col-sm-9">{{ $consumer->scheme?->scheme?->name }}</dd>
                     <dt class="col-sm-3">Payment</dt>
-                    <dd class="col-sm-9">-</dd>
+                    <dd class="col-sm-9">{{ $consumer->scheme?->scheme?->total_deposit }}</dd>
                 </dl>
 
                 <h4 class="mt-3 fw-semibold text-decoration-underline">More Details</h4>
@@ -60,13 +60,13 @@
                 <h4 class="mt-3 fw-semibold text-decoration-underline">Meter Details</h4>
                 <dl class="row">
                     <dt class="col-sm-3">Meter Number</dt>
-                    <dd class="col-sm-9">123456789</dd>
+                    <dd class="col-sm-9">{{ $consumer->meter?->meter_no }}</dd>
                     <dt class="col-sm-3">Serial Number</dt>
-                    <dd class="col-sm-9">123456789</dd>
+                    <dd class="col-sm-9">{{ $consumer->meter?->meter_serial_no }}</dd>
                     <dt class="col-sm-3">Initial Reading</dt>
-                    <dd class="col-sm-9">123456789</dd>
+                    <dd class="col-sm-9">{{ $consumer->meter?->initial_reading }}</dd>
                     <dt class="col-sm-3">Installation Date</dt>
-                    <dd class="col-sm-9">11-11-2025</dd>
+                    <dd class="col-sm-9">{{ $consumer->meter?->install_date?->format('d-m-Y') }}</dd>
                 </dl>
             </div>
         </div>

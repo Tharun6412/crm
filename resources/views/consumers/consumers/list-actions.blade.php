@@ -25,5 +25,8 @@
         @if ($consumer->status_id == 7)
             <li><a class="dropdown-item link-modal" href="{{ url('consumers/permanentDisconnect/'.$consumer->id.'/edit') }}"><i class="bi bi-chevron-right"></i>&nbsp;Permanent Disconnect</a></li>
         @endif
+        @if ($consumer->status_id == 8)
+            <li><a class="dropdown-item link-modal" href="{{ url('consumers/refund/'.$consumer->id.'/edit') }}"><i class="bi bi-chevron-right"></i>&nbsp;Initiate Refund</a></li>
+        @endif
     </ul>
 </div>

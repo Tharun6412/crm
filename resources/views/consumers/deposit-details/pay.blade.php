@@ -80,7 +80,7 @@
                                         <label class="col-form-label">
                                             <strong>{{ numberFormat($consumer_scheme->scheme->min_payment) }}</strong>
                                         </label>
-                                        <div><small>(&nbsp;Registration charges + Consumption deposit&nbsp;)</small></div>
+                                        <div><small>(&nbsp;Registration charges&nbsp;)</small></div>
                                     </div>
                                 </div>
                                 <div class="row mb-3">

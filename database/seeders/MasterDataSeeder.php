@@ -334,6 +334,43 @@ class MasterDataSeeder extends Seeder
             ['id' => '8','name' => 'PD','slug' => 'pd','created_at' => NULL,'updated_at' => NULL],
             ['id' => '9','name' => 'Reject','slug' => 'rejected','created_at' => NULL,'updated_at' => NULL]
         ]);
+
+        // mst titles
+        DB::table('mst_titles')->insert([
+            ['id' => '1', 'name' => 'Mr.', 'type' => '1'],
+            ['id' => '2', 'name' => 'Mrs.', 'type' => '1'],
+            ['id' => '3', 'name' => 'S/O', 'type' => '2'],
+            ['id' => '4', 'name' => 'D/O', 'type' => '2'],
+            ['id' => '5', 'name' => 'W/O', 'type' => '2'],
+        ]);
+
+        // mst Taxes
+        DB::table('mst_taxes')->insert([
+            ['id' => '1', 'name' => 'GST'],
+            ['id' => '2', 'name' => 'VAT'],
+        ]);
+
+        // mst cns Gas Required
+        DB::table('mst_cns_gas_required')->insert([
+            ['id' => '1', 'name' => 'Heating'],
+            ['id' => '2', 'name' => 'Cooking'],
+        ]);
+
+        // mst pay types
+        DB::table('mst_pay_types')->insert([
+            ['id' => '1', 'name' => 'Card Payment'],
+            ['id' => '2', 'name' => 'Cash Payment'],
+        ]);
+
+        // dc file Types
+        DB::table('dc_file_types')->insert([
+           ['id' => '1', 'name' => 'Aadhar', 'type' => '1'], 
+           ['id' => '2', 'name' => 'PAN', 'type' => '1'], 
+           ['id' => '3', 'name' => 'License', 'type' => '1'], 
+           ['id' => '4', 'name' => 'Passport', 'type' => '1'], 
+           ['id' => '5', 'name' => 'Meter Images', 'type' => '2'], 
+           ['id' => '6', 'name' => 'HSC', 'type' => '3'], 
+        ]);
     }
 }
  
