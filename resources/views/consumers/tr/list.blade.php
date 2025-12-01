@@ -1,9 +1,9 @@
 {{-- Pre-Consumers List --}}
 @extends('layouts.layout')
 
-@section('title', 'Temporary Consumers')
+@section('title', 'TR Consumers')
 
-@section('page-title', 'Temporary Consumers')
+@section('page-title', 'TR Consumers')
 
 @section('page-content')
     <div id="tr-list" class="current-page-reload">

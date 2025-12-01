@@ -6,7 +6,7 @@ use App\Models\Consumer\ConsumersStatus;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class RegisteredController extends Controller
+class AcceptController extends Controller
 {
     /**
      * Index method
@@ -22,7 +22,7 @@ class RegisteredController extends Controller
     public function edit(Request $request, $id) 
     {
         $consumer= Consumer::find($id);
-        return view('consumers.consumers.registered.create', [
+        return view('consumers.accept.create', [
             'consumer' => $consumer, 
             'id' => $id, 
         ]);
@@ -59,6 +59,6 @@ class RegisteredController extends Controller
             'created_by' => Auth::id(),
         ]);
         // Response
-        return response()->json(['success' => 'Consumer status updated Successfully.Go to <a href="'.url('consumers/'.$status_val).'">Consumers List</a>']);
+        return response()->json(['success' => 'Consumer status updated Successfully!']);
     }
 } 

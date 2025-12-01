@@ -127,6 +127,15 @@ a {
     z-index: 9999;
 }
 
+/* Dropdown filters */
+.data-filter {
+  font-size: 14px;
+  font-weight: normal;
+  min-width: max-content;
+  max-height: 300px;
+  overflow: auto;
+}
+
 @-webkit-keyframes spin {
   0% {
     -webkit-transform: rotate(0deg);

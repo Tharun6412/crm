@@ -16,14 +16,20 @@ class ConsumerController extends Controller
      */
     public function index(Request $request, ConsumerStatus $status)
     {
+        // dd($request->has('key'));
         // Get consumers
         $consumers = Consumer::
             when($request->has('key'), function ($q) use($request) {
-                $q->where(function ($q) use($request) {
-                    $q->where('crn', 'like', '%' . $request->key . '%')
-                        ->orWhere('fname', 'like', '%' . $request->key . '%')
-                        ->orWhere('lname', 'like', '%' . $request->key . '%');
-                });
+                $q->whereAny(['crn', 'fname', 'lname', 'email', 'phone'], 'like', '%' . $request->key . '%');
+            })
+            ->when($request->has('segments'), function ($q) use($request) {
+                $q->whereIn('segment_id', $request->segments);
+            })
+            ->when($request->has('geo_area'), function ($q) use($request) {
+                $q->whereIn('ga_id', $request->geo_area);
+            })
+            ->when($request->has('cns_status'), function ($q) use($request) {
+                $q->whereIn('status_id', $request->cns_status);
             })
             ->when(($status->id != null), function($q) use($status) {
                 $q->where('status_id', $status->id);

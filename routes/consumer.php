@@ -15,15 +15,14 @@ Route::middleware(['auth'])->group(function() {
     Route::get('register/getConsumerDepositDetails/{id}', [App\Http\Controllers\Consumer\RegistrationController::class, 'getConsumerDepositDetails']);
     Route::post('register/payDeposit/{id}', [App\Http\Controllers\Consumer\RegistrationController::class, 'payDeposit']);
     Route::resource('register', App\Http\Controllers\Consumer\RegistrationController::class);
-    Route::resource('registration', App\Http\Controllers\Consumer\RegisteredController::class);
-    Route::resource('execution', App\Http\Controllers\Consumer\ExecutionController::class);
+    Route::resource('registration', App\Http\Controllers\Consumer\AcceptController::class);
+    Route::resource('execution', App\Http\Controllers\Consumer\ExecuteController::class);
     Route::resource('hscAction', App\Http\Controllers\Consumer\HscController::class);
-    Route::resource('activation', App\Http\Controllers\Consumer\ActivationController::class);
+    Route::resource('activation', App\Http\Controllers\Consumer\ActivateController::class);
     Route::resource('temporaryDisconnect', App\Http\Controllers\Consumer\TemporaryDisconnectController::class);
     Route::resource('permanentDisconnect', App\Http\Controllers\Consumer\PermanentDisconnectController::class);
     Route::resource('refund', App\Http\Controllers\Consumer\RefundController::class);
 
     Route::get('/{id}', [App\Http\Controllers\Consumer\ConsumerController::class, 'show'])->whereNumber('id');
-    Route::get('/{status:slug?}', [App\Http\Controllers\Consumer\ConsumerController::class, 'index']);
-    
+    Route::get('/{status:slug?}', [App\Http\Controllers\Consumer\ConsumerController::class, 'index']); 
 });

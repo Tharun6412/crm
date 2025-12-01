@@ -9,7 +9,7 @@
 
 @section('page-content')
     <div>
-        <form action="{{ url('consumers') }}" id="consumer-search-form" method="GET">
+        <form action="{{ url('consumers') }}" id="consumers-search-form" method="GET">
             <div class="row gx-1 mb-1">
                 <div class="col-auto">
                     <div class="input-group input-group-sm">
@@ -21,15 +21,15 @@
                     <button type="submit" class="btn btn-sm btn-success"><i class="bi bi-search"></i></button>
                 </div>
             </div>
+            <div id="consumers-list">
+                @include('consumers.consumers.list-body')
+            </div>
         </form>
-        <div id="consumers-list">
-            @include('consumers.consumers.list-body')
-        </div>
     </div>
 @endsection
 
 @once
     @push('scripts')
-        @include('scripts.ajax-form-search', ['form' => 'consumer'])
+        @include('scripts.ajax-form-search', ['form' => 'consumers'])
     @endpush
 @endonce

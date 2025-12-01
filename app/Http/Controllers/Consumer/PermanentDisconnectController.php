@@ -16,19 +16,15 @@ class PermanentDisconnectController extends Controller
         echo "test method";
     }
     /**
-     * TO Get the Deposit Details
-     * Consumer Scheme Details
+     * Permanent disconnection form
      */
     public function edit(Request $request, $id) 
     {
-        return view('consumers.consumers.pd.create', [
-            'id' => $id, 
-        ]);
+        return view('consumers.pd.create', ['id' => $id]);
     }
 
     /**
-     * Accept/Reject
-     * Registered -> Accept/Reject
+     * Permanent disconnect
      */
     public function update(Request $request, $id)
     {

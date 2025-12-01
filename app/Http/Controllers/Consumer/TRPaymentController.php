@@ -111,6 +111,6 @@ class TRPaymentController extends Controller
             'created_by' => Auth::id(),
         ]);
         // Response
-        return response()->json(['success' => 'Consumer CRN Created Successfully<br/>Go to&nbsp;<a href="'.url('consumers').'">Consumers List</a>']);
+        return response()->json(['success' => 'CRN Created Successfully with ' . $crn_no . ', click <a href="'.url('consumers').'">here</a> to go to consumers list.']);
     }
 } 

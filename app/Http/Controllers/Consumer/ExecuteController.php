@@ -10,7 +10,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class ExecutionController extends Controller
+class ExecuteController extends Controller
 {
     /**
      * Index method
@@ -19,15 +19,13 @@ class ExecutionController extends Controller
     {
         echo "test method";
     }
+
     /**
-     * TO Get the Deposit Details
-     * Consumer Scheme Details
+     * Execute consumer form
      */
     public function edit(Request $request, $id) 
     {
-        return view('consumers.consumers.executed.create', [
-            'id' => $id, 
-        ]);
+        return view('consumers.execute.create', ['id' => $id]);
     }
 
     /**
@@ -78,6 +76,6 @@ class ExecutionController extends Controller
             'created_by' => Auth::id(),
         ]);
         // Response
-        return response()->json(['success' => 'Consumer executed Successfully.Go to <a href="'.url('consumers/executed').'">Consumers List</a>']);
+        return response()->json(['success' => 'Consumer executed successfully!']);
     }
 } 

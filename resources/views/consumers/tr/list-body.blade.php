@@ -30,11 +30,11 @@
         $i = (($consumers->currentPage() - 1) * $consumers->perPage())+1;
     @endphp
     <div class="teable-responsive">
-        <table class="table table-bordered page-sort">
-            <thead>
+        <table class="table table-bordered page-sort table-warning">
+            <thead class="table-warning">
                 <tr>
-                    <th>S.No</th>
-                    <th class="text-nowrap">CRN</th>
+                    <th width="1%" nowrap>S.No</th>
+                    <th class="text-nowrap">TCRN</th>
                     <th class="text-nowrap">Name</th>
                     <th>Consumer Type</th>
                     <th>Status</th>

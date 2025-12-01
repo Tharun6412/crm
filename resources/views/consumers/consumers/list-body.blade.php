@@ -1,17 +1,17 @@
 {{-- Consumers list --}}
 
-<div class="table-responsive">
+<div class="table-responsive" style="min-height: 500px;">
     <table class="table table-bordered table-hover">
         <thead class="table-success">
             <tr>
                 <th width="1%" nowrap>S No</th>
                 <th>CRN</th>
                 <th>Name</th>
-                <th>Segment</th>
+                <th>Segment<x-master.segmentFilter class="float-end" /></th>
                 <th>Status<x-consumer.statusFilter class="float-end" /></th>
-                <th>GA</th>
+                <th>GA<x-master.gaFilter class="float-end" /></th>
                 <th>Scheme</th>
-                <th>Created At</th>
+                <th>Created At<x-master.date-Filter /></th>
                 <th width="2%" nowrap>Actions</th>
             </tr>
         </thead>

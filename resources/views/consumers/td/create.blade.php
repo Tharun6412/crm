@@ -1,7 +1,7 @@
 <div class="modal-dialog">
     <div class="modal-content">
         <div class="modal-header">
-            <h5 class="modal-title">Temporary Disconnection Status</h5>
+            <h4 class="modal-title">Temporary Disconnect</h4>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
@@ -27,18 +27,16 @@
                     <div class="mb-3" id="td-error"></div>
                     <div class="row mb-3">
                         <div class="col-md-12 col-sm-12">
-                            <div class="text-end">
-                                <button type="submit" class="btn btn-success btn-sm">
-                                    <i class="mdi mdi-check" aria-hidden="true">&nbsp;</i>Update
-                                </button>
-                            </div>
+                            <button type="submit" class="btn btn-success">
+                                <i class="bi bi-check2-square" aria-hidden="true">&nbsp;</i>Disconnect Temporarly
+                            </button>
                         </div>
                     </div>
                 </form>
             </div>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-danger btn-sm" data-bs-dismiss="modal"><i class="mdi mdi-close">&nbsp;</i>Close</button>
+            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal"><i class="bi bi-x">&nbsp;</i>Close</button>
         </div>
     </div>
 </div>

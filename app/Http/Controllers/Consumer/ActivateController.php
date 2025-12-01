@@ -6,7 +6,7 @@ use App\Models\Consumer\ConsumersStatus;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class TemporaryDisconnectController extends Controller
+class ActivateController extends Controller
 {
     /**
      * Index method
@@ -16,35 +16,36 @@ class TemporaryDisconnectController extends Controller
         echo "test method";
     }
     /**
-     * Temporary Disconnection form
+     * Activate form
      */
     public function edit(Request $request, $id) 
     {
-        return view('consumers.td.create', ['id' => $id]);
+        return view('consumers.activate.create', ['id' => $id]);
     }
 
     /**
-     * Temporary disconnect
+     * Activate consumer
      */
     public function update(Request $request, $id)
     {
+        // Validation
         $request->validate([
             'notes' => 'required|max:255',
-            'status' => 'required',
         ]);
-        // 7 = TD
+
+        // 6 = Activation
         Consumer::where('id', $id)->update([
-            'status_id' => 7,
+            'status_id' => 6,
             'updated_by' => Auth::id(),
         ]);
-        // Consumer Status History
+        // Status History
         ConsumersStatus::create([
             'consumer_id' => $id,
-            'status_id' => 7,
+            'status_id' => 6,
             'notes' => $request->notes,
             'created_by' => Auth::id(),
         ]);
         // Response
-        return response()->json(['success' => 'Consumer Temporarily Disconnected.Go to <a href="'.url('consumers/td').'">Consumers List</a>']);
+        return response()->json(['success' => 'Consumer activated successfully!']);
     }
 } 

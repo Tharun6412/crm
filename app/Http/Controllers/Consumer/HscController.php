@@ -23,7 +23,7 @@ class HscController extends Controller
      */
     public function edit(Request $request, $id) 
     {
-        return view('consumers.consumers.hsc.create', [
+        return view('consumers.hsc.create', [
             'id' => $id, 
         ]);
     }
@@ -58,6 +58,6 @@ class HscController extends Controller
             'created_by' => Auth::id(),
         ]);
         // Response
-        return response()->json(['success' => 'Consumer activated Successfully.Go to <a href="'.url('consumers/hsc').'">Consumers List</a>']);
+        return response()->json(['success' => 'Consumer HSC successfully completed!']);
     }
 } 

@@ -163,7 +163,7 @@ class RegistrationController extends Controller
         }
         // Response Message
         return response()->json([
-            'success' => 'Consumer Created Successfully.<br/>Go to&nbsp;<a href="'.url('consumers').'">Consumers List</a>'
+            'success' => 'Consumer Created Successfully with TR number ' . $crn_code . ', click <a href="'.url('consumers').'">here</a> to see all consumers.'
         ]);
     }
 } 

@@ -27,7 +27,7 @@ class RefundController extends Controller
     public function edit(Request $request, $id) 
     {
         $consumer_scheme = ConsumersScheme::where('consumer_id', $id)->first();
-        return view('consumers.consumers.refund.create', [
+        return view('consumers.refund.create', [
             'id' => $id, 
             'consumer_scheme' => $consumer_scheme,
         ]);
