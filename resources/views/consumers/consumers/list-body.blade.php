@@ -8,7 +8,7 @@
                 <th>CRN</th>
                 <th>Name</th>
                 <th>Segment</th>
-                <th>Status</th>
+                <th>Status<x-consumer.statusFilter class="float-end" /></th>
                 <th>GA</th>
                 <th>Scheme</th>
                 <th>Created At</th>
@@ -23,7 +23,9 @@
                         <td>{{ $consumer->crn }}</td>
                         <td>{{ $consumer->name }}</td>
                         <td>{{ $consumer->segment->name }}</td>
-                        <td>{{ $consumer->status->name }}</td>
+                        <td>
+                            <x-consumer.status :status="$consumer->status" />
+                        </td>
                         <td>{{ $consumer->ga->name }}</td>
                         <td>{{ $consumer->scheme->scheme->name }}</td>
                         <td>{{ date('d.m.Y') }}</td>

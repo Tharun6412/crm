@@ -22,7 +22,7 @@
                 </div>
             </div>
         </form>
-        <div id="consumer-list">
+        <div id="consumers-list">
             @include('consumers.consumers.list-body')
         </div>
     </div>

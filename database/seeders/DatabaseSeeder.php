@@ -15,6 +15,6 @@ class DatabaseSeeder extends Seeder
     {
         $this->call(MasterDataSeeder::class);
         $this->call(ModuleDataSeeder::class);
-        // $this->call(SpotDataSeeder::class);
+        $this->call(SpotDataSeeder::class);
     }
 }

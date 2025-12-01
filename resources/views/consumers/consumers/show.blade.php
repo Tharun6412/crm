@@ -61,7 +61,7 @@
                     <div class="d-flex border rounded-top p-2 fs-4">
                         <div>{{ $consumer->crn }}</div>&nbsp;|&nbsp;
                         <div>{{ $consumer->segment->name ?? '' }}</div>&nbsp;|&nbsp;
-                        <div>{{ $consumer->status->name ?? '' }}</div>
+                        <div><x-consumer.status :status="$consumer->status" /></div>
                     </div>
                 </div>
                 <div class="col-md-12">
