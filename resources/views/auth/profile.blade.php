@@ -7,13 +7,6 @@
     
 @section('page-content')
     <div class="border p-3">
-        {{-- Flash message --}}
-        @if (session('status'))
-            <div class="alert alert-success">
-                <strong><i class="bi bi-check-circle"></i>&nbsp;Success!</strong><br>
-                {{ session('status') }}
-            </div>
-        @endif
         <div class="row align-items-center">
             <div class="col-sm-4 text-center">
                 <span class="text-light" style="font-size: 254px; line-height:0;">
@@ -45,9 +38,7 @@
                     <dl class="d-flex">
                         <dt>Geo area:</dt>
                         <dd class="ps-2 mb-0">
-                            @isset($user->ga->name)
-                                {{ $user->ga->code . '-' . $user->ga->name }}
-                            @endisset
+                            {{ $user->ga->pluck('name') }}
                         </dd class="ps-2 mb-0">
                     </dl>
                     <dl class="d-flex">

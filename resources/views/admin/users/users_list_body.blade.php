@@ -25,7 +25,7 @@
 
 {{-- Display --}}
 @if ($users->total() > 0)
-    <div class="table-responsive">
+    <div class="table-responsive" style="min-height: 500px;">
         <table class="table table-bordered page-sort">
             <thead>
                 <tr class="bg-light">
@@ -62,7 +62,7 @@
                             @endif
                         </a>
                     </th>
-                    <th>Geo Area<x-master.ga-filter/></th>
+                    <th>Geo Area<x-master.ga-filter class="float-end"/></th>
                     <th>Department<x-master.department-filter/></th>
                     <th>Role<x-admin.role-filter/></th>
                     <th>Access</th>

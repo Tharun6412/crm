@@ -3,6 +3,8 @@
 namespace App\Models\Master;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class District extends Model
 {
@@ -28,4 +30,36 @@ class District extends Model
         'status',
         'created_by',
     ];
+
+    /**
+     * Relation with state
+     */
+    public function state(): BelongsTo
+    {
+        return $this->belongsTo(State::class);
+    }
+
+    /**
+     * Relation with CLuster
+     */
+    public function cluster(): BelongsTo
+    {
+        return $this->belongsTo(Cluster::class);
+    }
+
+    /**
+     * Relation with GA
+     */
+    public function ga(): BelongsTo
+    {
+        return $this->belongsTo(Ga::class);
+    }
+
+    /**
+     * Relation with Charge areas
+     */
+    public function cas(): HasMany
+    {
+        return $this->hasMany(Ca::class);
+    }
 }

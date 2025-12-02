@@ -6,6 +6,7 @@ use App\Models\Admin\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Ga extends Model
 {
@@ -73,4 +74,12 @@ class Ga extends Model
     // {
     //     return $this->belongsToMany(ConsumerScheme::class, 'mst_cns_scheme_ga', 'ga_id', 'scheme_id');
     // }
+
+    /**
+     * Relation with districts
+     */
+    public function districts(): HasMany
+    {
+        return $this->hasMany(District::class);
+    }
 }

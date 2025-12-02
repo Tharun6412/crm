@@ -9,7 +9,7 @@
 @section('page-content')
 <div class="container">
     <div id="add-domestic-success">
-        <form id="add-domestic-form" action="{{ url('consumers/register') }}" method="POST" enctype="multipart/form-data">
+        <form id="add-domestic-form" action="{{ url('consumers/register/domestic') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="row bg-success-subtle pb-3">
                 <div class="col-sm-4 col-md-4">
@@ -114,7 +114,7 @@
                     <label>Security Deposit Schemes</label>
                     <div>
                         <select name="scheme_id" id="scheme_id" class="form-select" onchange="getSchemeDetails(this.value)">
-                            <option value="">All</option>
+                            <option value="">Select scheme</option>
                             @foreach ($schemes as $scheme)
                                 <option value="{{ $scheme->scheme->id }}">{{ $scheme->scheme->name }}</option>
                             @endforeach
@@ -314,7 +314,9 @@
             </div>
             <div class="mb-3 mt-4">
                 <div class="text-end">
-                    <button class="btn btn-success" type="submit"><i class="bi bi-check2-square" aria-hidden="true">&nbsp;</i>Register Domestic Consumer</button>
+                    <button class="btn btn-success" type="submit">
+                        <i class="bi bi-check2-square" aria-hidden="true">&nbsp;</i>Register Domestic Consumer
+                    </button>
                     <a class="btn btn-warning" href="{{ url('consumers') }}"><i class="bi bi-chevron-left">&nbsp;</i>Back</a>
                 </div>
             </div>
@@ -326,16 +328,16 @@
     // Get Districts By GA
     function getDistrictsByGa(ga) 
     {
-        $.get("{{ url('consumers/register/getDistrictsByGa') }}", { 'ga_id' : ga }, function(data) {
+        $.get("{{ url('common/gaDistrictsSchemes') }}", { 'ga_id' : ga }, function(data) {
             $('#district').empty();
             $('#scheme_id').empty();
-            let options = '<option value = "">Select District</option>'
+            let options = '<option value = "">Select district</option>'
             if(data.districts && data.districts.length > 0) {
                 data.districts.forEach(function(dist) {
                     options += `<option value="${dist.id}">${dist.name}</option>`;
                 });
             }
-            let options1 = '<option value="">select</option>'
+            let options1 = '<option value="">Select scheme</option>'
             if(data.schemes && data.schemes.length > 0) {
                 data.schemes.forEach(function(scheme) {
                     options1 += `<option value="${scheme.scheme.id}">${scheme.scheme.name}</option>`;
@@ -349,7 +351,7 @@
     // Get Scheme Details
     function getSchemeDetails(scheme_id)
     {
-        $.get("{{ url('consumers/register/getSchemeDetailsBySchemeId') }}", {'scheme_id' : scheme_id}, function(data) {
+        $.get("{{ url('common/schemeDetails') }}", {'scheme_id' : scheme_id}, function(data) {
             if(data.scheme_details != null) {
                 $('#scheme_name_details').html(data.scheme_details.name);
                 $('#security').html(data.scheme_details.security);
@@ -367,9 +369,9 @@
 
     // Get Charge Areas By District
     function getCasByDistrict(district_id) {
-        $.get("{{ url('consumers/register/getCasByDistrict') }}", { 'district_id' :district_id }, function(data) {
+        $.get("{{ url('common/districtCas') }}", { 'district_id' :district_id }, function(data) {
             $('#charge_area').empty();
-            let options = '<option value="">Select Charge Area</option>'
+            let options = '<option value="">Select charge area</option>'
             if(data.charge_areas && data.charge_areas.length > 0) {
                 data.charge_areas.forEach(function(ca) {
                     options += `<option value="${ca.id}">${ca.name}</option>`;

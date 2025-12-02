@@ -3,6 +3,7 @@
 namespace App\Models\Master;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Cluster extends Model
 {
@@ -19,6 +20,17 @@ class Cluster extends Model
      * @var array <int string>
      */
     protected $fillable = [
+        'code',
         'name',
+        'description',
+        'status',
     ];
+
+    /**
+     * Relation with GA
+     */
+    public function gas(): HasMany
+    {
+        return $this->hasMany(Ga::class);
+    }
 }

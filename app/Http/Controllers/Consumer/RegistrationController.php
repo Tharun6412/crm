@@ -1,42 +1,30 @@
 <?php
+
 namespace App\Http\Controllers\Consumer;
+
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\DocumentCentre\DocumentUpload;
 use App\Http\Requests\Consumer\RegistrationValidationRequest;
-use App\Models\Admin\User;
 use App\Models\Consumer\Consumer;
 use App\Models\Consumer\ConsumerDocument;
 use App\Models\Consumer\ConsumersScheme;
 use App\Models\Consumer\ConsumersStatus;
-use App\Models\DocumentCentre\Documents;
 use App\Models\DocumentCentre\DocumentTypes;
-use App\Models\Master\Ca;
 use App\Models\Master\ConsumerGasRequired;
 use App\Models\Master\ConsumerNomineeRelation;
 use App\Models\Master\ConsumerScheme;
-use App\Models\Master\ConsumerSchemeGa;
-use App\Models\Master\District;
 use App\Models\Master\Ga;
-use App\Models\Master\PaymentType;
 use App\Models\Master\Segment;
 use App\Models\Master\Title;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Storage;
 
 class RegistrationController extends Controller
 {
     /**
-     * Index method
+     * DPNG consumer registration form
      */
     public function index()
-    {
-        echo "Index Method";
-    }
-
-    public function create()
     {
         $geo_areas = Ga::whereIn('id', session()->get('user')['gas'])->get();
         return view('consumers.registration.create-domestic', [
@@ -52,33 +40,6 @@ class RegistrationController extends Controller
         ]);
     }
 
-    /**
-     * Get Districts By GA
-     */
-    public function getDistrictsByGa(Request $request)
-    {
-        $districts = District::where('ga_id', $request->ga_id)->get();
-        $schemes = ConsumerSchemeGa::with(['scheme'])->where('ga_id', $request->ga_id)->get();
-        return response()->json(['districts' => $districts, 'schemes' => $schemes]);
-    }
-
-    /**
-     * Get Districts By GA
-     */
-    public function getCasByDistrict(Request $request)
-    {
-        $charge_areas = Ca::where('district_id', $request->district_id)->get();
-        return response()->json(['charge_areas' => $charge_areas]);
-    }
-
-    /**
-     * Get Scheme Details By Scheme Id
-     */
-    public function getSchemeDetailsBySchemeId(Request $request)
-    {
-        $scheme_details = ConsumerScheme::find($request->scheme_id);
-        return response()->json(['scheme_details' => $scheme_details]);
-    }
     /**
      * Store ther Data
     */

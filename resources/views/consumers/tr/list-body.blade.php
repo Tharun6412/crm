@@ -65,10 +65,13 @@
                                         <a class="dropdown-item" href="{{ url('consumers/'.$consumer->id) }}">
                                             <i class="bi bi-info-circle"></i>&nbsp;View
                                         </a>
-                                        @if ($consumer->status_id == 1)    
-                                            <a class="dropdown-item link-modal" href="{{ url('consumers/trPayment/'.$consumer->id.'/edit') }}">
+                                        @if ($consumer->status_id == 1)
+                                            {{-- <a class="dropdown-item link-modal" href="{{ url('consumers/trPayment/'.$consumer->id.'/edit') }}">
                                                 <i class="bi bi-info-circle"></i>&nbsp;Pay Deposit
-                                            </a>
+                                            </a> --}}
+                                            <x-auth.link class="dropdown-item link-modal" href="{{ url('consumers/trPayment/' . $consumer->id . '/edit') }}" action="pdep">
+                                                <i class="bi bi-info-circle"></i>&nbsp;Pay Deposit
+                                            </x-auth.link>
                                         @endif
                                     </li>
                                 </ul>

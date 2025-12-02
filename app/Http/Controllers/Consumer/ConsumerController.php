@@ -16,10 +16,12 @@ class ConsumerController extends Controller
      */
     public function index(Request $request, ConsumerStatus $status)
     {
-        // dd($request->has('key'));
+        // print_r(session('user'));
         // Get consumers
-        $consumers = Consumer::
-            when($request->has('key'), function ($q) use($request) {
+        $consumers = Consumer::when((!isAdmin() AND !isSuperAdmin()), function ($q) {
+                $q->whereIn('ga_id', session('user')['gas']);
+            })
+            ->when($request->has('key'), function ($q) use($request) {
                 $q->whereAny(['crn', 'fname', 'lname', 'email', 'phone'], 'like', '%' . $request->key . '%');
             })
             ->when($request->has('segments'), function ($q) use($request) {
@@ -53,7 +55,9 @@ class ConsumerController extends Controller
     public function show($id)
     {
         // Find Consumer
-        $consumer = Consumer::find($id);
+        $consumer = Consumer::when((!isAdmin() AND !isSuperAdmin()), function ($q) {
+                $q->whereIn('ga_id', session('user')['gas']);
+            })->find($id);
 
         // Abort if consumer not found
         if (! $consumer) {

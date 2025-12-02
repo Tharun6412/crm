@@ -4,6 +4,7 @@ namespace App\Models\Master;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Ca extends Model
 {
@@ -33,5 +34,21 @@ class Ca extends Model
     public function ga() : BelongsTo
     {
         return $this->belongsTo(Ga::class)->withDefault();
+    }
+
+    /**
+     * Relation with District
+     */
+    public function district(): BelongsTo
+    {
+        return $this->belongsTo(District::class);
+    }
+
+    /**
+     * Relation with areas
+     */
+    public function areas(): HasMany
+    {
+        return $this->hasMany(Area::class);
     }
 }
