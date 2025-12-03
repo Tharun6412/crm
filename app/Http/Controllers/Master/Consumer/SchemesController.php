@@ -138,4 +138,20 @@ class SchemesController extends Controller
     {
 
     }
-}
+
+    public function toggleStatus($id)
+    {
+        $scheme = ConsumerScheme::findOrFail($id);
+
+        // Toggle status (1 → 0, 0 → 1)
+        $scheme->status = !$scheme->status;
+        $scheme->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Status updated successfully.',
+            'status' => $scheme->status ? 'Enabled' : 'Disabled'
+        ]);
+    }
+
+}   

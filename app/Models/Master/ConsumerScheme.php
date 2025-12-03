@@ -34,6 +34,7 @@ class ConsumerScheme extends Model
         'min_payment',
         'emi_amount',
         'rental_amount',
+        'status',
         'scheme_payment_id',
         'created_by',
     ];

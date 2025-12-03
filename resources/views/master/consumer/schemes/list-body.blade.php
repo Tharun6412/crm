@@ -36,10 +36,10 @@
         $i = (($schemes->currentPage() - 1) * $schemes->perPage())+1;
     @endphp
     <!-- Display prospects list -->
-    <table class="table table-bordered page-sort">
-        <thead>
+    <table class="table table-bordered table-hover page-sort">
+        <thead class="table-success">
             <tr>
-                <th nowrap>S No.</th>
+                <th width="1%" nowrap>S No.</th>
                 <th nowrap>
                     <a href="{{ $schemes->appends(['sortBy' => 'name','sortOr' => $sort_order_inverse])->url($schemes->currentPage()) }}">
                         Scheme Name
@@ -51,7 +51,7 @@
                 <th>Total Deposit Amount</th>
                 <th>Applicable GAs</th>
                 <th>Status</th>
-                <th nowrap class="text-center">Actions</th>
+                <th width="2%" nowrap class="text-center">Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -76,8 +76,8 @@
                                     <li><a href="{{ url('master/consumer/schemes/'.$scheme->id) }}" class="dropdown-item link-canvas"><i class="bi bi-eye">&nbsp;</i>View</a></li>
                                     <li><a href="{{ url('master/consumer/schemes/'.$scheme->id) }}/edit" class="dropdown-item link-modal"><i class="bi bi-pencil-square">&nbsp;</i>Edit</a></li>
                                     <li>
-                                        @if ( $scheme->status == 1) <a class="dropdown-item" href="#">Disable</a>
-                                        @else <a class="dropdown-item" href="#">Enable</a>
+                                        @if ( $scheme->status == 1) <a class="dropdown-item" href="javascript:statusToggle({{ $scheme->id }})">Disable</a>
+                                        @else <a class="dropdown-item" href="javascript:statusToggle({{ $scheme->id }})">Enable</a>
                                         @endif
                                     </li>
                                 </ul>
@@ -121,5 +121,27 @@
 @include('scripts.link-modal')
 @include('scripts.ajax-form-search', ['form' => 'schemes'])
 @include('scripts.link-canvas')
+
+<script>
+    function statusToggle(id) {
+        if(confirm('Are you sure, you want to toggle the status ?.'))
+        {
+            $.ajax({
+                url: "{{ url('master/consumer/schemes') }}/" + id + "/togglestatus",
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(response) {
+                    alert(response.message);
+                    location.reload();
+                },
+                error: function(error) {
+                    alert('Something went wrong.');
+                }
+            });
+        }
+    }
+</script>
 
 

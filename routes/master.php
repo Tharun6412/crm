@@ -8,6 +8,8 @@ Route::middleware(['auth'])->group(function() {
     Route::prefix('consumer')->group(function () {
         Route::resource('schemes', App\Http\Controllers\Master\Consumer\SchemesController::class);
         Route::resource('prices', App\Http\Controllers\Master\Consumer\PriceController::class);
+        Route::post('schemes/{id}/togglestatus', [App\Http\Controllers\Master\Consumer\SchemesController::class, 'toggleStatus']);
+
     });
 
     // States, Clusters, GAs, Districts, Charge areas, areas
