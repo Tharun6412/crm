@@ -35,4 +35,12 @@ class Price extends Model
         'created_by',
         'updated_by',
     ];
+
+    /**
+     * Relatio with district
+     */
+    public function district(): BelongsTo
+    {
+        return $this->belongsTo(District::class);
+    }
 }
