@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 // Guest access
 Route::middleware('guest')->group(function() {
-    Route::post('login', [App\Http\Controllers\Api\V1\Auth\AuthenticationController::class, 'login']);
+    Route::post('auth', [App\Http\Controllers\Api\V1\Auth\AuthenticationController::class, 'login']);
 });
 
 // Authenticated
