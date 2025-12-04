@@ -16,8 +16,8 @@ return new class extends Migration
         Schema::create('cns_consumers', function(Blueprint $table) {
             $table->id();
             $table->foreignId('segment_id')->nullable()->index()->constrained(table:'mst_segments')->noActionOnDelete()->noActionOnUpdate();
-            $table->string('t_crn', length:16)->index()->nullable();
-            $table->string('crn', length:16)->index()->nullable();
+            $table->string('t_crn', length:16)->index()->unique()->nullable();
+            $table->string('crn', length:16)->index()->unique()->nullable();
             $table->foreignId('title')->nullable()->index()->constrained(table:'mst_titles')->noActionOnDelete()->noActionOnUpdate();
             $table->string('fname', length:60)->nullable();
             $table->string('lname', length:60)->nullable();

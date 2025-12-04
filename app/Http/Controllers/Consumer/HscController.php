@@ -18,12 +18,11 @@ class HscController extends Controller
         echo "test method";
     }
     /**
-     * TO Get the Deposit Details
-     * Consumer Scheme Details
+     * Consumer HSC State
      */
     public function edit(Request $request, $id) 
     {
-        return view('consumers.hsc.create', [
+        return view('consumers.hsc.edit', [
             'id' => $id, 
         ]);
     }

@@ -20,7 +20,7 @@ class PermanentDisconnectController extends Controller
      */
     public function edit(Request $request, $id) 
     {
-        return view('consumers.pd.create', ['id' => $id]);
+        return view('consumers.pd.edit', ['id' => $id]);
     }
 
     /**

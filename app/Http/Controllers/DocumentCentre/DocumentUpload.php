@@ -62,7 +62,9 @@ class DocumentUpload extends Controller
     {
         // Validations
         $request->validate([
-            'dc_file_list.*' => 'required|file|max:51200',
+            'dc_file_list' => 'required|array',
+            'dc_file_list.0' => 'required|file|max:51200',
+            'dc_file_list.1' => 'required|file|max:51200',
             'tag' => 'max:30',
             'description' => 'max:90',
         ]);

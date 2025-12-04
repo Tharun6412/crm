@@ -20,11 +20,12 @@ class ActivateController extends Controller
      */
     public function edit(Request $request, $id) 
     {
-        return view('consumers.activate.create', ['id' => $id]);
+        return view('consumers.activate.edit', ['id' => $id]);
     }
 
     /**
      * Activate consumer
+     * #Activated state
      */
     public function update(Request $request, $id)
     {

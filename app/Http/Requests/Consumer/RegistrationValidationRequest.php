@@ -20,6 +20,7 @@ class RegistrationValidationRequest extends FormRequest
             'geo_area' => 'required',
             'district' => 'required',
             'charge_area' => 'required',
+            'area' => 'required',
             'email' => 'nullable|email',
             'scheme_id' => 'required',
             'title' => 'required',

@@ -21,8 +21,7 @@ class RefundController extends Controller
         echo "test method";
     }
     /**
-     * TO Get the Deposit Details
-     * Consumer Scheme Details
+     * Inititate Refund Form 
      */
     public function edit(Request $request, $id) 
     {

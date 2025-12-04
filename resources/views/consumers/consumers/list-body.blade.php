@@ -46,7 +46,7 @@
                             <x-consumer.status :status="$consumer->status" />
                         </td>
                         <td>{{ $consumer->ga->name }}</td>
-                        <td>{{ $consumer->scheme->scheme->name }}</td>
+                        <td>{{ $consumer->scheme?->scheme?->name }}</td>
                         <td>{{ dateFormat($consumer->created_at) }}</td>
                         <td>
                             @include('consumers.consumers.list-actions')

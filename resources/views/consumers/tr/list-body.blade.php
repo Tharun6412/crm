@@ -55,7 +55,7 @@
                             <td>{{ $consumer->status->name }}</td>
                             <td>{{ $consumer->ga->name }}</td>
                             <td>{{ $consumer->district->name }}</td>
-                            <td>{{ $consumer->scheme->scheme->name }}</td>
+                            <td>{{ $consumer->scheme?->scheme?->name }}</td>
                             <td class="dropdown">
                                 <button class="btn btn-sm btn-primary dropdown-toggle" type="button" id="actionDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                                     Actions

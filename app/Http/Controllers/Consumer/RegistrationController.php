@@ -31,6 +31,7 @@ class RegistrationController extends Controller
             'geo_areas' => $geo_areas,
             'districts' => [],
             'charge_areas' => [],
+            'areas' => [],
             'segments' => Segment::all(),
             'titles' => Title::all(),
             'nominee_relations' => ConsumerNomineeRelation::all(),
@@ -65,6 +66,7 @@ class RegistrationController extends Controller
             'colony' => $request->colony,
             'city' => $request->city,
             'ward' => $request->ward,
+            'area_id' => $request->area,
             'ga_id' => $request->geo_area,
             'district_id' => $request->district,
             'ca_id' => $request->charge_area,
@@ -122,6 +124,7 @@ class RegistrationController extends Controller
                 ]);
             }
         }
+        // SMS and Email to send
         // Response Message
         return response()->json([
             'success' => 'Consumer Created Successfully with TR number ' . $crn_code . ', click <a href="'.url('consumers').'">here</a> to see all consumers.'

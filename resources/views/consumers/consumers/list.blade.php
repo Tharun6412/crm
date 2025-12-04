@@ -10,7 +10,7 @@
 @section('page-content')
     <div>
         <form action="{{ url('consumers') }}" id="consumers-search-form" method="GET">
-            <div id="consumers-list">
+            <div id="consumers-list" class="current-page-reload">
                 @include('consumers.consumers.list-body')
             </div>
         </form>

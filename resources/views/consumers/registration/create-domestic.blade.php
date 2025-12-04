@@ -12,7 +12,7 @@
         <form id="add-domestic-form" action="{{ url('consumers/register/domestic') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="row bg-success-subtle pb-3">
-                <div class="col-sm-4 col-md-4">
+                <div class="col-sm-4 col-md-3">
                     <label>Geo Area</label>
                     <div>
                         <select name="geo_area" id="geo_area" class="form-select" onchange="getDistrictsByGa(this.value)">
@@ -24,7 +24,7 @@
                         <span class="text-danger" id="geo_area-error"></span>
                     </div>
                 </div>
-                <div class="col-sm-4 col-md-4">
+                <div class="col-sm-4 col-md-3">
                     <label>District</label>
                     <div>
                         <select name="district" id="district" class="form-select" onchange="getCasByDistrict(this.value)">
@@ -36,16 +36,28 @@
                         <span class="text-danger" id="district-error"></span>
                     </div>
                 </div>
-                <div class="col-sm-4 col-md-4">
+                <div class="col-sm-4 col-md-3">
                     <label>Charge Area</label>
                     <div>
-                        <select name="charge_area" id="charge_area" class="form-select">
+                        <select name="charge_area" id="charge_area" class="form-select" onchange="getCaAreas(this.value)">
                             <option value="">Select Charge Area</option>
                             @foreach ($charge_areas as $ca)
                                 <option value="{{ $ca->id }}">{{ $ca->name }}</option>
                             @endforeach
                         </select>
                         <span class="text-danger" id="charge_area-error"></span>
+                    </div>
+                </div>
+                <div class="col-sm-4 col-md-3">
+                    <label>Area</label>
+                    <div>
+                        <select name="area" id="area" class="form-select">
+                            <option value="">Select Area</option>
+                            @foreach ($areas as $area)
+                                <option value="{{ $area->id }}">{{ $area->name }}</option>
+                            @endforeach
+                        </select>
+                        <span class="text-danger" id="area-error"></span>
                     </div>
                 </div>
             </div>
@@ -378,6 +390,20 @@
                 });
             }
             $('#charge_area').html(options);
+        });
+    }
+
+    // Get Areas By Charge Area
+    function getCaAreas(ca_id) {
+        $.get("{{ url('common/caAreas') }}", { 'ca_id' :ca_id }, function(data) {
+            $('#area').empty();
+            let options = '<option value="">Select area</option>'
+            if(data.areas && data.areas.length > 0) {
+                data.areas.forEach(function(value) {
+                    options += `<option value="${value.id}">${value.name}</option>`;
+                });
+            }
+            $('#area').html(options);
         });
     }
 </script>

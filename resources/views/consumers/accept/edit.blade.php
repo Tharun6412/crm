@@ -6,17 +6,17 @@
         </div>
         <div class="modal-body">
             <div id="registered-success">
-                <form id="registered-form" action="{{ url('consumers/registration/'.$id) }}">
+                <form id="registered-form" action="{{ url('consumers/accept/'.$id) }}">
                     @csrf
                     @method('PUT')
                     <div class="row mb-2">
-                        <label class="col-form-label">Notes</label>
+                        <label class="col-form-label">Notes&nbsp;:<span class="text-danger">*</span></label>
                         <div class="col-12">
                             <textarea name="notes" id="notes" class="form-control"></textarea>
                         </div>
                     </div>
                     <div class="row mb-3">
-                        <label class="col-form-label">Acceptance Status</label>
+                        <label class="col-form-label">Acceptance Status&nbsp;:<span class="text-danger">*</span></label>
                         <div class="col-12 d-flex gap-4">
                             <div class="form-check">
                                 <input type="radio" class="form-check-input" name="status" id="status1" value="1">

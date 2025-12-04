@@ -25,7 +25,7 @@ class ExecuteController extends Controller
      */
     public function edit(Request $request, $id) 
     {
-        return view('consumers.execute.create', ['id' => $id]);
+        return view('consumers.execute.edit', ['id' => $id]);
     }
 
     /**
@@ -39,11 +39,10 @@ class ExecuteController extends Controller
             'meter_reading' => 'required|numeric',
             'notes' => 'required',
         ]);
-        // Meter Images Updload
+        // Meter Images Upload
          // Documents Data Preparation
+        $documents_bulk = DocumentUpload::uploadBulk($request, 'domestic');
         if($request->has('dc_file_list')) {
-            $documents_bulk = DocumentUpload::uploadBulk($request, 'domestic');
-            // print "<pre>"; print_r($request->dc_file_list);exit;
             foreach($request->dc_file_list as $key => $doc_type) {
                 $add_consumer_document = ConsumerDocument::create([
                     'consumer_id' => $id,

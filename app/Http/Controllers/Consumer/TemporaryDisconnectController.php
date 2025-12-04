@@ -20,7 +20,7 @@ class TemporaryDisconnectController extends Controller
      */
     public function edit(Request $request, $id) 
     {
-        return view('consumers.td.create', ['id' => $id]);
+        return view('consumers.td.edit', ['id' => $id]);
     }
 
     /**

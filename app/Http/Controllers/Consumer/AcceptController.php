@@ -16,13 +16,12 @@ class AcceptController extends Controller
         echo "test method";
     }
     /**
-     * TO Get the Deposit Details
-     * Consumer Scheme Details
+     * Consumer Scheme Accept State
      */
     public function edit(Request $request, $id) 
     {
         $consumer= Consumer::find($id);
-        return view('consumers.accept.create', [
+        return view('consumers.accept.edit', [
             'consumer' => $consumer, 
             'id' => $id, 
         ]);
