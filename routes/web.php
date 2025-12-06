@@ -1,12 +1,10 @@
 <?php
 
-use App\Http\Middleware\RouteAccess;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['auth', RouteAccess::class])->group(function() {
-    Route::get('/', function () {
-        return view('welcome');
-    })->name('home');
+Route::middleware(['auth'])->group(function() {
+    // Dashboard
+    Route::get('/', [App\Http\Controllers\Dashboard\HomeController::class, 'index'])->name('home');
 });
 
 

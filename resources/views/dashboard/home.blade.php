@@ -3,5 +3,5 @@
 @section('page-title', 'Welcome')
 
 @section('page-content')
-    <h1>Welcome to MeghaGas CRM V 1.0 &beta;</h1>
+    <h1>Welcome to MeghaGas {{ env('APP_VERSION') }}</h1>
 @endsection
