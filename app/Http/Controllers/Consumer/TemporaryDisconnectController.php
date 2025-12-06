@@ -30,7 +30,6 @@ class TemporaryDisconnectController extends Controller
     {
         $request->validate([
             'notes' => 'required|max:255',
-            'status' => 'required',
         ]);
         // 7 = TD
         Consumer::where('id', $id)->update([

@@ -24,5 +24,6 @@ class AppServiceProvider extends ServiceProvider
         Paginator::useBootstrapFive();
         // Custom helpers
         require_once app_path('Helpers/auth.php');
+        require_once app_path('Helpers/utils.php');
     }
 }

@@ -3,6 +3,7 @@ namespace App\Http\Controllers\Consumer;
 use App\Http\Controllers\Controller;
 use App\Models\Consumer\CaCounter;
 use App\Models\Consumer\Consumer;
+use App\Models\Consumer\ConsumerSdPayment;
 use App\Models\Consumer\ConsumersScheme;
 use App\Models\Consumer\ConsumersStatus;
 use App\Models\Invoice\BillInvoice;
@@ -43,7 +44,7 @@ class TRPaymentController extends Controller
     {
         $consumer_scheme = ConsumersScheme::where('consumer_id', $id)->first();
         $request->validate([
-            'amount' => ['required', 'numeric', 'gt:0', 'min:' . $consumer_scheme->scheme->min_payment],
+            'amount' => ['required', 'numeric', 'gt:0', 'min:' . $consumer_scheme->scheme->min_payment, 'max:'.$consumer_scheme->balance],
             'payment_type' => 'required',
             'transaction_no' => 'required',
             'notes' => 'nullable',
@@ -53,17 +54,11 @@ class TRPaymentController extends Controller
         $ca_code = $consumer_scheme->consumer->ca->code;
         if(!empty($district_code) and !empty($ca_code)) {
             // Consumer Number Generation
-            $ca_data = CaCounter::select('count')->where('ca_id', $consumer_scheme->consumer->ca_id)->first();
-            if(!empty($ca_data->count)) {
-                $ca_count = $ca_data->count+1;
-            }else {
-                $ca_count = 1;
-            }
-            CaCounter::create([
-                'ca_id' => $consumer_scheme->consumer->ca_id,
-                'count' => $ca_count,
-            ]);
-            $crn_no = $district_code.$segment_type.str_pad($ca_code, 2, 0,STR_PAD_LEFT).str_pad($ca_count, 6, "0", STR_PAD_LEFT);
+            $ca_data = CaCounter::firstOrNew(['ca_id' => $consumer_scheme->consumer->ca_id]);
+            $ca_data->count = ($ca_data->count ?? 0) + 1;
+            $ca_data->save();
+
+            $crn_no = $district_code.$segment_type.str_pad($ca_code, 2, 0,STR_PAD_LEFT).str_pad($ca_data->count, 6, "0", STR_PAD_LEFT);
             Consumer::where('id', $id)->update([
                 'crn' => $crn_no,
                 'status_id' => 2,
@@ -71,19 +66,30 @@ class TRPaymentController extends Controller
             ]);
             // Scheme Details
             // Paid Amount = Amount - Minimun Payment
-            $paid_amt = $request->amount - $consumer_scheme->scheme->min_payment;
+            $paid_amt = $request->amount - $consumer_scheme->scheme->registration;
             $balance_amt = $consumer_scheme->balance - $paid_amt;
             if($paid_amt > 0) {
                 // Scheme Payment Updated
                 $consumer_scheme->update([
                     'paid_deposit' => $paid_amt,
                     'balance' => $balance_amt,
-                    'status' => ($balance_amt == 0) ? 2 : 1, // 1 = Partially Paid, 2 = Paid
+                    'status' => ($balance_amt == 0) ? 1 : 0, // 1 = Paid, 0 =Not Paid
+                ]);
+
+                // Add Record to SD Payment
+                ConsumerSdPayment::create([
+                    'consumer_id' => $consumer_scheme->consumer_id,
+                    'payment_type_id' => $request->payment_type,
+                    'transaction_number' => $request->transaction_no,
+                    'amount' => $paid_amt,
+                    'balance' => $balance_amt,
+                    'status_id' => 1,
+                    'created_by' => Auth::id(),
                 ]);
             }
             // Service Invoice Generation
             // Calculations
-            $amt = $consumer_scheme->scheme->min_payment;
+            $amt = $consumer_scheme->scheme->registration;
             $gst_calculated_amt = 1.18; //(1+18%)
             $base_amt = round($amt/$gst_calculated_amt, 3);
             $tax_amt = round($amt - $base_amt, 3);
@@ -111,6 +117,7 @@ class TRPaymentController extends Controller
                 'notes' => !empty($request->notes) ? $request->notes : null,
                 'created_by' => Auth::id(),
             ]);
+            // SMS and Email to send
             // Response
             return response()->json(['success' => 'CRN Created Successfully with ' . $crn_no . ', click <a href="'.url('consumers').'">here</a> to go to consumers list.']);
         }else {

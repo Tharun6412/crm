@@ -3,7 +3,7 @@
     $(function() {
         $('#{{ $form }}-form').submit(function(e){
             e.preventDefault();
-            $('.text-danger').html('');
+            $('.validate-err-msg').html('');
             var formData = new FormData(this);
             $.ajax({
                 url : $(this).attr('action'),

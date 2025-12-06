@@ -67,9 +67,9 @@ class RegistrationController extends Controller
             'city' => $request->city,
             'ward' => $request->ward,
             'area_id' => $request->area,
-            'ga_id' => $request->geo_area,
-            'district_id' => $request->district,
             'ca_id' => $request->charge_area,
+            'district_id' => $request->district,
+            'ga_id' => $request->geo_area,
             'pincode' => $request->pincode,
             'lpg_connections' => $request->lpg_connections,
             'dcq' => $request->dcq,
@@ -114,7 +114,6 @@ class RegistrationController extends Controller
         // Documents Data Preparation
         if($request->has('document_type')) {
             $documents_bulk = DocumentUpload::uploadBulk($request, 'domestic');
-            // print "<pre>"; print_r($documents_bulk);exit;
             foreach($request->document_type as $key => $doc_type) {
                 $add_consumer_document = ConsumerDocument::create([
                     'consumer_id' => $add_consumer->id,

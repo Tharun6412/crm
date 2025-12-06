@@ -13,7 +13,7 @@
             @csrf
             <div class="row bg-success-subtle pb-3">
                 <div class="col-sm-4 col-md-3">
-                    <label>Geo Area</label>
+                    <label>Geo Area&nbsp;:<span class="text-danger">*</span></label>
                     <div>
                         <select name="geo_area" id="geo_area" class="form-select" onchange="getDistrictsByGa(this.value)">
                             <option value="">Select GA</option>
@@ -21,11 +21,11 @@
                                 <option value="{{ $ga->id }}">{{ $ga->name }}</option>
                             @endforeach
                         </select>
-                        <span class="text-danger" id="geo_area-error"></span>
+                        <span class="text-danger validate-err-msg" id="geo_area-error"></span>
                     </div>
                 </div>
                 <div class="col-sm-4 col-md-3">
-                    <label>District</label>
+                    <label>District&nbsp;:<span class="text-danger">*</span></label>
                     <div>
                         <select name="district" id="district" class="form-select" onchange="getCasByDistrict(this.value)">
                             <option value="">Select District</option>
@@ -33,11 +33,11 @@
                                 <option value="{{ $district->id }}">{{ $district->name }}</option>
                             @endforeach
                         </select>
-                        <span class="text-danger" id="district-error"></span>
+                        <span class="text-danger validate-err-msg" id="district-error"></span>
                     </div>
                 </div>
                 <div class="col-sm-4 col-md-3">
-                    <label>Charge Area</label>
+                    <label>Charge Area&nbsp;:<span class="text-danger">*</span></label>
                     <div>
                         <select name="charge_area" id="charge_area" class="form-select" onchange="getCaAreas(this.value)">
                             <option value="">Select Charge Area</option>
@@ -45,11 +45,11 @@
                                 <option value="{{ $ca->id }}">{{ $ca->name }}</option>
                             @endforeach
                         </select>
-                        <span class="text-danger" id="charge_area-error"></span>
+                        <span class="text-danger validate-err-msg" id="charge_area-error"></span>
                     </div>
                 </div>
                 <div class="col-sm-4 col-md-3">
-                    <label>Area</label>
+                    <label>Area&nbsp;:<span class="text-danger">*</span></label>
                     <div>
                         <select name="area" id="area" class="form-select">
                             <option value="">Select Area</option>
@@ -57,14 +57,14 @@
                                 <option value="{{ $area->id }}">{{ $area->name }}</option>
                             @endforeach
                         </select>
-                        <span class="text-danger" id="area-error"></span>
+                        <span class="text-danger validate-err-msg" id="area-error"></span>
                     </div>
                 </div>
             </div>
             <div class="mt-3 mb-1 fs-5 fw-semibold">Basic Details&nbsp;:</div>
             <div class="row mb-2">
                 <div class="col-md-6 col-sm-6 col-xs-12">
-                    <label class="form-label">Consumer Name&nbsp;:&nbsp;</label><span class="text-danger">*</span>
+                    <label class="form-label">Consumer Name&nbsp;:<span class="text-danger">*</span></label>
                     <div class="input-group">
                         <select name="title" id="title" class="form-select form-select-sm">
                             <option value="">Title</option>
@@ -75,9 +75,9 @@
                         <input type="text" name="fname" id="fname" class="form-control form-control-sm" placeholder="First Name"/>
                         <input type="text" name="lname" id="lname" class="form-control form-control-sm" placeholder="Last Name"/>
                     </div>
-                    <span class="text-danger" id="title-error"></span>
-                    <span class="text-danger" id="fname-error"></span>
-                    <span class="text-danger" id="lname-error"></span>
+                    <span class="text-danger validate-err-msg" id="title-error"></span>
+                    <span class="text-danger validate-err-msg" id="fname-error"></span>
+                    <span class="text-danger validate-err-msg" id="lname-error"></span>
                 </div>
                 <div class="col-md-6 col-sm-6 col-xs-12">
                     <label class="form-label">S/o / D/o / W/o&nbsp;:&nbsp;</label>
@@ -96,20 +96,20 @@
                 <div class="col-md-3 col-sm-6 col-xs-12">
                     <label class="form-label">Email&nbsp;:&nbsp;</label>
                     <input type="text" name="email" id="email" class="form-control form-control-sm" placeholder="Email"/>
-                    <span class="text-danger" id="email-error"></span>
+                    <span class="text-danger validate-err-msg" id="email-error"></span>
                 </div>
                 <div class="col-md-3 col-sm-6 col-xs-12">
-                    <label class="form-label">Aadhar number&nbsp;:&nbsp;</label><span class="text-danger">*</span>
+                    <label class="form-label">Aadhar number&nbsp;:<span class="text-danger">*</span></label>
                     <input maxlength="12" name="aadhar" id="aadhar" class="form-control form-control-sm" placeholder="Aadhar Number" type="text"/>
-                    <span class="text-danger" id="aadhar-error"></span>
+                    <span class="text-danger validate-err-msg" id="aadhar-error"></span>
                 </div>
                 <div class="col-md-3 col-sm-6 col-xs-12">
-                    <label class="form-label">Registered mobile&nbsp;:&nbsp;</label><span class="text-danger">*</span>
+                    <label class="form-label">Registered mobile&nbsp;:<span class="text-danger">*</span></label>
                     <div class="input-group input-group-sm">
                         <span class="input-group-text">+91</span>
                         <input maxlength="10" type="text" name="phone" id="phone" class="form-control form-control-sm" placeholder="Mobile Number" aria-label="Mobile" aria-describedby="mobile"/>
                     </div>
-                    <span class="text-danger" id="phone-error"></span>
+                    <span class="text-danger validate-err-msg" id="phone-error"></span>
                 </div>
                 <div class="col-md-3 col-sm-6 col-xs-12">
                     <label class="form-label">Alternate number&nbsp;:&nbsp;</label>
@@ -117,13 +117,13 @@
                         <span class="input-group-text">+91</span>
                         <input maxlength="10" type="text" name="phone_alt" id="phone_alt" class="form-control form-control-sm" placeholder="Alternate Contact Number" aria-label="Alt Mobile" aria-describedby="alt_mobile"/>
                     </div>
-                    <span class="text-danger" id="phone_alt-error"></span>
+                    <span class="text-danger validate-err-msg" id="phone_alt-error"></span>
                 </div>
             </div>
             <div class="mt-3 mb-1 fs-5 fw-semibold">Security Deposit Scheme Details&nbsp;:</div>
             <div class="row">
                 <div class="col-md-4 col-sm-6 col-xs-12">
-                    <label>Security Deposit Schemes</label>
+                    <label>Security Deposit Schemes&nbsp;:<span class="text-danger">*</span></label>
                     <div>
                         <select name="scheme_id" id="scheme_id" class="form-select" onchange="getSchemeDetails(this.value)">
                             <option value="">Select scheme</option>
@@ -132,7 +132,7 @@
                             @endforeach
                         </select>
                     </div>
-                    <span class="text-danger" id="scheme_id-error"></span>
+                    <span class="text-danger validate-err-msg" id="scheme_id-error"></span>
                 </div>
                 <div class="col-md-6 col-sm-6 d-none" id="scheme_data">
                     <label><span id="scheme_name_details"></span>
@@ -199,9 +199,9 @@
                     <input name="ward" id="ward" class="form-control form-control-sm" placeholder="Ward No" type="text"/>
                 </div>
                 <div class="col-md-3 col-sm-6 col-xs-12">
-                    <label class="form-label" for="pincode">Pincode&nbsp;:&nbsp;</label><span class="text-danger">*</span>
+                    <label class="form-label" for="pincode">Pincode&nbsp;:<span class="text-danger">*</span></label>
                     <input maxlength="6" name="pincode" id="pincode" class="form-control form-control-sm" placeholder="Pincode" type="text"/>
-                    <span class="text-danger" id="pincode-error"></span>
+                    <span class="text-danger validate-err-msg" id="pincode-error"></span>
                 </div>
             </div>
             <div class="mt-3 mb-1 fs-5 fw-semibold">Additional details&nbsp;:</div>
@@ -225,7 +225,7 @@
                     <label class="form-label" for="distance">Distance&nbsp;:&nbsp;</label>
                     <div class="input-group input-group-sm">
                         <input type="text" name="distance" id="distance" class="form-control form-control-sm" placeholder="Distance"/>
-                        <span class="input-group-text" >Km</label>
+                        <span class="input-group-text" >Mts</label>
                     </div>
                 </div>
             </div>
@@ -248,7 +248,8 @@
                     <label class="form-label" for="owner_phone">Owner contact number (In case rented)&nbsp;:&nbsp;</label>
                     <div class="input-group input-group-sm">
                         <span class="input-group-text">+91</span>
-                        <input maxlength="10" type="number" name="owner_phone" id="owner_phone" class="form-control form-control-sm" placeholder="Owner Contact Number"/>
+                        <input maxlength="10" type="text" name="owner_phone" id="owner_phone" class="form-control form-control-sm" placeholder="Owner Contact Number"/>
+                        <span class="text-danger validate-err-msg" id="owner_phone-error"></span>
                     </div>
                 </div>
                 <div class="col-md-3 col-sm-6 col-xs-12">
@@ -270,7 +271,8 @@
                     <label class="form-label" for="tenant_phone">Tenant contact number&nbsp;:&nbsp;</label>
                     <div class="input-group input-group-sm">
                         <span class="input-group-text">+91</span>
-                        <input maxlength="10" type="number" name="tenant_phone" id="tenant_phone" class="form-control form-control-sm" placeholder="Tenant Contact Number"/>
+                        <input maxlength="10" type="text" name="tenant_phone" id="tenant_phone" class="form-control form-control-sm" placeholder="Tenant Contact Number"/>
+                        <span class="text-danger validate-err-msg" id="tenant_phone-error"></span>
                     </div>
                 </div>
                 <div class="col-md-3 col-sm-6 col-xs-12">
@@ -281,39 +283,39 @@
             <div class="mt-3 mb-1 fs-5 fw-semibold">Documents&nbsp;:</div>
             <div class="row">
                 <div class="col-md-3 col-sm-6 col-xs-6">
-                    <label class="form-label">Document Type&nbsp;:&nbsp;</label>
+                    <label class="form-label">Document Type&nbsp;:<span class="text-danger">*</span></label>
                     <select name="document_type[]" id="document_type_0" class="form-select form-select-sm">
                         <option value="">Select</option>
                         @foreach ($documents as $doc_val)
                             <option value="{{ $doc_val->id }}">{{ $doc_val->name }}</option>
                         @endforeach
                     </select>
-                    <span class="text-danger" id="document_type_0-error"></span>
+                    <span class="text-danger validate-err-msg" id="document_type_0-error"></span>
                 </div>
                 <div class="col-md-3 col-sm-6 col-xs-6">
-                    <label class="form-label">Documents&nbsp;&nbsp;:</label>
+                    <label class="form-label">Documents&nbsp;:<span class="text-danger">*</span></label>
                     <div class="input-group input-group-sm">
                         <input type="file" name="dc_file_list[]" id="dc_file_list_0" class="form-control form-control-sm">
-                        <span class="text-danger" id="dc_file_list_0-error"></span>
+                        <span class="text-danger validate-err-msg" id="dc_file_list_0-error"></span>
                     </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-3 col-sm-6 col-xs-6">
-                    <label class="form-label">Document Type&nbsp;:&nbsp;</label>
+                    <label class="form-label">Document Type&nbsp;:<span class="text-danger">*</span></label>
                     <select name="document_type[]" id="document_type_1" class="form-select form-select-sm">
                         <option value="">Select</option>
                         @foreach ($documents as $doc_val)
                             <option value="{{ $doc_val->id }}">{{ $doc_val->name }}</option>
                         @endforeach
                     </select>
-                    <span class="text-danger" id="document_type_1-error"></span>
+                    <span class="text-danger validate-err-msg" id="document_type_1-error"></span>
                 </div>
                 <div class="col-md-3 col-sm-6 col-xs-6">
-                    <label class="form-label">Documents&nbsp;&nbsp;:</label>
+                    <label class="form-label">Documents&nbsp;:<span class="text-danger">*</span></label>
                     <div class="input-group input-group-sm">
                         <input type="file" name="dc_file_list[]" id="dc_file_list_1" class="form-control form-control-sm">
-                        <span class="text-danger" id="dc_file_list_1-error"></span>
+                        <span class="text-danger validate-err-msg" id="dc_file_list_1-error"></span>
                     </div>
                 </div>
             </div>

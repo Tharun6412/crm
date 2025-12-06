@@ -15,15 +15,6 @@
                             <textarea name="notes" id="notes" class="form-control"></textarea>
                         </div>
                     </div>
-                    <div class="row mb-3">
-                        <label class="col-form-label mb-2">Temporary Disconnection Status</label>
-                        <div class="col-12 d-flex gap-4">
-                            <div class="form-check">
-                                <input type="checkbox" class="form-check-input" name="status" id="status1" value="1">
-                                <label for="status1" class="form-check-label">Enable</label>
-                            </div>
-                        </div>
-                    </div>
                     <div class="mb-3" id="td-error"></div>
                     <div class="row mb-3">
                         <div class="col-md-12 col-sm-12">

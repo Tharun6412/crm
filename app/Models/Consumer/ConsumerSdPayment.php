@@ -45,7 +45,7 @@ class ConsumerSdPayment extends Model
     }
 
     /**
-     * Relation with Segments
+     * Relation with Payment Type
      */
     public function paymentType() :BelongsTo
     {
@@ -53,7 +53,7 @@ class ConsumerSdPayment extends Model
     }
 
     /**
-     * Relation with Segments
+     * Relation with Status
      */
     public function status() :BelongsTo
     {
@@ -61,7 +61,7 @@ class ConsumerSdPayment extends Model
     }
 
     /**
-     * Relation with Firm Type
+     * Relation with Invoice
      */
     public function invoice():BelongsTo
     {

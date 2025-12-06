@@ -17,24 +17,67 @@
                     <dd class="col-sm-9">{{ $consumer->name }}</dd>
                     <dt class="col-sm-3">Email</dt>
                     <dd class="col-sm-9">{{ $consumer->email }}</dd>
+                    <dt class="col-sm-3">Aadhar</dt>
+                    <dd class="col-sm-9">{{ maskNumber($consumer->aadhar) }}</dd>
+                    <dt class="col-sm-3">Mobile</dt>
+                    <dd class="col-sm-9">{{ maskNumber($consumer->phone) }}</dd>
+                    <dt class="col-sm-3">Alternate Mobile</dt>
+                    <dd class="col-sm-9">{{ maskNumber($consumer->phone_alt) }}</dd>
                     <dt class="col-sm-3">Status</dt>
                     <dd class="col-sm-9">{{ $consumer->status->name }}</dd>
                 </dl>
-
                 <h4 class="mt-3 fw-semibold text-decoration-underline">Scheme Details</h4>
                 <dl class="row">
-                    <dt class="col-sm-3">Scheme</dt>
+                    <dt class="col-sm-3">Scheme Name</dt>
                     <dd class="col-sm-9">{{ $consumer->scheme?->scheme?->name }}</dd>
-                    <dt class="col-sm-3">Payment</dt>
-                    <dd class="col-sm-9">{{ $consumer->scheme?->scheme?->total_deposit }}</dd>
+                    <dt class="col-sm-3">Registration</dt>
+                    <dd class="col-sm-9">{{ numberFormat($consumer->scheme?->scheme?->registration) }}</dd>
+                    <dt class="col-sm-3">Security Deposit</dt>
+                    <dd class="col-sm-9">{{ numberFormat($consumer->scheme?->security_deposit) }}</dd>
+                    <dt class="col-sm-3">Consumption Deposit</dt>
+                    <dd class="col-sm-9">{{ numberFormat($consumer->scheme?->consumption_deposit) }}</dd>
                 </dl>
-
-                <h4 class="mt-3 fw-semibold text-decoration-underline">More Details</h4>
+                <h4 class="mt-3 fw-semibold text-decoration-underline">Nominee Details</h4>
                 <dl class="row">
-                    <dt class="col-sm-3">Title</dt>
-                    <dd class="col-sm-9">Details</dd>
-                    <dt class="col-sm-3">Title</dt>
-                    <dd class="col-sm-9">Details</dd>
+                    <dt class="col-sm-3">Nominee Name</dt>
+                    <dd class="col-sm-9">{{ $consumer->nominee }}</dd>
+                    <dt class="col-sm-3">Nominee Relation</dt>
+                    <dd class="col-sm-9">{{ $consumer->nomineeRelation->name }}</dd>
+                </dl>
+                <h4 class="mt-3 fw-semibold text-decoration-underline">Owner Details</h4>
+                <dl class="row">
+                    <dt class="col-sm-3">Property Type</dt>
+                    <dd class="col-sm-9">
+                        @switch($consumer->property_type)
+                            @case(1)
+                                {{ "Own" }}
+                                @break
+                            @case(2)
+                                {{ "Rent" }}
+                                @break
+                            @case(3)
+                                {{ "Lease" }}
+                                @break
+                            @default
+                        @endswitch
+                    </dd>
+                    <dt class="col-sm-3">Owner Name</dt>
+                    <dd class="col-sm-9">{{ $consumer->owner_name }}</dd>
+                    <dt class="col-sm-3">Owner Phone</dt>
+                    <dd class="col-sm-9">{{ maskNumber($consumer->owner_phone) }}</dd>
+                </dl>
+                <h4 class="mt-3 fw-semibold text-decoration-underline">Additional Details</h4>
+                <dl class="row">
+                    <dt class="col-sm-3">LPG Connections</dt>
+                    <dd class="col-sm-9">{{ $consumer->lpg_connections }}</dd>
+                    <dt class="col-sm-3">DCQ</dt>
+                    <dd class="col-sm-9">{{ numberFormat($consumer->dcq) }}</dd>
+                    <dt class="col-sm-3">Expected Date</dt>
+                    <dd class="col-sm-9">{{ $consumer->expected_date?->format('d-m-Y') }}</dd>
+                    <dt class="col-sm-3">Distance&nbsp;(Mts)</dt>
+                    <dd class="col-sm-9">{{ numberFormat($consumer->distance) }}</dd>
+                    <dt class="col-sm-3">Natural Gas For</dt>
+                    <dd class="col-sm-9">{{ $consumer->gasRequired?->name }}</dd>
                 </dl>
             </div>
             <div class="col-md-6">
@@ -43,18 +86,17 @@
                     <dt class="col-sm-3">Geo Area</dt>
                     <dd class="col-sm-9">{{ $consumer->ga->name }}</dd>
                     <dt class="col-sm-3">Charge Area</dt>
-                    <dd class="col-sm-9">{{ $consumer->ca->name ?? '' }}</dd>
+                    <dd class="col-sm-9">{{ $consumer->ca->name }}</dd>
                     <dt class="col-sm-3">Location</dt>
-                    <dd class="col-sm-9">{{ $consumer->area->name ?? '' }}</dd>
+                    <dd class="col-sm-9">{{ $consumer->area->name }}</dd>
                 </dl>
-
                 <h4 class="mt-3 fw-semibold text-decoration-underline">Address</h4>
                 <address>
                     <strong>{{ $consumer->name}}</strong><br>
-                    {{ $consumer->cof->name ?? '' }} {{ $consumer->cof_name ?? '' }}<br>
+                    {{ $consumer->cofDisplay?->name }} {{ $consumer->cof_name }}<br>
                     {{ $consumer->hno }}, {{ $consumer->street }},<br>
                     {{ $consumer->colony }}, {{ $consumer->city }},<br>
-                    {{ $consumer->district->name ?? '' }}, {{ $consumer->state->name ?? '' }} - {{ $consumer->pincode }}.
+                    {{ $consumer->district->name ?? '' }}, {{ $consumer->ga->state->name ?? '' }} - {{ $consumer->pincode }}.
                 </address>
 
                 <h4 class="mt-3 fw-semibold text-decoration-underline">Meter Details</h4>
@@ -67,8 +109,42 @@
                     <dd class="col-sm-9">{{ $consumer->meter?->initial_reading }}</dd>
                     <dt class="col-sm-3">Installation Date</dt>
                     <dd class="col-sm-9">{{ $consumer->meter?->install_date?->format('d-m-Y') }}</dd>
+                    <dt class="col-sm-3">Installed By</dt>
+                    <dd class="col-sm-9">{{ $consumer->meter?->installBy?->first_name }}&nbsp;{{ $consumer->meter?->installBy?->last_name }}</dd>
+                </dl>
+                <h4 class="mt-3 fw-semibold text-decoration-underline">Tenant Details</h4>
+                <dl class="row">
+                    <dt class="col-sm-3">Tenant Name</dt>
+                    <dd class="col-sm-9">{{ $consumer->tenant_name }}</dd>
+                    <dt class="col-sm-3">Tenant Phone</dt>
+                    <dd class="col-sm-9">{{ maskNumber($consumer->tenant_phone) }}</dd>
+                    <dt class="col-sm-3">Tenant Email</dt>
+                    <dd class="col-sm-9">{{ $consumer->tenant_email }}</dd>
                 </dl>
             </div>
         </div>
+        <h4 class="fw-semibold text-decoration-underline">Status History</h4>
+        <table class="table table-bordered table-success table-hover">
+            <thead class="table-success">
+                <tr>
+                    <th>S.No</th>
+                    <th>Status</th>
+                    <th>Notes</th>
+                    <th>Created Date</th>
+                    <th>Created By</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($consumer->statusHistory as $history)
+                    <tr>
+                        <td>{{ $loop->iteration }}</td>
+                        <td>{{ $history->status->name }}</td>
+                        <td>{{ $history->notes }}</td>
+                        <td>{{ $history->created_at?->format('d-m-Y') }}</td>
+                        <td>{{ $history->createdBy?->first_name }}&nbsp;{{ $history->createdBy?->last_name }}</td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
     </div>
 </div>

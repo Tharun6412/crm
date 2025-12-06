@@ -13,31 +13,31 @@
                         <div class="col-md-6">
                             <label class="col-form-label">Isometric Image&nbsp;:<span class="text-danger">*</span></label>
                             <input type="file" name="dc_file_list[]" id="dc_file_list_0" class="form-control form-control-sm"/>
-                            <span class="text-danger" id="dc_file_list_0-error"></span>
+                            <span class="text-danger validate-err-msg" id="dc_file_list_0-error"></span>
                         </div>
                         <div class="col-md-6">
                             <label class="col-form-label">Installation Image&nbsp;:<span class="text-danger">*</span></label>
                             <input type="file" name="dc_file_list[]" id="dc_file_list_1" class="form-control form-control-sm"/>
-                            <span class="text-danger" id="dc_file_list_1-error"></span>
+                            <span class="text-danger validate-err-msg" id="dc_file_list_1-error"></span>
                         </div>
                     </div>
                     <div class="row mb-2">  
                         <div class="col-md-6">
                             <label class="col-form-label">Meter Number&nbsp;:<span class="text-danger">*</span></label>
                             <input type="text" name="meter_no" id="meter_no" class="form-control form-control-sm"/>
-                            <span class="text-danger" id="meter_no-error"></span>
+                            <span class="text-danger validate-err-msg" id="meter_no-error"></span>
                         </div>
                         <div class="col-md-6">
                         <label class="col-form-label">Meter Reading&nbsp;:<span class="text-danger">*</span></label>
                             <input type="text" name="meter_reading" id="meter_reading" class="form-control form-control-sm"/>
-                            <span class="text-danger" id="meter_reading-error"></span>
+                            <span class="text-danger validate-err-msg" id="meter_reading-error"></span>
                         </div>
                     </div>
                     <div class="row mb-3">
                         <label class="col-form-label">Installation Note&nbsp;:<span class="text-danger">*</span></label>
                         <div class="col-md-12">
                             <textarea name="notes" id="notes" class="form-control"></textarea>
-                            <span class="text-danger" id="notes-error"></span>
+                            <span class="text-danger validate-err-msg" id="notes-error"></span>
                         </div>
                     </div>
                     <div class="mb-3" id="executed-error"></div>

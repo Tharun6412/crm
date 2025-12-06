@@ -87,7 +87,7 @@
                             </div>
                             <div class="card bg-success-subtle">
                                 <div class="card-body">
-                                    <h4 class="card-title">0.00</h4>
+                                    <h4 class="card-title">{{ numberFormat($consumer->scheme?->balance) }}</h4>
                                     <span>Outstanding</span>
                                 </div>
                             </div>

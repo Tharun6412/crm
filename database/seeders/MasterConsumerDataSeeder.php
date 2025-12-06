@@ -108,6 +108,17 @@ class MasterConsumerDataSeeder extends Seeder
             ['id' => '1', 'name' => 'Active'],
             ['id' => '2', 'name' => 'InActive'],
         ]);
+
+        // mst cns scheme payments
+        DB::table('mst_cns_scheme_payments')->insert([
+            ['id' => '1', 'name' => 'Standard Payment'],
+            ['id' => '2', 'name' => 'EMI Payment'],
+        ]);
+        // mst sd payment status
+        DB::table('mst_sd_payment_status')->insert([
+            ['id' => '1', 'name' => 'Paid'],
+            ['id' => '2', 'name' => 'In Progress'],
+        ]);
     }
 }
  

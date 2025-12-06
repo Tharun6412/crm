@@ -30,6 +30,8 @@ class RegistrationValidationRequest extends FormRequest
             'phone' => 'required|numeric|digits:10',
             'phone_alt' => 'nullable|numeric|digits:10',
             'pincode' => 'required|numeric|digits:6',
+            'owner_phone' => 'nullable|numeric|digits:10',
+            'tenant_phone' => 'nullable|numeric|digits:10',
             'document_type.*' => 'required',
         ];
     }

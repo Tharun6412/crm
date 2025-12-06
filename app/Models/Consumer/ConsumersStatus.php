@@ -24,6 +24,8 @@ class ConsumersStatus extends Model
      */
     protected $fillable = [
         'consumer_id',
+        'lat',
+        'lng',
         'status_id',
         'notes',
         'created_by',

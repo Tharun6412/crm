@@ -30,7 +30,6 @@ class PermanentDisconnectController extends Controller
     {
         $request->validate([
             'notes' => 'required|max:255',
-            'status' => 'required',
         ]);
         // 8 = PD
         Consumer::where('id', $id)->update([

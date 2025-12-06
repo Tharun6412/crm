@@ -263,6 +263,19 @@ class MasterDataSeeder extends Seeder
             ['id' => '94','ga_id' => '3','name' => 'Chatanpally','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
             ['id' => '95','ga_id' => '3','name' => 'Mokila','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL],
         ]);
+
+        // Charge Areas
+        DB::table('mst_cas')->insert([
+            ['code' => '1' , 'name' => 'Agiripalli', 'ga_id' => 1, 'district_id' => 1, 'status' => 1],
+            ['code' => '2' , 'name' => 'Vijayawada', 'ga_id' => 1, 'district_id' => 2, 'status' => 1],
+        ]);
+
+        // Areas
+        DB::table('mst_areas')->insert([
+            ['name' => 'CA-01', 'ca_id' => '1', 'status' => 1],
+            ['name' => 'CA-02', 'ca_id' => '1', 'status' => 1],
+            ['name' => 'CA-03', 'ca_id' => '1', 'status' => 1],
+        ]);
     }
 }
  

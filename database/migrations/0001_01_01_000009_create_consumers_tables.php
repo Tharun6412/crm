@@ -68,9 +68,11 @@ return new class extends Migration
         });
 
         // cns Consumers data
-        Schema::create('cns_consumers_data', function(Blueprint $table) {
+        Schema::create('cns_consumer_data', function(Blueprint $table) {
             $table->id();
             $table->foreignId('consumer_id')->index()->nullable()->constrained(table:'cns_consumers')->noActionOnUpdate()->noActionOnDelete();
+            $table->decimal('lat',10,9)->nullable();
+            $table->decimal('lng',10,9)->nullable();
             $table->timestamps();
         });
 
@@ -127,6 +129,8 @@ return new class extends Migration
         Schema::create('cns_consumer_status', function(Blueprint $table) {
             $table->id();
             $table->foreignId('consumer_id')->index()->nullable()->constrained(table:'cns_consumers')->noActionOnUpdate()->noActionOnDelete();
+            $table->decimal('lat',10,9)->nullable();
+            $table->decimal('lng',10,9)->nullable();
             $table->foreignId('status_id')->index()->nullable()->constrained(table:'mst_cns_status')->noActionOnUpdate()->noActionOnDelete();
             $table->string('notes', length:225)->nullable();
             $table->foreignId('created_by')->nullable()->index()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();
@@ -164,7 +168,7 @@ return new class extends Migration
         Schema::dropIfExists('cns_consumer_schemes');
         Schema::dropIfExists('cns_meter_changes');
         Schema::dropIfExists('cns_consumer_meters');
-        Schema::dropIfExists('cns_consumers_data');
+        Schema::dropIfExists('cns_consumer_data');
         Schema::dropIfExists('cns_ca_counter');
         Schema::dropIfExists('cns_consumers');
         DB::statement('SET FOREIGN_KEY_CHECKS = 1;');

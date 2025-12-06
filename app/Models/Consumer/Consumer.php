@@ -19,6 +19,7 @@ use App\Models\Master\Title;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Consumer extends Model
@@ -233,10 +234,24 @@ class Consumer extends Model
     }
 
     /**
+     * Relation with Consumer Status History
+     */
+    public function statusHistory():HasMany
+    {
+        return $this->hasMany(ConsumersStatus::class, 'consumer_id', 'id')->orderBy('created_at', 'desc');
+    }
+    /**
      * Relation with scheme
      */
     public function scheme(): HasOne
     {
         return $this->hasOne(ConsumersScheme::class, 'consumer_id', 'id');
+    }
+    /**
+     * Relation with SDPaymentHistory
+     */
+    public function sdPayment() : HasMany
+    {
+        return $this->hasMany(ConsumerSdPayment::class, 'consumer_id', 'id')->orderBy('created_at', 'desc');
     }
 }

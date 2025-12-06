@@ -12,7 +12,7 @@ class ConsumerData extends Model
      * 
      * @var string
      */
-    protected $table = 'cns_consumers_data';
+    protected $table = 'cns_consumer_data';
 
     /**
      * The attributes that are mass assignable
@@ -21,6 +21,8 @@ class ConsumerData extends Model
      */
     protected $fillable = [
         'consumer_id',
+        'lat',
+        'lng',
     ];
 
     /**
