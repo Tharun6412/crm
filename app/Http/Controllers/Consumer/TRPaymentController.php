@@ -8,6 +8,7 @@ use App\Models\Consumer\ConsumersScheme;
 use App\Models\Consumer\ConsumersStatus;
 use App\Models\Invoice\BillInvoice;
 use App\Models\Master\PaymentType;
+use App\Services\InvoiceGeneration;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -93,7 +94,7 @@ class TRPaymentController extends Controller
             $gst_calculated_amt = 1.18; //(1+18%)
             $base_amt = round($amt/$gst_calculated_amt, 3);
             $tax_amt = round($amt - $base_amt, 3);
-            $add_service_invoice = BillInvoice::create([
+            $invoice_details = array(
                 'type_id' => 1, //Service Invoice
                 'consumer_id' => $consumer_scheme->consumer_id,
                 'invoice_date' => Carbon::now()->toDateString(),
@@ -107,9 +108,13 @@ class TRPaymentController extends Controller
                 'balance_amt' => 0,
                 'status_id' => 1, //Paid
                 'created_by' => Auth::id(),
-            ]);
-            $inv_number = "SI".str_pad($add_service_invoice->id, 5, "0", STR_PAD_LEFT);
-            BillInvoice::where('id', $add_service_invoice->id)->update(['invoice_number' => $inv_number]);
+            );
+            $inv_number_details = array(
+                'state_id' => $consumer_scheme->consumer->ga->state_id,
+                'inv_type' => 1,
+                'state_code' => $consumer_scheme->consumer->ga->state->code,
+            );
+            InvoiceGeneration::serviceInvoiceGenerate($invoice_details, $inv_number_details);
             // Consumer Status History
             ConsumersStatus::create([
                 'consumer_id' => $consumer_scheme->consumer_id,

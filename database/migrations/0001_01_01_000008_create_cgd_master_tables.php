@@ -140,6 +140,12 @@ return new class extends Migration
             $table->string('name', length:60)->nullable();
             $table->timestamps();
         });
+        // mst invoice bil item types
+        Schema::create('mst_bil_invoice_item_types', function(Blueprint $table) {
+            $table->id();
+            $table->string('name', length:100);
+            $table->timestamps();
+        });
         // mst invoice bil items
         Schema::create('mst_bil_invoice_items', function(Blueprint $table) {
             $table->id();
@@ -147,6 +153,9 @@ return new class extends Migration
             $table->string('name', length:60)->nullable();
             $table->boolean('price_type')->nullable();
             $table->double('price')->nullable();
+            $table->bigInteger('type_id')->index()->nullable()->constrained(table:'mst_bil_invoice_item_types')->noActionOnDelete()->noActionOnUpdate();
+            $table->string('hsn', length:16)->nullable();
+            $table->boolean('status')->nullable();
             $table->foreignId('created_by')->nullable()->index()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();
             $table->foreignId('updated_by')->nullable()->index()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();
             $table->timestamps();
@@ -298,6 +307,7 @@ return new class extends Migration
         Schema::dropIfExists('mst_price_history');
         Schema::dropIfExists('mst_price');
         Schema::dropIfExists('mst_taxes');
+        Schema::dropIfExists('mst_bil_invoice_item_types');
         Schema::dropIfExists('mst_pay_transaction_status');
         Schema::dropIfExists('mst_cns_scheme_ga');
         Schema::dropIfExists('mst_cns_schemes');

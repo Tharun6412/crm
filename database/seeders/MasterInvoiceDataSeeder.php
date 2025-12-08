@@ -38,6 +38,21 @@ class MasterInvoiceDataSeeder extends Seeder
             ['id' => '2', 'name' => 'Partially Paid'],
             ['id' => '3', 'name' => 'Not Paid'],
         ]);
+
+        // mst bil invoice item types
+        DB::table('mst_bil_invoice_item_types')->insert([
+            ['name' => 'Consumer Connection'],
+            ['name' => 'Consumer Services'],
+            ['name' => 'Custom'],
+        ]);
+
+        // mst refund status
+        DB::table('mst_ref_status')->insert([
+            ['name' => 'Refund Request'],
+            ['name' => 'Process'],
+            ['name' => 'Approved'],
+            ['name' => 'Closed'],
+        ]);
     }
 }
  

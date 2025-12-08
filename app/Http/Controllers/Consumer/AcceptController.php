@@ -3,6 +3,7 @@ namespace App\Http\Controllers\Consumer;
 use App\Http\Controllers\Controller;
 use App\Models\Consumer\Consumer;
 use App\Models\Consumer\ConsumersStatus;
+use App\Services\InvoiceGeneration;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -13,7 +14,28 @@ class AcceptController extends Controller
      */
     public function index(Request $request)
     {
-        echo "test method";
+        $invoice_details = array(
+            'type_id' => 1, //Service Invoice
+            'consumer_id' => 1,
+            'invoice_date' => '2025-12-06',
+            'base_amount' => 470,
+            'taxable_amount' => 30,
+            'tax_id' => 1,
+            'tax_value' => 18,
+            'tax_amount' => 30,
+            'total_amount' => 500,
+            'paid_amount' => 500,
+            'balance_amt' => 0,
+            'status_id' => 1, //Paid
+            'created_by' => Auth::id(),
+        );
+        $inv_number_details = array(
+            'state' => 1,
+            'inv_type' => 2,
+            'state_code' => 'AP',
+        );
+        InvoiceGeneration::serviceInvoiceGenerate($invoice_details, $inv_number_details);
+        echo "Invoice generated";
     }
     /**
      * Consumer Scheme Accept State

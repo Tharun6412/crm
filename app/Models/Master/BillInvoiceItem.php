@@ -24,7 +24,18 @@ class BillInvoiceItem extends Model
         'name',
         'price_type',
         'price',
+        'type_id',
+        'hsn',
+        'status',
         'created_by',
         'updated_by',
     ];
+
+    /**
+     * Relation with type
+     */
+    public function type() : BelongsTo
+    {
+        return $this->belongsTo(BillInvoiceItemType::class, 'type_id')->withDefault();
+    }
 }

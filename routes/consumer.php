@@ -16,6 +16,7 @@ Route::middleware(['auth', ModuleAccess::class])->group(function() {
     Route::resource('pdisconnect', App\Http\Controllers\Consumer\PermanentDisconnectController::class);
     Route::resource('refund', App\Http\Controllers\Consumer\RefundController::class);
     Route::resource('payDeposit', App\Http\Controllers\Consumer\PayDepositController::class);
+    Route::resource('reconnect', App\Http\Controllers\Consumer\ReconnectController::class);
     
     // Consumers list
     Route::resource('tr', App\Http\Controllers\Consumer\TRController::class);
