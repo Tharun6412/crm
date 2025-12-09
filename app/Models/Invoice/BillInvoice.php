@@ -9,6 +9,7 @@ use App\Models\Master\BillStatus;
 use App\Models\Master\Tax;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class BillInvoice extends Model
 {
@@ -101,5 +102,14 @@ class BillInvoice extends Model
     public function updatedBy():BelongsTo
     {
         return $this->belongsTo(User::class, 'updated_by')->withDefault();
+    }
+
+    /**
+     * Invoice table has HasMany relation with invoice consumption
+     * 
+     */
+    public function consumption():HasMany
+    {
+        return $this->hasMany(BillInvoiceConsumption::class, 'invoice_id');
     }
 }

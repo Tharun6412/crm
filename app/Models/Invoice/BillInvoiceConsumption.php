@@ -42,6 +42,17 @@ class BillInvoiceConsumption extends Model
     ];
 
     /**
+     * Casts
+     */
+    public function casts() {
+        return [
+            'date_from' => 'date',
+            'date_to' => 'date',
+        ];
+    }
+
+
+    /**
      * Relation with Invoice
      */
     public function invoice():BelongsTo
