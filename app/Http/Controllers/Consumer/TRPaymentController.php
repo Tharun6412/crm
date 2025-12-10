@@ -7,6 +7,7 @@ use App\Models\Consumer\ConsumerSdPayment;
 use App\Models\Consumer\ConsumersScheme;
 use App\Models\Consumer\ConsumersStatus;
 use App\Models\Invoice\BillInvoice;
+use App\Models\Invoice\InvoicePayment;
 use App\Models\Master\PaymentType;
 use App\Services\InvoiceGeneration;
 use Carbon\Carbon;
@@ -114,7 +115,18 @@ class TRPaymentController extends Controller
                 'inv_type' => 1,
                 'state_code' => $consumer_scheme->consumer->ga->state->code,
             );
-            InvoiceGeneration::serviceInvoiceGenerate($invoice_details, $inv_number_details);
+            $inv_id = InvoiceGeneration::serviceInvoiceGenerate($invoice_details, $inv_number_details);
+            // Adding to Invoice Payment
+            InvoicePayment::create([
+                'invoice_id' => $inv_id,
+                'payment_date' => Carbon::now()->toDateString(),
+                'payment_type_id' => $request->payment_type,
+                'transaction_id' => $request->transaction_no,
+                'amount' => $amt,
+                'status_id' => 1,
+                'notes' => !empty($request->notes) ? $request->notes : null,
+                'created_by' => Auth::id(),
+            ]);
             // Consumer Status History
             ConsumersStatus::create([
                 'consumer_id' => $consumer_scheme->consumer_id,

@@ -11,7 +11,6 @@
                     <tr>
                         <th>Scheme Name</th>
                         <th>#</th>
-                        <th>Registration Charges</th>
                         <th>Security Deposit</th>
                         <th>Consumption Deposit</th>
                         <th>Total Deposit</th>
@@ -19,18 +18,20 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td rowspan="2" class="text-center"><strong>{{ $consumer->scheme?->scheme?->name }}</strong></td>
+                        <td rowspan="3" class="text-center"><strong>{{ $consumer->scheme?->scheme?->name }}</strong></td>
                         <td>Charges</td>
-                        <td class="text-end">{{ numberFormat($consumer->scheme?->scheme?->registration) }}</td>
                         <td class="text-end">{{ numberFormat($consumer->scheme?->security_deposit) }}</td>
                         <td class="text-end">{{ numberFormat($consumer->scheme?->consumption_deposit) }}</td>
                         <td class="text-end">{{ numberFormat($consumer->scheme?->total_deposit) }}</td>
                     </tr>
                     <tr>
                         <td>Payments</td>
-                        <td class="text-end">{{ numberFormat($consumer->scheme?->scheme?->registration) }}</td>
-                        <td class="text-end" colspan="2">{{ numberFormat($consumer->scheme?->security_deposit + $consumer->scheme?->consumption_deposit) }}</td>
+                        <td class="text-end" colspan="2">{{ numberFormat($consumer->scheme?->paid_deposit) }}</td>
                         <td class="text-end">{{ numberFormat($consumer->scheme?->total_deposit) }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" class="text-end">Balance Deposit</td>
+                        <td class="text-end">{{ numberFormat($consumer?->scheme?->balance) }}</td>
                     </tr>
                 </tbody>
             </table>
