@@ -105,19 +105,39 @@ class MasterConsumerDataSeeder extends Seeder
 
         // mst cns meter status
         DB::table('mst_cns_meter_status')->insert([
-            ['id' => '1', 'name' => 'Active'],
-            ['id' => '2', 'name' => 'InActive'],
+            ['id' => 1, 'name' => 'Active'],
+            ['id' => 2, 'name' => 'In-Active'],
+            ['id' => 3, 'name' => 'Replaced'],
         ]);
 
         // mst cns scheme payments
         DB::table('mst_cns_scheme_payments')->insert([
-            ['id' => '1', 'name' => 'Standard Payment'],
-            ['id' => '2', 'name' => 'EMI Payment'],
+            ['id' => 1, 'name' => 'Full Payment'],
+            ['id' => 2, 'name' => 'EMI Payment'],
+            ['id' => 3, 'name' => 'Rental Payment'],
         ]);
+
         // mst sd payment status
         DB::table('mst_sd_payment_status')->insert([
-            ['id' => '1', 'name' => 'Paid'],
-            ['id' => '2', 'name' => 'In Progress'],
+            ['id' => 1, 'name' => 'Paid'],
+            ['id' => 2, 'name' => 'In Progress'],
+            ['id' => 3, 'name' => 'Reversed'],
+        ]);
+
+        // cns_geyser_status
+        DB::table('cns_geyser_status')->insert([
+            ['id' => 1, 'name' => 'Register'],
+            ['id' => 2, 'name' => 'Execute'],
+            ['id' => 3, 'name' => 'Active'],
+            ['id' => 4, 'name' => 'Disconnect'],
+        ]);
+
+        // mst refund status
+        DB::table('mst_ref_status')->insert([
+            ['id' => 1, 'name' => 'Request'],
+            ['id' => 2, 'name' => 'Process'],
+            ['id' => 3, 'name' => 'Approved'],
+            ['id' => 4, 'name' => 'Closed'],
         ]);
     }
 }
