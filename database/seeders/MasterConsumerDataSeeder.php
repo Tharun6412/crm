@@ -124,8 +124,8 @@ class MasterConsumerDataSeeder extends Seeder
             ['id' => 3, 'name' => 'Reversed'],
         ]);
 
-        // cns_geyser_status
-        DB::table('cns_geyser_status')->insert([
+        // mst_cns_geyser_status
+        DB::table('mst_cns_geyser_status')->insert([
             ['id' => 1, 'name' => 'Register'],
             ['id' => 2, 'name' => 'Execute'],
             ['id' => 3, 'name' => 'Active'],
