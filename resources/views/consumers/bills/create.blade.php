@@ -118,7 +118,7 @@
                     <div class="alert alert-danger">Invoice already generated or consumer activated today.</div>
                 @elseif ($bill_days < 10)
                     <div class="alert alert-danger">Billing Frequency should be greater than equal to 10 days.</div>
-                @elseif (empty($prices))
+                @elseif ($prices->isEmpty() OR $prices->last()->basic_price <= 0 OR $prices->last()->tax_value <= 0)
                     <div class="alert alert-danger">No price record found. Please update the price.</div>
                 @else
                     <div class="card mb-2">
