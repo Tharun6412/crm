@@ -32,11 +32,17 @@ class GasInvoiceController extends Controller
     */
    public function create($id)
    {
-        $consumer = Consumer::where('status_id', 6)->find($id);
+        $consumer = Consumer::where('id', $id)
+                            ->where('status_id', 6)
+                            ->with(['statusHistory' => function ($q) {
+                                $q->where('status_id', 6)->latest()->limit(1);
+                            }])
+                            ->first();
         if($consumer) {
             $invoice = BillInvoice::where('consumer_id', $id)->where('type_id', 2)->latest()->first();
-            $start_date = $invoice->consumption->last()->date_to->format('d-m-Y');
+            $start_date = (!empty($invoice)) ? $invoice->consumption->last()->date_to->format('Y-m-d') : ($consumer->statusHistory->first()->created_at->format('Y-m-d'));
             $end_date = date('Y-m-d');
+            $bill_days = Carbon::parse($start_date)->diffInDays($end_date);
             $prices = PriceHistory::where('district_id', $consumer->district_id)
                                         ->where('segment_id', $consumer->segment_id)
                                         ->where(function ($q) use ($start_date, $end_date) {
@@ -45,7 +51,20 @@ class GasInvoiceController extends Controller
                                         })
                                         ->orderBy('effective_from')
                                         ->get();
-            return view('consumers.bills.create', ['consumer' => $consumer, 'invoice' => $invoice, 'prices' => $prices]);
+            // If no price changes found, fetch the latest single record
+            if ($prices->isEmpty()) {
+                $prices = PriceHistory::where('district_id', $consumer->district_id)
+                    ->where('segment_id', $consumer->segment_id)
+                    ->orderBy('effective_from', 'desc')
+                    ->limit(1)
+                    ->get();  // <-- IMPORTANT: get() returns a collection
+            }
+            return view('consumers.bills.create', [
+                'consumer' => $consumer, 
+                'invoice' => $invoice, 
+                'prices' => $prices, 
+                'bill_days' => $bill_days
+            ]);
         }
         else {
             // Consumer not found or not in active status.
@@ -64,7 +83,12 @@ class GasInvoiceController extends Controller
         $start_date = $start_date_1 =  $request->start_date;
         $end_date = $request->end_date;
 
-        $consumer = Consumer::where('status_id', 6)->find($request->id);
+         $consumer = Consumer::where('id', $request->id)
+                            ->where('status_id', 6)
+                            ->with(['statusHistory' => function ($q) {
+                                $q->latest()->limit(1);
+                            }])
+                            ->first();
         $prices = PriceHistory::where('district_id', $consumer->district_id)
                                 ->where('segment_id', $consumer->segment_id)
                                 ->where(function ($q) use ($start_date, $end_date) {
@@ -73,6 +97,14 @@ class GasInvoiceController extends Controller
                                 })
                                 ->orderBy('effective_from')
                                 ->get()->toArray();
+        // If no price changes found, fetch the latest single record
+        if ($prices->isEmpty()) {
+            $prices = PriceHistory::where('district_id', $consumer->district_id)
+                ->where('segment_id', $consumer->segment_id)
+                ->orderBy('effective_from', 'desc')
+                ->limit(1)
+                ->get()->toArray();  // <-- IMPORTANT: get() returns a collection
+        }
 
         // If there is no price in between the range.
         if(empty($prices)) {

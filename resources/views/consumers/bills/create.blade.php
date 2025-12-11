@@ -47,7 +47,7 @@
                                 <tr>
                                     <td>Status Date</td>
                                     <td>:</td>
-                                    <td>{{ $consumer->status->created_at }}</td>
+                                    <td>{{ $consumer->statusHistory->first()->created_at->format('d-m-Y') }}</td>
                                 </tr>
                                 <tr>
                                     <td>Meter No</td>
@@ -67,7 +67,8 @@
             </div>
             <div class="card mb-2">
                 @php
-                    $invEndReading = ($invoice->consumption->count() > 0)
+                    $start_date = (!empty($invoice)) ? $invoice->consumption->last()->date_to->format('Y-m-d') : ($consumer->statusHistory->first()->created_at->format('Y-m-d'));
+                    $invEndReading = (!empty($invoice) and $invoice->consumption->count() > 0)
                         ? $invoice->consumption->last()->curr_reading
                         : 0;
                     $startReading = ($invEndReading > 0) ? $invEndReading : (($consumer->meter->initial_reading >= 0) ? $consumer->meter->initial_reading : "");
@@ -113,8 +114,12 @@
                 @endif
             </div>
             @if (!empty($consumer->meter->meter_no) && !empty($startReading))
-                @if ($invoice->consumption->last()->date_to->format('Y-m-d') == date('Y-m-d'))
-                    <div class="alert alert-danger">Invoice is already generated today.</div>
+                @if ($start_date == date('Y-m-d'))
+                    <div class="alert alert-danger">Invoice already generated or consumer activated today.</div>
+                @elseif ($bill_days < 10)
+                    <div class="alert alert-danger">Billing Frequency should be greater than equal to 10 days.</div>
+                @elseif (empty($prices))
+                    <div class="alert alert-danger">No price record found. Please update the price.</div>
                 @else
                     <div class="card mb-2">
                         <div class="row">
@@ -134,8 +139,8 @@
                         <div class="row">
                             <label for="start_date" class="col-sm-4 col-form-label">Start Date&nbsp;:&nbsp;</label>
                             <div class="col-sm-8">
-                                <span>{{ $invoice->consumption->last()->date_to->format('d-m-Y') }}</span>
-                                <input type="hidden" id="start_date" name="start_date" value="{{ $invoice->consumption->last()->date_to->format('Y-m-d')  }}">
+                                <span>{{ date('d-m-Y', strtotime($start_date)) }}</span>
+                                <input type="hidden" id="start_date" name="start_date" value="{{ $start_date  }}">
                             </div>
                         </div>
                         <div class="row">
