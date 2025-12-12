@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Master\Master;
+namespace App\Http\Controllers\Master\Location;
 
 use App\Http\Controllers\Controller;
 use App\Models\Master\State;
@@ -14,6 +14,6 @@ class StateController extends Controller
     {
         $states = State::all();
 
-        return view('master.states.list', ['states' => $states]);
+        return view('master.locations.states.list', ['states' => $states]);
     }
 }

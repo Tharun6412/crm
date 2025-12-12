@@ -37,10 +37,22 @@ class Price extends Model
     ];
 
     /**
+     * Relation with Segments
+     */
+    public function segment(): BelongsTo
+    {
+        return $this->belongsTo(Segment::class);
+    }
+
+    /**
      * Relatio with district
      */
     public function district(): BelongsTo
     {
         return $this->belongsTo(District::class);
     }
+
+    /**
+     * Relation with Users
+     */
 }

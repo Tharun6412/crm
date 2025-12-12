@@ -6,6 +6,10 @@
 
 @section('page-title', 'Clusters')
 
+@section('breadcrumb')
+    <li class="breadcrumb-item"><a href="{{ url('master') }}">Master</a></li>
+@endsection
+
 @section('page-content')
     <div>
         <div class="mb-2">
@@ -18,9 +22,9 @@
                         <tr>
                             <th width="1%" nowrap>S No</th>
                             <th>Code</th>
-                            <th>Name</th>
+                            <th>Cluster Name</th>
                             <th>Description</th>
-                            <th>GA</th>
+                            <th>Cluster GAs</th>
                             <th>Status</th>
                         </tr>
                     </thead>

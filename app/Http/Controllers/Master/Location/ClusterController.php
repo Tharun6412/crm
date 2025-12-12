@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Master\Master;
+namespace App\Http\Controllers\Master\Location;
 
 use App\Http\Controllers\Controller;
 use App\Models\Master\Cluster;
@@ -14,6 +14,6 @@ class ClusterController extends Controller
     {
         $clusters = Cluster::all();
 
-        return view('master.clusters.list', ['clusters' => $clusters]);
+        return view('master.locations.clusters.list', ['clusters' => $clusters]);
     }
 }

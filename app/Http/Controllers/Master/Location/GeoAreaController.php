@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Master\Master;
+namespace App\Http\Controllers\Master\Location;
 
 use App\Http\Controllers\Controller;
 use App\Models\Master\Ga;
@@ -14,6 +14,6 @@ class GeoAreaController extends Controller
     {
         $geo_areas = Ga::all();
 
-        return view('master.geo-areas.list', ['geo_areas' => $geo_areas]);
+        return view('master.locations.geo-areas.list', ['geo_areas' => $geo_areas]);
     }
 }
