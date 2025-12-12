@@ -93,7 +93,7 @@ class RefundController extends Controller
             'status_id' => 1, //Refund Request
             'created_by' => Auth::id(),
         ]);
-        $request_number_create = "R".str_pad($id, 6,0,STR_PAD_LEFT);
+        $request_number_create = "R".str_pad($add_refund->id, 6,0,STR_PAD_LEFT);
         ConsumerRefund::where('id', $add_refund->id)->update(['request_no' => $request_number_create]);
         // Refund Status
         ConsumerRefundStatus::create([

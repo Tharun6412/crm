@@ -27,7 +27,7 @@
                 <th>Consumer Number</th>
                 <th>Request Number</th>
                 <th>Status</th>
-                <th>Created At</th>
+                <th>Added Date</th>
                 <th width="2%" nowrap>Actions</th>
             </tr>
         </thead>
