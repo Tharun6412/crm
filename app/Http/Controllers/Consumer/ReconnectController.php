@@ -57,12 +57,12 @@ class ReconnectController extends Controller
         $base_amt = round($amt/$gst_calculated_amt, 3);
         $tax_amt = round($amt - $base_amt, 3);
         $invoice_details = array(
-            'type_id' => 1, //Service Invoice
+            'type_id' => 2, //Service Invoice
             'consumer_id' => $id,
             'invoice_date' => Carbon::now()->toDateString(),
             'base_amount' => $base_amt,
             'taxable_amount' => $base_amt,
-            'tax_id' => 1,
+            'tax_id' => 2,
             'tax_value' => 18,
             'tax_amount' => $tax_amt,
             'total_amount' => $amt,

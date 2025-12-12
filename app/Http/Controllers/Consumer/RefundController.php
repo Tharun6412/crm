@@ -29,7 +29,7 @@ class RefundController extends Controller
      */
     public function index(Request $request)
     {
-        $refunds_list = ConsumerRefund::when($request->has('key'), function ($q) use($request) {
+        $refunds_list = ConsumerRefund::with(['consumer'])->when($request->has('key'), function ($q) use($request) {
                 $q->whereAny(['request_no'], 'like', '%' . $request->key . '%');
             })->paginate(50)->withQueryString();
         if($request->ajax()) {
@@ -48,7 +48,21 @@ class RefundController extends Controller
      */
     public function show(Request $request, $id)
     {
-        $refund_data = ConsumerRefund::find($id);
+        $start = microtime(true);
+        $refund_data = ConsumerRefund::with([
+            'consumer:id,fname,lname,segment_id,crn,status_id',
+            'consumer.segment:id,name',
+            'consumer.status:id,name',
+            'consumer.scheme:id,consumer_id,scheme_id,security_deposit,consumption_deposit,total_deposit,paid_deposit,balance',
+            'consumer.scheme.scheme:id,name',
+            'status:id,name',
+            'refundStatus:id,refund_id,status_id,notes,created_at,created_by',
+            'refundStatus.createdBy:id,first_name,last_name',
+            'refundStatus.status:id,name',
+        ])->find($id);
+        $end = microtime(true);
+        $diff = $end - $start;
+        echo "Time".$diff." seconds";
         return view('consumers.refund.show', ['refund_data' => $refund_data]);
     }
     /**
@@ -115,9 +129,9 @@ class RefundController extends Controller
             'disconnect_amt' => 'required|numeric|min:0',
         ]);
         $refund_data = ConsumerRefund::find($id);
-        $balance = BillInvoice::where('status_id', '!=', 1)->where('consumer_id', $refund_data->consumer_id)->sum('balance_amount');
+        $balance = BillInvoice::select(DB::raw('GROUP_CONCAT(id) as ids'), DB::raw('SUM(balance_amount) as balance_amount'))->where('status_id', '!=', 1)->where('consumer_id', $refund_data->consumer_id)->first();
         //Refund Calculations
-        $balance_charges = $balance + $request->disconnect_amt;
+        $balance_charges = $balance->balance_amount + $request->disconnect_amt;
         $tot_refund_amt = $refund_data->consumer->scheme->paid_deposit - $balance_charges;
         // Add SI if disconnection charges applicable
         if($request->disconnect_amt > 0) {
@@ -127,12 +141,12 @@ class RefundController extends Controller
             $base_amt = round($amt/$gst_calculated_amt, 3);
             $tax_amt = round($amt - $base_amt, 3);
             $invoice_details = array(
-                'type_id' => 1, //Service Invoice
+                'type_id' => 2, //Service Invoice
                 'consumer_id' => $refund_data->consumer_id,
                 'invoice_date' => Carbon::now()->toDateString(),
                 'base_amount' => $base_amt,
                 'taxable_amount' => $base_amt,
-                'tax_id' => 1,
+                'tax_id' => 2,
                 'tax_value' => 18,
                 'tax_amount' => $tax_amt,
                 'total_amount' => $amt,
@@ -151,18 +165,24 @@ class RefundController extends Controller
             InvoicePayment::create([
                 'invoice_id' => $inv_id,
                 'payment_date' => Carbon::now()->toDateString(),
-                'payment_type_id' => 2,
-                'transaction_id' => "T123",
+                'payment_type_id' => 13,
+                'transaction_id' => "SD Refund",
                 'amount' => $amt,
-                'status_id' => 1,
+                'balance' => 0,
+                'status_id' => 1,//completed
                 'notes' => !empty($request->notes) ? $request->notes : null,
                 'created_by' => Auth::id(),
             ]);
+            // InvoicePayment Update
+            $ids = $balance->ids ? explode(',', $balance->ids) : [];
+            if(!empty($ids)) {
+                InvoicePayment::whereIn('invoice_id', $ids)->update(['payment_type_id' => 13, 'status_id' => 1, 'balance' => 0]);
+            }
         }
         // Refund Data 
         $add_refund = ConsumerRefund::where('id', $id)->update([
             'sd_paid' => $refund_data->consumer->scheme->paid_deposit,
-            'outstanding_amount' => $balance,
+            'outstanding_amount' => $balance->balance_amount,
             'disconnection_amount' => $request->disconnect_amt,
             'invoice_id' => $inv_id,
             'refund_amount' => $tot_refund_amt,
@@ -235,7 +255,7 @@ class RefundController extends Controller
         ]);
         // ConsumerRefund
         ConsumerRefund::where('id', $id)->update([
-            'payment_type_id' => 2,
+            'payment_type_id' => $request->payment_type,
             'transaction_id' => $request->transaction_no,
             'transaction_date' => Carbon::now()->toDateString(),
             'status_id' => '4'

@@ -63,7 +63,7 @@ class ModuleDataSeeder extends Seeder
             ['id' => 32, 'position' => 4, 'status' => 1, 'icon' => 'bi-pencil', 'package_id' => 1, 'parent_id' => 3, 'name' => 'Corrections', 'url' => ''],
             ['id' => 33, 'position' => 1, 'status' => 1, 'icon' => 'bi-file-x', 'package_id' => 1, 'parent_id' => 32, 'name' => 'Cancel Invoice', 'url' => 'invoice/cancel'],
             ['id' => 34, 'position' => 2, 'status' => 1, 'icon' => 'bi-file-minus', 'package_id' => 1, 'parent_id' => 32, 'name' => 'Reverse Payment', 'url' => 'payment/reverse'],
-            ['id' => 35, 'position' => 1, 'status' => 1, 'icon' => 'bi-cash-stack', 'package_id' => 1, 'parent_id' => 4, 'name' => 'Refund requests', 'url' => 'consumer/refunds'],
+            ['id' => 35, 'position' => 1, 'status' => 1, 'icon' => 'bi-cash-stack', 'package_id' => 1, 'parent_id' => 4, 'name' => 'Refund requests', 'url' => 'consumers/refunds'],
             ['id' => 36, 'position' => 1, 'status' => 1, 'icon' => 'bi-display', 'package_id' => 1, 'parent_id' => 5, 'name' => 'Dashboard', 'url' => 'calls/dashboard'],
             ['id' => 37, 'position' => 2, 'status' => 1, 'icon' => 'bi-telephone-plus', 'package_id' => 1, 'parent_id' => 5, 'name' => 'Create', 'url' => ''],
             ['id' => 38, 'position' => 1, 'status' => 1, 'icon' => 'bi-telephone-inbound', 'package_id' => 1, 'parent_id' => 37, 'name' => 'Consumer Call', 'url' => 'calls/create'],

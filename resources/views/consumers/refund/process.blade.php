@@ -1,10 +1,11 @@
 <div class="modal-dialog modal-lg">
     <div class="modal-content">
         <div class="modal-header">
-            <h4 class="modal-title">Consumer Process</h4>
+            <h4 class="modal-title">Refund Process</h4>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
+            <h4 class="fw-semibold text-decoration-underline">Consumer Details</h4>
             <div class="card mb-2">
                 <div class="row">
                     <div class="col-md-6 col-sm-6">
@@ -37,19 +38,19 @@
                         <table class="table table-borderless">
                             <tbody>
                                 <tr>
-                                    <td>Scheme</td>
+                                    <td>Request Number</td>
                                     <td>:</td>
-                                    <td>{{ $refund_data->consumer->scheme->scheme->name }}</td>
+                                    <td>{{ $refund_data->request_no }}</td>
                                 </tr>
                                 <tr>
-                                    <td>Paid Deposit</td>
+                                    <td>Requested Date</td>
                                     <td>:</td>
-                                    <td>{{ $refund_data->consumer->scheme->paid_deposit }}</td>
+                                    <td>{{ $refund_data->created_at->format('d-m-Y') }}</td>
                                 </tr>
                                 <tr>
-                                    <td>Balance Deposit</td>
+                                    <td>Requested By</td>
                                     <td>:</td>
-                                    <td>{{ $refund_data->consumer->scheme->balance }}</td>
+                                    <td>{{ $refund_data->createdBy->first_name }}&nbsp;{{ $refund_data->createdBy->last_name }}</td>
                                 </tr>
                                 <tr>
                                     <td>Refund Status</td>
@@ -120,6 +121,9 @@
                 @endphp
                 <form id="process-form" action="{{ url('consumers/refunds/processUpdate/'.$refund_data->id) }}" method="POST">
                     @csrf
+                    @php
+                        $i = 1;
+                    @endphp
                     <table class="table table-bordered"> 
                         <thead>
                             <th>#</th>
@@ -129,37 +133,21 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td>1</td>
+                                <td>{{ $i++ }}</td>
                                 <td>Refundable Security Deposit</td>
                                 <td class="text-end">{{ numberFormat($refund_data->consumer->scheme->paid_deposit) }}</td>
                                 <td class="text-end"></td>
                             </tr>
+                            @foreach ($inv_types as $type_id => $type_val)
+                                <tr>
+                                    <td>{{ $i++ }}</td>
+                                    <td>{{ $type_val->name }}</td>
+                                    <td></td>
+                                    <td class="text-end">{{ $inv_amt[$type_val->id] }}</td>
+                                </tr>
+                            @endforeach
                             <tr>
-                                <td>2</td>
-                                <td>Invoice</td>
-                                <td></td>
-                                <td class="text-end">{{ $inv_amt[2] }}</td>
-                            </tr>
-                            <tr>
-                                <td>3</td>
-                                <td>Geyser Deposit</td>
-                                <td></td>
-                                <td class="text-end">{{ $inv_amt[3] }}</td>
-                            </tr>
-                            <tr>
-                                <td>4</td>
-                                <td>Services</td>
-                                <td></td>
-                                <td class="text-end">{{ $inv_amt[1] }}</td>
-                            </tr>
-                            <tr>
-                                <td>5</td>
-                                <td>Custom Invoice</td>
-                                <td></td>
-                                <td class="text-end">{{ $inv_amt[4] }}</td>
-                            </tr>
-                            <tr>
-                                <td>6</td>
+                                <td>{{ $i++ }}</td>
                                 <td>Disconnection Charges</td>
                                 <td></td>
                                 <td>
@@ -179,11 +167,11 @@
                             </tr>
                             <tr>
 
-                                <td colspan="2" class="text-end">Final Refundable Amount</td>
+                                <td colspan="3" class="text-end">Final Refundable Amount</td>
                                 <td class="text-end" colspan="2" id="refundable_amt">{{ $tot_refund_amt > 0 ? $tot_refund_amt : 0 }}</td>
                             </tr>
                             <tr>
-                                <td colspan="2" class="text-end">Consumer Payable Amount</td>
+                                <td colspan="3" class="text-end">Consumer Payable Amount</td>
                                 <td class="text-end" colspan="2" id="payable_amt">{{ $tot_refund_amt < 0 ? abs($tot_refund_amt) : 0 }}</td>
                             </tr>
                         </tbody>
@@ -208,6 +196,9 @@
 </div>
 @include('scripts.ajax-form-submit', ['form' => 'process'])
 <script>
+    $(document).ready(function() {
+        disconnectionAmt($('#disconnect_amt').val());
+    });
     // Refund Amount Update Details
     function disconnectionAmt(disconnect_amt) {
         disconnect_amt = parseFloat(disconnect_amt) || 0;
@@ -220,7 +211,7 @@
 
         // Calculate difference
         let diff_amt = credit_amt - total_amt;
-        if (diff_amt > 0) {
+        if (diff_amt >= 0) {
             // Refundable amount
             $('#refundable_amt').html(diff_amt.toFixed(2));
             $('#payable_amt').html("0.00");

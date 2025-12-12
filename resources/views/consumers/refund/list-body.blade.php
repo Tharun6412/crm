@@ -46,7 +46,7 @@
                                     Actions
                                 </button>
                                 <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="{{ url('consumers/refunds/' . $list->id) }}"><i class="bi bi-chevron-right"></i>&nbsp;View</a></li>
+                                    <li><a class="dropdown-item link-modal" href="{{ url('consumers/refunds/' . $list->id) }}"><i class="bi bi-chevron-right"></i>&nbsp;View</a></li>
                                     @if ($list->status_id == 1)
                                         <li><a class="dropdown-item link-modal" href="{{ url('consumers/refunds/process/' . $list->id) }}"><i class="bi bi-chevron-right"></i>&nbsp;Process</a></li>
                                     @endif
@@ -72,6 +72,8 @@
     </table>
 </div>
 <div>
-    {{ $refunds_list->links('utils.paginator', ['modDiv' => 'refunds-list']) }}
+    @if ($refunds_list->count() > 0)
+        {{ $refunds_list->links('utils.paginator', ['modDiv' => 'refunds-list']) }}
+    @endif
 </div>
 @include('scripts.link-modal')

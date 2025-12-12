@@ -1,29 +1,35 @@
 <div class="modal-dialog modal-lg">
     <div class="modal-content">
         <div class="modal-header">
-            <h4 class="modal-title">Consumer Close</h4>
+            <h4 class="modal-title">Close Refund</h4>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
+            <h4 class="fw-semibold text-decoration-underline">Consumer Details</h4>
             <div class="card mb-2">
                 <div class="row">
                     <div class="col-md-6 col-sm-6">
                         <table class="table table-borderless">
                             <tbody>
                                 <tr>
+                                    <td>Name</td>
+                                    <td>:</td>
+                                    <td>{{ $refund_data->consumer->titleDisplay->name }}&nbsp;{{ $refund_data->consumer->name }}</td>
+                                </tr>
+                                <tr>
                                     <td>CRN</td>
                                     <td>:</td>
-                                    <td>{{ $refund_data->consumer->scheme->consumer->crn }}</td>
+                                    <td>{{ $refund_data->consumer->crn }}</td>
                                 </tr>
                                 <tr>
                                     <td>Consumer Type</td>
                                     <td>:</td>
-                                    <td>{{ $refund_data->consumer->scheme->consumer->segment->name }}</td>
+                                    <td>{{ $refund_data->consumer->segment->name }}</td>
                                 </tr>
                                 <tr>
                                     <td>Status</td>
                                     <td>:</td>
-                                    <td>{{ $refund_data->consumer->scheme->consumer->status->name }}</td>
+                                    <td>{{ $refund_data->consumer->status->name }}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -32,9 +38,19 @@
                         <table class="table table-borderless">
                             <tbody>
                                 <tr>
-                                    <td>Name</td>
+                                    <td>Request Number</td>
                                     <td>:</td>
-                                    <td>{{ $refund_data->consumer->titleDisplay->name }}&nbsp;{{ $refund_data->consumer->name }}</td>
+                                    <td>{{ $refund_data->request_no }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Requested Date</td>
+                                    <td>:</td>
+                                    <td>{{ $refund_data->created_at->format('d-m-Y') }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Requested By</td>
+                                    <td>:</td>
+                                    <td>{{ $refund_data->createdBy->first_name }}&nbsp;{{ $refund_data->createdBy->last_name }}</td>
                                 </tr>
                                 <tr>
                                     <td>Refund Status</td>
@@ -46,40 +62,31 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="clearfix">
-                    <div class="float-left">
-                        <strong class="text-decoration-underline">Refund Details</strong>
+            <div class="border p-3 rounded mt-3"> 
+                <div class="row">
+                    <h4 class="fw-semibold text-decoration-underline">Refund Details</h4>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-md-6">
+                        <dl class="row">
+                            <dt class="col-sm-8">Security Paid Deposit</dt>
+                            <dd class="col-sm-4">{{ numberFormat($refund_data->consumer->scheme->paid_deposit) }}</dd>
+                            <dt class="col-sm-8">Total Pending Balance</dt>
+                            <dd class="col-sm-4">{{ numberFormat($refund_data->outstanding_amount) }}</dd>
+                            <dt class="col-sm-8"><span class="text-nowrap">Disconnection Charges</span></dt>
+                            <dd class="col-sm-4">{{ numberFormat($refund_data->disconnection_amount) }}</dd>
+                            <dt class="col-sm-8"><span class="text-nowrap">Total Refundable Amount</span></dt>
+                            <dd class="col-sm-4">{{ numberFormat($refund_data->refund_amount) }}</dd>
+                        </dl>
                     </div>
-                </div>
-            </div> 
-            <div class="row mt-2">
-                <div class="col-md-6">
-                    <dl class="row">
-                        <dt class="col-sm-8">Refundable Security Deposit</dt>
-                        <dd class="col-sm-4">{{ numberFormat($refund_data->consumer->scheme->total_deposit) }}</dd>
-                    </dl>
-                    <dl class="row">
-                        <dt class="col-sm-8"><span class="text-nowrap">Total Refundable Amount</span></dt>
-                        <dd class="col-sm-4">{{ numberFormat($refund_data->refund_amount) }}</dd>
-                    </dl>
-                </div>
-                <div class="col-md-6">
-                    <dl class="row">
-                        <dt class="col-sm-8">Total Pending Balance</dt>
-                        <dd class="col-sm-4">{{ numberFormat($refund_data->outstanding_amount) }}</dd>
-                    </dl>
-                    <dl class="row">
-                        <dt class="col-sm-8"><span class="text-nowrap">Consumer Payable Amount</span></dt>
-                        <dd class="col-sm-4">{{ numberFormat($refund_data->outstanding_amount) }}</dd>
-                    </dl>
-                </div>
-            </div>               
-            <div class="mt-2" id="approve-success">
-                <form id="approve-form" action="{{ url('consumers/refunds/closeRefund/'.$refund_data->id) }}" method="POST">
+                </div> 
+            </div>              
+            <div class="border p-3 rounded mt-3" id="close-success">
+                <h4 class="fw-semibold text-decoration-underline">Update Payment Details</h4>
+                <form id="close-form" action="{{ url('consumers/refunds/closeRefund/'.$refund_data->id) }}" method="POST">
                     @csrf
                     <div class="row">
-                        <label class="col-form-label col-sm-4 text-end">Payment Mode<span class="text-danger">&nbsp;*</span>&nbsp;:</label>
+                        <label class="col-form-label col-sm-4 text-end">Payment Mode&nbsp;:<span class="text-danger">*</span></label>
                         <div class="col-sm-8">
                             <select class="form-select form-select-sm" name="payment_type" id="payment_type">
                                 <option value="">select</option>
@@ -90,18 +97,18 @@
                         </div>
                     </div>
                     <div class="row">
-                        <label class="col-sm-4 text-end col-form-label">Transaction No.<span class="text-danger">&nbsp;*</span>&nbsp;:</label>
+                        <label class="col-sm-4 text-end col-form-label">Transaction No.&nbsp;:<span class="text-danger">*</span></label>
                         <div class="col-sm-8">
                             <input type="text" class="form-control form-control-sm" name="transaction_no" id="transaction_no" placeholder="Transaction No.">
                         </div>
                     </div>
                     <div class="row">
-                        <label class="col-form-label col-sm-4 text-end">Notes<span class="text-danger">*</span></label>
+                        <label class="col-form-label col-sm-4 text-end">Notes&nbsp;:<span class="text-danger">*</span></label>
                         <div class="col-sm-8">
                             <textarea name="notes" id="notes" class="form-control" placeholder="Enter here"></textarea>
                         </div>
                     </div>
-                    <div class="text-danger mt-3" id="approve-error"></div>
+                    <div class="text-danger mt-3" id="close-error"></div>
                     <div class="row mt-3">
                         <div class="col-md-12 col-sm-12">
                             <div class="text-end">
@@ -119,4 +126,4 @@
         </div>
     </div>
 </div>
-@include('scripts.ajax-form-submit', ['form' => 'approve'])
+@include('scripts.ajax-form-submit', ['form' => 'close'])

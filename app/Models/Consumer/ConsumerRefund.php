@@ -8,6 +8,7 @@ use App\Models\Master\PaymentType;
 use App\Models\Master\RefundStatus;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class ConsumerRefund extends Model
 {
@@ -85,4 +86,12 @@ class ConsumerRefund extends Model
     {
         return $this->belongsTo(User::class, 'created_by')->withDefault();
     }
+    /**
+     * Relation with Refund history Status
+     */
+    public function refundStatus():HasMany
+    {
+        return $this->hasMany(ConsumerRefundStatus::class, 'refund_id')->orderBy('created_at', 'desc');
+    }
+
 }
