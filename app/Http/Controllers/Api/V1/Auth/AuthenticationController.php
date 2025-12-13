@@ -37,6 +37,7 @@ class AuthenticationController extends Controller
         return response()->json([
             'token' => $token,
             'user' => $user,
+            'user_gas' => $user->ga()->pluck('ga_id')->toArray(),
             'roles' => $roles,
             'modules' => $app_modules,
         ]);

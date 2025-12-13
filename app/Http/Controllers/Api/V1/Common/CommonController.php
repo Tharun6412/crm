@@ -30,8 +30,10 @@ class CommonController extends Controller
     public function gaDistrictsSchemes(Request $request)
     {
         $districts = District::select('id', 'name')->where('ga_id', $request->ga_id)->get();
-        $schemes = ConsumerSchemeGa::with(['scheme'])->where('ga_id', $request->ga_id)->get();
-
+        $schemes = ConsumerScheme::select('id','name', 'registration', 'security', 'consumption', 'total_deposit', 'emi_amount', 'rental_amount')
+            ->whereHas('gas', function($q) use($request) {
+                $q->where('ga_id', $request->ga_id);
+            })->get();
         return response()->json(['districts' => $districts, 'schemes' => $schemes], 200);
     }
 
@@ -67,7 +69,7 @@ class CommonController extends Controller
     public function schemeDetails (Request $request)
     {
         $scheme_details = ConsumerScheme::find($request->scheme_id);
-        
+
         return response()->json(['scheme_details' => $scheme_details], 200);
     }
 }

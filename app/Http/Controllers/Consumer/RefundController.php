@@ -50,7 +50,6 @@ class RefundController extends Controller
      */
     public function show(Request $request, $id)
     {
-        $start = microtime(true);
         $refund_data = ConsumerRefund::with([
             'consumer:id,fname,lname,segment_id,crn,status_id',
             'consumer.segment:id,name',
@@ -62,10 +61,6 @@ class RefundController extends Controller
             'refundStatus.createdBy:id,first_name,last_name',
             'refundStatus.status:id,name',
         ])->find($id);
-        $end = microtime(true);
-        $diff = $end - $start;
-        echo "Time".$diff." seconds";
-
         return view('consumers.refund.show', ['refund_data' => $refund_data]);
     }
 

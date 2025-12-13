@@ -13,5 +13,8 @@ Route::middleware('auth:sanctum')->group(function () {
     // Consumers routes
     Route::prefix('consumer')->group(function () {
         Route::get('list', [App\Http\Controllers\Api\V1\Application\ConsumerController::class, 'list']);
+        Route::get('create', [App\Http\Controllers\Api\V1\Application\ConsumerController::class, 'create']);
+        Route::post('store', [App\Http\Controllers\Api\V1\Application\ConsumerController::class, 'store']);
+        Route::get('details/{id}', [App\Http\Controllers\Api\V1\Application\ConsumerController::class, 'details']);
     });
 });
