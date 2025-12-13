@@ -5,64 +5,8 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-            <div class="card mb-2">
-                <div class="row">
-                    <div class="col-md-6 col-sm-6">
-                        <table class="table table-borderless">
-                            <tbody>
-                                <tr>
-                                    <td width="130">Consumer type</td>
-                                    <td width="1%">:</td>
-                                    <td>
-                                        <label class="text-success">{{ $consumer_scheme->consumer->segment->name }}</label>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Consumer code</td>
-                                    <td>:</td>
-                                    <td><label class="text-success">{{ $consumer_scheme->consumer->t_crn }}</label></td>
-                                </tr>
-                                <tr>
-                                    <td>Status</td>
-                                    <td>:</td>
-                                    <td><span>{{ $consumer_scheme->consumer->status->name }}</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>:</td>
-                                    <td>{{ $consumer_scheme->consumer->titleDisplay->name }}&nbsp;{{ $consumer_scheme->consumer->fname }}&nbsp;{{ $consumer_scheme->consumer->lname }}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="col-md-6 col-sm-6">
-                        <table class="table table-borderless">
-                            <tbody>
-                                <tr>
-                                    <td width="170">Scheme Name</td>
-                                    <td width="1%">:</td>
-                                    <td class="text-end">{{ $consumer_scheme->scheme->name }}</td>
-                                </tr>
-                                <tr>
-                                    <td>Security Deposit</td>
-                                    <td>:</td>
-                                    <td class="text-end">{{ numberFormat($consumer_scheme->security_deposit) }}</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Consumption deposit</td>
-                                    <td>:</td>
-                                    <td class="text-end">{{ numberFormat($consumer_scheme->consumption_deposit) }}</td>
-                                </tr>
-                                <tr>
-                                    <td>Registration Charges</td>
-                                    <td>:</td>
-                                    <td class="text-end">{{ numberFormat($consumer_scheme->scheme->registration) }}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+            {{-- Consumer basic details component --}}
+            <x-consumer.basic-details :consumer="$consumer_scheme->consumer" type="1" class="bg-info-subtle" />
             <div id="trpayment-success">
                 @if ($consumer_scheme->status != 1)
                     <form id="trpayment-form" action="{{ url('consumers/trPayment/'.$consumer_scheme->consumer_id) }}">
@@ -77,7 +21,7 @@
                             </div>
                         </div>
                         <div class="row mb-2">
-                            <label class="col-form-label col-sm-4 text-end">Total Amount Payable<span class="text-danger">&nbsp;*</span>&nbsp;:</label>
+                            <label class="col-form-label col-sm-4 text-end">Amount<span class="text-danger">&nbsp;*</span>&nbsp;:</label>
                             <div class="col-sm-6">
                                 <input type="text" class="form-control form-control-sm" name="amount" id="amount" placeholder="Total payable amount." value="{{ $consumer_scheme->scheme->min_payment }}">
                             </div>

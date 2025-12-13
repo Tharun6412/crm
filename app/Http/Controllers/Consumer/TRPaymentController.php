@@ -1,5 +1,7 @@
 <?php
+
 namespace App\Http\Controllers\Consumer;
+
 use App\Http\Controllers\Controller;
 use App\Models\Consumer\CaCounter;
 use App\Models\Consumer\Consumer;
@@ -21,8 +23,9 @@ class TRPaymentController extends Controller
      */
     public function index(Request $request)
     {
-        echo "test method";
+        return "TR Controller";
     }
+
     /**
      * TO Get the Deposit Details
      * Consumer Scheme Details
@@ -44,28 +47,34 @@ class TRPaymentController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // Get consumer scheme and scheme details
         $consumer_scheme = ConsumersScheme::where('consumer_id', $id)->first();
+        
+        // Validations
         $request->validate([
-            'amount' => ['required', 'numeric', 'gt:0', 'min:' . $consumer_scheme->scheme->min_payment, 'max:'.$consumer_scheme->balance],
+            'amount' => ['required', 'numeric', 'gt:0', 'min:' . $consumer_scheme->scheme->min_payment, 'max:' . ($consumer_scheme->scheme->registration + $consumer_scheme->scheme->security + $consumer_scheme->scheme->consumption)],
             'payment_type' => 'required',
             'transaction_no' => 'required',
             'notes' => 'nullable',
         ]);
+
+        // Check for CRN generation
         $district_code = $consumer_scheme->consumer->district->code;
-        $segment_type = $consumer_scheme->consumer->segment_id;
         $ca_code = $consumer_scheme->consumer->ca->code;
+        $segment_type = $consumer_scheme->consumer->segment_id;
         if(!empty($district_code) and !empty($ca_code)) {
-            // Consumer Number Generation
+            //-- CRN Generation
             $ca_data = CaCounter::firstOrNew(['ca_id' => $consumer_scheme->consumer->ca_id]);
             $ca_data->count = ($ca_data->count ?? 0) + 1;
             $ca_data->save();
-
+            // Generate CRN and update
             $crn_no = $district_code.$segment_type.str_pad($ca_code, 2, 0,STR_PAD_LEFT).str_pad($ca_data->count, 6, "0", STR_PAD_LEFT);
             Consumer::where('id', $id)->update([
                 'crn' => $crn_no,
                 'status_id' => 2,
                 'updated_by' => Auth::id(),
             ]);
+
             // Scheme Details
             // Paid Amount = Amount - Minimun Payment
             $paid_amt = $request->amount - $consumer_scheme->scheme->registration;
@@ -75,7 +84,7 @@ class TRPaymentController extends Controller
                 $consumer_scheme->update([
                     'paid_deposit' => $paid_amt,
                     'balance' => $balance_amt,
-                    'status' => ($balance_amt == 0) ? 1 : 0, // 1 = Paid, 0 =Not Paid
+                    'status' => ($balance_amt == 0) ? 1 : 0, // 1:Paid, 0:Not Paid
                 ]);
 
                 // Add Record to SD Payment
@@ -89,14 +98,15 @@ class TRPaymentController extends Controller
                     'created_by' => Auth::id(),
                 ]);
             }
-            // Service Invoice Generation
+
+            //-- Generate service invoice for registration
             // Calculations
             $amt = $consumer_scheme->scheme->registration;
             $gst_calculated_amt = 1.18; //(1+18%)
-            $base_amt = round($amt/$gst_calculated_amt, 3);
+            $base_amt = round($amt / $gst_calculated_amt, 3);
             $tax_amt = round($amt - $base_amt, 3);
-            $invoice_details = array(
-                'type_id' => 2, //Service Invoice
+            $invoice_details = [
+                'type_id' => 2, // Service Invoice
                 'consumer_id' => $consumer_scheme->consumer_id,
                 'invoice_date' => Carbon::now()->toDateString(),
                 'base_amount' => $base_amt,
@@ -107,16 +117,17 @@ class TRPaymentController extends Controller
                 'total_amount' => $amt,
                 'paid_amount' => $amt,
                 'balance_amt' => 0,
-                'status_id' => 1, //Paid
+                'status_id' => 1, // Paid
                 'created_by' => Auth::id(),
-            );
+            ];
             $inv_number_details = array(
                 'state_id' => $consumer_scheme->consumer->ga->state_id,
                 'inv_type' => 1,
                 'state_code' => $consumer_scheme->consumer->ga->state->code,
             );
             $inv_id = InvoiceGeneration::serviceInvoiceGenerate($invoice_details, $inv_number_details);
-            // Adding to Invoice Payment
+
+            // Adding payment record for service invoice
             InvoicePayment::create([
                 'invoice_id' => $inv_id,
                 'payment_date' => Carbon::now()->toDateString(),
@@ -127,18 +138,22 @@ class TRPaymentController extends Controller
                 'notes' => !empty($request->notes) ? $request->notes : null,
                 'created_by' => Auth::id(),
             ]);
-            // Consumer Status History
+
+            // Add consumer status history record
             ConsumersStatus::create([
                 'consumer_id' => $consumer_scheme->consumer_id,
                 'status_id' => 2,
                 'notes' => !empty($request->notes) ? $request->notes : null,
                 'created_by' => Auth::id(),
             ]);
+
             // SMS and Email to send
+
             // Response
-            return response()->json(['success' => 'CRN Created Successfully with ' . $crn_no . ', click <a href="'.url('consumers').'">here</a> to go to consumers list.']);
-        }else {
-            return response()->json(['success' => 'CRN number cannot be generated. Please contact administrator.']); 
+            return response()->json(['success' => 'CRN generated successfully with ' . $crn_no . ', click <a href="'.url('consumers').'">here</a> to go to consumers list.']);
+        }
+        else {
+            return response()->json(['success' => 'CRN cannot be generated, please contact administrator.']); 
         }
     }
 } 

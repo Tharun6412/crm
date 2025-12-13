@@ -1,5 +1,7 @@
 <?php
+
 namespace App\Http\Controllers\Consumer;
+
 use App\Http\Controllers\Controller;
 use App\Models\Consumer\Consumer;
 use App\Models\Consumer\ConsumerSdPayment;
@@ -12,7 +14,7 @@ class PayDepositController extends Controller
 {
     public function index()
     {
-        echo "Pay deposit controller";
+        return "PayDepositController";
     }
 
     /**
@@ -33,13 +35,16 @@ class PayDepositController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // Get consumer scheme details
         $consumer_scheme = ConsumersScheme::where('consumer_id', $id)->first();
+        // Validation
         $request->validate([
-            'amount' => ['required', 'numeric', 'gt:0', 'min:' . $consumer_scheme->scheme->min_payment, 'max:'.$consumer_scheme->balance],
+            'amount' => ['required', 'numeric', 'gt:0', 'min:1', 'max:' . $consumer_scheme->balance],
             'payment_type' => 'required',
             'transaction_no' => 'required',
             'notes' => 'nullable',
         ]);
+
         // Amount Calculations
         $balance_amt = $consumer_scheme->balance - $request->amount;
         $paid_deposit = $consumer_scheme->paid_deposit + $request->amount;
@@ -50,7 +55,7 @@ class PayDepositController extends Controller
             'transaction_number' => $request->transaction_no,
             'amount' => $request->amount,
             'balance' => $balance_amt,
-            'status_id' => 1, //1 = Paid
+            'status_id' => 1, // 1:Paid
             'created_by' => Auth::id(),
         ]);
         // Update Consumer Scheme
@@ -59,6 +64,8 @@ class PayDepositController extends Controller
             'balance' => $balance_amt,
             'status' => ($balance_amt == 0) ? 1 : 0, // 1 = Paid, 0 =Not Paid
         ]);
+
+        // Response
         return response()->json(['success' => 'SD Payment updated successfully']);
     }
 } 

@@ -5,53 +5,8 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-            <h4 class="fw-semibold text-decoration-underline">Consumer Details</h4>
-            <div class="card mb-2">
-                <div class="row">
-                    <div class="col-md-6 col-sm-6">
-                        <table class="table table-borderless">
-                            <tbody>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>:</td>
-                                    <td>{{ $consumer_scheme->consumer->titleDisplay->name }}&nbsp;{{ $consumer_scheme->consumer->name }}</td>
-                                </tr>
-                                <tr>
-                                    <td>CRN</td>
-                                    <td>:</td>
-                                    <td>{{ $consumer_scheme->consumer->crn }}</td>
-                                </tr>
-                                <tr>
-                                    <td>Consumer Type</td>
-                                    <td>:</td>
-                                    <td>{{ $consumer_scheme->consumer->segment->name }}</td>
-                                </tr>
-                                <tr>
-                                    <td>Status</td>
-                                    <td>:</td>
-                                    <td>{{ $consumer_scheme->consumer->status->name }}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="col-md-6 col-sm-6">
-                        <table class="table table-borderless">
-                            <tbody>
-                                <tr>
-                                    <td>Added Date</td>
-                                    <td>:</td>
-                                    <td>{{ $consumer_scheme->consumer->created_at->format('d-m-Y') }}</td>
-                                </tr>
-                                <tr>
-                                    <td>Added By</td>
-                                    <td>:</td>
-                                    <td>{{ $consumer_scheme->consumer->createdBy->first_name }}&nbsp;{{ $consumer_scheme->consumer->createdBy->last_name }}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+            {{-- Consumer basic details --}}
+            <x-consumer.basic-details :consumer="$consumer_scheme->consumer" type="2" class="bg-info-subtle" />
             <div class="row">
                 <div class="clearfix">
                     <div class="float-start">

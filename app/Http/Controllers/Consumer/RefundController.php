@@ -32,6 +32,8 @@ class RefundController extends Controller
         $refunds_list = ConsumerRefund::with(['consumer'])->when($request->has('key'), function ($q) use($request) {
                 $q->whereAny(['request_no'], 'like', '%' . $request->key . '%');
             })->paginate(50)->withQueryString();
+        
+        // Render output
         if($request->ajax()) {
             return view('consumers.refund.list-body', [
                 'refunds_list' => $refunds_list,
@@ -63,8 +65,10 @@ class RefundController extends Controller
         $end = microtime(true);
         $diff = $end - $start;
         echo "Time".$diff." seconds";
+
         return view('consumers.refund.show', ['refund_data' => $refund_data]);
     }
+
     /**
      * Inititate Refund Request 
      */
@@ -72,6 +76,7 @@ class RefundController extends Controller
     {
         $consumer_scheme = ConsumersScheme::where('consumer_id', $id)->first();
         $refund_data = ConsumerRefund::where('consumer_id', $id)->first();
+
         return view('consumers.refund.create', [
             'id' => $id, 
             'consumer_scheme' => $consumer_scheme,
@@ -120,14 +125,17 @@ class RefundController extends Controller
             'invoice_data' => $invoice_data,
         ]);
     }
+
     /**
      * Update Refund Process
      */
     public function processUpdate(Request $request, $id)
     {
+        // Validation
         $request->validate([
             'disconnect_amt' => 'required|numeric|min:0',
         ]);
+
         $refund_data = ConsumerRefund::find($id);
         $balance = BillInvoice::select(DB::raw('GROUP_CONCAT(id) as ids'), DB::raw('SUM(balance_amount) as balance_amount'))->where('status_id', '!=', 1)->where('consumer_id', $refund_data->consumer_id)->first();
         //Refund Calculations
@@ -184,7 +192,7 @@ class RefundController extends Controller
             'sd_paid' => $refund_data->consumer->scheme->paid_deposit,
             'outstanding_amount' => $balance->balance_amount,
             'disconnection_amount' => $request->disconnect_amt,
-            'invoice_id' => $inv_id,
+            'invoice_id' => isset($inv_id) ? $inv_id : null,
             'refund_amount' => $tot_refund_amt,
             'status_id' => 2,
             'created_by' => Auth::id(),
