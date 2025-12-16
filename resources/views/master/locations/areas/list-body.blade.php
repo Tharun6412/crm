@@ -1,19 +1,27 @@
 {{-- Areas list body --}}
 
-<div class="row gx-1 mb-1">
-    <div class="col-auto">
-        <input type="text" name="key" class="form-control form-control-sm" placeholder="Search..." value="{{ request()->key }}"/>
+<div class="d-flex justify-content-between">
+    <div class="row gx-1 mb-1">
+        <div class="col-auto">
+            <input type="text" name="key" class="form-control form-control-sm" placeholder="Search..." value="{{ request()->key }}"/>
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-success btn-sm"><i class="bi bi-search"></i></button>
+        </div>
+        <div class="col-auto">
+            <a href="{{ url('master/location/areas') }}" class="btn btn-warning btn-sm"><i class="bi bi-arrow-clockwise"></i></a>
+        </div>
+        <div class="col-auto">
+            ({{ $areas->count() }}) Records found
+        </div>
     </div>
-    <div class="col-auto">
-        <button type="submit" class="btn btn-success btn-sm"><i class="bi bi-search"></i></button>
-    </div>
-    <div class="col-auto">
-        <a href="{{ url('master/areas') }}" class="btn btn-warning btn-sm"><i class="bi bi-arrow-clockwise"></i></a>
-    </div>
-    <div class="col-auto">
-        ({{ $areas->count() }}) Records found
+    <div>
+        <a href="{{ url('master/location/areas/create') }}" class="btn btn-sm btn-success link-modal">
+            <i class="bi bi-plus-lg"></i>&nbsp;Create
+        </a>
     </div>
 </div>
+
 @if ($areas->count() > 0)
     <div class="table-responsive" style="min-height: 400px;">
         <table class="table table-bordered table-primary">
@@ -25,6 +33,7 @@
                     <th>District</th>
                     <th>GA<x-master.ga-filter class="float-end" /></th>
                     <th>Status</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -36,6 +45,9 @@
                         <td>{{ $item->ca->district->name ?? '' }}</td>
                         <td>{{ $item->ca->ga->name ?? '' }}</td>
                         <td><x-common.status :status="$item->status"/></td>
+                        <td>
+                            <a href="{{ url('master/location/areas/' . $item->id . '/edit') }}" class="link-modal fs-sm"><i class="bi bi-pencil-square"></i>&nbsp;Edit</a>
+                        </td>
                     </tr>
                 @endforeach
             </tbody>
@@ -44,3 +56,5 @@
 @else
     <div class="alert alert-info">No records found!</div>
 @endif
+{{-- Scripts --}}
+@include('scripts.link-modal')

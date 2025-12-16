@@ -30,7 +30,7 @@
                 <th>Status<x-consumer.statusFilter class="float-end" /></th>
                 <th>GA<x-master.gaFilter class="float-end" /></th>
                 <th>Scheme</th>
-                <th>Created At<x-master.date-Filter /></th>
+                <th>Created At<x-master.date-filter /></th>
                 <th width="2%" nowrap>Actions</th>
             </tr>
         </thead>

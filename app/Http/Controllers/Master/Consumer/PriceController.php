@@ -31,7 +31,7 @@ class PriceController extends Controller
                 $q->whereIn('ga_id', $request->geo_area);
             });
         })
-        ->paginate(50);
+        ->paginate(50)->withQueryString();
 
         // Render view
         if($request->ajax())

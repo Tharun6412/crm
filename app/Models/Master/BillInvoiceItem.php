@@ -2,6 +2,7 @@
 
 namespace App\Models\Master;
 
+use App\Models\Admin\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -20,12 +21,14 @@ class BillInvoiceItem extends Model
      * @var array <int string>
      */
     protected $fillable = [
+        'type_id',
         'code',
         'name',
-        'price_type',
-        'price',
-        'type_id',
         'hsn',
+        'price_type',
+        'basic',
+        'tax_value',
+        'price',
         'status',
         'created_by',
         'updated_by',
@@ -37,5 +40,21 @@ class BillInvoiceItem extends Model
     public function type() : BelongsTo
     {
         return $this->belongsTo(BillInvoiceItemType::class, 'type_id')->withDefault();
+    }
+
+    /**
+     * Relation with User
+     */
+    public function createdBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    /**
+     * Relation with User
+     */
+    public function updatedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'updated_by');
     }
 }

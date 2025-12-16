@@ -15,11 +15,19 @@ Route::middleware(['auth'])->group(function() {
 
     });
 
+    // Invoice master data
+    Route::prefix('invoice')->group(function () {
+        Route::resource('items', App\Http\Controllers\Master\Invoice\InvoiceItemsController::class);
+    });
+
     // Locations - States, Clusters, GAs, Districts, Charge areas, areas
-    Route::resource('states', App\Http\Controllers\Master\Location\StateController::class);
-    Route::resource('clusters', App\Http\Controllers\Master\Location\ClusterController::class);
-    Route::resource('geo-areas', App\Http\Controllers\Master\Location\GeoAreaController::class);
-    Route::resource('districts', App\Http\Controllers\Master\Location\DistrictController::class);
-    Route::resource('charge-areas', App\Http\Controllers\Master\Location\ChargeAreaController::class);
-    Route::resource('areas', App\Http\Controllers\Master\Location\AreaController::class);
+    // Invoice master data
+    Route::prefix('location')->group(function () {
+        Route::resource('states', App\Http\Controllers\Master\Location\StateController::class);
+        Route::resource('clusters', App\Http\Controllers\Master\Location\ClusterController::class);
+        Route::resource('geo-areas', App\Http\Controllers\Master\Location\GeoAreaController::class);
+        Route::resource('districts', App\Http\Controllers\Master\Location\DistrictController::class);
+        Route::resource('charge-areas', App\Http\Controllers\Master\Location\ChargeAreaController::class);
+        Route::resource('areas', App\Http\Controllers\Master\Location\AreaController::class);
+    });
 });

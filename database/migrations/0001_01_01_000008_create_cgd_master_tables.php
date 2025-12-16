@@ -149,12 +149,14 @@ return new class extends Migration
         // mst invoice bil items
         Schema::create('mst_bil_invoice_items', function(Blueprint $table) {
             $table->id();
-            $table->string('code', length:16)->nullable();
-            $table->string('name', length:60)->nullable();
-            $table->boolean('price_type')->nullable();
-            $table->double('price')->nullable();
             $table->bigInteger('type_id')->index()->nullable()->constrained(table:'mst_bil_invoice_item_types')->noActionOnDelete()->noActionOnUpdate();
+            $table->string('code', length:16)->nullable()->unique();
+            $table->string('name')->nullable();
             $table->string('hsn', length:16)->nullable();
+            $table->boolean('price_type')->nullable();
+            $table->double('basic')->nullable();
+            $table->decimal('tax_value', 4, 2)->nullable();
+            $table->double('price')->nullable();
             $table->boolean('status')->nullable();
             $table->foreignId('created_by')->nullable()->index()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();
             $table->foreignId('updated_by')->nullable()->index()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();
