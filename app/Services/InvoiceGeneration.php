@@ -22,6 +22,7 @@ class InvoiceGeneration
 
     /**
      * Invoice Number Generation
+     * @params state_id, state_code, inv_type
      */
     public static function invoiceNumberGenerate($inv_number_details) : string
     {

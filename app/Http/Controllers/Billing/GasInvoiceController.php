@@ -39,7 +39,7 @@ class GasInvoiceController extends Controller
                             }])
                             ->first();
         if($consumer) {
-            $invoice = BillInvoice::where('consumer_id', $id)->where('type_id', 2)->latest()->first();
+            $invoice = BillInvoice::where('consumer_id', $id)->where('type_id', 1)->latest()->first(); //1 = Gas Invoice
             $start_date = (!empty($invoice)) ? $invoice->consumption->last()->date_to->format('Y-m-d') : ($consumer->statusHistory->first()->created_at->format('Y-m-d'));
             $end_date = date('Y-m-d');
             $bill_days = Carbon::parse($start_date)->diffInDays($end_date);
@@ -98,7 +98,7 @@ class GasInvoiceController extends Controller
                                 ->orderBy('effective_from')
                                 ->get()->toArray();
         // If no price changes found, fetch the latest single record
-        if ($prices->isEmpty()) {
+        if (empty($prices)) {
             $prices = PriceHistory::where('district_id', $consumer->district_id)
                 ->where('segment_id', $consumer->segment_id)
                 ->orderBy('effective_from', 'desc')
@@ -156,7 +156,7 @@ class GasInvoiceController extends Controller
 
         // bill invoice array
         $invoice_ar = [
-            'type_id' => 2,
+            'type_id' => 1, //1 => Gas Invoice
             'consumer_id' => $consumer->id,
             'invoice_number' => $inv_number,
             'invoice_date' => $invoice_date,

@@ -338,6 +338,7 @@
     </div>
 </div>
 @include('scripts.ajax-file-submit', ['form' => 'add-domestic'])
+@include('scripts.datepicker', ['list' => ['expected_date']])
 <script type="text/javascript">
     // Get Districts By GA
     function getDistrictsByGa(ga) 

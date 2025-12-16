@@ -113,7 +113,7 @@
                 <span class="alert alert-info">No Previous Invoices Found..</span>
                 @endif
             </div>
-            @if (!empty($consumer->meter->meter_no) && !empty($startReading))
+            @if (!empty($consumer->meter->meter_no) && $startReading >= 0)
                 @if ($start_date == date('Y-m-d'))
                     <div class="alert alert-danger">Invoice already generated or consumer activated today.</div>
                 @elseif ($bill_days < 10)

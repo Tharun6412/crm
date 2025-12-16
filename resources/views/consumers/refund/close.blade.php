@@ -5,63 +5,8 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-            <h4 class="fw-semibold text-decoration-underline">Consumer Details</h4>
-            <div class="card mb-2">
-                <div class="row">
-                    <div class="col-md-6 col-sm-6">
-                        <table class="table table-borderless">
-                            <tbody>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>:</td>
-                                    <td>{{ $refund_data->consumer->titleDisplay->name }}&nbsp;{{ $refund_data->consumer->name }}</td>
-                                </tr>
-                                <tr>
-                                    <td>CRN</td>
-                                    <td>:</td>
-                                    <td>{{ $refund_data->consumer->crn }}</td>
-                                </tr>
-                                <tr>
-                                    <td>Consumer Type</td>
-                                    <td>:</td>
-                                    <td>{{ $refund_data->consumer->segment->name }}</td>
-                                </tr>
-                                <tr>
-                                    <td>Status</td>
-                                    <td>:</td>
-                                    <td>{{ $refund_data->consumer->status->name }}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="col-md-6 col-sm-6">
-                        <table class="table table-borderless">
-                            <tbody>
-                                <tr>
-                                    <td>Request Number</td>
-                                    <td>:</td>
-                                    <td>{{ $refund_data->request_no }}</td>
-                                </tr>
-                                <tr>
-                                    <td>Requested Date</td>
-                                    <td>:</td>
-                                    <td>{{ $refund_data->created_at->format('d-m-Y') }}</td>
-                                </tr>
-                                <tr>
-                                    <td>Requested By</td>
-                                    <td>:</td>
-                                    <td>{{ $refund_data->createdBy->first_name }}&nbsp;{{ $refund_data->createdBy->last_name }}</td>
-                                </tr>
-                                <tr>
-                                    <td>Refund Status</td>
-                                    <td>:</td>
-                                    <td>{{ $refund_data->status->name }}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+            {{-- Consumer details with refud details --}}
+            <x-consumer.refund-details :refund="$refund_data" type="2" class="bg-info-subtle" />
             <div class="border p-3 rounded mt-3"> 
                 <div class="row">
                     <h4 class="fw-semibold text-decoration-underline">Refund Details</h4>
@@ -80,7 +25,7 @@
                         </dl>
                     </div>
                 </div> 
-            </div>              
+            </div>
             <div class="border p-3 rounded mt-3" id="close-success">
                 <h4 class="fw-semibold text-decoration-underline">Update Payment Details</h4>
                 <form id="close-form" action="{{ url('consumers/refunds/closeRefund/'.$refund_data->id) }}" method="POST">
@@ -94,6 +39,15 @@
                                     <option value="{{ $type->id }}">{{ $type->name }}</option>
                                 @endforeach
                             </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-sm-4 text-end col-form-label">Transaction Date&nbsp;:<span class="text-danger">*</span></label>
+                        <div class="col-sm-8">
+                            <div class="input-group input-group-sm">
+                                <input name="transaction_date" id="transaction_date" class="form-control form-control-sm" placeholder="Enter Transaction Date (DD-MM-YYYY)" type="text"/>
+                                <span class="input-group-text"><i class="bi bi-calendar2-event"></i></span>
+                            </div>
                         </div>
                     </div>
                     <div class="row">
@@ -127,3 +81,4 @@
     </div>
 </div>
 @include('scripts.ajax-form-submit', ['form' => 'close'])
+@include('scripts.datepicker', ['list' => ['transaction_date']])

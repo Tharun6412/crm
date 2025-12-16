@@ -9,46 +9,6 @@
             <x-consumer.refund-details :refund="$refund_data" type="2" class="bg-info-subtle" />
             <div class="row">
                 <div class="clearfix">
-                    <div class="float-start">
-                        <span class="h5 text-decoration-underline">Security Deposit Details</span>
-                    </div>
-                    <div class="float-end">
-                        <span><strong>Scheme</strong>&nbsp;:&nbsp;{{ $refund_data->consumer->scheme->scheme->name }}</span>
-                    </div>
-                </div>
-            </div>
-            <div class="mt-2">
-                <table class="table table-bordered"> 
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Security Deposit</th>
-                            <th>Consumption Deposit</th>
-                            <th>Total Deposit</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Charges</td>
-                            <td class="text-end">{{ numberFormat($refund_data->consumer->scheme->security_deposit) }}</td>
-                            <td class="text-end">{{ numberFormat($refund_data->consumer->scheme->consumption_deposit) }}</td>
-                            <td class="text-end">{{ numberFormat($refund_data->consumer->scheme->total_deposit) }}</td>
-                        </tr>
-                        <tr>
-                            <td>Payments</td>
-                            <td class="text-end" colspan="2">{{ numberFormat($refund_data->consumer->scheme->paid_deposit) }}</td>
-                            <td class="text-end">{{ numberFormat($refund_data->consumer->scheme->paid_deposit) }}</td>
-                        </tr>
-                        <tr>
-                            <td class="text-end" colspan="3">Balance Deposit</td>
-                            <td class="text-end">{{ numberFormat($refund_data->consumer->scheme->balance) }}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="row">
-                <div class="clearfix">
                     <div class="float-left">
                         <strong class="text-decoration-underline">Outstanding Balance Sheet</strong>
                     </div>

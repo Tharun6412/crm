@@ -93,6 +93,7 @@ class RefundController extends Controller
             'status_id' => 1, //Refund Request
             'created_by' => Auth::id(),
         ]);
+        // Request Number Generation
         $request_number_create = "R".str_pad($add_refund->id, 6,0,STR_PAD_LEFT);
         ConsumerRefund::where('id', $add_refund->id)->update(['request_no' => $request_number_create]);
         // Refund Status
@@ -253,6 +254,7 @@ class RefundController extends Controller
     {
         $request->validate([
             'payment_type' => 'required',
+            'transaction_date' => 'required|before_or_equal:today',
             'transaction_no' => 'required',
             'notes' => 'required',
         ]);
@@ -260,7 +262,7 @@ class RefundController extends Controller
         ConsumerRefund::where('id', $id)->update([
             'payment_type_id' => $request->payment_type,
             'transaction_id' => $request->transaction_no,
-            'transaction_date' => Carbon::now()->toDateString(),
+            'transaction_date' => Carbon::createFromFormat('d-m-Y', $request->transaction_date),
             'status_id' => '4'
         ]);
         // Refund Status
