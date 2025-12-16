@@ -38,6 +38,17 @@ class PriceHistory extends Model
     ];
 
     /**
+     * Casts Dates
+     */
+    public function casts()
+    {
+        return [
+            'effective_from' => 'date',
+            'effective_to' => 'date',
+        ];
+    }
+
+    /**
      * Relation with Price
      */
     public function price() : BelongsTo

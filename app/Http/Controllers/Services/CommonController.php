@@ -17,9 +17,11 @@ class CommonController extends Controller
      * 
      * @param $ga_id
      */
-    public function gaDistricts()
+    public function gaDistricts(Request $request)
     {
-        return ('districts');
+        $districts = District::select('id', 'name')->where('ga_id', $request->ga_id)->get();
+
+        return response()->json(['districts' => $districts]);
     }
 
     /**

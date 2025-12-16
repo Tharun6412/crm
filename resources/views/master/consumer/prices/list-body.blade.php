@@ -33,8 +33,8 @@
                     <th class="text-end">Basic Price</th>
                     <th class="text-end">VAT%</th>
                     <th class="text-end">RSP</th>
-                    <th>Affective From</th>
-                    <th>Affective To</th>
+                    <th>Effective From</th>
+                    <th>Effective To</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -47,10 +47,11 @@
                         <td class="text-end">{{ numberFormat($price->basic_price, 2) }}</td>
                         <td class="text-end">{{ numberFormat($price->tax_value, 2) }}</td>
                         <td class="text-end">{{ numberFormat($price->rsp, 2) }}</td>
-                        <td>{{ $price->effective_from }}</td>
-                        <td>{{ $price->effective_to }}</td>
+                        <td>{{ $price->effective_from?->format('d-m-Y') }}</td>
+                        <td>{{ $price->effective_to?->format('d-m-Y') }}</td>
                         <td>
-                            drop down
+                            <a href="{{ url('master/consumer/prices/' . $price->id) }}" class="link-canvas fs-sm"><i class="bi bi-chevron-right"></i>&nbsp;View</a>
+                            <a href="{{ url('master/consumer/prices/' . $price->id . '/edit') }}" class="link-modal fs-sm"><i class="bi bi-pencil-square"></i>&nbsp;Edit</a>
                         </td>
                     </tr>
                 @endforeach
@@ -66,3 +67,4 @@
 
 {{-- Scripts --}}
 @include('scripts.link-modal')
+@include('scripts.link-canvas')

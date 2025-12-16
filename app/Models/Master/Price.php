@@ -2,8 +2,10 @@
 
 namespace App\Models\Master;
 
+use App\Models\Admin\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Price extends Model
 {
@@ -37,6 +39,25 @@ class Price extends Model
     ];
 
     /**
+     * Casts Dates
+     */
+    public function casts()
+    {
+        return [
+            'effective_from' => 'date',
+            'effective_to' => 'date',
+        ];
+    }
+
+    /**
+     * Relation with Price History
+     */
+    public function history(): HasMany
+    {
+        return $this->hasMany(PriceHistory::class)->orderBy('created_at', 'desc');
+    }
+
+    /**
      * Relation with Segments
      */
     public function segment(): BelongsTo
@@ -53,6 +74,18 @@ class Price extends Model
     }
 
     /**
-     * Relation with Users
+     * Relation with Users created_by
      */
+    public function createdBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    /**
+     * Relation with Users updated_by
+     */
+    public function updatedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'updated_by');
+    }
 }
