@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1\Application;
 
 use App\Http\Controllers\Controller;
 use App\Models\Consumer\Consumer;
+use App\Models\Invoice\BillInvoice;
 use App\Traits\ApiResponse;
 use Illuminate\Http\Request;
 
@@ -39,7 +40,7 @@ class ConsumerController extends Controller
     public function details(Request $request, $id)
     {
         // Find Consumer
-        $consumer = Consumer::when((!$request->user()->isAdmin() AND !$request->user()->isSuperAdmin()), function ($q) use($request) {
+        $consumer = Consumer::with(['scheme', 'sdPayment'])->when((!$request->user()->isAdmin() AND !$request->user()->isSuperAdmin()), function ($q) use($request) {
                 $q->whereIn('ga_id', $request->user()->ga()->pluck('ga_id')->toArray());
             })->find($id);
 
@@ -48,6 +49,11 @@ class ConsumerController extends Controller
             return response()->json(['error' => 'Consumer not found'], 403);
         }
         // Get consumer details
-        return response()->json(['consumer' => $consumer], 200);
+        return response()->json([
+            'consumer' => $consumer->makeHidden(['scheme', 'sdPayment']),
+            'scheme_details' => $consumer->scheme,
+            'sd_paid_history' => $consumer->sdPayment,
+            // 'consumer_invoices' => BillInvoice::where('consumer_id', $id)->get(),
+        ], 200);
     }
 }

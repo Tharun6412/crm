@@ -29,16 +29,13 @@ class AuthenticationController extends Controller
         $token = $user->createToken('api-token')->plainTextToken;
 
         // Get user roles and app modules
-        $roles = $user->roles->pluck('name', 'id')->toArray();
-        $app_modules = $user->roles->flatMap(function ($role) {
-            return $role->appModules;
-        })->unique('id')->pluck('name','code')->toArray();
+        $app_modules = $user->roles->flatMap->appModules->unique('id')->values()->map->only(['id', 'name', 'code'])->toArray();
 
         return response()->json([
             'token' => $token,
-            'user' => $user,
-            'user_gas' => $user->ga()->pluck('name', 'ga_id')->toArray(),
-            'roles' => $roles,
+            'user' => $user->makeHidden(['roles']),
+            'user_gas' => $user->ga()->select('name', 'ga_id')->get()->makeHidden('pivot'),
+            'roles' => $user->roles()->select('adm_roles.id', 'adm_roles.name')->get()->makeHidden('pivot'),
             'modules' => $app_modules,
         ]);
     }

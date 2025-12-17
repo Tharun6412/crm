@@ -39,7 +39,7 @@
                 @foreach ($consumers as $consumer)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
-                        <td><a href="{{ url('consumers/' . $consumer->id) }}">{{ $consumer->crn }}</a></td>
+                        <td><x-auth.link href="{{ url('consumers/' . $consumer->id) }}">{{ $consumer->crn }}</x-auth.link></td>
                         <td>{{ $consumer->name }}</td>
                         <td>{{ $consumer->segment->name }}</td>
                         <td>

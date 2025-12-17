@@ -46,15 +46,15 @@
                                     Actions
                                 </button>
                                 <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item link-modal" href="{{ url('consumers/refunds/' . $list->id) }}"><i class="bi bi-chevron-right"></i>&nbsp;View</a></li>
+                                    <li><x-auth.link class="dropdown-item link-modal" href="{{ url('consumers/refunds/' . $list->id) }}"><i class="bi bi-chevron-right"></i>&nbsp;View</x-auth.link></li>
                                     @if ($list->status_id == 1)
-                                        <li><a class="dropdown-item link-modal" href="{{ url('consumers/refunds/process/' . $list->id) }}"><i class="bi bi-chevron-right"></i>&nbsp;Process</a></li>
+                                        <li><x-auth.link class="dropdown-item link-modal" href="{{ url('consumers/refunds/process/' . $list->id) }}"><i class="bi bi-chevron-right"></i>&nbsp;Process</x-auth.link></li>
                                     @endif
                                     @if ($list->status_id == 2)
-                                        <li><a class="dropdown-item link-modal" href="{{ url('consumers/refunds/approve/' . $list->id) }}"><i class="bi bi-chevron-right"></i>&nbsp;Approve</a></li>
+                                        <li><x-auth.link class="dropdown-item link-modal" href="{{ url('consumers/refunds/approve/' . $list->id) }}"><i class="bi bi-chevron-right"></i>&nbsp;Approve</x-auth.link></li>
                                     @endif
                                     @if ($list->status_id == 3)
-                                        <li><a class="dropdown-item link-modal" href="{{ url('consumers/refunds/close/' . $list->id) }}"><i class="bi bi-chevron-right"></i>&nbsp;Close</a></li>
+                                        <li><x-auth.link class="dropdown-item link-modal" href="{{ url('consumers/refunds/close/' . $list->id) }}"><i class="bi bi-chevron-right"></i>&nbsp;Close</x-auth.link></li>
                                     @endif
                                 </ul>
                             </div>
