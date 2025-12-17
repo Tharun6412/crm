@@ -214,13 +214,7 @@ return new class extends Migration
             $table->string('name', length:60)->nullable();
             $table->timestamps();
         });
-        // mst cmp Categories
-        Schema::create('mst_cmp_categories', function(Blueprint $table) {
-            $table->id();
-            $table->string('name', length:60)->nullable();
-            $table->foreignId('parent_id')->nullable()->constrained('mst_cmp_categories')->nullOnDelete();
-            $table->timestamps();
-        });
+
         // mst cmp status
         Schema::create('mst_cmp_status', function(Blueprint $table) {
             $table->id();
@@ -251,6 +245,22 @@ return new class extends Migration
             $table->string('name', length:60)->nullable(); //Low | Medium | High
             $table->timestamps();
         });
+        
+        // mst cmp Categories
+        Schema::create('mst_cmp_categories', function(Blueprint $table) {
+            $table->id();
+            $table->string('name', length:60)->nullable();
+            $table->decimal('resolution', 4, 2)->nullable();
+            $table->boolean('resolution_type')->nullable();
+            $table->foreignId('type_id')->nullable()->index()->constrained(table:'mst_cmp_types')->noActionOnDelete()->noActionOnUpdate();
+            $table->foreignId('department_id')->nullable()->index()->constrained(table:'mst_departments')->noActionOnDelete()->noActionOnUpdate();
+            $table->foreignId('parent_id')->nullable()->constrained('mst_cmp_categories')->nullOnDelete();
+            $table->integer('position')->nullable();
+            $table->foreignId('created_by')->nullable()->index()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();
+            $table->foreignId('updated_by')->nullable()->index()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();
+            $table->timestamps();
+        });
+
         // mst sd payment status
         Schema::create('mst_sd_payment_status', function(Blueprint $table) {
             $table->id();

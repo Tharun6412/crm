@@ -18,6 +18,17 @@ Route::middleware(['auth'])->group(function() {
     // Invoice master data
     Route::prefix('invoice')->group(function () {
         Route::resource('items', App\Http\Controllers\Master\Invoice\InvoiceItemsController::class);
+        Route::resource('types', App\Http\Controllers\Master\Invoice\InvoiceTypesController::class);
+    });
+
+    // Payment master data
+    Route::prefix('payment')->group(function () {
+        Route::resource('types', App\Http\Controllers\Master\Payments\PaymentTypesController::class);
+    });
+
+    // Complaint master data
+    Route::prefix('complaint')->group(function () {
+        Route::resource('categories', App\Http\Controllers\Master\Complaint\CategoriesController::class);
     });
 
     // Locations - States, Clusters, GAs, Districts, Charge areas, areas

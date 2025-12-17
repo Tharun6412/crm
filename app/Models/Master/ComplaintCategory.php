@@ -2,8 +2,10 @@
 
 namespace App\Models\Master;
 
+use App\Models\Admin\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class ComplaintCategory extends Model
 {
@@ -21,6 +23,62 @@ class ComplaintCategory extends Model
      */
     protected $fillable = [
         'name',
+        'resolution',
+        'resolution_type',
+        'type_id',
+        'department_id',
         'parent_id',
+        'position',
+        'status',
+        'created_by',
+        'updated_by',
     ];
+
+    /**
+     * Parent relation
+     */
+    public function parent(): BelongsTo
+    {
+        return $this->belongsTo(ComplaintCategory::class, 'parent_id');
+    }
+
+    /**
+     * Child relation
+     */
+    public function children(): HasMany
+    {
+        return $this->hasMany(ComplaintCategory::class, 'parent_id')->orderBy('position');
+    }
+
+    /**
+     * Relation with type
+     */
+    public function type(): BelongsTo
+    {
+        return $this->belongsTo(ComplaintType::class);
+    }
+
+    /**
+     * Relation with Department
+     */
+    public function department(): BelongsTo
+    {
+        return $this->belongsTo(Department::class);
+    }
+
+    /**
+     * Relation with User
+     */
+    public function createdBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    /**
+     * Relation with User
+     */
+    public function updatedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'updated_by');
+    }
 }
