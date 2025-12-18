@@ -56,8 +56,8 @@ class Authentication extends Controller
         ];
         session()->put('user', $user);
 
-        // Routing to home page
-        return redirect()->route('home');
+        // Redirect to intended page or Home
+        return redirect()->intended('home');
     }
 
     /**
@@ -72,7 +72,7 @@ class Authentication extends Controller
         // Destroy circular module published cookie
         Cookie::queue(Cookie::forget('published'));
 
-        // Response
+        // Redirect to Home
         return redirect()->route('home');
     }
 }

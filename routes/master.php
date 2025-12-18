@@ -29,6 +29,7 @@ Route::middleware(['auth'])->group(function() {
     // Complaint master data
     Route::prefix('complaint')->group(function () {
         Route::resource('categories', App\Http\Controllers\Master\Complaint\CategoriesController::class);
+        Route::resource('contextual-data', App\Http\Controllers\Master\Complaint\ContextualDataController::class);
     });
 
     // Locations - States, Clusters, GAs, Districts, Charge areas, areas

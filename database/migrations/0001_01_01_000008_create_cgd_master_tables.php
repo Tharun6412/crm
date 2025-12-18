@@ -256,6 +256,7 @@ return new class extends Migration
             $table->foreignId('department_id')->nullable()->index()->constrained(table:'mst_departments')->noActionOnDelete()->noActionOnUpdate();
             $table->foreignId('parent_id')->nullable()->constrained('mst_cmp_categories')->nullOnDelete();
             $table->integer('position')->nullable();
+            $table->boolean('status')->nullable();
             $table->foreignId('created_by')->nullable()->index()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();
             $table->foreignId('updated_by')->nullable()->index()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();
             $table->timestamps();

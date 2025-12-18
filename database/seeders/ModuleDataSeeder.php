@@ -87,6 +87,9 @@ class ModuleDataSeeder extends Seeder
                 ['id' => 56, 'position' => 2, 'status' => 1, 'icon' => 'bi-list-task', 'package_id' => 2, 'parent_id' => 54, 'name' => 'Invoice items', 'url' => 'master/invoice/items'],
             ['id' => 57, 'position' => 4, 'status' => 1, 'icon' => 'bi-receipt', 'package_id' => 2, 'parent_id' => 7, 'name' => 'Payments', 'url' => ''],
                 ['id' => 58, 'position' => 1, 'status' => 1, 'icon' => 'bi-tags', 'package_id' => 2, 'parent_id' => 57, 'name' => 'Types', 'url' => 'master/payment/types'],
+            ['id' => 59, 'position' => 5, 'status' => 1, 'icon' => 'bi-envelope-paper', 'package_id' => 2, 'parent_id' => 7, 'name' => 'Complaints', 'url' => ''],
+                ['id' => 60, 'position' => 1, 'status' => 1, 'icon' => 'bi-inboxes', 'package_id' => 2, 'parent_id' => 59, 'name' => 'Categories', 'url' => 'master/payment/types'],
+                ['id' => 61, 'position' => 1, 'status' => 1, 'icon' => 'bi-suit-club', 'package_id' => 2, 'parent_id' => 59, 'name' => 'Contextual Data', 'url' => 'master/complaint/contextual-data'],
         ]);
 
         /**
