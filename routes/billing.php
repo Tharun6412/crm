@@ -11,7 +11,9 @@ Route::middleware(['auth', ModuleAccess::class])->group(function() {
 
 
     // Invoice Controller
-    Route::resource('invoice', App\Http\Controllers\Billing\InvoiceController::class);
     Route::get('invoice/create/{consumer}', [App\Http\Controllers\Billing\InvoiceController::class, 'create'])
      ->name('invoice.create.withConsumer');
+    Route::get('invoice/invoiceItems', [App\Http\Controllers\Billing\InvoiceController::class, 'invoiceItems']);
+    Route::get('invoice/renderTax', [App\Http\Controllers\Billing\InvoiceController::class, 'renderTax']);
+    Route::resource('invoice', App\Http\Controllers\Billing\InvoiceController::class);
 });
