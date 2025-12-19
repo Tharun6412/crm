@@ -7,11 +7,14 @@ use App\Models\Consumer\Consumer;
 use App\Models\Master\ComplaintCategory;
 use App\Models\Master\ComplaintMedia;
 use App\Models\Master\ComplaintPriority;
+use App\Models\Master\ComplaintSegment;
 use App\Models\Master\ComplaintStatus;
 use App\Models\Master\ComplaintType;
 use App\Models\Master\Segment;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Complaint extends Model
 {
@@ -59,7 +62,7 @@ class Complaint extends Model
      */
     public function segment() :BelongsTo
     {
-        return $this->belongsTo(Segment::class, 'segment_id')->withDefault();
+        return $this->belongsTo(ComplaintSegment::class, 'segment_id')->withDefault();
     }
 
     /**
@@ -101,6 +104,13 @@ class Complaint extends Model
     }
 
     /**
+     * Relation with Complaint StatusHistory 
+     */
+    public function statusHistory():HasMany
+    {
+        return $this->hasMany(ComplaintsStatus::class, 'complaint_id', 'id')->orderBy('created_at', 'desc');
+    }
+    /**
      * Relation with Type
      */
     public function type(): BelongsTo
@@ -121,5 +131,13 @@ class Complaint extends Model
     public function updatedBy():BelongsTo
     {
         return $this->belongsTo(User::class, 'updated_by')->withDefault();
+    }
+
+    /**
+     * Relation with Complaint Assign
+     */
+    public function assign():HasOne
+    {
+        return $this->hasOne(ComplaintAssign::class, 'complaint_id', 'id');
     }
 }

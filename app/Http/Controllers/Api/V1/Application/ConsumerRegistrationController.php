@@ -16,6 +16,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\Consumer\Consumer;
+use App\Models\Consumer\ConsumerData;
 
 /**
  * Consumer Registration Controller
@@ -85,6 +86,12 @@ class ConsumerRegistrationController extends Controller
         // Temporary CRN Generation
         $crn_code = "TR".$request->geo_area.$request->charge_area.str_pad($add_consumer->id, 5,'0', STR_PAD_LEFT);
         Consumer::where('id', $add_consumer->id)->update(['t_crn' => $crn_code]);
+        // Consumers Data with GeoCoordinates
+        ConsumerData::create([
+            'consumer_id' => $add_consumer->id,
+            'lat' => $request->lat,
+            'lng' => $request->lng,
+        ]);
         // Documents Data Preparation
         if($request->has('document_type')) {
             $documents_bulk = DocumentUpload::uploadBulk($request, 'domestic');
