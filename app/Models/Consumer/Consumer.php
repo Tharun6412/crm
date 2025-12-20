@@ -15,7 +15,6 @@ use App\Models\Master\Ga;
 use App\Models\Master\PaymentType;
 use App\Models\Master\Segment;
 use App\Models\Master\State;
-use App\Models\Master\Title;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -103,21 +102,6 @@ class Consumer extends Model
         return Attribute::get(fn () => "{$this->fname} {$this->lname}");
     }
 
-    /**
-     * Relation with Title
-     */
-    public function titleDisplay(): BelongsTo
-    {
-        return $this->belongsTo(Title::class, 'title')->withDefault();
-    }
-    /**
-     * Relation with cof Column
-     */
-    public function cofDisplay():BelongsTo
-    {
-        return $this->belongsTo(Title::class, 'cof')->withDefault();
-    }
-    
     /**
      * Relation with Segments
      */
