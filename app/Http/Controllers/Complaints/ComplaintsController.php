@@ -1,0 +1,255 @@
+<?php
+
+namespace App\Http\Controllers\Complaints;
+
+use App\Http\Controllers\Controller;
+use App\Http\Controllers\DocumentCentre\DocumentUpload;
+use App\Models\Admin\User;
+use App\Models\Complaint\Complaint;
+use App\Models\Complaint\ComplaintAssign;
+use App\Models\Complaint\ComplaintDocument;
+use App\Models\Complaint\ComplaintsStatus;
+use App\Models\Consumer\Consumer;
+use App\Models\Master\ComplaintCategory;
+use App\Models\Master\ComplaintMedia;
+use App\Models\Master\ComplaintPriority;
+use App\Models\Master\ComplaintSegment;
+use App\Models\Master\ComplaintStatus;
+use App\Models\Master\ComplaintType;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
+class ComplaintsController extends Controller
+{
+    /**
+     * list of Complaints
+     */
+    public function index(Request $request)
+    {
+        $complaints = Complaint::when($request->has('key'), function ($q) use($request) {
+                $q->whereAny(['crn', 'code'], 'like', '%' . $request->key . '%');
+            })->paginate(50)->withQueryString();
+        if($request->ajax()) {
+            return view('complaints.list-body', ['complaints' => $complaints]);
+        }else {
+            return view('complaints.list', ['complaints' => $complaints]);
+        }
+    }
+
+    /**
+     * To Show the Complaint Details
+     */
+    public function show(Request $request, $id)
+    {
+        $complaint = Complaint::find($id);
+        return view('complaints.show', ['complaint' => $complaint]);
+    }
+    /**
+     * Create a Complaint For Consumer
+     * @param int id
+     */
+    public function create(Request $request, $id)
+    {
+        $consumer = Consumer::find($id);
+        $types = ComplaintType::all();
+        $media = ComplaintMedia::all();
+        $segments = ComplaintSegment::all();
+        $priorities = ComplaintPriority::all();
+        $categories = ComplaintCategory::whereNull('parent_id')->get();
+        return view('complaints.create', [
+            'consumer' => $consumer,
+            'types' => $types,
+            'media' => $media,
+            'segments' => $segments,
+            'categories' => $categories,
+            'priorities' => $priorities,
+            'sub_categories' => [],
+        ]);
+    }
+
+    /**
+     * Get Sub categories List
+     */
+    public function getSubCategories(Request $request)
+    {
+        $sub_categories = ComplaintCategory::where('parent_id', $request->category_id)->get();
+        return response()->json(['sub_categories' => $sub_categories]);
+    }
+
+    /**
+     * Get Sub Category Details
+     */
+    public function getSubCategoryDetails(Request $request)
+    {
+        $now = Carbon::now();
+        $category_details = ComplaintCategory::with(['department', 'type'])->where('id', $request->sub_category_id)->first();
+        $resolution_val = (int)$category_details->resolution;
+        if($category_details->resolution_type == 1) {
+            $est_close_at = $now->addDays($resolution_val);
+        }else {
+            $est_close_at = $now->addHours($resolution_val);
+        }
+        return response()->json([
+            'category_details' => $category_details,
+            'estimation_time' => $est_close_at->toDateTimeString(),
+        ]);
+    }
+
+    /**
+     * To Add/Insert the Complaint
+     * 1 = Open
+     */
+    public function store(Request $request, $id)
+    {
+        $request->validate([
+            'segment_id' => 'required',
+            'type_id' => 'required',
+            'media_id' => 'required',
+            'category_id' => 'required',
+            'priority_id' => 'required',
+            'sub_category_id' => 'required',
+        ]);
+        // Data Preparation
+        // Complaints
+        $add_complaint = Complaint::create([
+            'consumer_id' => $id,
+            'category_id' =>  $request->sub_category_id,
+            'segment_id' => $request->segment_id,
+            'type_id' => $request->type_id,
+            'media_id' => $request->media_id,
+            'priority_id' => $request->priority_id,
+            'status_id' => 1,
+            'created_by' => Auth::id(),
+        ]);
+        $complaint_number = str_pad($add_complaint->id, 9, "0", STR_PAD_LEFT);
+        Complaint::where('id', $add_complaint->id)->update(['code' => $complaint_number]);
+        if(!empty($request->dc_file_list)) {
+            $add_document = DocumentUpload::uploadBulk($request);
+            foreach($request->dc_file_list as $key => $file) {
+                ComplaintDocument::create([
+                    'complaint_id' => $add_complaint->id,
+                    'file_id' => $add_document['file_list'][$key]['file_id'],
+                ]);
+            }
+        }
+        // Complaint Status
+        ComplaintsStatus::create([
+            'complaint_id' => $add_complaint->id,
+            'status_id' => 1,
+            'created_by' => Auth::id(),
+        ]);
+        return response()->json(['success' => 'Complaint raised successfully']);
+    }
+
+    /**
+     * Assign Complaint
+     */
+    public function assign(Request $request, $id)
+    {
+        $complaint = Complaint::find($id);
+        $users = User::where('department_id', $complaint->category->department_id)->get();
+        return view('complaints.assign', [
+            'complaint' => $complaint,
+            'users' => $users,
+        ]);
+    }
+    /**
+     * To Update Assigned user
+     * 2 = Assign
+     */
+    public function assignTo(Request $request, $id)
+    {
+        $request->validate([
+            'assign_id' => 'required',
+            'notes' => 'required',
+        ]);
+        // Assign Complaint
+        ComplaintAssign::create([ 
+            'complaint_id' => $id,
+            'assigned_to' => $request->assign_id,
+            'notes' => $request->notes,
+            'created_by' => Auth::id(),
+        ]);
+        // Complaint Status Update
+        Complaint::where('id', $id)->update(['status_id' => 2]);
+        // Complaint Status History
+        ComplaintsStatus::create([
+            'complaint_id' => $id,
+            'status_id' => 2,
+            'notes' => $request->notes,
+            'created_by' => Auth::id(),
+        ]);
+        return response()->json(['success' => 'Complaint assigned successfully']);
+    }
+
+    /**
+     * In Progress
+     */
+    public function inProgress(Request $request, $id)
+    {
+        $complaint = Complaint::find($id);
+        return view('complaints.in-progress', [
+            'complaint' => $complaint,
+            'status_id' => 3,
+        ]);
+    }
+
+    /**
+     * Investigate
+     */
+    public function investigate(Request $request, $id)
+    {
+        $complaint = Complaint::find($id);
+        return view('complaints.investigate', [
+            'complaint' => $complaint,
+            'status_id' => 4,
+        ]);
+    }
+
+    /**
+     * Close
+     */
+    public function close(Request $request, $id)
+    {
+        $complaint = Complaint::find($id);
+        return view('complaints.close', [
+            'complaint' => $complaint,
+            'status_id' => 5,
+        ]);
+    }
+
+    /**
+     * Cancel
+     */
+    public function cancel(Request $request, $id)
+    {
+        $complaint = Complaint::find($id);
+        return view('complaints.close', [
+            'complaint' => $complaint,
+            'status_id' => 6,
+        ]);
+    }
+    /**
+     * Status Update
+     */
+    public function statusChange(Request $request, $id, $status_id)
+    {
+        $request->validate([
+            'notes' => 'required',
+        ]);
+        // Complaint Status Update
+        Complaint::where('id', $id)->update([
+            'status_id' => $status_id,
+            'closed_at' => ($status_id == 5) ? Carbon::now() : NULL,
+        ]);
+        // Complaint Status History
+        ComplaintsStatus::create([
+            'complaint_id' => $id,
+            'status_id' => $status_id,
+            'notes' => $request->notes,
+            'created_by' => Auth::id(),
+        ]);
+        return response()->json(['success' => 'consumer status updated successfully']);
+    }
+}

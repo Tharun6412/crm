@@ -7,7 +7,7 @@ use App\Models\Master\ComplaintStatus;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class ComplaintComment extends Model
+class ComplaintsStatus extends Model
 {
     /**
      * The table associated with the model

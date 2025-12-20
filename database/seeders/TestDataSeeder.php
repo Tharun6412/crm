@@ -74,5 +74,16 @@ class TestDataSeeder extends Seeder
             ['id' => 57, 'position' => 4, 'status' => 1, 'icon' => 'bi-receipt', 'package_id' => 2, 'parent_id' => 7, 'name' => 'Payments', 'url' => ''],
                 ['id' => 58, 'position' => 1, 'status' => 1, 'icon' => 'bi-tags', 'package_id' => 2, 'parent_id' => 7, 'name' => 'Types', 'url' => 'master/payment/types'],
         ]);
+
+        // Complaint Status
+        DB::table('mst_cmp_status')->insert([
+            ['name' => 'Open'],
+            ['name' => 'Assigned'],
+            ['name' => 'In-Progress'],
+            ['name' => 'Investigation'],
+            ['name' => 'Closed'],
+            ['name' => 'Cancel'],
+        ]);
     }
+
 }
