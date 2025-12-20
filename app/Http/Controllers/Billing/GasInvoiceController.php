@@ -1,4 +1,5 @@
 <?php
+
 namespace APP\Http\Controllers\Billing;
 
 use App\Http\Controllers\Controller;
@@ -12,45 +13,46 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 
-/**
- * This controller is used for the DPNG Gas Bill generation purpose
- * 
- */
 class GasInvoiceController extends Controller
 {
     /**
-     * index 
+     * 
      */
-   public function index() 
-   {
+    public function index() 
+    {
         return  "Index Function";
-   }
-   
-   /**
-    * Create a Consumer Gas Invoice.
-    * @params $id -> Consumer id
-    */
-   public function create($id)
-   {
+    }
+    
+    /**
+     * Create Gas invoice
+     * 
+     * @param $id consumer_id
+     */
+    public function create($id)
+    {
         $consumer = Consumer::where('id', $id)
-                            ->where('status_id', 6)
-                            ->with(['statusHistory' => function ($q) {
-                                $q->where('status_id', 6)->latest()->limit(1);
-                            }])
-                            ->first();
+            ->where('status_id', 6)
+            ->with(['statusHistory' => function ($q) {
+                $q->where('status_id', 6)->latest()->limit(1);
+            }])->first();
+        
+        // Check consumer is billable
         if($consumer) {
-            $invoice = BillInvoice::where('consumer_id', $id)->where('type_id', 1)->latest()->first(); //1 = Gas Invoice
+            // 1. Get latest gas invoice if exists
+            $invoice = BillInvoice::where('consumer_id', $id)->where('type_id', 1)->latest()->first();
+
             $start_date = (!empty($invoice)) ? $invoice->consumption->last()->date_to->format('Y-m-d') : ($consumer->statusHistory->first()->created_at->format('Y-m-d'));
             $end_date = date('Y-m-d');
             $bill_days = Carbon::parse($start_date)->diffInDays($end_date);
+
+            // 2. Get the gas price for the billing
             $prices = PriceHistory::where('district_id', $consumer->district_id)
-                                        ->where('segment_id', $consumer->segment_id)
-                                        ->where(function ($q) use ($start_date, $end_date) {
-                                            $q->where('effective_from', '<=', $end_date)
-                                            ->where('effective_to', '>=', $start_date);
-                                        })
-                                        ->orderBy('effective_from')
-                                        ->get();
+                ->where('segment_id', $consumer->segment_id)
+                ->where(function ($q) use ($start_date, $end_date) {
+                    $q->where('effective_from', '<=', $end_date)->where('effective_to', '>=', $start_date);
+                })
+                ->orderBy('effective_from')->get();
+            
             // If no price changes found, fetch the latest single record
             if ($prices->isEmpty()) {
                 $prices = PriceHistory::where('district_id', $consumer->district_id)
@@ -59,6 +61,8 @@ class GasInvoiceController extends Controller
                     ->limit(1)
                     ->get();  // <-- IMPORTANT: get() returns a collection
             }
+
+            // Render output
             return view('consumers.bills.create', [
                 'consumer' => $consumer, 
                 'invoice' => $invoice, 
@@ -68,35 +72,40 @@ class GasInvoiceController extends Controller
         }
         else {
             // Consumer not found or not in active status.
-            return "Unable to process: Consumer missing or not in active status.";
+            abort(403, 'Invalid consumer for billing');
         }
-   }
-   /**
-    *  Submit the invoice
-    */
-   public function store(Request $request)
-   {
+    }
+
+    /**
+     * Save gas invoice
+     */
+    public function store(Request $request)
+    {
+        // Validation
         $request->validate([
             'end_reading' => 'required',
         ]);
 
+        // Prepare billing data
         $start_date = $start_date_1 =  $request->start_date;
         $end_date = $request->end_date;
 
-         $consumer = Consumer::where('id', $request->id)
-                            ->where('status_id', 6)
-                            ->with(['statusHistory' => function ($q) {
-                                $q->latest()->limit(1);
-                            }])
-                            ->first();
+        // Get the consumer details
+        $consumer = Consumer::where('id', $request->id)
+            ->where('status_id', 6)
+            ->with(['statusHistory' => function ($q) {
+                $q->latest()->limit(1);
+            }])->first();
+        
+        // Get the price details
         $prices = PriceHistory::where('district_id', $consumer->district_id)
-                                ->where('segment_id', $consumer->segment_id)
-                                ->where(function ($q) use ($start_date, $end_date) {
-                                    $q->where('effective_from', '<=', $end_date)
-                                    ->where('effective_to', '>=', $start_date);
-                                })
-                                ->orderBy('effective_from')
-                                ->get()->toArray();
+            ->where('segment_id', $consumer->segment_id)
+            ->where(function ($q) use ($start_date, $end_date) {
+                $q->where('effective_from', '<=', $end_date)
+                ->where('effective_to', '>=', $start_date);
+            })
+            ->orderBy('effective_from')->get()->toArray();
+
         // If no price changes found, fetch the latest single record
         if (empty($prices)) {
             $prices = PriceHistory::where('district_id', $consumer->district_id)
@@ -202,7 +211,6 @@ class GasInvoiceController extends Controller
             if($inv_cons and $net_consumption > 0) {
                 $bulkRows = [];
                 foreach ($inv_consmp_details as $detail) {
-        
                     $bulkRows[] = [
                         'invoice_consumption_id'   => $inv_cons->id,
                         'price_history_id' => $detail['price_history_id'],
@@ -213,7 +221,6 @@ class GasInvoiceController extends Controller
                         'total_price'      => $detail['total_price'],
                     ];
                 }
-        
                 BillInvoiceConsumptionDetails::insert($bulkRows);
             }
     
@@ -224,6 +231,3 @@ class GasInvoiceController extends Controller
         }
     }
 }
-
-
-?>

@@ -53,10 +53,17 @@ return new class extends Migration
             $table->timestamps();
         });
 
+        // Mst tax groups
+        Schema::create('mst_tax_groups', function(Blueprint $table) {
+            $table->id();
+            $table->string('name', length:32)->nullable();
+        });
+
         // mst taxes
         Schema::create('mst_taxes', function(Blueprint $table) {
             $table->id();
-            $table->string('name', length:100)->nullable();
+            $table->string('name', length:32)->nullable();
+            $table->foreignId('tax_group_id')->nullable()->index()->constrained(table:'mst_tax_groups')->noActionOnDelete()->noActionOnUpdate();
             $table->timestamps();
         });
 

@@ -21,5 +21,14 @@ class Tax extends Model
      */
     protected $fillable = [
         'name',
+        'tax_group_id',
     ];
+
+    /**
+     * Relation with Tax group
+     */
+    public function taxGroup(): BelongsTo
+    {
+        return $this->belongsTo(TaxGroup::class);
+    }
 }

@@ -4,16 +4,23 @@ use App\Http\Middleware\ModuleAccess;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', ModuleAccess::class])->group(function() {
-    // Gas Invoice Controller
+    // Gas Invoice
     Route::resource('gasInvoice', App\Http\Controllers\Billing\GasInvoiceController::class);
-    Route::get('gasInvoice/create/{consumer}', [App\Http\Controllers\Billing\GasInvoiceController::class, 'create'])
-     ->name('gasInvoice.create.withConsumer');
+    Route::get('gasInvoice/create/{consumer}', [App\Http\Controllers\Billing\GasInvoiceController::class, 'create']);
 
-
-    // Invoice Controller
-    Route::get('invoice/create/{consumer}', [App\Http\Controllers\Billing\InvoiceController::class, 'create'])
-     ->name('invoice.create.withConsumer');
-    Route::get('invoice/invoiceItems', [App\Http\Controllers\Billing\InvoiceController::class, 'invoiceItems']);
-    Route::get('invoice/renderTax', [App\Http\Controllers\Billing\InvoiceController::class, 'renderTax']);
-    Route::resource('invoice', App\Http\Controllers\Billing\InvoiceController::class);
+    // Invoice
+    Route::prefix('invoice')->group(function () {
+        Route::get('create/{id}', [App\Http\Controllers\Billing\InvoiceController::class, 'create']);
+        Route::get('createBody', [App\Http\Controllers\Billing\InvoiceController::class, 'createBody']);
+        Route::get('typeItems', [App\Http\Controllers\Billing\InvoiceController::class, 'typeItems']);
+        Route::post('addItem', [App\Http\Controllers\Billing\InvoiceController::class, 'addItem']);
+        Route::delete('removeItem', [App\Http\Controllers\Billing\InvoiceController::class, 'removeItem']);
+        Route::post('/{id}', [App\Http\Controllers\Billing\InvoiceController::class, 'store']);
+    });
+    
+    // Credit note
+    Route::prefix('creditNote')->group(function () {
+        // 
+    });
+    
 });

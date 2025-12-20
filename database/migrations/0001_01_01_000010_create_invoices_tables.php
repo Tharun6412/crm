@@ -187,10 +187,10 @@ return new class extends Migration
         });
 
         // bill state invoice counter
-        Schema::create('bil_state_invoice_counter', function(Blueprint $table) {
+        Schema::create('bil_invoice_counter', function(Blueprint $table) {
             $table->id();
             $table->foreignId('state_id')->nullable()->index()->constrained(table:'mst_states')->noActionOnDelete()->noActionOnUpdate();
-            $table->integer('invoice_type')->nullable();
+            $table->foreignId('tax_group_id')->nullable()->index()->constrained(table:'mst_tax_groups')->noActionOnDelete()->noActionOnUpdate();
             $table->string('invoice_code')->nullable();
             $table->double('count')->nullable();
             $table->timestamps();
@@ -277,7 +277,7 @@ return new class extends Migration
         DB::statement('SET FOREIGN_KEY_CHECKS = 0;');
         Schema::dropIfExists('ref_refund_status');
         Schema::dropIfExists('ref_refunds');
-        Schema::dropIfExists('bil_state_invoice_counter');
+        Schema::dropIfExists('bil_invoice_counter');
         Schema::dropIfExists('pay_transactions');
         Schema::dropIfExists('pay_payment_reversals');
         Schema::dropIfExists('pay_payment_cheques');

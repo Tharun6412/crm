@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Services;
 
 use App\Models\Invoice\BillInvoice;
@@ -36,5 +37,4 @@ class InvoiceGeneration
         $inv_number = $inv_type_data->invoice_code.str_pad($inv_type_data->count, 9, "0", STR_PAD_LEFT);
         return $inv_number;
     }
-
 }
