@@ -27,7 +27,7 @@
                     <tr>
                         <td>Payments</td>
                         <td class="text-end" colspan="2">{{ numberFormat($consumer->scheme?->paid_deposit) }}</td>
-                        <td class="text-end">{{ numberFormat($consumer->scheme?->total_deposit) }}</td>
+                        <td class="text-end">{{ numberFormat($consumer->scheme?->paid_deposit) }}</td>
                     </tr>
                     <tr>
                         <td colspan="3" class="text-end">Balance Deposit</td>

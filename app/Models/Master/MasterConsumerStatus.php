@@ -6,7 +6,7 @@ use App\Models\Consumer\Consumer;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class ConsumerStatus extends Model
+class MasterConsumerStatus extends Model
 {
     /**
      * The table associated with the model

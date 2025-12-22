@@ -4,7 +4,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\DocumentCentre\DocumentUpload;
 use App\Models\Consumer\Consumer;
 use App\Models\Consumer\ConsumerDocument;
-use App\Models\Consumer\ConsumersStatus;
+use App\Models\Consumer\ConsumerStatus;
 use App\Models\Consumer\ConsumerMeter;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -68,7 +68,7 @@ class ExecuteController extends Controller
             'updated_by' => Auth::id(),
         ]);
         // Status History
-        ConsumersStatus::create([
+        ConsumerStatus::create([
             'consumer_id' => $id,
             'status_id' => 4,
             'notes' => $request->notes,

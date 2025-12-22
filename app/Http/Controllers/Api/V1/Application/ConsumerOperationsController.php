@@ -3,16 +3,10 @@
 namespace App\Http\Controllers\Api\V1\Application;
 
 use App\Http\Controllers\Controller;
-use App\Models\Consumer\CaCounter;
 use App\Models\Consumer\Consumer;
 use App\Models\Consumer\ConsumerRefund;
 use App\Models\Consumer\ConsumerRefundStatus;
-use App\Models\Consumer\ConsumerSdPayment;
-use App\Models\Consumer\ConsumersScheme;
-use App\Models\Consumer\ConsumersStatus;
-use App\Models\Invoice\InvoicePayment;
-use App\Services\InvoiceGeneration;
-use Carbon\Carbon;
+use App\Models\Consumer\ConsumerStatus;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -32,7 +26,7 @@ class ConsumerOperationsController extends Controller
             'updated_by' => Auth::id(),
         ]);
         // Consumer Status History
-        ConsumersStatus::create([
+        ConsumerStatus::create([
             'consumer_id' => $id,
             'status_id' => 7,
             'notes' => $request->notes,
@@ -58,7 +52,7 @@ class ConsumerOperationsController extends Controller
             'updated_by' => Auth::id(),
         ]);
         // Consumer Status History
-        ConsumersStatus::create([
+        ConsumerStatus::create([
             'consumer_id' => $id,
             'status_id' => 8,
             'notes' => $request->notes,

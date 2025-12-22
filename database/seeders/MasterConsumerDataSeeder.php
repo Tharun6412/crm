@@ -65,7 +65,8 @@ class MasterConsumerDataSeeder extends Seeder
             ['id' => '6','name' => 'Activate','slug' => 'activated','created_at' => NULL,'updated_at' => NULL],
             ['id' => '7','name' => 'TD','slug' => 'td','created_at' => NULL,'updated_at' => NULL],
             ['id' => '8','name' => 'PD','slug' => 'pd','created_at' => NULL,'updated_at' => NULL],
-            ['id' => '9','name' => 'Reject','slug' => 'rejected','created_at' => NULL,'updated_at' => NULL]
+            ['id' => '9','name' => 'Reject','slug' => 'rejected','created_at' => NULL,'updated_at' => NULL],
+            ['id' => '10','name' => 'Reconnect','slug' => 'reconnect','created_at' => NULL,'updated_at' => NULL]
         ]);
 
         // mst titles

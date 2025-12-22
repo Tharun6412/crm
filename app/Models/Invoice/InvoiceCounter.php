@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 
-class BillStateInvoiceCounter extends Model
+class InvoiceCounter extends Model
 {
     /**
      * The table associated with the model

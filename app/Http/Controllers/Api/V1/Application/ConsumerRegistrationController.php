@@ -3,12 +3,10 @@ namespace App\Http\Controllers\Api\V1\Application;
 
 use App\Http\Controllers\Controller;
 use App\Models\Consumer\ConsumerDocument;
-use App\Models\Consumer\ConsumersScheme;
-use App\Models\Consumer\ConsumersStatus;
+use App\Models\Consumer\ConsumerScheme;
 use App\Models\DocumentCentre\DocumentTypes;
 use App\Models\Master\ConsumerGasRequired;
 use App\Models\Master\ConsumerNomineeRelation;
-use App\Models\Master\ConsumerScheme;
 use App\Models\Master\Title;
 use App\Http\Controllers\DocumentCentre\DocumentUpload;
 use App\Http\Requests\Api\Consumer\RegistrationValidationRequest;
@@ -17,6 +15,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\Consumer\Consumer;
 use App\Models\Consumer\ConsumerData;
+use App\Models\Consumer\ConsumerStatus;
+use App\Models\Master\MasterConsumerScheme;
 
 /**
  * Consumer Registration Controller
@@ -105,15 +105,15 @@ class ConsumerRegistrationController extends Controller
             }
         }
         // Consumer Status History
-        ConsumersStatus::create([
+        ConsumerStatus::create([
             'consumer_id' => $add_consumer->id,
             'status_id' => 1,
             'created_by' => Auth::id(),
         ]);
         // Consumer Scheme Preparation
         if($request->has('scheme_id') and !empty($request->scheme_id)) {
-            $scheme_details = ConsumerScheme::find($request->scheme_id);
-            $add_consumer_scheme = ConsumersScheme::create([
+            $scheme_details = MasterConsumerScheme::find($request->scheme_id);
+            $add_consumer_scheme = ConsumerScheme::create([
                 'consumer_id' => $add_consumer->id,
                 'scheme_id' => $scheme_details->id,
                 'security_deposit' => $scheme_details->security,

@@ -3,11 +3,11 @@
 namespace App\Models\Complaint;
 
 use App\Models\Admin\User;
-use App\Models\Master\ComplaintStatus;
+use App\Models\Master\MasterComplaintStatus;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class ComplaintsStatus extends Model
+class ComplaintStatusHistory extends Model
 {
     /**
      * The table associated with the model
@@ -41,7 +41,7 @@ class ComplaintsStatus extends Model
      */
     public function status() :BelongsTo
     {
-        return $this->belongsTo(ComplaintStatus::class, 'status_id')->withDefault();
+        return $this->belongsTo(MasterComplaintStatus::class, 'status_id')->withDefault();
     }
 
     /**

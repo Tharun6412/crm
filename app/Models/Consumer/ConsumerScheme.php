@@ -2,12 +2,12 @@
 
 namespace App\Models\Consumer;
 
-use App\Models\Master\ConsumerScheme;
 use App\Models\Master\ConsumerSchemePayment;
+use App\Models\Master\MasterConsumerScheme;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class ConsumersScheme extends Model
+class ConsumerScheme extends Model
 {
     /**
      * The table associated with the model
@@ -48,7 +48,7 @@ class ConsumersScheme extends Model
      */
     public function scheme() :BelongsTo
     {
-        return $this->belongsTo(ConsumerScheme::class, 'scheme_id')->withDefault();
+        return $this->belongsTo(MasterConsumerScheme::class, 'scheme_id')->withDefault();
     }
 
     /**

@@ -8,9 +8,8 @@ use App\Models\Master\ComplaintCategory;
 use App\Models\Master\ComplaintMedia;
 use App\Models\Master\ComplaintPriority;
 use App\Models\Master\ComplaintSegment;
-use App\Models\Master\ComplaintStatus;
 use App\Models\Master\ComplaintType;
-use App\Models\Master\Segment;
+use App\Models\Master\MasterComplaintStatus;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -53,6 +52,7 @@ class Complaint extends Model
      */
     public function casts() {
         return [
+            'estimated_closed_at' => 'datetime',
             'closed_at' => 'datetime',
         ];
     }
@@ -100,7 +100,7 @@ class Complaint extends Model
      */
     public function status(): BelongsTo
     {
-        return $this->belongsTo(ComplaintStatus::class, 'status_id')->withDefault();
+        return $this->belongsTo(MasterComplaintStatus::class, 'status_id')->withDefault();
     }
 
     /**
@@ -108,7 +108,7 @@ class Complaint extends Model
      */
     public function statusHistory():HasMany
     {
-        return $this->hasMany(ComplaintsStatus::class, 'complaint_id', 'id')->orderBy('created_at', 'desc');
+        return $this->hasMany(ComplaintStatusHistory::class, 'complaint_id', 'id')->orderBy('created_at', 'desc');
     }
     /**
      * Relation with Type
@@ -139,5 +139,13 @@ class Complaint extends Model
     public function assign():HasOne
     {
         return $this->hasOne(ComplaintAssign::class, 'complaint_id', 'id');
+    }
+
+    /**
+     * Relation with Complaint Documents
+     */
+    public function complaintDocuments():HasMany
+    {
+        return $this->hasMany(ComplaintDocument::class, 'complaint_id', 'id')->orderBy('created_at', 'desc');
     }
 }

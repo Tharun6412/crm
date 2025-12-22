@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use App\Models\Invoice\BillInvoice;
-use App\Models\Invoice\BillStateInvoiceCounter;
+use App\Models\Invoice\InvoiceCounter;
 use App\Models\Invoice\InvoiceItem;
 use Illuminate\Support\Str;
 
@@ -31,7 +31,7 @@ class InvoiceService
         $new_inv_item = InvoiceItem::insert($invoice_data['items']);
 
         // Response
-        return $inv_number;
+        return ['invoice_id' => $new_invoice->id, 'invoice_number' => $inv_number];
     }
 
     /**
@@ -43,7 +43,7 @@ class InvoiceService
     public static function generateNumber($state_id, $tax_id)
     {
         // Generate invoice number with state and tax group
-        $inv_counter = BillStateInvoiceCounter::where('state_id', $state_id)
+        $inv_counter = InvoiceCounter::where('state_id', $state_id)
             ->whereHas('taxGroup.taxes', function($q) use($tax_id) {
                 $q->where('mst_taxes.id', $tax_id);
             }
@@ -52,7 +52,7 @@ class InvoiceService
         // Check invoice counter group
         if($inv_counter) {
             // Increment counter
-            BillStateInvoiceCounter::where('id', $inv_counter->id)->increment('count');
+            InvoiceCounter::where('id', $inv_counter->id)->increment('count');
             $counter = $inv_counter->count + 1;
             // Invoice Number
             $inv_number = $inv_counter->invoice_code . str_pad($counter, 9, "0", STR_PAD_LEFT);

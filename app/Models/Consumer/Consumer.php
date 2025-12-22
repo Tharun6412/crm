@@ -7,14 +7,15 @@ use App\Models\Master\Area;
 use App\Models\Master\Ca;
 use App\Models\Master\ConsumerGasRequired;
 use App\Models\Master\ConsumerNomineeRelation;
-use App\Models\Master\ConsumerStatus;
 use App\Models\Master\District;
 use App\Models\Master\FirmType;
 use App\Models\Master\FuelType;
 use App\Models\Master\Ga;
+use App\Models\Master\MasterConsumerStatus;
 use App\Models\Master\PaymentType;
 use App\Models\Master\Segment;
 use App\Models\Master\State;
+use App\Models\Master\Title;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -102,6 +103,13 @@ class Consumer extends Model
         return Attribute::get(fn () => "{$this->fname} {$this->lname}");
     }
 
+    /**
+     * Relation with TitleDisplay
+     */
+    public function titleDisplay() : BelongsTo
+    {
+        return $this->belongsTo(Title::class, 'title')->withDefault();
+    }
     /**
      * Relation with Segments
      */
@@ -206,7 +214,7 @@ class Consumer extends Model
      */
     public function status() :BelongsTo
     {
-        return $this->belongsTo(ConsumerStatus::class, 'status_id')->withDefault();
+        return $this->belongsTo(MasterConsumerStatus::class, 'status_id')->withDefault();
     }
     
     /**
@@ -222,14 +230,14 @@ class Consumer extends Model
      */
     public function statusHistory():HasMany
     {
-        return $this->hasMany(ConsumersStatus::class, 'consumer_id', 'id')->orderBy('created_at', 'desc');
+        return $this->hasMany(ConsumerStatus::class, 'consumer_id', 'id')->orderBy('created_at', 'desc');
     }
     /**
      * Relation with scheme
      */
     public function scheme(): HasOne
     {
-        return $this->hasOne(ConsumersScheme::class, 'consumer_id', 'id');
+        return $this->hasOne(ConsumerScheme::class, 'consumer_id', 'id');
     }
     /**
      * Relation with SDPaymentHistory

@@ -5,18 +5,7 @@ namespace App\Models\Consumer;
 use App\Models\Admin\User;
 use App\Models\DocumentCentre\Documents;
 use App\Models\DocumentCentre\DocumentTypes;
-use App\Models\Master\Area;
-use App\Models\Master\Ca;
-use App\Models\Master\ConsumerGasRequired;
-use App\Models\Master\ConsumerNomineeRelation;
-use App\Models\Master\ConsumerStatus;
-use App\Models\Master\District;
-use App\Models\Master\FirmType;
-use App\Models\Master\FuelType;
-use App\Models\Master\Ga;
-use App\Models\Master\PaymentType;
-use App\Models\Master\State;
-use Dom\DocumentType;
+use App\Models\Master\MasterConsumerStatus;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -71,6 +60,6 @@ class ConsumerDocument extends Model
      */
     public function status() :BelongsTo
     {
-        return $this->belongsTo(ConsumerStatus::class, 'status_id')->withDefault();
+        return $this->belongsTo(MasterConsumerStatus::class, 'status_id')->withDefault();
     }
 }

@@ -8,9 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-
-
-class ConsumerScheme extends Model
+class MasterConsumerScheme extends Model
 {
     /**
      * The table associated with the model

@@ -167,7 +167,7 @@ class GasInvoiceController extends Controller
         $invoice_ar = [
             'type_id' => 1, //1 => Gas Invoice
             'consumer_id' => $consumer->id,
-            'invoice_number' => $inv_number,
+            'invoice_number' => $inv_number['invoice_number'],
             'invoice_date' => $invoice_date,
             'base_amount' => $inv_base_amt,
             'taxable_amount' => $inv_base_amt,

@@ -4,7 +4,7 @@
     <div class="col-auto">
         <div class="input-group input-group-sm">
             <span class="input-group-text" id="search-key">Search</span>
-            <input type="text" name="key" id="search-key" class="form-control" value="{{ request()->key }}">
+            <input type="text" name="key" id="search-key" class="form-control" value="{{ request()->key }}" placeholder="search complaint no.">
         </div>
     </div>
     <div class="col-auto">
@@ -23,13 +23,14 @@
 {{-- Consumers list --}}
 <div class="table-responsive" style="min-height: 500px;">
     <table class="table table-bordered table-hover">
-        <thead class="table-success">
+        <thead class="table-primary">
             <tr>
                 <th width="1%" nowrap>S No</th>
                 <th>Consumer Number</th>
-                <th>Code</th>
+                <th>Complaint Number</th>
                 <th>Priority</th>
                 <th>Segment</th>
+                <th>Estimated Close Date</th>
                 <th>Status</th>
                 <th>Created At<x-master.date-filter /></th>
                 <th width="2%" nowrap>Actions</th>
@@ -37,13 +38,35 @@
         </thead>
         <tbody>
             @if ($complaints->count() > 0)
+                @php
+                    $now = \Carbon\Carbon::now();
+                    $sort_by = (request()->has('sortBy')) ? request()->get('sortBy') : 'created_at';
+                    $sort_order = (request()->has('sortOr')) ? request()->get('sortOr') : 'desc';
+                    $sort_order_inverse = ($sort_order == 'asc') ? 'desc' : 'asc';
+                    $sort_icon = ($sort_order == 'asc') ? 'bi-caret-down-fill' : 'bi-caret-up-fill';
+                    $i = (($complaints->currentPage() - 1) * $complaints->perPage())+1;
+                @endphp
                 @foreach ($complaints as $complaint)
+                    @php
+                        if ($complaint->category->resolution_type == 1) {
+                            $difference = ceil($now->diffInDays(\Carbon\Carbon::parse($complaint->estimated_closed_at)))." Days";
+                        }else {
+                            $difference = numberFormat(abs($now->diffInHours(\Carbon\Carbon::parse($complaint->estimated_closed_at))), 2)." Hours";
+                        }
+                    @endphp
                     <tr>
-                        <td>{{ $loop->iteration }}</td>
+                        <td>{{ $i++ }}</td>
                         <td><x-auth.link href="{{ url('consumers/' . $complaint->consumer_id) }}" target="_blank">{{ $complaint->consumer->crn }}</x-auth.link></td>
                         <td><x-auth.link href="{{ url('complaints/'.$complaint->id) }}" class="link-modal">{{ $complaint->code }}</x-auth.link></td>
                         <td>{{ $complaint->priority->name }}</td>
                         <td>{{ $complaint->segment->name }}</td>
+                        <td>{{ $complaint->estimated_closed_at }}
+                            @if ($now > $complaint->estimated_closed_at)
+                                <small class="bg bg-danger-subtle">(&nbsp;{{ "Expired in ".$difference }}&nbsp;)</small>
+                            @else
+                                <small class="bg bg-success-subtle">(&nbsp;{{ "Expires in ".$difference }}&nbsp;)</small>
+                            @endif
+                        </td>
                         <td>{{ $complaint->status->name }}</td>
                         <td>{{ dateFormat($complaint->created_at) }}</td>
                         <td>
@@ -56,6 +79,7 @@
                                     <li><x-auth.link class="dropdown-item link-modal" href="{{ url('complaints/' . $complaint->id) }}"><i class="bi bi-chevron-right"></i>&nbsp;View</x-auth.link></li>
                                     {{--Complaint Status Dropdown--}}
                                     @if ($complaint->status_id == 1)
+                                        <li><x-auth.link class="dropdown-item link-modal" href="{{ url('complaints/'.$complaint->id.'/edit') }}"><i class="bi bi-chevron-right"></i>&nbsp;Edit</x-auth.link></li>
                                         <li><x-auth.link class="dropdown-item link-modal" href="{{ url('complaints/assign/'.$complaint->id) }}"><i class="bi bi-chevron-right"></i>&nbsp;Assign</x-auth.link></li>
                                         <li><x-auth.link class="dropdown-item link-modal" href="{{ url('complaints/close/'.$complaint->id) }}"><i class="bi bi-chevron-right"></i>&nbsp;Close</x-auth.link></li>
                                         <li><x-auth.link class="dropdown-item link-modal" href="{{ url('complaints/cancel/'.$complaint->id) }}"><i class="bi bi-chevron-right"></i>&nbsp;Cancel</x-auth.link></li>

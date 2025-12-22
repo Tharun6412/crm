@@ -2,7 +2,7 @@
 
 namespace App\View\Components\Consumer;
 
-use App\Models\Master\ConsumerStatus;
+use App\Models\Master\MasterConsumerStatus;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
@@ -23,7 +23,7 @@ class StatusFilter extends Component
     public function render(): View|Closure|string
     {
         // Get consumer status
-        $cns_status = ConsumerStatus::all();
+        $cns_status = MasterConsumerStatus::all();
         return view('components.consumer.status-filter', ['cns_status' => $cns_status]);
     }
 }

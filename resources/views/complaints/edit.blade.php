@@ -5,11 +5,11 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-            <div id="complaint-success">
-                <form id="complaint-form" action="{{ url('complaints/store/1') }}" method="POST">
+            <div id="edit-complaint-success">
+                <form id="edit-complaint-form" action="{{ url('complaints/update/'.$complaint->id) }}" method="POST">
                     @csrf
                     <div class="mt-2">
-                        <x-consumer.basic-details :consumer="$consumer" class="bg-info-subtle"/>
+                        <x-consumer.basic-details :consumer="$complaint->consumer" class="bg-info-subtle"/>
                     </div>
                     <div class="mt-2 p-2">
                         <h4 class="fw-semibold text-decoration-underline col-sm-4 text-end">Complaint Details</h4>
@@ -21,7 +21,7 @@
                             <select class="form-select form-select-sm" name="segment_id" id="segment_id">
                                 <option value="">select</option>
                                 @foreach ($segments as $segment)
-                                    <option value="{{ $segment->id }}">{{ $segment->name }}</option>
+                                    <option value="{{ $segment->id }}" @selected($complaint->segment_id == $segment->id)>{{ $segment->name }}</option>
                                 @endforeach
                             </select>
                             <span class="text-danger validate-err-msg" id="segment_id-error"></span>
@@ -34,7 +34,7 @@
                             <select class="form-select form-select-sm" name="type_id" id="type_id">
                                 <option value="">select</option>
                                 @foreach ($types as $type)
-                                    <option value="{{ $type->id }}">{{ $type->name }}</option>
+                                    <option value="{{ $type->id }}" @selected($complaint->type_id == $type->id)>{{ $type->name }}</option>
                                 @endforeach
                             </select>
                             <span class="text-danger validate-err-msg" id="type_id-error"></span>
@@ -47,7 +47,7 @@
                             <select class="form-select form-select-sm" name="priority_id" id="priority_id">
                                 <option value="">select</option>
                                 @foreach ($priorities as $priority)
-                                    <option value="{{ $priority->id }}">{{ $priority->name }}</option>
+                                    <option value="{{ $priority->id }}" @selected($complaint->priority_id == $priority->id)>{{ $priority->name }}</option>
                                 @endforeach
                             </select>
                             <span class="text-danger validate-err-msg" id="priority_id-error"></span>
@@ -60,7 +60,7 @@
                             <select class="form-select form-select-sm" name="media_id" id="media_id">
                                 <option value="">select</option>
                                 @foreach ($media as $media_val)
-                                    <option value="{{ $media_val->id }}">{{ $media_val->name }}</option>
+                                    <option value="{{ $media_val->id }}" @selected($complaint->media_id == $media_val->id)>{{ $media_val->name }}</option>
                                 @endforeach
                             </select>
                             <span class="text-danger validate-err-msg" id="media_id-error"></span>
@@ -73,7 +73,7 @@
                             <select class="form-select form-select-sm" name="category_id" id="category_id" onchange="getSubCategories(this.value)">
                                 <option value="">select</option>
                                 @foreach ($categories as $category)
-                                    <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                    <option value="{{ $category->id }}" @selected($complaint->category->parent->id == $category->id)>{{ $category->name }}</option>
                                 @endforeach
                             </select>
                             <span class="text-danger validate-err-msg" id="category_id-error"></span>
@@ -86,7 +86,7 @@
                             <select class="form-select form-select-sm" name="sub_category_id" id="sub_category_id" onchange="getSubCategoryDetails(this.value)">
                                 <option value="">select</option>
                                 @foreach ($sub_categories as $s_category)
-                                    <option value="{{ $s_category->id }}">{{ $s_category->name }}</option>
+                                    <option value="{{ $s_category->id }}" @selected($complaint->category_id == $s_category->id)>{{ $s_category->name }}</option>
                                 @endforeach
                             </select>
                             <span class="text-danger validate-err-msg" id="sub_category_id-error"></span>
@@ -123,12 +123,12 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row mb-3" id="complaint-error"></div>
+                    <div class="row mb-3" id="edit-complaint-error"></div>
                     <div class="row mb-3">
                         <div class="col-md-12 col-sm-12">
                             <div class="text-end">
                                 <button type="submit" class="btn btn-success btn-sm">
-                                    <i class="bi bi-check2-square" aria-hidden="true">&nbsp;</i>Add
+                                    <i class="bi bi-check2-square" aria-hidden="true">&nbsp;</i>Update
                                 </button>
                             </div>
                         </div>
@@ -141,8 +141,11 @@
         </div>
     </div>
 </div>
-@include('scripts.ajax-file-submit', ['form' => 'complaint'])
+@include('scripts.ajax-file-submit', ['form' => 'edit-complaint'])
 <script type="text/javascript">
+    $(document).ready(function() {
+        getSubCategoryDetails($('#sub_category_id').val());
+    });
     //Get Sub Categories By Id  
     function getSubCategories(category_id)
     {

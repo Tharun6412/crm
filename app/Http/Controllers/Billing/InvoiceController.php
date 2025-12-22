@@ -192,6 +192,6 @@ class InvoiceController extends Controller
         $request->session()->forget('inv_items');
 
         // Response 
-        return response()->json(['success' => 'Invoice created successfully with invoice number ' . $inv_number]);
+        return response()->json(['success' => 'Invoice created successfully with invoice number ' . $inv_number['invoice_number']]);
     }
 }

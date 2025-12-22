@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * Complaints Controller
+ */
 namespace App\Http\Controllers\Complaints;
 
 use App\Http\Controllers\Controller;
@@ -8,13 +10,12 @@ use App\Models\Admin\User;
 use App\Models\Complaint\Complaint;
 use App\Models\Complaint\ComplaintAssign;
 use App\Models\Complaint\ComplaintDocument;
-use App\Models\Complaint\ComplaintsStatus;
+use App\Models\Complaint\ComplaintStatusHistory;
 use App\Models\Consumer\Consumer;
 use App\Models\Master\ComplaintCategory;
 use App\Models\Master\ComplaintMedia;
 use App\Models\Master\ComplaintPriority;
 use App\Models\Master\ComplaintSegment;
-use App\Models\Master\ComplaintStatus;
 use App\Models\Master\ComplaintType;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -27,9 +28,12 @@ class ComplaintsController extends Controller
      */
     public function index(Request $request)
     {
+        $sortBy = ($request->get('sortBy')) ? $request->get('sortBy') : 'created_at';
+        $sortOr = ($request->get('sortOr')) ? $request->get('sortOr') : 'desc';
+        $records = ($request->get('records')) ? $request->get('records') : 50;
         $complaints = Complaint::when($request->has('key'), function ($q) use($request) {
-                $q->whereAny(['crn', 'code'], 'like', '%' . $request->key . '%');
-            })->paginate(50)->withQueryString();
+                $q->whereAny(['code'], 'like', '%' . $request->key . '%');
+            })->orderBy($sortBy, $sortOr)->paginate(2)->withQueryString();
         if($request->ajax()) {
             return view('complaints.list-body', ['complaints' => $complaints]);
         }else {
@@ -67,7 +71,6 @@ class ComplaintsController extends Controller
             'sub_categories' => [],
         ]);
     }
-
     /**
      * Get Sub categories List
      */
@@ -110,6 +113,14 @@ class ComplaintsController extends Controller
             'priority_id' => 'required',
             'sub_category_id' => 'required',
         ]);
+        $now = Carbon::now();
+        $category_details = ComplaintCategory::with(['department', 'type'])->where('id', $request->sub_category_id)->first();
+        $resolution_val = (int)$category_details->resolution;
+        if($category_details->resolution_type == 1) {
+            $est_close_at = $now->addDays($resolution_val);
+        }else {
+            $est_close_at = $now->addHours($resolution_val);
+        }
         // Data Preparation
         // Complaints
         $add_complaint = Complaint::create([
@@ -119,6 +130,7 @@ class ComplaintsController extends Controller
             'type_id' => $request->type_id,
             'media_id' => $request->media_id,
             'priority_id' => $request->priority_id,
+            'estimated_closed_at' => $est_close_at->toDateTimeString(),
             'status_id' => 1,
             'created_by' => Auth::id(),
         ]);
@@ -134,7 +146,7 @@ class ComplaintsController extends Controller
             }
         }
         // Complaint Status
-        ComplaintsStatus::create([
+        ComplaintStatusHistory::create([
             'complaint_id' => $add_complaint->id,
             'status_id' => 1,
             'created_by' => Auth::id(),
@@ -142,6 +154,74 @@ class ComplaintsController extends Controller
         return response()->json(['success' => 'Complaint raised successfully']);
     }
 
+    /**
+     * To edit the complaint 
+     * only status = 1 [Open]
+     */
+    public function edit(Request $request, $id)
+    {
+        $types = ComplaintType::all();
+        $media = ComplaintMedia::all();
+        $segments = ComplaintSegment::all();
+        $priorities = ComplaintPriority::all();
+        $categories = ComplaintCategory::whereNull('parent_id')->get();
+        $complaint = Complaint::find($id);
+        $sub_categories = ComplaintCategory::where('parent_id', $complaint->category->parent_id)->get();
+        // dd($sub_categories);
+        return view('complaints.edit', [
+            'complaint' => $complaint,
+            'types' => $types,
+            'media' => $media,
+            'segments' => $segments,
+            'categories' => $categories,
+            'priorities' => $priorities,
+            'sub_categories' => $sub_categories,
+        ]);
+    }
+
+    /**
+     * To Update the Complaint Details
+     */
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'segment_id' => 'required',
+            'type_id' => 'required',
+            'media_id' => 'required',
+            'category_id' => 'required',
+            'priority_id' => 'required',
+            'sub_category_id' => 'required',
+        ]);
+        $now = Carbon::now();
+        $category_details = ComplaintCategory::with(['department', 'type'])->where('id', $request->sub_category_id)->first();
+        $resolution_val = (int)$category_details->resolution;
+        if($category_details->resolution_type == 1) {
+            $est_close_at = $now->addDays($resolution_val);
+        }else {
+            $est_close_at = $now->addHours($resolution_val);
+        }
+        // Data Preparation
+        // Complaints
+        $add_complaint = Complaint::where('id', $id)->update([
+            'category_id' =>  $request->sub_category_id,
+            'segment_id' => $request->segment_id,
+            'type_id' => $request->type_id,
+            'media_id' => $request->media_id,
+            'priority_id' => $request->priority_id,
+            'estimated_closed_at' => $est_close_at->toDateTimeString(),
+            'updated_by' => Auth::id(),
+        ]);
+        if(!empty($request->dc_file_list)) {
+            $add_document = DocumentUpload::uploadBulk($request);
+            foreach($request->dc_file_list as $key => $file) {
+                ComplaintDocument::create([
+                    'complaint_id' => $id,
+                    'file_id' => $add_document['file_list'][$key]['file_id'],
+                ]);
+            }
+        }
+        return response()->json(['success' => 'Complaint updated successfully']);
+    }
     /**
      * Assign Complaint
      */
@@ -174,7 +254,7 @@ class ComplaintsController extends Controller
         // Complaint Status Update
         Complaint::where('id', $id)->update(['status_id' => 2]);
         // Complaint Status History
-        ComplaintsStatus::create([
+        ComplaintStatusHistory::create([
             'complaint_id' => $id,
             'status_id' => 2,
             'notes' => $request->notes,
@@ -225,7 +305,7 @@ class ComplaintsController extends Controller
     public function cancel(Request $request, $id)
     {
         $complaint = Complaint::find($id);
-        return view('complaints.close', [
+        return view('complaints.cancel', [
             'complaint' => $complaint,
             'status_id' => 6,
         ]);
@@ -244,7 +324,7 @@ class ComplaintsController extends Controller
             'closed_at' => ($status_id == 5) ? Carbon::now() : NULL,
         ]);
         // Complaint Status History
-        ComplaintsStatus::create([
+        ComplaintStatusHistory::create([
             'complaint_id' => $id,
             'status_id' => $status_id,
             'notes' => $request->notes,

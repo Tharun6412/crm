@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Master\Consumer;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Master\ConsumerScheme;
 use App\Models\Master\ConsumerSchemeGa;
 use App\Models\Master\Ga;
+use App\Models\Master\MasterConsumerScheme;
 use App\Models\Master\Segment;
 use Illuminate\Support\Facades\Auth;
 
@@ -18,7 +18,7 @@ class SchemesController extends Controller
         $sortBy = ($request->get('sortBy')) ? $request->get('sortBy') : 'created_at';
         $sortOr = ($request->get('sortOr')) ? $request->get('sortOr') : 'desc';
         $records = ($request->get('records')) ? $request->get('records') : 10;
-        $query = ConsumerScheme::with(['segment', 'schemePayment', 'schemesGa.ga'])->when($request->has('search_key'), function($q) use($request) {
+        $query = MasterConsumerScheme::with(['segment', 'schemePayment', 'schemesGa.ga'])->when($request->has('search_key'), function($q) use($request) {
             $q->where(function($q) use($request) {
                 $q->where('name', 'like', '%'.$request->get('search_key').'%');
             });
@@ -34,7 +34,7 @@ class SchemesController extends Controller
 
     public function show($id)
     {
-        $scheme = ConsumerScheme::find($id);
+        $scheme = MasterConsumerScheme::find($id);
         return view('master.consumer.schemes.show', ['scheme' => $scheme]);
     }
 
@@ -58,7 +58,7 @@ class SchemesController extends Controller
         ]);
 
         // TO insert into the Schemes
-        $add_scheme = ConsumerScheme::create([
+        $add_scheme = MasterConsumerScheme::create([
             'segment_id' => $request->segment,
             'code' => $request->code,
             'name' => $request->name,
@@ -90,7 +90,7 @@ class SchemesController extends Controller
 
     public function edit($id)
     {
-        $scheme = ConsumerScheme::find($id);
+        $scheme = MasterConsumerScheme::find($id);
         $gas = Ga::all();
         $segments = Segment::all();
         return view('master.consumer.schemes.edit', ['gas' => $gas, 'segments' => $segments, 'scheme' => $scheme]);
@@ -109,7 +109,7 @@ class SchemesController extends Controller
             'applicable_ga' => 'required|array|min:1',
         ]);
 
-        $scheme = ConsumerScheme::find($id);
+        $scheme = MasterConsumerScheme::find($id);
         // TO Update into the Schemes
         $update_scheme = $scheme->update([
             'segment_id' => $request->segment,
@@ -141,7 +141,7 @@ class SchemesController extends Controller
 
     public function toggleStatus($id)
     {
-        $scheme = ConsumerScheme::findOrFail($id);
+        $scheme = MasterConsumerScheme::findOrFail($id);
 
         // Toggle status (1 → 0, 0 → 1)
         $scheme->status = !$scheme->status;

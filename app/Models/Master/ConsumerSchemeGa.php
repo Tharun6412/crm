@@ -29,7 +29,7 @@ class ConsumerSchemeGa extends Model
      */
     public function scheme():BelongsTo
     {
-        return $this->belongsTo(ConsumerScheme::class, 'scheme_id')->withDefault();
+        return $this->belongsTo(MasterConsumerScheme::class, 'scheme_id')->withDefault();
     }
 
     /**

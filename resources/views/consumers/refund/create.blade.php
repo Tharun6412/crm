@@ -6,16 +6,17 @@
         </div>
         <div class="modal-body">
             {{-- Consumer basic details --}}
-            <x-consumer.refund-details :refund="$refund_data" type="2" class="bg-info-subtle" />           
+            {{-- <x-consumer.refund-details :refund="$refund_data" type="2" class="bg-info-subtle" />            --}}
+            <x-consumer.basic-details :consumer="$consumer_scheme->consumer" type="2" class="bg-info-subtle" />
 
-            <div class="row">
-                <div class="clearfix">
-                    <div class="float-left">
-                        <strong class="text-decoration-underline">Refund Details</strong>
-                    </div>
-                </div>
-            </div>                
             @if ($refund_data)
+                <div class="row">
+                    <div class="clearfix">
+                        <div class="float-left">
+                            <strong class="text-decoration-underline">Refund Details</strong>
+                        </div>
+                    </div>
+                </div>                
                 <div class="mt-3">
                     <div class="alert alert-warning">Request Number :&nbsp;{{ $refund_data->request_no }}</div>
                     <div class="alert alert-warning">Refund Status :&nbsp;{{ $refund_data->status->name }}</div>

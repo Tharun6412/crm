@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use App\Models\Invoice\BillInvoice;
-use App\Models\Invoice\BillStateInvoiceCounter;
+use App\Models\Invoice\InvoiceCounter;
 use Illuminate\Support\Facades\DB;
 
 class InvoiceGeneration 
@@ -27,7 +27,7 @@ class InvoiceGeneration
      */
     public static function invoiceNumberGenerate($inv_number_details) : string
     {
-        $inv_type_data = BillStateInvoiceCounter::firstOrNew(['state_id' => $inv_number_details['state_id'], 'invoice_type' => $inv_number_details['inv_type']]);
+        $inv_type_data = InvoiceCounter::firstOrNew(['state_id' => $inv_number_details['state_id'], 'invoice_type' => $inv_number_details['inv_type']]);
         // Values to be inserted
         $inv_code = ($inv_number_details['inv_type'] == "1") ? "G" : "V";
         $inv_type_data->invoice_code = $inv_number_details['state_code'].$inv_code;

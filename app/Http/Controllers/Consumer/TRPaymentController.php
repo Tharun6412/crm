@@ -6,12 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Models\Consumer\CaCounter;
 use App\Models\Consumer\Consumer;
 use App\Models\Consumer\ConsumerSdPayment;
-use App\Models\Consumer\ConsumersScheme;
-use App\Models\Consumer\ConsumersStatus;
-use App\Models\Invoice\BillInvoice;
+use App\Models\Consumer\ConsumerScheme;
+use App\Models\Consumer\ConsumerStatus;
 use App\Models\Invoice\InvoicePayment;
 use App\Models\Master\PaymentType;
-use App\Services\InvoiceGeneration;
+use App\Services\InvoiceService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -33,7 +32,7 @@ class TRPaymentController extends Controller
     public function edit(Request $request, $id) 
     {
         $payment_types = PaymentType::all();
-        $consumer_scheme = ConsumersScheme::with(['scheme'])->where('consumer_id', $id)->first();
+        $consumer_scheme = ConsumerScheme::with(['scheme'])->where('consumer_id', $id)->first();
         return view('consumers.deposit-details.pay', [
             'consumer_scheme' => $consumer_scheme,
             'payment_types' => $payment_types,
@@ -48,7 +47,7 @@ class TRPaymentController extends Controller
     public function update(Request $request, $id)
     {
         // Get consumer scheme and scheme details
-        $consumer_scheme = ConsumersScheme::where('consumer_id', $id)->first();
+        $consumer_scheme = ConsumerScheme::where('consumer_id', $id)->first();
         
         // Validations
         $request->validate([
@@ -74,7 +73,6 @@ class TRPaymentController extends Controller
                 'status_id' => 2,
                 'updated_by' => Auth::id(),
             ]);
-
             // Scheme Details
             // Paid Amount = Amount - Minimun Payment
             $paid_amt = $request->amount - $consumer_scheme->scheme->registration;
@@ -86,7 +84,6 @@ class TRPaymentController extends Controller
                     'balance' => $balance_amt,
                     'status' => ($balance_amt == 0) ? 1 : 0, // 1:Paid, 0:Not Paid
                 ]);
-
                 // Add Record to SD Payment
                 ConsumerSdPayment::create([
                     'consumer_id' => $consumer_scheme->consumer_id,
@@ -105,31 +102,40 @@ class TRPaymentController extends Controller
             $gst_calculated_amt = 1.18; //(1+18%)
             $base_amt = round($amt / $gst_calculated_amt, 3);
             $tax_amt = round($amt - $base_amt, 3);
-            $invoice_details = [
-                'type_id' => 2, // Service Invoice
-                'consumer_id' => $consumer_scheme->consumer_id,
-                'invoice_date' => Carbon::now()->toDateString(),
-                'base_amount' => $base_amt,
-                'taxable_amount' => $base_amt,
-                'tax_id' => 2,
-                'tax_value' => 18,
-                'tax_amount' => $tax_amt,
-                'total_amount' => $amt,
-                'paid_amount' => $amt,
-                'balance_amt' => 0,
-                'status_id' => 1, // Paid
-                'created_by' => Auth::id(),
+            $invoice_items[] = [
+                'item_id' => 1,
+                'quantity' => 1,
+                'unit_price' => $base_amt,
+                'total_price' => $base_amt,
+                'created_at' => Carbon::now(),
             ];
-            $inv_number_details = array(
-                'state_id' => $consumer_scheme->consumer->ga->state_id,
-                'inv_type' => 1,
-                'state_code' => $consumer_scheme->consumer->ga->state->code,
-            );
-            $inv_id = InvoiceGeneration::serviceInvoiceGenerate($invoice_details, $inv_number_details);
-
+            $invoice_data = [
+                'config' => [
+                    'state_id' => $consumer_scheme->consumer->ga->state_id,
+                    'tax_id' => 2, //GST = 2
+                ],
+                'headers' => [
+                    'type_id' => 2, // Service Invoice
+                    'consumer_id' => $consumer_scheme->consumer_id,
+                    'invoice_date' => Carbon::now()->toDateString(),
+                    'base_amount' => $base_amt,
+                    'taxable_amount' => $base_amt,
+                    'tax_id' => 2,
+                    'tax_value' => 18,
+                    'tax_amount' => $tax_amt,
+                    'total_amount' => $amt,
+                    'paid_amount' => $amt,
+                    'balance_amt' => 0,
+                    'status_id' => 1, // Paid
+                    'created_by' => Auth::id(),
+                ],
+                'items' => $invoice_items,
+            ];
+            // Generate Invoice with Invoice Service
+            $inv_number = InvoiceService::create($invoice_data);
             // Adding payment record for service invoice
             InvoicePayment::create([
-                'invoice_id' => $inv_id,
+                'invoice_id' => $inv_number['invoice_id'],
                 'payment_date' => Carbon::now()->toDateString(),
                 'payment_type_id' => $request->payment_type,
                 'transaction_id' => $request->transaction_no,
@@ -140,7 +146,7 @@ class TRPaymentController extends Controller
             ]);
 
             // Add consumer status history record
-            ConsumersStatus::create([
+            ConsumerStatus::create([
                 'consumer_id' => $consumer_scheme->consumer_id,
                 'status_id' => 2,
                 'notes' => !empty($request->notes) ? $request->notes : null,

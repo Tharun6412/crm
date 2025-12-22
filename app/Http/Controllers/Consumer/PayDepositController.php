@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Consumer;
 use App\Http\Controllers\Controller;
 use App\Models\Consumer\Consumer;
 use App\Models\Consumer\ConsumerSdPayment;
-use App\Models\Consumer\ConsumersScheme;
+use App\Models\Consumer\ConsumerScheme;
 use App\Models\Master\PaymentType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -36,7 +36,7 @@ class PayDepositController extends Controller
     public function update(Request $request, $id)
     {
         // Get consumer scheme details
-        $consumer_scheme = ConsumersScheme::where('consumer_id', $id)->first();
+        $consumer_scheme = ConsumerScheme::where('consumer_id', $id)->first();
         // Validation
         $request->validate([
             'amount' => ['required', 'numeric', 'gt:0', 'min:1', 'max:' . $consumer_scheme->balance],

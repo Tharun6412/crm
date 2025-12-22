@@ -26,7 +26,7 @@ return new class extends Migration
             $table->foreignId('type_id')->index()->nullable()->constrained(table:'mst_cmp_types')->noActionOnUpdate()->noActionOnDelete();
             $table->foreignId('media_id')->index()->nullable()->constrained(table:'mst_cmp_media')->noActionOnUpdate()->noActionOnDelete();
             $table->foreignId('priority_id')->index()->nullable()->constrained(table:'mst_cmp_priorities')->noActionOnUpdate()->noActionOnDelete();
-            $table->string('estimated_closed_at', length:225)->nullable();
+            $table->dateTime('estimated_closed_at')->nullable();
             $table->dateTime('closed_at')->nullable();
             $table->foreignId('status_id')->index()->nullable()->constrained(table:'mst_cmp_status')->noActionOnUpdate()->noActionOnDelete();
             $table->foreignId('created_by')->nullable()->index()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();

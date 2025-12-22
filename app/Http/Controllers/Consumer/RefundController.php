@@ -1,18 +1,18 @@
 <?php
+/**
+ * Refunds Controller
+ */
 namespace App\Http\Controllers\Consumer;
+
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\DocumentCentre\DocumentUpload;
-use App\Models\Consumer\Consumer;
-use App\Models\Consumer\ConsumerDocument;
 use App\Models\Consumer\ConsumerRefund;
 use App\Models\Consumer\ConsumerRefundStatus;
-use App\Models\Consumer\ConsumersScheme;
-use App\Models\Consumer\ConsumersStatus;
+use App\Models\Consumer\ConsumerScheme;
 use App\Models\Invoice\BillInvoice;
 use App\Models\Invoice\InvoicePayment;
 use App\Models\Master\BillInvoiceType;
 use App\Models\Master\PaymentType;
-use App\Services\InvoiceGeneration;
+use App\Services\InvoiceService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -29,10 +29,12 @@ class RefundController extends Controller
      */
     public function index(Request $request)
     {
+        $sortBy = ($request->get('sortBy')) ? $request->get('sortBy') : 'created_at';
+        $sortOr = ($request->get('sortOr')) ? $request->get('sortOr') : 'desc';
+        $records = ($request->get('records')) ? $request->get('records') : 50;
         $refunds_list = ConsumerRefund::with(['consumer'])->when($request->has('key'), function ($q) use($request) {
                 $q->whereAny(['request_no'], 'like', '%' . $request->key . '%');
-            })->paginate(50)->withQueryString();
-        
+            })->orderBy($sortBy, $sortOr)->paginate($records)->withQueryString();
         // Render output
         if($request->ajax()) {
             return view('consumers.refund.list-body', [
@@ -51,8 +53,10 @@ class RefundController extends Controller
     public function show(Request $request, $id)
     {
         $refund_data = ConsumerRefund::with([
-            'consumer:id,fname,lname,segment_id,crn,status_id',
+            'consumer:id,fname,lname,segment_id,crn,status_id,ga_id,district_id',
             'consumer.segment:id,name',
+            'consumer.district:id,name',
+            'consumer.ga:id,name,code',
             'consumer.status:id,name',
             'consumer.scheme:id,consumer_id,scheme_id,security_deposit,consumption_deposit,total_deposit,paid_deposit,balance',
             'consumer.scheme.scheme:id,name',
@@ -69,9 +73,8 @@ class RefundController extends Controller
      */
     public function refundRequest(Request $request, $id) 
     {
-        $consumer_scheme = ConsumersScheme::where('consumer_id', $id)->first();
+        $consumer_scheme = ConsumerScheme::where('consumer_id', $id)->first();
         $refund_data = ConsumerRefund::where('consumer_id', $id)->first();
-
         return view('consumers.refund.create', [
             'id' => $id, 
             'consumer_scheme' => $consumer_scheme,
@@ -144,30 +147,40 @@ class RefundController extends Controller
             $gst_calculated_amt = 1.18; //(1+18%)
             $base_amt = round($amt/$gst_calculated_amt, 3);
             $tax_amt = round($amt - $base_amt, 3);
-            $invoice_details = array(
-                'type_id' => 2, //Service Invoice
-                'consumer_id' => $refund_data->consumer_id,
-                'invoice_date' => Carbon::now()->toDateString(),
-                'base_amount' => $base_amt,
-                'taxable_amount' => $base_amt,
-                'tax_id' => 2,
-                'tax_value' => 18,
-                'tax_amount' => $tax_amt,
-                'total_amount' => $amt,
-                'paid_amount' => $amt,
-                'balance_amt' => 0,
-                'status_id' => 1, //Paid
-                'created_by' => Auth::id(),
-            );
-            $inv_number_details = array(
-                'state_id' => $refund_data->consumer->ga->state_id,
-                'inv_type' => 1,
-                'state_code' => $refund_data->consumer->ga->state->code,
-            );
-            $inv_id = InvoiceGeneration::serviceInvoiceGenerate($invoice_details, $inv_number_details);
+            $invoice_items[] = [
+                'item_id' => 1,
+                'quantity' => 1,
+                'unit_price' => $base_amt,
+                'total_price' => $base_amt,
+                'created_at' => Carbon::now(),
+            ];
+            $invoice_data = [
+                'config' => [
+                    'state_id' => $refund_data->consumer->ga->state_id,
+                    'tax_id' => 2, //GST = 2
+                ],
+                'headers' => [
+                    'type_id' => 2, //Service Invoice
+                    'consumer_id' => $refund_data->consumer_id,
+                    'invoice_date' => Carbon::now()->toDateString(),
+                    'base_amount' => $base_amt,
+                    'taxable_amount' => $base_amt,
+                    'tax_id' => 2,
+                    'tax_value' => 18,
+                    'tax_amount' => $tax_amt,
+                    'total_amount' => $amt,
+                    'paid_amount' => $amt,
+                    'balance_amt' => 0,
+                    'status_id' => 1, //Paid
+                    'created_by' => Auth::id(),
+                ],
+                'items' => $invoice_items,
+            ];
+            // Generate Invoice with Invoice Service
+            $inv_number = InvoiceService::create($invoice_data);
             // Adding to Invoice Payment
             InvoicePayment::create([
-                'invoice_id' => $inv_id,
+                'invoice_id' => $inv_number['invoice_id'],
                 'payment_date' => Carbon::now()->toDateString(),
                 'payment_type_id' => 13,
                 'transaction_id' => "SD Refund",

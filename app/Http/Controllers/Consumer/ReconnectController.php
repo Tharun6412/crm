@@ -1,16 +1,10 @@
 <?php
 namespace App\Http\Controllers\Consumer;
 use App\Http\Controllers\Controller;
-use App\Models\Consumer\CaCounter;
 use App\Models\Consumer\Consumer;
-use App\Models\Consumer\ConsumerSdPayment;
-use App\Models\Consumer\ConsumersScheme;
-use App\Models\Consumer\ConsumersStatus;
-use App\Models\Invoice\InvoiceItem;
+use App\Models\Consumer\ConsumerStatus;
 use App\Models\Master\BillInvoiceItem;
-use App\Models\Master\ConsumerStatus;
-use App\Models\Master\PaymentType;
-use App\Services\InvoiceGeneration;
+use App\Services\InvoiceService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -56,41 +50,43 @@ class ReconnectController extends Controller
         $gst_calculated_amt = 1.18; //(1+18%)
         $base_amt = round($amt/$gst_calculated_amt, 3);
         $tax_amt = round($amt - $base_amt, 3);
-        $invoice_details = array(
-            'type_id' => 2, //Service Invoice
-            'consumer_id' => $id,
-            'invoice_date' => Carbon::now()->toDateString(),
-            'base_amount' => $base_amt,
-            'taxable_amount' => $base_amt,
-            'tax_id' => 2,
-            'tax_value' => 18,
-            'tax_amount' => $tax_amt,
-            'total_amount' => $amt,
-            'paid_amount' => $amt,
-            'balance_amt' => 0,
-            'status_id' => 1, //Paid
-            'created_by' => Auth::id(),
-        );
-        $inv_number_details = array(
-            'state_id' => $consumer->ga->state_id,
-            'inv_type' => 1,
-            'state_code' => $consumer->ga->state->code,
-        );
-        $create_invoice = InvoiceGeneration::serviceInvoiceGenerate($invoice_details, $inv_number_details);
-        // Invoice item 
-        InvoiceItem::create([
-            'invoice_id' => $create_invoice,
+        $invoice_items[] = [
             'item_id' => $request->item_id,
             'quantity' => 1,
-            'unit_price' => $inv_item->price,
-            'total_price' => $inv_item->price,
-        ]);
+            'unit_price' => $inv_item->basic,
+            'total_price' => $inv_item->basic,
+            'created_at' => Carbon::now(),
+        ];
+        $invoice_data = [
+            'config' => [
+                'state_id' => $consumer->ga->state_id,
+                'tax_id' => 2, //GST = 2
+            ],
+            'headers' => [
+                'type_id' => 2, // Service Invoice
+                'consumer_id' => $id,
+                'invoice_date' => Carbon::now()->toDateString(),
+                'base_amount' => $base_amt,
+                'taxable_amount' => $base_amt,
+                'tax_id' => 2,
+                'tax_value' => 18,
+                'tax_amount' => $tax_amt,
+                'total_amount' => $amt,
+                'paid_amount' => $amt,
+                'balance_amt' => 0,
+                'status_id' => 1, // Paid
+                'created_by' => Auth::id(),
+            ],
+            'items' => $invoice_items,
+        ];
+        // Generate Invoice with Invoice Service
+        $inv_number = InvoiceService::create($invoice_data);
         // Consumer Status Update
         $consumer->update([
             'status_id' => 6,
         ]);
         // Adding to Status History
-        ConsumersStatus::create([
+        ConsumerStatus::create([
             'consumer_id' => $id,
             'status_id' => 10,
             'notes' => !empty($request->notes) ? $request->notes : null,

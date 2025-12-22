@@ -3,12 +3,11 @@
 namespace App\Models\Consumer;
 
 use App\Models\Admin\User;
-use App\Models\Invoice\BillInvoice;
-use App\Models\Master\ConsumerStatus;
+use App\Models\Master\MasterConsumerStatus;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class ConsumersStatus extends Model
+class ConsumerStatus extends Model
 {
     /**
      * The table associated with the model
@@ -44,7 +43,7 @@ class ConsumersStatus extends Model
      */
     public function status() :BelongsTo
     {
-        return $this->belongsTo(ConsumerStatus::class, 'status_id')->withDefault();
+        return $this->belongsTo(MasterConsumerStatus::class, 'status_id')->withDefault();
     }
 
     /**

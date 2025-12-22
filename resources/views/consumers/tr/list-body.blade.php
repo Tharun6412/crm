@@ -50,7 +50,7 @@
                         <tr>
                             <td>{{ $i++ }}</td>
                             <td>{{ $consumer->t_crn }}</td>
-                            <td>{{ $consumer->titleDisplay->name }}&nbsp;{{ $consumer->fname }}&nbsp;{{ $consumer->lname }}</td>
+                            <td>{{ $consumer->titleDisplay->name }}&nbsp;{{ $consumer->name }}</td>
                             <td>{{ $consumer->segment->name }}</td>
                             <td>{{ $consumer->status->name }}</td>
                             <td>{{ $consumer->ga->name }}</td>

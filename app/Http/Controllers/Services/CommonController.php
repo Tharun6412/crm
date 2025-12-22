@@ -5,9 +5,9 @@ namespace App\Http\Controllers\Services;
 use App\Http\Controllers\Controller;
 use App\Models\Master\Area;
 use App\Models\Master\Ca;
-use App\Models\Master\ConsumerScheme;
 use App\Models\Master\ConsumerSchemeGa;
 use App\Models\Master\District;
+use App\Models\Master\MasterConsumerScheme;
 use Illuminate\Http\Request;
 
 class CommonController extends Controller
@@ -68,7 +68,7 @@ class CommonController extends Controller
      */
     public function schemeDetails (Request $request)
     {
-        $scheme_details = ConsumerScheme::find($request->scheme_id);
+        $scheme_details = MasterConsumerScheme::find($request->scheme_id);
         
         return response()->json(['scheme_details' => $scheme_details]);
     }

@@ -2,7 +2,7 @@
 
 namespace App\Models\Master;
 
-use App\Models\Invoice\BillStateInvoiceCounter;
+use App\Models\Invoice\InvoiceCounter;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -37,6 +37,6 @@ class TaxGroup extends Model
      */
     public function counter(): HasMany
     {
-        return $this->hasMany(BillStateInvoiceCounter::class);
+        return $this->hasMany(InvoiceCounter::class);
     }
 }

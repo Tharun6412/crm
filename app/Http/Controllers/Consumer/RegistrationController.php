@@ -7,13 +7,13 @@ use App\Http\Controllers\DocumentCentre\DocumentUpload;
 use App\Http\Requests\Consumer\RegistrationValidationRequest;
 use App\Models\Consumer\Consumer;
 use App\Models\Consumer\ConsumerDocument;
-use App\Models\Consumer\ConsumersScheme;
-use App\Models\Consumer\ConsumersStatus;
+use App\Models\Consumer\ConsumerScheme;
+use App\Models\Consumer\ConsumerStatus;
 use App\Models\DocumentCentre\DocumentTypes;
 use App\Models\Master\ConsumerGasRequired;
 use App\Models\Master\ConsumerNomineeRelation;
-use App\Models\Master\ConsumerScheme;
 use App\Models\Master\Ga;
+use App\Models\Master\MasterConsumerScheme;
 use App\Models\Master\Segment;
 use App\Models\Master\Title;
 use Carbon\Carbon;
@@ -90,15 +90,15 @@ class RegistrationController extends Controller
         $crn_code = "TR".$request->geo_area.$request->charge_area.str_pad($add_consumer->id, 5,'0', STR_PAD_LEFT);
         Consumer::where('id', $add_consumer->id)->update(['t_crn' => $crn_code]);
         // Consumer Status History
-        ConsumersStatus::create([
+        ConsumerStatus::create([
             'consumer_id' => $add_consumer->id,
             'status_id' => 1,
             'created_by' => Auth::id(),
         ]);
         // Consumer Scheme Preparation
         if($request->has('scheme_id') and !empty($request->scheme_id)) {
-            $scheme_details = ConsumerScheme::find($request->scheme_id);
-            $add_consumer_scheme = ConsumersScheme::create([
+            $scheme_details = MasterConsumerScheme::find($request->scheme_id);
+            $add_consumer_scheme = ConsumerScheme::create([
                 'consumer_id' => $add_consumer->id,
                 'scheme_id' => $scheme_details->id,
                 'security_deposit' => $scheme_details->security,

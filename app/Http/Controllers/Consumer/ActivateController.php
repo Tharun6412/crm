@@ -2,7 +2,7 @@
 namespace App\Http\Controllers\Consumer;
 use App\Http\Controllers\Controller;
 use App\Models\Consumer\Consumer;
-use App\Models\Consumer\ConsumersStatus;
+use App\Models\Consumer\ConsumerStatus;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -40,7 +40,7 @@ class ActivateController extends Controller
             'updated_by' => Auth::id(),
         ]);
         // Status History
-        ConsumersStatus::create([
+        ConsumerStatus::create([
             'consumer_id' => $id,
             'status_id' => 6,
             'notes' => $request->notes,

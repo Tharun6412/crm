@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Consumer;
 
 use App\Http\Controllers\Controller;
 use App\Models\Consumer\Consumer;
-use App\Models\Master\ConsumerStatus;
+use App\Models\Master\MasterConsumerStatus;
 use Illuminate\Http\Request;
 
 class ConsumerController extends Controller
@@ -14,7 +14,7 @@ class ConsumerController extends Controller
      * 
      * ConsumerStatus will map the URL slug with database and returns object
      */
-    public function index(Request $request, ConsumerStatus $status)
+    public function index(Request $request, MasterConsumerStatus $status)
     {
         // print_r(session('user'));
         // Get consumers

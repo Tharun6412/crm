@@ -24,7 +24,7 @@
                         <div class="col-md-12 col-sm-12">
                             <div class="text-end">
                                 <button type="submit" class="btn btn-success btn-sm">
-                                    <i class="bi bi-check2-square" aria-hidden="true">&nbsp;</i>Assign
+                                    <i class="bi bi-check2-square" aria-hidden="true">&nbsp;</i>Update
                                 </button>
                             </div>
                         </div>
