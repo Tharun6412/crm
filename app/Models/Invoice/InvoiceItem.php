@@ -42,6 +42,6 @@ class InvoiceItem extends Model
      */
     public function item() :BelongsTo
     {
-        return $this->belongsTo(BillInvoiceItem::class, 'price_history_id')->withDefault();
+        return $this->belongsTo(BillInvoiceItem::class, 'item_id')->withDefault();
     }
 }

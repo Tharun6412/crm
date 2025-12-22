@@ -8,9 +8,6 @@
 @section('page-content')
     <div>
         <x-consumer.basic-details :consumer="$consumer" type="3" class="bg-info-subtle"/>
-        <div class="bg-warning-subtle">
-
-        </div>
     </div>
     <div id="add-gas-bill-success">
         <form action="{{ url('bill/gasInvoice/') }}" name="add-gas-bill-form" id="add-gas-bill-form" method="post">
@@ -26,39 +23,21 @@
                     $startReading = ($invEndReading > 0) ? $invEndReading : (($consumer->meter->initial_reading >= 0) ? $consumer->meter->initial_reading : "");
                 @endphp
                 @if (!empty($invoice))
-                    <div class="row">
-                        <div class="col-md-6 col-sm-6">
-                            <table class="table table-borderless">
-                                <tbody>
-                                    <tr>
-                                        <td>Invoice No.</td>
-                                        <td>:</td>
-                                        <td>{{ $invoice->invoice_number }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Invoice Date</td>
-                                        <td>:</td>
-                                        <td>{{ $invoice->invoice_date->format('d-m-Y') }}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="col-md-6 col-sm-6">
-                            <table class="table table-borderless">
-                                <tbody>
-                                    <tr>
-                                        <td>Invoice End Reading</td>
-                                        <td>:</td>
-                                        <td>{{ $invEndReading }}</td>
-                                        <input type="hidden" id="inv_end_reading" name="inv_end_reading" value={{ $invEndReading }} >
-                                    </tr>
-                                    <tr>
-                                        <td>Invoice Amount</td>
-                                        <td>:</td>
-                                        <td>{{ $invoice->total_amount }}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                    <div class="bg-warning-subtle rounded mt-3">
+                        <input type="hidden" id="inv_end_reading" name="inv_end_reading" value={{ $invEndReading }} >
+                        <div class="row g-2 pb-2 mb-2">
+                            <div class="col-sm-2 text-end fw-semibold">Invoice No. : </div>
+                            <div class="col-sm-4">{{ $invoice->invoice_number }}</div>
+                            <div class="col-sm-2 text-end fw-semibold">Status : </div>
+                            <div class="col-sm-4"><x-invoice.status :status="$invoice->status"/></div>
+                            <div class="col-sm-2 text-end fw-semibold">Invoice Date : </div>
+                            <div class="col-sm-4">{{ $invoice->invoice_date->format('d-m-Y') }}</div>
+                            <div class="col-sm-2 text-end fw-semibold">Consumption : </div>
+                            <div class="col-sm-4">{{ $invoice->consumption->last()->net_consumption ?? '' }} SCM</div>
+                            <div class="col-sm-2 text-end fw-semibold">Reading : </div>
+                            <div class="col-sm-4">{{ $invEndReading }} - {{ $invoice->consumption->last()->prev_reading }}</div>
+                            <div class="col-sm-2 text-end fw-semibold">Amount : </div>
+                            <div class="col-sm-4">{{ $invoice->total_amount }}</div>
                         </div>
                     </div>
                 @else
@@ -82,8 +61,9 @@
                                         <label class="col-form-label">({{ date('d-m-Y', strtotime($start_date)) }} to {{ date('d-m-Y') }})</label>
                                         <input type="hidden" id="start_date" name="start_date" value="{{ $start_date  }}">
                                         <input type="hidden" id="end_date" name="end_date" value="{{ date('Y-m-d') }}">
+                                        <br>{{ $bill_days }} Days
                                     </div>
-                                    <label for="start_reading" class="col-sm-4 col-form-label text-end">Start Reading&nbsp;:&nbsp;</label>
+                                    <label for="start_reading" class="col-sm-4 col-form-label text-end">Previous Reading&nbsp;:&nbsp;</label>
                                     <div class="col-sm-8">
                                         <label class="col-form-label">{{ $startReading }}</label>
                                         <input type="hidden" id="start_reading" name="start_reading" value="{{ $startReading }}">
@@ -92,7 +72,7 @@
                                     <div class="col-sm-8">
                                         <div class="input-group">
                                             <input type="text" class="form-control" name="end_reading" id="end_reading" placeholder="Current reading" onchange="calculateReadings(this.value)">
-                                            <label for="end_reading" class="input-group-text">SCM</label>
+                                            <label for="end_reading" class="input-group-text"><i class="bi bi-input-cursor"></i></label>
                                         </div>
                                         <span class="text-danger" id="end_read_err"></span>
                                     </div>
@@ -105,29 +85,28 @@
                                 <div class="row">
                                     <label for="unit_price" class="col-sm-4 col-form-label text-end">Unit Price&nbsp;:&nbsp;</label>
                                     <div class="col-sm-8">
-                                        <span>{{ $prices->last()->basic_price }}</span>
+                                        <label class="col-form-label">{{ $prices->last()->basic_price }} / SCM</label>
                                         <input type="hidden" id="unit_price" name="unit_price" value="{{ $prices->last()->basic_price }}">
                                     </div>
-                                    <label for="vat" class="col-sm-4 col-form-label text-end">Vat&nbsp;:&nbsp;</label>
+                                    <label for="vat" class="col-sm-4 col-form-label text-end">VAT&nbsp;:&nbsp;</label>
                                     <div class="col-sm-8">
-                                        <span>{{ $prices->last()->tax_value }}</span>
+                                        <label class="col-form-label">{{ $prices->last()->tax_value }} %</label>
                                         <input type="hidden" id="tax_price" name="tax_price" value="{{ $prices->last()->tax_value }}">
                                     </div>
                                     <label for="base_amount" class="col-sm-4 col-form-label text-end">Net SCM&nbsp;:&nbsp;</label>
                                     <div class="col-sm-8">
-                                        <span id="net_scm"></span>
+                                        <label class="col-form-label" id="net_scm"></label> SCM
                                     </div>
                                     <label for="base_amount" class="col-sm-4 col-form-label text-end">Base Amount&nbsp;:&nbsp;</label>
                                     <div class="col-sm-8">
-                                        <span id="base_amt"></span>
-                                    </div>
-                                    <label for="tax_amount" class="col-sm-4 col-form-label text-end">Tax Amount&nbsp;:&nbsp;</label>
+                                       <label class="col-form-label" id="base_amt"></label>                                    </div>
+                                    <label for="tax_amount" class="col-sm-4 col-form-label text-end">VAT Amount&nbsp;:&nbsp;</label>
                                     <div class="col-sm-8">
-                                        <span id="tax_amt"></span>
+                                        <label class="col-form-label" id="tax_amt"></label>
                                     </div>
                                     <label for="total_amount" class="col-sm-4 col-form-label text-end">Total Amount&nbsp;:&nbsp;</label>
                                     <div class="col-sm-8">
-                                        <span id="total_amt"></span>
+                                        <label class="col-form-label" id="total_amt"></label>
                                     </div>
                                 </div>
                             </div>

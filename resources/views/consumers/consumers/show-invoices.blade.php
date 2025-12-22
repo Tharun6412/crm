@@ -1,10 +1,56 @@
-{{-- Show Invoices details, tab content --}}
+{{-- Show invoices, tab content --}}
 
 <div class="border rounded-top">
     <div class="bg-light p-2 fs-5 fw-semibold">
-        <i class="bi bi-files-alt"></i>&nbsp;Invoices
+        <i class="bi bi-files"></i>&nbsp;Invoices - ({{ $invoices->total() }})
     </div>
     <div class="p-2">
-        ...
+        @if ($invoices->count() > 0)
+            <div class="responsive">
+                <table class="table table-bordered table-hover table-primary">
+                    <thead class="table-primary">
+                        <tr>
+                            <th width="1%" nowrap>S No</th>
+                            <th>Invoice number</th>
+                            <th>Date</th>
+                            <th>Due Date</th>
+                            <th class="text-end">Amount</th>
+                            <th>Status</th>
+                            <th>Created By</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($invoices as $invoice)
+                            <tr>
+                                <td>{{ $loop->iteration }}</td>
+                                <td>{{ $invoice->invoice_number }}</td>
+                                <td>{{ $invoice->invoice_date?->format('d-m-y') }}</td>
+                                <td>{{ $invoice->invoice_date?->format('d-m-y') }}</td>
+                                <td class="text-end">{{ numberFormat($invoice->total_amount, 2) }}</td>
+                                <td><x-invoice.status :status="$invoice->status"/></td>
+                                <td>{{ $invoice->createdBy->emp_id }}</td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Actions</button>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item" href="{{ url('bill/invoice/' . $invoice->id) }}" target="_blank"><i class="bi bi-file-text"></i>&nbsp;View</a></li>
+                                            <li><a class="dropdown-item" href="#"><i class="bi bi-printer"></i>&nbsp;Print</a></li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+            <div>
+                {{ $invoices->links('utils.paginator', ['modDiv' => 'nav-inv']) }}
+            </div>
+        @else
+            <div class="alert alert-info">
+                No invoices found!
+            </div>
+        @endif
     </div>
 </div>

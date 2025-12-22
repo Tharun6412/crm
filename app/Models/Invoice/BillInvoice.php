@@ -65,6 +65,14 @@ class BillInvoice extends Model
     }
 
     /**
+     * Relation with items
+     */
+    public function items(): HasMany
+    {
+        return $this->hasMany(InvoiceItem::class, 'invoice_id');
+    }
+
+    /**
      * Relation with Type
      */
     public function invoiceType() :BelongsTo

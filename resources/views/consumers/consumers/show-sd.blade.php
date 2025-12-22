@@ -6,8 +6,8 @@
     </div>
     <div class="p-2">
         <div class="mt-2">
-            <table class="table table-bordered"> 
-                <thead>
+            <table class="table table-bordered table-warning"> 
+                <thead class="table-warning">
                     <tr>
                         <th>Scheme Name</th>
                         <th>#</th>
@@ -38,17 +38,18 @@
         </div>
         <div>
             <h4 class="fw-semibold text-decoration-underline">Security Deposit Paid History</h4>
-            <table class="table table-bordered">
-                <thead>
+            <table class="table table-bordered table-primary">
+                <thead class="table-primary">
                     <tr>
-                        <th>S.No</th>
+                        <th width="1%" nowrap>S.No</th>
                         <th>Date</th>
                         <th>Payment Type</th>
                         <th>Transaction Number</th>
-                        <th class="text-end">Amount</th>
+                        <th class="text-end">Paid</th>
                         <th class="text-end">Balance</th>
-                        <th>Payment Status</th>
+                        <th>Status</th>
                         <th>Created By</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -59,10 +60,19 @@
                                 <td>{{ $sd->created_at->format('d-m-Y') }}</td>
                                 <td>{{ $sd->paymentType->name }}</td>
                                 <td>{{ $sd->transaction_number }}</td>
-                                <td class="text-end">{{ numberFormat($sd->amount) }}</td>
-                                <td class="text-end">{{ numberFormat($sd->balance) }}</td>
+                                <td class="text-end">{{ numberFormat($sd->amount, 2) }}</td>
+                                <td class="text-end">{{ numberFormat($sd->balance, 2) }}</td>
                                 <td>{{ $sd->status->name }}</td>
-                                <td>{{ $sd->createdBy->first_name }}&nbsp;{{ $sd->createdBy->last_name }}</td>
+                                <td>{{ $sd->createdBy->emp_id }}</td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Actions</button>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item" href="#"><i class="bi bi-file-text"></i>&nbsp;View</a></li>
+                                            <li><a class="dropdown-item" href="#"><i class="bi bi-printer"></i>&nbsp;Print</a></li>
+                                        </ul>
+                                    </div>
+                                </td>
                             </tr>
                         @endforeach
                     @else

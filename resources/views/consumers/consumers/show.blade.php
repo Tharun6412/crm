@@ -32,10 +32,10 @@
                             <a href="#" class="list-group-item list-group-item-action list-group-item-light" id="nav-sd-tab" data-bs-toggle="tab" data-bs-target="#nav-sd" role="tab" aria-controls="nav-sd" aria-selected="false">
                                 <i class="bi bi-cash-stack"></i>&nbsp;SD Details
                             </a>
-                            <a href="#" class="list-group-item list-group-item-action list-group-item-light" id="nav-bills-tab" data-bs-toggle="tab" data-bs-target="#nav-bills" role="tab" aria-controls="nav-bills" aria-selected="true">
+                            <a href="#" class="list-group-item list-group-item-action list-group-item-light" id="nav-bills-tab" data-bs-toggle="tab" data-bs-target="#nav-bills" data-url="{{ url('consumers/invoices/' . $consumer->id . '/1') }}" role="tab" aria-controls="nav-bills" aria-selected="true">
                                 <i class="bi bi-files"></i>&nbsp;Bills
                             </a>
-                            <a href="#" class="list-group-item list-group-item-action list-group-item-light" id="nav-inv-tab" data-bs-toggle="tab" data-bs-target="#nav-inv" role="tab" aria-controls="nav-inv" aria-selected="false">
+                            <a href="#" class="list-group-item list-group-item-action list-group-item-light" id="nav-inv-tab" data-bs-toggle="tab" data-bs-target="#nav-inv" data-url="{{ url('consumers/invoices/' . $consumer->id . '/2') }}" role="tab" aria-controls="nav-inv" aria-selected="false">
                                 <i class="bi bi-files-alt"></i>&nbsp;Invoices
                             </a>
                             <a href="#" class="list-group-item list-group-item-action list-group-item-light" id="nav-pay-tab" data-bs-toggle="tab" data-bs-target="#nav-pay" role="tab" aria-controls="nav-pay" aria-selected="true">
@@ -103,10 +103,10 @@
                             @include('consumers.consumers.show-sd')
                         </div>
                         <div class="tab-pane fade" id="nav-bills" role="tabpanel" aria-labelledby="nav-bills-tab" tabindex="0">
-                            @include('consumers.consumers.show-bills')
+                            {{-- Invoices will load dynamically --}}
                         </div>
                         <div class="tab-pane fade" id="nav-inv" role="tabpanel" aria-labelledby="nav-inv-tab" tabindex="0">
-                            @include('consumers.consumers.show-invoices')
+                            {{-- Invoices will load dynamically --}}
                         </div>
                         <div class="tab-pane fade" id="nav-pay" role="tabpanel" aria-labelledby="nav-pay-tab" tabindex="0">
                             @include('consumers.consumers.show-payments')
@@ -127,6 +127,24 @@
     </div>
     <div>
 @endsection
+{{-- Scripts --}}
+@push('scripts')
+    <script type="module">
+        $(function(){
+            // Tabs with ajax
+            $('a[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {                
+                let target = $($(e.target).data('bs-target'));
+                if (target.data('loaded')) return;
+                if($(e.target).data('url')) {
+                    $.get($(e.target).data('url'), function (data) {
+                        target.html(data).data('loaded', true);
+                    });
+                }
+            });
+        });
+    </script>
+@endpush
+{{-- Styles --}}
 @push('styles')
     <style>
         dt {

@@ -9,6 +9,7 @@ use App\Models\Invoice\BillInvoiceConsumption;
 use App\Models\Invoice\BillInvoiceConsumptionDetails;
 use App\Models\Master\PriceHistory;
 use App\Services\InvoiceGeneration;
+use App\Services\InvoiceService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -20,7 +21,7 @@ class GasInvoiceController extends Controller
      */
     public function index() 
     {
-        return  "Index Function";
+        return view('billing.billing.list');
     }
     
     /**
@@ -28,7 +29,7 @@ class GasInvoiceController extends Controller
      * 
      * @param $id consumer_id
      */
-    public function create($id)
+    public function create($id = 0)
     {
         $consumer = Consumer::where('id', $id)
             ->where('status_id', 6)
@@ -43,7 +44,7 @@ class GasInvoiceController extends Controller
 
             $start_date = (!empty($invoice)) ? $invoice->consumption->last()->date_to->format('Y-m-d') : ($consumer->statusHistory->first()->created_at->format('Y-m-d'));
             $end_date = date('Y-m-d');
-            $bill_days = Carbon::parse($start_date)->diffInDays($end_date);
+            $bill_days = Carbon::parse($start_date)->diffInDays($end_date) + 1;
 
             // 2. Get the gas price for the billing
             $prices = PriceHistory::where('district_id', $consumer->district_id)
@@ -63,7 +64,7 @@ class GasInvoiceController extends Controller
             }
 
             // Render output
-            return view('consumers.bills.create', [
+            return view('billing.gas-bill.create', [
                 'consumer' => $consumer, 
                 'invoice' => $invoice, 
                 'prices' => $prices, 
@@ -83,6 +84,7 @@ class GasInvoiceController extends Controller
     {
         // Validation
         $request->validate([
+            'id' => 'required',
             'end_reading' => 'required',
         ]);
 
@@ -122,7 +124,7 @@ class GasInvoiceController extends Controller
                 'cust_err_msg' => ['required' => "No Prices found."],
             ]);
         }
-        $total_no_days = Carbon::parse($start_date)->diffInDays($end_date);
+        $total_no_days = Carbon::parse($start_date)->diffInDays($end_date) + 1;
 
         $start_reading = (float)$request->start_reading;
         $end_reading = (float)$request->end_reading;
@@ -159,7 +161,8 @@ class GasInvoiceController extends Controller
         $avg_price = $p_price / count($prices); 
         
         // invoice number generation
-        $inv_number = InvoiceGeneration::invoiceNumberGenerate(['state_id' => $consumer->ga->state_id, 'inv_type' => 2]);
+        // $inv_number = InvoiceGeneration::invoiceNumberGenerate(['state_id' => $consumer->ga->state_id, 'inv_type' => 2]);
+        $inv_number = InvoiceService::generateNumber($consumer->ga->state_id, 1);
         $invoice_date = Carbon::now()->format('Y-m-d');
         $due_date = Carbon::now()->addDays(15)->format('Y-m-d');
 
@@ -178,7 +181,7 @@ class GasInvoiceController extends Controller
             'paid_amount' => NULL,
             'balance_amount' => $inv_total,
             'due_date' => $due_date,
-            'status_id' => 1,
+            'status_id' => 3, // Not paid
             'created_by' => Auth::id()
         ];
         $inv_insert = BillInvoice::create($invoice_ar);

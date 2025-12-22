@@ -28,8 +28,12 @@ Route::middleware(['auth', ModuleAccess::class])->group(function() {
     Route::resource('payDeposit', App\Http\Controllers\Consumer\PayDepositController::class);
     // Reconnect
     Route::resource('reconnect', App\Http\Controllers\Consumer\ReconnectController::class);
+    
+    // Consumer invoices
+    Route::get('invoices/{id}/{type}', [App\Http\Controllers\Consumer\ConsumerInvoiceController::class, 'index']);
+    
     // Consumers list
     Route::resource('tr', App\Http\Controllers\Consumer\TRController::class);
     Route::get('/{id}', [App\Http\Controllers\Consumer\ConsumerController::class, 'show'])->whereNumber('id');
-    Route::get('/{status:slug?}', [App\Http\Controllers\Consumer\ConsumerController::class, 'index']); 
+    Route::get('/{status:slug?}', [App\Http\Controllers\Consumer\ConsumerController::class, 'index']);
 });

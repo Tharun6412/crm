@@ -13,7 +13,7 @@ class InvoiceService
      * Create invoice
      * 
      * @param array $invoice_data
-     * $invoice_data = [config, headers , items]
+     * $invoice_data = [config, headers, items]
      */
     public static function create($invoice_data)
     {

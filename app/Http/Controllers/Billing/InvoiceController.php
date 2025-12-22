@@ -19,7 +19,7 @@ class InvoiceController extends Controller
      */
     public function index()
     {
-        echo "Invoice generation controller";
+        return view('billing.billing.list');
     }
 
     /**
@@ -193,5 +193,21 @@ class InvoiceController extends Controller
 
         // Response 
         return response()->json(['success' => 'Invoice created successfully with invoice number ' . $inv_number['invoice_number']]);
+    }
+
+    /**
+     * Show invoice
+     * 
+     * @param Int Invoice Id
+     */
+    public function show($id)
+    {
+        // Get invoice details
+        $invoice = BillInvoice::find($id);
+        if(!$invoice)
+            abort(403, 'Invoice not found');
+
+        // Rendert output
+        return view('billing.invoices.show', ['invoice' => $invoice]);
     }
 }
