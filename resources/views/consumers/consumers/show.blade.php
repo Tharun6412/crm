@@ -47,7 +47,7 @@
                             <a href="#" class="list-group-item list-group-item-action list-group-item-light" id="nav-ledger-tab" data-bs-toggle="tab" data-bs-target="#nav-ledger" role="tab" aria-controls="nav-ledger" aria-selected="true">
                                 <i class="bi bi-file-ruled"></i>&nbsp;Ledger
                             </a>
-                            <a href="#" class="list-group-item list-group-item-action list-group-item-light" id="nav-calls-tab" data-bs-toggle="tab" data-bs-target="#nav-calls" role="tab" aria-controls="nav-calls" aria-selected="false">
+                            <a href="#" class="list-group-item list-group-item-action list-group-item-light" id="nav-calls-tab" data-bs-toggle="tab" data-bs-target="#nav-calls" data-url="{{ url('calls/consumerComplaints/' . $consumer->id) }}" role="tab" aria-controls="nav-calls" aria-selected="false">
                                 <i class="bi bi-telephone-inbound"></i>&nbsp;Calls
                             </a>
                         </div>
@@ -118,7 +118,7 @@
                             @include('consumers.consumers.show-ledger')
                         </div>
                         <div class="tab-pane fade" id="nav-calls" role="tabpanel" aria-labelledby="nav-calls-tab" tabindex="0">
-                            @include('consumers.consumers.show-calls')
+                            {{-- @include('consumers.consumers.show-calls') --}}
                         </div>
                     </div>
                 </div>

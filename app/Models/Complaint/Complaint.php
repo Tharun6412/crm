@@ -9,7 +9,10 @@ use App\Models\Master\ComplaintMedia;
 use App\Models\Master\ComplaintPriority;
 use App\Models\Master\ComplaintSegment;
 use App\Models\Master\ComplaintType;
+use App\Models\Master\District;
+use App\Models\Master\Ga;
 use App\Models\Master\MasterComplaintStatus;
+use App\Models\Master\State;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -32,6 +35,9 @@ class Complaint extends Model
     protected $fillable = [
         'consumer_id',
         'code',
+        'state_id',
+        'ga_id',
+        'district_id',
         'name',
         'email',
         'phone',
@@ -147,5 +153,37 @@ class Complaint extends Model
     public function complaintDocuments():HasMany
     {
         return $this->hasMany(ComplaintDocument::class, 'complaint_id', 'id')->orderBy('created_at', 'desc');
+    }
+
+    /**
+     * Relation with State
+     */
+    public function state():BelongsTo
+    {
+        return $this->belongsTo(State::class, 'state_id')->withDefault();
+    }
+
+    /**
+     * Relation with Ga
+     */
+    public function ga():BelongsTo
+    {
+        return $this->belongsTo(Ga::class, 'ga_id')->withDefault();
+    }
+
+    /**
+     * Relation with District
+     */
+    public function district():BelongsTo
+    {
+        return $this->belongsTo(District::class, 'district_id')->withDefault();
+    }
+
+    /**
+     * Relation with Comments
+     */
+    public function comments():HasMany
+    {
+        return $this->hasMany(ComplaintComment::class, 'complaint_id', 'id')->orderBy('created_at', 'desc');
     }
 }

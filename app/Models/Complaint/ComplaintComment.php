@@ -5,6 +5,7 @@ namespace App\Models\Complaint;
 use App\Models\Admin\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class ComplaintComment extends Model
 {
@@ -23,7 +24,8 @@ class ComplaintComment extends Model
     protected $fillable = [
         'complaint_id',
         'comments',
-        'created_by',
+        'commentable_type',
+        'commentable_id',
     ];
 
     /**
@@ -35,10 +37,11 @@ class ComplaintComment extends Model
     }
 
     /**
-     * Realtion with CreatedBy
+     * Polymorphic relation
+     * Can be User or Consumer
      */
-    public function createdBy():BelongsTo
+    public function commentable(): MorphTo
     {
-        return $this->belongsTo(User::class, 'created_by')->withDefault();
+        return $this->morphTo(); //user||consumer
     }
 }

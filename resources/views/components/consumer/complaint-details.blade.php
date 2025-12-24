@@ -3,7 +3,23 @@
     'complaint' => [],
 ])
 {{-- Consumer basic details --}}
-<x-consumer.basic-details :consumer="$complaint->consumer" {{ $attributes->merge(['class']) }} />
+@if($complaint->consumer_id > 0)
+    <x-consumer.basic-details :consumer="$complaint->consumer" {{ $attributes->merge(['class']) }} />
+@else
+    <div class="row gx-2 pb-2 mb-2 bg-info-subtle">
+        <h4 class="fw-semibold text-decoration-underline px-2">Customer Details</h4>
+        <div class="col-sm-2 text-end fw-semibold">Name : </div>
+        <div class="col-sm-4">{{ $complaint->name }}</div>
+        <div class="col-sm-2 text-end fw-semibold">District : </div>
+        <div class="col-sm-4">{{ $complaint->district->name }}</div>
+        <div class="col-sm-2 text-end fw-semibold">Email : </div>
+        <div class="col-sm-4">{{ $complaint->email }}</div>
+        <div class="col-sm-2 text-end fw-semibold">GA : </div>
+        <div class="col-sm-4">{{ $complaint->ga->name }} ({{ $complaint->ga->code }})</div>
+        <div class="col-sm-2 text-end fw-semibold">Phone : </div>
+        <div class="col-sm-4">{{ maskNumber($complaint->phone) }}</div>
+    </div>
+@endif
 {{-- Complaint and Category details --}}
 <div class="row g-2 pb-2 my-2 bg-warning-subtle rounded">
     <span class="px-2 fw-semibold text-decoration-underline">Complaint Details</span>
@@ -21,6 +37,9 @@
         <div class="col-sm-2 text-end fw-semibold">Closed Date : </div>
         <div class="col-sm-4">{{ $complaint->closed_at->format('d-m-Y') }}</div>
     @endif
+    <div class="col-sm-12"></div>
+    <div class="col-sm-2 text-end fw-semibold">Description : </div>
+    <div class="col-sm-10">{{ $complaint->description }}</div>
     <span class="px-2 fw-semibold text-decoration-underline">Category Details</span>
     <div class="col-sm-2 text-end fw-semibold">Category : </div>
     <div class="col-sm-4">{{ $complaint->category->parent->name }}</div>

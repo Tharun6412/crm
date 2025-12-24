@@ -1,4 +1,4 @@
-<div class="modal-dialog modal-lg">
+<div class="modal-dialog modal-xl">
     <div class="modal-content">
         <div class="modal-header">
             <h4 class="modal-title">View Complaint Details&nbsp;#{{ $complaint->code }}</h4>
@@ -49,7 +49,9 @@
                     <span>No Documents found</span>
                 </div>
             @endif
-            <table></table>
+        </div>
+        <div class="p-3"id="comments">
+            @include('complaints.comments')
         </div>
         <div class="table-responsive p-3">
             <h4 class="fw-semibold text-decoration-underline">Complaint Status History</h4>

@@ -6,7 +6,7 @@
         </div>
         <div class="modal-body">
             <div id="complaint-success">
-                <form id="complaint-form" action="{{ url('complaints/store/1') }}" method="POST">
+                <form id="complaint-form" action="{{ url('calls/store/1') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="mt-2">
                         <x-consumer.basic-details :consumer="$consumer" class="bg-info-subtle"/>
@@ -107,6 +107,13 @@
                             <div class="col-sm-4" id="est_close"></div>
                         </div>
                     </div>
+                    <div class="row mb-2">
+                        <label class="col-form-label col-sm-4 text-end">Notes&nbsp;:<span class="text-danger">*</span></label>
+                        <div class="col-sm-8">
+                            <textarea name="notes" id="notes" class="form-control"></textarea>
+                            <span class="text-danger validate-err-msg" id="notes-error"></span>
+                        </div>
+                    </div>
                     <div class="row mb-3">
                         <label class="form-label col-sm-4 text-end">Documents&nbsp;:</label>
                         <div class="col-sm-8">
@@ -148,7 +155,7 @@
     {
         $('#sub_category_id').empty();
         let options = '<option value="">select</option>';
-        $.get("{{ url('complaints/getSubCategories') }}", {'category_id' : category_id}, function(data) {
+        $.get("{{ url('calls/getSubCategories') }}", {'category_id' : category_id}, function(data) {
             if(data.sub_categories && data.sub_categories.length > 0) {
                 data.sub_categories.forEach(function(category) {
                     options += `<option value="${category.id}">${category.name}</option>`;
@@ -161,7 +168,7 @@
     function getSubCategoryDetails(category_id)
     {
         $('#cmp_details').removeClass('d-none');
-        $.get("{{ url('complaints/getSubCategoryDetails') }}", {'sub_category_id' : category_id}, function(data) {
+        $.get("{{ url('calls/getSubCategoryDetails') }}", {'sub_category_id' : category_id}, function(data) {
             $('#cmp_name').html(data.category_details.name);
             $('#cmp_resolution').html(data.category_details.resolution + " " + (data.category_details.resolution_type == 1 ? "Days" : "Hours"));
             $('#cmp_dept').html(data.category_details.department.name);

@@ -11,7 +11,7 @@
                 <x-consumer.complaint-details :complaint="$complaint" class="bg-info-subtle"/>
             </div>
             <div id="assign-success" class="mt-3">
-                <form id="assign-form" action="{{ url('complaints/assignTo/'.$complaint->id) }}" method="POST">
+                <form id="assign-form" action="{{ url('calls/assignTo/'.$complaint->id) }}" method="POST">
                     @csrf
                     {{-- Complaint Assign To Dropdown List --}}
                     <div class="row mb-3">

@@ -11,7 +11,7 @@
                 <x-consumer.complaint-details :complaint="$complaint" class="bg-info-subtle"/>
             </div>
             <div id="inprogress-success" class="mt-3">
-                <form id="inprogress-form" action="{{ url('complaints/statusChange/'.$complaint->id.'/'.$status_id) }}" method="POST">
+                <form id="inprogress-form" action="{{ url('calls/statusChange/'.$complaint->id.'/'.$status_id) }}" method="POST">
                     @csrf
                     <div class="row mb-2">
                         <label class="col-form-label col-sm-4 text-end">Notes&nbsp;:<span class="text-danger">*</span></label>

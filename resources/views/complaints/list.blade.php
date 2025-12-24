@@ -1,9 +1,9 @@
 {{-- Complaints List --}}
 @extends('layouts.layout')
 
-@section('title', 'Complaints')
+@section('title', 'Calls')
 
-@section('page-title', 'Complaints')
+@section('page-title', 'Calls')
 
 @section('page-content')
     <form action="{{ url('complaints') }}" id="complaints-search-form" method="GET">

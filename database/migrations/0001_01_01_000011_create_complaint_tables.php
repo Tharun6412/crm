@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('phone', length:16)->nullable();
             $table->foreignId('category_id')->index()->nullable()->constrained(table:'mst_cmp_categories')->noActionOnUpdate()->noActionOnDelete();
             $table->string('description', length:225)->nullable();
-            $table->foreignId('segment_id')->index()->nullable()->constrained(table:'mst_segments')->noActionOnUpdate()->noActionOnDelete();
+            $table->foreignId('segment_id')->index()->nullable()->constrained(table:'mst_cmp_segments')->noActionOnUpdate()->noActionOnDelete();
             $table->foreignId('type_id')->index()->nullable()->constrained(table:'mst_cmp_types')->noActionOnUpdate()->noActionOnDelete();
             $table->foreignId('media_id')->index()->nullable()->constrained(table:'mst_cmp_media')->noActionOnUpdate()->noActionOnDelete();
             $table->foreignId('priority_id')->index()->nullable()->constrained(table:'mst_cmp_priorities')->noActionOnUpdate()->noActionOnDelete();

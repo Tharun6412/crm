@@ -3,6 +3,7 @@
 namespace App\Models\Consumer;
 
 use App\Models\Admin\User;
+use App\Models\Complaint\ComplaintComment;
 use App\Models\Master\Area;
 use App\Models\Master\Ca;
 use App\Models\Master\ConsumerGasRequired;
@@ -21,6 +22,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Consumer extends Model
 {
@@ -245,5 +247,15 @@ class Consumer extends Model
     public function sdPayment() : HasMany
     {
         return $this->hasMany(ConsumerSdPayment::class, 'consumer_id', 'id')->orderBy('created_at', 'desc');
+    }
+
+    /**
+     * #PolyMorphic relation
+     * Relation with complaints
+     * MorphMany
+     */
+    public function commentsBy():MorphMany
+    {
+        return $this->morphMany(ComplaintComment::class, 'commentable');
     }
 }

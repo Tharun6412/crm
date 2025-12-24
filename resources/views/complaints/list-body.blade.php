@@ -11,13 +11,14 @@
         <button type="submit" class="btn btn-sm btn-success"><i class="bi bi-search"></i></button>
     </div>
     <div class="col-auto">
-        <a href="{{ url('complaints') }}" class="btn btn-warning btn-sm"><i class="bi bi-arrow-clockwise"></i></a>
+        <a href="{{ url('calls') }}" class="btn btn-warning btn-sm"><i class="bi bi-arrow-clockwise"></i></a>
     </div>
     <div class="col-auto">
         ({{ $complaints->total() }}) Records found
     </div>
     <div class="col-auto float-end">
-        <x-auth.link href="{{ url('complaints/create/1') }}" class="btn btn-success btn-sm link-modal">Create</x-auth.link>
+        <x-auth.link href="{{ url('calls/create/1') }}" class="btn btn-success btn-sm link-modal">Create</x-auth.link>
+        <x-auth.link href="{{ url('externalCalls/create') }}" class="btn btn-success btn-sm link-modal">External Calls Create</x-auth.link>
     </div>
 </div>
 {{-- Consumers list --}}
@@ -49,7 +50,7 @@
                 @foreach ($complaints as $complaint)
                     @php
                         if ($complaint->category->resolution_type == 1) {
-                            $difference = ceil($now->diffInDays(\Carbon\Carbon::parse($complaint->estimated_closed_at)))." Days";
+                            $difference = ceil(abs($now->diffInDays(\Carbon\Carbon::parse($complaint->estimated_closed_at))))." Days";
                         }else {
                             $difference = numberFormat(abs($now->diffInHours(\Carbon\Carbon::parse($complaint->estimated_closed_at))), 2)." Hours";
                         }
@@ -57,7 +58,7 @@
                     <tr>
                         <td>{{ $i++ }}</td>
                         <td><x-auth.link href="{{ url('consumers/' . $complaint->consumer_id) }}" target="_blank">{{ $complaint->consumer->crn }}</x-auth.link></td>
-                        <td><x-auth.link href="{{ url('complaints/'.$complaint->id) }}" class="link-modal">{{ $complaint->code }}</x-auth.link></td>
+                        <td><x-auth.link href="{{ url('calls/'.$complaint->id) }}" class="link-modal">{{ $complaint->code }}</x-auth.link></td>
                         <td>{{ $complaint->priority->name }}</td>
                         <td>{{ $complaint->segment->name }}</td>
                         <td>{{ $complaint->estimated_closed_at }}
@@ -76,20 +77,20 @@
                                     Actions
                                 </button>
                                 <ul class="dropdown-menu">
-                                    <li><x-auth.link class="dropdown-item link-modal" href="{{ url('complaints/' . $complaint->id) }}"><i class="bi bi-chevron-right"></i>&nbsp;View</x-auth.link></li>
+                                    <li><x-auth.link class="dropdown-item link-modal" href="{{ url('calls/' . $complaint->id) }}"><i class="bi bi-chevron-right"></i>&nbsp;View</x-auth.link></li>
                                     {{--Complaint Status Dropdown--}}
                                     @if ($complaint->status_id == 1)
-                                        <li><x-auth.link class="dropdown-item link-modal" href="{{ url('complaints/'.$complaint->id.'/edit') }}"><i class="bi bi-chevron-right"></i>&nbsp;Edit</x-auth.link></li>
-                                        <li><x-auth.link class="dropdown-item link-modal" href="{{ url('complaints/assign/'.$complaint->id) }}"><i class="bi bi-chevron-right"></i>&nbsp;Assign</x-auth.link></li>
-                                        <li><x-auth.link class="dropdown-item link-modal" href="{{ url('complaints/close/'.$complaint->id) }}"><i class="bi bi-chevron-right"></i>&nbsp;Close</x-auth.link></li>
-                                        <li><x-auth.link class="dropdown-item link-modal" href="{{ url('complaints/cancel/'.$complaint->id) }}"><i class="bi bi-chevron-right"></i>&nbsp;Cancel</x-auth.link></li>
+                                        <li><x-auth.link class="dropdown-item link-modal" href="{{ url('calls/'.$complaint->id.'/edit') }}"><i class="bi bi-chevron-right"></i>&nbsp;Edit</x-auth.link></li>
+                                        <li><x-auth.link class="dropdown-item link-modal" href="{{ url('calls/assign/'.$complaint->id) }}"><i class="bi bi-chevron-right"></i>&nbsp;Assign</x-auth.link></li>
+                                        <li><x-auth.link class="dropdown-item link-modal" href="{{ url('calls/close/'.$complaint->id) }}"><i class="bi bi-chevron-right"></i>&nbsp;Close</x-auth.link></li>
+                                        <li><x-auth.link class="dropdown-item link-modal" href="{{ url('calls/cancel/'.$complaint->id) }}"><i class="bi bi-chevron-right"></i>&nbsp;Cancel</x-auth.link></li>
                                     @endif
                                     @if ($complaint->status_id == 2 and (auth()->id() == $complaint->assign->assigned_to))
-                                        <li><x-auth.link class="dropdown-item link-modal" href="{{ url('complaints/inProgress/'.$complaint->id) }}"><i class="bi bi-chevron-right"></i>&nbsp;In Progres</x-auth.link></li>
-                                        <li><x-auth.link class="dropdown-item link-modal" href="{{ url('complaints/investigate/'.$complaint->id) }}"><i class="bi bi-chevron-right"></i>&nbsp;Investigate</x-auth.link></li>
+                                        <li><x-auth.link class="dropdown-item link-modal" href="{{ url('calls/inProgress/'.$complaint->id) }}"><i class="bi bi-chevron-right"></i>&nbsp;In Progres</x-auth.link></li>
+                                        <li><x-auth.link class="dropdown-item link-modal" href="{{ url('calls/investigate/'.$complaint->id) }}"><i class="bi bi-chevron-right"></i>&nbsp;Investigate</x-auth.link></li>
                                     @endif
-                                    @if ($complaint->status_id == 3)
-                                        <li><x-auth.link class="dropdown-item link-modal" href="{{ url('complaints/close/'.$complaint->id) }}"><i class="bi bi-chevron-right"></i>&nbsp;Close</x-auth.link></li>
+                                    @if ($complaint->status_id == 3 OR $complaint->status_id == 4)
+                                        <li><x-auth.link class="dropdown-item link-modal" href="{{ url('calls/close/'.$complaint->id) }}"><i class="bi bi-chevron-right"></i>&nbsp;Close</x-auth.link></li>
                                     @endif
                                 </ul>
                             </div>

@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth'])->group(function() {
     // Common services
+    Route::get('stateGas', [App\Http\Controllers\Services\CommonController::class, 'stateGas']);
     Route::get('gaDistricts', [App\Http\Controllers\Services\CommonController::class, 'gaDistricts']);
     Route::get('gaDistrictsSchemes', [App\Http\Controllers\Services\CommonController::class, 'gaDistrictsSchemes']);
     Route::get('districtCas', [App\Http\Controllers\Services\CommonController::class, 'districtCas']);

@@ -7,11 +7,21 @@ use App\Models\Master\Area;
 use App\Models\Master\Ca;
 use App\Models\Master\ConsumerSchemeGa;
 use App\Models\Master\District;
+use App\Models\Master\Ga;
 use App\Models\Master\MasterConsumerScheme;
 use Illuminate\Http\Request;
 
 class CommonController extends Controller
 {
+    /**
+     * Get GeoAreas from state
+     * @param $state_id
+     */
+    public function stateGas(Request $request)
+    {
+        $geo_areas = Ga::select('id', 'name')->where('state_id', $request->state_id)->get();
+        return response()->json(['geo_areas' => $geo_areas]);
+    }
     /**
      * Get districts from GA
      * 

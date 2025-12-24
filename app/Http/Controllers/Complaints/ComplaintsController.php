@@ -9,6 +9,7 @@ use App\Http\Controllers\DocumentCentre\DocumentUpload;
 use App\Models\Admin\User;
 use App\Models\Complaint\Complaint;
 use App\Models\Complaint\ComplaintAssign;
+use App\Models\Complaint\ComplaintComment;
 use App\Models\Complaint\ComplaintDocument;
 use App\Models\Complaint\ComplaintStatusHistory;
 use App\Models\Consumer\Consumer;
@@ -33,7 +34,7 @@ class ComplaintsController extends Controller
         $records = ($request->get('records')) ? $request->get('records') : 50;
         $complaints = Complaint::when($request->has('key'), function ($q) use($request) {
                 $q->whereAny(['code'], 'like', '%' . $request->key . '%');
-            })->orderBy($sortBy, $sortOr)->paginate(2)->withQueryString();
+            })->orderBy($sortBy, $sortOr)->paginate($records)->withQueryString();
         if($request->ajax()) {
             return view('complaints.list-body', ['complaints' => $complaints]);
         }else {
@@ -47,7 +48,23 @@ class ComplaintsController extends Controller
     public function show(Request $request, $id)
     {
         $complaint = Complaint::find($id);
+        $reload = $request->has('reload') ? true : false;
+        if($reload == true) {
+            return view('complaints.comments', ['complaint' => $complaint]);
+        }
         return view('complaints.show', ['complaint' => $complaint]);
+    }
+
+    /**
+     * Relation with Consumer Complaints
+     */
+    public function consumerComplaints(Request $request, $id)
+    {
+        $sortBy = ($request->get('sortBy')) ? $request->get('sortBy') : 'created_at';
+        $sortOr = ($request->get('sortOr')) ? $request->get('sortOr') : 'desc';
+        $records = ($request->get('records')) ? $request->get('records') : 2;
+        $complaints = Complaint::where('consumer_id', $id)->paginate($records)->withQueryString();
+        return view('consumers.consumers.show-calls', ['complaints' => $complaints]);
     }
     /**
      * Create a Complaint For Consumer
@@ -112,6 +129,7 @@ class ComplaintsController extends Controller
             'category_id' => 'required',
             'priority_id' => 'required',
             'sub_category_id' => 'required',
+            'notes' => 'required|max:225', 
         ]);
         $now = Carbon::now();
         $category_details = ComplaintCategory::with(['department', 'type'])->where('id', $request->sub_category_id)->first();
@@ -121,11 +139,16 @@ class ComplaintsController extends Controller
         }else {
             $est_close_at = $now->addHours($resolution_val);
         }
+        $consumer = Consumer::select('ga_id', 'district_id')->where('id', $id)->first();
         // Data Preparation
         // Complaints
         $add_complaint = Complaint::create([
             'consumer_id' => $id,
+            'state_id' => $consumer->ga->state_id,
+            'ga_id' => $consumer->ga_id,
+            'district_id' => $consumer->district_id,
             'category_id' =>  $request->sub_category_id,
+            'description' => $request->notes,
             'segment_id' => $request->segment_id,
             'type_id' => $request->type_id,
             'media_id' => $request->media_id,
@@ -191,6 +214,7 @@ class ComplaintsController extends Controller
             'category_id' => 'required',
             'priority_id' => 'required',
             'sub_category_id' => 'required',
+            'notes' => 'required|max:225',
         ]);
         $now = Carbon::now();
         $category_details = ComplaintCategory::with(['department', 'type'])->where('id', $request->sub_category_id)->first();
@@ -204,6 +228,7 @@ class ComplaintsController extends Controller
         // Complaints
         $add_complaint = Complaint::where('id', $id)->update([
             'category_id' =>  $request->sub_category_id,
+            'description' => $request->notes,
             'segment_id' => $request->segment_id,
             'type_id' => $request->type_id,
             'media_id' => $request->media_id,
@@ -331,5 +356,33 @@ class ComplaintsController extends Controller
             'created_by' => Auth::id(),
         ]);
         return response()->json(['success' => 'consumer status updated successfully']);
+    }
+
+    /**
+     * Relation with Comments
+     */
+    public function comments(Request $request, $id) 
+    {
+        $request->validate(['comments' => 'required']);
+        $commentable = Auth::user(); // User or Consumer
+
+        $commentable->commentsBy()->create([
+            'complaint_id' => $id,
+            'comments' => $request->comments,
+        ]);
+        // ComplaintComment::create([
+        //     'complaint_id' => $id,
+        //     'comments' => $request->comments,
+        //     'created_by' => Auth::id(),
+        // ]);
+    }
+
+    /**
+     * To delete the Comment By ID
+     */
+    public function deleteComment(Request $request, $id)
+    {
+        // TO Delete the comment
+        ComplaintComment::where('id', $id)->delete();
     }
 }
