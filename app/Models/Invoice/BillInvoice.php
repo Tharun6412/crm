@@ -116,8 +116,16 @@ class BillInvoice extends Model
      * Invoice table has HasMany relation with invoice consumption
      * 
      */
-    public function consumption():HasMany
+    public function consumption(): HasMany
     {
         return $this->hasMany(BillInvoiceConsumption::class, 'invoice_id');
+    }
+
+    /**
+     * Relation with Credit notes
+     */
+    public function creditNotes(): HasMany
+    {
+        return $this->hasMany(CreditNote::class, 'invoice_id')->orderBy('created_at', 'desc');
     }
 }

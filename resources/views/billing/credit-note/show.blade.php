@@ -1,12 +1,15 @@
-{{-- Invoice show --}}
+{{-- Credit note show --}}
 
 @extends('layouts.layout')
 
-@section('title', 'Invoice')
+@section('title', 'Credt Note')
 
-@section('page-title', 'Invoice#' . $invoice->invoice_number)
+@section('page-title', 'Credit Note#' . $note->code)
 
 @section('page-content')
+    @php
+        $invoice = $note->invoice;
+    @endphp
     <div class="d-flex align-content-md-start">
         <div class="a4-page pb-2 border bg-white">
             <div class="row p-4">
@@ -14,7 +17,7 @@
                     <img src="{{ asset('img/logo.png') }}" alt="MeghaGas" class="img-fluid">
                 </div>
                 <div class="col-sm-8 text-end">
-                    <span class="fs-3 fw-semibold">INVOICE</span>
+                    <span class="fs-3 fw-semibold">{{ ($note->type == 1) ? 'Credit' : 'Debit' }} Note</span>
                 </div>
             </div>
             <div class="row px-4">
@@ -28,10 +31,10 @@
                 </div>
                 <div class="col-sm-6">
                     <div class="row gy-1 gx-2">
-                        <div class="col-sm-6 text-end">Invoice Number:</div>
-                        <div class="col-sm-6">{{ $invoice->invoice_number }}</div>
+                        <div class="col-sm-6 text-end">Note Number:</div>
+                        <div class="col-sm-6">{{ $note->code }}</div>
                         <div class="col-sm-6 text-end">Date:</div>
-                        <div class="col-sm-6">{{ $invoice->invoice_date?->format('d-m-Y') }}</div>
+                        <div class="col-sm-6">{{ $note->created_at?->format('d-m-Y') }}</div>
                         <div class="col-sm-6 text-end">CRN:</div>
                         <div class="col-sm-6">{{ $invoice->consumer?->crn }}</div>
                     </div>
@@ -48,27 +51,27 @@
                     </address>
                 </div>
                 <div class="col-sm-6 text-center">
-                    {{ $invoice->invoiceType->name ?? '' }}
+                    Reference Invoice: {{ $invoice->invoice_number}}
                 </div>
             </div>
             <div class="px-4">
-                <div class="fw-semibold">Invoice items</div>
+                <div class="fw-semibold">Note items</div>
                 <table class="table table-bordered table-success">
                     <thead class="table-success">
                         <tr>
                             <th width="1%" nowrap>No</th>
-                            <th>Item</th>
+                            <th>Description</th>
                             <th class="text-end">Unit Price</th>
                             <th class="text-end">QTY</th>
                             <th class="text-end">Price</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @if ($invoice->items->count() > 0)
-                            @foreach ($invoice->items as $item)
+                        @if ($note->items->count() > 0)
+                            @foreach ($note->items as $item)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
-                                    <td>{{ $item->item->name ?? '' }}</td>
+                                    <td>{{ $item->description ?? '' }}</td>
                                     <td class="text-end">{{ numberFormat($item->unit_price, 2) }}</td>
                                     <td class="text-end">{{ numberFormat($item->quantity, 2) }}</td>
                                     <td class="text-end">{{ numberFormat(($item->unit_price * $item->quantity), 2) }}</td>
@@ -79,15 +82,15 @@
                     <tfoot>
                         <tr>
                             <td colspan="4" class="text-end">Sub Total</td>
-                            <td class="text-end">{{ numberFormat($invoice->base_amount, 2) }}</td>
+                            <td class="text-end">{{ numberFormat($note->base_amount, 2) }}</td>
                         </tr>
                         <tr>
-                            <td colspan="4" class="text-end">Tax ({{ $invoice->tax->name ??'' }} - {{ $invoice->tax_value }}%)</td>
-                            <td class="text-end">{{ numberFormat($invoice->tax_amount, 2) }}</td>
+                            <td colspan="4" class="text-end">Tax ({{ $note->tax->name ?? 'N/A' }} - {{ $note->tax_value }}%)</td>
+                            <td class="text-end">{{ numberFormat($note->tax_amount, 2) }}</td>
                         </tr>
                         <tr>
-                            <td colspan="4" class="text-end">Invoice Total</td>
-                            <td class="text-end">{{ numberFormat($invoice->total_amount, 2) }}</td>
+                            <td colspan="4" class="text-end">Note Total</td>
+                            <td class="text-end">{{ numberFormat($note->total_amount, 2) }}</td>
                         </tr>
                     </tfoot>
                 </table>
@@ -96,36 +99,10 @@
         <div class="p-2">
             <button class="btn btn-primary"><i class="bi bi-printer"></i>&nbsp;Print</button>
             <button class="btn btn-primary"><i class="bi bi-file-text"></i>&nbsp;Options</button>
-            <div>
-                @if ($invoice->creditNotes->count() > 0)
-                    <div class="fs-5 fw-semibold">Credit/Debit Notes ({{ $invoice->creditNotes->count() }})</div>
-                    <table class="table table-bordered table-hover table-warning">
-                        <thead class="table-warning">
-                            <tr>
-                                <th width="1%" nowrap>S No</th>
-                                <th>Type</th>
-                                <th>Code</th>
-                                <th>Date</th>
-                                <th class="text-end">Amount</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($invoice->creditNotes as $item)
-                                <tr>
-                                    <td>{{ $loop->iteration }}</td>
-                                    <td>{{ ($item->type == 1) ? 'Credit' : 'Debit' }} Note</td>
-                                    <td>{{ $item->code }}</td>
-                                    <td>{{ $item->created_at?->format('d-m-Y H:i') }}</td>
-                                    <td class="text-end">{{ numberFormat($item->total_amount, 2) }}</td>
-                                    <td>
-                                        <a href="{{ url('bill/creditNote/' . $item->id) }}">View</a>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                @endif
+            <div class="p-2">
+                <a href="{{ url('bill/invoice/' . $invoice->id) }}">
+                    Back to invoice - {{ $invoice->invoice_number }}
+                </a>
             </div>
         </div>
     </div>

@@ -29,7 +29,9 @@ Route::middleware(['auth', ModuleAccess::class])->group(function() {
     
     // Credit note
     Route::prefix('creditNote')->group(function () {
-        // 
+        Route::get('/{id}', [App\Http\Controllers\Billing\CreditNoteController::class, 'show']);
+        Route::get('create/{id}', [App\Http\Controllers\Billing\CreditNoteController::class, 'index']);
+        Route::post('create/{id}', [App\Http\Controllers\Billing\CreditNoteController::class, 'store']);
     });
     
 });

@@ -5,7 +5,7 @@ namespace App\Models\Invoice;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class BillCreditItem extends Model
+class CreditItem extends Model
 {
     /**
      * The table associated with the model
@@ -32,6 +32,6 @@ class BillCreditItem extends Model
      */
     public function creditNote():BelongsTo
     {
-        return $this->belongsTo(BillCreditNote::class, 'credit_note_id')->withDefault();
+        return $this->belongsTo(CreditNote::class, 'credit_note_id')->withDefault();
     }
 }

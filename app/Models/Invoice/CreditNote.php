@@ -6,8 +6,9 @@ use App\Models\Admin\User;
 use App\Models\Master\Tax;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class BillCreditNote extends Model
+class CreditNote extends Model
 {
     /**
      * The table associated with the model
@@ -22,6 +23,7 @@ class BillCreditNote extends Model
      * @var array <int string>
      */
     protected $fillable = [
+        'code',
         'invoice_id',
         'type',
         'notes',
@@ -35,9 +37,17 @@ class BillCreditNote extends Model
     ];
 
     /**
+     * Relation with credit items
+     */
+    public function items(): HasMany
+    {
+        return $this->hasMany(CreditItem::class);
+    }
+
+    /**
      * Relation with Invoice
      */
-    public function invoice():BelongsTo
+    public function invoice(): BelongsTo
     {
         return $this->belongsTo(BillInvoice::class, 'invoice_id')->withDefault();
     }
@@ -49,6 +59,7 @@ class BillCreditNote extends Model
     {
         return $this->belongsTo(Tax::class, 'tax_id')->withDefault();
     }
+
     /**
      * Realtion with CreatedBy
      */
