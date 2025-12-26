@@ -170,7 +170,7 @@ class GasInvoiceController extends Controller
         $invoice_ar = [
             'type_id' => 1, //1 => Gas Invoice
             'consumer_id' => $consumer->id,
-            'invoice_number' => $inv_number['invoice_number'],
+            'invoice_number' => $inv_number,
             'invoice_date' => $invoice_date,
             'base_amount' => $inv_base_amt,
             'taxable_amount' => $inv_base_amt,
@@ -181,7 +181,7 @@ class GasInvoiceController extends Controller
             'paid_amount' => NULL,
             'balance_amount' => $inv_total,
             'due_date' => $due_date,
-            'status_id' => 3, // Not paid
+            'status_id' => 2, // Not paid
             'created_by' => Auth::id()
         ];
         $inv_insert = BillInvoice::create($invoice_ar);

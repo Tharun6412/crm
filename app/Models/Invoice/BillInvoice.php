@@ -128,4 +128,29 @@ class BillInvoice extends Model
     {
         return $this->hasMany(CreditNote::class, 'invoice_id')->orderBy('created_at', 'desc');
     }
+    
+    /**
+     * Each invoice may have multiple payments
+     * 
+     */
+    public function payments():HasMany
+    {
+        return $this->hasMany(InvoicePayment::class, 'invoice_id');
+    }
+
+    /**
+     * Parent invoice (original invoice)
+     */
+    public function parentInvoice():BelongsTo
+    {
+        return $this->belongsTo(self::class, 'parent_invoice_id');
+    }
+
+    /**
+     * Child invoices (late fee, penalty, adjustments, etc.)
+     */
+    public function childInvoices():HasMany
+    {
+        return $this->hasMany(self::class, 'parent_invoice_id');
+    }
 }

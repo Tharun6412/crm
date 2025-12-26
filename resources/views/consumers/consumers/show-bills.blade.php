@@ -37,6 +37,9 @@
                                         <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Actions</button>
                                         <ul class="dropdown-menu">
                                             <li><a class="dropdown-item" href="#"><i class="bi bi-file-text"></i>&nbsp;View</a></li>
+                                            @if (in_array($invoice->status_id, [2,3]))
+                                                <li><a class="dropdown-item link-modal" href="{{ url('payments/gasPayments/create/'.$invoice->id) }}"><i class="bi bi-cash"></i>&nbsp;Pay Invoice</a></li>
+                                            @endif
                                             <li><a class="dropdown-item" href="#"><i class="bi bi-printer"></i>&nbsp;Print</a></li>
                                         </ul>
                                     </div>
@@ -56,3 +59,5 @@
         @endif
     </div>
 </div>
+
+@include('scripts.link-modal')

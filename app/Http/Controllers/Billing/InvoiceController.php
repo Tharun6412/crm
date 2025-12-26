@@ -180,7 +180,7 @@ class InvoiceController extends Controller
                 'tax_amount' => $tax_amount,
                 'total_amount' => $invoice_total,
                 'due_date' => date('Y-m-d'),
-                'status_id' => 1,
+                'status_id' => 2,
             ],
             'items' => $invoice_items,
         ];
