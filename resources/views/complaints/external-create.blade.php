@@ -77,9 +77,11 @@
                     </div>
                     <div class="row mt-2 p-2">
                         <h4 class="fw-semibold text-decoration-underline">Complaint Details</h4>
-                        <div class="row mb-2">
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
                             {{-- Complaint Segment --}}
-                            <div class="col-md-4 d-flex align-items-center">
+                            <div class="row mb-3">
                                 <label class="col-form-label col-sm-4 text-end">Group&nbsp;:<span class="text-danger">*</span>&nbsp;</label>
                                 <div class="col-sm-8">
                                     <select class="form-select form-select-sm" name="segment_id" id="segment_id">
@@ -92,7 +94,7 @@
                                 </div>
                             </div>
                             {{-- Type --}}
-                            <div class="col-md-4 d-flex align-items-center">
+                            <div class="row mb-3">
                                 <label class="col-form-label col-sm-4 text-end">Type&nbsp;:<span class="text-danger">*</span>&nbsp;</label>
                                 <div class="col-sm-8">
                                     <select class="form-select form-select-sm" name="type_id" id="type_id">
@@ -105,7 +107,7 @@
                                 </div>
                             </div>
                             {{-- Priority --}}
-                            <div class="col-md-4 d-flex align-items-center">
+                            <div class="row mb-3">
                                 <label class="col-form-label col-sm-4 text-end">Priority&nbsp;:<span class="text-danger">*</span>&nbsp;</label>
                                 <div class="col-sm-8">
                                     <select class="form-select form-select-sm" name="priority_id" id="priority_id">
@@ -117,10 +119,8 @@
                                     <span class="text-danger validate-err-msg" id="priority_id-error"></span>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row mb-2">
                             {{-- Media --}}
-                            <div class="col-md-4 d-flex align-items-center">
+                            <div class="row mb-3">
                                 <label class="col-form-label col-sm-4 text-end">Media&nbsp;:<span class="text-danger">*</span>&nbsp;</label>
                                 <div class="col-sm-8">
                                     <select class="form-select form-select-sm" name="media_id" id="media_id">
@@ -133,7 +133,7 @@
                                 </div>
                             </div>
                             {{-- Category --}}
-                            <div class="col-md-4 d-flex align-items-center">
+                            <div class="row mb-3">
                                 <label class="col-form-label col-sm-4 text-end">Category&nbsp;:<span class="text-danger">*</span>&nbsp;</label>
                                 <div class="col-sm-8">
                                     <select class="form-select form-select-sm" name="category_id" id="category_id" onchange="getSubCategories(this.value)">
@@ -146,8 +146,8 @@
                                 </div>
                             </div>
                             {{--Sub Category --}}
-                            <div class="col-md-4 d-flex align-items-center">
-                                <label class="col-form-label col-sm-4 text-nowrap">Sub Category&nbsp;:<span class="text-danger">*</span>&nbsp;</label>
+                            <div class="row mb-3">
+                                <label class="col-form-label col-sm-4 text-end">Sub Category&nbsp;:<span class="text-danger">*</span>&nbsp;</label>
                                 <div class="col-sm-8">
                                     <select class="form-select form-select-sm" name="sub_category_id" id="sub_category_id" onchange="getSubCategoryDetails(this.value)">
                                         <option value="">select</option>
@@ -158,48 +158,46 @@
                                     <small class="text-danger validate-err-msg" id="sub_category_id-error"></small>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="row mt-2 p-2">
-                        <div class="row mb-2">
-                            <div class="col-md-4 d-flex align-items-center">
+                            <div class="row mb-3">
                                 <label class="col-form-label col-sm-4 text-end">Notes&nbsp;:<span class="text-danger">*</span>&nbsp;</label>
                                 <div class="col-sm-8">
                                     <textarea name="notes" id="notes" class="form-control"></textarea>
                                     <small class="text-danger validate-err-msg" id="notes-error"></small>
                                 </div>
                             </div>
-                            <div class="col-md-8">
-                                <div class="bg-success-subtle d-none" id="cmp_details">
-                                    <div class="g-2">
-                                        <div class="mx-3 fw-semibold text-decoration-underline">Category Details : </div>
-                                        <div class="col-sm-2 text-end fw-semibold">Name : </div>
-                                        <div class="col-sm-4" id="cmp_name"></div>
-                                        <div class="col-sm-2 text-end fw-semibold">Resolution : </div>
-                                        <div class="col-sm-4" id="cmp_resolution"></div>
-                                        <div class="col-sm-2 text-end fw-semibold">Type : </div>
-                                        <div class="col-sm-4" id="cmp_by"></div>
-                                        <div class="col-sm-2 text-end fw-semibold">Department : </div>
-                                        <div class="col-sm-4" id="cmp_dept"></div>
-                                        <div class="col-sm-2 text-end fw-semibold">Est. Close At : </div>
-                                        <div class="col-sm-4" id="est_close"></div>
+                            <div class="row mb-3">
+                                <label class="form-label col-sm-4 text-end">Documents&nbsp;:</label>
+                                <div class="col-sm-8">
+                                    <div class="input-group input-group-sm">
+                                        <input type="file" name="dc_file_list[]" id="dc_file_list_0" class="form-control form-control-sm">
+                                        <span class="text-danger validate-err-msg" id="dc_file_list_0-error"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label class="col-sm-4"></label>
+                                <div class="col-sm-8 mt-2">
+                                    <div class="input-group input-group-sm">
+                                        <input type="file" name="dc_file_list[]" id="dc_file_list_1" class="form-control form-control-sm">
+                                        <span class="text-danger validate-err-msg" id="dc_file_list_1-error"></span>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="row mb-2">
-                            <label class="form-label col-sm-4 text-end">Documents&nbsp;:</label>
-                            <div class="col-sm-8">
-                                <div class="input-group input-group-sm">
-                                    <input type="file" name="dc_file_list[]" id="dc_file_list_0" class="form-control form-control-sm">
-                                    <span class="text-danger validate-err-msg" id="dc_file_list_0-error"></span>
-                                </div>
-                            </div>
-                            <label class="col-sm-4"></label>
-                            <div class="col-sm-8 mt-2">
-                                <div class="input-group input-group-sm">
-                                    <input type="file" name="dc_file_list[]" id="dc_file_list_1" class="form-control form-control-sm">
-                                    <span class="text-danger validate-err-msg" id="dc_file_list_1-error"></span>
+                        <div class="col-md-6">
+                            <div class="mt-2 bg-success-subtle d-none" id="cmp_details">
+                                <div class="row g-2 mb-2">
+                                    <div class="mx-5 fw-semibold text-decoration-underline">Category Details : </div>
+                                    <div class="col-sm-6 text-end fw-semibold">Name : </div>
+                                    <div class="col-sm-6" id="cmp_name"></div>
+                                    <div class="col-sm-6 text-end fw-semibold">Resolution : </div>
+                                    <div class="col-sm-6" id="cmp_resolution"></div>
+                                    <div class="col-sm-6 text-end fw-semibold">Type : </div>
+                                    <div class="col-sm-6" id="cmp_by"></div>
+                                    <div class="col-sm-6 text-end fw-semibold">Department : </div>
+                                    <div class="col-sm-6" id="cmp_dept"></div>
+                                    <div class="col-sm-6 text-end fw-semibold">Est. Close At : </div>
+                                    <div class="col-sm-6" id="est_close"></div>
                                 </div>
                             </div>
                         </div>
@@ -207,9 +205,9 @@
                     <div class="row mb-3" id="external-complaint-error"></div>
                     <div class="row mb-3">
                         <div class="col-md-12 col-sm-12">
-                            <div class="text-end">
+                            <div class="col-sm-2 text-end">
                                 <button type="submit" class="btn btn-success btn-sm">
-                                    <i class="bi bi-check2-square" aria-hidden="true">&nbsp;</i>Add
+                                    <i class="bi bi-check2-square" aria-hidden="true">&nbsp;</i>Add Complaint
                                 </button>
                             </div>
                         </div>

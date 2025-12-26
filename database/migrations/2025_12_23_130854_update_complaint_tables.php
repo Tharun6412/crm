@@ -20,9 +20,19 @@ return new class extends Migration
 
         //cmp_complaint_comments Table Columns update
         Schema::table('cmp_complaint_comments', function(Blueprint $table) {
-            $table->dropForeign(['created_by']);
-            $table->dropColumn('created_by');
+            if(Schema::hasColumn('cmp_complaint_comments', 'created_by')) {
+                $table->dropForeign(['created_by']);
+                $table->dropColumn('created_by');
+            }
             $table->morphs('commentable');
+        });
+
+        // cmp_complaint feedback table columns update
+        Schema::table('cmp_complaint_feedback', function(Blueprint $table) {
+            if(Schema::hasColumn('cmp_complaint_feedback', 'collected_by')) {
+                $table->dropColumn('collected_by');
+            }
+            $table->morphs('collectable');
         });
     }
 
@@ -39,6 +49,15 @@ return new class extends Migration
             $table->dropForeign(['district_id']);
             // Drop columns
             $table->dropColumn(['state_id', 'ga_id', 'district_id']);
+        });
+
+        //cmp_complaint comments
+        Schema::table('cmp_complaint_comments', function(Blueprint $table) {
+            $table->dropMorphs('commentable');
+        });
+        //cmp_complaint feedback
+        Schema::table('cmp_complaint_feedback', function(Blueprint $table) {
+            $table->dropMorphs('collectable');
         });
     }
 };

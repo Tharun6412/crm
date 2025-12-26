@@ -186,4 +186,12 @@ class Complaint extends Model
     {
         return $this->hasMany(ComplaintComment::class, 'complaint_id', 'id')->orderBy('created_at', 'desc');
     }
+
+    /**
+     * Relation with feedback
+     */
+    public function feedback():HasOne
+    {
+        return $this->hasOne(ComplaintFeedback::class, 'complaint_id', 'id');
+    }
 }

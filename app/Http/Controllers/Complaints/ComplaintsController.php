@@ -370,11 +370,6 @@ class ComplaintsController extends Controller
             'complaint_id' => $id,
             'comments' => $request->comments,
         ]);
-        // ComplaintComment::create([
-        //     'complaint_id' => $id,
-        //     'comments' => $request->comments,
-        //     'created_by' => Auth::id(),
-        // ]);
     }
 
     /**

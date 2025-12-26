@@ -4,6 +4,7 @@ namespace App\Models\Consumer;
 
 use App\Models\Admin\User;
 use App\Models\Complaint\ComplaintComment;
+use App\Models\Complaint\ComplaintFeedback;
 use App\Models\Master\Area;
 use App\Models\Master\Ca;
 use App\Models\Master\ConsumerGasRequired;
@@ -251,11 +252,20 @@ class Consumer extends Model
 
     /**
      * #PolyMorphic relation
-     * Relation with complaints
+     * Relation with complaint comments
      * MorphMany
      */
     public function commentsBy():MorphMany
     {
         return $this->morphMany(ComplaintComment::class, 'commentable');
+    }
+    /**
+     * #PolyMorphic relation
+     * Relation with complaint Feedback
+     * MorphMany
+     */
+    public function feedbackBy():MorphMany
+    {
+        return $this->morphMany(ComplaintFeedback::class, 'collectable');
     }
 }

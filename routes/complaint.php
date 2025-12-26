@@ -29,6 +29,7 @@ Route::middleware(['auth', ModuleAccess::class])->group(function() {
     Route::post('calls/assignTo/{id}',[App\Http\Controllers\Complaints\ComplaintsController::class, 'assignTo']);
     Route::post('calls/statusChange/{id}/{status}',[App\Http\Controllers\Complaints\ComplaintsController::class, 'statusChange']);
     // resource
+    Route::resource('calls/feedback', App\Http\Controllers\Complaints\FeedbackController::class);
     Route::resource('calls', App\Http\Controllers\Complaints\ComplaintsController::class);
     // External Calls
     Route::resource('externalCalls', App\Http\Controllers\Complaints\ExternalCallsController::class);

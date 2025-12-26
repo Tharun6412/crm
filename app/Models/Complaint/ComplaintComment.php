@@ -38,7 +38,7 @@ class ComplaintComment extends Model
 
     /**
      * Polymorphic relation
-     * Can be User or Consumer
+     * User or Consumer model instance to be stored
      */
     public function commentable(): MorphTo
     {

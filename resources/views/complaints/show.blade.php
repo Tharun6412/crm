@@ -50,9 +50,24 @@
                 </div>
             @endif
         </div>
-        <div class="p-3"id="comments">
+        <div class="p-3" id="comments">
             @include('complaints.comments')
         </div>
+        @if ($complaint->feedback)
+            <div class="mx-3 p-3 bg-info-subtle bordered">
+                <h4 class="mx-5 fw-semibold text-decoration-underline">Feedback Details</h4>
+                <div class="row g-2">
+                    <div class="col-sm-2 text-end fw-semibold">Rating : </div>
+                    <div class="col-sm-4">{{ $complaint->feedback->rating }}</div>
+                    <div class="col-sm-2 text-end fw-semibold">Added Date : </div>
+                    <div class="col-sm-4">{{ $complaint->feedback->created_at->format('d-m-Y') }}</div>
+                    <div class="col-sm-2 text-end fw-semibold">Notes : </div>
+                    <div class="col-sm-4">{{ $complaint->feedback->notes }}</div>
+                    <div class="col-sm-2 text-end fw-semibold">Added By : </div>
+                    <div class="col-sm-4">{{ $complaint->feedback->collectable->name }}</div>
+                </div>
+            </div>
+            @endif
         <div class="table-responsive p-3">
             <h4 class="fw-semibold text-decoration-underline">Complaint Status History</h4>
             <table class="table table-bordered table-primary">

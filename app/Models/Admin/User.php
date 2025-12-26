@@ -5,6 +5,7 @@ namespace App\Models\Admin;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 use App\Models\Complaint\ComplaintComment;
+use App\Models\Complaint\ComplaintFeedback;
 use App\Models\Master\Department;
 use App\Models\Master\Ga;
 use App\Models\Spot\SpotRoles;
@@ -123,5 +124,12 @@ class User extends Authenticatable
     public function commentsBy():MorphMany
     {
         return $this->morphMany(ComplaintComment::class, 'commentable');
+    }
+    /**
+     * PolyMorph Relation with Feedback
+     */
+    public function feedbackBy():MorphMany
+    {
+        return $this->morphMany(ComplaintFeedback::class, 'collectable');
     }
 }

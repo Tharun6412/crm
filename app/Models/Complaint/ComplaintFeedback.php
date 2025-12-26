@@ -5,8 +5,9 @@ namespace App\Models\Complaint;
 use App\Models\Admin\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
-class ComplaintComment extends Model
+class ComplaintFeedback extends Model
 {
     /**
      * The table associated with the model
@@ -42,5 +43,15 @@ class ComplaintComment extends Model
     public function collectedBy():BelongsTo
     {
         return $this->belongsTo(User::class, 'collected_by')->withDefault();
+    }
+
+    /**
+     * PolyMorph Relation
+     * Relation with Collectable_id
+     * @instance of User|consumer model
+     */
+    public function collectable():MorphTo
+    {
+        return $this->morphTo(); //user|consumer
     }
 }

@@ -60,16 +60,6 @@ class MasterComplaintDataSeeder extends Seeder
             ['id' => 3, 'name' => 'Medium (P3)'],
             ['id' => 4, 'name' => 'Low (P4)'],
         ]);
-        
-        // Complaint Status
-        DB::table('mst_cmp_status')->insert([
-            ['name' => 'Open'],
-            ['name' => 'Assigned'],
-            ['name' => 'In-Progress'],
-            ['name' => 'Investigation'],
-            ['name' => 'Closed'],
-            ['name' => 'Cancel'],
-        ]);
     }
 }
  

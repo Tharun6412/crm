@@ -92,6 +92,9 @@
                                     @if ($complaint->status_id == 3 OR $complaint->status_id == 4)
                                         <li><x-auth.link class="dropdown-item link-modal" href="{{ url('calls/close/'.$complaint->id) }}"><i class="bi bi-chevron-right"></i>&nbsp;Close</x-auth.link></li>
                                     @endif
+                                    @if ($complaint->status_id == 5 and $complaint->feedback == null)
+                                        <li><x-auth.link class="dropdown-item link-modal" href="{{ url('calls/feedback/'.$complaint->id.'/edit') }}"><i class="bi bi-chevron-right"></i>&nbsp;Feedback</x-auth.link></li>
+                                    @endif
                                 </ul>
                             </div>
                         </td>
