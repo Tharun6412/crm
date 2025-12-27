@@ -3,6 +3,11 @@ namespace App\Http\Controllers\Consumer;
 use App\Http\Controllers\Controller;
 use App\Models\Consumer\Consumer;
 use App\Models\Consumer\ConsumerStatus;
+use App\Models\Invoice\BillInvoice;
+use App\Models\Invoice\InvoicePayment;
+use App\Models\Invoice\Ledger;
+use App\Services\LedgerService;
+use Faker\Provider\Payment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -13,7 +18,28 @@ class AcceptController extends Controller
      */
     public function index(Request $request)
     {
-        echo "Invoice generated";
+        $invoice = BillInvoice::find(1);
+        $payment = InvoicePayment::find(1);
+            $ledger = Ledger::where('consumer_id', 1)->latest('id')->first();
+            print "<pre>"; print_r($ledger->debit);exit;
+        $data[] = [
+            'model' => $invoice,
+            'consumer_id' => 1,
+            'description' => "test",
+            'credit' => 100,
+            'debit' => 0,
+            'balance' => 0,
+        ];
+        $data[] = [
+            'model' => $payment,
+            'consumer_id' => 1,
+            'description' => "test",
+            'credit' => 100,
+            'debit' => 0,
+            'balance' => 0,
+        ];
+        LedgerService::create($data);
+        return "Invoices Inserted";
     }
     /**
      * Consumer Scheme Accept State

@@ -44,7 +44,7 @@
                             <a href="#" class="list-group-item list-group-item-action list-group-item-light" id="nav-crd-tab" data-bs-toggle="tab" data-bs-target="#nav-crd" role="tab" aria-controls="nav-crd" aria-selected="false">
                                 <i class="bi bi-file-diff"></i>&nbsp;Credit / Debit Notes
                             </a>
-                            <a href="#" class="list-group-item list-group-item-action list-group-item-light" id="nav-ledger-tab" data-bs-toggle="tab" data-bs-target="#nav-ledger" role="tab" aria-controls="nav-ledger" aria-selected="true">
+                            <a href="#" class="list-group-item list-group-item-action list-group-item-light" id="nav-ledger-tab" data-bs-toggle="tab" data-bs-target="#nav-ledger" data-url="{{ url('bill/ledger/'.$consumer->id) }}" role="tab" aria-controls="nav-ledger" aria-selected="true">
                                 <i class="bi bi-file-ruled"></i>&nbsp;Ledger
                             </a>
                             <a href="#" class="list-group-item list-group-item-action list-group-item-light" id="nav-calls-tab" data-bs-toggle="tab" data-bs-target="#nav-calls" data-url="{{ url('calls/consumerComplaints/' . $consumer->id) }}" role="tab" aria-controls="nav-calls" aria-selected="false">
@@ -115,7 +115,7 @@
                             @include('consumers.consumers.show-credit')
                         </div>
                         <div class="tab-pane fade" id="nav-ledger" role="tabpanel" aria-labelledby="nav-ledger-tab" tabindex="0">
-                            @include('consumers.consumers.show-ledger')
+                            {{-- @include('consumers.consumers.show-ledger') --}}
                         </div>
                         <div class="tab-pane fade" id="nav-calls" role="tabpanel" aria-labelledby="nav-calls-tab" tabindex="0">
                             {{-- @include('consumers.consumers.show-calls') --}}

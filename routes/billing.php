@@ -34,4 +34,6 @@ Route::middleware(['auth', ModuleAccess::class])->group(function() {
         Route::post('create/{id}', [App\Http\Controllers\Billing\CreditNoteController::class, 'store']);
     });
     
+    // Ledger
+    Route::resource('ledger', App\Http\Controllers\Billing\LedgerController::class);
 });

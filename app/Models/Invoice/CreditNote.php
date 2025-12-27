@@ -7,6 +7,7 @@ use App\Models\Master\Tax;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class CreditNote extends Model
 {
@@ -66,5 +67,13 @@ class CreditNote extends Model
     public function createdBy():BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by')->withDefault();
+    }
+
+    /**
+     * PolyMorphic Relation to Ledger
+     */
+    public function ledger():MorphMany
+    {
+        return $this->morphMany(Ledger::class, 'legible');
     }
 }

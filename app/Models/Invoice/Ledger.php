@@ -5,8 +5,9 @@ namespace App\Models\Invoice;
 use App\Models\Consumer\Consumer;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
-class BillLedger extends Model
+class Ledger extends Model
 {
     /**
      * The table associated with the model
@@ -25,7 +26,8 @@ class BillLedger extends Model
         'legible_id',
         'legible_type',
         'description',
-        'amount',
+        'credit',
+        'debit',
         'balance',
     ];
 
@@ -35,5 +37,13 @@ class BillLedger extends Model
     public function consumer() :BelongsTo
     {
         return $this->belongsTo(Consumer::class, 'consumer_id')->withDefault();
+    }
+
+    /**
+     * Polymorph relation
+     */
+    public function legible():MorphTo
+    {
+        return $this->morphTo(); //Invoice|Payments|CreditNote
     }
 }

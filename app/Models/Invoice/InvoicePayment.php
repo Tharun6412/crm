@@ -8,6 +8,7 @@ use App\Models\Master\PaymentTransactionStatus;
 use App\Models\Master\PaymentType;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class InvoicePayment extends Model
 {
@@ -82,5 +83,13 @@ class InvoicePayment extends Model
     public function status():BelongsTo
     {
         return $this->belongsTo(PaymentStatus::class, 'status_id')->withDefault();
+    }
+
+    /**
+     * PolyMorphic Relation to Ledger
+     */
+    public function ledger():MorphMany
+    {
+        return $this->morphMany(Ledger::class, 'legible');
     }
 }

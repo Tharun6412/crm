@@ -5,7 +5,9 @@
  use App\Models\Consumer\Consumer;
 use App\Models\Invoice\BillInvoice;
 use App\Models\Invoice\InvoicePayment;
+use App\Models\Invoice\Ledger;
 use App\Models\Master\PaymentType;
+use App\Services\LedgerService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -68,6 +70,21 @@ class InvoicePaymentsController extends Controller
         ];
         $insert = InvoicePayment::create($payment_ar);
         if($insert) {
+            // Add to Ledger 
+            $payment = InvoicePayment::find($insert->id);
+            // Get the Latest Ledger Data
+            $ledger = Ledger::where('consumer_id', $payment->invoice->consumer_id)->latest('id')->first();
+            $balance = $ledger->balance ? $ledger->balance - $payment->amount : $payment->amount;
+            $ledger_data[] = [
+                'model' => $payment,
+                'consumer_id' => $payment->invoice->consumer_id,
+                'description' => $request->notes,
+                'credit' => NULL,
+                'debit' => $payment->amount,
+                'balance' => $balance, 
+            ];
+            // Call Ledger Service
+            LedgerService::create($ledger_data);
             $inv_ar = [
                 'id' => $request->invoice_id,
                 'status_id' => $inv_payment_status,

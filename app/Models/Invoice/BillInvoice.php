@@ -10,6 +10,7 @@ use App\Models\Master\Tax;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class BillInvoice extends Model
 {
@@ -152,5 +153,13 @@ class BillInvoice extends Model
     public function childInvoices():HasMany
     {
         return $this->hasMany(self::class, 'parent_invoice_id');
+    }
+
+    /**
+     * PolyMorphic Relation to Ledger
+     */
+    public function ledger():MorphMany
+    {
+        return $this->morphMany(Ledger::class, 'legible');
     }
 }
