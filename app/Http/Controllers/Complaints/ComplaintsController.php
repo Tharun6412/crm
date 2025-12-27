@@ -102,12 +102,16 @@ class ComplaintsController extends Controller
      */
     public function getSubCategoryDetails(Request $request)
     {
+        // Validate
+        $request->validate(['sub_category_id' => 'required']);
+        
         $now = Carbon::now();
         $category_details = ComplaintCategory::with(['department', 'type'])->where('id', $request->sub_category_id)->first();
         $resolution_val = (int)$category_details->resolution;
         if($category_details->resolution_type == 1) {
             $est_close_at = $now->addDays($resolution_val);
-        }else {
+        }
+        else {
             $est_close_at = $now->addHours($resolution_val);
         }
         return response()->json([
@@ -254,6 +258,7 @@ class ComplaintsController extends Controller
     {
         $complaint = Complaint::find($id);
         $users = User::where('department_id', $complaint->category->department_id)->get();
+        // Render output
         return view('complaints.assign', [
             'complaint' => $complaint,
             'users' => $users,

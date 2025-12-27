@@ -14,19 +14,17 @@
                 <form id="investigate-form" action="{{ url('calls/statusChange/'.$complaint->id.'/'.$status_id) }}" method="POST">
                     @csrf
                     <div class="row mb-2">
-                        <label class="col-form-label col-sm-4 text-end">Notes&nbsp;:<span class="text-danger">*</span></label>
+                        <label class="col-form-label col-sm-2 text-end">Notes&nbsp;:<span class="text-danger">*</span></label>
                         <div class="col-sm-8">
                             <textarea name="notes" id="notes" class="form-control"></textarea>
                         </div>
                     </div>
-                    <div class="row mb-3" id="investigate-error"></div>
-                    <div class="row mb-3">
-                        <div class="col-md-12 col-sm-12">
-                            <div class="text-end">
-                                <button type="submit" class="btn btn-success btn-sm">
-                                    <i class="bi bi-check2-square" aria-hidden="true">&nbsp;</i>Update
-                                </button>
-                            </div>
+                    <div class="mb-2" id="investigate-error"></div>
+                    <div class="rows">
+                        <div class="offset-sm-2 col-sm-10">
+                            <button type="submit" class="btn btn-success btn-sm">
+                                <i class="bi bi-save" aria-hidden="true">&nbsp;</i>Update status
+                            </button>
                         </div>
                     </div>
                 </form>

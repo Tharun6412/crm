@@ -15,30 +15,28 @@
                     @csrf
                     {{-- Complaint Assign To Dropdown List --}}
                     <div class="row mb-3">
-                        <label class="col-form-label col-sm-4 text-end">Assign To&nbsp;:<span class="text-danger">*</span></label>
-                        <div class="col-sm-8">
+                        <label class="col-form-label col-sm-2 text-end">Assign To&nbsp;:<span class="text-danger">*</span></label>
+                        <div class="col-sm-6">
                             <select class="form-select form-select-sm" name="assign_id" id="assign_id">
                                 <option value="">select</option>
                                 @foreach ($users as $user)
-                                    <option value="{{ $user->id }}">{{ $user->first_name }}&nbsp;{{ $user->last_name }}</option>
+                                    <option value="{{ $user->id }}">{{ $user->first_name }}&nbsp;{{ $user->last_name }} - {{ $user->emp_id }}</option>
                                 @endforeach
                             </select>
                         </div>
                     </div>
                     <div class="row mb-2">
-                        <label class="col-form-label col-sm-4 text-end">Notes&nbsp;:<span class="text-danger">*</span></label>
-                        <div class="col-sm-8">
+                        <label class="col-form-label col-sm-2 text-end">Notes&nbsp;:<span class="text-danger">*</span></label>
+                        <div class="col-sm-6">
                             <textarea name="notes" id="notes" class="form-control"></textarea>
                         </div>
                     </div>
-                    <div class="row mb-3" id="assign-error"></div>
-                    <div class="row mb-3">
-                        <div class="col-md-12 col-sm-12">
-                            <div class="text-end">
-                                <button type="submit" class="btn btn-success btn-sm">
-                                    <i class="bi bi-check2-square" aria-hidden="true">&nbsp;</i>Assign
-                                </button>
-                            </div>
+                    <div class="m-1" id="assign-error"></div>
+                    <div class="row">
+                        <div class="offset-sm-2 col-sm-10">
+                            <button type="submit" class="btn btn-success btn-sm">
+                                <i class="bi bi-check2-square" aria-hidden="true">&nbsp;</i>Assign
+                            </button>
                         </div>
                     </div>
                 </form>

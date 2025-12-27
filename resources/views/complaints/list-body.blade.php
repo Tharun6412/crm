@@ -27,11 +27,15 @@
         <thead class="table-primary">
             <tr>
                 <th width="1%" nowrap>S No</th>
-                <th>Consumer Number</th>
-                <th>Complaint Number</th>
+                <th>GA</th>
+                <th>#Complaint</th>
+                <th>Category</th>
                 <th>Priority</th>
+                <th>CRN</th>
+                <th>Consumer</th>
                 <th>Segment</th>
                 <th>Estimated Close Date</th>
+                <th>Closed Date</th>
                 <th>Status</th>
                 <th>Created At<x-master.date-filter /></th>
                 <th width="2%" nowrap>Actions</th>
@@ -50,26 +54,37 @@
                 @foreach ($complaints as $complaint)
                     @php
                         if ($complaint->category->resolution_type == 1) {
-                            $difference = ceil(abs($now->diffInDays(\Carbon\Carbon::parse($complaint->estimated_closed_at))))." Days";
+                            $difference = ceil(abs($now->diffInDays(\Carbon\Carbon::parse($complaint->estimated_closed_at))))."D";
                         }else {
-                            $difference = numberFormat(abs($now->diffInHours(\Carbon\Carbon::parse($complaint->estimated_closed_at))), 2)." Hours";
+                            $difference = numberFormat(abs($now->diffInHours(\Carbon\Carbon::parse($complaint->estimated_closed_at))), 2)."H";
                         }
                     @endphp
                     <tr>
                         <td>{{ $i++ }}</td>
-                        <td><x-auth.link href="{{ url('consumers/' . $complaint->consumer_id) }}" target="_blank">{{ $complaint->consumer->crn }}</x-auth.link></td>
-                        <td><x-auth.link href="{{ url('calls/'.$complaint->id) }}" class="link-modal">{{ $complaint->code }}</x-auth.link></td>
-                        <td>{{ $complaint->priority->name }}</td>
-                        <td>{{ $complaint->segment->name }}</td>
-                        <td>{{ $complaint->estimated_closed_at }}
-                            @if ($now > $complaint->estimated_closed_at)
-                                <small class="bg bg-danger-subtle">(&nbsp;{{ "Expired in ".$difference }}&nbsp;)</small>
-                            @else
-                                <small class="bg bg-success-subtle">(&nbsp;{{ "Expires in ".$difference }}&nbsp;)</small>
+                        <td nowrap>{{ $complaint->ga->name ?? '' }}</td>
+                        <td nowrap>
+                            <x-auth.link href="{{ url('calls/'.$complaint->id) }}" class="link-modal">{{ $complaint->code }}</x-auth.link>
+                        </td>
+                        <td nowrap>{{ $complaint->category->name }}</td>
+                        <td nowrap>{{ $complaint->priority->name }}</td>
+                        <td nowrap>
+                            <x-auth.link href="{{ url('consumers/' . $complaint->consumer_id) }}" target="_blank">{{ $complaint->consumer->crn }}</x-auth.link>
+                        </td>
+                        <td nowrap>{{ $complaint->consumer->name ?? '' }}</td>
+                        <td nowrap>{{ $complaint->segment->name }}</td>
+                        <td nowrap>
+                            {{ $complaint->estimated_closed_at?->format('d-m-y H:i') }}
+                            @if ($complaint->status_id != 5)
+                                @if ($now > $complaint->estimated_closed_at)
+                                    <span class="badge text-bg-danger">{{ "Expired " . $difference }}</span>
+                                @else
+                                    <span class="badge text-bg-success">{{ "Expires in " . $difference }}</span>
+                                @endif
                             @endif
                         </td>
-                        <td>{{ $complaint->status->name }}</td>
-                        <td>{{ dateFormat($complaint->created_at) }}</td>
+                        <td nowrap>{{ $complaint->closed_at?->format('d-m-Y H:i') }}</td>
+                        <td nowrap>{{ $complaint->status->name }}</td>
+                        <td nowrap>{{ dateFormat($complaint->created_at) }}</td>
                         <td>
                             {{-- Consumers list actions --}}
                             <div class="dropdown">
@@ -85,7 +100,7 @@
                                         <li><x-auth.link class="dropdown-item link-modal" href="{{ url('calls/close/'.$complaint->id) }}"><i class="bi bi-chevron-right"></i>&nbsp;Close</x-auth.link></li>
                                         <li><x-auth.link class="dropdown-item link-modal" href="{{ url('calls/cancel/'.$complaint->id) }}"><i class="bi bi-chevron-right"></i>&nbsp;Cancel</x-auth.link></li>
                                     @endif
-                                    @if ($complaint->status_id == 2 and (auth()->id() == $complaint->assign->assigned_to))
+                                    @if ($complaint->status_id == 2 and (isAdmin() || auth()->id() == $complaint->assign->assigned_to))
                                         <li><x-auth.link class="dropdown-item link-modal" href="{{ url('calls/inProgress/'.$complaint->id) }}"><i class="bi bi-chevron-right"></i>&nbsp;In Progres</x-auth.link></li>
                                         <li><x-auth.link class="dropdown-item link-modal" href="{{ url('calls/investigate/'.$complaint->id) }}"><i class="bi bi-chevron-right"></i>&nbsp;Investigate</x-auth.link></li>
                                     @endif
