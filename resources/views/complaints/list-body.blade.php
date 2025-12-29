@@ -30,13 +30,13 @@
                 <th>GA</th>
                 <th>#Complaint</th>
                 <th>Category</th>
-                <th>Priority</th>
                 <th>CRN</th>
                 <th>Consumer</th>
                 <th>Segment</th>
                 <th>Estimated Close Date</th>
                 <th>Closed Date</th>
-                <th>Status</th>
+                <th>Priority</th>
+                <th nowrap>Status<x-complaint.statusFilter class="float-end" /></th>
                 <th>Created At<x-master.date-filter /></th>
                 <th width="2%" nowrap>Actions</th>
             </tr>
@@ -66,11 +66,10 @@
                             <x-auth.link href="{{ url('calls/'.$complaint->id) }}" class="link-modal">{{ $complaint->code }}</x-auth.link>
                         </td>
                         <td nowrap>{{ $complaint->category->name }}</td>
-                        <td nowrap>{{ $complaint->priority->name }}</td>
                         <td nowrap>
                             <x-auth.link href="{{ url('consumers/' . $complaint->consumer_id) }}" target="_blank">{{ $complaint->consumer->crn }}</x-auth.link>
                         </td>
-                        <td nowrap>{{ $complaint->consumer->name ?? '' }}</td>
+                        <td nowrap>{{ ($complaint->consumer_id > 0) ? $complaint->consumer->name : $complaint->name }}</td>
                         <td nowrap>{{ $complaint->segment->name }}</td>
                         <td nowrap>
                             {{ $complaint->estimated_closed_at?->format('d-m-y H:i') }}
@@ -83,7 +82,8 @@
                             @endif
                         </td>
                         <td nowrap>{{ $complaint->closed_at?->format('d-m-Y H:i') }}</td>
-                        <td nowrap>{{ $complaint->status->name }}</td>
+                        <td nowrap>{{ $complaint->priority->name }}</td>
+                        <td nowrap><x-complaint.status :status="$complaint->status"/></td>
                         <td nowrap>{{ dateFormat($complaint->created_at) }}</td>
                         <td>
                             {{-- Consumers list actions --}}

@@ -29,9 +29,7 @@
                 <div class="col-sm-2 text-end fw-semibold">Rating : </div>
                 <div class="col-sm-4">
                     @if ($complaint->feedback)
-                        @for ($i = 0; $i < $complaint->feedback->rating; $i++)
-                            <i class="bi bi-star-fill text-warning"></i>
-                        @endfor
+                        <x-complaint.rating :rating="$complaint->feedback->rating"/>
                     @endif
                 </div>
                 <div class="col-sm-2 text-end fw-semibold">Description : </div>
@@ -87,9 +85,7 @@
                     <h4>Feedback Details:</h4>
                     <div>
                         <span class="fw-semibold"><i class="bi bi-person-heart"></i>&nbsp;{{ $complaint->feedback->collectable->name }}</span>&nbsp;
-                        @for ($i = 0; $i < $complaint->feedback->rating; $i++)
-                            <i class="bi bi-star-fill text-warning"></i>
-                        @endfor
+                        <x-complaint.rating :rating="$complaint->feedback->rating"/>
                     </div>
                     <figure class="ms-3">
                         <blockquote class="blockquote">

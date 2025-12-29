@@ -12,8 +12,10 @@
                         <tr>
                             <th width="1%" nowrap>S.No</th>
                             <th>Complaint Number</th>
+                            <th>Category</th>
+                            <th>Raised Date</th>
+                            <th>Closed Date</th>
                             <th>Status</th>
-                            <th>Added Date</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -29,8 +31,10 @@
                             <tr>
                                 <td>{{ $i++ }}</td>
                                 <td><x-auth.link href="{{ url('calls/'.$cmp->id) }}" class="link-modal">{{ $cmp->code }}</x-auth.link></td>
-                                <td>{{ $cmp->status->name }}</td>
+                                <td>{{ $cmp->category->name ?? '' }}</td>
                                 <td>{{ $cmp->created_at->format('d-m-Y') }}</td>
+                                <td>{{ $cmp->closed_at?->format('d-m-Y') }}</td>
+                                <td nowrap><x-complaint.status :status="$cmp->status"/></td>
                                 <td>
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Actions</button>

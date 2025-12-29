@@ -14,16 +14,16 @@
                 <form id="close-form" action="{{ url('calls/statusChange/'.$complaint->id.'/'.$status_id) }}" method="POST">
                     @csrf
                     <div class="row mb-2">
-                        <label class="col-form-label col-sm-2 text-end">Notes&nbsp;:<span class="text-danger">*</span></label>
-                        <div class="col-sm-8">
+                        <label class="col-form-label col-sm-3 text-end">Notes&nbsp;:<span class="text-danger">*</span></label>
+                        <div class="col-sm-7">
                             <textarea name="notes" id="notes" class="form-control"></textarea>
                         </div>
                     </div>
-                    <div class="mb-2" id="close-error"></div>
+                    <div class="m-1" id="close-error"></div>
                     <div class="row">
-                        <div class="offset-sm-2 col-sm-10">
-                            <button type="submit" class="btn btn-success btn-sm">
-                                <i class="bi bi-check2-square" aria-hidden="true">&nbsp;</i>Close complaint
+                        <div class="offset-sm-3 col-sm-7">
+                            <button type="submit" class="btn btn-success">
+                                <i class="bi bi-check2-all" aria-hidden="true">&nbsp;</i>Close complaint
                             </button>
                         </div>
                     </div>

@@ -14,9 +14,9 @@
                 <form id="assign-form" action="{{ url('calls/assignTo/'.$complaint->id) }}" method="POST">
                     @csrf
                     {{-- Complaint Assign To Dropdown List --}}
-                    <div class="row mb-3">
-                        <label class="col-form-label col-sm-2 text-end">Assign To&nbsp;:<span class="text-danger">*</span></label>
-                        <div class="col-sm-6">
+                    <div class="row mb-2">
+                        <label class="col-form-label col-sm-3 text-end">Assign To&nbsp;:<span class="text-danger">*</span></label>
+                        <div class="col-sm-7">
                             <select class="form-select form-select-sm" name="assign_id" id="assign_id">
                                 <option value="">select</option>
                                 @foreach ($users as $user)
@@ -26,16 +26,16 @@
                         </div>
                     </div>
                     <div class="row mb-2">
-                        <label class="col-form-label col-sm-2 text-end">Notes&nbsp;:<span class="text-danger">*</span></label>
-                        <div class="col-sm-6">
+                        <label class="col-form-label col-sm-3 text-end">Notes&nbsp;:<span class="text-danger">*</span></label>
+                        <div class="col-sm-7">
                             <textarea name="notes" id="notes" class="form-control"></textarea>
                         </div>
                     </div>
                     <div class="m-1" id="assign-error"></div>
                     <div class="row">
-                        <div class="offset-sm-2 col-sm-10">
-                            <button type="submit" class="btn btn-success btn-sm">
-                                <i class="bi bi-check2-square" aria-hidden="true">&nbsp;</i>Assign
+                        <div class="offset-sm-3 col-sm-7">
+                            <button type="submit" class="btn btn-success">
+                                <i class="bi bi-person-check" aria-hidden="true">&nbsp;</i>Assign
                             </button>
                         </div>
                     </div>

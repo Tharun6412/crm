@@ -34,12 +34,17 @@ class ComplaintsController extends Controller
         $records = ($request->get('records')) ? $request->get('records') : 50;
         $complaints = Complaint::when($request->has('key'), function ($q) use($request) {
                 $q->whereAny(['code'], 'like', '%' . $request->key . '%');
-            })->orderBy($sortBy, $sortOr)->paginate($records)->withQueryString();
-        if($request->ajax()) {
+            })
+            ->when($request->has('cmp_status'), function($q) use($request) {
+                $q->whereIn('status_id', $request->cmp_status);
+            })
+            ->orderBy($sortBy, $sortOr)->paginate($records)->withQueryString();
+        
+        // Render output
+        if($request->ajax())
             return view('complaints.list-body', ['complaints' => $complaints]);
-        }else {
+        else
             return view('complaints.list', ['complaints' => $complaints]);
-        }
     }
 
     /**

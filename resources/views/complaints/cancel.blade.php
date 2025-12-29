@@ -13,20 +13,18 @@
             <div id="cancel-success" class="mt-3">
                 <form id="cancel-form" action="{{ url('calls/statusChange/'.$complaint->id.'/'.$status_id) }}" method="POST">
                     @csrf
-                    <div class="row mb-2">
-                        <label class="col-form-label col-sm-4 text-end">Notes&nbsp;:<span class="text-danger">*</span></label>
-                        <div class="col-sm-8">
+                    <div class="row">
+                        <label class="col-form-label col-sm-3 text-end">Notes&nbsp;:<span class="text-danger">*</span></label>
+                        <div class="col-sm-7">
                             <textarea name="notes" id="notes" class="form-control"></textarea>
                         </div>
                     </div>
-                    <div class="row mb-3" id="cancel-error"></div>
-                    <div class="row mb-3">
-                        <div class="col-md-12 col-sm-12">
-                            <div class="text-end">
-                                <button type="submit" class="btn btn-success btn-sm">
-                                    <i class="bi bi-check2-square" aria-hidden="true">&nbsp;</i>Cancel
-                                </button>
-                            </div>
+                    <div class="my-1" id="cancel-error"></div>
+                    <div class="row">
+                        <div class="offset-sm-3 col-sm-7">
+                            <button type="submit" class="btn btn-success">
+                                <i class="bi bi-x-circle" aria-hidden="true">&nbsp;</i>Cancel
+                            </button>
                         </div>
                     </div>
                 </form>

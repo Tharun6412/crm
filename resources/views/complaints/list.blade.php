@@ -6,7 +6,7 @@
 @section('page-title', 'Calls')
 
 @section('page-content')
-    <form action="{{ url('complaints') }}" id="complaints-search-form" method="GET">
+    <form action="{{ url('calls') }}" id="complaints-search-form" method="GET">
         <div id="complaints-list" class="current-page-reload">
             @include('complaints.list-body')
         </div>

@@ -108,6 +108,7 @@
                         <label class="col-form-label col-sm-3 text-end">Notes&nbsp;:<span class="text-danger">*</span></label>
                         <div class="col-sm-8">
                             <textarea name="notes" id="notes" class="form-control"></textarea>
+                            <div class="form-text">Maximum 255 characters allowed.</div>
                             <span class="text-danger validate-err-msg" id="notes-error"></span>
                         </div>
                     </div>
