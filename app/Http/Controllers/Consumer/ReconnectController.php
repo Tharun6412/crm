@@ -72,9 +72,9 @@ class ReconnectController extends Controller
                 'tax_value' => 18,
                 'tax_amount' => $tax_amt,
                 'total_amount' => $amt,
-                'paid_amount' => $amt,
-                'balance_amt' => 0,
-                'status_id' => 1, // Paid
+                'paid_amount' => null,
+                'balance_amount' => $amt,
+                'status_id' => 2, // Not Paid
                 'created_by' => Auth::id(),
             ],
             'items' => $invoice_items,

@@ -17,6 +17,7 @@ Route::middleware(['auth', ModuleAccess::class])->group(function() {
     // Invoice
     Route::prefix('invoicePayments')->group(function () {
         Route::get('create/{consumer}', [App\Http\Controllers\Payments\InvoicePaymentsController::class, 'create']);
+        Route::get('show/{consumer}', [App\Http\Controllers\Payments\InvoicePaymentsController::class, 'show']);
         Route::resource('/', App\Http\Controllers\Payments\InvoicePaymentsController::class);
     });
     

@@ -98,26 +98,36 @@ class CreditNoteController extends Controller
         $new_note_items = CreditItem::insert($cr_items);
 
         // Adjust invoice balances
-        $eff_total = ($request->note_type == 1) ? -($total) : $total;
+        // $eff_total = ($request->note_type == 1) ? -($total) : $total;
+        if($request->note_type == 1) {
+            $type = "credit";
+            $eff_total = -($total);
+            $credit_amt = $new_note->total_amount;
+            $debit_amt = null;
+        }else {
+            $type = "debit";
+            $eff_total = $total;
+            $credit_amt = null;
+            $debit_amt = $new_note->total_amount;
+        }
+        
+        $type = ($request->note_type == 1) ? "credit" : "debit";
         $invoice = BillInvoice::find($id);
         $invoice->credit_amount = (($invoice->credit_amount) ? $invoice->credit_amount : 0) + ($eff_total);
         $invoice->total_amount = $invoice->total_amount + ($eff_total);
         $invoice->balance_amount = $invoice->balance_amount + ($eff_total);
         $invoice->save();
         // Add Ledger Report
-        $ledger = Ledger::where('consumer_id', $new_note->invoice->consumer_id)->latest('created_at')->first();
-        $creditNote = CreditNote::find($new_note->id);
-        $balance_pay = $ledger?->balance ? $ledger->balance - $creditNote->total_amount : $creditNote->total_amount;
         $ledger_data[] = [
-            'model' => $creditNote,
-            'consumer_id' => $creditNote->invoice->consumer_id,
+            'model' => $new_note,
+            'consumer_id' => $new_note->invoice->consumer_id,
             'description' => "Credit/Debit Note: Invoice Generated with Invoice No.",
-            'credit' => $creditNote->total_amount,
-            'debit' => NULL,
-            'balance' => $balance_pay,
+            'credit' => $credit_amt,
+            'debit' => $debit_amt,
+            'balance' => $new_note->total_amount,
         ];
         // Call Ledger Service
-        LedgerService::create($ledger_data);
+        LedgerService::create($ledger_data, $type);
         // Response
         return response()->json(['success' => 'Note created successfully!']);
     }

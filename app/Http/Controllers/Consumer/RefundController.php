@@ -15,6 +15,7 @@ use App\Models\Master\BillInvoiceType;
 use App\Models\Master\PaymentType;
 use App\Services\InvoiceService;
 use App\Services\LedgerService;
+use App\Services\PaymentService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -181,7 +182,7 @@ class RefundController extends Controller
             // Generate Invoice with Invoice Service
             $inv_number = InvoiceService::create($invoice_data);
             // Adding to Invoice Payment
-            $inv_payment = InvoicePayment::create([
+            $inv_payment = PaymentService::create([
                 'invoice_id' => $inv_number['invoice_id'],
                 'payment_date' => Carbon::now()->toDateString(),
                 'payment_type_id' => 13,
@@ -192,19 +193,6 @@ class RefundController extends Controller
                 'notes' => !empty($request->notes) ? $request->notes : null,
                 'created_by' => Auth::id(),
             ]);
-            // Get Latest Ledger data by consumer ID
-            $ledger = Ledger::where('consumer_id', $id)->latest('created_at')->first();
-            $payment = InvoicePayment::find($inv_payment->id);
-            $balance_pay = $ledger->balance ? $ledger->balance - $inv_payment->amount : $inv_payment->amount;
-            $ledger_data[] = [
-                'model' => $payment,
-                'consumer_id' => $payment->invoice->consumer_id,
-                'description' => "Bill Payment: Invoice Generated with Invoice No.",
-                'credit' => $payment->amount,
-                'debit' => NULL,
-                'balance' => $balance_pay,
-            ];
-            LedgerService::create($ledger_data);
             // InvoicePayment Update
             $ids = $balance->ids ? explode(',', $balance->ids) : [];
             if(!empty($ids)) {

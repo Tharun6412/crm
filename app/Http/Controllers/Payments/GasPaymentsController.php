@@ -8,6 +8,7 @@ use App\Models\Invoice\InvoicePayment;
 use App\Models\Invoice\Ledger;
 use App\Models\Master\PaymentType;
 use App\Services\LedgerService;
+use App\Services\PaymentService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -68,24 +69,8 @@ class GasPaymentsController extends Controller
             'notes' => $request->notes,
             'created_by' => Auth::id(),
         ];
-        $insert = InvoicePayment::create($payment_ar);
-        if($insert) {
-            // Add to Ledger 
-            $payment = InvoicePayment::find($insert->id);
-            // Get the Latest Ledger Data
-            $ledger = Ledger::where('consumer_id', $payment->invoice->consumer_id)->latest('created_at')->first();
-            $balance = $ledger->balance ? $ledger->balance - $payment->amount : $payment->amount;
-            $ledger_data[] = [
-                'model' => $payment,
-                'consumer_id' => $payment->invoice->consumer_id,
-                'description' => "Bill Payment: Invoice Generated with Invoice No.",
-                'credit' => $payment->amount,
-                'debit' => NULL,
-                'balance' => $balance, 
-            ];
-            // Call Ledger Service
-            LedgerService::create($ledger_data);
-            
+        $insert = PaymentService::create($payment_ar);
+        if($insert->id) {
             $inv_ar = [
                 'id' => $request->invoice_id,
                 'status_id' => $inv_payment_status,

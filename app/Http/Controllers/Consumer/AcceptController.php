@@ -7,6 +7,7 @@ use App\Models\Invoice\BillInvoice;
 use App\Models\Invoice\InvoicePayment;
 use App\Models\Invoice\Ledger;
 use App\Services\LedgerService;
+use Carbon\Carbon;
 use Faker\Provider\Payment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -18,27 +19,17 @@ class AcceptController extends Controller
      */
     public function index(Request $request)
     {
-        $invoice = BillInvoice::find(1);
-        $payment = InvoicePayment::find(1);
-            $ledger = Ledger::where('consumer_id', 1)->latest('id')->first();
-            print "<pre>"; print_r($ledger->debit);exit;
-        $data[] = [
-            'model' => $invoice,
-            'consumer_id' => 1,
-            'description' => "test",
-            'credit' => 100,
-            'debit' => 0,
-            'balance' => 0,
-        ];
-        $data[] = [
-            'model' => $payment,
-            'consumer_id' => 1,
-            'description' => "test",
-            'credit' => 100,
-            'debit' => 0,
-            'balance' => 0,
-        ];
-        LedgerService::create($data);
+        $inv_payment = InvoicePayment::create([
+            'invoice_id' => 14,
+            'payment_date' => Carbon::now()->toDateString(),
+            'payment_type_id' => 1,
+            'transaction_id' => "2312312",
+            'amount' => 1000,
+            'status_id' => 1,
+            'notes' => !empty($request->notes) ? $request->notes : null,
+            'created_by' => Auth::id(),
+        ]);
+        dd($inv_payment);
         return "Invoices Inserted";
     }
     /**

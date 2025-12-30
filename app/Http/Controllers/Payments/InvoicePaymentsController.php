@@ -62,6 +62,7 @@ class InvoicePaymentsController extends Controller
             'transaction_id' => $request->transaction_no,
             'amount' => $request->amount,
             'notes' => $request->notes,
+            'status_id' => 1,
         ]);
         /*
         $rem_balance = ($request->invoice_balance - $request->amount);
@@ -82,20 +83,16 @@ class InvoicePaymentsController extends Controller
         $insert = InvoicePayment::create($payment_ar);
         if($insert) {
             // Add to Ledger 
-            $payment = InvoicePayment::find($insert->id);
-            // Get the Latest Ledger Data
-            $ledger = Ledger::where('consumer_id', $payment->invoice->consumer_id)->latest('created_at')->first();
-            $balance = $ledger->balance ? $ledger->balance - $payment->amount : $payment->amount;
             $ledger_data[] = [
-                'model' => $payment,
-                'consumer_id' => $payment->invoice->consumer_id,
+                'model' => $insert,
+                'consumer_id' => $insert->invoice->consumer_id,
                 'description' => "Bill Payment: Invoice Generated with Invoice No.",
-                'credit' => $payment->amount,
+                'credit' => $insert->amount,
                 'debit' => NULL,
-                'balance' => $balance, 
+                'balance' => $insert->amount, 
             ];
             // Call Ledger Service
-            LedgerService::create($ledger_data);
+            LedgerService::create($ledger_data, 'credit');
             $inv_ar = [
                 'id' => $request->invoice_id,
                 'status_id' => $inv_payment_status,
@@ -105,5 +102,19 @@ class InvoicePaymentsController extends Controller
             $inv_insert = BillInvoice::where('id', $request->invoice_id)->update($inv_ar);
         }*/
         return response()->json(['success' => 'Invoice payment updated successfully']);
+    }
+
+    /**
+     * Show Payments By Consumer ID
+     * @param int consumer_id
+     */
+    public function show(Request $request, $id)
+    {
+        $payments = InvoicePayment::whereHas('invoice', function($q) use($id) {
+            $q->where('consumer_id', $id);
+        })->orderBy('created_at', 'desc')->paginate(10)->withQueryString();
+        return view('consumers.consumers.show-payments', [
+            'payments' => $payments,
+        ]);
     }
 }

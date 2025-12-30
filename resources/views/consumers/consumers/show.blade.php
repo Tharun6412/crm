@@ -38,7 +38,7 @@
                             <a href="#" class="list-group-item list-group-item-action list-group-item-light" id="nav-inv-tab" data-bs-toggle="tab" data-bs-target="#nav-inv" data-url="{{ url('consumers/invoices/' . $consumer->id . '/2') }}" role="tab" aria-controls="nav-inv" aria-selected="false">
                                 <i class="bi bi-files-alt"></i>&nbsp;Invoices
                             </a>
-                            <a href="#" class="list-group-item list-group-item-action list-group-item-light" id="nav-pay-tab" data-bs-toggle="tab" data-bs-target="#nav-pay" role="tab" aria-controls="nav-pay" aria-selected="true">
+                            <a href="#" class="list-group-item list-group-item-action list-group-item-light" id="nav-pay-tab" data-bs-toggle="tab" data-bs-target="#nav-pay" data-url="{{ url('payments/invoicePayments/show/'.$consumer->id) }}" role="tab" aria-controls="nav-pay" aria-selected="true">
                                 <i class="bi bi-file-text"></i>&nbsp;Payments
                             </a>
                             <a href="#" class="list-group-item list-group-item-action list-group-item-light" id="nav-crd-tab" data-bs-toggle="tab" data-bs-target="#nav-crd" data-url="{{ url('bill/creditNote/showCreditByConsumerId/'.$consumer->id) }}" role="tab" aria-controls="nav-crd" aria-selected="false">
@@ -109,7 +109,7 @@
                             {{-- Invoices will load dynamically --}}
                         </div>
                         <div class="tab-pane fade" id="nav-pay" role="tabpanel" aria-labelledby="nav-pay-tab" tabindex="0">
-                            @include('consumers.consumers.show-payments')
+                            {{-- @include('consumers.consumers.show-payments') --}}
                         </div>
                         <div class="tab-pane fade" id="nav-crd" role="tabpanel" aria-labelledby="nav-crd-tab" tabindex="0">
                             {{-- @include('consumers.consumers.show-credit') --}}

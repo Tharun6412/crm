@@ -31,7 +31,7 @@ class PaymentService
             'balance' => $balance,
             'notes' => $data['notes'],
             'created_by' => Auth::id(),
-            'status_id' => 1, // Completed
+            'status_id' => $data['status_id'], //1 = Completed
         ]);
 
         // Update invoice paid and balances
@@ -41,6 +41,16 @@ class PaymentService
         $invoice->save();
 
         // Add ledger record
+        $ledger_data[] = [
+            'model' => $new_payment,
+            'consumer_id' => $new_payment->invoice->consumer_id,
+            'description' => "Bill Payment: Invoice Generated with Invoice No.",
+            'credit' => $new_payment->amount,
+            'debit' => NULL,
+            'balance' => $new_payment->amount, 
+        ];
+        // Call Ledger Service
+        LedgerService::create($ledger_data, "credit");
 
         // Return payment object
         return $new_payment;

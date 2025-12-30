@@ -24,21 +24,17 @@ class InvoiceService
         $invoice_data['headers']['invoice_number'] = $inv_number;
         // 2. Insert invoice
         $new_invoice = BillInvoice::create($invoice_data['headers']);
-        // Add to Ledger 
-        $invoice = BillInvoice::find($new_invoice->id);
-        // Get Latest Ledger data by consumer ID
-        $ledger = Ledger::where('consumer_id', $invoice->consumer_id)->latest('id')->first();
-        $balance = $ledger ? ($ledger->balance ?? 0) + $invoice->paid_amount : $invoice->paid_amount;
+        // Prepare Ledger Data
         $data[] = [
-            'model' => $invoice,
-            'consumer_id' => $invoice->consumer_id,
+            'model' => $new_invoice,
+            'consumer_id' => $new_invoice->consumer_id,
             'description' => "Bill: Invoice Generated with Invoice No.",
             'credit' => NULL,
-            'debit' => $invoice->paid_amount,
-            'balance' => $balance,
+            'debit' => $new_invoice->total_amount,
+            'balance' => $new_invoice->total_amount,
         ];
         // Add/insert into Ledger Report
-        LedgerService::create($data);
+        LedgerService::create($data, 'debit');
         // Push new invoice_id to invoice item
         foreach($invoice_data['items'] as &$item) {
             $item['invoice_id'] = $new_invoice->id;

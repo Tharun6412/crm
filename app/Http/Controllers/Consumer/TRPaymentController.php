@@ -13,6 +13,7 @@ use App\Models\Invoice\Ledger;
 use App\Models\Master\PaymentType;
 use App\Services\InvoiceService;
 use App\Services\LedgerService;
+use App\Services\PaymentService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -136,7 +137,7 @@ class TRPaymentController extends Controller
             // Generate Invoice with Invoice Service
             $inv_number = InvoiceService::create($invoice_data);
             // Adding payment record for service invoice
-            $inv_payment = InvoicePayment::create([
+            $inv_payment = PaymentService::create([
                 'invoice_id' => $inv_number['invoice_id'],
                 'payment_date' => Carbon::now()->toDateString(),
                 'payment_type_id' => $request->payment_type,
@@ -146,20 +147,6 @@ class TRPaymentController extends Controller
                 'notes' => !empty($request->notes) ? $request->notes : null,
                 'created_by' => Auth::id(),
             ]);
-            // Get Latest Ledger data by consumer ID
-            $ledger = Ledger::where('consumer_id', $id)->latest('created_at')->first();
-            $payment = InvoicePayment::find($inv_payment->id);
-            $balance = $ledger->balance ? $ledger->balance - $inv_payment->amount : $inv_payment->amount;
-            $ledger_data[] = [
-                'model' => $payment,
-                'consumer_id' => $payment->invoice->consumer_id,
-                'description' => "Bill Payment: Invoice Generated with Invoice No.",
-                'credit' => $payment->amount,
-                'debit' => NULL,
-                'balance' => $balance, 
-            ];
-            LedgerService::create($ledger_data);
-            
             // Add consumer status history record
             ConsumerStatus::create([
                 'consumer_id' => $consumer_scheme->consumer_id,
