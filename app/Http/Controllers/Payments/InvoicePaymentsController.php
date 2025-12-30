@@ -1,19 +1,19 @@
 <?php
- namespace App\Http\Controllers\Payments;
 
- use App\Http\Controllers\Controller;
- use App\Models\Consumer\Consumer;
+namespace App\Http\Controllers\Payments;
+
+use App\Http\Controllers\Controller;
+use App\Models\Consumer\Consumer;
 use App\Models\Invoice\BillInvoice;
 use App\Models\Invoice\InvoicePayment;
 use App\Models\Invoice\Ledger;
 use App\Models\Master\PaymentType;
 use App\Services\LedgerService;
+use App\Services\PaymentService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
-/**
- * This is the payments controller for Gas Invoices.
- */
+
 class InvoicePaymentsController extends Controller
 {
     /**
@@ -46,14 +46,24 @@ class InvoicePaymentsController extends Controller
      */
     public function store(Request $request)
     {
+        // Validation
         $request->validate([
             'invoice_id' => 'required',
             'payment_type' => 'required',
             'transaction_no' => 'required',
-             'amount' => ['required', 'numeric', 'gt:0', 'min:' . $request->invoice_balance, 'max:' . $request->invoice_balance]
+            // 'amount' => ['required', 'numeric', 'gt:0', 'min:' . $request->invoice_balance, 'max:' . $request->invoice_balance]
         ]);
 
-        // $bill = BillInvoice::find($request->invoice_id);
+        // Prepare data for Payment service
+        $payment_data = PaymentService::create([
+            'invoice_id' => $request->invoice_id,
+            'payment_date' => date('Y-m-d'),
+            'payment_type_id' => $request->payment_type,
+            'transaction_id' => $request->transaction_no,
+            'amount' => $request->amount,
+            'notes' => $request->notes,
+        ]);
+        /*
         $rem_balance = ($request->invoice_balance - $request->amount);
         $inv_payment_status = ($rem_balance == 0) ? 1 : 3; 
         $till_paid_amount = ($request->till_paid_amount + $request->amount);
@@ -68,6 +78,7 @@ class InvoicePaymentsController extends Controller
             'notes' => $request->notes,
             'created_by' => Auth::id(),
         ];
+
         $insert = InvoicePayment::create($payment_ar);
         if($insert) {
             // Add to Ledger 
@@ -92,7 +103,7 @@ class InvoicePaymentsController extends Controller
                 'balance_amount' => $rem_balance,
             ];
             $inv_insert = BillInvoice::where('id', $request->invoice_id)->update($inv_ar);
-        }
-        return response()->json(['success' => 'Invoice payment inserted successfully']);
+        }*/
+        return response()->json(['success' => 'Invoice payment updated successfully']);
     }
 }
