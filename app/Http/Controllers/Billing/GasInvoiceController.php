@@ -187,6 +187,7 @@ class GasInvoiceController extends Controller
         $inv_insert = BillInvoice::create($invoice_ar);
 
         if($inv_insert) {
+            
             //  Invoice Consumption array
             $inv_consumption = [
                 'invoice_id' => $inv_insert->id,

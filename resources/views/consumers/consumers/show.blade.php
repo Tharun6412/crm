@@ -41,7 +41,7 @@
                             <a href="#" class="list-group-item list-group-item-action list-group-item-light" id="nav-pay-tab" data-bs-toggle="tab" data-bs-target="#nav-pay" role="tab" aria-controls="nav-pay" aria-selected="true">
                                 <i class="bi bi-file-text"></i>&nbsp;Payments
                             </a>
-                            <a href="#" class="list-group-item list-group-item-action list-group-item-light" id="nav-crd-tab" data-bs-toggle="tab" data-bs-target="#nav-crd" role="tab" aria-controls="nav-crd" aria-selected="false">
+                            <a href="#" class="list-group-item list-group-item-action list-group-item-light" id="nav-crd-tab" data-bs-toggle="tab" data-bs-target="#nav-crd" data-url="{{ url('bill/creditNote/showCreditByConsumerId/'.$consumer->id) }}" role="tab" aria-controls="nav-crd" aria-selected="false">
                                 <i class="bi bi-file-diff"></i>&nbsp;Credit / Debit Notes
                             </a>
                             <a href="#" class="list-group-item list-group-item-action list-group-item-light" id="nav-ledger-tab" data-bs-toggle="tab" data-bs-target="#nav-ledger" data-url="{{ url('bill/ledger/'.$consumer->id) }}" role="tab" aria-controls="nav-ledger" aria-selected="true">
@@ -112,7 +112,7 @@
                             @include('consumers.consumers.show-payments')
                         </div>
                         <div class="tab-pane fade" id="nav-crd" role="tabpanel" aria-labelledby="nav-crd-tab" tabindex="0">
-                            @include('consumers.consumers.show-credit')
+                            {{-- @include('consumers.consumers.show-credit') --}}
                         </div>
                         <div class="tab-pane fade" id="nav-ledger" role="tabpanel" aria-labelledby="nav-ledger-tab" tabindex="0">
                             {{-- @include('consumers.consumers.show-ledger') --}}

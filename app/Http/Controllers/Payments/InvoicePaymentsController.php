@@ -73,14 +73,14 @@ class InvoicePaymentsController extends Controller
             // Add to Ledger 
             $payment = InvoicePayment::find($insert->id);
             // Get the Latest Ledger Data
-            $ledger = Ledger::where('consumer_id', $payment->invoice->consumer_id)->latest('id')->first();
+            $ledger = Ledger::where('consumer_id', $payment->invoice->consumer_id)->latest('created_at')->first();
             $balance = $ledger->balance ? $ledger->balance - $payment->amount : $payment->amount;
             $ledger_data[] = [
                 'model' => $payment,
                 'consumer_id' => $payment->invoice->consumer_id,
-                'description' => $request->notes,
-                'credit' => NULL,
-                'debit' => $payment->amount,
+                'description' => "Bill Payment: Invoice Generated with Invoice No.",
+                'credit' => $payment->amount,
+                'debit' => NULL,
                 'balance' => $balance, 
             ];
             // Call Ledger Service

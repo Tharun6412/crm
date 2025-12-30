@@ -7,6 +7,7 @@ use App\Models\Consumer\Consumer;
 use App\Models\Master\BillInvoiceType;
 use App\Models\Master\BillStatus;
 use App\Models\Master\Tax;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -57,6 +58,12 @@ class BillInvoice extends Model
         ];
     }
 
+    protected $appends = ['invNumber'];
+
+    protected function invNumber():Attribute
+    {
+        return Attribute::get(fn() => "{$this->invoice_number}");
+    }
     /**
      * Relation with Consumer
      */

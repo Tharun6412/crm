@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\Invoice\BillInvoice;
 use App\Models\Invoice\CreditItem;
 use App\Models\Invoice\CreditNote;
+use App\Models\Invoice\Ledger;
 use App\Models\Master\Tax;
+use App\Services\LedgerService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -102,7 +104,20 @@ class CreditNoteController extends Controller
         $invoice->total_amount = $invoice->total_amount + ($eff_total);
         $invoice->balance_amount = $invoice->balance_amount + ($eff_total);
         $invoice->save();
-
+        // Add Ledger Report
+        $ledger = Ledger::where('consumer_id', $new_note->invoice->consumer_id)->latest('created_at')->first();
+        $creditNote = CreditNote::find($new_note->id);
+        $balance_pay = $ledger?->balance ? $ledger->balance - $creditNote->total_amount : $creditNote->total_amount;
+        $ledger_data[] = [
+            'model' => $creditNote,
+            'consumer_id' => $creditNote->invoice->consumer_id,
+            'description' => "Credit/Debit Note: Invoice Generated with Invoice No.",
+            'credit' => $creditNote->total_amount,
+            'debit' => NULL,
+            'balance' => $balance_pay,
+        ];
+        // Call Ledger Service
+        LedgerService::create($ledger_data);
         // Response
         return response()->json(['success' => 'Note created successfully!']);
     }
@@ -122,5 +137,26 @@ class CreditNoteController extends Controller
 
         // Render output
         return view('billing.credit-note.show', ['note' => $note]);
+    }
+
+    /**
+     * Show Credit NOte Details
+     * #consumer Tab
+     * @param int consumer_id
+     */
+    public function showCreditByConsumerId(Request $request, $id)
+    {
+        // Get the invoice details
+        $taxes = Tax::all();
+        // Get past credit notes
+        $credit_notes = CreditNote::whereHas('invoice', function($q) use($id) {
+            $q->where('consumer_id', $id);
+        })->orderBy('created_at', 'desc')->get();
+
+        // Render output
+        return view('consumers.consumers.show-credit', [
+            'credit_notes' => $credit_notes,
+            'taxes' => $taxes,
+        ]);
     }
 }

@@ -4,6 +4,7 @@ namespace App\Models\Invoice;
 
 use App\Models\Admin\User;
 use App\Models\Master\Tax;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -37,6 +38,16 @@ class CreditNote extends Model
         'created_by',
     ];
 
+    // Append invNumber to the $fillable
+    protected $appends = ['invNumber'];
+
+    /**
+     * To Get Invoice Number
+     */
+    protected function invNumber():Attribute
+    {
+        return Attribute::get(fn() => "{$this->invoice->invoice_number}");
+    }
     /**
      * Relation with credit items
      */

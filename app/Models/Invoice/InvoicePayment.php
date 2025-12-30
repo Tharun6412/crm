@@ -6,6 +6,7 @@ use App\Models\Admin\User;
 use App\Models\Master\PaymentStatus;
 use App\Models\Master\PaymentTransactionStatus;
 use App\Models\Master\PaymentType;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
@@ -38,21 +39,27 @@ class InvoicePayment extends Model
 
     /**
      * Casts
-     */
+    */
     public function casts() {
         return [
             'payment_date' => 'date',
         ];
     }
-
+    
     /**
      * Relation with Invoice
-     */
+    */
     public function invoice() :BelongsTo
     {
         return $this->belongsTo(BillInvoice::class, 'invoice_id')->withDefault();
     }
-
+    
+    protected $appends = ['invNumber'];
+    
+    protected function invNumber():Attribute
+    {
+        return Attribute::get(fn () => "{$this->invoice->invoice_number}");
+    }
     /**
      * Relation with Payment Type
      */

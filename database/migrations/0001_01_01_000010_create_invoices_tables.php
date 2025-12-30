@@ -90,7 +90,8 @@ return new class extends Migration
             $table->bigInteger('legible_id')->nullable();
             $table->string('legible_type', length:225)->nullable();
             $table->string('description', length:225)->nullable();
-            $table->double('amount')->nullable();
+            $table->double('credit')->nullable();
+            $table->double('debit')->nullable();
             $table->double('balance')->nullable();
             $table->timestamps();
         });
@@ -98,6 +99,7 @@ return new class extends Migration
         // bil credit notes
         Schema::create('bil_credit_notes', function(Blueprint $table) {
             $table->id();
+            $table->string('code', length:20);
             $table->foreignId('invoice_id')->index()->nullable()->constrained(table:'bil_invoices')->noActionOnDelete()->noActionOnUpdate();
             $table->integer('type')->nullable()->comment('1 = Credit, 2= Debit');
             $table->string('notes', length:225)->nullable();

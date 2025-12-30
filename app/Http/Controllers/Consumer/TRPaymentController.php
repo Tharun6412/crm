@@ -147,7 +147,7 @@ class TRPaymentController extends Controller
                 'created_by' => Auth::id(),
             ]);
             // Get Latest Ledger data by consumer ID
-            $ledger = Ledger::where('consumer_id', $id)->latest('id')->first();
+            $ledger = Ledger::where('consumer_id', $id)->latest('created_at')->first();
             $payment = InvoicePayment::find($inv_payment->id);
             $balance = $ledger->balance ? $ledger->balance - $inv_payment->amount : $inv_payment->amount;
             $ledger_data[] = [

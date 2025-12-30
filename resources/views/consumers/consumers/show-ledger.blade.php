@@ -13,9 +13,9 @@
                             <th width="1%" nowrap>S.No</th>
                             <th>Date</th>
                             <th>Description</th>
-                            <th>Credit</th>
-                            <th>Debit</th>
-                            <th>Balance</th>
+                            <th class="text-end">Credit(Cr)</th>
+                            <th class="text-end">Debit(Dr)</th>
+                            <th class="text-end">Balance(&#8377;)</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -23,7 +23,7 @@
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $ledger->created_at->format('d-m-Y H:m:i') }}</td>
-                                <td>{{ $ledger->description }}&nbsp;</td>
+                                <td>{{ $ledger->description }}&nbsp;{{ $ledger->legible->invNumber }}&nbsp;</td>
                                 <td class="text-end">{{ $ledger->credit }}</td>
                                 <td class="text-end">{{ $ledger->debit }}</td>
                                 <td class="text-end">{{ $ledger->balance }}</td>
@@ -34,7 +34,7 @@
             </div>
         @else
             <div class="alert alert-warning">
-                No complaints found
+                No records found
             </div>
         @endif
     </div>
