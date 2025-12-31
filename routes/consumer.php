@@ -14,6 +14,19 @@ Route::middleware(['auth', ModuleAccess::class])->group(function() {
     Route::resource('activate', App\Http\Controllers\Consumer\ActivateController::class);
     Route::resource('tdisconnect', App\Http\Controllers\Consumer\TemporaryDisconnectController::class);
     Route::resource('pdisconnect', App\Http\Controllers\Consumer\PermanentDisconnectController::class);
+    
+    // Search
+    Route::get('search', [App\Http\Controllers\Consumer\ConsumerSearchController::class, 'search']);
+    
+    // Deposit
+    Route::resource('payDeposit', App\Http\Controllers\Consumer\PayDepositController::class);
+    
+    // Reconnect
+    Route::resource('reconnect', App\Http\Controllers\Consumer\ReconnectController::class);
+    
+    // Consumer invoices
+    Route::get('invoices/{id}/{type}', [App\Http\Controllers\Consumer\ConsumerInvoiceController::class, 'index']);
+    
     // Refunds
     Route::get('refunds/refundRequest/{id}',[App\Http\Controllers\Consumer\RefundController::class, 'refundRequest']);
     Route::post('refunds/refundRequestUpdate/{id}',[App\Http\Controllers\Consumer\RefundController::class, 'refundRequestUpdate']);
@@ -24,14 +37,7 @@ Route::middleware(['auth', ModuleAccess::class])->group(function() {
     Route::get('refunds/close/{id}',[App\Http\Controllers\Consumer\RefundController::class, 'close']);
     Route::post('refunds/closeRefund/{id}',[App\Http\Controllers\Consumer\RefundController::class, 'closeRefund']);
     Route::resource('refunds', App\Http\Controllers\Consumer\RefundController::class);
-    // Deposit
-    Route::resource('payDeposit', App\Http\Controllers\Consumer\PayDepositController::class);
-    // Reconnect
-    Route::resource('reconnect', App\Http\Controllers\Consumer\ReconnectController::class);
-    
-    // Consumer invoices
-    Route::get('invoices/{id}/{type}', [App\Http\Controllers\Consumer\ConsumerInvoiceController::class, 'index']);
-    
+
     // Consumers list
     Route::resource('tr', App\Http\Controllers\Consumer\TRController::class);
     Route::get('/{id}', [App\Http\Controllers\Consumer\ConsumerController::class, 'show'])->whereNumber('id');
