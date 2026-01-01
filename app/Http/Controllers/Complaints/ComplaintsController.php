@@ -166,6 +166,7 @@ class ComplaintsController extends Controller
             'status_id' => 1,
             'created_by' => Auth::id(),
         ]);
+        // Complaint Number Generation
         $complaint_number = str_pad($add_complaint->id, 9, "0", STR_PAD_LEFT);
         Complaint::where('id', $add_complaint->id)->update(['code' => $complaint_number]);
         if(!empty($request->dc_file_list)) {
@@ -183,7 +184,7 @@ class ComplaintsController extends Controller
             'status_id' => 1,
             'created_by' => Auth::id(),
         ]);
-        return response()->json(['success' => 'Complaint raised successfully']);
+        return response()->json(['success' => 'Complaint raised successfully'], 200);
     }
 
     /**

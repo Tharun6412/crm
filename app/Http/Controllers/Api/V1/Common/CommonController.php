@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1\Common;
 use App\Http\Controllers\Controller;
 use App\Models\Master\Area;
 use App\Models\Master\Ca;
+use App\Models\Master\ComplaintCategory;
 use App\Models\Master\District;
 use App\Models\Master\MasterConsumerScheme;
 use Illuminate\Http\Request;
@@ -70,5 +71,16 @@ class CommonController extends Controller
         $scheme_details = MasterConsumerScheme::find($request->scheme_id);
 
         return response()->json(['scheme_details' => $scheme_details], 200);
+    }
+
+    /**
+     * Complaint Category
+     * Get Sub Category Details By Category
+     * @param $category_id
+     */
+    public function getSubCategories(Request $request)
+    {
+        $sub_categories = ComplaintCategory::select('id', 'name', 'resolution', 'resolution_type', 'type_id', 'department_id')->where('parent_id', $request->category_id)->get();
+        return response()->json(['sub_categories' => $sub_categories]); 
     }
 }

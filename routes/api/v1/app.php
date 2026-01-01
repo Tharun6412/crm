@@ -9,6 +9,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('districtCas', [App\Http\Controllers\Api\V1\Common\CommonController::class, 'districtCas']);
     Route::get('caAreas', [App\Http\Controllers\Api\V1\Common\CommonController::class, 'caAreas']);
     Route::get('schemeDetails', [App\Http\Controllers\Api\V1\Common\CommonController::class, 'schemeDetails']);
+    Route::get('getSubCategories', [App\Http\Controllers\Api\V1\Common\CommonController::class, 'getSubCategories']);
 
     // Consumers routes
     Route::prefix('consumer')->group(function () {
@@ -28,5 +29,15 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('pdisconnect/{id}', [App\Http\Controllers\Api\V1\Application\ConsumerOperationsController::class, 'pdisconnect'])->whereNumber('id');
         Route::post('payDeposit/{id}', [App\Http\Controllers\Api\V1\Application\ConsumerOperationsController::class, 'payDeposit'])->whereNumber('id');
         Route::post('refundRequest/{id}', [App\Http\Controllers\Api\V1\Application\ConsumerOperationsController::class, 'refundRequest'])->whereNumber('id');
+    });
+
+    // Complaints routes
+    Route::prefix('complaint')->group(function() {
+        Route::get('list/{id}', [App\Http\Controllers\Api\V1\Application\ComplaintsController::class, 'list']);
+        Route::get('show/{id}', [App\Http\Controllers\Api\V1\Application\ComplaintsController::class, 'show']);
+        Route::get('create/{id}', [App\Http\Controllers\Api\V1\Application\ComplaintsController::class, 'create']);
+        Route::post('store/{id}', [App\Http\Controllers\Api\V1\Application\ComplaintsController::class, 'store']);
+        Route::post('statusChange/{id}/{status_id}', [App\Http\Controllers\Api\V1\Application\ComplaintsController::class, 'statusChange']);
+        Route::post('comments/{id}/', [App\Http\Controllers\Api\V1\Application\ComplaintsController::class, 'comments']);
     });
 });
