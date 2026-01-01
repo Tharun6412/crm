@@ -27,6 +27,7 @@ class InvoicePayment extends Model
      */
     protected $fillable = [
         'invoice_id',
+        'code',
         'payment_date',
         'payment_type_id',
         'transaction_id',
@@ -39,27 +40,29 @@ class InvoicePayment extends Model
 
     /**
      * Casts
-    */
+     */
     public function casts() {
         return [
             'payment_date' => 'date',
         ];
     }
     
+    protected $appends = ['invNumber'];
+    
     /**
      * Relation with Invoice
-    */
+     */
     public function invoice() :BelongsTo
     {
         return $this->belongsTo(BillInvoice::class, 'invoice_id')->withDefault();
     }
     
-    protected $appends = ['invNumber'];
     
     protected function invNumber():Attribute
     {
         return Attribute::get(fn () => "{$this->invoice->invoice_number}");
     }
+
     /**
      * Relation with Payment Type
      */

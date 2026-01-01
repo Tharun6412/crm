@@ -5,6 +5,7 @@ namespace App\Models\Consumer;
 use App\Models\Admin\User;
 use App\Models\Complaint\ComplaintComment;
 use App\Models\Complaint\ComplaintFeedback;
+use App\Models\Invoice\BillInvoice;
 use App\Models\Master\Area;
 use App\Models\Master\Ca;
 use App\Models\Master\ConsumerGasRequired;
@@ -113,6 +114,7 @@ class Consumer extends Model
     {
         return $this->belongsTo(Title::class, 'title')->withDefault();
     }
+
     /**
      * Relation with Segments
      */
@@ -136,6 +138,7 @@ class Consumer extends Model
     {
         return $this->belongsTo(FuelType::class, 'fuel_id')->withDefault();
     }
+
     /**
      * Relation with Gas Required
      */
@@ -143,6 +146,7 @@ class Consumer extends Model
     {
         return $this->belongsTo(ConsumerGasRequired::class, 'gas_required_id')->withDefault();
     }
+
     /**
      * Relation with Nominee Relation
      */
@@ -198,6 +202,7 @@ class Consumer extends Model
     {
         return $this->belongsTo(User::class, 'created_by')->withDefault();
     }
+
     /**
      * Realtion with UpdatedBy
      */
@@ -205,6 +210,7 @@ class Consumer extends Model
     {
         return $this->belongsTo(User::class, 'updated_by')->withDefault();
     }
+
     /**
      * Relation with Price History
      */
@@ -212,6 +218,7 @@ class Consumer extends Model
     {
         return $this->belongsTo(Ca::class, 'ca_id')->withDefault();
     }
+
     /**
      * Relation with Status
      */
@@ -235,6 +242,7 @@ class Consumer extends Model
     {
         return $this->hasMany(ConsumerStatus::class, 'consumer_id', 'id')->orderBy('created_at', 'desc');
     }
+
     /**
      * Relation with scheme
      */
@@ -242,6 +250,7 @@ class Consumer extends Model
     {
         return $this->hasOne(ConsumerScheme::class, 'consumer_id', 'id');
     }
+
     /**
      * Relation with SDPaymentHistory
      */
@@ -259,6 +268,7 @@ class Consumer extends Model
     {
         return $this->morphMany(ComplaintComment::class, 'commentable');
     }
+
     /**
      * #PolyMorphic relation
      * Relation with complaint Feedback
@@ -267,5 +277,13 @@ class Consumer extends Model
     public function feedbackBy():MorphMany
     {
         return $this->morphMany(ComplaintFeedback::class, 'collectable');
+    }
+
+    /**
+     * Invoices
+     */
+    public function invoices(): HasMany
+    {
+        return $this->hasMany(BillInvoice::class);
     }
 }

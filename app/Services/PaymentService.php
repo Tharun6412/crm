@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Invoice\BillInvoice;
 use App\Models\Invoice\InvoicePayment;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class PaymentService
 {
@@ -22,7 +23,7 @@ class PaymentService
 
         // Insert payment data
         $new_payment = InvoicePayment::create([
-            'code' => '',
+            'code' => Str::random(6),
             'invoice_id' => $data['invoice_id'],
             'payment_date' => $data['payment_date'],
             'payment_type_id' => $data['payment_type_id'],
@@ -42,15 +43,19 @@ class PaymentService
 
         // Add ledger record
         $ledger_data[] = [
-            'model' => $new_payment,
-            'consumer_id' => $new_payment->invoice->consumer_id,
+            
             'description' => "Bill Payment: Invoice Generated with Invoice No.",
             'credit' => $new_payment->amount,
             'debit' => NULL,
             'balance' => $new_payment->amount, 
         ];
-        // Call Ledger Service
-        LedgerService::create($ledger_data, "credit");
+
+        // Add record to Ledger
+        $ledger_record = LedgerService::create([
+            'model' => $new_payment,
+            'consumer_id' => $new_payment->invoice->consumer_id,
+            'amount' => $data['amount'],
+        ], "cr");
 
         // Return payment object
         return $new_payment;

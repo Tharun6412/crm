@@ -20,29 +20,27 @@ class InvoiceService
     {
         // 1. Generate Invoice_no
         $inv_number = self::generateNumber($invoice_data['config']['state_id'], $invoice_data['config']['tax_id']);
+        
+        // 2. Insert invoice
         // Push invoice number into invoice data
         $invoice_data['headers']['invoice_number'] = $inv_number;
-        // 2. Insert invoice
         $new_invoice = BillInvoice::create($invoice_data['headers']);
-        // Prepare Ledger Data
-        $data[] = [
-            'model' => $new_invoice,
-            'consumer_id' => $new_invoice->consumer_id,
-            'description' => "Bill: Invoice Generated with Invoice No.",
-            'credit' => NULL,
-            'debit' => $new_invoice->total_amount,
-            'balance' => $new_invoice->total_amount,
-        ];
-        // Add/insert into Ledger Report
-        LedgerService::create($data, 'debit');
+
+        // 3. Invoice items
         // Push new invoice_id to invoice item
         foreach($invoice_data['items'] as &$item) {
             $item['invoice_id'] = $new_invoice->id;
         }
-        // 3. Invoice items
         $new_inv_item = InvoiceItem::insert($invoice_data['items']);
+        
+        // 4. Add record to ledger
+        $ledger_record = LedgerService::create([
+            'model' => $new_invoice,
+            'consumer_id' => $new_invoice->consumer_id,
+            'amount' => ($invoice_data['headers']['total_amount'] ?? 0),
+        ], 'dr');
 
-        // Response
+        // Return
         return ['invoice_id' => $new_invoice->id, 'invoice_number' => $inv_number];
     }
 

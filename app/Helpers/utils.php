@@ -10,7 +10,7 @@ use Illuminate\Support\Number;
  */
 if(!function_exists('numberFormat')) {
     function numberFormat($number, $precision = 0) {
-        if($number > 0) {
+        if(is_numeric($number)) {
             return Number::format($number, precision: $precision, locale: 'en_IN');
         }else {
             return 0;

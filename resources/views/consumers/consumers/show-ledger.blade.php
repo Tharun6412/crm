@@ -22,10 +22,10 @@
                         @foreach ($ledger_report as $ledger)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
-                                <td>{{ $ledger->created_at->format('d-m-Y H:m:i') }}</td>
+                                <td>{{ $ledger->created_at->format('d-m-Y H:i') }}</td>
                                 <td>{{ $ledger->description }}&nbsp;{{ $ledger->legible->invNumber }}&nbsp;</td>
-                                <td class="text-end">{{ $ledger->credit }}</td>
-                                <td class="text-end">{{ $ledger->debit }}</td>
+                                <td class="text-end text-danger">{{ ($ledger->credit > 0) ? '-' . numberFormat($ledger->credit, 2) : '' }}</td>
+                                <td class="text-end text-success">{{ ($ledger->debit > 0) ? '+' . numberFormat($ledger->debit, 2) : '' }}</td>
                                 <td class="text-end">{{ $ledger->balance }}</td>
                             </tr>
                         @endforeach

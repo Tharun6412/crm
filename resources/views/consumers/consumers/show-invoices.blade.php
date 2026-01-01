@@ -37,6 +37,8 @@
                                             <li><a class="dropdown-item" href="{{ url('bill/invoice/' . $invoice->id) }}" target="_blank"><i class="bi bi-file-text"></i>&nbsp;View</a></li>
                                             @if (in_array($invoice->status_id, [2,3]))
                                                 <li><a class="dropdown-item link-modal" href="{{ url('payments/invoicePayments/create/'.$invoice->id) }}"><i class="bi bi-cash"></i>&nbsp;Pay Invoice</a></li>
+                                            @else
+                                                <li><a class="dropdown-item link-modal" href="{{ url('payments/invoicePayments/create/'.$invoice->id) }}"><i class="bi bi-cash"></i>&nbsp;Payment Info</a></li>
                                             @endif
                                             <li><a class="dropdown-item" href="#"><i class="bi bi-printer"></i>&nbsp;Print</a></li>
                                         </ul>

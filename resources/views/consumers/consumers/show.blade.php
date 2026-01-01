@@ -67,28 +67,33 @@
                 <div class="col-md-12">
                     <div class="">
                         <div class="card-group">
-                            <div class="card bg-success-subtle">
+                            <div class="card bg-{{ ($consumer->scheme->balance > 0) ? 'danger' : 'success' }}-subtle">
                                 <div class="card-body">
-                                    <h4 class="card-title">10,000</h4>
-                                    <span>Bills</span>
+                                    <h4 class="card-title">{{ numberFormat($consumer->scheme->balance, 2) }}</h4>
+                                    <span>Security Deposit</span>
                                 </div>
                             </div>
-                            <div class="card bg-success-subtle">
+                            @php
+                                $gasbill_outstand = $consumer->invoices()->where('type_id', 1)->sum('balance_amount');
+                                $invoice_outstand = $consumer->invoices()->where('type_id', '!=', 1)->sum('balance_amount');
+                                $total_outstand = ($consumer->scheme->balance + $gasbill_outstand + $invoice_outstand);
+                            @endphp
+                            <div class="card bg-{{ ($gasbill_outstand > 0) ? 'danger' : 'success' }}-subtle">
                                 <div class="card-body">
-                                    <h4 class="card-title">10,000</h4>
+                                    <h4 class="card-title">{{ numberFormat($gasbill_outstand, 2) }}</h4>
+                                    <span>Gas Bills</span>
+                                </div>
+                            </div>
+                            <div class="card bg-{{ ($invoice_outstand > 0) ? 'danger' : 'success' }}-subtle">
+                                <div class="card-body">
+                                    <h4 class="card-title">{{ numberFormat($invoice_outstand, 2) }}</h4>
                                     <span>Invoices</span>
                                 </div>
                             </div>
-                            <div class="card bg-success-subtle">
+                            <div class="card bg-{{ ($total_outstand > 0) ? 'danger' : 'success' }}-subtle">
                                 <div class="card-body">
-                                    <h4 class="card-title">20,000</h4>
-                                    <span>Payments</span>
-                                </div>
-                            </div>
-                            <div class="card bg-success-subtle">
-                                <div class="card-body">
-                                    <h4 class="card-title">{{ numberFormat($consumer->scheme?->balance) }}</h4>
-                                    <span>Outstanding</span>
+                                    <h4 class="card-title">{{ numberFormat($total_outstand, 2) }}</h4>
+                                    <span>Total Outstanding</span>
                                 </div>
                             </div>
                         </div>

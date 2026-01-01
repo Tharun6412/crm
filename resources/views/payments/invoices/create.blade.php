@@ -8,6 +8,18 @@
         <div class="modal-body">
             <div id="add-invoice-payment-success">
                 <x-consumer.invoice-details :invoice="$bill" class="bg-info-subtle"/>
+                <div class="row mb-2">
+                    <label class="col-sm-4 col-form-label text-end">Paid Amount :</label>
+                    <label class="col-sm-4 col-form-label">{{ numberFormat($bill->paid_amount, 2) }}</label>
+                </div>
+                <div class="row mb-2">
+                    <label class="col-sm-4 col-form-label text-end">Credt / Debit Amount :</label>
+                    <label class="col-sm-4 col-form-label">{{ numberFormat($bill->credit_amount, 2) }}</label>
+                </div>
+                <div class="row mb-2">
+                    <label class="col-sm-4 col-form-label text-end">Balance Amount :</label>
+                    <label class="col-sm-4 col-form-label">{{ numberFormat($bill->balance_amount, 2) }}</label>
+                </div>
                 @if ($bill->balance_amount > 0)
                     <form action="{{ url('payments/invoicePayments/') }}" method="post" name="add-invoice-payment-form" id="add-invoice-payment-form">
                         @csrf
@@ -27,18 +39,18 @@
                                 </div>
                             </div>
                             <div class="row mb-2">
-                                <label for="transaction_no" class="col-sm-4 col-form-label text-end">Transaction No/Cheque no&nbsp;:&nbsp;<i class="text-danger">*&nbsp;</i></label>
-                                <div class="col-sm-7">
-                                    <input type="text" class="form-control" id="transaction_no" name="transaction_no" placeholder="Enter the transaction number.">
-                                </div>
-                            </div>
-                            <div class="row mb-2">
                                 <label for="amount" class="col-sm-4 col-form-label text-end">Amount&nbsp;:&nbsp;<i class="text-danger">*&nbsp;</i></label>
                                 <div class="col-sm-7">
                                     <div class="input-group">
                                         <input type="text" class="form-control text-end" id="amount" name="amount" placeholder="Enter the amount to be paid." value="{{ $bill->balance_amount ?? 0 }}">
                                         <span class="input-group-text"><i class="bi-currency-rupee"></i></span>
                                     </div>
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <label for="transaction_no" class="col-sm-4 col-form-label text-end">Transaction No/Cheque no&nbsp;:&nbsp;<i class="text-danger">*&nbsp;</i></label>
+                                <div class="col-sm-7">
+                                    <input type="text" class="form-control" id="transaction_no" name="transaction_no" placeholder="Enter the transaction number.">
                                 </div>
                             </div>
                             <div class="row mb-2">
@@ -57,31 +69,34 @@
                     </form>
                 @endif
                 @if ($bill->payments->count() > 0)
-                    <div class="bg-info-subtle rounded mt-3">
-                        <div class="responsive">
-                            <table class="table table-bordered table-hover table-primary">
-                                <thead class="table-primary">
+                    <h4>Payment records</h4>
+                    <div class="responsive mt-2">
+                        <table class="table table-bordered table-hover table-info">
+                            <thead class="table-info">
+                                <tr>
+                                    <th width="1%" nowrap="">S No</th>
+                                    <th>#Ref</th>
+                                    <th>Date</th>
+                                    <th>Type</th>
+                                    <th class="text-end">Amount</th>
+                                    <th>Status</th>
+                                    <th>Created By</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($bill->payments as $pay)
                                     <tr>
-                                        <th width="1%" nowrap="">S No</th>
-                                        <th>Payment Date</th>
-                                        <th class="text-end">Amount</th>
-                                        <th>Status</th>
-                                        <th>Created By</th>
+                                        <td>{{ $loop->iteration }}</td>
+                                        <td>{{ $pay->code }}</td>
+                                        <td>{{ $pay->payment_date?->format('d-m-y') }}</td>
+                                        <td>{{ $pay->paymentType->name ?? '' }}</td>
+                                        <td class="text-end">{{ numberFormat($pay->amount, 2) }}</td>
+                                        <td><span>{{ $pay->status->name }}</span></td>
+                                        <td>{{ $pay->createdBy->emp_id }}</td>
                                     </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($bill->payments as $pay)
-                                        <tr>
-                                            <td>{{ $loop->iteration }}</td>
-                                            <td>{{ $pay->payment_date?->format('d-m-y') }}</td>
-                                            <td class="text-end">{{ numberFormat($pay->amount) }}</td>
-                                            <td><span>{{ $pay->status->name }}</span></td>
-                                            <td>{{ $pay->createdBy->emp_id }}</td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
                 @endif
             </div>

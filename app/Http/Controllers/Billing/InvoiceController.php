@@ -179,9 +179,10 @@ class InvoiceController extends Controller
                 'tax_value' => $request->tax_value,
                 'tax_amount' => $tax_amount,
                 'total_amount' => $invoice_total,
+                'payable_amount' => $invoice_total,
                 'balance_amount' => $invoice_total,
                 'due_date' => date('Y-m-d'),
-                'status_id' => 2,
+                'status_id' => 2, // Unpaid
             ],
             'items' => $invoice_items,
         ];

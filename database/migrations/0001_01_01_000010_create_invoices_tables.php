@@ -24,8 +24,9 @@ return new class extends Migration
             $table->foreignId('tax_id')->index()->nullable()->constrained(table:'mst_taxes')->noActionOnDelete()->noActionOnUpdate();
             $table->double('tax_value')->nullable();
             $table->double('tax_amount')->nullable();
-            $table->double('credit_amount')->nullable();
             $table->double('total_amount')->nullable();
+            $table->double('credit_amount')->nullable();
+            $table->double('payable_amount')->nullable();
             $table->double('paid_amount')->nullable();
             $table->double('balance_amount')->nullable();
             $table->date('due_date')->nullable();
@@ -137,6 +138,7 @@ return new class extends Migration
         Schema::create('pay_invoice_payments', function(Blueprint $table) {
             $table->id();
             $table->foreignId('invoice_id')->index()->nullable()->constrained(table:'bil_invoices')->noActionOnDelete()->noActionOnUpdate();
+            $table->string('code', length:16)->nullable();
             $table->date('payment_date')->nullable();
             $table->foreignId('payment_type_id')->index()->nullable()->constrained(table:'mst_pay_types')->noActionOnDelete()->noActionOnUpdate();
             $table->string('transaction_id', length:225)->nullable();
