@@ -152,7 +152,7 @@ class BillInvoice extends Model
      */
     public function parentInvoice():BelongsTo
     {
-        return $this->belongsTo(self::class, 'parent_invoice_id');
+        return $this->belongsTo(BillInvoice::class, 'parent_invoice_id');
     }
 
     /**

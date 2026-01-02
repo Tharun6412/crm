@@ -96,7 +96,7 @@
                 </table>
             </div>
         </div>
-        <div class="p-2">
+        <div class="ms-2 p-2 bg-white">
             <button class="btn btn-primary"><i class="bi bi-printer"></i>&nbsp;Print</button>
             <button class="btn btn-primary"><i class="bi bi-file-text"></i>&nbsp;Options</button>
             <div class="p-2">
@@ -114,7 +114,7 @@
         width: 210mm;
         min-height: 180mm;
     }
-    .content-page {
+    body {
         background-color: #F7F7F7;
     }
 </style>

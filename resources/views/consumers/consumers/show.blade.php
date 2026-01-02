@@ -69,8 +69,13 @@
                         <div class="card-group">
                             <div class="card bg-{{ ($consumer->scheme->balance > 0) ? 'danger' : 'success' }}-subtle">
                                 <div class="card-body">
-                                    <h4 class="card-title">{{ numberFormat($consumer->scheme->balance, 2) }}</h4>
-                                    <span>Security Deposit</span>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h4 class="card-title mb-0">{{ numberFormat($consumer->scheme->balance, 2) }}</h4>
+                                            <span>Security Deposit</span>
+                                        </div>
+                                        <div class="p-2"><i class="bi bi-piggy-bank fs-3"></i></div>
+                                    </div>
                                 </div>
                             </div>
                             @php
@@ -80,20 +85,35 @@
                             @endphp
                             <div class="card bg-{{ ($gasbill_outstand > 0) ? 'danger' : 'success' }}-subtle">
                                 <div class="card-body">
-                                    <h4 class="card-title">{{ numberFormat($gasbill_outstand, 2) }}</h4>
-                                    <span>Gas Bills</span>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h4 class="card-title mb-0">{{ numberFormat($gasbill_outstand, 2) }}</h4>
+                                            <span>Gas Bills</span>
+                                        </div>
+                                        <div class="p-2"><i class="bi bi-file-text fs-3"></i></div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="card bg-{{ ($invoice_outstand > 0) ? 'danger' : 'success' }}-subtle">
                                 <div class="card-body">
-                                    <h4 class="card-title">{{ numberFormat($invoice_outstand, 2) }}</h4>
-                                    <span>Invoices</span>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h4 class="card-title mb-0">{{ numberFormat($invoice_outstand, 2) }}</h4>
+                                            <span>Invoices</span>
+                                        </div>
+                                        <div class="p-2"><i class="bi bi-file-ruled fs-3"></i></div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="card bg-{{ ($total_outstand > 0) ? 'danger' : 'success' }}-subtle">
                                 <div class="card-body">
-                                    <h4 class="card-title">{{ numberFormat($total_outstand, 2) }}</h4>
-                                    <span>Total Outstanding</span>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h4 class="card-title mb-0">{{ numberFormat($total_outstand, 2) }}</h4>
+                                            <span>Total Outstanding</span>
+                                        </div>
+                                        <div class="p-2"><i class="bi bi-alarm fs-3"></i></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

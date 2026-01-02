@@ -101,22 +101,79 @@
                 </table>
             </div>
         </div>
-        <div class="p-2">
-            <div class="mb-2">
-                <button class="btn btn-primary"><i class="bi bi-printer"></i>&nbsp;Print</button>
-                <button class="btn btn-primary"><i class="bi bi-file-text"></i>&nbsp;Options</button>
-            </div>
+        <div class="ms-2 p-2 bg-white">
+            {{-- Child or Connected Invoices --}}
+            @if ($invoice->childInvoices->count() > 0)
+                <h4>Connected Invoices ({{ $invoice->childInvoices->count() }})</h4>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-primary">
+                        <thead class="table-primary">
+                            <tr>
+                                <th width="1%" nowrap>S No</th>
+                                <th>Invoice No</th>
+                                <th>Type</th>
+                                <th class="text-end">Amount</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($invoice->childInvoices as $invoice_item)
+                                <tr>
+                                    <td>{{ $loop->iteration }}</td>
+                                    <td>{{ $invoice_item->invoice_number }}</td>
+                                    <td>{{ $invoice_item->invoiceType->name ?? '' }}</td>
+                                    <td class="text-end">{{ numberFormat($invoice_item->total_amount, 2) }}</td>
+                                    <td>{{ $invoice_item->status->name ?? '' }}</td>
+                                    <td>
+                                        <a href="{{ url('bill/invoice/' . $invoice_item->id) }}">View</a>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            @endif
+            {{-- Parent invoice --}}
+            @if ($invoice->parentInvoice)
+                <h4>Parent Invoice</h4>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-primary">
+                        <thead class="table-primary">
+                            <tr>
+                                <th>Invoice No</th>
+                                <th>Type</th>
+                                <th class="text-end">Amount</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{ $invoice->parentInvoice->invoice_number }}</td>
+                                <td>{{ $invoice->parentInvoice->invoiceType->name ?? '' }}</td>
+                                <td class="text-end">{{ numberFormat($invoice->parentInvoice->total_amount, 2) }}</td>
+                                <td>{{ $invoice->parentInvoice->status->name ?? '' }}</td>
+                                <td>
+                                    <a href="{{ url('bill/invoice/' . $invoice->parentInvoice->id) }}">View</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            @endif
+
             {{-- Credit / Debit notes --}}
-            <div>
-                @if ($invoice->creditNotes->count() > 0)
-                    <h4>Credit/Debit Notes ({{ $invoice->creditNotes->count() }})</h4>
+            @if ($invoice->creditNotes->count() > 0)
+                <h4>Credit/Debit Notes ({{ $invoice->creditNotes->count() }})</h4>
+                <div class="table-responsive">
                     <table class="table table-bordered table-hover table-warning">
                         <thead class="table-warning">
                             <tr>
                                 <th width="1%" nowrap>S No</th>
-                                <th>Type</th>
                                 <th>Code</th>
                                 <th>Date</th>
+                                <th>Type</th>
                                 <th class="text-end">Amount</th>
                                 <th>Actions</th>
                             </tr>
@@ -125,9 +182,9 @@
                             @foreach ($invoice->creditNotes as $item)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
-                                    <td>{{ ($item->type == 1) ? 'Credit' : 'Debit' }} Note</td>
                                     <td>{{ $item->code }}</td>
                                     <td>{{ $item->created_at?->format('d-m-Y H:i') }}</td>
+                                    <td>{{ ($item->type == 1) ? 'Credit' : 'Debit' }} Note</td>
                                     <td class="text-end">{{ numberFormat($item->total_amount, 2) }}</td>
                                     <td>
                                         <a href="{{ url('bill/creditNote/' . $item->id) }}">View</a>
@@ -136,11 +193,11 @@
                             @endforeach
                         </tbody>
                     </table>
-                @endif
-            </div>
-            {{-- Payment records --}}
+                </div>
+            @endif
+            {{-- Payments --}}
             @if ($invoice->payments->count() > 0)
-                <h4>Payment records</h4>
+                <h4>Payments ({{ $invoice->payments->count() }})</h4>
                 <div class="responsive mt-2">
                     <table class="table table-bordered table-hover table-info">
                         <thead class="table-info">
@@ -151,7 +208,6 @@
                                 <th>Type</th>
                                 <th class="text-end">Amount</th>
                                 <th>Status</th>
-                                <th>Created By</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -163,7 +219,6 @@
                                     <td>{{ $pay->paymentType->name ?? '' }}</td>
                                     <td class="text-end">{{ numberFormat($pay->amount, 2) }}</td>
                                     <td><span>{{ $pay->status->name }}</span></td>
-                                    <td>{{ $pay->createdBy->emp_id }}</td>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -180,7 +235,7 @@
         width: 210mm;
         min-height: 180mm;
     }
-    .content-page {
+    body {
         background-color: #F7F7F7;
     }
 </style>

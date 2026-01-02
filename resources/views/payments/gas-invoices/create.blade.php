@@ -8,6 +8,54 @@
         <div class="modal-body">
             <div id="add-gas-payment-success">
                 <x-consumer.invoice-details :invoice="$bill" class="bg-info-subtle"/>
+                {{-- Get connected invoices --}}
+                @php
+                    $child_inv_balance = 0;
+                @endphp
+                @if ($bill->childInvoices->count() > 0)
+                    <h4>Connected Invoices ({{ $bill->childInvoices->count() }})</h4>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-primary">
+                            <thead class="table-primary">
+                                <tr>
+                                    <th width="1%" nowrap>S No</th>
+                                    <th>Invoice No</th>
+                                    <th>Type</th>
+                                    <th class="text-end">Amount</th>
+                                    <th class="text-end">Balnce</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($bill->childInvoices as $invoice_item)
+                                    @php
+                                        $child_inv_balance += $invoice_item->balance_amount;
+                                    @endphp
+                                    <tr>
+                                        <td>{{ $loop->iteration }}</td>
+                                        <td>{{ $invoice_item->invoice_number }}</td>
+                                        <td>{{ $invoice_item->invoiceType->name ?? '' }}</td>
+                                        <td class="text-end">{{ numberFormat($invoice_item->total_amount, 2) }}</td>
+                                        <td class="text-end">{{ numberFormat($invoice_item->balance_amount, 2) }}</td>
+                                        <td>{{ $invoice_item->status->name ?? '' }}</td>
+                                        <td>
+                                            <a href="{{ url('bill/invoice/' . $invoice_item->id) }}" target="_blank">View</a>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                            <tfoot>
+                                <tr class="fw-semibold">
+                                    <td colspan="4" class="text-end">Total</td>
+                                    <td class="text-end"> {{ numberFormat($child_inv_balance, 2) }}</td>
+                                    <td colspan="2"></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                @endif
+                {{-- Payment form --}}
                 @if ($bill->balance_amount > 0)
                     <form action="{{ url('payments/gasPayments/') }}" method="post" name="add-gas-payment-form" id="add-gas-payment-form">
                         @csrf
@@ -16,6 +64,10 @@
                             <input type="hidden" name="invoice_id" id="invoice_id" value="{{ $bill->id }}">
                             <input type="hidden" name="invoice_balance" id="invoice_balance" value="{{ $bill->balance_amount }}">
                             <input type="hidden" name="till_paid_amount" id="till_paid_amount" value="{{ $bill->paid_amount }}">
+                            <div class="row mb-2">
+                                <label class="col-sm-3 col-form-label text-end">Total Payable Amount:</label>
+                                <label class="col-sm-3 col-form-label">{{ numberFormat(($child_inv_balance + $bill->balance_amount), 2) }}</label>
+                            </div>
                             <div class="row mb-2">
                                 <label for="payment_type" class="col-sm-3 col-form-label text-end">Payment Type&nbsp;:&nbsp;<i class="text-danger">*&nbsp;</i></label>
                                 <div class="col-sm-7">
@@ -57,32 +109,34 @@
                         </div>
                     </form>
                 @endif
+                {{-- Payments --}}
                 @if ($bill->payments->count() > 0)
-                    <div class="bg-info-subtle rounded mt-3">
-                        <div class="responsive">
-                            <table class="table table-bordered table-hover table-primary">
-                                <thead class="table-primary">
+                    <h4>Payments</h4>
+                    <div class="responsive">
+                        <table class="table table-bordered table-hover table-primary">
+                            <thead class="table-primary">
+                                <tr>
+                                    <th width="1%" nowrap="">S No</th>
+                                    <th>Date</th>
+                                    <th>Method</th>
+                                    <th class="text-end">Amount</th>
+                                    <th>Status</th>
+                                    <th>Created By</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($bill->payments as $pay)
                                     <tr>
-                                        <th width="1%" nowrap="">S No</th>
-                                        <th>Payment Date</th>
-                                        <th class="text-end">Amount</th>
-                                        <th>Status</th>
-                                        <th>Created By</th>
+                                        <td>{{ $loop->iteration }}</td>
+                                        <td>{{ $pay->payment_date?->format('d-m-y') }}</td>
+                                        <td>{{ $pay->paymentType->name ?? '' }}</td>
+                                        <td class="text-end">{{ numberFormat($pay->amount, 2) }}</td>
+                                        <td><span>{{ $pay->status->name }}</span></td>
+                                        <td>{{ $pay->createdBy->emp_id }}</td>
                                     </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($bill->payments as $pay)
-                                        <tr>
-                                            <td>{{ $loop->iteration }}</td>
-                                            <td>{{ $pay->payment_date?->format('d-m-y') }}</td>
-                                            <td class="text-end">{{ numberFormat($pay->amount) }}</td>
-                                            <td><span>{{ $pay->status->name }}</span></td>
-                                            <td>{{ $pay->createdBy->emp_id }}</td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
                 @endif
             </div>
@@ -92,5 +146,5 @@
         </div>
     </div>
 </div>
-
+{{-- Script --}}
 @include('scripts.ajax-form-submit', ['form' => 'add-gas-payment'])

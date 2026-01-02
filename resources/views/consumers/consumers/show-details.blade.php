@@ -7,7 +7,7 @@
     <div class="p-2">
         <div class="row">
             <div class="col-md-6">
-                <h4 class="fw-semibold text-decoration-underline">Details</h4>
+                <h4 class="text-primary fw-semibold text-decoration-underline">Details</h4>
                 <dl class="row">
                     <dt class="col-sm-3">Segment</dt>
                     <dd class="col-sm-9">{{ $consumer->segment->name }}</dd>
@@ -26,7 +26,7 @@
                     <dt class="col-sm-3">Status</dt>
                     <dd class="col-sm-9">{{ $consumer->status->name }}</dd>
                 </dl>
-                <h4 class="mt-3 fw-semibold text-decoration-underline">Scheme Details</h4>
+                <h4 class="text-primary mt-3 fw-semibold text-decoration-underline">Scheme Details</h4>
                 <dl class="row">
                     <dt class="col-sm-3">Scheme Name</dt>
                     <dd class="col-sm-9">{{ $consumer->scheme?->scheme?->name }}</dd>
@@ -37,14 +37,14 @@
                     <dt class="col-sm-3">Consumption Deposit</dt>
                     <dd class="col-sm-9">{{ numberFormat($consumer->scheme?->consumption_deposit) }}</dd>
                 </dl>
-                <h4 class="mt-3 fw-semibold text-decoration-underline">Nominee Details</h4>
+                <h4 class="text-primary mt-3 fw-semibold text-decoration-underline">Nominee Details</h4>
                 <dl class="row">
                     <dt class="col-sm-3">Nominee Name</dt>
                     <dd class="col-sm-9">{{ $consumer->nominee }}</dd>
                     <dt class="col-sm-3">Nominee Relation</dt>
                     <dd class="col-sm-9">{{ $consumer->nomineeRelation->name }}</dd>
                 </dl>
-                <h4 class="mt-3 fw-semibold text-decoration-underline">Owner Details</h4>
+                <h4 class="text-primary mt-3 fw-semibold text-decoration-underline">Owner Details</h4>
                 <dl class="row">
                     <dt class="col-sm-3">Property Type</dt>
                     <dd class="col-sm-9">
@@ -66,7 +66,49 @@
                     <dt class="col-sm-3">Owner Phone</dt>
                     <dd class="col-sm-9">{{ maskNumber($consumer->owner_phone) }}</dd>
                 </dl>
-                <h4 class="mt-3 fw-semibold text-decoration-underline">Additional Details</h4>
+                <h4 class="text-primary mt-3 fw-semibold text-decoration-underline">Tenant Details</h4>
+                <dl class="row">
+                    <dt class="col-sm-3">Tenant Name</dt>
+                    <dd class="col-sm-9">{{ $consumer->tenant_name }}</dd>
+                    <dt class="col-sm-3">Tenant Phone</dt>
+                    <dd class="col-sm-9">{{ maskNumber($consumer->tenant_phone) }}</dd>
+                    <dt class="col-sm-3">Tenant Email</dt>
+                    <dd class="col-sm-9">{{ $consumer->tenant_email }}</dd>
+                </dl>
+            </div>
+            <div class="col-md-6">
+                <h4 class="text-primary fw-semibold text-decoration-underline">Location</h4>
+                <dl class="row">
+                    <dt class="col-sm-3">Geo Area</dt>
+                    <dd class="col-sm-9">{{ $consumer->ga->name }}</dd>
+                    <dt class="col-sm-3">Charge Area</dt>
+                    <dd class="col-sm-9">{{ $consumer->ca->name }}</dd>
+                    <dt class="col-sm-3">Location</dt>
+                    <dd class="col-sm-9">{{ $consumer->area->name }}</dd>
+                </dl>
+                <h4 class="text-primary mt-3 fw-semibold text-decoration-underline">Address</h4>
+                <address>
+                    <strong>{{ $consumer->name}}</strong><br>
+                    {{ $consumer->cofDisplay?->name }} {{ $consumer->cof_name }}<br>
+                    {{ $consumer->hno }}, {{ $consumer->street }},<br>
+                    {{ $consumer->colony }}, {{ $consumer->city }},<br>
+                    {{ $consumer->district->name ?? '' }}, {{ $consumer->ga->state->name ?? '' }} - {{ $consumer->pincode }}.
+                </address>
+
+                <h4 class="text-primary mt-3 fw-semibold text-decoration-underline">Meter Details</h4>
+                <dl class="row">
+                    <dt class="col-sm-3">Meter Number</dt>
+                    <dd class="col-sm-9">{{ $consumer->meter?->meter_no }}</dd>
+                    <dt class="col-sm-3">Serial Number</dt>
+                    <dd class="col-sm-9">{{ $consumer->meter?->meter_serial_no }}</dd>
+                    <dt class="col-sm-3">Initial Reading</dt>
+                    <dd class="col-sm-9">{{ $consumer->meter?->initial_reading }}</dd>
+                    <dt class="col-sm-3">Installation Date</dt>
+                    <dd class="col-sm-9">{{ $consumer->meter?->install_date?->format('d-m-Y') }}</dd>
+                    <dt class="col-sm-3">Installed By</dt>
+                    <dd class="col-sm-9">{{ $consumer->meter?->installBy?->first_name }}&nbsp;{{ $consumer->meter?->installBy?->last_name }}</dd>
+                </dl>
+                <h4 class="text-primary mt-3 fw-semibold text-decoration-underline">Additional Details</h4>
                 <dl class="row">
                     <dt class="col-sm-3">LPG Connections</dt>
                     <dd class="col-sm-9">{{ $consumer->lpg_connections }}</dd>
@@ -80,52 +122,10 @@
                     <dd class="col-sm-9">{{ $consumer->gasRequired?->name }}</dd>
                 </dl>
             </div>
-            <div class="col-md-6">
-                <h4 class="fw-semibold text-decoration-underline">Location</h4>
-                <dl class="row">
-                    <dt class="col-sm-3">Geo Area</dt>
-                    <dd class="col-sm-9">{{ $consumer->ga->name }}</dd>
-                    <dt class="col-sm-3">Charge Area</dt>
-                    <dd class="col-sm-9">{{ $consumer->ca->name }}</dd>
-                    <dt class="col-sm-3">Location</dt>
-                    <dd class="col-sm-9">{{ $consumer->area->name }}</dd>
-                </dl>
-                <h4 class="mt-3 fw-semibold text-decoration-underline">Address</h4>
-                <address>
-                    <strong>{{ $consumer->name}}</strong><br>
-                    {{ $consumer->cofDisplay?->name }} {{ $consumer->cof_name }}<br>
-                    {{ $consumer->hno }}, {{ $consumer->street }},<br>
-                    {{ $consumer->colony }}, {{ $consumer->city }},<br>
-                    {{ $consumer->district->name ?? '' }}, {{ $consumer->ga->state->name ?? '' }} - {{ $consumer->pincode }}.
-                </address>
-
-                <h4 class="mt-3 fw-semibold text-decoration-underline">Meter Details</h4>
-                <dl class="row">
-                    <dt class="col-sm-3">Meter Number</dt>
-                    <dd class="col-sm-9">{{ $consumer->meter?->meter_no }}</dd>
-                    <dt class="col-sm-3">Serial Number</dt>
-                    <dd class="col-sm-9">{{ $consumer->meter?->meter_serial_no }}</dd>
-                    <dt class="col-sm-3">Initial Reading</dt>
-                    <dd class="col-sm-9">{{ $consumer->meter?->initial_reading }}</dd>
-                    <dt class="col-sm-3">Installation Date</dt>
-                    <dd class="col-sm-9">{{ $consumer->meter?->install_date?->format('d-m-Y') }}</dd>
-                    <dt class="col-sm-3">Installed By</dt>
-                    <dd class="col-sm-9">{{ $consumer->meter?->installBy?->first_name }}&nbsp;{{ $consumer->meter?->installBy?->last_name }}</dd>
-                </dl>
-                <h4 class="mt-3 fw-semibold text-decoration-underline">Tenant Details</h4>
-                <dl class="row">
-                    <dt class="col-sm-3">Tenant Name</dt>
-                    <dd class="col-sm-9">{{ $consumer->tenant_name }}</dd>
-                    <dt class="col-sm-3">Tenant Phone</dt>
-                    <dd class="col-sm-9">{{ maskNumber($consumer->tenant_phone) }}</dd>
-                    <dt class="col-sm-3">Tenant Email</dt>
-                    <dd class="col-sm-9">{{ $consumer->tenant_email }}</dd>
-                </dl>
-            </div>
         </div>
-        <h4 class="fw-semibold text-decoration-underline">Status History</h4>
-        <table class="table table-bordered table-success table-hover">
-            <thead class="table-success">
+        <h4 class="text-primary fw-semibold text-decoration-underline">Status History</h4>
+        <table class="table table-bordered table-primary table-hover">
+            <thead class="table-primary">
                 <tr>
                     <th>S.No</th>
                     <th>Status</th>

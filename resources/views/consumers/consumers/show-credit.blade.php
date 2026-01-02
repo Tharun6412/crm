@@ -6,8 +6,8 @@
     </div>
     <div class="p-2">
         @if ($credit_notes->count() > 0)
-            <table class="table table-bordered table-hover table-info">
-                <thead class="table-info">
+            <table class="table table-bordered table-hover table-primary">
+                <thead class="table-primary">
                     <tr>
                         <th width="1%" nowrap>S No</th>
                         <th>Type</th>

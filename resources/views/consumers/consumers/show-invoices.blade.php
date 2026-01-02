@@ -59,4 +59,5 @@
         @endif
     </div>
 </div>
+{{-- Scripts --}}
 @include('scripts.link-modal')
