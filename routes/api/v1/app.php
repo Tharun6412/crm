@@ -40,4 +40,10 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('statusChange/{id}/{status_id}', [App\Http\Controllers\Api\V1\Application\ComplaintsController::class, 'statusChange']);
         Route::post('comments/{id}/', [App\Http\Controllers\Api\V1\Application\ComplaintsController::class, 'comments']);
     });
+    
+    Route::prefix('bills')->group(function() {
+        // Gas Bills Generation
+        Route::post('generateGasBill/{id}', [App\Http\Controllers\Api\V1\Application\BillingController::class, 'generateGasBill'])->whereNumber('id');
+        Route::post('storeGasBill/{id}', [App\Http\Controllers\Api\V1\Application\BillingController::class, 'storeGasBill'])->whereNumber('id');
+    });
 });

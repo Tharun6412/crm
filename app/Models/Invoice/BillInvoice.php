@@ -59,7 +59,7 @@ class BillInvoice extends Model
         ];
     }
 
-    protected $appends = ['invNumber'];
+    protected $appends = ['inv_number'];
 
     protected function invNumber():Attribute
     {
