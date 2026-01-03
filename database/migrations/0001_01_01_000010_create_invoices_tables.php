@@ -137,8 +137,8 @@ return new class extends Migration
         // pay invoice payments
         Schema::create('pay_invoice_payments', function(Blueprint $table) {
             $table->id();
-            $table->foreignId('invoice_id')->index()->nullable()->constrained(table:'bil_invoices')->noActionOnDelete()->noActionOnUpdate();
             $table->string('code', length:16)->nullable();
+            $table->foreignId('invoice_id')->index()->nullable()->constrained(table:'bil_invoices')->noActionOnDelete()->noActionOnUpdate();
             $table->date('payment_date')->nullable();
             $table->foreignId('payment_type_id')->index()->nullable()->constrained(table:'mst_pay_types')->noActionOnDelete()->noActionOnUpdate();
             $table->string('transaction_id', length:225)->nullable();

@@ -38,8 +38,12 @@ Route::middleware(['auth', ModuleAccess::class])->group(function() {
     Route::post('refunds/closeRefund/{id}',[App\Http\Controllers\Consumer\RefundController::class, 'closeRefund']);
     Route::resource('refunds', App\Http\Controllers\Consumer\RefundController::class);
 
+    // Consumer Meter Change 
+    Route::resource('meterChange', App\Http\Controllers\Consumer\MeterChangeController::class);
+    
     // Consumers list
     Route::resource('tr', App\Http\Controllers\Consumer\TRController::class);
     Route::get('/{id}', [App\Http\Controllers\Consumer\ConsumerController::class, 'show'])->whereNumber('id');
     Route::get('/{status:slug?}', [App\Http\Controllers\Consumer\ConsumerController::class, 'index']);
+
 });

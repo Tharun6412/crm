@@ -22,12 +22,17 @@
                         </div>
                     </div>
                     <div class="row mb-2">  
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <label class="col-form-label">Meter Number&nbsp;:<span class="text-danger">*</span></label>
                             <input type="text" name="meter_no" id="meter_no" class="form-control form-control-sm"/>
                             <span class="text-danger validate-err-msg" id="meter_no-error"></span>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
+                            <label class="col-form-label">Meter Serial Number&nbsp;:</label>
+                            <input type="text" name="meter_serial_no" id="meter_serial_no" class="form-control form-control-sm"/>
+                            <span class="text-danger validate-err-msg" id="meter_serial_no-error"></span>
+                        </div>
+                        <div class="col-md-4">
                         <label class="col-form-label">Meter Reading&nbsp;:<span class="text-danger">*</span></label>
                             <input type="text" name="meter_reading" id="meter_reading" class="form-control form-control-sm"/>
                             <span class="text-danger validate-err-msg" id="meter_reading-error"></span>

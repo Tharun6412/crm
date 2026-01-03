@@ -30,6 +30,7 @@ class ConsumerMeter extends Model
         'install_by',
         'status',
         'created_by',
+        'updated_by'
     ];
 
     /**
@@ -61,6 +62,14 @@ class ConsumerMeter extends Model
     public function createdBy():BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by')->withDefault();
+    }
+
+    /**
+     * Realtion with UpdatedBy
+     */
+    public function updatedBy():BelongsTo
+    {
+        return $this->belongsTo(User::class, 'updated_by')->withDefault();
     }
 
     /**

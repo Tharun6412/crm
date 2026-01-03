@@ -17,6 +17,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('consumer_id')->index()->nullable()->constrained(table:'cns_consumers')->noActionOnUpdate()->noActionOnDelete();
             $table->string('code', length:16)->nullable();
+            $table->foreignId('state_id')->nullable()->index()->constrained(table:'mst_states')->noActionOnDelete()->noActionOnUpdate();
+            $table->foreignId('ga_id')->nullable()->index()->constrained(table:'mst_gas')->noActionOnDelete()->noActionOnUpdate();
+            $table->foreignId('district_id')->nullable()->index()->constrained(table:'mst_districts')->noActionOnDelete()->noActionOnUpdate();
             $table->string('name', length:60)->nullable();
             $table->string('email', length:60)->nullable();
             $table->string('phone', length:16)->nullable();
@@ -67,7 +70,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('complaint_id')->index()->nullable()->constrained(table:'cmp_complaints')->noActionOnUpdate()->noActionOnDelete();
             $table->string('comments', length:225)->nullable();
-            $table->foreignId('created_by')->nullable()->index()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();
+            $table->morphs('commentable');
             $table->timestamps();
         });
 
@@ -77,8 +80,8 @@ return new class extends Migration
             $table->foreignId('complaint_id')->index()->nullable()->constrained(table:'cmp_complaints')->noActionOnUpdate()->noActionOnDelete();
             $table->decimal('rating', total:8, places:3);
             $table->string('notes', length:225)->nullable();
-            $table->bigInteger('collected_by')->index()->nullable()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();
             $table->string('link', length:120)->nullable();
+            $table->morphs('collectable');
             $table->timestamps();
         });
     }

@@ -27,6 +27,7 @@ class ConsumerMeterChanges extends Model
         'meter_id',
         'prev_reading',
         'end_reading',
+        'consumption',
         'new_meter_id',
         'request_date',
         'replace_date',

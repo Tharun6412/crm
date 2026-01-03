@@ -87,6 +87,7 @@ return new class extends Migration
             $table->foreignId('install_by')->nullable()->index()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();
             $table->foreignId('status')->nullable()->index()->constrained(table:'mst_cns_meter_status')->noActionOnDelete()->noActionOnUpdate();
             $table->foreignId('created_by')->nullable()->index()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();
+            $table->foreignId('updated_by')->nullable()->index()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();
             $table->timestamps();
         });
         
@@ -97,6 +98,7 @@ return new class extends Migration
             $table->foreignId('meter_id')->index()->nullable()->constrained(table:'cns_consumer_meters')->noActionOnUpdate()->noActionOnDelete();
             $table->double('prev_reading')->nullable();
             $table->double('end_reading')->nullable();
+            $table->decimal('consumption', 8, 3)->nullable();
             $table->foreignId('new_meter_id')->index()->nullable()->constrained(table:'cns_consumer_meters')->noActionOnUpdate()->noActionOnDelete();
             $table->date('request_date')->nullable();
             $table->date('replace_date')->nullable();

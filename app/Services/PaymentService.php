@@ -41,15 +41,6 @@ class PaymentService
         $invoice->status_id = ($balance > 0) ? 2 : 1;
         $invoice->save();
 
-        // Add ledger record
-        $ledger_data[] = [
-            
-            'description' => "Bill Payment: Invoice Generated with Invoice No.",
-            'credit' => $new_payment->amount,
-            'debit' => NULL,
-            'balance' => $new_payment->amount, 
-        ];
-
         // Add record to Ledger
         $ledger_record = LedgerService::create([
             'model' => $new_payment,

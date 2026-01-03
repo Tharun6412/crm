@@ -9,6 +9,7 @@ use App\Models\Consumer\ConsumerMeter;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 class ExecuteController extends Controller
 {
@@ -35,7 +36,16 @@ class ExecuteController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'meter_no' => 'required|unique:cns_consumer_meters,meter_no',
+            'meter_no' => ['required',
+                Rule::unique('cns_consumer_meters', 'meter_no')->where(function($q) {
+                    $q->where('status', 1);
+                }),
+            ],
+            'meter_serial_no' => ['nullable', 
+                Rule::unique('cns_consumer_meters', 'meter_serial_no')->where(function($q) {
+                    $q->where('status', 1);
+                }),
+            ],
             'meter_reading' => 'required|numeric',
             'notes' => 'required',
         ]);
@@ -56,6 +66,7 @@ class ExecuteController extends Controller
         ConsumerMeter::create([
             'consumer_id' => $id,
             'meter_no' => $request->meter_no,
+            'meter_serial_no' => $request->meter_serial_no,
             'initial_reading' => $request->meter_reading,
             'install_date' => Carbon::now(),
             'install_by' => Auth::id(),
