@@ -18,39 +18,34 @@
                         <div class="col-sm-3">{{ $consumer_meter->meter_no }}</div>
                         <div class="col-sm-3 text-end fw-semibold">Meter Serial Number : </div>
                         <div class="col-sm-3">{{ $consumer_meter->meter_serial_no }}</div>
-                        <div class="col-sm-3 text-end fw-semibold">End Reading : </div>
-                        <div class="col-sm-3">
-                            @if ($meter_data?->curr_reading)
-                                {{ $meter_data->curr_reading }}
-                            @else
-                                {{ $consumer_meter->initial_reading }}
-                            @endif
-                        </div>
                         <div class="col-sm-3 text-end fw-semibold">Meter Status : </div>
                         <div class="col-sm-3">{{ $consumer_meter->meterStatus->name }}</div>
                         <div class="col-sm-3 text-end fw-semibold">Install Date : </div>
                         <div class="col-sm-3">{{ $consumer_meter->install_date->format('d-m-Y') }}</div>
                         <div class="col-sm-3 text-end fw-semibold">Installed By : </div>
                         <div class="col-sm-3">{{ $consumer_meter->installBy->name }}</div>
+                        <div class="col-sm-3 text-end fw-semibold">Previous Reading : </div>
+                        <div class="col-sm-3">{{ round(($consumer_meter->meterConsumption?->prev_reading ?? $consumer_meter->initial_reading), 3) }}</div>
+                        <div class="col-sm-6"></div>
+                        <div class="col-sm-3 text-end fw-semibold">End Reading&nbsp;:<span class="text-danger">*</span></div>
+                        <div class="col-sm-3">
+                            <input type="text" name="end_reading" id="end_reading" class="form-control form-control-sm text-satrt"/>
+                        </div>
                     </div>
                     <br/>
                     <div class="fw-semibold text-decoration-underline">New Meter Details</div>
                     <div class="row mb-2">  
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <label class="col-form-label">Meter Number&nbsp;:<span class="text-danger">*</span></label>
                             <input type="text" name="meter_no" id="meter_no" class="form-control form-control-sm"/>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <label class="col-form-label">Meter Serial Number&nbsp;:</label>
                             <input type="text" name="meter_serial_no" id="meter_serial_no" class="form-control form-control-sm"/>
                         </div>
-                        <div class="col-md-6">
-                        <label class="col-form-label">Start Reading&nbsp;:<span class="text-danger">*</span></label>
-                            <input type="text" name="prev_reading" id="prev_reading" class="form-control form-control-sm"/>
-                        </div>
-                        <div class="col-md-6">
-                        <label class="col-form-label">End Reading&nbsp;:<span class="text-danger">*</span></label>
-                            <input type="text" name="end_reading" id="end_reading" class="form-control form-control-sm"/>
+                        <div class="col-md-4">
+                        <label class="col-form-label">Initial Reading&nbsp;:<span class="text-danger">*</span></label>
+                            <input type="text" name="initial_reading" id="initial_reading" class="form-control form-control-sm"/>
                         </div>
                     </div>
                     <div class="row mb-2">

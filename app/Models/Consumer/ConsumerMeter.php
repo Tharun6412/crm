@@ -3,9 +3,12 @@
 namespace App\Models\Consumer;
 
 use App\Models\Admin\User;
+use App\Models\Invoice\BillInvoiceConsumption;
 use App\Models\Master\ConsumerMeterStatus;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class ConsumerMeter extends Model
 {
@@ -78,5 +81,13 @@ class ConsumerMeter extends Model
     public function meterStatus():BelongsTo
     {
         return $this->belongsTo(ConsumerMeterStatus::class, 'status')->withDefault();
+    }
+
+    /**
+     * Relation with Meter Consumption Latest
+     */
+    public function meterConsumption():HasOne
+    {
+        return $this->hasOne(BillInvoiceConsumption::class, 'meter_id', 'id')->latestOfMany('id');
     }
 }

@@ -32,12 +32,10 @@ class MeterChangeController extends Controller
     public function edit(Request $request, $id) 
     {
         $consumer_meter= ConsumerMeter::where('consumer_id', $id)->where('status', 1)->first();
-        $meter_data = BillInvoiceConsumption::where('meter_id', $consumer_meter->id)->latest('id')->first();
         $users = User::select('id', 'first_name', 'last_name', 'emp_id')->whereIn('department_id', [3, 5])->get();
         return view('consumers.meter-change.create', [
             'consumer_meter' => $consumer_meter, 
             'id' => $id,
-            'meter_data' => $meter_data,
             'users' => $users,
         ]);
     }
@@ -49,6 +47,8 @@ class MeterChangeController extends Controller
     public function update(Request $request, $id)
     {
         // Validation Message
+        $old_meter = ConsumerMeter::where(['consumer_id' => $id, 'status' => 1])->first();
+        $prev_reading = round(($old_meter->meterConsumption?->prev_reading ?? $old_meter->initial_reading), 3);
         $request->validate([
             'meter_no' => ['required',
                 Rule::unique('cns_consumer_meters', 'meter_no')->where(function($q) {
@@ -60,15 +60,14 @@ class MeterChangeController extends Controller
                     $q->where('status', 1);
                 }),
             ],
-            'prev_reading' => 'required|numeric',
-            'end_reading' => 'required|numeric|gt:prev_reading',
+            'end_reading' => 'required|numeric|gt:'.$prev_reading,
+            'initial_reading' => 'required|numeric',
             'request_date' => 'required',
             'release_date' => 'required',
             'technician_id' => 'required',
             'reason' => 'required|max:255',
         ]);
         // Fetch Old Meter Details
-        $old_meter = ConsumerMeter::where(['consumer_id' => $id, 'status' => 1])->latest('id')->first();
         // Old Consumer Meter Update status = Replaced[3]
         $old_meter->update([
             'status' => 3,
@@ -79,19 +78,19 @@ class MeterChangeController extends Controller
             'consumer_id' => $id,
             'meter_no' => $request->meter_no,
             'meter_serial_no' => $request->meter_serial_no,
-            'initial_reading' => $request->prev_reading,
+            'initial_reading' => $request->initial_reading,
             'install_date' => Carbon::now(),
             'install_by' => Auth::id(),
             'status' => 1,
             'created_by' => Auth::id(),
         ]);
         // Meter Reading Calculations
-        $consumption = round($request->end_reading - $request->prev_reading, 3);
+        $consumption = round($request->end_reading - $prev_reading, 3);
         // Add Meter Change record
         ConsumerMeterChanges::create([
             'consumer_id' => $id,
             'meter_id' => $old_meter->id,
-            'prev_reading' => $request->prev_reading,
+            'prev_reading' => $prev_reading,
             'end_reading' => $request->end_reading,
             'consumption' => $consumption,
             'new_meter_id' => $new_meter->id,
