@@ -51,33 +51,51 @@ class GasPaymentsController extends Controller
             'invoice_id' => 'required',
             'payment_type' => 'required',
             'transaction_no' => 'required',
-            // 'amount' => ['required', 'numeric', 'gt:0', 'min:' . $request->invoice_balance, 'max:' . $request->invoice_balance]
+            'amount' => ['required', 'numeric', 'gt:0', 'min:' . $request->invoice_balance, 'max:' . $request->invoice_balance]
         ]);
 
-        // $bill = BillInvoice::find($request->invoice_id);
-        $rem_balance = ($request->invoice_balance - $request->amount);
-        $inv_payment_status = ($rem_balance == 0) ? 1 : 3; 
-        $till_paid_amount = ($request->till_paid_amount + $request->amount);
-        $payment_ar = [
-            'invoice_id' => $request->invoice_id,
-            'payment_date' => date('Y-m-d'),
-            'payment_type_id' => $request->payment_type,
-            'transaction_id' => $request->transaction_no,
-            'amount' => $request->amount,
-            'balance' => $rem_balance,
-            'status_id' => 1,
-            'notes' => $request->notes,
-            'created_by' => Auth::id(),
-        ];
-        $insert = PaymentService::create($payment_ar);
-        if($insert->id) {
-            $inv_ar = [
-                'id' => $request->invoice_id,
-                'status_id' => $inv_payment_status,
-                'paid_amount' => $till_paid_amount,
-                'balance_amount' => $rem_balance,
-            ];
-            $inv_insert = BillInvoice::where('id', $request->invoice_id)->update($inv_ar);
+        $parentInvoice = BillInvoice::with('childInvoices')
+            ->findOrFail($request->invoice_id);
+
+        // Merge child invoices + parent (parent last)
+        $invoices = $parentInvoice->childInvoices
+            ->sortBy('invoice_date')
+            ->values();
+
+        $invoices->push($parentInvoice);
+        $remainingAmount = $request->amount;
+
+        foreach ($invoices as $invoice) {
+            if ($remainingAmount <= 0) {
+                break;
+            }
+            if ($invoice->balance_amount <= 0) {
+                continue;
+            }
+            $payAmount = min($invoice->balance_amount, $remainingAmount);
+            $newBalance = $invoice->balance_amount - $payAmount;
+            $newPaid    = $invoice->paid_amount + $payAmount;
+
+            // Create payment record for THIS invoice
+            PaymentService::create([
+                'invoice_id'      => $invoice->id,
+                'payment_date'    => date('Y-m-d'),
+                'payment_type_id' => $request->payment_type,
+                'transaction_id'  => $request->transaction_no,
+                'amount'          => $payAmount,
+                'balance'         => $newBalance,
+                'status_id'       => 1,
+                'notes'           => $request->notes,
+                'created_by'      => Auth::id(),
+            ]);
+
+            // Update invoice
+            $invoice->update([
+                'paid_amount'    => $newPaid,
+                'balance_amount' => $newBalance,
+                'status_id'      => ($newBalance == 0) ? 1 : 3, // Paid / Partial
+            ]);
+            $remainingAmount -= $payAmount;
         }
         return response()->json(['success' => 'Invoice payment inserted successfully']);
     }

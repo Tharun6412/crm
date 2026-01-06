@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class BillInvoice extends Model
@@ -122,12 +123,12 @@ class BillInvoice extends Model
     }
 
     /**
-     * Invoice table has HasMany relation with invoice consumption
+     * Invoice table has HasOne relation with invoice consumption
      * 
      */
-    public function consumption(): HasMany
+    public function consumption(): HasOne
     {
-        return $this->hasMany(BillInvoiceConsumption::class, 'invoice_id');
+        return $this->hasOne(BillInvoiceConsumption::class, 'invoice_id');
     }
 
     /**

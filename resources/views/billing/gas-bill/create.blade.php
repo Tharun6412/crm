@@ -6,42 +6,64 @@
 @section('page-title', 'Gas Invoice Generation')
 
 @section('page-content')
-    <div>
-        <x-consumer.basic-details :consumer="$consumer" type="3" class="bg-info-subtle"/>
-    </div>
-    <div id="add-gas-bill-success">
-        <form action="{{ url('bill/gasInvoice/') }}" name="add-gas-bill-form" id="add-gas-bill-form" method="post">
-            @csrf
-            <input type="hidden" id="id" name="id" value="{{ $consumer->id }}">
-            <input type="hidden" id="meter_init_reading" name="meter_init_reading" value="{{ $consumer->meter->initial_reading }}">
-            <div class="mb-2">
-                @php
-                    $start_date = (!empty($invoice)) ? $invoice->consumption->last()->date_to->format('Y-m-d') : ($consumer->statusHistory->first()->created_at->format('Y-m-d'));
-                    $invEndReading = (!empty($invoice) and $invoice->consumption->count() > 0)
-                        ? $invoice->consumption->last()->curr_reading
-                        : 0;
+<div id="add-gas-bill-success">
+    <form action="{{ url('bill/gasInvoice/') }}" name="add-gas-bill-form" id="add-gas-bill-form" method="post">
+        @csrf
+        <input type="hidden" id="id" name="id" value="{{ $consumer->id }}">
+        <input type="hidden" id="meter_init_reading" name="meter_init_reading" value="{{ $consumer->meter->initial_reading }}">
+        <div class="mb-2">
+            @php
+                    $start_date = (!empty($invoice)) ? $invoice->consumption->date_to->format('Y-m-d') : ($consumer->statusHistory->first()->created_at->format('Y-m-d'));
+                    $invEndReading = (!empty($invoice) and $invoice->consumption()->exists())
+                    ? $invoice->consumption->curr_reading
+                    : 0;
                     $startReading = ($invEndReading > 0) ? $invEndReading : (($consumer->meter->initial_reading >= 0) ? $consumer->meter->initial_reading : "");
-                @endphp
+                    @endphp
                 @if (!empty($invoice))
-                    <div class="bg-warning-subtle rounded mt-3">
-                        <input type="hidden" id="inv_end_reading" name="inv_end_reading" value={{ $invEndReading }} >
+                    <x-consumer.invoice-details :invoice="$invoice" type="3" class="bg-info-subtle" />
+                    <input type="hidden" id="inv_end_reading" name="inv_end_reading" value={{ $invEndReading }} >
+                    <div class="bg-secondary-subtle rounded mt-3">
                         <div class="row g-2 pb-2 mb-2">
-                            <div class="col-sm-2 text-end fw-semibold">Invoice No. : </div>
-                            <div class="col-sm-4">{{ $invoice->invoice_number }}</div>
-                            <div class="col-sm-2 text-end fw-semibold">Status : </div>
-                            <div class="col-sm-4"><x-invoice.status :status="$invoice->status"/></div>
-                            <div class="col-sm-2 text-end fw-semibold">Invoice Date : </div>
-                            <div class="col-sm-4">{{ $invoice->invoice_date->format('d-m-Y') }}</div>
-                            <div class="col-sm-2 text-end fw-semibold">Consumption : </div>
-                            <div class="col-sm-4">{{ $invoice->consumption->last()->net_consumption ?? '' }} SCM</div>
-                            <div class="col-sm-2 text-end fw-semibold">Reading : </div>
-                            <div class="col-sm-4">{{ $invEndReading }} - {{ $invoice->consumption->last()->prev_reading }}</div>
-                            <div class="col-sm-2 text-end fw-semibold">Amount : </div>
-                            <div class="col-sm-4">{{ $invoice->total_amount }}</div>
+                            <div class="col-sm-2 text-end fw-semibold">Scheme Name : </div>
+                            <div class="col-sm-4">{{ $consumer->scheme->scheme->name }}</div>
+                            <div class="col-sm-2 text-end fw-semibold">Scheme Amount : </div>
+                            <div class="col-sm-4">{{ $consumer->scheme->scheme->total_deposit}}</div>
+                            <div class="col-sm-2 text-end fw-semibold">Paid Amount : </div>
+                            <div class="col-sm-4">{{ $consumer->sdPayment->sum('amount') ?? 0 }}</div>
+                            <div class="col-sm-2 text-end fw-semibold">Balance : </div>
+                            <div class="col-sm-4">{{ $consumer->sdPayment->last()->balance ?? $consumer->scheme->scheme->total_deposit }}</div>
+                            @if ($consumer->scheme->scheme->emi_amount > 0)
+                                <div class="col-sm-2 text-end fw-semibold">Emi Amount :</div>
+                                <div class="col-sm-4">{{ $consumer->scheme->scheme->emi_amount }}</div>
+                                <div class="col-sm-2 text-end fw-semibold">No of EMIs paid : </div>
+                                <div class="col-sm-4">{{ $consumer->sdPayment->last()->emi_no ?? 0 }}</div>
+                            @endif
+                        </div>
+                    </iv>
+                @else
+                    <div>
+                        <x-consumer.basic-details :consumer="$consumer" type="3" class="bg-info-subtle"/>
+                    </div>
+                    <div class="alert alert-warning mb-0">No Previous Invoices Found..!</div>
+                    <input type="hidden" id="inv_end_reading" name="inv_end_reading" value={{ $invEndReading }} >
+                    <div class="bg-secondary-subtle rounded mt-3">
+                        <div class="row g-2 pb-2 mb-2">
+                            <div class="col-sm-2 text-end fw-semibold">Scheme Name : </div>
+                            <div class="col-sm-4">{{ $consumer->scheme->scheme->name }}</div>
+                            <div class="col-sm-2 text-end fw-semibold">Scheme Amount : </div>
+                            <div class="col-sm-4">{{ $consumer->scheme->scheme->total_deposit}}</div>
+                            <div class="col-sm-2 text-end fw-semibold">Paid Amount : </div>
+                            <div class="col-sm-4">{{ $consumer->sdPayment->sum('amount') ?? 0 }}</div>
+                            <div class="col-sm-2 text-end fw-semibold">Balance : </div>
+                            <div class="col-sm-4">{{ $consumer->sdPayment->last()->balance ?? $consumer->scheme->scheme->total_deposit }}</div>
+                            @if ($consumer->scheme->scheme->emi_amount > 0)
+                                <div class="col-sm-2 text-end fw-semibold">Emi Amount :</div>
+                                <div class="col-sm-4">{{ $consumer->scheme->scheme->emi_amount }}</div>
+                                <div class="col-sm-2 text-end fw-semibold">No of EMIs paid : </div>
+                                <div class="col-sm-4">{{ $consumer->sdPayment->last()->emi_no ?? 0 }}</div>
+                            @endif
                         </div>
                     </div>
-                @else
-                    <div class="alert alert-warning mb-0">No Previous Invoices Found..!</div>
                 @endif
             </div>
             @if (!empty($consumer->meter->meter_no) AND $startReading >= 0)

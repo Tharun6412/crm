@@ -62,7 +62,7 @@
                         <h4>Payment details</h4>
                         <div>
                             <input type="hidden" name="invoice_id" id="invoice_id" value="{{ $bill->id }}">
-                            <input type="hidden" name="invoice_balance" id="invoice_balance" value="{{ $bill->balance_amount }}">
+                            <input type="hidden" name="invoice_balance" id="invoice_balance" value="{{ ($child_inv_balance + $bill->balance_amount) }}">
                             <input type="hidden" name="till_paid_amount" id="till_paid_amount" value="{{ $bill->paid_amount }}">
                             <div class="row mb-2">
                                 <label class="col-sm-3 col-form-label text-end">Total Payable Amount:</label>
@@ -89,7 +89,7 @@
                                 <label for="amount" class="col-sm-3 col-form-label text-end">Amount&nbsp;:&nbsp;<i class="text-danger">*&nbsp;</i></label>
                                 <div class="col-sm-7">
                                     <div class="input-group">
-                                        <input type="text" class="form-control text-end" id="amount" name="amount" placeholder="Enter the amount to be paid." value="{{ $bill->balance_amount }}">
+                                        <input type="text" class="form-control text-end" id="amount" name="amount" placeholder="Enter the amount to be paid." value="{{ ($child_inv_balance + $bill->balance_amount) }}">
                                         <span class="input-group-text"><i class="bi-currency-rupee"></i></span>
                                     </div>
                                 </div>

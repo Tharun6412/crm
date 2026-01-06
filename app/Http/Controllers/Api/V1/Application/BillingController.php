@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api\V1\Application;
 
+use App\Enums\ConsumerStatus;
+use App\Enums\InvoiceStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\DocumentCentre\DocumentUpload;
 use App\Models\Consumer\Consumer;
@@ -10,6 +12,7 @@ use App\Models\Invoice\BillInvoiceConsumption;
 use App\Models\Invoice\BillInvoiceConsumptionDetails;
 use App\Models\Master\PaymentType;
 use App\Models\Master\PriceHistory;
+use App\Services\DependentInvoiceService;
 use App\Services\InvoiceService;
 use App\Services\LedgerService;
 use Carbon\Carbon;
@@ -24,17 +27,16 @@ class BillingController extends Controller
     public function generateGasBill(Request $request, $id)
     {
         $consumer = Consumer::where('id', $id)
-            ->where('status_id', 6)
+            ->where('status_id', ConsumerStatus::ACTIVATE->value)
             ->with(['statusHistory' => function ($q) {
-                $q->where('status_id', 6)->latest()->limit(1);
+                $q->where('status_id', ConsumerStatus::ACTIVATE->value)->latest()->limit(1);
             }])->first();
         
         // Check consumer is billable
         if($consumer) {
             // 1. Get latest gas invoice if exists
             $invoice = BillInvoice::where('consumer_id', $id)->where('type_id', 1)->latest()->first();
-
-            $start_date = (!empty($invoice)) ? $invoice->consumption->last()->date_to->format('Y-m-d') : ($consumer->statusHistory->first()->created_at->format('Y-m-d'));
+            $start_date = (!empty($invoice)) ? $invoice->consumption->date_to->format('Y-m-d') : ($consumer->statusHistory->first()->created_at->format('Y-m-d'));
             $end_date = date('Y-m-d');
             $bill_days = Carbon::parse($start_date)->diffInDays($end_date) + 1;
 
@@ -45,7 +47,6 @@ class BillingController extends Controller
                     $q->where('effective_from', '<=', $end_date)->where('effective_to', '>=', $start_date);
                 })
                 ->orderBy('effective_from')->get();
-            
             // If no price changes found, fetch the latest single record
             if ($prices->isEmpty()) {
                 $prices = PriceHistory::where('district_id', $consumer->district_id)
@@ -86,7 +87,7 @@ class BillingController extends Controller
         $end_date = $request->end_date;
         // Get the consumer details
         $consumer = Consumer::where('id', $id)
-            ->where('status_id', 6)
+            ->where('status_id', ConsumerStatus::ACTIVATE->value)
             ->with(['statusHistory' => function ($q) {
                 $q->latest()->limit(1);
             }])->first();
@@ -104,7 +105,6 @@ class BillingController extends Controller
                 ->where('effective_to', '>=', $start_date);
             })
             ->orderBy('effective_from')->get()->toArray();
-
         // If no price changes found, fetch the latest single record
         if (empty($prices)) {
             $prices = PriceHistory::where('district_id', $consumer->district_id)
@@ -159,7 +159,6 @@ class BillingController extends Controller
         $inv_number = InvoiceService::generateNumber($consumer->ga->state_id, 1);
         $invoice_date = Carbon::now()->format('Y-m-d');
         $due_date = Carbon::now()->addDays(15)->format('Y-m-d');
-
         // Meter image upload.
         $doc_upload = DocumentUpload::upload($request, 'domestic');
 
@@ -178,7 +177,7 @@ class BillingController extends Controller
             'paid_amount' => NULL,
             'balance_amount' => $inv_total,
             'due_date' => $due_date,
-            'status_id' => 2, // Not paid
+            'status_id' => InvoiceStatus::NOT_PAID->value, // Not paid
             'created_by' => Auth::id()
         ];
         $inv_insert = BillInvoice::create($invoice_ar);
@@ -230,6 +229,19 @@ class BillingController extends Controller
             ];
             // Add/insert into Ledger Report
             LedgerService::create($data, 'debit');
+
+            // dependent invoice creation (SD EMI / Rental)
+            $scheme = $consumer->scheme;
+            if ($scheme) {
+                // EMI INVOICE
+                if ($scheme->emi_amount > 0 and $scheme->security_deposit > 0 and $scheme->status == 0) {
+                    DependentInvoiceService::sdEmiCreate($consumer, $inv_insert);
+                }
+                // RENTAL INVOICE (only if EMI not applicable)
+                elseif ($scheme->rental_amount > 0 and $scheme->status == 0) {
+                    DependentInvoiceService::rentalInvCreate($consumer, $inv_insert);
+                }
+            }
 
             // Response Message
             return response()->json([

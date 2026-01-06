@@ -10,9 +10,13 @@ use App\Models\Invoice\BillInvoiceConsumptionDetails;
 use App\Models\Master\PriceHistory;
 use App\Services\InvoiceGeneration;
 use App\Services\InvoiceService;
+use App\Services\LedgerService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use App\Enums\ConsumerStatus;
+use App\Enums\InvoiceStatus;
+use App\Services\DependentInvoiceService;
 
 class GasInvoiceController extends Controller
 {
@@ -32,17 +36,15 @@ class GasInvoiceController extends Controller
     public function create($id = 0)
     {
         $consumer = Consumer::where('id', $id)
-            ->where('status_id', 6)
+            ->where('status_id', ConsumerStatus::ACTIVATE->value)
             ->with(['statusHistory' => function ($q) {
-                $q->where('status_id', 6)->latest()->limit(1);
+                $q->where('status_id', ConsumerStatus::ACTIVATE->value)->latest()->limit(1);
             }])->first();
-        
         // Check consumer is billable
         if($consumer) {
             // 1. Get latest gas invoice if exists
             $invoice = BillInvoice::where('consumer_id', $id)->where('type_id', 1)->latest()->first();
-
-            $start_date = (!empty($invoice)) ? $invoice->consumption->last()->date_to->format('Y-m-d') : ($consumer->statusHistory->first()->created_at->format('Y-m-d'));
+            $start_date = (!empty($invoice)) ? $invoice->consumption->date_to->format('Y-m-d') : ($consumer->statusHistory->first()->created_at->format('Y-m-d'));
             $end_date = date('Y-m-d');
             $bill_days = Carbon::parse($start_date)->diffInDays($end_date) + 1;
 
@@ -53,7 +55,6 @@ class GasInvoiceController extends Controller
                     $q->where('effective_from', '<=', $end_date)->where('effective_to', '>=', $start_date);
                 })
                 ->orderBy('effective_from')->get();
-            
             // If no price changes found, fetch the latest single record
             if ($prices->isEmpty()) {
                 $prices = PriceHistory::where('district_id', $consumer->district_id)
@@ -87,18 +88,15 @@ class GasInvoiceController extends Controller
             'id' => 'required',
             'end_reading' => 'required',
         ]);
-
         // Prepare billing data
         $start_date = $start_date_1 =  $request->start_date;
         $end_date = $request->end_date;
-
         // Get the consumer details
         $consumer = Consumer::where('id', $request->id)
-            ->where('status_id', 6)
+            ->where('status_id', ConsumerStatus::ACTIVATE->value)
             ->with(['statusHistory' => function ($q) {
                 $q->latest()->limit(1);
             }])->first();
-        
         // Get the price details
         $prices = PriceHistory::where('district_id', $consumer->district_id)
             ->where('segment_id', $consumer->segment_id)
@@ -107,16 +105,14 @@ class GasInvoiceController extends Controller
                 ->where('effective_to', '>=', $start_date);
             })
             ->orderBy('effective_from')->get()->toArray();
-
         // If no price changes found, fetch the latest single record
         if (empty($prices)) {
             $prices = PriceHistory::where('district_id', $consumer->district_id)
                 ->where('segment_id', $consumer->segment_id)
                 ->orderBy('effective_from', 'desc')
                 ->limit(1)
-                ->get()->toArray();  // <-- IMPORTANT: get() returns a collection
+                ->get()->toArray();
         }
-
         // If there is no price in between the range.
         if(empty($prices)) {
             // Response Message
@@ -161,7 +157,6 @@ class GasInvoiceController extends Controller
         $avg_price = $p_price / count($prices); 
         
         // invoice number generation
-        // $inv_number = InvoiceGeneration::invoiceNumberGenerate(['state_id' => $consumer->ga->state_id, 'inv_type' => 2]);
         $inv_number = InvoiceService::generateNumber($consumer->ga->state_id, 1);
         $invoice_date = Carbon::now()->format('Y-m-d');
         $due_date = Carbon::now()->addDays(15)->format('Y-m-d');
@@ -181,7 +176,7 @@ class GasInvoiceController extends Controller
             'paid_amount' => NULL,
             'balance_amount' => $inv_total,
             'due_date' => $due_date,
-            'status_id' => 2, // Not paid
+            'status_id' => InvoiceStatus::NOT_PAID->value, // Not paid
             'created_by' => Auth::id()
         ];
         $inv_insert = BillInvoice::create($invoice_ar);
@@ -208,10 +203,7 @@ class GasInvoiceController extends Controller
                 'file_id' => NULL,
             ];
             $inv_cons = BillInvoiceConsumption::create($inv_consumption);
-    
-            // -----------------------------
             // Attach consumption_id to consumption details & bulk insert
-            // -----------------------------
             if($inv_cons and $net_consumption > 0) {
                 $bulkRows = [];
                 foreach ($inv_consmp_details as $detail) {
@@ -226,6 +218,25 @@ class GasInvoiceController extends Controller
                     ];
                 }
                 BillInvoiceConsumptionDetails::insert($bulkRows);
+            }
+            // Ledger Service.
+            $ledger_record = LedgerService::create([
+                'model' => $inv_insert,
+                'consumer_id' => $inv_insert->consumer_id,
+                'amount' => ($total_amount ?? 0),
+            ], 'dr');
+
+            // dependent invoice creation (SD EMI / Rental)
+            $scheme = $consumer->scheme;
+            if ($scheme) {
+                // EMI INVOICE
+                if ($scheme->emi_amount > 0 and $scheme->security_deposit > 0 and $scheme->status == 0) {
+                    DependentInvoiceService::sdEmiCreate($consumer, $inv_insert);
+                }
+                // RENTAL INVOICE (only if EMI not applicable)
+                elseif ($scheme->rental_amount > 0 and $scheme->status == 0) {
+                    DependentInvoiceService::rentalInvCreate($consumer, $inv_insert);
+                }
             }
     
             // Response Message
