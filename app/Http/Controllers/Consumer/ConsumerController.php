@@ -58,13 +58,16 @@ class ConsumerController extends Controller
         $consumer = Consumer::when((!isAdmin() AND !isSuperAdmin()), function ($q) {
                 $q->whereIn('ga_id', session('user')['gas']);
             })->find($id);
-
+        
         // Abort if consumer not found
         if (! $consumer) {
             abort(404, 'Consumer not found');
         }
 
         // Render output
-        return view('consumers.consumers.show', ['consumer' => $consumer]);
+        return view('consumers.consumers.show', [
+            'consumer' => $consumer,
+            'consumer_meter' => $consumer->meter->where('status', 1)->first(),
+        ]);
     }
 }

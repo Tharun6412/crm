@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api\V1\Application;
 
 use App\Enums\ConsumerStatus;
 use App\Enums\InvoiceStatus;
+use App\Enums\TaxType;
+use App\Enums\InvoiceType;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\DocumentCentre\DocumentUpload;
 use App\Models\Consumer\Consumer;
@@ -164,13 +166,13 @@ class BillingController extends Controller
 
         // bill invoice array
         $invoice_ar = [
-            'type_id' => 1, //1 => Gas Invoice
+            'type_id' => InvoiceType::GAS_BILL->value, //1 => Gas Invoice
             'consumer_id' => $consumer->id,
             'invoice_number' => $inv_number,
             'invoice_date' => $invoice_date,
             'base_amount' => $inv_base_amt,
             'taxable_amount' => $inv_base_amt,
-            'tax_id'=> 2,
+            'tax_id' => TaxType::GST->value,
             'tax_value' => $vat_percent,
             'tax_amount' => $inv_tax_amt,
             'total_amount' => $inv_total,

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api\V1\Application;
 
+use App\Enums\ConsumerStatus as EnumsConsumerStatus;
+use App\Enums\RefundStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Consumer\Consumer;
 use App\Models\Consumer\ConsumerRefund;
@@ -22,13 +24,13 @@ class ConsumerOperationsController extends Controller
         ]);
         // 7 = TD
         Consumer::where('id', $id)->update([
-            'status_id' => 7,
+            'status_id' => EnumsConsumerStatus::TD->value,
             'updated_by' => Auth::id(),
         ]);
         // Consumer Status History
         ConsumerStatus::create([
             'consumer_id' => $id,
-            'status_id' => 7,
+            'status_id' => EnumsConsumerStatus::TD->value,
             'notes' => $request->notes,
             'created_by' => Auth::id(),
         ]);
@@ -48,13 +50,13 @@ class ConsumerOperationsController extends Controller
         ]);
         // 8 = PD
         Consumer::where('id', $id)->update([
-            'status_id' => 8,
+            'status_id' => EnumsConsumerStatus::PD->value,
             'updated_by' => Auth::id(),
         ]);
         // Consumer Status History
         ConsumerStatus::create([
             'consumer_id' => $id,
-            'status_id' => 8,
+            'status_id' => EnumsConsumerStatus::PD->value,
             'notes' => $request->notes,
             'created_by' => Auth::id(),
         ]);
@@ -75,7 +77,7 @@ class ConsumerOperationsController extends Controller
         // Refund Data
         $add_refund = ConsumerRefund::create([
             'consumer_id' => $id,
-            'status_id' => 1, //Refund Request
+            'status_id' => RefundStatus::REQUEST->value, //Refund Request
             'created_by' => Auth::id(),
         ]);
         // Number Generation
@@ -84,7 +86,7 @@ class ConsumerOperationsController extends Controller
         // Refund Status
         ConsumerRefundStatus::create([
             'refund_id' => $add_refund->id,
-            'status_id' => '1', //1 = Refund Request 
+            'status_id' => RefundStatus::REQUEST->value, //1 = Refund Request 
             'notes' => !empty($request->notes) ? $request->notes : null,
             'created_by' => Auth::id(),
         ]);

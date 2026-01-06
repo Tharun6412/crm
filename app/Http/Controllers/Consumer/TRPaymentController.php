@@ -2,6 +2,12 @@
 
 namespace App\Http\Controllers\Consumer;
 
+use App\Enums\ConsumerStatus as EnumsConsumerStatus;
+use App\Enums\InvoiceStatus;
+use App\Enums\InvoiceType;
+use App\Enums\PaymentStatus;
+use App\Enums\SDPaymentStatus;
+use App\Enums\TaxType;
 use App\Http\Controllers\Controller;
 use App\Models\Consumer\CaCounter;
 use App\Models\Consumer\Consumer;
@@ -73,7 +79,7 @@ class TRPaymentController extends Controller
             $crn_no = $district_code.$segment_type.str_pad($ca_code, 2, 0,STR_PAD_LEFT).str_pad($ca_data->count, 6, "0", STR_PAD_LEFT);
             Consumer::where('id', $id)->update([
                 'crn' => $crn_no,
-                'status_id' => 2,
+                'status_id' => EnumsConsumerStatus::REGISTER->value,
                 'updated_by' => Auth::id(),
             ]);
             // Scheme Details
@@ -94,7 +100,7 @@ class TRPaymentController extends Controller
                     'transaction_number' => $request->transaction_no,
                     'amount' => $paid_amt,
                     'balance' => $balance_amt,
-                    'status_id' => 1,
+                    'status_id' => SDPaymentStatus::PAID->value,
                     'created_by' => Auth::id(),
                 ]);
             }
@@ -115,21 +121,21 @@ class TRPaymentController extends Controller
             $invoice_data = [
                 'config' => [
                     'state_id' => $consumer_scheme->consumer->ga->state_id,
-                    'tax_id' => 2, //GST = 2
+                    'tax_id' => TaxType::GST->value, //GST = 2
                 ],
                 'headers' => [
-                    'type_id' => 2, // Service Invoice
+                    'type_id' => InvoiceType::SERVICE_INVOICE->value, // 2 = Service Invoice
                     'consumer_id' => $consumer_scheme->consumer_id,
                     'invoice_date' => Carbon::now()->toDateString(),
                     'base_amount' => $base_amt,
                     'taxable_amount' => $base_amt,
-                    'tax_id' => 2,
+                    'tax_id' => TaxType::GST->value,
                     'tax_value' => 18,
                     'tax_amount' => $tax_amt,
                     'total_amount' => $amt,
                     'paid_amount' => $amt,
                     'balance_amt' => 0,
-                    'status_id' => 1, // Paid
+                    'status_id' => InvoiceStatus::PAID->value, // Paid
                     'created_by' => Auth::id(),
                 ],
                 'items' => $invoice_items,
@@ -143,14 +149,14 @@ class TRPaymentController extends Controller
                 'payment_type_id' => $request->payment_type,
                 'transaction_id' => $request->transaction_no,
                 'amount' => $amt,
-                'status_id' => 1,
+                'status_id' => PaymentStatus::COMPLETED->value,
                 'notes' => !empty($request->notes) ? $request->notes : null,
                 'created_by' => Auth::id(),
             ]);
             // Add consumer status history record
             ConsumerStatus::create([
                 'consumer_id' => $consumer_scheme->consumer_id,
-                'status_id' => 2,
+                'status_id' => EnumsConsumerStatus::REGISTER->value,
                 'notes' => !empty($request->notes) ? $request->notes : null,
                 'created_by' => Auth::id(),
             ]);

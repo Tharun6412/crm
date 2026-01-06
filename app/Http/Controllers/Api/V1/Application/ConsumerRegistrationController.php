@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers\Api\V1\Application;
 
+use App\Enums\ConsumerStatus as EnumsConsumerStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Consumer\ConsumerDocument;
 use App\Models\Consumer\ConsumerScheme;
@@ -80,7 +81,7 @@ class ConsumerRegistrationController extends Controller
             'tenant_phone' => $request->tenant_phone,
             'tenant_email' => $request->tenant_email,
             'gas_required_id' => $request->gas_required_id,
-            'status_id' => 1,
+            'status_id' => EnumsConsumerStatus::PRE_REGISTER->value,
             'created_by' => Auth::id(),
         ]);
         // Temporary CRN Generation
@@ -98,7 +99,7 @@ class ConsumerRegistrationController extends Controller
             foreach($request->document_type as $key => $doc_type) {
                 $add_consumer_document = ConsumerDocument::create([
                     'consumer_id' => $add_consumer->id,
-                    'status_id' => 1,
+                    'status_id' => EnumsConsumerStatus::PRE_REGISTER->value,
                     'doc_type_id' => $doc_type,
                     'file_id' => $documents_bulk['file_list'][$key]['file_id'],
                 ]);
@@ -107,7 +108,7 @@ class ConsumerRegistrationController extends Controller
         // Consumer Status History
         ConsumerStatus::create([
             'consumer_id' => $add_consumer->id,
-            'status_id' => 1,
+            'status_id' => EnumsConsumerStatus::PRE_REGISTER->value,
             'created_by' => Auth::id(),
         ]);
         // Consumer Scheme Preparation

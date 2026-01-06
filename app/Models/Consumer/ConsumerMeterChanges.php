@@ -3,6 +3,7 @@
 namespace App\Models\Consumer;
 
 use App\Models\Admin\User;
+use App\Models\DocumentCentre\Documents;
 use App\Models\Invoice\BillInvoice;
 use App\Models\Master\ConsumerGeyserStatus;
 use Illuminate\Database\Eloquent\Model;
@@ -28,6 +29,7 @@ class ConsumerMeterChanges extends Model
         'prev_reading',
         'end_reading',
         'consumption',
+        'file_id',
         'new_meter_id',
         'request_date',
         'replace_date',
@@ -86,6 +88,14 @@ class ConsumerMeterChanges extends Model
     public function createdBy():BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by')->withDefault();
+    }
+
+    /**
+     * Relation with File
+     */
+    public function file():BelongsTo
+    {
+        return $this->belongsTo(Documents::class, 'file_id')->withDefault();
     }
 
 }

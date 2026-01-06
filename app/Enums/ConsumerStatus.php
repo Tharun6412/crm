@@ -10,7 +10,8 @@ enum ConsumerStatus: int
     case EXECUTE = 4;
     case HSC = 5;
     case ACTIVATE = 6;
-    case REJECT = 7;
-    case TD = 8;
-    case PD = 9;
+    case TD = 7;
+    case PD = 8;
+    case REJECT = 9;
+    case RECONNECT = 10;
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Consumer;
 
+use App\Enums\SDPaymentStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Consumer\Consumer;
 use App\Models\Consumer\ConsumerSdPayment;
@@ -55,7 +56,7 @@ class PayDepositController extends Controller
             'transaction_number' => $request->transaction_no,
             'amount' => $request->amount,
             'balance' => $balance_amt,
-            'status_id' => 1, // 1:Paid
+            'status_id' => SDPaymentStatus::PAID->value, // 1:Paid
             'created_by' => Auth::id(),
         ]);
         // Update Consumer Scheme

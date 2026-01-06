@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Consumer;
 
+use App\Enums\MeterStatus;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\DocumentCentre\DocumentUpload;
 use App\Models\Admin\User;
 use App\Models\Consumer\Consumer;
 use App\Models\Consumer\ConsumerMeter;
@@ -60,44 +62,48 @@ class MeterChangeController extends Controller
                     $q->where('status', 1);
                 }),
             ],
-            'end_reading' => 'required|numeric|gt:'.$prev_reading,
+            'prev_reading' => 'required|numeric',
+            'end_reading' => 'required|numeric|gt:'.$request->prev_reading,
             'initial_reading' => 'required|numeric',
             'request_date' => 'required',
             'release_date' => 'required',
             'technician_id' => 'required',
             'reason' => 'required|max:255',
         ]);
+        $doc_upload = DocumentUpload::upload($request, 'domestic');
         // Fetch Old Meter Details
         // Old Consumer Meter Update status = Replaced[3]
         $old_meter->update([
-            'status' => 3,
+            'status' => MeterStatus::Replace->value,
             'updated_by' => Auth::id(),
         ]);
         // Add New Meter Record with Active Status
         $new_meter = ConsumerMeter::create([
             'consumer_id' => $id,
+            'file_id' => $doc_upload['file_id'],
             'meter_no' => $request->meter_no,
             'meter_serial_no' => $request->meter_serial_no,
             'initial_reading' => $request->initial_reading,
             'install_date' => Carbon::now(),
             'install_by' => Auth::id(),
-            'status' => 1,
+            'status' => MeterStatus::Active->value,
             'created_by' => Auth::id(),
         ]);
         // Meter Reading Calculations
-        $consumption = round($request->end_reading - $prev_reading, 3);
+        $consumption = round($request->end_reading - $request->prev_reading, 3);
         // Add Meter Change record
         ConsumerMeterChanges::create([
             'consumer_id' => $id,
             'meter_id' => $old_meter->id,
-            'prev_reading' => $prev_reading,
+            'file_id' => $doc_upload['file_id'],
+            'prev_reading' => $request->prev_reading,
             'end_reading' => $request->end_reading,
             'consumption' => $consumption,
             'new_meter_id' => $new_meter->id,
             'request_date' => Carbon::createFromFormat('d-m-Y', $request->request_date),
             'replace_date' => Carbon::createFromFormat('d-m-Y', $request->release_date),
             'reason' => $request->reason,
-            'status_id' => 1,
+            'status_id' => 1, //1 = Pending, 2 = Closed
             'technician_id' => $request->technician_id,
             'created_by' => Auth::id(),
         ]);

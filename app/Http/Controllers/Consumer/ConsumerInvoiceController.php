@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Consumer;
 
+use App\Enums\InvoiceStatus;
+use App\Enums\InvoiceType;
 use App\Http\Controllers\Controller;
 use App\Models\Invoice\BillInvoice;
 use Illuminate\Http\Request;
@@ -16,11 +18,11 @@ class ConsumerInvoiceController extends Controller
      * @param Int $id consumer_id
      * @param Int $type Invoice type
      */
-    public function index(Request $request, $id, $type = 1)
+    public function index(Request $request, $id, $type = InvoiceType::GAS_BILL->value)
     {
         // Get invoices with type = 1
         $invoices = BillInvoice::where('consumer_id', $id)
-            ->when(($type == 1), function($q) use($type) {
+            ->when(($type == InvoiceType::GAS_BILL->value), function($q) use($type) {
                 $q->where('type_id', $type);
             })
             ->when(($type != 1), function ($q) {
@@ -29,7 +31,7 @@ class ConsumerInvoiceController extends Controller
             ->orderBy('invoice_date', 'desc')->paginate(20);
 
         // Render output
-        if($type == 1)
+        if($type == InvoiceType::GAS_BILL->value)
             return view('consumers.consumers.show-bills', ['invoices' => $invoices]);
         else
             return view('consumers.consumers.show-invoices', ['invoices' => $invoices]);

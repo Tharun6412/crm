@@ -47,7 +47,7 @@ class InvoicePayment extends Model
         ];
     }
     
-    protected $appends = ['invNumber'];
+    protected $appends = ['inv_number'];
     
     /**
      * Relation with Invoice

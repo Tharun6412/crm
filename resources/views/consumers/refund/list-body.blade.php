@@ -1,5 +1,7 @@
 {{-- Refund list body --}}
-
+@php
+    use \App\Enums\RefundStatus;
+@endphp
 {{-- Search form --}}
 <div class="row gx-1 mb-1">
     <div class="col-auto">
@@ -55,13 +57,13 @@
                                 </button>
                                 <ul class="dropdown-menu">
                                     <li><x-auth.link class="dropdown-item link-modal" href="{{ url('consumers/refunds/' . $list->id) }}"><i class="bi bi-chevron-right"></i>&nbsp;View</x-auth.link></li>
-                                    @if ($list->status_id == 1)
+                                    @if ($list->status_id == RefundStatus::REQUEST->value)
                                         <li><x-auth.link class="dropdown-item link-modal" href="{{ url('consumers/refunds/process/' . $list->id) }}"><i class="bi bi-chevron-right"></i>&nbsp;Process</x-auth.link></li>
                                     @endif
-                                    @if ($list->status_id == 2)
+                                    @if ($list->status_id == RefundStatus::PROCESS->value)
                                         <li><x-auth.link class="dropdown-item link-modal" href="{{ url('consumers/refunds/approve/' . $list->id) }}"><i class="bi bi-chevron-right"></i>&nbsp;Approve</x-auth.link></li>
                                     @endif
-                                    @if ($list->status_id == 3)
+                                    @if ($list->status_id == RefundStatus::APPROVE->value)
                                         <li><x-auth.link class="dropdown-item link-modal" href="{{ url('consumers/refunds/close/' . $list->id) }}"><i class="bi bi-chevron-right"></i>&nbsp;Close</x-auth.link></li>
                                     @endif
                                 </ul>

@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\InvoiceStatus;
 use App\Models\Invoice\BillInvoice;
 use App\Models\Invoice\InvoicePayment;
 use Illuminate\Support\Facades\Auth;
@@ -38,7 +39,7 @@ class PaymentService
         // Update invoice paid and balances
         $invoice->paid_amount = $invoice->paid_amount + $data['amount'];
         $invoice->balance_amount = $balance;
-        $invoice->status_id = ($balance > 0) ? 2 : 1;
+        $invoice->status_id = ($balance > 0) ? InvoiceStatus::NOT_PAID->value : InvoiceStatus::PAID->value; //2 = NotPaid, 1=PAID
         $invoice->save();
 
         // Add record to Ledger

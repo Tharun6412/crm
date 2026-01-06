@@ -230,9 +230,9 @@ class Consumer extends Model
     /**
      * Relation with Meter
      */
-    public function meter(): HasOne
+    public function meter(): HasMany
     {
-        return $this->hasOne(ConsumerMeter::class, 'consumer_id', 'id');
+        return $this->hasMany(ConsumerMeter::class, 'consumer_id', 'id')->orderBy('created_at', 'desc');
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Billing;
 
+use App\Enums\InvoiceStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Consumer\Consumer;
 use App\Models\Invoice\BillInvoice;
@@ -182,7 +183,7 @@ class InvoiceController extends Controller
                 'payable_amount' => $invoice_total,
                 'balance_amount' => $invoice_total,
                 'due_date' => date('Y-m-d'),
-                'status_id' => 2, // Unpaid
+                'status_id' => InvoiceStatus::NOT_PAID->value, //2 =  Unpaid
             ],
             'items' => $invoice_items,
         ];

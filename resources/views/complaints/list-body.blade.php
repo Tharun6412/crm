@@ -1,4 +1,7 @@
 {{-- Complaint list body --}}
+@php
+    use \App\Enums\ComplaintStatus;
+@endphp
 {{-- Search form --}}
 <div class="row gx-1 mb-1">
     <div class="col-auto">
@@ -94,20 +97,20 @@
                                 <ul class="dropdown-menu">
                                     <li><x-auth.link class="dropdown-item link-modal" href="{{ url('calls/' . $complaint->id) }}"><i class="bi bi-chevron-right"></i>&nbsp;View</x-auth.link></li>
                                     {{--Complaint Status Dropdown--}}
-                                    @if ($complaint->status_id == 1)
+                                    @if ($complaint->status_id == ComplaintStatus::REGISTER->value)
                                         <li><x-auth.link class="dropdown-item link-modal" href="{{ url('calls/'.$complaint->id.'/edit') }}"><i class="bi bi-chevron-right"></i>&nbsp;Edit</x-auth.link></li>
                                         <li><x-auth.link class="dropdown-item link-modal" href="{{ url('calls/assign/'.$complaint->id) }}"><i class="bi bi-chevron-right"></i>&nbsp;Assign</x-auth.link></li>
                                         <li><x-auth.link class="dropdown-item link-modal" href="{{ url('calls/close/'.$complaint->id) }}"><i class="bi bi-chevron-right"></i>&nbsp;Close</x-auth.link></li>
                                         <li><x-auth.link class="dropdown-item link-modal" href="{{ url('calls/cancel/'.$complaint->id) }}"><i class="bi bi-chevron-right"></i>&nbsp;Cancel</x-auth.link></li>
                                     @endif
-                                    @if ($complaint->status_id == 2 and (isAdmin() || auth()->id() == $complaint->assign->assigned_to))
+                                    @if ($complaint->status_id == ComplaintStatus::ASSIGN->value and (isAdmin() || auth()->id() == $complaint->assign->assigned_to))
                                         <li><x-auth.link class="dropdown-item link-modal" href="{{ url('calls/inProgress/'.$complaint->id) }}"><i class="bi bi-chevron-right"></i>&nbsp;In Progres</x-auth.link></li>
                                         <li><x-auth.link class="dropdown-item link-modal" href="{{ url('calls/investigate/'.$complaint->id) }}"><i class="bi bi-chevron-right"></i>&nbsp;Investigate</x-auth.link></li>
                                     @endif
-                                    @if ($complaint->status_id == 3 OR $complaint->status_id == 4)
+                                    @if ($complaint->status_id == ComplaintStatus::IN_PROGRESS->value OR $complaint->status_id == ComplaintStatus::INVESTIGATION->value)
                                         <li><x-auth.link class="dropdown-item link-modal" href="{{ url('calls/close/'.$complaint->id) }}"><i class="bi bi-chevron-right"></i>&nbsp;Close</x-auth.link></li>
                                     @endif
-                                    @if ($complaint->status_id == 5 and $complaint->feedback == null)
+                                    @if ($complaint->status_id == ComplaintStatus::CLOSE->value and $complaint->feedback == null)
                                         <li><x-auth.link class="dropdown-item link-modal" href="{{ url('calls/feedback/'.$complaint->id.'/edit') }}"><i class="bi bi-chevron-right"></i>&nbsp;Feedback</x-auth.link></li>
                                     @endif
                                 </ul>

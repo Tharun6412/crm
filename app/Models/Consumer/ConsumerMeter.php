@@ -3,6 +3,7 @@
 namespace App\Models\Consumer;
 
 use App\Models\Admin\User;
+use App\Models\DocumentCentre\Documents;
 use App\Models\Invoice\BillInvoiceConsumption;
 use App\Models\Master\ConsumerMeterStatus;
 use Illuminate\Database\Eloquent\Model;
@@ -26,6 +27,7 @@ class ConsumerMeter extends Model
      */
     protected $fillable = [
         'consumer_id',
+        'file_id',
         'meter_no',
         'meter_serial_no',
         'initial_reading',
@@ -73,6 +75,14 @@ class ConsumerMeter extends Model
     public function updatedBy():BelongsTo
     {
         return $this->belongsTo(User::class, 'updated_by')->withDefault();
+    }
+
+    /**
+     * Relation with File
+     */
+    public function file():BelongsTo
+    {
+        return $this->belongsTo(Documents::class, 'file_id')->withDefault();
     }
 
     /**

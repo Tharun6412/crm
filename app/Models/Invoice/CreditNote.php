@@ -39,7 +39,7 @@ class CreditNote extends Model
     ];
 
     // Append invNumber to the $fillable
-    protected $appends = ['invNumber'];
+    protected $appends = ['inv_number'];
 
     /**
      * To Get Invoice Number

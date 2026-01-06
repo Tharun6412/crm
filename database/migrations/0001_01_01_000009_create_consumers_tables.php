@@ -80,6 +80,7 @@ return new class extends Migration
         Schema::create('cns_consumer_meters', function(Blueprint $table) {
             $table->id();
             $table->foreignId('consumer_id')->index()->nullable()->constrained(table:'cns_consumers')->noActionOnUpdate()->noActionOnDelete();
+            $table->foreignId('file_id')->index()->nullable()->constrained(table:'dc_files')->noActionOnUpdate()->noActionOnDelete();
             $table->string('meter_no', length:32)->nullable();
             $table->string('meter_serial_no', length:32)->nullable();
             $table->double('initial_reading')->nullable();
@@ -96,6 +97,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('consumer_id')->index()->nullable()->constrained(table:'cns_consumers')->noActionOnUpdate()->noActionOnDelete();
             $table->foreignId('meter_id')->index()->nullable()->constrained(table:'cns_consumer_meters')->noActionOnUpdate()->noActionOnDelete();
+            $table->foreignId('file_id')->index()->nullable()->constrained(table:'dc_files')->noActionOnUpdate()->noActionOnDelete();
             $table->double('prev_reading')->nullable();
             $table->double('end_reading')->nullable();
             $table->decimal('consumption', 8, 3)->nullable();

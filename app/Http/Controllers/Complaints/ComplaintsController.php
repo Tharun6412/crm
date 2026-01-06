@@ -4,6 +4,7 @@
  */
 namespace App\Http\Controllers\Complaints;
 
+use App\Enums\ComplaintStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\DocumentCentre\DocumentUpload;
 use App\Models\Admin\User;
@@ -163,7 +164,7 @@ class ComplaintsController extends Controller
             'media_id' => $request->media_id,
             'priority_id' => $request->priority_id,
             'estimated_closed_at' => $est_close_at->toDateTimeString(),
-            'status_id' => 1,
+            'status_id' => ComplaintStatus::REGISTER->value,
             'created_by' => Auth::id(),
         ]);
         // Complaint Number Generation
@@ -181,7 +182,7 @@ class ComplaintsController extends Controller
         // Complaint Status
         ComplaintStatusHistory::create([
             'complaint_id' => $add_complaint->id,
-            'status_id' => 1,
+            'status_id' => ComplaintStatus::REGISTER->value,
             'created_by' => Auth::id(),
         ]);
         return response()->json(['success' => 'Complaint raised successfully'], 200);
@@ -288,11 +289,11 @@ class ComplaintsController extends Controller
             'created_by' => Auth::id(),
         ]);
         // Complaint Status Update
-        Complaint::where('id', $id)->update(['status_id' => 2]);
+        Complaint::where('id', $id)->update(['status_id' => ComplaintStatus::ASSIGN->value]);
         // Complaint Status History
         ComplaintStatusHistory::create([
             'complaint_id' => $id,
-            'status_id' => 2,
+            'status_id' => ComplaintStatus::ASSIGN->value,
             'notes' => $request->notes,
             'created_by' => Auth::id(),
         ]);
@@ -307,7 +308,7 @@ class ComplaintsController extends Controller
         $complaint = Complaint::find($id);
         return view('complaints.in-progress', [
             'complaint' => $complaint,
-            'status_id' => 3,
+            'status_id' => ComplaintStatus::IN_PROGRESS->value,
         ]);
     }
 
@@ -319,7 +320,7 @@ class ComplaintsController extends Controller
         $complaint = Complaint::find($id);
         return view('complaints.investigate', [
             'complaint' => $complaint,
-            'status_id' => 4,
+            'status_id' => ComplaintStatus::INVESTIGATION->value,
         ]);
     }
 
@@ -331,7 +332,7 @@ class ComplaintsController extends Controller
         $complaint = Complaint::find($id);
         return view('complaints.close', [
             'complaint' => $complaint,
-            'status_id' => 5,
+            'status_id' => ComplaintStatus::CLOSE->value,
         ]);
     }
 
@@ -343,7 +344,7 @@ class ComplaintsController extends Controller
         $complaint = Complaint::find($id);
         return view('complaints.cancel', [
             'complaint' => $complaint,
-            'status_id' => 6,
+            'status_id' => ComplaintStatus::CANCEL->value,
         ]);
     }
     /**
@@ -357,7 +358,7 @@ class ComplaintsController extends Controller
         // Complaint Status Update
         Complaint::where('id', $id)->update([
             'status_id' => $status_id,
-            'closed_at' => ($status_id == 5) ? Carbon::now() : NULL,
+            'closed_at' => ($status_id == ComplaintStatus::CLOSE->value) ? Carbon::now() : NULL,
         ]);
         // Complaint Status History
         ComplaintStatusHistory::create([

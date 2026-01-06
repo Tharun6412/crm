@@ -2,6 +2,7 @@
 
 namespace APP\Http\Controllers\Billing;
 
+use App\Enums\InvoiceType;
 use App\Http\Controllers\Controller;
 use App\Models\Consumer\Consumer;
 use App\Models\Invoice\BillInvoice;
@@ -163,7 +164,7 @@ class GasInvoiceController extends Controller
 
         // bill invoice array
         $invoice_ar = [
-            'type_id' => 1, //1 => Gas Invoice
+            'type_id' => InvoiceType::GAS_BILL->value, //1 => Gas Invoice
             'consumer_id' => $consumer->id,
             'invoice_number' => $inv_number,
             'invoice_date' => $invoice_date,

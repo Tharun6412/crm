@@ -1,5 +1,7 @@
 <?php
 namespace App\Http\Controllers\Consumer;
+
+use App\Enums\ConsumerStatus as EnumsConsumerStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Consumer\Consumer;
 use App\Models\Consumer\ConsumerStatus;
@@ -19,18 +21,7 @@ class AcceptController extends Controller
      */
     public function index(Request $request)
     {
-        $inv_payment = InvoicePayment::create([
-            'invoice_id' => 14,
-            'payment_date' => Carbon::now()->toDateString(),
-            'payment_type_id' => 1,
-            'transaction_id' => "2312312",
-            'amount' => 1000,
-            'status_id' => 1,
-            'notes' => !empty($request->notes) ? $request->notes : null,
-            'created_by' => Auth::id(),
-        ]);
-        dd($inv_payment);
-        return "Invoices Inserted";
+        // return "Invoices Inserted";
     }
     /**
      * Consumer Scheme Accept State
@@ -56,10 +47,10 @@ class AcceptController extends Controller
         ]);
         // Consumer Status History 3= Accept, 9=Reject
         if($request->status == 1) {
-            $con_status = 3;
+            $con_status = EnumsConsumerStatus::ACCEPT->value;
             $status_val = "accepted";
         }else {
-            $con_status = 9;
+            $con_status = EnumsConsumerStatus::REJECT->value;
             $status_val = "rejected";
         }
         // Consumer Update

@@ -4,6 +4,11 @@
  */
 namespace App\Http\Controllers\Consumer;
 
+use App\Enums\InvoiceStatus;
+use App\Enums\InvoiceType;
+use App\Enums\PaymentStatus;
+use App\Enums\RefundStatus;
+use App\Enums\TaxType;
 use App\Http\Controllers\Controller;
 use App\Models\Consumer\ConsumerRefund;
 use App\Models\Consumer\ConsumerRefundStatus;
@@ -96,7 +101,7 @@ class RefundController extends Controller
         // Refund Data
         $add_refund = ConsumerRefund::create([
             'consumer_id' => $id,
-            'status_id' => 1, //Refund Request
+            'status_id' => RefundStatus::REQUEST->value, //Refund Request
             'created_by' => Auth::id(),
         ]);
         // Request Number Generation
@@ -105,7 +110,7 @@ class RefundController extends Controller
         // Refund Status
         ConsumerRefundStatus::create([
             'refund_id' => $add_refund->id,
-            'status_id' => '1', //1 = Refund Request 
+            'status_id' => RefundStatus::REQUEST->value, //1 = Refund Request 
             'notes' => !empty($request->notes) ? $request->notes : null,
             'created_by' => Auth::id(),
         ]);
@@ -160,21 +165,21 @@ class RefundController extends Controller
             $invoice_data = [
                 'config' => [
                     'state_id' => $refund_data->consumer->ga->state_id,
-                    'tax_id' => 2, //GST = 2
+                    'tax_id' => TaxType::GST->value, //GST = 2
                 ],
                 'headers' => [
-                    'type_id' => 2, //Service Invoice
+                    'type_id' => InvoiceType::SERVICE_INVOICE->value, //Service Invoice
                     'consumer_id' => $refund_data->consumer_id,
                     'invoice_date' => Carbon::now()->toDateString(),
                     'base_amount' => $base_amt,
                     'taxable_amount' => $base_amt,
-                    'tax_id' => 2,
+                    'tax_id' => TaxType::GST->value,
                     'tax_value' => 18,
                     'tax_amount' => $tax_amt,
                     'total_amount' => $amt,
                     'paid_amount' => $amt,
                     'balance_amt' => 0,
-                    'status_id' => 1, //Paid
+                    'status_id' => InvoiceStatus::PAID->value, //Paid
                     'created_by' => Auth::id(),
                 ],
                 'items' => $invoice_items,
@@ -189,14 +194,14 @@ class RefundController extends Controller
                 'transaction_id' => "SD Refund",
                 'amount' => $amt,
                 'balance' => 0,
-                'status_id' => 1,//completed
+                'status_id' => PaymentStatus::COMPLETED->value,//completed
                 'notes' => !empty($request->notes) ? $request->notes : null,
                 'created_by' => Auth::id(),
             ]);
             // InvoicePayment Update
             $ids = $balance->ids ? explode(',', $balance->ids) : [];
             if(!empty($ids)) {
-                InvoicePayment::whereIn('invoice_id', $ids)->update(['payment_type_id' => 13, 'status_id' => 1, 'balance' => 0]);
+                InvoicePayment::whereIn('invoice_id', $ids)->update(['payment_type_id' => 13, 'status_id' => PaymentStatus::COMPLETED->value, 'balance' => 0]);
             }
         }
         // Refund Data 
@@ -206,13 +211,13 @@ class RefundController extends Controller
             'disconnection_amount' => $request->disconnect_amt,
             'invoice_id' => isset($inv_id) ? $inv_id : null,
             'refund_amount' => $tot_refund_amt,
-            'status_id' => 2,
+            'status_id' => RefundStatus::PROCESS->value,
             'created_by' => Auth::id(),
         ]);
         // Refund Status
         ConsumerRefundStatus::create([
             'refund_id' => $id,
-            'status_id' => '2', //2 = Process
+            'status_id' => RefundStatus::PROCESS->value, //2 = Process
             'created_by' => Auth::id(),
         ]);
         // Response
@@ -239,12 +244,12 @@ class RefundController extends Controller
             'notes' => 'required',
         ]);
         ConsumerRefund::where('id', $id)->update([
-            'status_id' => '3'
+            'status_id' => RefundStatus::APPROVE->value,
         ]);
         // Refund Status
         ConsumerRefundStatus::create([
             'refund_id' => $id,
-            'status_id' => '3', //3 = Approve
+            'status_id' => RefundStatus::APPROVE->value, //3 = Approve
             'notes' => $request->notes,
             'created_by' => Auth::id(),
         ]);
@@ -279,12 +284,12 @@ class RefundController extends Controller
             'payment_type_id' => $request->payment_type,
             'transaction_id' => $request->transaction_no,
             'transaction_date' => Carbon::createFromFormat('d-m-Y', $request->transaction_date),
-            'status_id' => '4'
+            'status_id' => RefundStatus::CLOSE->value
         ]);
         // Refund Status
         ConsumerRefundStatus::create([
             'refund_id' => $id,
-            'status_id' => '4', //4 = Closed
+            'status_id' => RefundStatus::CLOSE->value, //4 = Closed
             'notes' => $request->notes,
             'created_by' => Auth::id(),
         ]);

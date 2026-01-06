@@ -1,5 +1,7 @@
 <?php
 namespace App\Http\Controllers\Consumer;
+
+use App\Enums\ConsumerStatus as EnumsConsumerStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Consumer\Consumer;
 use App\Models\Consumer\ConsumerStatus;
@@ -36,13 +38,13 @@ class ActivateController extends Controller
 
         // 6 = Activation
         Consumer::where('id', $id)->update([
-            'status_id' => 6,
+            'status_id' => EnumsConsumerStatus::ACTIVATE->value,
             'updated_by' => Auth::id(),
         ]);
         // Status History
         ConsumerStatus::create([
             'consumer_id' => $id,
-            'status_id' => 6,
+            'status_id' => EnumsConsumerStatus::ACTIVATE->value,
             'notes' => $request->notes,
             'created_by' => Auth::id(),
         ]);

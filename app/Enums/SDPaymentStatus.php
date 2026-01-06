@@ -2,10 +2,9 @@
 
 namespace App\Enums;
 
-enum InvoiceStatus: int
+enum SDPaymentStatus: int
 {
     case PAID = 1;
     case NOT_PAID = 2;
-    case PARTIALLY_PAID = 3;
-    case CANCEL = 4;
+    case REVERSAL = 3;
 }

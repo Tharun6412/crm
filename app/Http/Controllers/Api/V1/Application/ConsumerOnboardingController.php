@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api\V1\Application;
 
+use App\Enums\ConsumerStatus as EnumsConsumerStatus;
+use App\Enums\MeterStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\DocumentCentre\DocumentUpload;
 use App\Models\Consumer\Consumer;
@@ -40,10 +42,10 @@ class ConsumerOnboardingController extends Controller
             ]);
             // Consumer Status History 3= Accept, 9=Reject
             if($request->status == 1) {
-                $con_status = 3;
+                $con_status = EnumsConsumerStatus::ACCEPT->value;
                 $status_val = "accepted";
             }else {
-                $con_status = 9;
+                $con_status = EnumsConsumerStatus::REJECT->value;
                 $status_val = "rejected";
             }
             // Consumer Update
@@ -86,40 +88,41 @@ class ConsumerOnboardingController extends Controller
          // Documents Data Preparation
         $documents_bulk = DocumentUpload::uploadBulk($request, 'domestic');
         if($request->has('dc_file_list')) {
-            foreach($request->dc_file_list as $key => $doc_type) {
-                $add_consumer_document = ConsumerDocument::create([
-                    'consumer_id' => $id,
-                    'status_id' => 4,
-                    'doc_type_id' => 5,
-                    'file_id' => $documents_bulk['file_list'][$key]['file_id'],
-                ]);
-            }
+            $add_consumer_document = ConsumerDocument::create([
+                'consumer_id' => $id,
+                'status_id' => EnumsConsumerStatus::EXECUTE->value,
+                'doc_type_id' => 5,
+                'file_id' => $documents_bulk['file_list'][0]['file_id'],
+            ]);
+            // foreach($request->dc_file_list as $key => $doc_type) {
+            // }
         }
         // Consumer Meter
         ConsumerMeter::create([
             'consumer_id' => $id,
+            'file_id' => $documents_bulk['file_list'][1]['file_id'],
             'meter_no' => $request->meter_no,
             'meter_serial_no' => $request->meter_serial_no,
             'initial_reading' => $request->meter_reading,
             'install_date' => Carbon::now(),
             'install_by' => Auth::id(),
-            'status' => 1,
+            'status' => MeterStatus::Active->value,
             'created_by' => Auth::id(),
         ]);
         // 4 = Execution
         Consumer::where('id', $id)->update([
-            'status_id' => 4,
+            'status_id' => EnumsConsumerStatus::EXECUTE->value,
             'updated_by' => Auth::id(),
         ]);
         // Status History
         ConsumerStatus::create([
             'consumer_id' => $id,
-            'status_id' => 4,
+            'status_id' => EnumsConsumerStatus::EXECUTE->value,
             'notes' => $request->notes,
             'created_by' => Auth::id(),
         ]);
         // Response
-        return response()->json(['success' => 'Consumer executed successfully!'], 500);
+        return response()->json(['success' => 'Consumer executed successfully!'], 200);
     }
 
     /**
@@ -134,7 +137,7 @@ class ConsumerOnboardingController extends Controller
         //HSC Image Upload
         ConsumerDocument::create([
             'consumer_id' => $id,
-            'status_id' => 5,
+            'status_id' => EnumsConsumerStatus::HSC->value,
             'doc_type_id' => 6,
             'file_id' => $doc_upload['file_id'],
         ]);
@@ -146,7 +149,7 @@ class ConsumerOnboardingController extends Controller
         // Consumer Status History
         ConsumerStatus::create([
             'consumer_id' => $id,
-            'status_id' => 5,
+            'status_id' => EnumsConsumerStatus::HSC->value,
             'notes' => $request->notes,
             'created_by' => Auth::id(),
         ]);
@@ -165,13 +168,13 @@ class ConsumerOnboardingController extends Controller
 
         // 6 = Activation
         Consumer::where('id', $id)->update([
-            'status_id' => 6,
+            'status_id' => EnumsConsumerStatus::ACTIVATE->value,
             'updated_by' => Auth::id(),
         ]);
         // Status History
         ConsumerStatus::create([
             'consumer_id' => $id,
-            'status_id' => 6,
+            'status_id' => EnumsConsumerStatus::ACTIVATE->value,
             'notes' => $request->notes,
             'created_by' => Auth::id(),
         ]);

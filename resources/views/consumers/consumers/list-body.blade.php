@@ -1,5 +1,4 @@
 {{-- Consumers list body --}}
-
 {{-- Search form --}}
 <div class="row gx-1 mb-1">
     <div class="col-auto">

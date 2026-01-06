@@ -1,5 +1,10 @@
 <?php
 namespace App\Http\Controllers\Consumer;
+
+use App\Enums\ConsumerStatus as EnumsConsumerStatus;
+use App\Enums\InvoiceStatus;
+use App\Enums\InvoiceType;
+use App\Enums\TaxType;
 use App\Http\Controllers\Controller;
 use App\Models\Consumer\Consumer;
 use App\Models\Consumer\ConsumerStatus;
@@ -60,21 +65,21 @@ class ReconnectController extends Controller
         $invoice_data = [
             'config' => [
                 'state_id' => $consumer->ga->state_id,
-                'tax_id' => 2, //GST = 2
+                'tax_id' => TaxType::GST->value, //GST = 2
             ],
             'headers' => [
-                'type_id' => 2, // Service Invoice
+                'type_id' => InvoiceType::SERVICE_INVOICE->value, //2 = Service Invoice
                 'consumer_id' => $id,
                 'invoice_date' => Carbon::now()->toDateString(),
                 'base_amount' => $base_amt,
                 'taxable_amount' => $base_amt,
-                'tax_id' => 2,
+                'tax_id' => TaxType::GST->value,
                 'tax_value' => 18,
                 'tax_amount' => $tax_amt,
                 'total_amount' => $amt,
                 'paid_amount' => null,
                 'balance_amount' => $amt,
-                'status_id' => 2, // Not Paid
+                'status_id' => InvoiceStatus::NOT_PAID->value, // Not Paid
                 'created_by' => Auth::id(),
             ],
             'items' => $invoice_items,
@@ -83,12 +88,12 @@ class ReconnectController extends Controller
         $inv_number = InvoiceService::create($invoice_data);
         // Consumer Status Update
         $consumer->update([
-            'status_id' => 6,
+            'status_id' => EnumsConsumerStatus::ACTIVATE->value,
         ]);
         // Adding to Status History
         ConsumerStatus::create([
             'consumer_id' => $id,
-            'status_id' => 10,
+            'status_id' => EnumsConsumerStatus::RECONNECT->value,
             'notes' => !empty($request->notes) ? $request->notes : null,
             'created_by' => Auth::id(),
         ]);

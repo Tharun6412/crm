@@ -98,15 +98,15 @@
                 <h4 class="text-primary mt-3 fw-semibold text-decoration-underline">Meter Details</h4>
                 <dl class="row">
                     <dt class="col-sm-3">Meter Number</dt>
-                    <dd class="col-sm-9">{{ $consumer->meter?->meter_no }}</dd>
+                    <dd class="col-sm-9">{{ $consumer_meter?->meter_no }}</dd>
                     <dt class="col-sm-3">Serial Number</dt>
-                    <dd class="col-sm-9">{{ $consumer->meter?->meter_serial_no }}</dd>
+                    <dd class="col-sm-9">{{ $consumer_meter?->meter_serial_no }}</dd>
                     <dt class="col-sm-3">Initial Reading</dt>
-                    <dd class="col-sm-9">{{ $consumer->meter?->initial_reading }}</dd>
+                    <dd class="col-sm-9">{{ $consumer_meter?->initial_reading }}</dd>
                     <dt class="col-sm-3">Installation Date</dt>
-                    <dd class="col-sm-9">{{ $consumer->meter?->install_date?->format('d-m-Y') }}</dd>
+                    <dd class="col-sm-9">{{ $consumer_meter?->install_date?->format('d-m-Y') }}</dd>
                     <dt class="col-sm-3">Installed By</dt>
-                    <dd class="col-sm-9">{{ $consumer->meter?->installBy?->first_name }}&nbsp;{{ $consumer->meter?->installBy?->last_name }}</dd>
+                    <dd class="col-sm-9">{{ $consumer_meter?->installBy?->first_name }}&nbsp;{{ $consumer_meter?->installBy?->last_name }}</dd>
                 </dl>
                 <h4 class="text-primary mt-3 fw-semibold text-decoration-underline">Additional Details</h4>
                 <dl class="row">

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1\Application;
 
+use App\Enums\ComplaintStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\DocumentCentre\DocumentUpload;
 use App\Http\Requests\Api\Consumer\ComplaintValidationRequest;
@@ -99,7 +100,7 @@ class ComplaintsController extends Controller
             'media_id' => $request->media_id,
             'priority_id' => $request->priority_id,
             'estimated_closed_at' => $est_close_at->toDateTimeString(),
-            'status_id' => 1,
+            'status_id' => ComplaintStatus::REGISTER->value,
             'created_by' => Auth::id(),
         ]);
         $complaint_number = str_pad($add_complaint->id, 9, "0", STR_PAD_LEFT);
@@ -116,7 +117,7 @@ class ComplaintsController extends Controller
         // Complaint Status
         ComplaintStatusHistory::create([
             'complaint_id' => $add_complaint->id,
-            'status_id' => 1,
+            'status_id' => ComplaintStatus::REGISTER->value,
             'created_by' => Auth::id(),
         ]);
         return response()->json(['success' => 'Complaint raised successfully'], 200);
@@ -160,7 +161,7 @@ class ComplaintsController extends Controller
         // Complaint Status Update
         Complaint::where('id', $id)->update([
             'status_id' => $status_id,
-            'closed_at' => ($status_id == 5) ? Carbon::now() : NULL,
+            'closed_at' => ($status_id == ComplaintStatus::CLOSE->value) ? Carbon::now() : NULL,
         ]);
         // Complaint Status History
         ComplaintStatusHistory::create([

@@ -1,5 +1,7 @@
 <?php
 namespace App\Http\Controllers\Consumer;
+
+use App\Enums\ConsumerStatus as EnumsConsumerStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Consumer\Consumer;
 use App\Models\Consumer\ConsumerStatus;
@@ -33,13 +35,13 @@ class TemporaryDisconnectController extends Controller
         ]);
         // 7 = TD
         Consumer::where('id', $id)->update([
-            'status_id' => 7,
+            'status_id' => EnumsConsumerStatus::TD->value,
             'updated_by' => Auth::id(),
         ]);
         // Consumer Status History
         ConsumerStatus::create([
             'consumer_id' => $id,
-            'status_id' => 7,
+            'status_id' => EnumsConsumerStatus::TD->value,
             'notes' => $request->notes,
             'created_by' => Auth::id(),
         ]);

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Complaints;
 
+use App\Enums\ComplaintStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\DocumentCentre\DocumentUpload;
 use App\Models\Complaint\Complaint;
@@ -97,7 +98,7 @@ class ExternalCallsController extends Controller
             'media_id' => $request->media_id,
             'priority_id' => $request->priority_id,
             'estimated_closed_at' => $est_close_at->toDateTimeString(),
-            'status_id' => 1,
+            'status_id' => ComplaintStatus::REGISTER->value,
             'created_by' => Auth::id(),
         ]);
         $complaint_number = str_pad($add_complaint->id, 9, "0", STR_PAD_LEFT);
@@ -114,7 +115,7 @@ class ExternalCallsController extends Controller
         // Complaint Status
         ComplaintStatusHistory::create([
             'complaint_id' => $add_complaint->id,
-            'status_id' => 1,
+            'status_id' => ComplaintStatus::REGISTER->value,
             'created_by' => Auth::id(),
         ]);
         return response()->json(['success' => 'Complaint raised successfully']);
