@@ -362,8 +362,8 @@ class ComplaintsController extends Controller
             'otp' => 'required',
         ]);
         $complaint = Complaint::find($id);
-        if($complaint->phone) {
-            $verify_otp = OtpService::verify($complaint->phone, OtpPurpose::COMPLAINT_CLOSE->value, $request->otp, OtpModule::USER->value);
+        if($complaint->consumer->phone) {
+            $verify_otp = OtpService::verify($complaint->consumer->phone, OtpPurpose::COMPLAINT_CLOSE->value, $request->otp, OtpModule::USER->value);
         }
         // Stop if OTP is invalid
         if (!$verify_otp) {

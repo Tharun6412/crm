@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api\V1\Application;
 
 use App\Enums\ComplaintStatus;
+use App\Enums\OtpModule;
+use App\Enums\OtpPurpose;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\DocumentCentre\DocumentUpload;
 use App\Http\Requests\Api\Consumer\ComplaintValidationRequest;
@@ -15,6 +17,7 @@ use App\Models\Master\ComplaintMedia;
 use App\Models\Master\ComplaintPriority;
 use App\Models\Master\ComplaintSegment;
 use App\Models\Master\ComplaintType;
+use App\Services\OtpService;
 use App\Traits\ApiResponse;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -147,6 +150,51 @@ class ComplaintsController extends Controller
         return response()->json([
             'complaint' => $complaint,
         ], 200);
+    }
+
+    /**
+     * Close OTP
+     */
+    public function closeOTP(Request $request) 
+    {
+        if(empty($request->phone_no)){
+            return response()->json(['message' => 'OTP not Sent'], 422);
+        }
+        $otp = OtpService::create($request->phone_no, OtpPurpose::COMPLAINT_CLOSE->value, OtpModule::USER->value);
+        return response()->json(['message' => 'OTP Sent Successfully to your mobile number'.$otp], 200);
+    }
+
+    /**
+     * Close Complaint
+     */
+    public function closeComplaint(Request $request, $id, $status_id)
+    {
+        $verify_otp = '';
+        $request->validate([
+            'notes' => 'required',
+            'otp' => 'required',
+        ]);
+        $complaint = Complaint::find($id);
+        if($complaint->consumer->phone) {
+            $verify_otp = OtpService::verify($complaint->consumer->phone, OtpPurpose::COMPLAINT_CLOSE->value, $request->otp, OtpModule::USER->value);
+        }
+        // Stop if OTP is invalid
+        if (!$verify_otp) {
+            return response()->json(['message' => 'Invalid OTP or OTP Expired'], 422);
+        }
+        // Complaint Status Update
+        $complaint->update([
+            'status_id' => $status_id,
+            'closed_at' => Carbon::now(),
+        ]);
+        // Complaint Status History
+        ComplaintStatusHistory::create([
+            'complaint_id' => $id,
+            'status_id' => $status_id,
+            'notes' => $request->notes,
+            'created_by' => Auth::id(),
+        ]);
+        return response()->json(['success' => 'Complaint closed successfully'], 200);
     }
 
     /**

@@ -38,6 +38,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('create/{id}', [App\Http\Controllers\Api\V1\Application\ComplaintsController::class, 'create']);
         Route::post('store/{id}', [App\Http\Controllers\Api\V1\Application\ComplaintsController::class, 'store']);
         Route::post('statusChange/{id}/{status_id}', [App\Http\Controllers\Api\V1\Application\ComplaintsController::class, 'statusChange']);
+        Route::post('closeOTP', [App\Http\Controllers\Api\V1\Application\ComplaintsController::class, 'closeOTP']);
+        Route::post('closeComplaint/{id}/{status_id}', [App\Http\Controllers\Api\V1\Application\ComplaintsController::class, 'closeComplaint']);
         Route::post('comments/{id}/', [App\Http\Controllers\Api\V1\Application\ComplaintsController::class, 'comments']);
     });
     
