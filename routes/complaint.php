@@ -28,6 +28,9 @@ Route::middleware(['auth', ModuleAccess::class])->group(function() {
     Route::get('calls/cancel/{id}',[App\Http\Controllers\Complaints\ComplaintsController::class, 'cancel']);
     Route::post('calls/assignTo/{id}',[App\Http\Controllers\Complaints\ComplaintsController::class, 'assignTo']);
     Route::post('calls/statusChange/{id}/{status}',[App\Http\Controllers\Complaints\ComplaintsController::class, 'statusChange']);
+    Route::post('calls/closeComplaint/{id}/{status}',[App\Http\Controllers\Complaints\ComplaintsController::class, 'closeComplaint']);
+    // OTP
+    Route::post('calls/closeOTP',[App\Http\Controllers\Complaints\ComplaintsController::class, 'closeOTP']);
     // resource
     Route::resource('calls/feedback', App\Http\Controllers\Complaints\FeedbackController::class);
     Route::resource('calls', App\Http\Controllers\Complaints\ComplaintsController::class);

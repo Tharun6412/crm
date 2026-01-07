@@ -5,6 +5,8 @@
 namespace App\Http\Controllers\Complaints;
 
 use App\Enums\ComplaintStatus;
+use App\Enums\OtpModule;
+use App\Enums\OtpPurpose;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\DocumentCentre\DocumentUpload;
 use App\Models\Admin\User;
@@ -19,6 +21,7 @@ use App\Models\Master\ComplaintMedia;
 use App\Models\Master\ComplaintPriority;
 use App\Models\Master\ComplaintSegment;
 use App\Models\Master\ComplaintType;
+use App\Services\OtpService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -149,7 +152,7 @@ class ComplaintsController extends Controller
         }else {
             $est_close_at = $now->addHours($resolution_val);
         }
-        $consumer = Consumer::select('ga_id', 'district_id')->where('id', $id)->first();
+        $consumer = Consumer::select('ga_id', 'district_id', 'fname', 'lname', 'email' ,'phone')->where('id', $id)->first();
         // Data Preparation
         // Complaints
         $add_complaint = Complaint::create([
@@ -337,6 +340,51 @@ class ComplaintsController extends Controller
     }
 
     /**
+     * Close OTP
+     */
+    public function closeOTP(Request $request) 
+    {
+        if(empty($request->phone_no)){
+            return response()->json('OTP not Sent');
+        }
+        $otp = OtpService::create($request->phone_no, OtpPurpose::COMPLAINT_CLOSE->value, OtpModule::USER->value);
+        return response()->json('OTP Sent Successfully to your mobile number'.": ".$otp."<br/> and will expire in 60 seconds.");
+    }
+
+    /**
+     * Close Complaint
+     */
+    public function closeComplaint(Request $request, $id, $status_id)
+    {
+        $verify_otp = '';
+        $request->validate([
+            'notes' => 'required',
+            'otp' => 'required',
+        ]);
+        $complaint = Complaint::find($id);
+        if($complaint->phone) {
+            $verify_otp = OtpService::verify($complaint->phone, OtpPurpose::COMPLAINT_CLOSE->value, $request->otp, OtpModule::USER->value);
+        }
+        // Stop if OTP is invalid
+        if (!$verify_otp) {
+            abort(422, 'Invalid otp or OTP expired');
+        }
+        // Complaint Status Update
+        $complaint->update([
+            'status_id' => $status_id,
+            'closed_at' => Carbon::now(),
+        ]);
+        // Complaint Status History
+        ComplaintStatusHistory::create([
+            'complaint_id' => $id,
+            'status_id' => $status_id,
+            'notes' => $request->notes,
+            'created_by' => Auth::id(),
+        ]);
+        return response()->json(['success' => 'Complaint closed successfully']);
+    }
+
+    /**
      * Cancel
      */
     public function cancel(Request $request, $id)
@@ -358,7 +406,6 @@ class ComplaintsController extends Controller
         // Complaint Status Update
         Complaint::where('id', $id)->update([
             'status_id' => $status_id,
-            'closed_at' => ($status_id == ComplaintStatus::CLOSE->value) ? Carbon::now() : NULL,
         ]);
         // Complaint Status History
         ComplaintStatusHistory::create([
