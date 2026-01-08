@@ -55,9 +55,9 @@
     @if ($type == 3)
         <div class="row g-2 pb-2 mb-2">
             <div class="col-sm-2 text-end fw-semibold">Meter No : </div>
-            <div class="col-sm-4">{{ $consumer->meter->meter_no }}</div>
+            <div class="col-sm-4">{{ $consumer->activeMeter->meter_no }}</div>
             <div class="col-sm-2 text-end fw-semibold">Initial Reading : </div>
-            <div class="col-sm-4">{{ $consumer->meter->initial_reading }}</div>
+            <div class="col-sm-4">{{ $consumer->activeMeter->initial_reading }}</div>
         </div>
     @endif
 </div>

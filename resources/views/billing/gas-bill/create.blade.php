@@ -10,139 +10,152 @@
     <form action="{{ url('bill/gasInvoice/') }}" name="add-gas-bill-form" id="add-gas-bill-form" method="post">
         @csrf
         <input type="hidden" id="id" name="id" value="{{ $consumer->id }}">
-        <input type="hidden" id="meter_init_reading" name="meter_init_reading" value="{{ $consumer->meter->initial_reading }}">
+        <input type="hidden" id="meter_init_reading" name="meter_init_reading" value="{{ $consumer->activeMeter->initial_reading }}">
         <div class="mb-2">
             @php
                     $start_date = (!empty($invoice)) ? $invoice->consumption->date_to->format('Y-m-d') : ($consumer->statusHistory->first()->created_at->format('Y-m-d'));
                     $invEndReading = (!empty($invoice) and $invoice->consumption()->exists())
                     ? $invoice->consumption->curr_reading
                     : 0;
-                    $startReading = ($invEndReading > 0) ? $invEndReading : (($consumer->meter->initial_reading >= 0) ? $consumer->meter->initial_reading : "");
-                    @endphp
-                @if (!empty($invoice))
-                    <x-consumer.invoice-details :invoice="$invoice" type="3" class="bg-info-subtle" />
-                    <input type="hidden" id="inv_end_reading" name="inv_end_reading" value={{ $invEndReading }} >
-                    <div class="bg-secondary-subtle rounded mt-3">
-                        <div class="row g-2 pb-2 mb-2">
-                            <div class="col-sm-2 text-end fw-semibold">Scheme Name : </div>
-                            <div class="col-sm-4">{{ $consumer->scheme->scheme->name }}</div>
-                            <div class="col-sm-2 text-end fw-semibold">Scheme Amount : </div>
-                            <div class="col-sm-4">{{ $consumer->scheme->scheme->total_deposit}}</div>
-                            <div class="col-sm-2 text-end fw-semibold">Paid Amount : </div>
-                            <div class="col-sm-4">{{ $consumer->sdPayment->sum('amount') ?? 0 }}</div>
-                            <div class="col-sm-2 text-end fw-semibold">Balance : </div>
-                            <div class="col-sm-4">{{ $consumer->sdPayment->last()->balance ?? $consumer->scheme->scheme->total_deposit }}</div>
-                            @if ($consumer->scheme->scheme->emi_amount > 0)
-                                <div class="col-sm-2 text-end fw-semibold">Emi Amount :</div>
-                                <div class="col-sm-4">{{ $consumer->scheme->scheme->emi_amount }}</div>
-                                <div class="col-sm-2 text-end fw-semibold">No of EMIs paid : </div>
-                                <div class="col-sm-4">{{ $consumer->sdPayment->last()->emi_no ?? 0 }}</div>
-                            @endif
-                        </div>
-                    </iv>
-                @else
-                    <div>
-                        <x-consumer.basic-details :consumer="$consumer" type="3" class="bg-info-subtle"/>
+                    $meterChange = $consumer->meterChanges()->where('status_id', 1)->first();
+                    if ($consumer->meterChanges()->where('status_id', 1)->exists()) {
+                        $startReading = $consumer->activeMeter->initial_reading;
+                        $old_consumption = $meterChange?->consumption;
+                    }
+                    else {
+                        $startReading = ($invEndReading > 0) ? $invEndReading : (($consumer->activeMeter->initial_reading >= 0) ? $consumer->activeMeter->initial_reading : "");
+                        $old_consumption = 0;
+                    }
+            @endphp
+            @if (!empty($invoice))
+                <x-consumer.invoice-details :invoice="$invoice" type="3" class="bg-info-subtle" />
+                <input type="hidden" id="inv_end_reading" name="inv_end_reading" value={{ $invEndReading }} >
+                <div class="bg-secondary-subtle rounded mt-3">
+                    <div class="row g-2 pb-2 mb-2">
+                        <div class="col-sm-2 text-end fw-semibold">Scheme Name : </div>
+                        <div class="col-sm-4">{{ $consumer->scheme->scheme->name }}</div>
+                        <div class="col-sm-2 text-end fw-semibold">Scheme Amount : </div>
+                        <div class="col-sm-4">{{ $consumer->scheme->scheme->total_deposit}}</div>
+                        <div class="col-sm-2 text-end fw-semibold">Paid Amount : </div>
+                        <div class="col-sm-4">{{ $consumer->sdPayment->sum('amount') ?? 0 }}</div>
+                        <div class="col-sm-2 text-end fw-semibold">Balance : </div>
+                        <div class="col-sm-4">{{ $consumer->sdPayment->last()->balance ?? $consumer->scheme->scheme->total_deposit }}</div>
+                        @if ($consumer->scheme->scheme->emi_amount > 0)
+                            <div class="col-sm-2 text-end fw-semibold">Emi Amount :</div>
+                            <div class="col-sm-4">{{ $consumer->scheme->scheme->emi_amount }}</div>
+                            <div class="col-sm-2 text-end fw-semibold">No of EMIs paid : </div>
+                            <div class="col-sm-4">{{ $consumer->sdPayment->last()->emi_no ?? 0 }}</div>
+                        @endif
                     </div>
-                    <div class="alert alert-warning mb-0">No Previous Invoices Found..!</div>
-                    <input type="hidden" id="inv_end_reading" name="inv_end_reading" value={{ $invEndReading }} >
-                    <div class="bg-secondary-subtle rounded mt-3">
-                        <div class="row g-2 pb-2 mb-2">
-                            <div class="col-sm-2 text-end fw-semibold">Scheme Name : </div>
-                            <div class="col-sm-4">{{ $consumer->scheme->scheme->name }}</div>
-                            <div class="col-sm-2 text-end fw-semibold">Scheme Amount : </div>
-                            <div class="col-sm-4">{{ $consumer->scheme->scheme->total_deposit}}</div>
-                            <div class="col-sm-2 text-end fw-semibold">Paid Amount : </div>
-                            <div class="col-sm-4">{{ $consumer->sdPayment->sum('amount') ?? 0 }}</div>
-                            <div class="col-sm-2 text-end fw-semibold">Balance : </div>
-                            <div class="col-sm-4">{{ $consumer->sdPayment->last()->balance ?? $consumer->scheme->scheme->total_deposit }}</div>
-                            @if ($consumer->scheme->scheme->emi_amount > 0)
-                                <div class="col-sm-2 text-end fw-semibold">Emi Amount :</div>
-                                <div class="col-sm-4">{{ $consumer->scheme->scheme->emi_amount }}</div>
-                                <div class="col-sm-2 text-end fw-semibold">No of EMIs paid : </div>
-                                <div class="col-sm-4">{{ $consumer->sdPayment->last()->emi_no ?? 0 }}</div>
-                            @endif
-                        </div>
-                    </div>
-                @endif
-            </div>
-            @if (!empty($consumer->meter->meter_no) AND $startReading >= 0)
-                @if ($start_date == date('Y-m-d'))
-                    <div class="alert alert-danger">Invoice already generated or consumer activated today.</div>
-                @elseif ($bill_days < 10)
-                    <div class="alert alert-danger">Billing Frequency should be greater than equal to 10 days.</div>
-                @elseif ($prices->isEmpty() OR $prices->last()->basic_price <= 0 OR $prices->last()->tax_value <= 0)
-                    <div class="alert alert-danger">No price record found. Please update the price.</div>
-                @else
-                    <div class="bg-light rounded">
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <div class="row">
-                                    <label for="start_reading" class="col-sm-4 col-form-label text-end">Billing Period&nbsp;:&nbsp;</label>
-                                    <div class="col-sm-8">
-                                        <label class="col-form-label">({{ date('d-m-Y', strtotime($start_date)) }} to {{ date('d-m-Y') }})</label>
-                                        <input type="hidden" id="start_date" name="start_date" value="{{ $start_date  }}">
-                                        <input type="hidden" id="end_date" name="end_date" value="{{ date('Y-m-d') }}">
-                                        <br>{{ $bill_days }} Days
-                                    </div>
-                                    <label for="start_reading" class="col-sm-4 col-form-label text-end">Previous Reading&nbsp;:&nbsp;</label>
-                                    <div class="col-sm-8">
-                                        <label class="col-form-label">{{ $startReading }}</label>
-                                        <input type="hidden" id="start_reading" name="start_reading" value="{{ $startReading }}">
-                                    </div>
-                                    <label for="end_reading" class="col-sm-4 col-form-label text-end">Current Reading<i class="text-danger">*</i>&nbsp;:&nbsp;</label>
-                                    <div class="col-sm-8">
-                                        <div class="input-group">
-                                            <input type="text" class="form-control" name="end_reading" id="end_reading" placeholder="Current reading" onchange="calculateReadings(this.value)">
-                                            <label for="end_reading" class="input-group-text"><i class="bi bi-input-cursor"></i></label>
-                                        </div>
-                                        <span class="text-danger" id="end_read_err"></span>
-                                    </div>
-                                    <div class="offset-sm-4 col-sm-8 mt-2">
-                                        <button class="btn btn-sm btn-success" type="submit"><i class="bi bi-plus-square">&nbsp;</i>Generate Bill</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="row">
-                                    <label for="unit_price" class="col-sm-4 col-form-label text-end">Unit Price&nbsp;:&nbsp;</label>
-                                    <div class="col-sm-8">
-                                        <label class="col-form-label">{{ $prices->last()->basic_price }} / SCM</label>
-                                        <input type="hidden" id="unit_price" name="unit_price" value="{{ $prices->last()->basic_price }}">
-                                    </div>
-                                    <label for="vat" class="col-sm-4 col-form-label text-end">VAT&nbsp;:&nbsp;</label>
-                                    <div class="col-sm-8">
-                                        <label class="col-form-label">{{ $prices->last()->tax_value }} %</label>
-                                        <input type="hidden" id="tax_price" name="tax_price" value="{{ $prices->last()->tax_value }}">
-                                    </div>
-                                    <label for="base_amount" class="col-sm-4 col-form-label text-end">Net SCM&nbsp;:&nbsp;</label>
-                                    <div class="col-sm-8">
-                                        <label class="col-form-label" id="net_scm"></label> SCM
-                                    </div>
-                                    <label for="base_amount" class="col-sm-4 col-form-label text-end">Base Amount&nbsp;:&nbsp;</label>
-                                    <div class="col-sm-8">
-                                       <label class="col-form-label" id="base_amt"></label>                                    </div>
-                                    <label for="tax_amount" class="col-sm-4 col-form-label text-end">VAT Amount&nbsp;:&nbsp;</label>
-                                    <div class="col-sm-8">
-                                        <label class="col-form-label" id="tax_amt"></label>
-                                    </div>
-                                    <label for="total_amount" class="col-sm-4 col-form-label text-end">Total Amount&nbsp;:&nbsp;</label>
-                                    <div class="col-sm-8">
-                                        <label class="col-form-label" id="total_amt"></label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <input type="hidden" name="cust_err_msg" id="cust_err_msg">
-                    <div id="add-gas-bill-error"></div>
-                    
-                @endif
+                </iv>
             @else
-                <div class="alert alert-danger">Please update the Meter number / Initial meter reading.</div>
+                <div>
+                    <x-consumer.basic-details :consumer="$consumer" type="3" class="bg-info-subtle"/>
+                </div>
+                <div class="alert alert-warning mb-0">No Previous Invoices Found..!</div>
+                <input type="hidden" id="inv_end_reading" name="inv_end_reading" value={{ $invEndReading }} >
+                <div class="bg-secondary-subtle rounded mt-3">
+                    <div class="row g-2 pb-2 mb-2">
+                        <div class="col-sm-2 text-end fw-semibold">Scheme Name : </div>
+                        <div class="col-sm-4">{{ $consumer->scheme->scheme->name }}</div>
+                        <div class="col-sm-2 text-end fw-semibold">Scheme Amount : </div>
+                        <div class="col-sm-4">{{ $consumer->scheme->scheme->total_deposit}}</div>
+                        <div class="col-sm-2 text-end fw-semibold">Paid Amount : </div>
+                        <div class="col-sm-4">{{ $consumer->sdPayment->sum('amount') ?? 0 }}</div>
+                        <div class="col-sm-2 text-end fw-semibold">Balance : </div>
+                        <div class="col-sm-4">{{ $consumer->sdPayment->last()->balance ?? $consumer->scheme->scheme->total_deposit }}</div>
+                        @if ($consumer->scheme->scheme->emi_amount > 0)
+                            <div class="col-sm-2 text-end fw-semibold">Emi Amount :</div>
+                            <div class="col-sm-4">{{ $consumer->scheme->scheme->emi_amount }}</div>
+                            <div class="col-sm-2 text-end fw-semibold">No of EMIs paid : </div>
+                            <div class="col-sm-4">{{ $consumer->sdPayment->last()->emi_no ?? 0 }}</div>
+                        @endif
+                    </div>
+                </div>
             @endif
-        </form>
-    </div>
+        </div>
+        @if (!empty($consumer->activeMeter->meter_no) AND $startReading >= 0)
+            @if ($start_date == date('Y-m-d'))
+                <div class="alert alert-danger">Invoice already generated or consumer activated today.</div>
+            @elseif ($bill_days < 10)
+                <div class="alert alert-danger">Billing Frequency should be greater than equal to 10 days.</div>
+            @elseif ($prices->isEmpty() OR $prices->last()->basic_price <= 0 OR $prices->last()->tax_value <= 0)
+                <div class="alert alert-danger">No price record found. Please update the price.</div>
+            @else
+                <div class="bg-light rounded">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="row">
+                                <label for="start_reading" class="col-sm-4 col-form-label text-end">Billing Period&nbsp;:&nbsp;</label>
+                                <div class="col-sm-8">
+                                    <label class="col-form-label">({{ date('d-m-Y', strtotime($start_date)) }} to {{ date('d-m-Y') }})</label>
+                                    <input type="hidden" id="start_date" name="start_date" value="{{ $start_date  }}">
+                                    <input type="hidden" id="end_date" name="end_date" value="{{ date('Y-m-d') }}">
+                                    <br>{{ $bill_days }} Days
+                                </div>
+                                <label for="old_consumption" class="col-sm-4 col-form-label text-end">Old Consumption&nbsp;:&nbsp;</label>
+                                <div class="col-sm-8">
+                                    <label class="col-form-label">{{ $old_consumption }}</label>
+                                    <input type="hidden" id="old_consumption" name="old_consumption" value="{{ $old_consumption }}">
+                                </div>
+                                <label for="start_reading" class="col-sm-4 col-form-label text-end">Previous Reading&nbsp;:&nbsp;</label>
+                                <div class="col-sm-8">
+                                    <label class="col-form-label">{{ $startReading }}</label>
+                                    <input type="hidden" id="start_reading" name="start_reading" value="{{ $startReading }}">
+                                </div>
+                                <label for="end_reading" class="col-sm-4 col-form-label text-end">Current Reading<i class="text-danger">*</i>&nbsp;:&nbsp;</label>
+                                <div class="col-sm-8">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" name="end_reading" id="end_reading" placeholder="Current reading" onchange="calculateReadings(this.value)">
+                                        <label for="end_reading" class="input-group-text"><i class="bi bi-input-cursor"></i></label>
+                                    </div>
+                                    <span class="text-danger" id="end_read_err"></span>
+                                </div>
+                                <div class="offset-sm-4 col-sm-8 mt-2">
+                                    <button class="btn btn-sm btn-success" type="submit"><i class="bi bi-plus-square">&nbsp;</i>Generate Bill</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="row">
+                                <label for="unit_price" class="col-sm-4 col-form-label text-end">Unit Price&nbsp;:&nbsp;</label>
+                                <div class="col-sm-8">
+                                    <label class="col-form-label">{{ $prices->last()->basic_price }} / SCM</label>
+                                    <input type="hidden" id="unit_price" name="unit_price" value="{{ $prices->last()->basic_price }}">
+                                </div>
+                                <label for="vat" class="col-sm-4 col-form-label text-end">VAT&nbsp;:&nbsp;</label>
+                                <div class="col-sm-8">
+                                    <label class="col-form-label">{{ $prices->last()->tax_value }} %</label>
+                                    <input type="hidden" id="tax_price" name="tax_price" value="{{ $prices->last()->tax_value }}">
+                                </div>
+                                <label for="base_amount" class="col-sm-4 col-form-label text-end">Net SCM&nbsp;:&nbsp;</label>
+                                <div class="col-sm-8">
+                                    <label class="col-form-label" id="net_scm"></label> SCM
+                                </div>
+                                <label for="base_amount" class="col-sm-4 col-form-label text-end">Base Amount&nbsp;:&nbsp;</label>
+                                <div class="col-sm-8">
+                                    <label class="col-form-label" id="base_amt"></label>                                    </div>
+                                <label for="tax_amount" class="col-sm-4 col-form-label text-end">VAT Amount&nbsp;:&nbsp;</label>
+                                <div class="col-sm-8">
+                                    <label class="col-form-label" id="tax_amt"></label>
+                                </div>
+                                <label for="total_amount" class="col-sm-4 col-form-label text-end">Total Amount&nbsp;:&nbsp;</label>
+                                <div class="col-sm-8">
+                                    <label class="col-form-label" id="total_amt"></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" name="cust_err_msg" id="cust_err_msg">
+                <div id="add-gas-bill-error"></div>
+                
+            @endif
+        @else
+            <div class="alert alert-danger">Please update the Meter number / Initial meter reading.</div>
+        @endif
+    </form>
+</div>
 @endsection()
 {{-- Scripts --}}
 @push('scripts')
@@ -166,14 +179,16 @@
                     return false;
                 }
                 else {
+                    var old_consumption = $('#old_consumption').val();
                     var net_scm = Number(end_read - start_read).toFixed(3);
+                    var total_scm = (parseFloat(net_scm) + parseFloat(old_consumption)).toFixed(3);
                     var price = $('#unit_price').val();
                     var vat = $('#tax_price').val();
-                    var base_amot = (net_scm * price).toFixed(2);
+                    var base_amot = (total_scm * price).toFixed(2);
                     var tax_amot = (parseFloat(base_amot * vat)/100).toFixed(2);
                     var total_amot = Number(parseFloat(base_amot) + parseFloat(tax_amot)).toFixed(2);
 
-                    $('#net_scm').html(net_scm);
+                    $('#net_scm').html(total_scm);
                     $('#base_amt').html(base_amot);
                     $('#tax_amt').html(tax_amot);
                     $('#total_amt').html(total_amot);

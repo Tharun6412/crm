@@ -286,4 +286,20 @@ class Consumer extends Model
     {
         return $this->hasMany(BillInvoice::class);
     }
+
+    /**
+     * Relation with consumer meter change which are pending.
+     */
+    public function meterChanges(): HasMany
+    {
+        return $this->hasMany(ConsumerMeterChanges::class, 'consumer_id');
+    }
+
+    /**
+     * Relation with consumer meter for active meters
+     */
+    public function activeMeter(): HasOne
+    {
+        return $this->hasOne(ConsumerMeter::class, 'consumer_id')->where('status', 1);
+    }
 }

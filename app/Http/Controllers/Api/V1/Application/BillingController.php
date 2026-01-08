@@ -33,9 +33,11 @@ class BillingController extends Controller
             ->with(['statusHistory' => function ($q) {
                 $q->where('status_id', ConsumerStatus::ACTIVATE->value)->latest()->limit(1);
             }])->first();
-        
         // Check consumer is billable
         if($consumer) {
+            // pending meter replacement.
+            $replacement = $consumer->meterChanges;
+            $activeMeter = $consumer->activeMeter;
             // 1. Get latest gas invoice if exists
             $invoice = BillInvoice::where('consumer_id', $id)->where('type_id', 1)->latest()->first();
             $start_date = (!empty($invoice)) ? $invoice->consumption->date_to->format('Y-m-d') : ($consumer->statusHistory->first()->created_at->format('Y-m-d'));
@@ -63,7 +65,8 @@ class BillingController extends Controller
                 'consumer' => $consumer, 
                 'invoice' => $invoice, 
                 'prices' => $prices, 
-                'bill_days' => $bill_days
+                'bill_days' => $bill_days,
+                'replaced_meters' => $replacement
             ], 200);
         }
         else {
@@ -99,6 +102,8 @@ class BillingController extends Controller
                 'message' => 'Invalid or inactive consumer for billing'
             ], 403);
         }
+        // checking for meter replacement
+        $meterChange = $consumer->meterChanges()->where('status_id', 1)->first();
         // Get the price details
         $prices = PriceHistory::where('district_id', $consumer->district_id)
             ->where('segment_id', $consumer->segment_id)
@@ -121,19 +126,24 @@ class BillingController extends Controller
             return response()->json(['message' => 'No price configuration found for the given date range'], 422);
         }
         $total_no_days = Carbon::parse($start_date)->diffInDays($end_date) + 1;
+        if($total_no_days < 10) {
+            return response()->json(['message' => 'Billing Frequency should be greater than equal to 10 days.'], 422);
+        }
 
         $start_reading = (float)$request->start_reading;
         $end_reading = (float)$request->end_reading;
         $total_consumption = ($end_reading - $start_reading);
-        $scm_per_day = ($total_consumption/$total_no_days);
+        $old_consumption = (float)$request->old_consumption;
+        $total_scms = round(($total_consumption+$old_consumption), 3);
+        $scm_per_day = ($total_scms/$total_no_days);
         $cf = 1;
-        $net_consumption = round(($total_consumption * $cf),3);
+        $net_consumption = round(($total_scms * $cf),3);
         $p_price = $inv_base_amt = $inv_tax_amt = $inv_total = 0;
         $p_id = NULL;
         $vat_percent = 0;
         foreach ($prices as $key => $price) {
-            $end_date_1 = ($end_date > $price['effective_to']) ? $price['effective_to'] : $end_date;
-            $no_days = Carbon::parse($start_date_1)->diffInDays($end_date_1);
+            $end_date_1 = (isset($price['effective_to']) and ($end_date > $price['effective_to'])) ? $price['effective_to'] : $end_date;
+            $no_days = Carbon::parse($start_date_1)->diffInDays($end_date_1) + 1;
             $consmp_breakup = ($no_days*$scm_per_day);
             $p_price += $price['basic_price'];
             $base_amot_1 = round((($consmp_breakup * $cf) * $price['basic_price']), 2);
@@ -187,7 +197,7 @@ class BillingController extends Controller
             //  Invoice Consumption array
             $inv_consumption = [
                 'invoice_id' => $inv_insert->id,
-                'meter_id' => $consumer->meter->id,
+                'meter_id' => $consumer->activeMeter?->id,
                 'price_history_id' => $p_id,
                 'date_from' => $start_date,
                 'date_to' => $end_date,
@@ -197,13 +207,19 @@ class BillingController extends Controller
                 'consumption' => $total_consumption,
                 'cf' => $cf,
                 'mater_change_id' => NULL,
-                'old_comsumption' => NULL,
+                'old_consumption' => $old_consumption,
                 'net_consumption' => $net_consumption,
                 'unit_price' => $avg_price,
                 'total_price' => $inv_total,
+                'meter_change_id' => $meterChange?->id,
                 'file_id' => $doc_upload['file_id'],
             ];
             $inv_cons = BillInvoiceConsumption::create($inv_consumption);
+            // Update the pending meter status to complete.
+            if ($meterChange) {
+                $meterChange->status_id = 2; // example: approved / processed
+                $meterChange->save();
+            }
             // Attach consumption_id to consumption details & bulk insert
             if($inv_cons and $net_consumption > 0) {
                 $bulkRows = [];
@@ -220,17 +236,12 @@ class BillingController extends Controller
                 }
                 BillInvoiceConsumptionDetails::insert($bulkRows);
             }
-            // Prepare Ledger Data
-            $data[] = [
+            // Ledger Service.
+            $ledger_record = LedgerService::create([
                 'model' => $inv_insert,
                 'consumer_id' => $inv_insert->consumer_id,
-                'description' => "Bill: Invoice Generated with Invoice No.",
-                'credit' => NULL,
-                'debit' => $inv_insert->total_amount,
-                'balance' => $inv_insert->total_amount,
-            ];
-            // Add/insert into Ledger Report
-            LedgerService::create($data, 'debit');
+                'amount' => ($inv_total ?? 0),
+            ], 'dr');
 
             // dependent invoice creation (SD EMI / Rental)
             $scheme = $consumer->scheme;
