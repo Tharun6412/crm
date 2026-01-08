@@ -34,6 +34,7 @@ return new class extends Migration
             $table->id();
             $table->string('code', length: 8)->nullable();
             $table->string('name', length: 90)->nullable();
+            $table->string('lang_code', length: 90)->nullable();
             $table->tinyInteger('status')->nullable();
         });
 

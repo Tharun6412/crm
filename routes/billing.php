@@ -11,6 +11,7 @@ Route::middleware(['auth', ModuleAccess::class])->group(function() {
     // Invoice
     Route::prefix('gasInvoice')->group(function () {
         Route::get('create/{consumer}', [App\Http\Controllers\Billing\GasInvoiceController::class, 'create']);
+        Route::get('/{id}', [App\Http\Controllers\Billing\GasBillController::class, 'show']);
         Route::resource('/', App\Http\Controllers\Billing\GasInvoiceController::class);
     });
 

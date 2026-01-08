@@ -37,6 +37,7 @@
                                         <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Actions</button>
                                         <ul class="dropdown-menu">
                                             <li><a class="dropdown-item" href="{{ url('bill/invoice/' . $invoice->id) }}" target="_blank"><i class="bi bi-file-text"></i>&nbsp;View</a></li>
+                                            <li><a class="dropdown-item" href="{{ url('bill/gasInvoice/' . $invoice->id) }}" target="_blank"><i class="bi bi-file-text"></i>&nbsp;View / Print Gas Bill</a></li>
                                             @if (in_array($invoice->status_id, [2,3]))
                                                 <li><a class="dropdown-item link-modal" href="{{ url('payments/gasPayments/create/'.$invoice->id) }}"><i class="bi bi-cash"></i>&nbsp;Pay Invoice</a></li>
                                             @endif

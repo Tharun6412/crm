@@ -33,16 +33,16 @@ class MasterDataSeeder extends Seeder
 
         // States data
         DB::table('mst_states')->insert([
-            ['id' => 1, 'name' => 'Andhra Pradesh', 'status' => 1],
-            ['id' => 2, 'name' => 'Telangana', 'status' => 1],
-            ['id' => 3, 'name' => 'Tamil Nadu', 'status' => 1],
-            ['id' => 4, 'name' => 'Karnataka', 'status' => 1],
-            ['id' => 5, 'name' => 'Odisha', 'status' => 1],
-            ['id' => 6, 'name' => 'Maharashtra', 'status' => 1],
-            ['id' => 7, 'name' => 'Madhya Pradesh', 'status' => 1],
-            ['id' => 8, 'name' => 'Panjab', 'status' => 1],
-            ['id' => 9, 'name' => 'Uttar Pradesh', 'status' => 1],
-            ['id' => 10, 'name' => 'Rajasthan', 'status' => 1],
+            ['id' => 1, 'name' => 'Andhra Pradesh', 'lang_code' => 'tel', 'status' => 1],
+            ['id' => 2, 'name' => 'Telangana', 'lang_code' => 'tel', 'status' => 1],
+            ['id' => 3, 'name' => 'Tamil Nadu', 'lang_code' => 'tam', 'status' => 1],
+            ['id' => 4, 'name' => 'Karnataka', 'lang_code' => 'kan', 'status' => 1],
+            ['id' => 5, 'name' => 'Odisha', 'lang_code' => 'ori', 'status' => 1],
+            ['id' => 6, 'name' => 'Maharashtra', 'lang_code' => 'mar', 'status' => 1],
+            ['id' => 7, 'name' => 'Madhya Pradesh', 'lang_code' => 'hin', 'status' => 1],
+            ['id' => 8, 'name' => 'Panjab', 'lang_code' => 'pan', 'status' => 1],
+            ['id' => 9, 'name' => 'Uttar Pradesh', 'lang_code' => 'hin', 'status' => 1],
+            ['id' => 10, 'name' => 'Rajasthan', 'lang_code' => 'raj', 'status' => 1],
         ]);
         
         // GA
