@@ -12,6 +12,7 @@ use App\Models\Master\BillInvoiceType;
 use App\Models\Master\Tax;
 use App\Services\InvoiceService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class InvoiceController extends Controller
 {
@@ -184,6 +185,7 @@ class InvoiceController extends Controller
                 'balance_amount' => $invoice_total,
                 'due_date' => date('Y-m-d'),
                 'status_id' => InvoiceStatus::NOT_PAID->value, //2 =  Unpaid
+                'created_by' => Auth::id(),
             ],
             'items' => $invoice_items,
         ];

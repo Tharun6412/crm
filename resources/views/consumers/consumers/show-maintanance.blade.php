@@ -10,20 +10,25 @@
                     <th>Install Date</th>
                     <th>Install By</th>
                     <th>Status</th>
-                    <th>Status Con</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach ($consumer->meter as $meter)
-                    <tr>
-                        <td>{{ $loop->iteration }}</td>
-                        <td>{{ $meter->meter_no }}</td>
-                        <td>{{ $meter->meter_serial_no }}</td>
-                        <td>{{ $meter->install_date->format('d-m-Y') }}</td>
-                        <td>{{ $meter->installBy->name }}</td>
-                        <td>{{ $meter->meterStatus->name }}</td>
-                    </tr>
-                @endforeach
+                @if($consumer->meter->count() > 0)
+                    @foreach ($consumer->meter as $meter)
+                        <tr>
+                            <td>{{ $loop->iteration }}</td>
+                            <td>{{ $meter->meter_no }}</td>
+                            <td>{{ $meter->meter_serial_no }}</td>
+                            <td>{{ $meter->install_date->format('d-m-Y') }}</td>
+                            <td>{{ $meter->installBy->name }}</td>
+                            <td>{{ $meter->meterStatus->name }}</td>
+                        </tr>
+                    @endforeach
+                @else
+                        <tr>
+                            <td colspan="6">No records found</td>
+                        </tr>
+                @endif
             </tbody>
         </table>
     </div>
