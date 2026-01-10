@@ -25,6 +25,7 @@ Route::middleware(['auth'])->group(function() {
     // Payment master data
     Route::prefix('payment')->group(function () {
         Route::resource('types', App\Http\Controllers\Master\Payments\PaymentTypesController::class);
+        Route::resource('paymentGateways', App\Http\Controllers\Master\Payments\PaymentGatewayController::class);
     });
 
     // Complaint master data
