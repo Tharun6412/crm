@@ -6,8 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Master\ComplaintMedia;
 use App\Models\Master\ComplaintPriority;
 use App\Models\Master\ComplaintSegment;
-use App\Models\Master\ComplaintStatus;
 use App\Models\Master\ComplaintType;
+use App\Models\Master\MasterComplaintStatus;
 
 class ContextualDataController extends Controller
 {
@@ -20,7 +20,7 @@ class ContextualDataController extends Controller
         $segments = ComplaintSegment::all();
         $types = ComplaintType::all();
         $media = ComplaintMedia::all();
-        $status = ComplaintStatus::all();
+        $status = MasterComplaintStatus::all();
         $priorities = ComplaintPriority::all();
 
         // Render output

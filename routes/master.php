@@ -19,6 +19,7 @@ Route::middleware(['auth'])->group(function() {
     Route::prefix('invoice')->group(function () {
         Route::resource('items', App\Http\Controllers\Master\Invoice\InvoiceItemsController::class);
         Route::resource('types', App\Http\Controllers\Master\Invoice\InvoiceTypesController::class);
+        Route::resource('configuration', App\Http\Controllers\Master\Invoice\ConfigController::class);
     });
 
     // Payment master data
