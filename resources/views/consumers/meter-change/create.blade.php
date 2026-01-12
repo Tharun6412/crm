@@ -8,6 +8,14 @@
             {{-- Consumer basic details --}}
             <x-consumer.basic-details :consumer="$consumer_meter->consumer" class="bg-info-subtle" />
                 {{-- Meter Change Form --}}
+            @if ($consumer_meter?->oldMeter?->status_id == 1)
+                <div class="mt-3 alert alert-danger">
+                    <span>Current Meter still in pending status. New Meter cannot be created.</span>
+                    @php
+                        exit;
+                    @endphp
+                </div>
+            @endif
             <div class="mt-2" id="meter-change-success">
                 <form id="meter-change-form" action="{{ url('consumers/meterChange/'.$id) }}" method="POST" enctype="multipart/form-data">
                     @csrf
@@ -75,7 +83,7 @@
                             <span class="text-danger validate-err-msg" id="request_date-error"></span>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label" for="release_date">Release Date&nbsp;:&nbsp;</label>
+                            <label class="form-label" for="release_date">Replace Date&nbsp;:&nbsp;</label>
                             <div class="input-group input-group-sm">
                                 <input name="release_date" id="release_date" class="form-control form-control-sm" placeholder="Release Date( DD-MM-YYYY )" type="text"/>
                                 <span class="input-group-text"><i class="bi bi-calendar2-event"></i></span>

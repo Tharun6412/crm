@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers\Consumer;
 
+use App\Enums\ConsumerStatus as EnumsConsumerStatus;
+use App\Enums\DocumentType;
 use App\Enums\MeterStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\DocumentCentre\DocumentUpload;
 use App\Models\Admin\User;
 use App\Models\Consumer\Consumer;
+use App\Models\Consumer\ConsumerDocument;
 use App\Models\Consumer\ConsumerMeter;
 use App\Models\Consumer\ConsumerMeterChanges;
 use App\Models\Consumer\ConsumerStatus;
@@ -23,7 +26,14 @@ class MeterChangeController extends Controller
      */
     public function index(Request $request)
     {
-        $meterChange = ConsumerMeterChanges::all();
+        $meterChange = ConsumerMeterChanges::when($request->has('key'), function ($q) use($request) {
+                $q->whereAny(['prev_reading'], 'like', '%' . $request->key . '%');
+            })->orderBy('created_at', 'desc')->paginate(20)->withQueryString();
+        if($request->ajax()) {
+            return view('consumers.meter-change.list-body', [
+                'meterChange' => $meterChange,
+            ]);        
+        }
         return view('consumers.meter-change.list', [
             'meterChange' => $meterChange,
         ]);
@@ -50,7 +60,7 @@ class MeterChangeController extends Controller
     {
         // Validation Message
         $old_meter = ConsumerMeter::where(['consumer_id' => $id, 'status' => 1])->first();
-        $prev_reading = round(($old_meter->meterConsumption?->prev_reading ?? $old_meter->initial_reading), 3);
+        $prev_reading = round(($old_meter->meterConsumption?->curr_reading ?? $old_meter->initial_reading), 3);
         $request->validate([
             'meter_no' => ['required',
                 Rule::unique('cns_consumer_meters', 'meter_no')->where(function($q) {
@@ -62,16 +72,25 @@ class MeterChangeController extends Controller
                     $q->where('status', 1);
                 }),
             ],
-            'prev_reading' => 'required|numeric',
+            'prev_reading' => 'required|numeric|in:'.$prev_reading,
             'end_reading' => 'required|numeric|gt:'.$request->prev_reading,
             'initial_reading' => 'required|numeric',
             'request_date' => 'required',
             'release_date' => 'required',
             'technician_id' => 'required',
             'reason' => 'required|max:255',
+        ], [
+            'prev_reading.in' => "Previous Reading must be exactly ".$prev_reading,
         ]);
         $doc_upload = DocumentUpload::upload($request, 'domestic');
         // Fetch Old Meter Details
+        //Meter Image Upload
+        ConsumerDocument::create([
+            'consumer_id' => $id,
+            'status_id' => EnumsConsumerStatus::HSC->value,
+            'doc_type_id' => DocumentType::METER_IMAGE->value,
+            'file_id' => $doc_upload['file_id'],
+        ]);
         // Old Consumer Meter Update status = Replaced[3]
         $old_meter->update([
             'status' => MeterStatus::Replace->value,

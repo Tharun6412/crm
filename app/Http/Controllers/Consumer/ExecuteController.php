@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\Consumer;
 
 use App\Enums\ConsumerStatus as EnumsConsumerStatus;
+use App\Enums\DocumentType;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\DocumentCentre\DocumentUpload;
 use App\Models\Consumer\Consumer;
@@ -58,11 +59,9 @@ class ExecuteController extends Controller
             $add_consumer_document = ConsumerDocument::create([
                 'consumer_id' => $id,
                 'status_id' => EnumsConsumerStatus::EXECUTE->value,
-                'doc_type_id' => 5,
-                'file_id' => $documents_bulk['file_list'][0]['file_id'],
+                'doc_type_id' => DocumentType::METER_IMAGE->value,
+                'file_id' => $documents_bulk['file_list'][1]['file_id'],
             ]);
-            // foreach($request->dc_file_list as $key => $doc_type) {
-            // }
         }
         // Consumer Meter
         ConsumerMeter::create([

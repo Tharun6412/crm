@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Payments;
 
+use App\Enums\InvoiceType;
 use App\Http\Controllers\Controller;
 use App\Models\Consumer\Consumer;
 use App\Models\Invoice\BillInvoice;
@@ -111,7 +112,7 @@ class InvoicePaymentsController extends Controller
     public function show(Request $request, $id)
     {
         $payments = InvoicePayment::whereHas('invoice', function($q) use($id) {
-            $q->where('consumer_id', $id);
+            $q->where(['consumer_id' => $id, 'type_id' => InvoiceType::GAS_BILL->value]);
         })->orderBy('created_at', 'desc')->paginate(10)->withQueryString();
         return view('consumers.consumers.show-payments', [
             'payments' => $payments,

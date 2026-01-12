@@ -10,9 +10,17 @@
                     @csrf
                     @method('PUT')
                     <div class="row mb-2">
+                        <label class="col-form-label">Activate Image</label>
+                        <div class="col-12">
+                            <input type="file" name="dc_file" id="dc_file" class="form-control form-control-sm"/>
+                            <span class="text-danger validate-err-msg" id="dc_file-error"></span>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
                         <label class="col-form-label">Notes&nbsp;:<span class="text-danger">*</span></label>
                         <div class="col-12">
                             <textarea name="notes" id="notes" class="form-control"></textarea>
+                            <span class="text-danger validate-err-msg" id="notes-error"></span>
                         </div>
                     </div>
                     <div class="mb-3" id="activated-error"></div>
@@ -31,4 +39,4 @@
         </div>
     </div>
 </div>
-@include('scripts.ajax-form-submit', ['form' => 'activated'])
+@include('scripts.ajax-file-submit', ['form' => 'activated'])

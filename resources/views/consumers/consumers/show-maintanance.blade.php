@@ -25,9 +25,9 @@
                         </tr>
                     @endforeach
                 @else
-                        <tr>
-                            <td colspan="6">No records found</td>
-                        </tr>
+                    <tr>
+                        <td colspan="6">No records found</td>
+                    </tr>
                 @endif
             </tbody>
         </table>

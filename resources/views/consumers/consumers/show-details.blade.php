@@ -113,11 +113,11 @@
                     <dt class="col-sm-3">LPG Connections</dt>
                     <dd class="col-sm-9">{{ $consumer->lpg_connections }}</dd>
                     <dt class="col-sm-3">DCQ</dt>
-                    <dd class="col-sm-9">{{ numberFormat($consumer->dcq) }}</dd>
+                    <dd class="col-sm-9">{{ numberFormat($consumer->dcq, 2) }}</dd>
                     <dt class="col-sm-3">Expected Date</dt>
                     <dd class="col-sm-9">{{ $consumer->expected_date?->format('d-m-Y') }}</dd>
                     <dt class="col-sm-3">Distance&nbsp;(Mts)</dt>
-                    <dd class="col-sm-9">{{ numberFormat($consumer->distance) }}</dd>
+                    <dd class="col-sm-9">{{ numberFormat($consumer->distance, 2) }}</dd>
                     <dt class="col-sm-3">Natural Gas For</dt>
                     <dd class="col-sm-9">{{ $consumer->gasRequired?->name }}</dd>
                 </dl>
@@ -140,7 +140,7 @@
                         <td>{{ $loop->iteration }}</td>
                         <td>{{ $history->status->name }}</td>
                         <td>{{ $history->notes }}</td>
-                        <td>{{ $history->created_at?->format('d-m-Y') }}</td>
+                        <td>{{ $history->created_at?->format('d-m-Y H:i:s') }}</td>
                         <td>{{ $history->createdBy?->first_name }}&nbsp;{{ $history->createdBy?->last_name }}</td>
                     </tr>
                 @endforeach

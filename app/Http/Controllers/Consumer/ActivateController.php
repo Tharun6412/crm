@@ -2,8 +2,11 @@
 namespace App\Http\Controllers\Consumer;
 
 use App\Enums\ConsumerStatus as EnumsConsumerStatus;
+use App\Enums\DocumentType;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\DocumentCentre\DocumentUpload;
 use App\Models\Consumer\Consumer;
+use App\Models\Consumer\ConsumerDocument;
 use App\Models\Consumer\ConsumerStatus;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -35,7 +38,16 @@ class ActivateController extends Controller
         $request->validate([
             'notes' => 'required|max:255',
         ]);
-
+        if($request->has('dc_file')) {
+            $doc_upload = DocumentUpload::upload($request, 'domestic');
+            //Activate Image Upload
+            ConsumerDocument::create([
+                'consumer_id' => $id,
+                'status_id' => EnumsConsumerStatus::ACTIVATE->value,
+                'doc_type_id' => DocumentType::ACTIVATION_IMAGE->value,
+                'file_id' => $doc_upload['file_id'],
+            ]);
+        }
         // 6 = Activation
         Consumer::where('id', $id)->update([
             'status_id' => EnumsConsumerStatus::ACTIVATE->value,

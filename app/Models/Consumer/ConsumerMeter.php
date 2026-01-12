@@ -100,4 +100,12 @@ class ConsumerMeter extends Model
     {
         return $this->hasOne(BillInvoiceConsumption::class, 'meter_id', 'id')->latestOfMany('id');
     }
+
+    /**
+     * Relation with OLD Meter
+     */
+    public function oldMeter() : HasOne
+    {
+        return $this->hasOne(ConsumerMeterChanges::class, 'new_meter_id', 'id')->where('status_id', 1);
+    }
 }

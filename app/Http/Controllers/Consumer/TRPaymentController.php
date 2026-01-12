@@ -133,6 +133,7 @@ class TRPaymentController extends Controller
                     'tax_value' => 18,
                     'tax_amount' => $tax_amt,
                     'total_amount' => $amt,
+                    'payable_amount' => $amt,
                     'paid_amount' => 0,
                     'balance_amount' => $amt,
                     'status_id' => InvoiceStatus::NOT_PAID->value, // Paid

@@ -27,5 +27,4 @@ class OTP extends Model
         'expires_at',
         'is_used',
     ];
-
 }

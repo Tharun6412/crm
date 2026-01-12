@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\Consumer;
 
 use App\Enums\ConsumerStatus as EnumsConsumerStatus;
+use App\Enums\DocumentType;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\DocumentCentre\DocumentUpload;
 use App\Models\Consumer\Consumer;
@@ -43,7 +44,7 @@ class HscController extends Controller
         ConsumerDocument::create([
             'consumer_id' => $id,
             'status_id' => EnumsConsumerStatus::HSC->value,
-            'doc_type_id' => 6,
+            'doc_type_id' => DocumentType::HSC_IMAGE->value,
             'file_id' => $doc_upload['file_id'],
         ]);
         // 5 = HSC
