@@ -17,7 +17,7 @@ use App\Models\Master\PriceHistory;
 use App\Services\DependentInvoiceService;
 use App\Services\InvoiceService;
 use App\Services\LedgerService;
-use Carbon\Carbon;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
@@ -28,29 +28,38 @@ class BillingController extends Controller
      */
     public function generateGasBill(Request $request, $id)
     {
-        $consumer = Consumer::where('id', $id)
-            ->where('status_id', ConsumerStatus::ACTIVATE->value)
-            ->with(['statusHistory' => function ($q) {
-                $q->where('status_id', ConsumerStatus::ACTIVATE->value)->latest()->limit(1);
-            }])->first();
+        $consumer = Consumer::with([
+            'statusHistory:id,consumer_id,status_id,created_at',
+            'meter:id,consumer_id,file_id,meter_no,meter_serial_no,initial_reading,install_date,status',
+            'scheme:id,consumer_id,security_deposit,consumption_deposit,total_deposit,emi_amount,rental_amount,paid_deposit,balance,status',
+            'sdPayment:id,consumer_id,emi_no,amount,status_id,invoice_id,balance,created_at',
+            'meterChanges:id,consumer_id,meter_id,prev_reading,end_reading,consumption,new_meter_id,status_id',
+            'activeMeter:id,consumer_id,meter_no,meter_serial_no,initial_reading,status',
+            'invoices:id,consumer_id,invoice_date,invoice_number,type_id,base_amount,taxable_amount,tax_id,tax_amount,total_amount,credit_amount,payable_amount,balance_amount,paid_amount,due_date,status_id,parent_invoice_id',
+        ])->select('id', 'segment_id', 't_crn', 'crn', 'title', 'fname', 'lname', 'segment_id', 'district_id', 'state_id', 'ga_id')->where('id', $id)
+            ->where('status_id', ConsumerStatus::ACTIVATE->value)->first();
+        // dd($consumer);
         // Check consumer is billable
         if($consumer) {
-            // pending meter replacement.
-            $replacement = $consumer->meterChanges;
-            $activeMeter = $consumer->activeMeter;
             // 1. Get latest gas invoice if exists
-            $invoice = BillInvoice::where('consumer_id', $id)->where('type_id', 1)->latest()->first();
+            // $invoice = BillInvoice::where('consumer_id', $id)->where('type_id', 1)->latest()->first();
+            $invoice = $consumer->invoices()->where('type_id', 1)->latest()->first();
             $start_date = (!empty($invoice)) ? $invoice->consumption->date_to->format('Y-m-d') : ($consumer->statusHistory->first()->created_at->format('Y-m-d'));
             $end_date = date('Y-m-d');
-            $bill_days = Carbon::parse($start_date)->diffInDays($end_date) + 1;
+            $bill_days = Carbon::parse($start_date)->diffInDays($end_date);
 
             // 2. Get the gas price for the billing
+            // Get the price details
+            $minEffectiveFrom = PriceHistory::where('district_id', $consumer->district_id)
+                ->where('segment_id', $consumer->segment_id)
+                ->where('effective_from', '<=', $start_date)
+                ->max('effective_from');
             $prices = PriceHistory::where('district_id', $consumer->district_id)
                 ->where('segment_id', $consumer->segment_id)
-                ->where(function ($q) use ($start_date, $end_date) {
-                    $q->where('effective_from', '<=', $end_date)->where('effective_to', '>=', $start_date);
-                })
-                ->orderBy('effective_from')->get();
+                ->where('effective_from', '<=', $end_date)
+                ->where('effective_from', '>=', $minEffectiveFrom)
+                ->orderBy('effective_from')
+                ->get();
             // If no price changes found, fetch the latest single record
             if ($prices->isEmpty()) {
                 $prices = PriceHistory::where('district_id', $consumer->district_id)
@@ -66,7 +75,6 @@ class BillingController extends Controller
                 'invoice' => $invoice, 
                 'prices' => $prices, 
                 'bill_days' => $bill_days,
-                'replaced_meters' => $replacement
             ], 200);
         }
         else {
@@ -79,23 +87,29 @@ class BillingController extends Controller
         }
     }
 
+
     public function storeGasBill(Request $request, $id)
     {
         // Validation
         $request->validate([
-            'end_reading' => 'required',
-            'start_reading' => 'required',
-            'start_date' => 'required',
-            'end_date' => 'required',
+            'start_date' => 'required|date|before:end_date',
+            'end_date' => 'required|date|after:start_date',
+            'end_reading' => 'numeric|min:0',
+            'start_reading' => 'numeric|min:0',
         ]);
         $start_date = $start_date_1 =  $request->start_date;
         $end_date = $request->end_date;
         // Get the consumer details
-        $consumer = Consumer::where('id', $id)
-            ->where('status_id', ConsumerStatus::ACTIVATE->value)
-            ->with(['statusHistory' => function ($q) {
-                $q->latest()->limit(1);
-            }])->first();
+        $consumer = Consumer::with([
+            'statusHistory:id,consumer_id,status_id,created_at',
+            'meter:id,consumer_id,file_id,meter_no,meter_serial_no,initial_reading,install_date,status',
+            'scheme:id,consumer_id,security_deposit,consumption_deposit,total_deposit,emi_amount,rental_amount,paid_deposit,balance,status',
+            'sdPayment:id,consumer_id,emi_no,amount,status_id,invoice_id,balance,created_at',
+            'meterChanges:id,consumer_id,meter_id,prev_reading,end_reading,consumption,new_meter_id,status_id',
+            'activeMeter:id,consumer_id,meter_no,meter_serial_no,initial_reading,status',
+            'invoices:id,consumer_id,invoice_date,invoice_number,type_id,base_amount,taxable_amount,tax_id,tax_amount,total_amount,credit_amount,payable_amount,balance_amount,paid_amount,due_date,status_id,parent_invoice_id',
+        ])->select('id', 'segment_id', 't_crn', 'crn', 'title', 'fname', 'lname', 'segment_id', 'district_id', 'state_id', 'ga_id')->where('id', $id)
+            ->where('status_id', ConsumerStatus::ACTIVATE->value)->first();
         //     
         if (!$consumer) {
             return response()->json([
@@ -105,13 +119,16 @@ class BillingController extends Controller
         // checking for meter replacement
         $meterChange = $consumer->meterChanges()->where('status_id', 1)->first();
         // Get the price details
+        $minEffectiveFrom = PriceHistory::where('district_id', $consumer->district_id)
+            ->where('segment_id', $consumer->segment_id)
+            ->where('effective_from', '<=', $start_date)
+            ->max('effective_from');
         $prices = PriceHistory::where('district_id', $consumer->district_id)
             ->where('segment_id', $consumer->segment_id)
-            ->where(function ($q) use ($start_date, $end_date) {
-                $q->where('effective_from', '<=', $end_date)
-                ->where('effective_to', '>=', $start_date);
-            })
-            ->orderBy('effective_from')->get()->toArray();
+            ->where('effective_from', '<=', $end_date)
+            ->where('effective_from', '>=', $minEffectiveFrom)
+            ->orderBy('effective_from')
+            ->get()->toArray();
         // If no price changes found, fetch the latest single record
         if (empty($prices)) {
             $prices = PriceHistory::where('district_id', $consumer->district_id)
@@ -125,13 +142,17 @@ class BillingController extends Controller
             // Response Message
             return response()->json(['message' => 'No price configuration found for the given date range'], 422);
         }
-        $total_no_days = Carbon::parse($start_date)->diffInDays($end_date) + 1;
+        $total_no_days = Carbon::parse($start_date)->diffInDays($end_date);
         if($total_no_days < 10) {
             return response()->json(['message' => 'Billing Frequency should be greater than equal to 10 days.'], 422);
         }
 
         $start_reading = (float)$request->start_reading;
         $end_reading = (float)$request->end_reading;
+        if ($end_reading < $start_reading) {
+            return response()->json(['message' => 'End reading cannot be less than start reading'], 422);
+        }
+
         $total_consumption = ($end_reading - $start_reading);
         $old_consumption = (float)$request->old_consumption;
         $total_scms = round(($total_consumption+$old_consumption), 3);
@@ -141,9 +162,10 @@ class BillingController extends Controller
         $p_price = $inv_base_amt = $inv_tax_amt = $inv_total = 0;
         $p_id = NULL;
         $vat_percent = 0;
+        $inv_consmp_details = [];
         foreach ($prices as $key => $price) {
             $end_date_1 = (isset($price['effective_to']) and ($end_date > $price['effective_to'])) ? $price['effective_to'] : $end_date;
-            $no_days = Carbon::parse($start_date_1)->diffInDays($end_date_1) + 1;
+            $no_days = Carbon::parse($start_date_1)->diffInDays($end_date_1);
             $consmp_breakup = ($no_days*$scm_per_day);
             $p_price += $price['basic_price'];
             $base_amot_1 = round((($consmp_breakup * $cf) * $price['basic_price']), 2);
@@ -168,7 +190,7 @@ class BillingController extends Controller
         $avg_price = $p_price / count($prices); 
         
         // invoice number generation
-        $inv_number = InvoiceService::generateNumber($consumer->ga->state_id, 1);
+        $inv_number = InvoiceService::generateNumber($consumer->state_id, 1);
         $invoice_date = Carbon::now()->format('Y-m-d');
         $due_date = Carbon::now()->addDays(15)->format('Y-m-d');
         // Meter image upload.

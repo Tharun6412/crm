@@ -17,6 +17,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use App\Enums\ConsumerStatus;
 use App\Enums\InvoiceStatus;
+use App\Enums\TaxType;
 use App\Services\DependentInvoiceService;
 
 class GasInvoiceController extends Controller
@@ -47,15 +48,20 @@ class GasInvoiceController extends Controller
             $invoice = BillInvoice::where('consumer_id', $id)->where('type_id', 1)->latest()->first();
             $start_date = (!empty($invoice)) ? $invoice->consumption->date_to->format('Y-m-d') : ($consumer->statusHistory->first()->created_at->format('Y-m-d'));
             $end_date = date('Y-m-d');
-            $bill_days = Carbon::parse($start_date)->diffInDays($end_date) + 1;
+            $bill_days = Carbon::parse($start_date)->diffInDays($end_date);
 
             // 2. Get the gas price for the billing
+            // Get the price details
+            $minEffectiveFrom = PriceHistory::where('district_id', $consumer->district_id)
+                ->where('segment_id', $consumer->segment_id)
+                ->where('effective_from', '<=', $start_date)
+                ->max('effective_from');
             $prices = PriceHistory::where('district_id', $consumer->district_id)
                 ->where('segment_id', $consumer->segment_id)
-                ->where(function ($q) use ($start_date, $end_date) {
-                    $q->where('effective_from', '<=', $end_date)->where('effective_to', '>=', $start_date);
-                })
-                ->orderBy('effective_from')->get();
+                ->where('effective_from', '<=', $end_date)
+                ->where('effective_from', '>=', $minEffectiveFrom)
+                ->orderBy('effective_from')
+                ->get();
             // If no price changes found, fetch the latest single record
             if ($prices->isEmpty()) {
                 $prices = PriceHistory::where('district_id', $consumer->district_id)
@@ -102,13 +108,16 @@ class GasInvoiceController extends Controller
         $meterChange = $consumer->meterChanges()->where('status_id', 1)->first();
 
         // Get the price details
+        $minEffectiveFrom = PriceHistory::where('district_id', $consumer->district_id)
+            ->where('segment_id', $consumer->segment_id)
+            ->where('effective_from', '<=', $start_date)
+            ->max('effective_from');
         $prices = PriceHistory::where('district_id', $consumer->district_id)
             ->where('segment_id', $consumer->segment_id)
-            ->where(function ($q) use ($start_date, $end_date) {
-                $q->where('effective_from', '<=', $end_date)
-                ->where('effective_to', '>=', $start_date);
-            })
-            ->orderBy('effective_from')->get()->toArray();
+            ->where('effective_from', '<=', $end_date)
+            ->where('effective_from', '>=', $minEffectiveFrom)
+            ->orderBy('effective_from')
+            ->get()->toArray();
         // If no price changes found, fetch the latest single record
         if (empty($prices)) {
             $prices = PriceHistory::where('district_id', $consumer->district_id)
@@ -124,7 +133,7 @@ class GasInvoiceController extends Controller
                 'cust_err_msg' => ['required' => "No Prices found."],
             ]);
         }
-        $total_no_days = Carbon::parse($start_date)->diffInDays($end_date) + 1;
+        $total_no_days = Carbon::parse($start_date)->diffInDays($end_date);
 
         $start_reading = (float)$request->start_reading;
         $end_reading = (float)$request->end_reading;
@@ -137,9 +146,10 @@ class GasInvoiceController extends Controller
 
         $p_price = $inv_base_amt = $inv_tax_amt = $inv_total = 0;
         $p_id = NULL;
+        $inv_consmp_details = [];
         foreach ($prices as $key => $price) {
             $end_date_1 = (isset($price['effective_to']) and ($end_date > $price['effective_to'])) ? $price['effective_to'] : $end_date;
-            $no_days = Carbon::parse($start_date_1)->diffInDays($end_date_1) + 1;
+            $no_days = Carbon::parse($start_date_1)->diffInDays($end_date_1);
             $consmp_breakup = ($no_days*$scm_per_day);
             $p_price += $price['basic_price'];
             $base_amot_1 = round((($consmp_breakup * $cf) * $price['basic_price']), 2);
@@ -161,7 +171,6 @@ class GasInvoiceController extends Controller
             $start_date_1 = $end_date_1; 
         }
         $avg_price = $p_price / count($prices); 
-        
         // invoice number generation
         $inv_number = InvoiceService::generateNumber($consumer->ga->state_id, 1);
         $invoice_date = Carbon::now()->format('Y-m-d');
@@ -175,7 +184,7 @@ class GasInvoiceController extends Controller
             'invoice_date' => $invoice_date,
             'base_amount' => $inv_base_amt,
             'taxable_amount' => $inv_base_amt,
-            'tax_id'=> 2,
+            'tax_id'=> TaxType::GST->value,
             'tax_value' => $request->tax_price,
             'tax_amount' => $inv_tax_amt,
             'total_amount' => $inv_total,
