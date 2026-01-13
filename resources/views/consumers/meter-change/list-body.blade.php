@@ -57,7 +57,7 @@
                 @endforeach
             @else
                 <tr>
-                    <td colspan="5">
+                    <td colspan="9">
                         <x-layouts.callout-info>No records found!</x->
                     </td>
                 </tr>

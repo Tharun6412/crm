@@ -22,6 +22,7 @@ class RegistrationValidationRequest extends FormRequest
             'charge_area' => 'required',
             'area' => 'required',
             'email' => 'nullable|email',
+            'connection_type' => 'required',
             'scheme_id' => 'required',
             'title' => 'required',
             'fname' => 'required|alpha_dash:ascii',

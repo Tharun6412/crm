@@ -10,6 +10,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('caAreas', [App\Http\Controllers\Api\V1\Common\CommonController::class, 'caAreas']);
     Route::get('schemeDetails', [App\Http\Controllers\Api\V1\Common\CommonController::class, 'schemeDetails']);
     Route::get('getSubCategories', [App\Http\Controllers\Api\V1\Common\CommonController::class, 'getSubCategories']);
+    Route::get('gaSchemesByType', [App\Http\Controllers\Api\V1\Common\CommonController::class, 'gaSchemesByType']);
 
     // Consumers routes
     Route::prefix('consumer')->group(function () {

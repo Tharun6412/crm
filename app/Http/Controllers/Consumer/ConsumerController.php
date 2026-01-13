@@ -27,6 +27,9 @@ class ConsumerController extends Controller
             ->when($request->has('segments'), function ($q) use($request) {
                 $q->whereIn('segment_id', $request->segments);
             })
+            ->when($request->has('connection_type_id'), function ($q) use($request) {
+                $q->whereIn('connection_type_id', $request->connection_type_id);
+            })
             ->when($request->has('geo_area'), function ($q) use($request) {
                 $q->whereIn('ga_id', $request->geo_area);
             })

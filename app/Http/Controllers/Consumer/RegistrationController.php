@@ -10,7 +10,9 @@ use App\Models\Consumer\Consumer;
 use App\Models\Consumer\ConsumerDocument;
 use App\Models\Consumer\ConsumerScheme;
 use App\Models\Consumer\ConsumerStatus;
+use App\Models\Consumer\Prepaid;
 use App\Models\DocumentCentre\DocumentTypes;
+use App\Models\Master\ConnectionType;
 use App\Models\Master\ConsumerGasRequired;
 use App\Models\Master\ConsumerNomineeRelation;
 use App\Models\Master\Ga;
@@ -39,6 +41,7 @@ class RegistrationController extends Controller
             'documents' => DocumentTypes::where('type', 1)->get(),
             'gas_required_list' => ConsumerGasRequired::all(),
             'schemes' => [],
+            'connection_types' => ConnectionType::all(),
         ]);
     }
 
@@ -51,6 +54,7 @@ class RegistrationController extends Controller
         // Data Preparation
         $add_consumer = Consumer::create([
             'segment_id' => 1,
+            'connection_type_id' => $request->connection_type,
             'title' => $request->title,
             'fname' => $request->fname,
             'lname' => $request->lname,
@@ -123,6 +127,13 @@ class RegistrationController extends Controller
                     'file_id' => $documents_bulk['file_list'][$key]['file_id'],
                 ]);
             }
+        }
+        // IF Connection Type=PREPAID Add record
+        if($request->connection_type == 2) {
+            Prepaid::create([
+                'consumer_id' => $add_consumer->id,
+                'bonus' => $scheme_details->bonus,
+            ]);
         }
         // SMS and Email to send
         // Response Message

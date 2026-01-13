@@ -15,3 +15,8 @@
         </form>
     </div>
 @endsection
+@once
+    @push('scripts')
+        @include('scripts.ajax-form-search', ['form' => 'meter-change'])
+    @endpush
+@endonce

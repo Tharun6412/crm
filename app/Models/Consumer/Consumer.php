@@ -8,6 +8,7 @@ use App\Models\Complaint\ComplaintFeedback;
 use App\Models\Invoice\BillInvoice;
 use App\Models\Master\Area;
 use App\Models\Master\Ca;
+use App\Models\Master\ConnectionType;
 use App\Models\Master\ConsumerGasRequired;
 use App\Models\Master\ConsumerNomineeRelation;
 use App\Models\Master\District;
@@ -42,6 +43,7 @@ class Consumer extends Model
      */
     protected $fillable = [
         'segment_id',
+        'connection_type_id',
         't_crn',
         'crn',
         'title',
@@ -301,5 +303,13 @@ class Consumer extends Model
     public function activeMeter(): HasOne
     {
         return $this->hasOne(ConsumerMeter::class, 'consumer_id')->where('status', 1);
+    }
+
+    /**
+     * Relation with Connection Type
+     */
+    public function connectType():BelongsTo
+    {
+        return $this->belongsTo(ConnectionType::class, 'connection_type_id')->withDefault();
     }
 }

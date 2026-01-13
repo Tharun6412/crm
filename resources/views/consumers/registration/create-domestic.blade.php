@@ -121,8 +121,20 @@
                     </div>
                 </div>
                 <div class="row mt-3">
+                    <div class="mt-3 mb-1 fs-5 fw-semibold">Security Deposit Scheme Details&nbsp;:</div>
+                    <div class="col-md-2 col-sm-6 col-xs-12">
+                        <label>Connection Type&nbsp;:<span class="text-danger">*</span></label>
+                        <div>
+                            <select name="connection_type" id="connection_type" class="form-select" onchange="getSchemesByType(this.value)">
+                                <option value="">Select Type</option>
+                                @foreach ($connection_types as $type)
+                                    <option value="{{ $type->id }}">{{ $type->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <span class="text-danger validate-err-msg" id="connection_type-error"></span>
+                    </div>
                     <div class="col-md-4 col-sm-6 col-xs-12">
-                        <div class="mb-1 fs-5 fw-semibold">Security Deposit Scheme Details&nbsp;:</div>
                         <label>Security Deposit Schemes&nbsp;:<span class="text-danger">*</span></label>
                         <div>
                             <select name="scheme_id" id="scheme_id" class="form-select" onchange="getSchemeDetails(this.value)">
@@ -348,26 +360,34 @@
         // Get Districts By GA
         function getDistrictsByGa(ga) 
         {
-            $.get("{{ url('common/gaDistrictsSchemes') }}", { 'ga_id' : ga }, function(data) {
+            $.get("{{ url('common/gaDistricts') }}", { 'ga_id' : ga }, function(data) {
                 $('#district').empty();
-                $('#scheme_id').empty();
                 let options = '<option value = "">Select district</option>'
                 if(data.districts && data.districts.length > 0) {
                     data.districts.forEach(function(dist) {
                         options += `<option value="${dist.id}">${dist.name}</option>`;
                     });
                 }
+                $('#district').html(options);
+            });
+        }
+
+        // Get Schemes By Connection Type
+        function getSchemesByType(type_id)
+        {
+            var ga = $('#geo_area').val();
+            $('#scheme_data').addClass('d-none');
+            $.get("{{ url('common/gaSchemesByType') }}", { 'type_id' : type_id , 'ga_id' : ga}, function(data) {
+                $('#scheme_id').empty();
                 let options1 = '<option value="">Select scheme</option>'
                 if(data.schemes && data.schemes.length > 0) {
                     data.schemes.forEach(function(scheme) {
                         options1 += `<option value="${scheme.scheme.id}">${scheme.scheme.name}</option>`;
                     });
                 }
-                $('#district').html(options);
                 $('#scheme_id').html(options1);
             });
         }
-
         // Get Scheme Details
         function getSchemeDetails(scheme_id)
         {

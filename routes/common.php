@@ -10,4 +10,5 @@ Route::middleware(['auth'])->group(function() {
     Route::get('districtCas', [App\Http\Controllers\Services\CommonController::class, 'districtCas']);
     Route::get('caAreas', [App\Http\Controllers\Services\CommonController::class, 'caAreas']);
     Route::get('schemeDetails', [App\Http\Controllers\Services\CommonController::class, 'schemeDetails']);
+    Route::get('gaSchemesByType', [App\Http\Controllers\Services\CommonController::class, 'gaSchemesByType']);
 });

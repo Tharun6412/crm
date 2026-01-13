@@ -48,6 +48,17 @@ class CommonController extends Controller
     }
 
     /**
+     * Get Schemes By Type
+     * @param $type_id, $ga_id
+     */
+    public function gaSchemesByType(Request $request)
+    {
+        $schemes = ConsumerSchemeGa::with(['scheme'])->whereHas('scheme', function($q) use($request) {
+            $q->where('connection_type_id', $request->type_id);
+        })->where('ga_id', $request->ga_id)->get();
+        return response()->json(['schemes' => $schemes]);
+    }
+    /**
      * Get charge areas from district
      * 
      * @param $district_id

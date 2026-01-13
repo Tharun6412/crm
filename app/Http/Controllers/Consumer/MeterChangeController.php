@@ -27,7 +27,9 @@ class MeterChangeController extends Controller
     public function index(Request $request)
     {
         $meterChange = ConsumerMeterChanges::when($request->has('key'), function ($q) use($request) {
-                $q->whereAny(['prev_reading'], 'like', '%' . $request->key . '%');
+                $q->whereHas('meter', function($q1) use($request) {
+                    $q1->whereAny(['meter_no'], 'like', '%' . $request->key . '%');
+                });
             })->orderBy('created_at', 'desc')->paginate(20)->withQueryString();
         if($request->ajax()) {
             return view('consumers.meter-change.list-body', [

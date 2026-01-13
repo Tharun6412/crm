@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Master\Area;
 use App\Models\Master\Ca;
 use App\Models\Master\ComplaintCategory;
+use App\Models\Master\ConsumerSchemeGa;
 use App\Models\Master\District;
 use App\Models\Master\MasterConsumerScheme;
 use Illuminate\Http\Request;
@@ -17,11 +18,22 @@ class CommonController extends Controller
      * 
      * @param $ga_id
      */
-    public function gaDistricts()
+    public function gaDistricts(Request $request)
     {
-        return ('districts');
+        $districts = District::select('id', 'name')->where('ga_id', $request->ga_id)->get();
+        return response()->json(['districts' => $districts], 200);
     }
-
+    /**
+     * get Schemes By Type
+     * @param $type_id, $ga_id
+     */
+    public function gaSchemesByType(Request $request)
+    {
+        $schemes = ConsumerSchemeGa::whereHas('scheme', function($q) use($request) {
+            $q->where('connection_type_id', $request->type_id);
+        })->where('ga_id', $request->ga_id)->get();
+        return response()->json(['schemes' => $schemes], 200);
+    }
     /**
      * Get districts, schemes from GA
      * 

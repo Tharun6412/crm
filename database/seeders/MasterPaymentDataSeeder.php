@@ -35,6 +35,12 @@ class MasterPaymentDataSeeder extends Seeder
             ['id' => 3, 'name' => 'Failed'],
             ['id' => 4, 'name' => 'Cancelled'],
         ]);
+
+        // mst connection type Required
+        DB::table('mst_connection_types')->insert([
+            ['id' => '1', 'name' => 'POSTPAID'],
+            ['id' => '2', 'name' => 'PREPAID'],
+        ]);
     }
 }
  

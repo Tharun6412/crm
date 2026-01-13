@@ -24,6 +24,7 @@
             <tr>
                 <th width="1%" nowrap>S No</th>
                 <th>CRN</th>
+                <th>Connection Type<x-consumer.type-filter class="float-end"/></th>
                 <th>Name</th>
                 <th>Segment<x-master.segmentFilter class="float-end" /></th>
                 <th>Status<x-consumer.statusFilter class="float-end" /></th>
@@ -39,6 +40,7 @@
                     <tr>
                         <td>{{ $loop->iteration }}</td>
                         <td><x-auth.link href="{{ url('consumers/' . $consumer->id) }}">{{ $consumer->crn }}</x-auth.link></td>
+                        <td>{{ $consumer->connectType->name }}</td>
                         <td>{{ $consumer->name }}</td>
                         <td>{{ $consumer->segment->name }}</td>
                         <td>
