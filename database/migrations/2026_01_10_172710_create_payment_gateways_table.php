@@ -16,9 +16,9 @@ return new class extends Migration
          */
         Schema::create('mst_payment_gateways', function (Blueprint $table) {
             $table->id();
-            $table->string('gateway'); // easebuzz, razorpay, stripe, payu
-            $table->enum('mode', ['test', 'production']);
-            $table->json('credentials'); // encrypted
+            $table->string('gateway')->nullable(); // Easebuzz, BBPS
+            $table->enum('mode', ['test', 'production'])->nullable();
+            $table->json('credentials')->nullable(); // encrypted
             $table->boolean('is_active')->default(true);
             $table->timestamps();
 

@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
         // $this->call(MasterInvoiceDataSeeder::class);
         // $this->call(SpotDataSeeder::class);
         // $this->call(MasterComplaintDataSeeder::class);
+        // $this->call(MasterPaymentDataSeeder::class);
         // $this->call(TestDataSeeder::class);
     }
 }

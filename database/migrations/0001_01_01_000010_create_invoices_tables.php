@@ -171,25 +171,6 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // pay transactions
-        Schema::create('pay_transactions', function(Blueprint $table) {
-            $table->id();
-            $table->foreignId('consumer_id')->index()->nullable()->constrained(table:'cns_consumers')->noActionOnDelete()->noActionOnUpdate();
-            $table->foreignId('invoice_id')->index()->nullable()->constrained(table:'bil_invoices')->noActionOnDelete()->noActionOnUpdate();
-            $table->string('order_id', length:32)->nullable();
-            $table->integer('through')->nullable();
-            $table->double('amount')->nullable();
-            $table->foreignId('status_id')->index()->nullable()->constrained(table:'mst_pay_transaction_status')->noActionOnDelete()->noActionOnUpdate();
-            $table->date('transaction_date')->nullable();
-            $table->string('transaction_ref', length:32)->nullable();
-            $table->string('bank_ref', length:32)->nullable();
-            $table->string('transaction_no', length:32)->nullable();
-            $table->double('paid_amount')->nullable();
-            $table->string('payment_mode', length:32)->nullable();
-            $table->foreignId('updated_by')->nullable()->index()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();
-            $table->timestamps();
-        });
-
         // bill state invoice counter
         Schema::create('bil_invoice_counter', function(Blueprint $table) {
             $table->id();
@@ -282,7 +263,6 @@ return new class extends Migration
         Schema::dropIfExists('ref_refund_status');
         Schema::dropIfExists('ref_refunds');
         Schema::dropIfExists('bil_invoice_counter');
-        Schema::dropIfExists('pay_transactions');
         Schema::dropIfExists('pay_payment_reversals');
         Schema::dropIfExists('pay_payment_cheques');
         Schema::dropIfExists('pay_invoice_payments');
