@@ -17,6 +17,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use App\Enums\ConsumerStatus;
 use App\Enums\InvoiceStatus;
+use App\Enums\MeterChange;
 use App\Enums\TaxType;
 use App\Services\DependentInvoiceService;
 
@@ -37,38 +38,31 @@ class GasInvoiceController extends Controller
      */
     public function create($id = 0)
     {
+        // 1. Check consumer is billable
         $consumer = Consumer::where('id', $id)
             ->where('status_id', ConsumerStatus::ACTIVATE->value)
             ->with(['statusHistory' => function ($q) {
                 $q->where('status_id', ConsumerStatus::ACTIVATE->value)->latest()->limit(1);
             }])->first();
-        // Check consumer is billable
         if($consumer) {
-            // 1. Get latest gas invoice if exists
-            $invoice = BillInvoice::where('consumer_id', $id)->where('type_id', 1)->latest()->first();
+            // 2. Get latest gas invoice if exists
+            $invoice = BillInvoice::where('consumer_id', $id)->where('type_id', InvoiceType::GAS_BILL->value)->latest()->first();
             $start_date = (!empty($invoice)) ? $invoice->consumption->date_to->format('Y-m-d') : ($consumer->statusHistory->first()->created_at->format('Y-m-d'));
             $end_date = date('Y-m-d');
             $bill_days = Carbon::parse($start_date)->diffInDays($end_date);
 
-            // 2. Get the gas price for the billing
+            // 3. Get the gas price for the billing
             // Get the price details
             $minEffectiveFrom = PriceHistory::where('district_id', $consumer->district_id)
                 ->where('segment_id', $consumer->segment_id)
                 ->where('effective_from', '<=', $start_date)
                 ->max('effective_from');
-            $prices = PriceHistory::where('district_id', $consumer->district_id)
-                ->where('segment_id', $consumer->segment_id)
-                ->where('effective_from', '<=', $end_date)
-                ->where('effective_from', '>=', $minEffectiveFrom)
-                ->orderBy('effective_from')
-                ->get();
-            // If no price changes found, fetch the latest single record
-            if ($prices->isEmpty()) {
+            if ($minEffectiveFrom) {
                 $prices = PriceHistory::where('district_id', $consumer->district_id)
                     ->where('segment_id', $consumer->segment_id)
-                    ->orderBy('effective_from', 'desc')
-                    ->limit(1)
-                    ->get();  // <-- IMPORTANT: get() returns a collection
+                    ->where('effective_from', '<=', $end_date)
+                    ->where('effective_from', '>=', $minEffectiveFrom)
+                    ->orderBy('effective_from')->get();
             }
 
             // Render output
@@ -90,54 +84,197 @@ class GasInvoiceController extends Controller
      */
     public function store(Request $request)
     {
-        // Validation
+        // 1. Validation
         $request->validate([
             'id' => 'required',
             'end_reading' => 'required',
         ]);
-        // Prepare billing data
-        $start_date = $start_date_1 =  $request->start_date;
-        $end_date = $request->end_date;
-        // Get the consumer details
+        // 2. Prepare consumption data
+        $total_consumption = ($request->end_reading - $request->start_reading);
+        $old_consumption = (float)$request->old_consumption;
+        $total_scms = round(($total_consumption+$old_consumption), 3);
+        $cf = 1;
+        $net_consumption = round(($total_scms * $cf),3);
+        // 3. Get the consumer details
         $consumer = Consumer::where('id', $request->id)
             ->where('status_id', ConsumerStatus::ACTIVATE->value)
             ->with(['statusHistory' => function ($q) {
-                $q->latest()->limit(1);
+                $q->where('status_id', ConsumerStatus::ACTIVATE->value)->latest()->limit(1);
             }])->first();
-        // checking for meter replacement
-        $meterChange = $consumer->meterChanges()->where('status_id', 1)->first();
-
-        // Get the price details
+        // 4. checking for meter replacement
+        $meterChange = $consumer->meterChanges()->where('status_id', MeterChange::PENDING->value)->first();
+        // 5. Get the price details
+        // first fetch the price record, if the price is changed before the start date.
+        $prices = collect();
         $minEffectiveFrom = PriceHistory::where('district_id', $consumer->district_id)
             ->where('segment_id', $consumer->segment_id)
-            ->where('effective_from', '<=', $start_date)
+            ->where('effective_from', '<=', $request->start_date)
             ->max('effective_from');
-        $prices = PriceHistory::where('district_id', $consumer->district_id)
-            ->where('segment_id', $consumer->segment_id)
-            ->where('effective_from', '<=', $end_date)
-            ->where('effective_from', '>=', $minEffectiveFrom)
-            ->orderBy('effective_from')
-            ->get()->toArray();
-        // If no price changes found, fetch the latest single record
-        if (empty($prices)) {
+        // fetch the price records, with reference of the above query result and end date.
+        if ($minEffectiveFrom) {
             $prices = PriceHistory::where('district_id', $consumer->district_id)
                 ->where('segment_id', $consumer->segment_id)
-                ->orderBy('effective_from', 'desc')
-                ->limit(1)
-                ->get()->toArray();
+                ->where('effective_from', '<=', $request->end_date)
+                ->where('effective_from', '>=', $minEffectiveFrom)
+                ->orderBy('effective_from')->get();
         }
-        // If there is no price in between the range.
-        if(empty($prices)) {
-            // Response Message
+        // return error message, if there is no price records.
+        if($prices->isEmpty()) {
             $request->validate([
                 'cust_err_msg' => ['required' => "No Prices found."],
             ]);
         }
-        $total_no_days = Carbon::parse($start_date)->diffInDays($end_date);
+        // If total consumption is ZERO (zero billing.)
+        if ($net_consumption <= 0) {
+            $invoice_resp = $this->zeroInvoice($consumer, $prices, $request, $meterChange?->id);
+        }
+        // If there is single price record.
+        elseif ($prices->count() == 1) {
+            $invoice_resp = $this->singlePriceInvoice($consumer, $prices->first(), $request, $meterChange?->id);
+        }
+        // If there is multiple price change records.
+        else {
+            $invoice_resp = $this->multiPriceInvoice($consumer, $prices, $request, $meterChange?->id);
+        }
+        
+        if($invoice_resp) {   
+            // Response Message
+            return response()->json([
+                'success' => 'Gas Invoice Created Successfully with invoice number ' . $invoice_resp['invoice_number'] . ', click <a href="'.url('gasInvoices').'">here</a> to see all invoices.'
+            ]);
+        }
+    }
 
-        $start_reading = (float)$request->start_reading;
-        $end_reading = (float)$request->end_reading;
-        $total_consumption = ($end_reading - $start_reading);
+    /**
+     * Zero consumption invoice preperation.
+     * 
+     */
+    public function zeroInvoice($consumer, $prices, $request, $meterChangeId)
+    {
+        // 1. Prepare billing data
+        $start_date = $request->start_date;
+        $end_date = $request->end_date;
+        $total_no_days = Carbon::parse($start_date)->diffInDays($end_date);
+        $tax_value = $prices->last()->tax_value; // tax percentage.
+
+        // 2. bill invoice array
+        $invoice['invoice'] = [
+            'type_id' => InvoiceType::GAS_BILL->value, //1 => Gas Invoice
+            'consumer_id' => $consumer->id,
+            'invoice_date' => Carbon::now()->format('Y-m-d'),
+            'base_amount' => 0,
+            'taxable_amount' => 0,
+            'tax_id'=> TaxType::VAT->value,
+            'tax_value' => $tax_value,
+            'tax_amount' => 0,
+            'total_amount' => 0,
+            'paid_amount' => 0,
+            'balance_amount' => 0,
+            'due_date' => Carbon::now()->addDays(15)->format('Y-m-d'),
+            'status_id' => InvoiceStatus::PAID->value, // paid
+            'created_by' => Auth::id()
+        ];
+
+        // 3. Invoice Consumption array 
+        $invoice['consumption'] = [
+            'meter_id' => $consumer->activemeter->id,
+            'date_from' => $start_date,
+            'date_to' => $end_date,
+            'days' => $total_no_days,
+            'prev_reading' => $request->start_reading,
+            'curr_reading' => $request->end_reading,
+            'consumption' => 0,
+            'old_consumption' => 0,
+            'net_consumption' => 0,
+            'unit_price' => $prices->avg('basic_price'), // average price.
+            'meter_change_id' => $meterChangeId,
+            'file_id' => NULL,
+        ];
+        // 4. Calling of insertion method from the same controller. 
+        $inv_resp = $this->invoiceInsert($consumer, $invoice);
+        return $inv_resp;
+    }
+
+    /**
+     * Invoice preperation for single price record.
+     * 
+     */
+    public function singlePriceInvoice($consumer, $price, $request, $meterChangeId)
+    {
+        // 1. Prepare billing data
+        $inv_base_amt = $inv_tax_amt = $inv_total = 0;
+        $start_date = $start_date_1 =  $request->start_date;
+        $end_date = $request->end_date;
+        $total_no_days = Carbon::parse($start_date)->diffInDays($end_date);
+        $total_consumption = ($request->end_reading - $request->start_reading);
+        $old_consumption = (float)$request->old_consumption;
+        $total_scms = round(($total_consumption+$old_consumption), 3);
+        $cf = 1;
+        $net_consumption = round(($total_scms * $cf),3);
+        $inv_base_amt = round((($net_consumption * $cf) * $price->basic_price), 2);
+        $tax_value = $price->tax_value; // tax percentage.
+        $inv_tax_amt = round((($inv_base_amt * $tax_value) / 100), 2);
+        $inv_total = $inv_base_amt + $inv_tax_amt;
+
+        // 2. Invoice consumption details array preparation.
+        $invoice['consumption_details'][] = [
+            'price_history_id' => $price->id,
+            'days' => $total_no_days,
+            'consumption' => $total_scms,
+            'cf' => $cf,
+            'unit_price' => $price->basic_price,
+            'total_price' => $inv_base_amt,
+        ];
+
+        // 3. bill invoice array
+        $invoice['invoice'] = [
+            'type_id' => InvoiceType::GAS_BILL->value, //1 => Gas Invoice
+            'consumer_id' => $consumer->id,
+            'invoice_date' => Carbon::now()->format('Y-m-d'),
+            'base_amount' => $inv_base_amt,
+            'taxable_amount' => $inv_base_amt,
+            'tax_id'=> TaxType::VAT->value,
+            'tax_value' => $tax_value,
+            'tax_amount' => $inv_tax_amt,
+            'total_amount' => $inv_total,
+            'paid_amount' => NULL,
+            'balance_amount' => $inv_total,
+            'due_date' => Carbon::now()->addDays(15)->format('Y-m-d'),
+            'status_id' => InvoiceStatus::NOT_PAID->value, // Not paid
+            'created_by' => Auth::id()
+        ];
+
+        // 4. Invoice Consumption array
+        $invoice['consumption'] = [
+            'meter_id' => $consumer->activemeter->id,
+            'date_from' => $start_date,
+            'date_to' => $end_date,
+            'days' => $total_no_days,
+            'prev_reading' => $request->start_reading,
+            'curr_reading' => $request->end_reading,
+            'consumption' => $total_consumption,
+            'old_consumption' => $old_consumption,
+            'net_consumption' => $net_consumption,
+            'unit_price' => $price->basic_price, // single price.
+            'meter_change_id' => $meterChangeId,
+            'file_id' => NULL,
+        ];
+        // 5. Calling of insertion method from the same controller.
+        $inv_resp = $this->invoiceInsert($consumer, $invoice);
+        return $inv_resp;
+    }
+
+    /**
+     * Invoice preperation for multiple price records.
+     * 
+     */
+    public function multiPriceInvoice($consumer, $prices, $request, $meterChangeId)
+    {   
+        // 1. Prepare billing data
+        $start_date = $start_date_1 =  $request->start_date;
+        $end_date = $request->end_date;
+        $total_no_days = Carbon::parse($start_date)->diffInDays($end_date);
+        $total_consumption = ($request->end_reading - $request->start_reading);
         $old_consumption = (float)$request->old_consumption;
         $total_scms = round(($total_consumption+$old_consumption), 3);
         $scm_per_day = ($total_scms/$total_no_days);
@@ -145,105 +282,102 @@ class GasInvoiceController extends Controller
         $net_consumption = round(($total_scms * $cf),3);
 
         $p_price = $inv_base_amt = $inv_tax_amt = $inv_total = 0;
-        $p_id = NULL;
         $inv_consmp_details = [];
         foreach ($prices as $key => $price) {
-            $end_date_1 = (isset($price['effective_to']) and ($end_date > $price['effective_to'])) ? $price['effective_to'] : $end_date;
+            // If next slab exists, it starts a new price
+            $end_date_1 = isset($prices[$key + 1]) ? Carbon::parse($prices[$key + 1]->effective_from)->subDay() : Carbon::parse($request->end_date);
             $no_days = Carbon::parse($start_date_1)->diffInDays($end_date_1);
             $consmp_breakup = ($no_days*$scm_per_day);
             $p_price += $price['basic_price'];
             $base_amot_1 = round((($consmp_breakup * $cf) * $price['basic_price']), 2);
-            $tax_amot_1 = round((($base_amot_1 * $price['tax_value']) / 100), 2);
-            $total_amot_1 = $base_amot_1 + $tax_amot_1;
             $inv_base_amt += $base_amot_1;
-            $inv_tax_amt += $tax_amot_1;
-            $inv_total += $total_amot_1; 
-            $p_id = $price['id'];
 
-            $inv_consmp_details[] = [
+            
+            $invoice['consumption_details'][] = [
                 'price_history_id' => $price['id'],
                 'days' => $no_days,
                 'consumption' => $consmp_breakup,
                 'cf' => $cf,
                 'unit_price' => $price['basic_price'],
-                'total_price' => round(($price['basic_price'] * ($consmp_breakup * $cf)),2),
+                'total_price' => $base_amot_1,
             ];
             $start_date_1 = $end_date_1; 
         }
-        $avg_price = $p_price / count($prices); 
-        // invoice number generation
-        $inv_number = InvoiceService::generateNumber($consumer->ga->state_id, 1);
-        $invoice_date = Carbon::now()->format('Y-m-d');
-        $due_date = Carbon::now()->addDays(15)->format('Y-m-d');
-
+        $avg_price = $p_price / count($prices);
+        $tax_value = $prices->last()->tax_value; // tax percentage.
+        $inv_tax_amt =  round((($inv_base_amt * $tax_value) / 100), 2);
+        $inv_total =  $inv_base_amt + $inv_tax_amt;
+                
         // bill invoice array
-        $invoice_ar = [
+        $invoice['invoice'] = [
             'type_id' => InvoiceType::GAS_BILL->value, //1 => Gas Invoice
             'consumer_id' => $consumer->id,
-            'invoice_number' => $inv_number,
-            'invoice_date' => $invoice_date,
+            'invoice_date' => Carbon::now()->format('Y-m-d'),
             'base_amount' => $inv_base_amt,
             'taxable_amount' => $inv_base_amt,
-            'tax_id'=> TaxType::GST->value,
-            'tax_value' => $request->tax_price,
+            'tax_id'=> TaxType::VAT->value,
+            'tax_value' => $tax_value,
             'tax_amount' => $inv_tax_amt,
             'total_amount' => $inv_total,
             'paid_amount' => NULL,
             'balance_amount' => $inv_total,
-            'due_date' => $due_date,
+            'due_date' => Carbon::now()->addDays(15)->format('Y-m-d'),
             'status_id' => InvoiceStatus::NOT_PAID->value, // Not paid
             'created_by' => Auth::id()
         ];
-        $inv_insert = BillInvoice::create($invoice_ar);
 
+        $invoice['consumption'] = [
+            'meter_id' => $consumer->activemeter->id,
+            'date_from' => $start_date,
+            'date_to' => $end_date,
+            'days' => $total_no_days,
+            'prev_reading' => $request->start_reading,
+            'curr_reading' => $request->end_reading,
+            'consumption' => $total_consumption,
+            'old_consumption' => $old_consumption,
+            'net_consumption' => $net_consumption,
+            'unit_price' => $avg_price, // average price.
+            'meter_change_id' => $meterChangeId,
+            'file_id' => NULL,
+        ];
+
+        // 5. Calling of insertion method from the same controller.
+        $inv_resp = $this->invoiceInsert($consumer, $invoice);
+        return $inv_resp;
+    }
+    
+    /** 
+     * Common function for the invoice generation.
+     */ 
+    public function invoiceInsert($consumer, $invoice_data)
+    {
+        // 1. Invoice number generation via service.
+        $inv_number = InvoiceService::generateNumber($consumer->ga->state_id, 1);
+        // 2. Invoice insertion from the data received (excl. invoice number).
+        $invoice_data['invoice']['invoice_number'] = $inv_number;
+        $inv_insert = BillInvoice::create($invoice_data['invoice']);
+        
         if($inv_insert) {
-            //  Invoice Consumption array
-            $inv_consumption = [
-                'invoice_id' => $inv_insert->id,
-                'meter_id' => $consumer->activemeter->id,
-                'price_history_id' => $p_id,
-                'date_from' => $start_date,
-                'date_to' => $end_date,
-                'days' => $total_no_days,
-                'prev_reading' => $start_reading,
-                'curr_reading' => $end_reading,
-                'consumption' => $total_consumption,
-                'cf' => $cf,
-                'mater_change_id' => NULL,
-                'old_consumption' => $old_consumption,
-                'net_consumption' => $net_consumption,
-                'unit_price' => $avg_price,
-                'total_price' => $inv_total,
-                'meter_change_id' => $meterChange?->id,
-                'file_id' => NULL,
-            ];
-            $inv_cons = BillInvoiceConsumption::create($inv_consumption);
-            // Update the pending meter status to complete.
-            if ($meterChange) {
-                $meterChange->status_id = 2; // example: approved / processed
-                $meterChange->save();
+            // 3. save the invoice id column with new consumption object.
+            $invoice_data['consumption']['invoice_id'] = $inv_insert->id;
+            // 4. Invoice Consumption array insertion (excl. invoice id).
+            $inv_cons = BillInvoiceConsumption::create($invoice_data['consumption']);
+            // 5. Update the pending meter status to complete.
+            if (!empty($invoice_data['consumption']['meter_change_id'])) {
+                $consumer->meterChanges()->where('id', $invoice_data['consumption']['meter_change_id'])->update(['status_id' => MeterChange::CLOSED->value]);
             }
-            // Attach consumption_id to consumption details & bulk insert
-            if($inv_cons and $net_consumption > 0) {
-                $bulkRows = [];
-                foreach ($inv_consmp_details as $detail) {
-                    $bulkRows[] = [
-                        'invoice_consumption_id'   => $inv_cons->id,
-                        'price_history_id' => $detail['price_history_id'],
-                        'days'             => $detail['days'],
-                        'consumption'      => $detail['consumption'],
-                        'cf'               => $cf,
-                        'unit_price'       => $detail['unit_price'],
-                        'total_price'      => $detail['total_price'],
-                    ];
+            // 6.. Attach consumption_id to consumption details.
+            if($inv_cons and !empty($invoice_data['consumption_details'])) {
+                foreach ($invoice_data['consumption_details'] as &$detail) {
+                    $detail['invoice_consumption_id'] = $inv_cons->id;
                 }
-                BillInvoiceConsumptionDetails::insert($bulkRows);
+                BillInvoiceConsumptionDetails::insert($invoice_data['consumption_details']);
             }
             // Ledger Service.
             $ledger_record = LedgerService::create([
                 'model' => $inv_insert,
                 'consumer_id' => $inv_insert->consumer_id,
-                'amount' => ($inv_total ?? 0),
+                'amount' => ($invoice_data['invoice']['total_amount']),
             ], 'dr');
 
             // dependent invoice creation (SD EMI / Rental)
@@ -258,11 +392,7 @@ class GasInvoiceController extends Controller
                     DependentInvoiceService::rentalInvCreate($consumer, $inv_insert);
                 }
             }
-    
-            // Response Message
-            return response()->json([
-                'success' => 'Gas Invoice Created Successfully with invoice number ' . $inv_number . ', click <a href="'.url('gasInvoices').'">here</a> to see all invoices.'
-            ]);
         }
+        return ['invoice_id' => $inv_insert->id, 'invoice_number' => $inv_number];
     }
 }

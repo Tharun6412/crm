@@ -17,8 +17,8 @@
                     $invEndReading = (!empty($invoice) and $invoice->consumption()->exists())
                     ? $invoice->consumption->curr_reading
                     : 0;
-                    $meterChange = $consumer->meterChanges()->where('status_id', 1)->first();
-                    if ($consumer->meterChanges()->where('status_id', 1)->exists()) {
+                    $meterChange = $consumer->meterChanges()->where('status_id', \App\Enums\MeterChange::PENDING->value)->first();
+                    if ($consumer->meterChanges()->where('status_id', \App\Enums\MeterChange::PENDING->value)->exists()) {
                         $startReading = $consumer->activeMeter->initial_reading;
                         $old_consumption = $meterChange?->consumption;
                     }
