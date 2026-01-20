@@ -21,4 +21,6 @@ Route::middleware(['auth', ModuleAccess::class])->group(function() {
         Route::resource('/', App\Http\Controllers\Payments\InvoicePaymentsController::class);
     });
     
+    // Online transactions
+    Route::resource('transactions', App\Http\Controllers\Payments\TransactionsController::class);
 });

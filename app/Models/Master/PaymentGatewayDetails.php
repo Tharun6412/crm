@@ -3,6 +3,7 @@
 namespace App\Models\Master;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class PaymentGatewayDetails extends Model
 {
@@ -19,9 +20,16 @@ class PaymentGatewayDetails extends Model
      * @var array <int string>
      */
     protected $fillable = [
-        'district_id',
+        'ga_id',
         'payment_gateway_id',
         'sub_merchant_id',
     ];
 
+    /**
+     * Relation with GA
+     */
+    public function ga(): BelongsTo
+    {
+        return $this->belongsTo(Ga::class);
+    }
 }

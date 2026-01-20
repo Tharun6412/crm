@@ -43,6 +43,13 @@ class PaymentTransaction extends Model
     ];
 
     /**
+     * Casting
+     */
+    protected $casts = [
+        'transaction_date' => 'date',
+    ];
+
+    /**
      * Relation with Consumer
      */
     public function module(): BelongsTo

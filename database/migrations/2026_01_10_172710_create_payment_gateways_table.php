@@ -31,7 +31,7 @@ return new class extends Migration
         Schema::create('mst_payment_gateway_details', function(Blueprint $table) {
             $table->id();
             $table->foreignId('payment_gateway_id')->nullable()->index()->constrained(table:'mst_payment_gateways')->noActionOnDelete()->noActionOnUpdate();
-            $table->foreignId('district_id')->nullable()->index()->constrained(table:'mst_districts')->noActionOnDelete()->noActionOnUpdate();
+            $table->foreignId('ga_id')->nullable()->index()->constrained(table:'mst_gas')->noActionOnDelete()->noActionOnUpdate();
             $table->string('sub_merchant_id', length: 32)->nullable();
             $table->timestamps();
         });

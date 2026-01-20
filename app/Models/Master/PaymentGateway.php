@@ -3,6 +3,7 @@
 namespace App\Models\Master;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class PaymentGateway extends Model
 {
@@ -31,4 +32,12 @@ class PaymentGateway extends Model
     protected $casts = [
         'credentials' => 'encrypted:array',
     ];
+
+    /**
+     * Relation with payment gateway details
+     */
+    public function details(): HasMany
+    {
+        return $this->hasMany(PaymentGatewayDetails::class);
+    }
 }

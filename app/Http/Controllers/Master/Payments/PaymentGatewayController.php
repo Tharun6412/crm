@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Master\Payments;
 
 use App\Http\Controllers\Controller;
+use App\Models\Master\Ga;
 use App\Models\Master\PaymentGateway;
 use Illuminate\Http\Request;
 
@@ -23,16 +24,30 @@ class PaymentGatewayController extends Controller
     }
 
     /**
+     * Show
+     */
+    public function show($id)
+    {
+        // Get payment gateway details
+        $gateway = PaymentGateway::find($id);
+
+        // Render output
+        return view('master.payment.payment-gateways.show', ['gateway' => $gateway]);
+    }
+
+    /**
      * Edit
      */
     public function edit($id)
     {
         // Get details
         $gateway = PaymentGateway::find($id);
+        $gas = Ga::all();
 
         // Render output
         return view('master.payment.payment-gateways.edit', [
             'gateway' => $gateway,
+            'gas' => $gas,
         ]);
     }
 
@@ -47,5 +62,8 @@ class PaymentGatewayController extends Controller
         ]);
 
         // Update
+
+        // Response
+        return response()->json(['success' => 'Updated successfully!']);
     }
 }

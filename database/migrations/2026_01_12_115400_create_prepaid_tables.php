@@ -23,7 +23,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('consumer_id')->nullable()->index()->constrained(table:'cns_consumers')->noActionOnUpdate()->noActionOnDelete();
             $table->date('conversion_date')->nullable();
-            $table->decimal('bonus', 4, 2)->nullable();
+            $table->decimal('bonus', 11, 2)->nullable();
             $table->boolean('bonus_status')->nullable();
             $table->boolean('bonus_date')->nullable();
             $table->double('balance')->nullable();
@@ -48,7 +48,7 @@ return new class extends Migration
         // Update Scheme
         Schema::table('mst_cns_schemes', function (Blueprint $table) {
             $table->foreignId('connection_type_id')->nullable()->index()->after('rental_amount')->constrained(table:'mst_connection_types')->noActionOnUpdate()->noActionOnDelete();
-            $table->decimal('bonus', 4, 2)->nullable();
+            $table->decimal('bonus', 11, 2)->nullable();
         });
 
         // Update consumers

@@ -25,14 +25,16 @@
                             </select>
                         </div>
                     </div>
-                    @foreach ($gateway->credentials as $key => $value)
-                        <div class="row mb-2">
-                            <label for="{{ $key }}" class="col-sm-2 col-form-label text-end">{{ $key }}</label>
-                            <div class="col-sm-9">
-                                <input type="text" name="credentials[{{ $key }}]" id="{{ $key }}" value="{{ $value }}" class="form-control">
+                    @if ($gateway->credentials)
+                        @foreach ($gateway->credentials as $key => $value)
+                            <div class="row mb-2">
+                                <label for="{{ $key }}" class="col-sm-2 col-form-label text-end">{{ $key }}</label>
+                                <div class="col-sm-9">
+                                    <input type="text" name="credentials[{{ $key }}]" id="{{ $key }}" value="{{ $value }}" class="form-control">
+                                </div>
                             </div>
-                        </div>
-                    @endforeach
+                        @endforeach
+                    @endif
                     <div id="gw-edit-error" class="text-danger"></div>
                     <div class="row">
                         <div class="offset-sm-2 col-sm-9">

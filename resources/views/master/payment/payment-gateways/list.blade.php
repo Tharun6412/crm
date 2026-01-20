@@ -36,9 +36,11 @@
                                 <td>{{ $gateway->mode }}</td>
                                 <td>{{ $gateway->is_active }}</td>
                                 <td>
-                                    {{ print_r($gateway->credentials) }}
                                     <a href="{{ url('master/payment/paymentGateways/' . $gateway->id . '/edit') }}" class="btn btn-sm link-modal">
                                         Edit
+                                    </a>
+                                    <a href="{{ url('master/payment/paymentGateways/' . $gateway->id) }}" class="btn btn-sm link-canvas">
+                                        View
                                     </a>
                                 </td>
                             </tr>
@@ -52,4 +54,5 @@
 {{-- Scripts --}}
 @push('scripts')
     @include('scripts.link-modal')
+    @include('scripts.link-canvas')
 @endpush
