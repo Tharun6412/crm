@@ -29,9 +29,9 @@ class CommonController extends Controller
      */
     public function gaSchemesByType(Request $request)
     {
-        $schemes = ConsumerSchemeGa::whereHas('scheme', function($q) use($request) {
-            $q->where('connection_type_id', $request->type_id);
-        })->where('ga_id', $request->ga_id)->get();
+        $schemes = MasterConsumerScheme::select('id', 'name', 'registration', 'security', 'consumption', 'total_deposit', 'min_payment', 'emi_amount', 'rental_amount', 'bonus')->whereHas('schemesGa', function($q) use($request) {
+            $q->where('ga_id', $request->ga_id);
+        })->where('connection_type_id', $request->type_id)->get();
         return response()->json(['schemes' => $schemes], 200);
     }
     /**

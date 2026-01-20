@@ -52,9 +52,19 @@ class ConsumerController extends Controller
     public function details(Request $request, $id)
     {
         // Find Consumer
-        $consumer = Consumer::with(['scheme', 'sdPayment'])->when((!$request->user()->isAdmin() AND !$request->user()->isSuperAdmin()), function ($q) use($request) {
-                $q->whereIn('ga_id', $request->user()->ga()->pluck('ga_id')->toArray());
-            })->find($id);
+        $consumer = Consumer::with([
+            'state:id,name',
+            'ga:id,name',
+            'district:id,name',
+            'ca:id,name',
+            'statusHistory:id,consumer_id,lat,lng,status_id,created_by,created_at',
+            'statusHistory.status:id,name', 
+            'scheme',
+            'scheme.scheme:id,name,registration,min_payment',
+            'sdPayment'
+        ])->when((!$request->user()->isAdmin() AND !$request->user()->isSuperAdmin()), function ($q) use($request) {
+            $q->whereIn('ga_id', $request->user()->ga()->pluck('ga_id')->toArray());
+        })->find($id);
 
         // Abort if consumer not found
         if (! $consumer) {
@@ -62,10 +72,7 @@ class ConsumerController extends Controller
         }
         // Get consumer details
         return response()->json([
-            'consumer' => $consumer->makeHidden(['scheme', 'sdPayment']),
-            'scheme_details' => $consumer->scheme,
-            'sd_paid_history' => $consumer->sdPayment,
-            // 'consumer_invoices' => BillInvoice::where('consumer_id', $id)->get(),
+            'consumer' => $consumer,
         ], 200);
     }
 }

@@ -36,7 +36,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('complaint')->group(function() {
         Route::get('list/{id}', [App\Http\Controllers\Api\V1\Application\ComplaintsController::class, 'list']);
         Route::get('show/{id}', [App\Http\Controllers\Api\V1\Application\ComplaintsController::class, 'show']);
-        Route::get('create/{id}', [App\Http\Controllers\Api\V1\Application\ComplaintsController::class, 'create']);
+        Route::get('create', [App\Http\Controllers\Api\V1\Application\ComplaintsController::class, 'create']);
         Route::post('store/{id}', [App\Http\Controllers\Api\V1\Application\ComplaintsController::class, 'store']);
         Route::post('statusChange/{id}/{status_id}', [App\Http\Controllers\Api\V1\Application\ComplaintsController::class, 'statusChange']);
         Route::post('closeOTP', [App\Http\Controllers\Api\V1\Application\ComplaintsController::class, 'closeOTP']);

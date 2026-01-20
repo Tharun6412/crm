@@ -93,7 +93,7 @@ class RegistrationController extends Controller
         ]);
         // Temporary CRN Generation
         $crn_code = "TR".$request->geo_area.$request->charge_area.str_pad($add_consumer->id, 5,'0', STR_PAD_LEFT);
-        Consumer::where('id', $add_consumer->id)->update(['t_crn' => $crn_code]);
+        Consumer::where('id', $add_consumer->id)->update(['t_crn' => $crn_code, 'state_id' => $add_consumer->ga->state_id]);
         // Consumer Status History
         ConsumerStatus::create([
             'consumer_id' => $add_consumer->id,

@@ -62,10 +62,9 @@ class ComplaintsController extends Controller
      * Create a request and DropDown List
      * @method GET
      */
-    public function create(Request $request, $id)
+    public function create(Request $request)
     {
         return response()->json([
-            'consumer_id' => $id,
             'types' => ComplaintType::select('id', 'name')->get(),
             'media' => ComplaintMedia::select('id', 'name')->get(),
             'segments' => ComplaintSegment::select('id', 'name')->get(),

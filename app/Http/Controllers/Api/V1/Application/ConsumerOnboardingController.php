@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1\Application;
 
 use App\Enums\ConsumerStatus as EnumsConsumerStatus;
+use App\Enums\DocumentType;
 use App\Enums\MeterStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\DocumentCentre\DocumentUpload;
@@ -94,8 +95,6 @@ class ConsumerOnboardingController extends Controller
                 'doc_type_id' => 5,
                 'file_id' => $documents_bulk['file_list'][0]['file_id'],
             ]);
-            // foreach($request->dc_file_list as $key => $doc_type) {
-            // }
         }
         // Consumer Meter
         ConsumerMeter::create([
@@ -165,7 +164,17 @@ class ConsumerOnboardingController extends Controller
         $request->validate([
             'notes' => 'required|max:255',
         ]);
-
+        //Check If Document has been uploaded [optional] 
+        if($request->has('dc_file')) {
+            $doc_upload = DocumentUpload::upload($request, 'domestic');
+            //Activate Image Upload
+            ConsumerDocument::create([
+                'consumer_id' => $id,
+                'status_id' => EnumsConsumerStatus::ACTIVATE->value,
+                'doc_type_id' => DocumentType::ACTIVATION_IMAGE->value,
+                'file_id' => $doc_upload['file_id'],
+            ]);
+        }
         // 6 = Activation
         Consumer::where('id', $id)->update([
             'status_id' => EnumsConsumerStatus::ACTIVATE->value,
