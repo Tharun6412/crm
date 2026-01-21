@@ -27,7 +27,7 @@
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $invoice->invoice_number }}</td>
                                 <td>{{ $invoice->invoice_date?->format('d-m-y') }}</td>
-                                <td class="text-end">{{ numberFOrmat($invoice->consumption->sum('net_consumption'), 3) }}</td>
+                                <td class="text-end">{{ numberFormat($invoice->consumption->net_consumption, 3) }}</td>
                                 <td>{{ $invoice->invoice_date?->format('d-m-y') }}</td>
                                 <td class="text-end">{{ numberFormat($invoice->total_amount, 2) }}</td>
                                 <td><x-invoice.status :status="$invoice->status"/></td>

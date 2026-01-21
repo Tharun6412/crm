@@ -53,6 +53,7 @@ class GasInvoiceController extends Controller
 
             // 3. Get the gas price for the billing
             // Get the price details
+            $prices = collect();
             $minEffectiveFrom = PriceHistory::where('district_id', $consumer->district_id)
                 ->where('segment_id', $consumer->segment_id)
                 ->where('effective_from', '<=', $start_date)
@@ -168,6 +169,7 @@ class GasInvoiceController extends Controller
             'tax_value' => $tax_value,
             'tax_amount' => 0,
             'total_amount' => 0,
+            'payable_amount' => 0,
             'paid_amount' => 0,
             'balance_amount' => 0,
             'due_date' => Carbon::now()->addDays(15)->format('Y-m-d'),
@@ -237,6 +239,7 @@ class GasInvoiceController extends Controller
             'tax_value' => $tax_value,
             'tax_amount' => $inv_tax_amt,
             'total_amount' => $inv_total,
+            'payable_amount' => $inv_total,
             'paid_amount' => NULL,
             'balance_amount' => $inv_total,
             'due_date' => Carbon::now()->addDays(15)->format('Y-m-d'),
@@ -319,6 +322,7 @@ class GasInvoiceController extends Controller
             'tax_value' => $tax_value,
             'tax_amount' => $inv_tax_amt,
             'total_amount' => $inv_total,
+            'payable_amount' => $inv_total,
             'paid_amount' => NULL,
             'balance_amount' => $inv_total,
             'due_date' => Carbon::now()->addDays(15)->format('Y-m-d'),

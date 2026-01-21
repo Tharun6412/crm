@@ -1,12 +1,16 @@
 <?php
  namespace App\Http\Controllers\Payments;
 
- use App\Http\Controllers\Controller;
+use App\Enums\InvoiceStatus;
+use App\Enums\InvoiceType;
+use App\Enums\TaxType;
+use App\Http\Controllers\Controller;
  use App\Models\Consumer\Consumer;
 use App\Models\Invoice\BillInvoice;
 use App\Models\Invoice\InvoicePayment;
 use App\Models\Invoice\Ledger;
 use App\Models\Master\PaymentType;
+use App\Services\InvoiceService;
 use App\Services\LedgerService;
 use App\Services\PaymentService;
 use Illuminate\Http\Request;
@@ -34,10 +38,12 @@ class GasPaymentsController extends Controller
     {
         $bill = BillInvoice::find($id);
         $payment_types = PaymentType::all();
+        $lpc_applied = $bill->childInvoices->contains('type_id', 3);
 
         return view('payments.gas-invoices.create',[
             'bill' => $bill,
-            'payment_types' => $payment_types
+            'payment_types' => $payment_types,
+            'lpc_applied' => $lpc_applied
         ]);
     }
 
@@ -47,21 +53,64 @@ class GasPaymentsController extends Controller
      */
     public function store(Request $request)
     {
+        // 1. data validation
         $request->validate([
             'invoice_id' => 'required',
             'payment_type' => 'required',
             'transaction_no' => 'required',
             'amount' => ['required', 'numeric', 'gt:0', 'min:' . $request->invoice_balance, 'max:' . $request->invoice_balance]
-        ]);
-
+            ]);
+        $invoice = BillInvoice::find($request->invoice_id);
+        // 2. check if LPC is applicable.
+        if ($request->lpc_applicable) {
+            // Late fee calculation.
+            $late_fee = $request->late_fee;
+            $tax_value = 18;
+            $basic_amount = round(($late_fee * (100 / (100 + $tax_value))),2);
+            $tax_amount = round(($late_fee - $basic_amount),2);
+            // Invoice items array preperation.
+            $invoice_items[] = [
+                'item_id' => 4,
+                'quantity' => 1,
+                'unit_price' => $basic_amount,
+                'total_price' => $basic_amount,
+            ];
+            // Invoice array preperation for invoice service.
+            $invoice_data = [
+                'config' => [
+                    'state_id' => $invoice->consumer->ga->state_id,
+                    'tax_id' => 2,
+                ],
+                'headers' => [
+                    'type_id' => InvoiceType::LATE_PAYMENT_CHARGES->value,
+                    'consumer_id' => $invoice->consumer_id,
+                    'invoice_date' => date('Y-m-d'),
+                    'base_amount' => $basic_amount,
+                    'taxable_amount' => $basic_amount,
+                    'tax_id' => TaxType::GST->value,
+                    'tax_value' => $tax_value,
+                    'tax_amount' => $tax_amount,
+                    'total_amount' => $late_fee,
+                    'payable_amount' => $late_fee,
+                    'balance_amount' => $late_fee,
+                    'due_date' => date('Y-m-d'),
+                    'status_id' => InvoiceStatus::NOT_PAID->value, //2 =  Unpaid
+                    'parent_invoice_id' => $invoice->id,
+                    'created_by' => Auth::id(),
+                ],
+                'items' => $invoice_items,
+            ];
+            // Generate Invoice with Invoice Service
+            $inv_number = InvoiceService::create($invoice_data);
+        }
+        // 3. Parent invoice details
         $parentInvoice = BillInvoice::with('childInvoices')
             ->findOrFail($request->invoice_id);
-
-        // Merge child invoices + parent (parent last)
+        // 4. Connected invoices
         $invoices = $parentInvoice->childInvoices
             ->sortBy('invoice_date')
             ->values();
-
+        // 5. Merge connected invoices + parent (parent last)
         $invoices->push($parentInvoice);
         $remainingAmount = $request->amount;
 

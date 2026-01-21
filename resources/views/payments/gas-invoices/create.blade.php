@@ -1,3 +1,6 @@
+@php
+    use Carbon\Carbon;
+@endphp
 {{-- Gas invoice payments --}}
 <div class="modal-dialog modal-lg">
     <div class="modal-content">
@@ -57,16 +60,44 @@
                 @endif
                 {{-- Payment form --}}
                 @if ($bill->balance_amount > 0)
+                    @php
+                        $lpc_applicable = $late_fee = 0;
+                        if (now()->gt(Carbon::parse($bill->due_date)->endOfDay()) and !$lpc_applied) {
+                            $lpc_applicable = 1;
+                            switch ($bill->consumer->segment_id) {
+                                case '1':
+                                    $late_fee = 20;
+                                    break;
+                                case '2':
+                                    $late_fee = 50;
+                                    break;
+                                case '3':
+                                    $late_fee = 100;
+                                    break;
+                                default:
+                                    $late_fee = 0;
+                                    break;
+                            }
+                        }
+                    @endphp
                     <form action="{{ url('payments/gasPayments/') }}" method="post" name="add-gas-payment-form" id="add-gas-payment-form">
                         @csrf
                         <h4>Payment details</h4>
                         <div>
                             <input type="hidden" name="invoice_id" id="invoice_id" value="{{ $bill->id }}">
-                            <input type="hidden" name="invoice_balance" id="invoice_balance" value="{{ ($child_inv_balance + $bill->balance_amount) }}">
+                            <input type="hidden" name="invoice_balance" id="invoice_balance" value="{{ ($late_fee + $child_inv_balance + $bill->balance_amount) }}">
                             <input type="hidden" name="till_paid_amount" id="till_paid_amount" value="{{ $bill->paid_amount }}">
+                            <input type="hidden" name="lpc_applicable" id="lpc_applicable" value="{{ $lpc_applicable }}">
+                            @if ($lpc_applicable)
+                                <input type="hidden" name="late_fee" id="late_fee" value="{{ $late_fee }}">
+                                <div class="row mb-2">
+                                    <label class="col-sm-3 col-form-label text-end">Late Fee :</label>
+                                    <label class="col-sm-3 col-form-label">{{ numberFormat(($late_fee), 2) }}</label>
+                                </div>    
+                            @endif
                             <div class="row mb-2">
                                 <label class="col-sm-3 col-form-label text-end">Total Payable Amount:</label>
-                                <label class="col-sm-3 col-form-label">{{ numberFormat(($child_inv_balance + $bill->balance_amount), 2) }}</label>
+                                <label class="col-sm-3 col-form-label">{{ numberFormat(($late_fee + $child_inv_balance + $bill->balance_amount), 2) }}</label>
                             </div>
                             <div class="row mb-2">
                                 <label for="payment_type" class="col-sm-3 col-form-label text-end">Payment Type&nbsp;:&nbsp;<i class="text-danger">*&nbsp;</i></label>
@@ -89,7 +120,7 @@
                                 <label for="amount" class="col-sm-3 col-form-label text-end">Amount&nbsp;:&nbsp;<i class="text-danger">*&nbsp;</i></label>
                                 <div class="col-sm-7">
                                     <div class="input-group">
-                                        <input type="text" class="form-control text-end" id="amount" name="amount" placeholder="Enter the amount to be paid." value="{{ ($child_inv_balance + $bill->balance_amount) }}">
+                                        <input type="text" class="form-control text-end" id="amount" name="amount" placeholder="Enter the amount to be paid." value="{{ ($late_fee + $child_inv_balance + $bill->balance_amount) }}">
                                         <span class="input-group-text"><i class="bi-currency-rupee"></i></span>
                                     </div>
                                 </div>

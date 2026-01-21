@@ -9,82 +9,88 @@
 @section('page-content')
     <div class="container">
         <x-consumer.invoice-details :invoice="$invoice" class="bg-info-subtle"/>
-        <div id="credit-note-create-success">
-            <form action="{{ url('bill/creditNote/create/' . $invoice->id) }}" id="credit-note-create-form">
-                @csrf
-                <div class="d-flex justify-content-between mb-1">
-                    <div class="fs-5 fw-semibold">Note items</div>
-                    <div>
-                        <select name="note_type" id="note_type" class="form-select">
-                            <option value="">Select Type</option>
-                                <option value="1">Credit Note</option>
-                                <option value="2">Debit Note</option>
-                        </select>
+        @if ($invoice->status_id == 1)
+            <div class="alert alert-danger">
+                Invoice is fully paid. Credit or debit note cannot be issued. Please contact the administrator.
+            </div>
+        @else
+            <div id="credit-note-create-success">
+                <form action="{{ url('bill/creditNote/create/' . $invoice->id) }}" id="credit-note-create-form">
+                    @csrf
+                    <div class="d-flex justify-content-between mb-1">
+                        <div class="fs-5 fw-semibold">Note items</div>
+                        <div>
+                            <select name="note_type" id="note_type" class="form-select">
+                                <option value="">Select Type</option>
+                                    <option value="1">Credit Note</option>
+                                    <option value="2">Debit Note</option>
+                            </select>
+                        </div>
                     </div>
-                </div>
-                <table class="table table-bordered table-info">
-                    <thead class="table-info">
-                        <tr>
-                            <th width="1%" nowrap>#</th>
-                            <th>Description</th>
-                            <th class="text-end">Unit Price</th>
-                            <th class="text-end">Quantity</th>
-                            <th class="text-end">Total</th>
-                        </tr>
-                    </thead>
-                    <tbody id="credit-note-body">
-                        <tr>
-                            <td>
-                                <button type="button" class="btn btn-outline-danger btn-sm del-row"><i class="bi bi-trash"></i></button>
-                            </td>
-                            <td>
-                                <textarea name="description[]" rows="1" class="form-control"></textarea>
-                            </td>
-                            <td>
-                                <input type="text" name="price[]" class="form-control text-end price">
-                            </td>
-                            <td>
-                                <input type="text" name="qty[]" class="form-control text-end qty"></div>
-                            </td>
-                            <td class="text-end"><span class="total">0.00</span></td>
-                        </tr>
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <td colspan="2" rowspan="3" class="text-center">
-                                <button type="button" class="btn btn-outline-info btn-sm" id="add-credit-row"><i class="bi bi-plus-lg"></i>&nbsp;Add Row</button>
-                            </td>
-                            <td colspan="2" class="text-end">Total</td>
-                            <td class="text-end"><span id="cr-total"></span></td>
-                        </tr>
-                        <tr>
-                            <td colspan="2">
-                                <div class="input-group">
-                                    <label for="tax_id" class="input-group-text">Tax</label>
-                                    <select name="tax_id" id="tax_id" class="form-select">
-                                        <option value="">Select Tax</option>
-                                        @foreach ($taxes as $tax)
-                                            <option value="{{ $tax->id }}">{{ $tax->name }}</option>
-                                        @endforeach
-                                    </select>
-                                    <input type="text" name="tax_value" id="tax_value" class="form-control">
-                                    <label for="tax_value" class="input-group-text">%</label>
-                                </div>
-                            </td>
-                            <td class="text-end"><span id="tax_amount"></span></td>
-                        </tr>
-                        <tr>
-                            <td colspan="2" class="text-end">Note Total</td>
-                            <td class="text-end"><span id="tax-total"></span></td>
-                        </tr>
-                    </tfoot>
-                </table>
-                <div id="credit-note-create-error"></div>
-                <div class="text-end">
-                    <button type="submit" class="btn btn-success"><i class="bi bi-save"></i>&nbsp;Save</button>
-                </div>
-            </form>
-        </div>
+                    <table class="table table-bordered table-info">
+                        <thead class="table-info">
+                            <tr>
+                                <th width="1%" nowrap>#</th>
+                                <th>Description</th>
+                                <th class="text-end">Unit Price</th>
+                                <th class="text-end">Quantity</th>
+                                <th class="text-end">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody id="credit-note-body">
+                            <tr>
+                                <td>
+                                    <button type="button" class="btn btn-outline-danger btn-sm del-row"><i class="bi bi-trash"></i></button>
+                                </td>
+                                <td>
+                                    <textarea name="description[]" rows="1" class="form-control"></textarea>
+                                </td>
+                                <td>
+                                    <input type="text" name="price[]" class="form-control text-end price">
+                                </td>
+                                <td>
+                                    <input type="text" name="qty[]" class="form-control text-end qty"></div>
+                                </td>
+                                <td class="text-end"><span class="total">0.00</span></td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="2" rowspan="3" class="text-center">
+                                    <button type="button" class="btn btn-outline-info btn-sm" id="add-credit-row"><i class="bi bi-plus-lg"></i>&nbsp;Add Row</button>
+                                </td>
+                                <td colspan="2" class="text-end">Total</td>
+                                <td class="text-end"><span id="cr-total"></span></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <div class="input-group">
+                                        <label for="tax_id" class="input-group-text">Tax</label>
+                                        <select name="tax_id" id="tax_id" class="form-select">
+                                            <option value="">Select Tax</option>
+                                            @foreach ($taxes as $tax)
+                                                <option value="{{ $tax->id }}">{{ $tax->name }}</option>
+                                            @endforeach
+                                        </select>
+                                        <input type="text" name="tax_value" id="tax_value" class="form-control">
+                                        <label for="tax_value" class="input-group-text">%</label>
+                                    </div>
+                                </td>
+                                <td class="text-end"><span id="tax_amount"></span></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" class="text-end">Note Total</td>
+                                <td class="text-end"><span id="tax-total"></span></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                    <div id="credit-note-create-error"></div>
+                    <div class="text-end">
+                        <button type="submit" class="btn btn-success"><i class="bi bi-save"></i>&nbsp;Save</button>
+                    </div>
+                </form>
+            </div>
+        @endif
         <p>Notes: </p>
         <div>
             <div class="fs-5 fw-semibold">Credit/Debit Notes ({{ $credit_notes->count() }})</div>
