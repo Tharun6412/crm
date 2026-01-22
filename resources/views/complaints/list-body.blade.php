@@ -3,28 +3,30 @@
     use \App\Enums\ComplaintStatus;
 @endphp
 {{-- Search form --}}
-<div class="row gx-1 mb-1">
-    <div class="col-auto">
-        <div class="input-group input-group-sm">
-            <span class="input-group-text" id="search-key">Search</span>
-            <input type="text" name="key" id="search-key" class="form-control" value="{{ request()->key }}" placeholder="search complaint no.">
+<div class="d-flex justify-content-between">
+    <div class="row gx-1 mb-1">
+        <div class="col-auto">
+            <div class="input-group input-group-sm">
+                <span class="input-group-text" id="search-key">Search</span>
+                <input type="text" name="key" id="search-key" class="form-control" value="{{ request()->key }}" placeholder="search complaint no.">
+            </div>
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-sm btn-success"><i class="bi bi-search"></i></button>
+        </div>
+        <div class="col-auto">
+            <a href="{{ url('calls') }}" class="btn btn-warning btn-sm"><i class="bi bi-arrow-clockwise"></i></a>
+        </div>
+        <div class="col-auto">
+            ({{ $complaints->total() }}) Records found
         </div>
     </div>
-    <div class="col-auto">
-        <button type="submit" class="btn btn-sm btn-success"><i class="bi bi-search"></i></button>
-    </div>
-    <div class="col-auto">
-        <a href="{{ url('calls') }}" class="btn btn-warning btn-sm"><i class="bi bi-arrow-clockwise"></i></a>
-    </div>
-    <div class="col-auto">
-        ({{ $complaints->total() }}) Records found
-    </div>
-    <div class="col-auto float-end">
-        <x-auth.link href="{{ url('calls/create/1') }}" class="btn btn-success btn-sm link-modal">Create</x-auth.link>
-        <x-auth.link href="{{ url('externalCalls/create') }}" class="btn btn-success btn-sm link-modal">External Calls Create</x-auth.link>
+    <div>
+        <x-auth.link href="{{ url('calls/create/1') }}" class="btn btn-success btn-sm link-modal"><i class="bi bi-plus-lg"></i>&nbsp;Consumer</x-auth.link>
+        <x-auth.link href="{{ url('calls/external/create') }}" class="btn btn-success btn-sm link-modal"><i class="bi bi-plus-lg"></i>&nbsp;External</x-auth.link>
     </div>
 </div>
-{{-- Consumers list --}}
+{{-- Complaints / Calls list --}}
 <div class="table-responsive" style="min-height: 500px;">
     <table class="table table-bordered table-hover">
         <thead class="table-primary">
