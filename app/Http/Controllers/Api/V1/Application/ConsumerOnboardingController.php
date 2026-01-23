@@ -71,13 +71,18 @@ class ConsumerOnboardingController extends Controller
      */
     public function execution(Request $request, $id)
     {
+        // Get Consumer Details
+        $consumer = Consumer::find($id);
+        // Validation
         $request->validate([
             'meter_no' => ['required',
                 Rule::unique('cns_consumer_meters', 'meter_no')->where(function($q) {
                     $q->where('status', 1);
                 }),
             ],
-            'meter_serial_no' => ['nullable', 
+            'meter_serial_no' => [
+                Rule::requiredIf($consumer->connection_type_id == 2), 
+                'nullable',
                 Rule::unique('cns_consumer_meters', 'meter_serial_no')->where(function($q) {
                     $q->where('status', 1);
                 }),
@@ -109,7 +114,7 @@ class ConsumerOnboardingController extends Controller
             'created_by' => Auth::id(),
         ]);
         // 4 = Execution
-        Consumer::where('id', $id)->update([
+        $consumer->update([
             'status_id' => EnumsConsumerStatus::EXECUTE->value,
             'updated_by' => Auth::id(),
         ]);
