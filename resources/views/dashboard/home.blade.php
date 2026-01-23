@@ -30,7 +30,7 @@
                     <div class="card">
                         <div class="d-flex justify-content-between p-4">
                             <div>
-                                <h2 class="mb-0">100</h2>
+                                <h2 class="mb-0">{{ $consumer_count }}</h2>
                                 <span>Consumer</span>
                             </div>
                             <div>
@@ -40,8 +40,8 @@
                             </div>
                         </div>
                         <div class="d-flex justify-content-between bg-light py-1 px-2 rounded-bottom">
-                            <a href="">All Consumers</a>
-                            <a href=""><is class="bi bi-arrow-right-circle-fill"></i></a>
+                            <a href="{{ url('consumers') }}">All Consumers</a>
+                            <a href="{{ url('consumers') }}"><is class="bi bi-arrow-right-circle-fill"></i></a>
                         </div>
                     </div>
                 </div>
@@ -49,7 +49,7 @@
                     <div class="card">
                         <div class="d-flex justify-content-between p-4">
                             <div>
-                                <h2 class="mb-0">100</h2>
+                                <h2 class="mb-0">{{ $invoice_count }}</h2>
                                 <span>Invoices</span>
                             </div>
                             <div>
@@ -68,7 +68,7 @@
                     <div class="card">
                         <div class="d-flex justify-content-between p-4">
                             <div>
-                                <h2 class="mb-0">100</h2>
+                                <h2 class="mb-0">{{ $payments_count }}</h2>
                                 <span>Payments</span>
                             </div>
                             <div>
@@ -87,7 +87,7 @@
                     <div class="card">
                         <div class="d-flex justify-content-between p-4">
                             <div>
-                                <h2 class="mb-0">100</h2>
+                                <h2 class="mb-0">{{ $calls_list }}</h2>
                                 <span>Consumer Calls</span>
                             </div>
                             <div>
@@ -97,8 +97,8 @@
                             </div>
                         </div>
                         <div class="d-flex justify-content-between bg-light py-1 px-2 rounded-bottom">
-                            <a href="">All calls</a>
-                            <a href=""><is class="bi bi-arrow-right-circle-fill"></i></a>
+                            <a href="{{ url('calls') }}">All calls</a>
+                            <a href="{{ url('calls') }}"><is class="bi bi-arrow-right-circle-fill"></i></a>
                         </div>
                     </div>
                 </div>

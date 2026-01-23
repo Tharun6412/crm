@@ -15,8 +15,19 @@ Route::middleware(['auth', ModuleAccess::class])->group(function() {
         Route::resource('/', App\Http\Controllers\Billing\GasInvoiceController::class);
     });
 
+    // Consumer Search
+    Route::prefix('consumer')->group(function() {
+        Route::get('search', [App\Http\Controllers\Billing\ConsumerSearchController::class, 'search']);
+    });
+
     // Invoice
     Route::prefix('invoice')->group(function () {
+        // Quick search
+        Route::get('search', [App\Http\Controllers\Billing\InvoiceSearchController::class, 'search']);
+        Route::get('cancel', [App\Http\Controllers\Billing\InvoiceSearchController::class, 'cancel']);
+        Route::get('cancelInvoice/{id}', [App\Http\Controllers\Billing\InvoiceSearchController::class, 'cancelInvoice']);
+        Route::put('cancelInvoiceUpdate/{id}', [App\Http\Controllers\Billing\InvoiceSearchController::class, 'cancelInvoiceUpdate']);
+
         Route::get('create/{id}', [App\Http\Controllers\Billing\InvoiceController::class, 'create']);
         Route::get('createBody', [App\Http\Controllers\Billing\InvoiceController::class, 'createBody']);
         Route::get('typeItems', [App\Http\Controllers\Billing\InvoiceController::class, 'typeItems']);

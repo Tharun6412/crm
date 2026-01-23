@@ -6,7 +6,11 @@ use Illuminate\Support\Facades\Route;
 Route::middleware(['auth', ModuleAccess::class])->group(function() {
     // Landing page
     Route::get('/', [App\Http\Controllers\Payments\GasPaymentsController::class, 'index']);
-
+    // Payment Search
+    // Route::get('search', [App\Http\Controllers\Payments\PaymentsSearchController::class, 'search']);
+    Route::get('reversal', [App\Http\Controllers\Payments\PaymentsSearchController::class, 'reversal']);
+    Route::get('reversalPayment/{id}', [App\Http\Controllers\Payments\PaymentsSearchController::class, 'reversalPayment']);
+    Route::put('reversalPaymentUpdate/{id}', [App\Http\Controllers\Payments\PaymentsSearchController::class, 'reversalPaymentUpdate']);
     // Gas Invoice
     // Invoice
     Route::prefix('gasPayments')->group(function () {

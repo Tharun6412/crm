@@ -36,6 +36,9 @@ Route::middleware(['auth', ModuleAccess::class])->group(function() {
     // resource
     Route::resource('feedback', App\Http\Controllers\Complaints\FeedbackController::class);
     Route::resource('', App\Http\Controllers\Complaints\ComplaintsController::class);
+    // Consumer Call search
+    Route::get('search',[App\Http\Controllers\Complaints\ConsumerSearchController::class, 'search']);
     // External Calls
     Route::resource('external', App\Http\Controllers\Complaints\ExternalCallsController::class);
+
 });

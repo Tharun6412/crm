@@ -118,6 +118,6 @@ class ExternalCallsController extends Controller
             'status_id' => ComplaintStatus::REGISTER->value,
             'created_by' => Auth::id(),
         ]);
-        return response()->json(['success' => 'Complaint raised successfully']);
+        return response()->json(['success' => 'Complaint raised successfully<br/>GO to Calls <a href="'.url('calls').'">List</a>']);
     }
 }

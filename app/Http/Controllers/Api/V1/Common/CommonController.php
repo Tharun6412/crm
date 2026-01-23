@@ -92,7 +92,10 @@ class CommonController extends Controller
      */
     public function getSubCategories(Request $request)
     {
-        $sub_categories = ComplaintCategory::select('id', 'name', 'resolution', 'resolution_type', 'type_id', 'department_id')->where('parent_id', $request->category_id)->get();
+        $sub_categories = ComplaintCategory::with([
+            'type:id,name',
+            'department:id,name',
+        ])->select('id', 'name', 'resolution', 'resolution_type', 'type_id', 'department_id')->where('parent_id', $request->category_id)->get();
         return response()->json(['sub_categories' => $sub_categories]); 
     }
 }

@@ -13,7 +13,7 @@ class BillInvoiceCancel extends Model
      * 
      * @var string
      */
-    protected $table = 'bil_credit_notes';
+    protected $table = 'bil_invoice_cancels';
 
     /**
      * The attributes that are mass assignable

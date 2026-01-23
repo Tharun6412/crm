@@ -23,7 +23,7 @@
     </div>
     <div>
         <x-auth.link href="{{ url('calls/create/1') }}" class="btn btn-success btn-sm link-modal"><i class="bi bi-plus-lg"></i>&nbsp;Consumer</x-auth.link>
-        <x-auth.link href="{{ url('calls/external/create') }}" class="btn btn-success btn-sm link-modal"><i class="bi bi-plus-lg"></i>&nbsp;External</x-auth.link>
+        <x-auth.link href="{{ url('calls/external/create') }}" class="btn btn-success btn-sm" target="_blank"><i class="bi bi-plus-lg"></i>&nbsp;External</x-auth.link>
     </div>
 </div>
 {{-- Complaints / Calls list --}}
@@ -91,7 +91,7 @@
                         <td nowrap><x-complaint.status :status="$complaint->status"/></td>
                         <td nowrap>{{ dateFormat($complaint->created_at) }}</td>
                         <td>
-                            {{-- Consumers list actions --}}
+                            {{-- list actions --}}
                             <div class="dropdown">
                                 <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     Actions

@@ -61,7 +61,14 @@ class ConsumerController extends Controller
             'statusHistory.status:id,name', 
             'scheme',
             'scheme.scheme:id,name,registration,min_payment',
-            'sdPayment'
+            'sdPayment',
+            'sdPayment.paymentType:id,name',
+            'invoices',
+            'invoices.invoiceType:id,name',
+            'invoices.status:id,name',
+            'invoices.payments',
+            'invoices.payments.paymentType:id,name',
+            'invoices.payments.status:id,name',
         ])->when((!$request->user()->isAdmin() AND !$request->user()->isSuperAdmin()), function ($q) use($request) {
             $q->whereIn('ga_id', $request->user()->ga()->pluck('ga_id')->toArray());
         })->find($id);

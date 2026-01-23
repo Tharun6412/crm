@@ -2,14 +2,14 @@
 
 @extends('layouts.layout')
 
-@section('title', 'Bill Generation')
+@section('title', 'Calls')
 
-@section('page-title', 'Bill Generation')
+@section('page-title', 'Calls')
 
 @section('page-content')
     {{-- Quick search --}}
     <div>
-        <form action="{{ url('bill/consumer/search') }}" id="consumer-search-search-form" method="GET">
+        <form action="{{ url('calls/search') }}" id="consumer-search-form" method="GET">
             <div class="rounded bg-info-subtle p-3 mb-3">
                 <div class="row justify-content-sm-center">
                     <div class="col-sm-6">
@@ -27,11 +27,11 @@
                 </div>
             </div>
         </form>
-        <div id="consumer-search-list" class="current-page-reload">
+        <div id="consumer-list" class="current-page-reload">
         </div>
     </div>
 @endsection
 {{-- Scripts --}}
 @push('scripts')
-    @include('scripts.ajax-form-search', ['form' => 'consumer-search'])
+    @include('scripts.ajax-form-search', ['form' => 'consumer'])
 @endpush
