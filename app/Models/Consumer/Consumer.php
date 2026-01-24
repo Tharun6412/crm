@@ -312,4 +312,11 @@ class Consumer extends Model
     {
         return $this->belongsTo(ConnectionType::class, 'connection_type_id')->withDefault();
     }
+    /**
+     * Relation with prepaid table
+     */
+    public function prepaidData():HasOne
+    {
+        return $this->hasOne(Prepaid::class, 'consumer_id', 'id');
+    }
 }

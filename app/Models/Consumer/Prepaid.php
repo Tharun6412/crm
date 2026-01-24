@@ -3,6 +3,7 @@
 namespace App\Models\Consumer;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Prepaid extends Model
 {
@@ -26,6 +27,8 @@ class Prepaid extends Model
         'bonus_date',
         'balance',
         'balance_date',
+        'hes_status',
+        'hes_date',
     ];
 
     // Casting
@@ -33,5 +36,14 @@ class Prepaid extends Model
         'conversion_date' => 'date',
         'bonus_date' => 'date',
         'balance_date' => 'date',
+        'hes_date' => 'date',
     ];
+
+    /**
+     * Relation with consumers
+     */
+    public function consumers():BelongsTo
+    {
+        return $this->belongsTo(Consumer::class, 'consumer_id');
+    }
 }
