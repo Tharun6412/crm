@@ -20,6 +20,9 @@ class ConsumerController extends Controller
      */
     public function list(Request $request)
     {
+        if(empty($request->key)) {
+            return response()->json(['message' => 'Please select consumer number'], 422);
+        }
         // Get consumers list
         $consumers_q = Consumer::with(['ga:id,code,name', 'status:id,name'])->select('id', 'crn', 'fname', 'lname', 'ga_id', 'status_id')
             ->when((!$request->user()->isAdmin() AND !$request->user()->isSuperAdmin()), function ($q) use($request) {
@@ -63,12 +66,6 @@ class ConsumerController extends Controller
             'scheme.scheme:id,name,registration,min_payment',
             'sdPayment',
             'sdPayment.paymentType:id,name',
-            'invoices',
-            'invoices.invoiceType:id,name',
-            'invoices.status:id,name',
-            'invoices.payments',
-            'invoices.payments.paymentType:id,name',
-            'invoices.payments.status:id,name',
         ])->when((!$request->user()->isAdmin() AND !$request->user()->isSuperAdmin()), function ($q) use($request) {
             $q->whereIn('ga_id', $request->user()->ga()->pluck('ga_id')->toArray());
         })->find($id);

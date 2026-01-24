@@ -49,4 +49,13 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('generateGasBill/{id}', [App\Http\Controllers\Api\V1\Application\BillingController::class, 'generateGasBill'])->whereNumber('id');
         Route::post('storeGasBill/{id}', [App\Http\Controllers\Api\V1\Application\BillingController::class, 'storeGasBill'])->whereNumber('id');
     });
+
+    // Invoices List
+    Route::prefix('invoices')->group(function() {
+        Route::get('list', [App\Http\Controllers\Api\V1\Application\InvoiceController::class, 'list']);
+        Route::get('viewInvoice/{id}', [App\Http\Controllers\Api\V1\Application\InvoiceController::class, 'viewInvoice'])->whereNumber('id');
+        // Gas Bills List
+        Route::get('gasBills', [App\Http\Controllers\Api\V1\Application\InvoiceController::class, 'gasBills']);
+        Route::get('viewGasBill/{id}', [App\Http\Controllers\Api\V1\Application\InvoiceController::class, 'viewGasBill'])->whereNumber('id');
+    });
 });
