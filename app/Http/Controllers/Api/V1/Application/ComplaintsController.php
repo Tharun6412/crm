@@ -50,7 +50,7 @@ class ComplaintsController extends Controller
             $q->whereAny(['code'], 'like', '%' . $request->key . '%');
         })
         ->when($request->has('cmp_status'), function($q) use($request) {
-            $q->whereIn('status_id', $request->cmp_status);
+            $q->whereIn('status_id', (array)$request->cmp_status);
         })
         ->where('consumer_id', $id)->orderBy('created_at', 'desc')->paginate(10);
         $complaints = $this->apiPagination($complaints_q);

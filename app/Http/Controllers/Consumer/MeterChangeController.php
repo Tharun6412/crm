@@ -40,6 +40,16 @@ class MeterChangeController extends Controller
             'meterChange' => $meterChange,
         ]);
     }
+
+    /**
+     * Fetch By Meter
+     * @param $meter_id
+     */
+    public function show(Request $request, $id)
+    {
+        $consumer_meter = ConsumerMeterChanges::find($id);
+        return view('consumers.meter-change.show',['consumer_meter' => $consumer_meter]);
+    }
     /**
      * Consumer Scheme Accept State
      */

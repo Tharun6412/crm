@@ -19,6 +19,15 @@ class PayDepositController extends Controller
     }
 
     /**
+     * Deposit Details By ID
+     * @param $sd_payment_id
+     */
+    public function show(Request $request, $id)
+    {
+        $sd_payment = ConsumerSdPayment::find($id);
+        return view('consumers.deposit-details.show', ['sd_payment' => $sd_payment]);
+    }
+    /**
      * To Pay SD Deposit
      */
     public function edit($id) 

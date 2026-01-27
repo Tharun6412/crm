@@ -32,16 +32,16 @@ class ConsumerController extends Controller
                 $q->whereAny(['crn', 'fname', 'lname', 'email', 'phone'], 'like', '%' . $request->key . '%');
             })
             ->when($request->has('segments'), function ($q) use($request) {
-                $q->whereIn('segment_id', $request->segments);
+                $q->whereIn('segment_id', (array) $request->segments);
             })
             ->when($request->has('connection_type_id'), function ($q) use($request) {
-                $q->whereIn('connection_type_id', $request->connection_type_id);
+                $q->whereIn('connection_type_id', (array)$request->connection_type_id);
             })
             ->when($request->has('geo_area'), function ($q) use($request) {
-                $q->whereIn('ga_id', $request->geo_area);
+                $q->whereIn('ga_id', (array) $request->geo_area);
             })
             ->when($request->has('cns_status'), function ($q) use($request) {
-                $q->whereIn('status_id', $request->cns_status);
+                $q->whereIn('status_id', (array)$request->cns_status);
             })
             ->paginate(10);
             $consumers = $this->apiPagination($consumers_q);

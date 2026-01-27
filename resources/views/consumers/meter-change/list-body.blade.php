@@ -32,9 +32,10 @@
                 <th>Old Meter Consumption</th>
                 <th>New Meter Number</th>
                 <th>Request Date</th>
-                <th>Replace Date</th>
+                <th>Release Date</th>
                 <th>Status</th>
                 <th>Added By</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -53,6 +54,7 @@
                         <td>{{ $change?->replace_date?->format('d-m-Y') }}</td>
                         <td>{{ $change->status_id == 1 ? "Pending" : "Completed" }}</td>
                         <td>{{ $change?->createdBy->name }}</td>
+                        <td><a class="btn btn-info btn-sm link-modal" href="{{ url('consumers/meterChange/'.$change->id) }}">view</a></td>
                     </tr>
                 @endforeach
             @else
