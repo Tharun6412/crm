@@ -18,7 +18,7 @@ class OtpService
         $plainOtp = random_int(100000, 999999);
 
         // Save
-        OTP::create([
+        Otp::create([
             'identifier' => $identifier,
             'purpose' => $purpose,
             'module' => $module,
@@ -38,7 +38,7 @@ class OtpService
     public static function verify(string $identifier, string $purpose, string $inputOtp, string $module)
     {
         // Get latest record with identifier
-        $verifyOtp = OTP::where([
+        $verifyOtp = Otp::where([
             'identifier' => $identifier,
             'purpose' => $purpose,
             'module' => $module,

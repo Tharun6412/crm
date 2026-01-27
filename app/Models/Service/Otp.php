@@ -5,7 +5,7 @@ namespace App\Models\Service;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class OTP extends Model
+class Otp extends Model
 {
     /**
      * The table associated with the model
