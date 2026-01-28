@@ -9,7 +9,7 @@ use App\Models\DocumentCentre\DocumentTypes;
 use App\Models\Master\ConsumerGasRequired;
 use App\Models\Master\ConsumerNomineeRelation;
 use App\Models\Master\Title;
-use App\Http\Controllers\DocumentCentre\DocumentUpload;
+use App\Http\Controllers\Master\DocumentCentre\DocumentUpload;
 use App\Http\Requests\Api\Consumer\RegistrationValidationRequest;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;

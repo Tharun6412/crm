@@ -3,7 +3,7 @@ namespace App\Http\Controllers\Spot;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Http\Controllers\DocumentCentre\DocumentUpload;
+use App\Http\Controllers\Master\DocumentCentre\DocumentUpload;
 use App\Models\Spot\ProspectApproval;
 use App\Models\Spot\ProspectDocuments;
 use App\Models\Spot\Prospects;

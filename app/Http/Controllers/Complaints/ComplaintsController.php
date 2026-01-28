@@ -7,8 +7,9 @@ namespace App\Http\Controllers\Complaints;
 use App\Enums\ComplaintStatus;
 use App\Enums\OtpModule;
 use App\Enums\OtpPurpose;
+use App\Exports\ComplaintExport;
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\DocumentCentre\DocumentUpload;
+use App\Http\Controllers\Master\DocumentCentre\DocumentUpload;
 use App\Models\Admin\User;
 use App\Models\Complaint\Complaint;
 use App\Models\Complaint\ComplaintAssign;
@@ -438,5 +439,13 @@ class ComplaintsController extends Controller
     {
         // TO Delete the comment
         ComplaintComment::where('id', $id)->delete();
+    }
+
+    /**
+     * Complaints Export
+     */
+    public function complaintExport(Request $request)
+    {
+        return (new ComplaintExport($request))->download('complaints.xlsx');
     }
 }

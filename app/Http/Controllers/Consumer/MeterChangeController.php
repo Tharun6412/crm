@@ -6,7 +6,7 @@ use App\Enums\ConsumerStatus as EnumsConsumerStatus;
 use App\Enums\DocumentType;
 use App\Enums\MeterStatus;
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\DocumentCentre\DocumentUpload;
+use App\Http\Controllers\Master\DocumentCentre\DocumentUpload;
 use App\Models\Admin\User;
 use App\Models\Consumer\Consumer;
 use App\Models\Consumer\ConsumerDocument;

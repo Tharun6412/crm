@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Complaints;
 
 use App\Enums\ComplaintStatus;
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\DocumentCentre\DocumentUpload;
+use App\Http\Controllers\Master\DocumentCentre\DocumentUpload;
 use App\Models\Complaint\Complaint;
 use App\Models\Complaint\ComplaintDocument;
 use App\Models\Complaint\ComplaintStatusHistory;

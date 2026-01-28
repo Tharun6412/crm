@@ -35,6 +35,8 @@ Route::middleware(['auth', ModuleAccess::class])->group(function() {
     Route::post('closeOTP',[App\Http\Controllers\Complaints\ComplaintsController::class, 'closeOTP']);
     // resource
     Route::resource('feedback', App\Http\Controllers\Complaints\FeedbackController::class);
+    // Export
+    Route::get('complaintExport',[App\Http\Controllers\Complaints\ComplaintsController::class, 'complaintExport']);
     Route::resource('', App\Http\Controllers\Complaints\ComplaintsController::class);
     // Consumer Call search
     Route::get('search',[App\Http\Controllers\Complaints\ConsumerSearchController::class, 'search']);

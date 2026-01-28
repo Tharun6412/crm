@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Consumer;
 
 use App\Enums\ConsumerStatus as EnumsConsumerStatus;
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\DocumentCentre\DocumentUpload;
+use App\Http\Controllers\Master\DocumentCentre\DocumentUpload;
 use App\Http\Requests\Consumer\RegistrationValidationRequest;
 use App\Models\Consumer\Consumer;
 use App\Models\Consumer\ConsumerDocument;

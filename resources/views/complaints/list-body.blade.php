@@ -23,6 +23,7 @@
     </div>
     <div>
         <x-auth.link href="{{ url('calls/create/1') }}" class="btn btn-success btn-sm link-modal"><i class="bi bi-plus-lg"></i>&nbsp;Consumer</x-auth.link>
+        <x-auth.link href="{{ url('calls/complaintExport') }}?{{ http_build_query(request()->all()) }}" class="btn btn-secondary btn-sm"><i class="bi bi-plus-lg"></i>&nbsp;Export</x-auth.link>
         <x-auth.link href="{{ url('calls/external/create') }}" class="btn btn-success btn-sm" target="_blank"><i class="bi bi-plus-lg"></i>&nbsp;External</x-auth.link>
     </div>
 </div>

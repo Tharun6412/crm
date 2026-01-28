@@ -2,8 +2,8 @@
 namespace App\Http\Controllers\Spot;
 
 use App\Http\Controllers\Controller;
-use App\Models\Admin\Ga;
-use App\Models\Admin\Segment;
+use App\Models\Master\Ga;
+use App\Models\Master\Segment;
 use App\Models\Spot\Target;
 use Carbon\Carbon;
 use Illuminate\Http\Request;

@@ -1,7 +1,7 @@
 <?php
 namespace App\Http\Controllers\Spot;
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\DocumentCentre\DocumentUpload;
+use App\Http\Controllers\Master\DocumentCentre\DocumentUpload;
 use App\Models\Spot\DocumentTypes;
 use App\Models\Spot\ProspectDocuments;
 use App\Models\Spot\Prospects;

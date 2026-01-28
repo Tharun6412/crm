@@ -8,7 +8,7 @@ use App\Enums\TaxType;
 use App\Enums\InvoiceType;
 use App\Enums\MeterChange;
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\DocumentCentre\DocumentUpload;
+use App\Http\Controllers\Master\DocumentCentre\DocumentUpload;
 use App\Models\Consumer\Consumer;
 use App\Models\Invoice\BillInvoice;
 use App\Models\Invoice\BillInvoiceConsumption;

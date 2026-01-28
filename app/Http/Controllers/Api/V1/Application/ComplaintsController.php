@@ -6,7 +6,7 @@ use App\Enums\ComplaintStatus;
 use App\Enums\OtpModule;
 use App\Enums\OtpPurpose;
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\DocumentCentre\DocumentUpload;
+use App\Http\Controllers\Master\DocumentCentre\DocumentUpload;
 use App\Http\Requests\Api\Consumer\ComplaintValidationRequest;
 use App\Models\Complaint\Complaint;
 use App\Models\Complaint\ComplaintDocument;
