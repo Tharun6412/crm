@@ -3,6 +3,7 @@
 namespace App\Models\Invoice;
 
 use App\Models\Admin\User;
+use App\Models\Consumer\ConsumerMeter;
 use App\Models\DocumentCentre\Documents;
 use App\Models\Master\PriceHistory;
 use Illuminate\Database\Eloquent\Model;
@@ -77,6 +78,10 @@ class BillInvoiceConsumption extends Model
     }
 
     /**
-     * Relation with Meter Change
+     * Relation with Meter
      */
+    public function meter(): BelongsTo
+    {
+        return $this->belongsTo(ConsumerMeter::class, 'meter_id');
+    }
 }

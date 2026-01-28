@@ -58,4 +58,11 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('gasBills', [App\Http\Controllers\Api\V1\Application\InvoiceController::class, 'gasBills']);
         Route::get('viewGasBill/{id}', [App\Http\Controllers\Api\V1\Application\InvoiceController::class, 'viewGasBill'])->whereNumber('id');
     });
+    
+    // Payments
+    Route::prefix('payments')->group(function() {
+        Route::get('list', [App\Http\Controllers\Api\V1\Application\PaymentsController::class, 'list']);
+        // Route::get('edit/{id}', [App\Http\Controllers\Api\V1\Application\PaymentsController::class,'edit']);
+        Route::post('update', [App\Http\Controllers\Api\V1\Application\PaymentsController::class,'update']);
+    });
 });
