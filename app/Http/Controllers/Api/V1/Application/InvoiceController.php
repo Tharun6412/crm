@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers\Api\V1\Application;
 
+use App\Enums\Constants;
 use App\Enums\InvoiceType;
 use App\Http\Controllers\Controller;
 use App\Models\Consumer\Consumer;
 use App\Models\Invoice\BillInvoice;
+use App\Models\Master\PaymentType;
 use App\Traits\ApiResponse;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class InvoiceController extends Controller
@@ -19,19 +22,12 @@ class InvoiceController extends Controller
     /**
      * Invoices List
      * @method GET
+     * @param $consumer_id
      */
-    public function list(Request $request)
+    public function list(Request $request, $consumer_id)
     {
-        if(empty($request->key) || !preg_match('/^[a-zA-Z0-9]+$/', $request->key)) {
-            return response()->json(['message' => 'Please select consumer or Invoice number'], 422);
-        }
         // Get Invoices list
-        $invoices_q = BillInvoice::where(function ($query) use ($request) {
-                $query->whereHas('consumer', function ($q) use ($request) {
-                    $q->where('crn', 'like', '%' . trim($request->key) . '%');
-                })
-                ->orWhere('invoice_number', 'like', '%' . trim($request->key) . '%');
-            })
+        $invoices_q = BillInvoice::where('consumer_id', $consumer_id)
             ->whereNotIn('type_id', [InvoiceType::GAS_BILL->value])
             ->paginate(10);
             $invoices = $this->apiPagination($invoices_q);
@@ -58,29 +54,24 @@ class InvoiceController extends Controller
         if (! $invoice) {
             return response()->json(['error' => 'Invoice not found'], 422);
         }
+        // Payment Types
+        $payment_types = PaymentType::select('id', 'name', 'status')->get();
         // Get Invoice details
         return response()->json([
             'invoice' => $invoice,
+            'payment_types' => $payment_types,
         ], 200);
     }
 
     /**
      * Gas Bill list
      * @method GET
+     * @param $consumer_id
      */
-    public function gasBills(Request $request)
+    public function gasBills(Request $request, $consumer_id)
     {
-        // Gas Invoice
-        if(empty($request->key) || !preg_match('/^[a-zA-Z0-9]+$/', $request->key)) {
-            return response()->json(['message' => 'Please select consumer or Invoice number'], 422);
-        }
-        // Get Invoices list
-        $invoices_q = BillInvoice::where(function ($query) use ($request) {
-                $query->whereHas('consumer', function ($q) use ($request) {
-                    $q->where('crn', 'like', '%' . trim($request->key) . '%');
-                })
-                ->orWhere('invoice_number', 'like', '%' . trim($request->key) . '%');
-            })
+        // Get Gas Invoices list
+        $invoices_q = BillInvoice::where('consumer_id', $consumer_id)
             ->where('type_id', InvoiceType::GAS_BILL->value)
             ->paginate(10);
         $invoices = $this->apiPagination($invoices_q);
@@ -107,9 +98,32 @@ class InvoiceController extends Controller
         if (! $invoice) {
             return response()->json(['error' => 'Invoice not found'], 422);
         }
-        // Get Invoice details
+        // Check Invoice Due Date with Current Date
+        $late_fee = 0;
+        if(Carbon::now()->toDateString() > $invoice->due_date) {
+            // Check Late Fee invoice
+            if($invoice->childInvoices->contains('type_id', 3)) {
+                $late_fee = 0;
+            }else {
+                switch($invoice->consumer->segment_id) {
+                    case 1:
+                        $late_fee = Constants::DPNG_LPC->value;break;
+                    case 2:
+                        $late_fee = Constants::CPNG_LPC->value;break;
+                    case 3:
+                        $late_fee = Constants::IPNG_LPC->value;break;
+                    default:
+                        $late_fee = 0;
+                }
+            }
+        }
+        // Payment Types
+        $payment_types = PaymentType::select('id', 'name', 'status')->get();
+        // Response Data
         return response()->json([
             'invoice' => $invoice,
+            'late_fee' => $late_fee,
+            'payment_types' => $payment_types,
         ], 200);
     }
 }

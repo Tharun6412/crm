@@ -44,4 +44,15 @@ Route::middleware(['auth'])->group(function() {
         Route::resource('charge-areas', App\Http\Controllers\Master\Location\ChargeAreaController::class);
         Route::resource('areas', App\Http\Controllers\Master\Location\AreaController::class);
     });
+
+    // Documents
+    Route::prefix('dc')->group(function() {
+        Route::resource('documents', App\Http\Controllers\Master\DocumentCentre\DocumentController::class);
+        // Document browser
+        Route::resource('browse', App\Http\Controllers\Master\DocumentCentre\DocumentBrowser::class);
+        Route::get('sessionFiles', [App\Http\Controllers\Master\DocumentCentre\DocumentBrowser::class, 'sessionFiles']);
+        Route::get('deleteFile', [App\Http\Controllers\Master\DocumentCentre\DocumentBrowser::class, 'deleteFile']);
+        Route::get('search', [App\Http\Controllers\Master\DocumentCentre\DocumentBrowser::class, 'search']);
+        Route::post('selectFiles', [App\Http\Controllers\Master\DocumentCentre\DocumentBrowser::class, 'selectFiles']);
+    });
 });

@@ -161,7 +161,7 @@ class BillInvoice extends Model
      */
     public function childInvoices():HasMany
     {
-        return $this->hasMany(self::class, 'parent_invoice_id');
+        return $this->hasMany(self::class, 'parent_invoice_id')->orderBy('id', 'desc');
     }
 
     /**

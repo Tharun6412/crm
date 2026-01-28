@@ -24,7 +24,7 @@ class ConsumerController extends Controller
             return response()->json(['message' => 'Please select consumer number'], 422);
         }
         // Get consumers list
-        $consumers_q = Consumer::with(['ga:id,code,name', 'status:id,name'])->select('id', 'crn', 'fname', 'lname', 'ga_id', 'status_id')
+        $consumers_q = Consumer::with(['ga:id,code,name', 'status:id,name'])->select('id', 'crn', 'fname', 'lname', 'ga_id', 'status_id', 'segment_id', 'connection_type_id')
             ->when((!$request->user()->isAdmin() AND !$request->user()->isSuperAdmin()), function ($q) use($request) {
                 $q->whereIn('ga_id', $request->user()->ga()->pluck('ga_id')->toArray());
             })
@@ -35,13 +35,13 @@ class ConsumerController extends Controller
                 $q->whereIn('segment_id', (array) $request->segments);
             })
             ->when($request->has('connection_type_id'), function ($q) use($request) {
-                $q->whereIn('connection_type_id', (array)$request->connection_type_id);
+                $q->whereIn('connection_type_id', (array) $request->connection_type_id);
             })
             ->when($request->has('geo_area'), function ($q) use($request) {
                 $q->whereIn('ga_id', (array) $request->geo_area);
             })
             ->when($request->has('cns_status'), function ($q) use($request) {
-                $q->whereIn('status_id', (array)$request->cns_status);
+                $q->whereIn('status_id', (array) $request->cns_status);
             })
             ->paginate(10);
             $consumers = $this->apiPagination($consumers_q);

@@ -9,17 +9,28 @@
 @section('page-content')
     <div>
         @php
-            //Segments Enums
-            use \App\Enums\SegmentType; 
+            // Array Preparation
+            $complaint_status = $complaint_segment = [];
+            foreach ($complaints as $key => $value) {
+                # code...
+                $complaint_status[$value->status_id] = $value->status_count;
+                // SEGMENT Based Count
+                if (!isset($complaint_segment[$value->segment_id])) {
+                    $complaint_segment[$value->segment_id] = 0;
+                }
+                $complaint_segment[$value->segment_id] += $value->segment_count;
+            }
+            // Complaint Segment Dynamic
+            use \App\Enums\ComplaintSegmentType;
             // Complaints Enums
             use \App\Enums\ComplaintStatus;
             // Complaint Status Dynamic
-            $register = $complaints[ComplaintStatus::REGISTER->value] ?? 0;
-            $assign = $complaints[ComplaintStatus::ASSIGN->value] ?? 0;
-            $inprogress = $complaints[ComplaintStatus::IN_PROGRESS->value] ?? 0;
-            $investigation = $complaints[ComplaintStatus::INVESTIGATION->value] ?? 0;
-            $close = $complaints[ComplaintStatus::CLOSE->value] ?? 0;
-            $cancel = $complaints[ComplaintStatus::CANCEL->value] ?? 0;
+            $register = $complaint_status[ComplaintStatus::REGISTER->value] ?? 0;
+            $assign = $complaint_status[ComplaintStatus::ASSIGN->value] ?? 0;
+            $inprogress = $complaint_status[ComplaintStatus::IN_PROGRESS->value] ?? 0;
+            $investigation = $complaint_status[ComplaintStatus::INVESTIGATION->value] ?? 0;
+            $close = $complaint_status[ComplaintStatus::CLOSE->value] ?? 0;
+            $cancel = $complaint_status[ComplaintStatus::CANCEL->value] ?? 0;
             $total = $register+$assign+$inprogress+$investigation+$close+$cancel;
         @endphp
         <div class="row g-2 mb-3">
@@ -27,7 +38,7 @@
                 <div class="border border-primary rounded p-2">
                     <div class="d-flex justify-content-between align-items-center">
                         <span>DPNG</span>
-                        <span class="fs-3 fw-semibold">{{ $consumers[SegmentType::DOMESTIC->value] ?? 0 }}</span>
+                        <span class="fs-3 fw-semibold">{{ $complaint_segment[ComplaintSegmentType::PNGDOM->value] ?? 0 }}</span>
                     </div>
                 </div>
             </div>
@@ -35,7 +46,7 @@
                 <div class="border border-primary rounded p-2">
                     <div class="d-flex justify-content-between align-items-center">
                         <span>DPNG</span>
-                        <span class="fs-3 fw-semibold">{{ $consumers[SegmentType::DOMESTIC->value] ?? 0 }}</span>
+                        <span class="fs-3 fw-semibold">{{ $complaint_segment[ComplaintSegmentType::GENERAL->value] ?? 0 }}</span>
                     </div>
                 </div>
             </div>
@@ -43,7 +54,7 @@
                 <div class="border border-primary rounded p-2">
                     <div class="d-flex justify-content-between align-items-center">
                         <span>CPNG</span>
-                        <span class="fs-3 fw-semibold">{{ $consumers[SegmentType::COMMERCIAL->value] ?? 0 }}</span>
+                        <span class="fs-3 fw-semibold">{{ $complaint_segment[ComplaintSegmentType::PNGCOM->value] ?? 0 }}</span>
                     </div>
                 </div>
             </div>
@@ -51,7 +62,7 @@
                 <div class="border border-primary rounded p-2">
                     <div class="d-flex justify-content-between align-items-center">
                         <span>IPNG</span>
-                        <span class="fs-3 fw-semibold">{{ $consumers[SegmentType::INDUSTRIAL->value] ?? 0 }}</span>
+                        <span class="fs-3 fw-semibold">{{ $complaint_segment[ComplaintSegmentType::PNGIND->value] ?? 0 }}</span>
                     </div>
                 </div>
             </div>
@@ -59,7 +70,7 @@
                 <div class="border border-primary rounded p-2">
                     <div class="d-flex justify-content-between align-items-center">
                         <span>CNG</span>
-                        <span class="fs-3 fw-semibold">{{ $consumers[SegmentType::CNG->value] ?? 0 }}</span>
+                        <span class="fs-3 fw-semibold">{{ $complaint_segment[ComplaintSegmentType::CNG->value] ?? 0 }}</span>
                     </div>
                 </div>
             </div>

@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Models\Service\OTP;
+use App\Models\Service\Otp;
 use Illuminate\Support\Facades\Hash;
 
 class OtpService

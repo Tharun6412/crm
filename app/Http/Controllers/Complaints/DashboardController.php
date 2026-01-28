@@ -16,12 +16,9 @@ class DashboardController extends Controller
     public function index()
     {
         // Render output
-        $complaints = Complaint::select('status_id', DB::raw('COUNT(id) as status_count'))->groupBy('status_id')->get()->pluck('status_count','status_id');
-        $consumers = Consumer::select('segment_id', DB::raw('COUNT(id) as segment_count'))->groupBy('segment_id')->get()->pluck('segment_count','segment_id');
-        // dd($complaints);
+        $complaints = Complaint::select('status_id', 'segment_id', DB::raw('COUNT(id) as segment_count'), DB::raw('COUNT(id) as status_count'))->groupBy('status_id', 'segment_id')->get();
         return view('complaints.dashboard.dashboard', [
             'complaints' => $complaints,
-            'consumers' => $consumers,
         ]);
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\DocumentCentre;
+namespace App\Http\Controllers\Master\DocumentCentre;
 
 use App\Http\Controllers\Controller;
 use App\Models\DocumentCentre\Documents;
