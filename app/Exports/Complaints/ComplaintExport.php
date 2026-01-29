@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Exports;
+namespace App\Exports\Complaints;
 
 use App\Models\Complaint\Complaint;
 use Carbon\Carbon;

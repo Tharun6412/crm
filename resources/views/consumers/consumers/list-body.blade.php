@@ -16,6 +16,9 @@
     <div class="col-auto">
         ({{ $consumers->total() }}) Records found
     </div>
+    <div class="col-auto">
+        <a href="{{ url('consumers/consumerExport') }}?{{ http_build_query(request()->all()) }}" class="btn btn-info btn-sm"><i class="bi bi-squar">Export</i></a>
+    </div>
 </div>
 {{-- Consumers list --}}
 <div class="table-responsive" style="min-height: 500px;">

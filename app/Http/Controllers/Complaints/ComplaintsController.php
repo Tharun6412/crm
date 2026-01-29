@@ -7,7 +7,7 @@ namespace App\Http\Controllers\Complaints;
 use App\Enums\ComplaintStatus;
 use App\Enums\OtpModule;
 use App\Enums\OtpPurpose;
-use App\Exports\ComplaintExport;
+use App\Exports\Complaints\ComplaintExport;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Master\DocumentCentre\DocumentUpload;
 use App\Models\Admin\User;

@@ -31,16 +31,16 @@ class ConsumerController extends Controller
             ->when($request->has('key'), function ($q) use($request) {
                 $q->whereAny(['crn', 'fname', 'lname', 'email', 'phone'], 'like', '%' . $request->key . '%');
             })
-            ->when($request->has('segments'), function ($q) use($request) {
+            ->when($request->has('segments') and !empty($request->segments), function ($q) use($request) {
                 $q->whereIn('segment_id', (array) $request->segments);
             })
-            ->when($request->has('connection_type_id'), function ($q) use($request) {
+            ->when($request->has('connection_type_id') and !empty($request->connection_type_id), function ($q) use($request) {
                 $q->whereIn('connection_type_id', (array) $request->connection_type_id);
             })
-            ->when($request->has('geo_area'), function ($q) use($request) {
+            ->when($request->has('geo_area') and !empty($request->geo_area), function ($q) use($request) {
                 $q->whereIn('ga_id', (array) $request->geo_area);
             })
-            ->when($request->has('cns_status'), function ($q) use($request) {
+            ->when($request->has('cns_status') and !empty($request->cns_status), function ($q) use($request) {
                 $q->whereIn('status_id', (array) $request->cns_status);
             })
             ->paginate(10);

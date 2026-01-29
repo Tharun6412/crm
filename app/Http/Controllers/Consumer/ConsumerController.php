@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Consumer;
 
+use App\Exports\Consumers\ConsumerExport;
 use App\Http\Controllers\Controller;
 use App\Models\Consumer\Consumer;
 use App\Models\Master\MasterConsumerStatus;
@@ -72,5 +73,13 @@ class ConsumerController extends Controller
             'consumer' => $consumer,
             'consumer_meter' => $consumer->meter->where('status', 1)->first(),
         ]);
+    }
+
+    /**
+     * Consumers Export
+     */
+    public function consumerExport(Request $request)
+    {
+        return (new ConsumerExport($request))->download('consumers.xlsx');
     }
 }

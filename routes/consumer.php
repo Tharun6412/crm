@@ -43,6 +43,7 @@ Route::middleware(['auth', ModuleAccess::class])->group(function() {
     
     // Consumers list
     Route::resource('tr', App\Http\Controllers\Consumer\TRController::class);
+    Route::get('consumerExport', [App\Http\Controllers\Consumer\ConsumerController::class, 'consumerExport']);
     Route::get('/{id}', [App\Http\Controllers\Consumer\ConsumerController::class, 'show'])->whereNumber('id');
     Route::get('/{status:slug?}', [App\Http\Controllers\Consumer\ConsumerController::class, 'index']);
 

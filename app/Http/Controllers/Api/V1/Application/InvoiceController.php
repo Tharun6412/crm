@@ -27,10 +27,16 @@ class InvoiceController extends Controller
     public function list(Request $request, $consumer_id)
     {
         // Get Invoices list
-        $invoices_q = BillInvoice::where('consumer_id', $consumer_id)
-            ->whereNotIn('type_id', [InvoiceType::GAS_BILL->value])
-            ->paginate(10);
-            $invoices = $this->apiPagination($invoices_q);
+        $invoices_q = BillInvoice::with([
+            'invoiceType:id,name',
+            'status:id,name',
+        ])
+        ->select('id', 'type_id', 'invoice_number', 'invoice_date', 'total_amount', 'payable_amount', 'paid_amount', 'balance_amount', 'status_id', 'due_date', 'created_at')
+        ->where('consumer_id', $consumer_id)
+        ->whereNotIn('type_id', [InvoiceType::GAS_BILL->value])
+        ->paginate(10);
+
+        $invoices = $this->apiPagination($invoices_q);
         return response()->json(['invoices' => $invoices], 200);
     }
 
@@ -71,9 +77,15 @@ class InvoiceController extends Controller
     public function gasBills(Request $request, $consumer_id)
     {
         // Get Gas Invoices list
-        $invoices_q = BillInvoice::where('consumer_id', $consumer_id)
-            ->where('type_id', InvoiceType::GAS_BILL->value)
-            ->paginate(10);
+        $invoices_q = BillInvoice::with([
+            'invoiceType:id,name',
+            'status:id,name',
+        ])
+        ->select('id', 'type_id', 'invoice_number', 'invoice_date', 'total_amount', 'payable_amount', 'paid_amount', 'balance_amount', 'status_id', 'due_date', 'created_at')
+        ->where('consumer_id', $consumer_id)
+        ->where('type_id', InvoiceType::GAS_BILL->value)
+        ->paginate(10);
+
         $invoices = $this->apiPagination($invoices_q);
         return response()->json(['invoices' => $invoices], 200);
     }
