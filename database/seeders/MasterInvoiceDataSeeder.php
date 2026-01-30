@@ -80,13 +80,6 @@ class MasterInvoiceDataSeeder extends Seeder
             ['id' => 3, 'name' => 'Bounce'],
             ['id' => 4, 'name' => 'Cancel'],
         ]);
-        
-        // mst_pay_transaction_status
-        DB::table('mst_pay_transaction_status')->insert([
-            ['id' => 1, 'name' => 'No response'],
-            ['id' => 2, 'name' => 'Success'],
-            ['id' => 3, 'name' => 'Fail'],
-        ]);
     }
 }
  
