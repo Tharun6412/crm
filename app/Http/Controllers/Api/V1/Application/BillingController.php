@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1\Application;
 
+use App\Enums\Constants;
 use App\Enums\ConsumerStatus;
 use App\Enums\InvoiceStatus;
 use App\Enums\TaxType;
@@ -133,7 +134,7 @@ class BillingController extends Controller
         $total_consumption = ($request->end_reading - $request->start_reading);
         $old_consumption = (float)$request->old_consumption;
         $total_scms = round(($total_consumption+$old_consumption), 3);
-        $cf = 1;
+        $cf = Constants::CORRECTION_FACTOR->value;
         $net_consumption = round(($total_scms * $cf),3);
 
         // 6. Get the price details
@@ -213,7 +214,7 @@ class BillingController extends Controller
             'payable_amount' => 0,
             'paid_amount' => 0,
             'balance_amount' => 0,
-            'due_date' => Carbon::now()->addDays(15)->format('Y-m-d'),
+            'due_date' => Carbon::now()->addDays(Constants::DPNG_DUEDAYS->value)->format('Y-m-d'),
             'status_id' => InvoiceStatus::PAID->value, // paid
             'created_by' => Auth::id()
         ];
@@ -256,7 +257,7 @@ class BillingController extends Controller
         $total_consumption = ($request->end_reading - $request->start_reading);
         $old_consumption = (float)$request->old_consumption;
         $total_scms = round(($total_consumption+$old_consumption), 3);
-        $cf = 1;
+        $cf = Constants::CORRECTION_FACTOR->value;
         $net_consumption = round(($total_scms * $cf),3);
         $inv_base_amt = round((($net_consumption * $cf) * $price->basic_price), 2);
         $tax_value = $price->tax_value; // tax percentage.
@@ -287,7 +288,7 @@ class BillingController extends Controller
             'payable_amount' => $inv_total,
             'paid_amount' => NULL,
             'balance_amount' => $inv_total,
-            'due_date' => Carbon::now()->addDays(15)->format('Y-m-d'),
+            'due_date' => Carbon::now()->addDays(Constants::DPNG_DUEDAYS->value)->format('Y-m-d'),
             'status_id' => InvoiceStatus::NOT_PAID->value, // Not paid
             'created_by' => Auth::id()
         ];
@@ -330,7 +331,7 @@ class BillingController extends Controller
         $old_consumption = (float)$request->old_consumption;
         $total_scms = round(($total_consumption+$old_consumption), 3);
         $scm_per_day = ($total_scms/$total_no_days);
-        $cf = 1;
+        $cf = Constants::CORRECTION_FACTOR->value;
         $net_consumption = round(($total_scms * $cf),3);
 
         $p_price = $inv_base_amt = $inv_tax_amt = $inv_total = 0;
@@ -372,7 +373,7 @@ class BillingController extends Controller
             'payable_amount' => $inv_total,
             'paid_amount' => NULL,
             'balance_amount' => $inv_total,
-            'due_date' => Carbon::now()->addDays(15)->format('Y-m-d'),
+            'due_date' => Carbon::now()->addDays(Constants::DPNG_DUEDAYS->value)->format('Y-m-d'),
             'status_id' => InvoiceStatus::NOT_PAID->value, // Not paid
             'created_by' => Auth::id()
         ];

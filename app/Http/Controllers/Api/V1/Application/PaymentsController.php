@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1\Application;
 
 use App\Enums\InvoiceStatus;
 use App\Enums\InvoiceType;
+use App\Enums\PaymentStatus;
 use App\Enums\TaxType;
 use App\Http\Controllers\Controller;
 use App\Models\Invoice\BillInvoice;
@@ -35,14 +36,14 @@ class PaymentsController extends Controller
             return response()->json(['error' => 'Search Key is required'], 422);
         }
         // Get Invoices
-        $invoices_q = BillInvoice::whereHas('consumer', function($q) use($request) {
+        $invoices_q = BillInvoice::with([
+            'invoiceType:id,name',
+            'status:id,name',
+        ])->whereHas('consumer', function($q) use($request) {
             $q->where('crn', 'like', '%'.$request->key.'%');
         })->orWhere('invoice_number', 'like', '%'.$request->key.'%')->paginate(20);
         $invoices = $this->apiPagination($invoices_q);
 
-        if(empty($invoices['data'])) {
-            return response()->json(['error' => 'No records found'], 200);
-        }
         return response()->json(['invoices' => $invoices]);
     }
 
@@ -105,7 +106,7 @@ class PaymentsController extends Controller
             $invoice_data = [
                 'config' => [
                     'state_id' => $invoice->consumer->ga->state_id,
-                    'tax_id' => 2,
+                    'tax_id' => TaxType::GST->value,
                 ],
                 'headers' => [
                     'type_id' => InvoiceType::LATE_PAYMENT_CHARGES->value,
@@ -159,7 +160,7 @@ class PaymentsController extends Controller
                 'transaction_id'  => $request->transaction_no,
                 'amount'          => $payAmount,
                 'balance'         => $newBalance,
-                'status_id'       => 1,
+                'status_id'       => PaymentStatus::COMPLETED->value,
                 'notes'           => $request->notes,
                 'created_by'      => Auth::id(),
             ]);
@@ -168,7 +169,7 @@ class PaymentsController extends Controller
             $invoice->update([
                 'paid_amount'    => $newPaid,
                 'balance_amount' => $newBalance,
-                'status_id'      => ($newBalance == 0) ? 1 : 3, // Paid / Partial
+                'status_id'      => ($newBalance == 0) ? InvoiceStatus::PAID->value : InvoiceStatus::PARTIALLY_PAID->value, // Paid / Partial
             ]);
             $remainingAmount -= $payAmount;
         }
