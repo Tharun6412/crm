@@ -21,7 +21,7 @@
                     </div>
                     <div class="row mb-2" id="send_otp">
                         <div class="offset-sm-3 col-sm-7">
-                            <button type="button" class="btn btn-success" onclick="closeOTP({{ $complaint->consumer->phone }})">
+                            <button type="button" class="btn btn-success" onclick="closeOTP({{ $complaint->id }})">
                                 <i class="bi bi-check2-all" aria-hidden="true">&nbsp;</i>Send OTP
                             </button>
                         </div>
@@ -55,11 +55,11 @@
 @include('scripts.ajax-form-submit', ['form' => 'close'])
 <script type="text/javascript">
     // Close OTP Function
-    function closeOTP(phone_no)
+    function closeOTP(complaint_id)
     {
         $('#send_otp').addClass('d-none');
         $('#close_cmp').removeClass('d-none');
-        $.post("{{ url('calls/closeOTP') }}", {'phone_no' : phone_no, '_token' : '{{ csrf_token() }}'}, function(data) {
+        $.post("{{ url('calls/closeOTP') }}", {'id' : complaint_id, '_token' : '{{ csrf_token() }}'}, function(data) {
             $('#otp-msg').html(data);
         });
     }

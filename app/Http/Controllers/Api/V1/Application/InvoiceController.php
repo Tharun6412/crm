@@ -111,11 +111,11 @@ class InvoiceController extends Controller
             return response()->json(['error' => 'Invoice not found'], 422);
         }
         // Check Invoice Due Date with Current Date
-        $late_fee = 0;
+        $late_fee = '0';
         if(Carbon::now()->toDateString() > $invoice->due_date) {
             // Check Late Fee invoice
             if($invoice->childInvoices->contains('type_id', 3)) {
-                $late_fee = 0;
+                $late_fee = '0';
             }else {
                 switch($invoice->consumer->segment_id) {
                     case 1:
@@ -125,7 +125,7 @@ class InvoiceController extends Controller
                     case 3:
                         $late_fee = Constants::IPNG_LPC->value;break;
                     default:
-                        $late_fee = 0;
+                        $late_fee = '0';
                 }
             }
         }

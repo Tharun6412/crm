@@ -24,9 +24,19 @@ class InvoiceSearchController extends Controller
                 return response()->json(['message' => 'Please enter Invoice/CRN number'], 422);
             }
             // Get Invoices
-            $invoices = BillInvoice::whereHas('consumer', function($q) use($request) {
-                $q->where('crn', 'like', '%'.$request->search.'%');
-            })->orWhere('invoice_number', 'like', '%'.$request->search.'%')->paginate(20)->withQueryString();
+            $invoices = BillInvoice::when((!isAdmin() && !isSuperAdmin()), function ($q) {
+                $q->whereHas('consumer', function ($q) {
+                    $q->whereIn('ga_id', session('user')['gas']);
+                });
+            })
+            ->where(function ($q) use ($request) {
+                $q->whereHas('consumer', function ($q) use ($request) {
+                    $q->where('crn', 'like', '%' . $request->search . '%');
+                })
+                ->orWhere('invoice_number', 'like', '%' . $request->search . '%');
+            })
+            ->paginate(20)
+            ->withQueryString();
             // Ajax Response
             return view('billing.invoices.list-body', ['invoices' => $invoices]);
         }

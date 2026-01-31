@@ -6,6 +6,7 @@
                     <tr>
                         <th width="1%" nowrap>S.No</th>
                         <th>Invoice Number</th>
+                        <th>Invoice Type</th>
                         <th>Transaction Number</th>
                         <th>Payment Date</th>
                         <th>Paid Amount</th>
@@ -22,6 +23,7 @@
                         <tr>
                             <td>{{ $i++ }}</td>
                             <td>{{ $payment->invoice->invoice_number }}</td>
+                            <td>{{ $payment->invoiceType->name }}</td>
                             <td>{{ $payment->transaction_id }}</td>
                             <td>{{ $payment->payment_date->format('d-m-Y') }}</td>
                             <td>{{ numberFormat($payment->amount, 2) }}</td>

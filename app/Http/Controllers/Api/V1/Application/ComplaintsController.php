@@ -158,12 +158,15 @@ class ComplaintsController extends Controller
     /**
      * Close OTP
      */
-    public function closeOTP(Request $request) 
+    public function closeOTP(Request $request, $id) 
     {
-        if(empty($request->phone_no)){
+        // Fetch Complaint Details
+        $complaint = Complaint::find($id);
+        $phone_no = $complaint->consumer->phone ?? $complaint->phone;
+        if(empty($phone_no)){
             return response()->json(['message' => 'OTP not Sent'], 422);
         }
-        $otp = OtpService::create($request->phone_no, OtpPurpose::COMPLAINT_CLOSE->value, OtpModule::USER->value);
+        $otp = OtpService::create($phone_no, OtpPurpose::COMPLAINT_CLOSE->value, OtpModule::USER->value);
         return response()->json(['message' => 'OTP Sent Successfully to your mobile number'.$otp], 200);
     }
 

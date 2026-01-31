@@ -71,8 +71,8 @@ return new class extends Migration
         Schema::create('cns_consumer_data', function(Blueprint $table) {
             $table->id();
             $table->foreignId('consumer_id')->index()->nullable()->constrained(table:'cns_consumers')->noActionOnUpdate()->noActionOnDelete();
-            $table->decimal('lat',10,9)->nullable();
-            $table->decimal('lng',10,9)->nullable();
+            $table->string('lat',length:50)->nullable();
+            $table->string('lng',length:50)->nullable();
             $table->timestamps();
         });
 

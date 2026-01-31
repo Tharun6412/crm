@@ -37,13 +37,20 @@ class ComplaintsController extends Controller
         $sortBy = ($request->get('sortBy')) ? $request->get('sortBy') : 'created_at';
         $sortOr = ($request->get('sortOr')) ? $request->get('sortOr') : 'desc';
         $records = ($request->get('records')) ? $request->get('records') : 50;
-        $complaints = Complaint::when($request->has('key'), function ($q) use($request) {
-                $q->whereAny(['code'], 'like', '%' . $request->key . '%');
-            })
-            ->when($request->has('cmp_status'), function($q) use($request) {
-                $q->whereIn('status_id', $request->cmp_status);
-            })
-            ->orderBy($sortBy, $sortOr)->paginate($records)->withQueryString();
+        // fetch complaints based on GA
+        $complaints = Complaint::when((!isAdmin() AND !isSuperAdmin()), function ($q) {
+            $q->whereIn('ga_id', session('user')['gas']);
+        })
+        ->when($request->filled('key'), function ($q) use($request) {
+            $q->whereAny(['code'], 'like', '%' . $request->key . '%');
+        })
+        ->when($request->has('segment_id'), function($q) use($request) {
+            $q->whereIn('segment_id', $request->segment_id);
+        })
+        ->when($request->has('cmp_status'), function($q) use($request) {
+            $q->whereIn('status_id', $request->cmp_status);
+        })
+        ->orderBy($sortBy, $sortOr)->paginate($records)->withQueryString();
         
         // Render output
         if($request->ajax())
@@ -345,10 +352,13 @@ class ComplaintsController extends Controller
      */
     public function closeOTP(Request $request) 
     {
-        if(empty($request->phone_no)){
+        // Fetch Complaint Details
+        $complaint = Complaint::find($request->id);
+        $phone_no = $complaint->consumer->phone ?? $complaint->phone;
+        if(empty($phone_no)){
             return response()->json('OTP not Sent');
         }
-        $otp = OtpService::create($request->phone_no, OtpPurpose::COMPLAINT_CLOSE->value, OtpModule::USER->value);
+        $otp = OtpService::create($phone_no, OtpPurpose::COMPLAINT_CLOSE->value, OtpModule::USER->value);
         return response()->json('OTP Sent Successfully to your mobile number'.": ".$otp."<br/> and will expire in 60 seconds.");
     }
 

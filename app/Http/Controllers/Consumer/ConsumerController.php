@@ -17,7 +17,6 @@ class ConsumerController extends Controller
      */
     public function index(Request $request, MasterConsumerStatus $status)
     {
-        // print_r(session('user'));
         // Get consumers
         $consumers = Consumer::when((!isAdmin() AND !isSuperAdmin()), function ($q) {
                 $q->whereIn('ga_id', session('user')['gas']);

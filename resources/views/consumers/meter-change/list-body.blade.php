@@ -17,9 +17,6 @@
     <div class="col-auto">
         ({{ $meterChange->total() }}) Records found
     </div>
-    <div class="col-auto float-end">
-        <x-auth.link href="{{ url('consumers/meterChange/2/edit') }}" class="btn btn-success btn-sm link-modal">Create</x-auth.link>
-    </div>
 </div>
 {{-- Consumers Meter Change list --}}
 <div class="table-responsive" style="min-height: 500px;">

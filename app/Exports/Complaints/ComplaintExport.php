@@ -28,8 +28,11 @@ class ComplaintExport implements FromQuery, WithHeadings, WithMapping
     {
         $sortBy = ($this->request->get('sortBy')) ? $this->request->get('sortBy') : 'created_at';
         $sortOr = ($this->request->get('sortOr')) ? $this->request->get('sortOr') : 'desc';
-        $complaints = Complaint::when($this->request->has('key'), function ($q) {
+        $complaints = Complaint::when($this->request->filled('key'), function ($q) {
                 $q->whereAny(['code'], 'like', '%' . $this->request->key . '%');
+            })
+            ->when($this->request->has('segment_id'), function($q) {
+                $q->whereIn('segment_id', $this->request->segment_id);
             })
             ->when($this->request->has('cmp_status'), function($q) {
                 $q->whereIn('status_id', $this->request->cmp_status);

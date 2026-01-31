@@ -22,9 +22,7 @@
         </div>
     </div>
     <div>
-        <x-auth.link href="{{ url('calls/create/1') }}" class="btn btn-success btn-sm link-modal"><i class="bi bi-plus-lg"></i>&nbsp;Consumer</x-auth.link>
         <x-auth.link href="{{ url('calls/complaintExport') }}?{{ http_build_query(request()->all()) }}" class="btn btn-secondary btn-sm"><i class="bi bi-plus-lg"></i>&nbsp;Export</x-auth.link>
-        <x-auth.link href="{{ url('calls/external/create') }}" class="btn btn-success btn-sm" target="_blank"><i class="bi bi-plus-lg"></i>&nbsp;External</x-auth.link>
     </div>
 </div>
 {{-- Complaints / Calls list --}}
@@ -38,7 +36,7 @@
                 <th>Category</th>
                 <th>CRN</th>
                 <th>Consumer</th>
-                <th>Segment</th>
+                <th>Segment<x-complaint.segment-filter/></th>
                 <th>Estimated Close Date</th>
                 <th>Closed Date</th>
                 <th>Priority</th>
@@ -123,7 +121,7 @@
                 @endforeach
             @else
                 <tr>
-                    <td colspan="9">
+                    <td colspan="13">
                         <x-layouts.callout-info>No records found!</x->
                     </td>
                 </tr>
