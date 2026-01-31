@@ -1,3 +1,4 @@
+{{-- Execution form --}}
 <div class="modal-dialog modal-lg">
     <div class="modal-content">
         <div class="modal-header">
@@ -6,7 +7,7 @@
         </div>
         <div class="modal-body">
             <div id="executed-success">
-                <form id="executed-form" action="{{ url('consumers/execute/'.$id) }}" enctype="multipart/form-data" method="POST">
+                <form id="executed-form" action="{{ url('consumers/execute/' . $id) }}" enctype="multipart/form-data" method="POST">
                     @csrf
                     @method('PUT')
                     <div class="row mb-2">
@@ -45,13 +46,11 @@
                             <span class="text-danger validate-err-msg" id="notes-error"></span>
                         </div>
                     </div>
-                    <div class="mb-3" id="executed-error"></div>
-                    <div class="row mb-3">
-                        <div class="col-md-12 col-sm-12">
-                            <button type="submit" class="btn btn-success">
-                                <i class="bi bi-check2-square" aria-hidden="true">&nbsp;</i>Execute
-                            </button>
-                        </div>
+                    <div class="m-1" id="executed-error"></div>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-dark">
+                            <i class="bi bi-gear-wide" aria-hidden="true">&nbsp;</i>Execute
+                        </button>
                     </div>
                 </form>
             </div>

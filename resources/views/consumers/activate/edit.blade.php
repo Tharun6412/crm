@@ -1,4 +1,5 @@
-<div class="modal-dialog">
+{{-- Activation Form --}}
+<div class="modal-dialog modal-lg">
     <div class="modal-content">
         <div class="modal-header">
             <h4 class="modal-title">Activate Consumer</h4>
@@ -10,7 +11,7 @@
                     @csrf
                     @method('PUT')
                     <div class="row mb-2">
-                        <label class="col-form-label">Activate Image</label>
+                        <label class="col-form-label">Activation Image</label>
                         <div class="col-12">
                             <input type="file" name="dc_file" id="dc_file" class="form-control form-control-sm"/>
                             <span class="text-danger validate-err-msg" id="dc_file-error"></span>
@@ -24,12 +25,10 @@
                         </div>
                     </div>
                     <div class="mb-3" id="activated-error"></div>
-                    <div class="row mb-2">
-                        <div class="col-md-12 col-sm-12">
-                            <button type="submit" class="btn btn-success">
-                                <i class="bi bi-check2-square" aria-hidden="true">&nbsp;</i>Activate
-                            </button>
-                        </div>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-success">
+                            <i class="bi bi-check2-square" aria-hidden="true">&nbsp;</i>Activate
+                        </button>
                     </div>
                 </form>
             </div>

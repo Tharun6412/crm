@@ -205,3 +205,11 @@ a {
         text-align: center !important;
     }
 }
+
+/* Custom styles */
+.text-bg-purple {
+  background-color: purple;
+}
+.text-bg-yellow {
+  background-color: yellow;
+}

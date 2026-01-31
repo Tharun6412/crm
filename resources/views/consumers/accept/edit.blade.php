@@ -20,11 +20,11 @@
                         <div class="col-12 d-flex gap-4">
                             <div class="form-check">
                                 <input type="radio" class="form-check-input" name="status" id="status1" value="1">
-                                <label for="status1" class="form-check-label text-success">Accept</label>
+                                <label for="status1" class="form-check-label text-success"><i class="bi bi-check-all"></i>&nbsp;Accept</label>
                             </div>
                             <div class="form-check">
                                 <input type="radio" class="form-check-input" name="status" id="status2" value="2">
-                                <label for="status2" class="form-check-label text-danger">Reject</label>
+                                <label for="status2" class="form-check-label text-danger"><i class="bi bi-ban"></i>&nbsp;Reject</label>
                             </div>
                         </div>
                     </div>

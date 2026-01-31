@@ -1,3 +1,4 @@
+{{-- HSC Form --}}
 <div class="modal-dialog modal-lg">
     <div class="modal-content">
         <div class="modal-header">
@@ -24,12 +25,10 @@
                         </div>
                     </div>
                     <div class="mb-3" id="hsc-error"></div>
-                    <div class="row mb-2">
-                        <div class="col-md-12 col-sm-12">
-                            <button type="submit" class="btn btn-success">
-                                <i class="bi bi-check2-square" aria-hidden="true">&nbsp;</i>HSC
-                            </button>
-                        </div>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-success text-bg-purple">
+                            <i class="bi bi-link-45deg" aria-hidden="true">&nbsp;</i>HSC
+                        </button>
                     </div>
                 </form>
             </div>

@@ -16,12 +16,10 @@
                         </div>
                     </div>
                     <div class="mb-3" id="td-error"></div>
-                    <div class="row mb-3">
-                        <div class="col-md-12 col-sm-12">
-                            <button type="submit" class="btn btn-success">
-                                <i class="bi bi-check2-square" aria-hidden="true">&nbsp;</i>Disconnect Temporarly
-                            </button>
-                        </div>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-warning">
+                            <i class="bi bi-ban" aria-hidden="true">&nbsp;</i>Disconnect Temporarly
+                        </button>
                     </div>
                 </form>
             </div>

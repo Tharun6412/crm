@@ -16,14 +16,10 @@
                         </div>
                     </div>
                     <div class="mb-3" id="pd-error"></div>
-                    <div class="row mb-3">
-                        <div class="col-md-12 col-sm-12">
-                            <div class="text-end">
-                                <button type="submit" class="btn btn-success btn-sm">
-                                    <i class="bi bi-check2-square" aria-hidden="true">&nbsp;</i>Permanently Disconnect
-                                </button>
-                            </div>
-                        </div>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-danger">
+                            <i class="bi bi-x-circle" aria-hidden="true">&nbsp;</i>Disconnect Permanently
+                        </button>
                     </div>
                 </form>
             </div>
