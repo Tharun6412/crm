@@ -1,44 +1,30 @@
 {{-- User registration view --}}
 
-@extends('layouts.layout_guest')
+@extends('layouts.layout-auth')
 
 @section('title', 'Registration')
 
-@push('scripts')
-    <script src="{{ asset('js/auth.js') }}"></script>
-@endpush
-
 @section('page-content')
-    <div class="row">
-        <div class="offset-md-3 col-md-6 col-sm-12">
-            {{-- <div class="d-flex justify-content-center m-5"> --}}
-                <div class="card w-100">
-                    <div class="card-header">
-                        <h5 class="card-title">User Registration</h5>
-                    </div>
-                    <div class="card-body" id="self-register-container">
-                        <form action="{{ url('register-verify') }}" id="register-verify">
-                            @csrf
-                            <div class="row mb-3">
-                                <label for="emp_id" class="col-sm-3 col-control-label">Employee Id</label>
-                                <div class="col-sm-9">
-                                    <input type="text" class="form-control" name="emp_id" id="emp_id" value="{{ old('emp_id') }}">
-                                    @error('emp_id')
-                                        <small class="text-danger">{{ $message }}</small>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="offset-sm-3 col-sm-9">
-                                    <button type="submit" class="btn btn-success"><i class="bi bi-person-exclamation"></i>&nbsp;Verify</button>
-                                    <a href="{{ url('login') }}" class="btn btn-link">Login</a>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
+    <h1 class="fs-3 fw-semibold"><i class="bi bi-shield-lock"></i>&nbsp;Register</h1>
+    <div id="self-register-container">
+        <form action="{{ url('register-verify') }}" id="register-verify">
+            @csrf
+            <div class="row mb-3">
+                <label for="emp_id" class="col-sm-4 col-form-label"><i class="bi bi-person"></i>&nbsp;Employee ID</label>
+                <div class="col-sm-8">
+                    <input type="text" name="emp_id" id="emp_id" class="form-control" value="{{ old('emp_id') }}">
+                    @error('emp_id')
+                        <small class="text-danger">{{ $message }}</small>
+                    @enderror
                 </div>
-            {{-- </div> --}}
-        </div>
+            </div>
+            <div class="row">
+                <div class="offset-sm-4 col-sm-8">
+                    <button type="submit" class="btn btn-success"><i class="bi bi-person-exclamation"></i>&nbsp;Verify</button>
+                    <a href="{{ url('login') }}" class="btn btn-link">LogIn</a>
+                </div>
+            </div>
+        </form>
     </div>
     <script type="module">
         $(function(){

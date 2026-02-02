@@ -16,11 +16,9 @@
                 @foreach ($user->statusHistory as $status)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
-                        <td>{{ $status->created_at->format('d.m.Y') }}</td>
+                        <td>{{ $status->created_at?->format('d.m.Y H:i') }}</td>
                         <td>
-                            <span class="badge text-bg-{{ ($status->status == 1) ? 'success' : 'danger' }}">
-                                {{ ($status->status == 1) ? 'Active' : 'Inactive' }}
-                            </span>
+                            <x-admin.user-status :status="$status->status" />
                         </td>
                         <td>{{ $status->notes }}</td>
                         <td>{{ $status->createdBy->emp_id }}</td>

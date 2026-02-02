@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Admin\User;
-use App\Models\Admin\UserStatus;
+use App\Models\Admin\UserStatusHistory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -33,11 +33,11 @@ class UserStatusController extends Controller
         ]);
 
         // Update user status
-        User::where('id', $id)->update(['status' => $request->status]);
+        User::where('id', $id)->update(['status_id' => $request->status]);
         // Add status history record
-        UserStatus::create([
+        UserStatusHistory::create([
             'user_id' => $id,
-            'status' => $request->status,
+            'status_id' => $request->status,
             'notes' => $request->notes,
             'created_by' => Auth::id(),
         ]);

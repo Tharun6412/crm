@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\UserStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Master\Department;
 use App\Models\Master\Ga;
 use App\Models\Admin\Role;
 use App\Models\Admin\User;
+use App\Models\Admin\UserStatusHistory;
 use App\Models\Spot\SpotRoles;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\View\View;
 
@@ -47,8 +50,8 @@ class UserController extends Controller
                 return $q->whereIn('role_id', $request->roles);
             });
         })
-        ->when($request->has('status'), function($q) use($request) {
-            return $q->whereIn('status', $request->status);
+        ->when($request->has('status_id'), function($q) use($request) {
+            return $q->whereIn('status_id', $request->status);
         })
         ->orderBy($sortBy, $sortOr)->paginate(10)->withQueryString();
 
@@ -87,6 +90,72 @@ class UserController extends Controller
     }
 
     /**
+     * Create New user
+     */
+    public function create()
+    {
+        // Get required data to create
+        $geo_areas = Ga::all();
+        $departments = Department::all();
+        $roles = Role::all();
+
+        // Render output
+        return view('admin.users.create', [
+            'geo_areas' => $geo_areas,
+            'departments' => $departments,
+            'roles' => $roles,
+        ]);
+    }
+
+    /**
+     * Insert user data
+     */
+    public function store(Request $request)
+    {
+        // Validation
+        $request->validate([
+            'emp_id' => 'required|unique:App\Models\Admin\User,emp_id',
+            'email' => 'required',
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'mobile' => 'required',
+            'department_id' => 'required',
+        ]);
+
+        //-- Create New user
+        // Insert into users
+        $new_user = User::create([
+            'emp_id' => $request->emp_id,
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'password' => Hash::make('Megha@Gas'),
+            'email' => $request->email,
+            'mobile' => $request->mobile,
+            'dob' => ($request->dob) ? Carbon::createFromFormat('d-m-Y', $request->dob) : null,
+            'doj' => ($request->doj) ? Carbon::createFromFormat('d-m-Y', $request->doj) : null,
+            'department_id' => $request->department_id,
+            'status_id' => UserStatus::REGISTER->value,
+        ]);
+
+        // Insert into user status history
+        UserStatusHistory::create([
+            'user_id' => $new_user->id,
+            'status_id' => UserStatus::REGISTER->value,
+            'created_by' => Auth::id(),
+        ]);
+        // Sync Geo areas, roles with pivot relation
+        $validated = $request->validate([
+            'geo_areas' => 'array',
+            'roles' => 'array',
+        ]);
+        $new_user->ga()->sync($validated['geo_areas'] ?? []);
+        $new_user->roles()->sync($validated['roles'] ?? []);
+
+        // Response
+        return response()->json(['success' => 'New user created successfully!']);
+    }
+
+    /**
      * User edit
      */
     public function edit($id)
@@ -115,20 +184,22 @@ class UserController extends Controller
     {
         // Validation
         $request->validate([
+            'emp_id' => 'required',
+            'email' => 'required',
             'first_name' => 'required',
             'last_name' => 'required',
             'mobile' => 'required',
             'department_id' => 'required',
-            'status' => 'required',
         ]);
 
         // Update
         $user = User::findOrFail($id);
+        $user->emp_id = $request->emp_id;
+        $user->email = $request->email;
         $user->first_name = $request->first_name;
         $user->last_name = $request->last_name;
         $user->mobile = $request->mobile;
         $user->department_id = $request->department_id;
-        // $user->status = $request->status;
         $user->dob = ($request->dob) ? Carbon::createFromFormat('d-m-Y', $request->dob) : null;
         $user->save();
 
@@ -149,12 +220,19 @@ class UserController extends Controller
     /**
      * Reset password
      */
-    public function reset(Request $request, $id)
+    public function reset($id)
     {
         // Reset password
-        $update = User::where('id', $id)->update([
-            'password' => Hash::make('Megha@2025'),
+        $update_user = User::where('id', $id)->update([
+            'password' => Hash::make('Megha@Gas'),
         ]);
+        // Insert into user status history
+        UserStatusHistory::create([
+            'user_id' => $id,
+            'status_id' => UserStatus::RSET_PASSWORD->value,
+            'created_by' => Auth::id(),
+        ]);
+
         // Response
         return response()->json(['msg' => 'Password reset successful!']);
     }

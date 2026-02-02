@@ -19,11 +19,17 @@ return new class extends Migration
             $table->foreignId('ga_id')->nullable()->index()->constrained(table:'mst_gas')->noActionOnDelete()->noActionOnUpdate();
         });
 
-        // User status history
+        // User status
         Schema::create('adm_user_status', function(Blueprint $table) {
             $table->id();
+            $table->string('name', length:64)->nullable();
+        });
+
+        // User status history
+        Schema::create('adm_user_status_history', function(Blueprint $table) {
+            $table->id();
             $table->foreignId('user_id')->nullable()->index()->constrained(table: 'users')->noActionOnDelete()->noActionOnUpdate();
-            $table->boolean('status')->nullable();
+            $table->foreignId('status_id')->nullable()->index()->constrained(table:'adm_user_status')->noActionOnDelete()->noActionOnUpdate();
             $table->string('notes', length:225)->nullable();
             $table->foreignId('created_by')->nullable()->index()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();
             $table->timestamps();
@@ -31,8 +37,9 @@ return new class extends Migration
 
         // Alter User table department and ga_id
         Schema::table('users', function(Blueprint $table) {
-            $table->foreignId('ga_id')->after('status')->nullable()->index()->constrained(table:'mst_gas')->noActionOnDelete()->noActionOnUpdate();
-            $table->foreignId('department_id')->after('ga_id')->nullable()->index()->constrained(table:'mst_departments')->noActionOnDelete()->noActionOnUpdate();
+            $table->foreignId('status_id')->after('type')->nullable()->index()->constrained(table:'adm_user_status')->noActionOnDelete()->noActionOnUpdate();
+            $table->foreignId('department_id')->after('status_id')->nullable()->index()->constrained(table:'mst_departments')->noActionOnDelete()->noActionOnUpdate();
+            $table->foreignId('ga_id')->after('department_id')->nullable()->index()->constrained(table:'mst_gas')->noActionOnDelete()->noActionOnUpdate();
         });
     }
 

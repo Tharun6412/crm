@@ -2,10 +2,15 @@
 
 namespace app\Http\Controllers\Auth;
 
+use App\Enums\OtpModule;
+use App\Enums\OtpPurpose;
+use App\Enums\UserStatus;
 use App\Http\Controllers\Controller;
 use App\Mail\ForgotPasswordOtpMail;
-use App\Models\User;
+use App\Models\Admin\User;
+use App\Models\Admin\UserStatusHistory;
 use App\Models\UserOtp;
+use App\Services\OtpService;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -30,15 +35,17 @@ class ForgotPassword extends Controller
     public function userVerify(Request $request)
     {
         // Validation
-        $request->validate(['emp_id' => 'required|exists:App\Models\User,emp_id',]);
+        $request->validate(['emp_id' => 'required']);
 
         // Get details of user
-        $user = User::where('emp_id', $request->emp_id)->first();
+        $user = User::where(['emp_id' => $request->emp_id, 'status_id' => UserStatus::ACTIVE->value])->first();
+        if(!$user)
+            abort(422, 'Invalid Emp Id / Employee disabled');
         // Generate OTP and send email
-        $this->generateOtp($user);
+        $otp = $this->generateOtp($user);
 
         // Response
-        return view('auth/forgot_user_details', ['user' => $user]);
+        return view('auth/forgot_user_details', ['user' => $user, 'otp' => $otp]);
     }
 
     /**
@@ -47,21 +54,15 @@ class ForgotPassword extends Controller
     public function generateOtp($user)
     {
         // Generate, store and send OTP to the registered mobile number
-        $reg_otp = mt_rand(100000, 999999);
-        // Invalidate current active OTP records
-        $update = UserOtp::where('user_id', $user->id)->where('verify_status', 0)->update(['verify_status' => 2]);
-        // Store OTP
-        $store_otp = UserOtp::create([
-            'user_id' => $user->id,
-            'otp' => $reg_otp,
-            'verify_status' => 0,
-        ]);
+        $otp = OtpService::create($user->mobile, OtpPurpose::PASSWORD_RESET->value, OtpModule::USER->value);
+
         // Send OTP to email
         $mail_data = [
-            'name' => $user->first_name . ' ' . $user->last_name,
-            'otp' => $reg_otp,
+            'name' => $user->name,
+            'otp' => $otp,
         ];
-        Mail::to($user->email)->send(new ForgotPasswordOtpMail($mail_data));
+        // Mail::to($user->email)->send(new ForgotPasswordOtpMail($mail_data));
+        return $otp;
     }
 
     /**
@@ -71,22 +72,14 @@ class ForgotPassword extends Controller
     {
         // Validation
         $request->validate([
-            'reg_otp' => [
-                'required',
-                'numeric',
-                'digits:6',
-                Rule::exists('adm_user_otp', 'otp')->where(function (Builder $query) use($id) {
-                    $query->where('user_id', $id);
-                    $query->where('verify_status', 0);
-                }),
-            ]
+            'reg_otp' => 'required|numeric|digits:6',
         ]);
 
+        // Get User deatils
+        $user = User::find($id);
+
         // Update OTP table
-        $otp_update = UserOtp::where('user_id', $request->id)->where('verify_status', 0)->update([
-            'verify_status' => 1,
-            'veified_at' => now()
-        ]);
+        $verify_otp = OtpService::verify($user->mobile, OtpPurpose::PASSWORD_RESET->value, $request->reg_otp, OtpModule::USER->value);
 
         // Generate session and redirect or load password creation window
         $request->session()->put('forgot_user', $request->id);
@@ -120,13 +113,30 @@ class ForgotPassword extends Controller
             ],
         ]);
         // Get and destroy session data
-        $user_source_id = $request->session()->pull('forgot_user');
+        $user_id = $request->session()->pull('forgot_user');
 
         // Update password with flash data
         $update_user = User::where('id', $id)->update([
             'password' => Hash::make($request->password),
         ]);
+        // Create status history record
+        UserStatusHistory::create([
+            'user_id' => $user_id,
+            'status_id' => UserStatus::RSET_PASSWORD->value,
+            'created_by' => $user_id,
+        ]);
+
         // Response
         return redirect('login')->with('status', 'Your have successfully regenerated your password!');
+    }
+
+    /**
+     * Cancel Regenarate
+     */
+    public function cancelReset(Request $request)
+    {
+        // Unset session
+        $request->session()->forget('forgot_user');
+        return redirect('forgotPassword');
     }
 }

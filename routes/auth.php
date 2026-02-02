@@ -21,6 +21,7 @@ Route::middleware('guest')->group(function(){
     Route::post('validateUserOtp/{id}', [App\Http\Controllers\Auth\ForgotPassword::class, 'validateUserOtp']);
     Route::get('reGeneratePassword', [App\Http\Controllers\Auth\ForgotPassword::class, 'reGeneratePassword']);
     Route::post('updatePassword/{id}', [App\Http\Controllers\Auth\ForgotPassword::class, 'updatePassword']);
+    Route::get('cancelReset', [App\Http\Controllers\Auth\ForgotPassword::class, 'cancelReset']);
 });
 // Authenticated
 Route::middleware('auth')->group(function(){

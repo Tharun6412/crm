@@ -6,6 +6,11 @@
 @section('page-title', 'User Profile')
     
 @section('page-content')
+    @if (session('status'))
+        <div class="alert alert-success">
+            {{ session('status') }}
+        </div>
+    @endif
     <div class="border p-3">
         <div class="row align-items-center">
             <div class="col-sm-4 text-center">
@@ -73,9 +78,7 @@
                     <dl class="d-flex">
                         <dt>Status:</dt>
                         <dd class="ps-2 mb-0">
-                            <span class="badge bg-{{ ($user->status == 1) ? 'success' : 'danger' }}">
-                                {{ !empty($user->status) ? (($user->status == 1) ? 'Active' : 'Inactive') : '-' }}
-                            </span>
+                            <x-admin.user-status :status="$user->status"/>
                         </dd class="ps-2 mb-0">
                     </dl>
                     <dl class="d-flex">

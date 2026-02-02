@@ -88,9 +88,7 @@
                             <dl class="d-flex">
                                 <dt>Status:</dt>
                                 <dd class="ps-2 mb-0">
-                                    <span class="badge bg-{{ ($user->status == 1) ? 'success' : 'danger' }}">
-                                        {{ !empty($user->status) ? (($user->status == 1) ? 'Active' : 'Inactive') : 'Inactive' }}
-                                    </span>
+                                    <x-admin.user-status :status="$user->status" />
                                 </dd>
                             </dl>
                             <dl class="d-flex">

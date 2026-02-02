@@ -1,6 +1,6 @@
 {{-- User registration view --}}
 
-@extends('layouts.layout')
+@extends('layouts.layout-auth')
 
 @section('title', 'Registration')
 

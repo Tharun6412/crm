@@ -14,9 +14,9 @@
                     <div class="row mb-2">
                         <label for="status" class="col-sm-3 col-form-label text-end">Status</label>
                         <div class="col-sm-8">
-                            <select name="status" id="status" class="form-select border-{{ ($user->status == 1) ? 'success' : 'danger'}}">
-                                <option value="1" @selected($user->status == 1)>Active</option>
-                                <option value="0" @selected($user->status == 0)>Inactive</option>
+                            <select name="status" id="status" class="form-select border-{{ ($user->status_id == 1) ? 'success' : 'danger'}}">
+                                <option value="1" @selected($user->status_id == 1)>Active</option>
+                                <option value="2" @selected($user->status_id == 2)>Inactive</option>
                             </select>
                         </div>
                     </div>

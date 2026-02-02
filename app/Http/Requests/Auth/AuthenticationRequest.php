@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Auth;
 
+use App\Enums\UserStatus;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
@@ -38,7 +39,7 @@ class AuthenticationRequest extends FormRequest
     {
         // Authentication with database table with status active
         // if(!Auth::attempt($this->only('emp_id', 'password'))) {
-        if(!Auth::attempt(['emp_id' => $this->emp_id, 'password' => $this->password, 'status' => 1])) {
+        if(!Auth::attempt(['emp_id' => $this->emp_id, 'password' => $this->password, 'status_id' => UserStatus::ACTIVE->value])) {
             // Set validation message
             throw ValidationException::withMessages([
                 'emp_id' => 'Invalid Employee Id or password!'

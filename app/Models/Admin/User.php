@@ -32,22 +32,24 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-        'email',
+        'emp_id',
         'password',
-        // Additional Columns
         'first_name',
         'last_name',
-        'status',
-        'email_verified_at',
         'mobile',
-        'emp_id',
+        'email',
+        'status_id',
+        'email_verified_at',
         'mobile_b',
         'gender',
         'dob',
+        'doj',
         'image',
         'type',
-        'department_id'
+        'department_id',
+        'activated_at',
     ];
+
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -57,8 +59,11 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
-    protected $appends = ['name'];
 
+    /**
+     * New property name = fname + lname
+     */
+    protected $appends = ['name'];
     protected function name(): Attribute
     {
         return Attribute::get(fn () => "{$this->first_name} {$this->last_name}");
@@ -74,6 +79,8 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'dob' => 'date',
+            'doj' => 'date',
+            'activated_at' => 'datetimes',
             'password' => 'hashed',
         ];
     }
@@ -87,12 +94,29 @@ class User extends Authenticatable
     }
 
     /**
+     * Relation with User status
+     */
+    public function status(): BelongsTo
+    {
+        return $this->belongsTo(UserStatus::class);
+    }
+
+    /**
+     * Status history
+     */
+    public function statusHistory(): HasMany
+    {
+        return $this->hasMany(UserStatusHistory::class);
+    }
+
+    /**
      * Relation with roles table via pivote user_roles
      */
     public function roles(): BelongsToMany
     {
         return $this->belongsToMany(Role::class, 'adm_user_roles', 'user_id', 'role_id');
     }
+    
 
     /**
      * Relation with geo areas table via pivote user_ga
@@ -111,24 +135,16 @@ class User extends Authenticatable
     }
 
     /**
-     * Status history
+     * Poly Morph Relation with Complaint comments
      */
-    public function statusHistory(): HasMany
-    {
-        return $this->hasMany(UserStatus::class);
-    }
-
-    /**
-     * Poly Morph Relation with Complaint
-     */
-    public function commentsBy():MorphMany
+    public function commentsBy(): MorphMany
     {
         return $this->morphMany(ComplaintComment::class, 'commentable');
     }
     /**
-     * PolyMorph Relation with Feedback
+     * PolyMorph Relation with complaint Feedback
      */
-    public function feedbackBy():MorphMany
+    public function feedbackBy(): MorphMany
     {
         return $this->morphMany(ComplaintFeedback::class, 'collectable');
     }

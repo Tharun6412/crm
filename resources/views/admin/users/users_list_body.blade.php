@@ -1,18 +1,25 @@
 {{-- Users list body --}}
 {{-- Search form --}}
 <form id="users-search-form" action="{{ url('admin/users') }}" method="GET">
-    <div class="row g-2 align-items-center pb-2">
-        <div class="col-auto">
-            <div class="input-group">
-                <input type="text" name="search_key" id="search_key" class="form-control form-control-sm" placeholder="search here..." value="{{ request()->get('search_key') }}">
-                <button type="submit" class="btn btn-primary btn-sm"><i class="bi bi-search"></i></button>
+    <div class="d-flex justify-content-between">
+        <div class="row g-2 align-items-center pb-2">
+            <div class="col-auto">
+                <div class="input-group">
+                    <input type="text" name="search_key" id="search_key" class="form-control form-control-sm" placeholder="search here..." value="{{ request()->get('search_key') }}">
+                    <button type="submit" class="btn btn-primary btn-sm"><i class="bi bi-search"></i></button>
+                </div>
+            </div>
+            <div class="col-auto">
+                <a href="{{ url('admin/users') }}" class="btn btn-sm btn-warning ajax-link"><i class="bi bi-arrow-clockwise"></i></a>
+            </div>
+            <div class="col-auto">
+                ({{ $users->total() }}) Records found
             </div>
         </div>
-        <div class="col-auto">
-            <a href="{{ url('admin/users') }}" class="btn btn-sm btn-warning ajax-link"><i class="bi bi-arrow-clockwise"></i></a>
-        </div>
-        <div class="col-auto">
-            ({{ $users->total() }}) Records found
+        <div>
+            <a href="{{ url('admin/users/create') }}" class="btn btn-sm btn-success link-modal">
+                <i class="bi bi-plus-lg"></i>&nbsp;Create
+            </a>
         </div>
     </div>
 
@@ -26,8 +33,8 @@
 {{-- Display --}}
 @if ($users->total() > 0)
     <div class="table-responsive" style="min-height: 500px;">
-        <table class="table table-bordered page-sort">
-            <thead>
+        <table class="table table-bordered table-primary page-sort">
+            <thead class="table-primary">
                 <tr class="bg-light">
                     <th width="1%" nowrap>S No</th>
                     <th nowrap>
@@ -65,8 +72,7 @@
                     <th>Geo Area<x-master.ga-filter class="float-end"/></th>
                     <th>Department<x-master.department-filter/></th>
                     <th>Role<x-admin.role-filter/></th>
-                    <th>Access</th>
-                    <th width="80" nowrap>Status<x-admin.status-filter name="status" :data="[1 => 'Active', 0 => 'Inactive']"/></th>
+                    <th width="80" nowrap>Status<x-admin.status-filter name="status" :data="[1 => 'Active', 2 => 'Inactive']"/></th>
                     <th>Actions</th>
                 </thead>
                 </tr>
@@ -91,7 +97,7 @@
                                         </button>
                                         <ul class="dropdown-menu">                
                                 @else
-                                    <li class="dropdown-item"><i class="bi bi-check2-square"></i>&nbsp;{{ $ga->code . '-' . $ga->name }}</li>
+                                    <li class="dropdown-item"><i class="bi bi-geo-alt-fill"></i>&nbsp;{{ $ga->code . '-' . $ga->name }}</li>
                                 @endif
                             @endforeach
                                 </ul>
@@ -107,7 +113,7 @@
                         @if ($user->roles->count() > 0)
                             @foreach ($user->roles as $role)
                                 @if ($loop->iteration == 1)
-                                    <div class="btn-group">
+                                    <div class="btn-group w-100">
                                         <button type="button" class="btn btn-outline-primary btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                                             {{ $role->name }}
                                         </button>
@@ -121,18 +127,7 @@
                         @endif
                     </td>
                     <td>
-                        @if ($user->ga_restriction)
-                            GA
-                        @elseif($user->cluster_restriction)
-                            Cluster
-                        @else
-                            Full
-                        @endif
-                    </td>
-                    <td>
-                        <span class="badge text-bg-{{ ($user->status == 1) ? 'success' : 'danger' }}">
-                            {{ ($user->status == 1) ? 'Active' : 'Inactive' }}
-                        </span>
+                        <x-admin.user-status :status="$user->status" />
                     </td>
                     <td>
                         <div class="btn-group">
@@ -150,20 +145,22 @@
                                         <i class="bi bi-pencil"></i>&nbsp;Edit
                                     </a>
                                 </li>
-                                <li>
-                                    <a class="dropdown-item reset-pwd" href="{{ url('admin/users/reset/' . $user->id) }}">
-                                        <i class="bi bi-key"></i>&nbsp;Reset Password
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item link-modal" href="{{ url('admin/users/status/' . $user->id) }}">
-                                        @if ($user->status == 1)
-                                            <i class="bi bi-ban"></i>&nbsp;Inactive
-                                        @else
-                                            <i class="bi bi-check-circle"></i>&nbsp;Activate
-                                        @endif
-                                    </a>
-                                </li>
+                                @if (in_array($user->status_id, [1, 2]))
+                                    <li>
+                                        <a class="dropdown-item reset-pwd" href="{{ url('admin/users/reset/' . $user->id) }}">
+                                            <i class="bi bi-key"></i>&nbsp;Reset Password
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item link-modal" href="{{ url('admin/users/status/' . $user->id) }}">
+                                            @if ($user->status_id == 1)
+                                                <i class="bi bi-ban"></i>&nbsp;Inactive
+                                            @else
+                                                <i class="bi bi-check-circle"></i>&nbsp;Activate
+                                            @endif
+                                        </a>
+                                    </li>
+                                @endif
                             </ul>
                         </div>
                     </td>

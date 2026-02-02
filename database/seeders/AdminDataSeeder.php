@@ -20,6 +20,14 @@ class AdminDataSeeder extends Seeder
             ['id' => 2, 'name' => 'Admin', 'position' => 2, 'status' => 1],
         ]);
 
+        // User Status
+        DB::table('adm_user_status')->insert([
+            ['id' => 1, 'name' => 'Active'],
+            ['id' => 2, 'name' => 'InActive'],
+            ['id' => 3, 'name' => 'Registered'],
+            ['id' => 4, 'name' => 'Reset / Change Password'],
+        ]);
+
         // Departments
         DB::table('mst_departments')->insert([
             ['id' => 1, 'name' => 'Finance and Accounts (F&A)', 'status' => 1],
@@ -44,8 +52,8 @@ class AdminDataSeeder extends Seeder
         
         // Users
         DB::table('users')->insert([
-            ['id' => 1, 'first_name' => 'Super', 'last_name' => 'Admin', 'email' => 'superadmin@meghagas.com', 'email_verified_at' => null, 'password' => Hash::make('12345678'), 'emp_id' => 'superadmin', 'mobile' => '9999999999', 'mobile_b' => NULL, 'gender' => NULL, 'dob' => NULL, 'image' => NULL, 'type' => 1, 'status' => 1, 'department_id' => 18, 'remember_token' => NULL, 'created_at' => now(), 'updated_at' => now()],
-            ['id' => 2, 'first_name' => 'Admin', 'last_name' => 'Megha', 'email' => 'admin@meghagas.com.com', 'email_verified_at' => null, 'password' => Hash::make(12345678), 'emp_id' => 'admin', 'mobile' => '8888888888', 'mobile_b' => NULL, 'gender' => NULL, 'dob' => NULL, 'image' => NULL, 'type' => 1, 'status' => 1, 'department_id' => 18, 'remember_token' => NULL, 'created_at' => now(), 'updated_at' => now()],
+            ['id' => 1, 'first_name' => 'Super', 'last_name' => 'Admin', 'email' => 'superadmin@meghagas.com', 'email_verified_at' => null, 'password' => Hash::make('12345678'), 'emp_id' => 'superadmin', 'mobile' => '9999999999', 'mobile_b' => NULL, 'gender' => NULL, 'dob' => NULL, 'image' => NULL, 'type' => 1, 'status_id' => 1, 'department_id' => 18, 'remember_token' => NULL, 'created_at' => now(), 'updated_at' => now()],
+            ['id' => 2, 'first_name' => 'Admin', 'last_name' => 'Megha', 'email' => 'admin@meghagas.com.com', 'email_verified_at' => null, 'password' => Hash::make(12345678), 'emp_id' => 'admin', 'mobile' => '8888888888', 'mobile_b' => NULL, 'gender' => NULL, 'dob' => NULL, 'image' => NULL, 'type' => 1, 'status_id' => 1, 'department_id' => 18, 'remember_token' => NULL, 'created_at' => now(), 'updated_at' => now()],
         ]);
 
         // User roles

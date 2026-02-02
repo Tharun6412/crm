@@ -25,10 +25,11 @@ return new class extends Migration
             $table->string('mobile_b', length: 16)->nullable();
             $table->tinyInteger('gender')->nullable();
             $table->date('dob')->nullable();
+            $table->date('doj')->nullable();
             $table->string('image', length: 120)->nullable();
             $table->integer('type')->nullable();
-            $table->tinyInteger('status')->nullable();
             $table->rememberToken();
+            $table->dateTime('activated_at');
             $table->timestamps();
         });
 
