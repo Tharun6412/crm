@@ -22,6 +22,8 @@ Route::middleware(['auth', ModuleAccess::class])->group(function() {
     Route::get('{id}',[App\Http\Controllers\Complaints\ComplaintsController::class, 'show'])->whereNumber('id');
     Route::get('{id}/edit',[App\Http\Controllers\Complaints\ComplaintsController::class, 'edit']);
     Route::post('update/{id}',[App\Http\Controllers\Complaints\ComplaintsController::class, 'update']);
+    Route::post('deleteComplaintDocument/{id}',[App\Http\Controllers\Complaints\ComplaintsController::class, 'deleteComplaintDocument']);
+
     // Status Change Routes
     Route::get('assign/{id}',[App\Http\Controllers\Complaints\ComplaintsController::class, 'assign']);
     Route::get('inProgress/{id}',[App\Http\Controllers\Complaints\ComplaintsController::class, 'inProgress']);

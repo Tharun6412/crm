@@ -1,15 +1,15 @@
 
-{{-- Domestic Registration --}}
+{{-- Industrial Registration --}}
 @extends('layouts.layout')
 
-@section('title', 'Registration')
+@section('title', 'Industrial Registration')
 
-@section('page-title', 'Registration')
+@section('page-title', 'Industrial Registration')
 
 @section('page-content')
     <div class="container">
-        <div id="add-domestic-success">
-            <form id="add-domestic-form" action="{{ url('consumers/register/domestic') }}" method="POST" enctype="multipart/form-data">
+        <div id="add-industrial-success">
+            <form id="add-industrial-form" action="{{ url('consumers/register/industrial') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="row bg-success-subtle pb-3">
                     <div class="col-sm-4 col-md-3">
@@ -63,45 +63,12 @@
                 </div>
                 <div class="mt-3 mb-1 fs-5 fw-semibold">Basic Details&nbsp;:</div>
                 <div class="row mb-2">
-                    <div class="col-md-6 col-sm-6 col-xs-12">
-                        <label class="form-label">Consumer Name&nbsp;:<span class="text-danger">*</span></label>
-                        <div class="input-group">
-                            <select name="title" id="title" class="form-select form-select-sm">
-                                <option value="">Title</option>
-                                @foreach ($titles->where('type', 1) as $title)
-                                    <option value="{{ $title->id }}">{{ $title->name }}</option>
-                                @endforeach
-                            </select>
-                            <input type="text" name="fname" id="fname" class="form-control form-control-sm" placeholder="First Name"/>
-                            <input type="text" name="lname" id="lname" class="form-control form-control-sm" placeholder="Last Name"/>
-                        </div>
-                        <span class="text-danger validate-err-msg" id="title-error"></span>
-                        <span class="text-danger validate-err-msg" id="fname-error"></span>
-                        <span class="text-danger validate-err-msg" id="lname-error"></span>
-                    </div>
-                    <div class="col-md-6 col-sm-6 col-xs-12">
-                        <label class="form-label">S/o / D/o / W/o&nbsp;:&nbsp;</label>
-                        <div class="input-group">
-                            <select name="cof" id="cof" class="form-select form-select-sm" style="width: 1%">
-                                <option value="">Select</option>
-                                @foreach ($titles->where('type', 2) as $title)
-                                    <option value="{{ $title->id }}">{{ $title->name }}</option>
-                                @endforeach
-                            </select>
-                            <input name="cof_name" id="cof_name" class="form-control form-control-sm" placeholder="Name" type="text"/>
-                        </div>
-                    </div>
-                </div>
-                <div class="row mb-2">
                     <div class="col-md-3 col-sm-6 col-xs-12">
-                        <label class="form-label">Email&nbsp;:&nbsp;</label>
-                        <input type="text" name="email" id="email" class="form-control form-control-sm" placeholder="Email"/>
-                        <span class="text-danger validate-err-msg" id="email-error"></span>
-                    </div>
-                    <div class="col-md-3 col-sm-6 col-xs-12">
-                        <label class="form-label">Aadhar number&nbsp;:<span class="text-danger">*</span></label>
-                        <input maxlength="12" name="aadhar" id="aadhar" class="form-control form-control-sm" placeholder="Aadhar Number" type="text"/>
-                        <span class="text-danger validate-err-msg" id="aadhar-error"></span>
+                        <label class="form-label">Name of the Firm/Unit&nbsp;:<span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <input type="text" name="name" id="name" class="form-control form-control-sm" placeholder="Enter Name"/>
+                        </div>
+                        <span class="text-danger validate-err-msg" id="name-error"></span>
                     </div>
                     <div class="col-md-3 col-sm-6 col-xs-12">
                         <label class="form-label">Registered mobile&nbsp;:<span class="text-danger">*</span></label>
@@ -119,7 +86,18 @@
                         </div>
                         <span class="text-danger validate-err-msg" id="phone_alt-error"></span>
                     </div>
+                    <div class="col-md-3 col-sm-6 col-xs-12">
+                        <label class="form-label">Email&nbsp;:&nbsp;</label>
+                        <input type="text" name="email" id="email" class="form-control form-control-sm" placeholder="Email"/>
+                        <span class="text-danger validate-err-msg" id="email-error"></span>
+                    </div>
+                    <div class="col-md-3 col-sm-6 col-xs-12">
+                        <label class="form-label">PAN number&nbsp;:</label>
+                        <input maxlength="12" name="pan" id="pan" class="form-control form-control-sm" placeholder="PAN Number" type="text"/>
+                        <span class="text-danger validate-err-msg" id="pan-error"></span>
+                    </div>
                 </div>
+                {{-- Security Deposit Details --}}
                 <div class="row mt-3">
                     <div class="mt-3 mb-1 fs-5 fw-semibold">Security Deposit Scheme Details&nbsp;:</div>
                     <div class="col-md-2 col-sm-6 col-xs-12">
@@ -172,6 +150,7 @@
                         </table>
                     </div>
                 </div>
+                {{-- Nominee Details --}}
                 <div class="mt-3 mb-1 fs-5 fw-semibold">Nominee details&nbsp;:</div>
                 <div class="row">
                     <div class="col-md-3 col-sm-6 col-xs-12">
@@ -188,6 +167,7 @@
                         </select>
                     </div>
                 </div>
+                {{-- Address Details --}}
                 <div class="mt-3 mb-1 fs-5 fw-semibold">Address details&nbsp;:</div>
                 <div class="row">
                     <div class="col-md-3 col-sm-6 col-xs-12">
@@ -221,12 +201,13 @@
                 <div class="mt-3 mb-1 fs-5 fw-semibold">Additional details&nbsp;:</div>
                 <div class="row">
                     <div class="col-md-3 col-sm-6 col-xs-12">
-                        <label class="form-label" for="lpg_no">LPG Connections no (if any)&nbsp;:&nbsp;</label>
-                        <input type="number" name="lpg_connections" id="lpg_connections" class="form-control form-control-sm" placeholder="LPG Connections"/>
-                    </div>
-                    <div class="col-md-3 col-sm-6 col-xs-12">
-                        <label class="form-label" for="dcq">Expected required PNG per day&nbsp;:&nbsp;</label>
-                        <input name="dcq" id="dcq" class="form-control form-control-sm" placeholder="DCQ" type="text"/>
+                        <label class="form-label" for="firm_type_id">Firm Type&nbsp;:&nbsp;</label>
+                        <select name="firm_type_id" id="firm_type_id" class="form-select form-select-sm">
+                            <option value="">Select</option>
+                            @foreach ($firm_types as $type)
+                                <option value="{{ $type->id }}">{{ $type->name }}</option>
+                            @endforeach
+                        </select>
                     </div>
                     <div class="col-md-3 col-sm-6 col-xs-12">
                         <label class="form-label" for="expected_date">Expected Date&nbsp;:&nbsp;</label>
@@ -236,62 +217,39 @@
                         </div>
                     </div>
                     <div class="col-md-3 col-sm-6 col-xs-12">
-                        <label class="form-label" for="distance">Distance&nbsp;:&nbsp;</label>
+                        <label class="form-label" for="distance">Distance From Pipeline&nbsp;:&nbsp;</label>
                         <div class="input-group input-group-sm">
                             <input type="text" name="distance" id="distance" class="form-control form-control-sm" placeholder="Distance"/>
-                            <span class="input-group-text" >Mts</label>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-3 col-sm-6 col-xs-12">
-                        <!-- 1=> Own. 2=> Rented.-->
-                        <label class="form-label" for="property_type">House&nbsp;:&nbsp;</label>
-                        <select name="property_type" id="property_type" class="form-select form-select-sm">
-                            <option value="">Select</option>
-                            <option value="1">Own</option>
-                            <option value="2">Rent</option>
-                            <option value="3">Lease</option>
-                        </select>
-                    </div>
-                    <div class="col-md-3 col-sm-6 col-xs-12">
-                        <label class="form-label" for="owner_name">Owner name (In case rented)&nbsp;:&nbsp;</label>
-                        <input type="text" name="owner_name" id="owner_name" class="form-control form-control-sm" placeholder="Owner Name"/>
-                    </div>
-                    <div class="col-md-3 col-sm-6 col-xs-12">
-                        <label class="form-label" for="owner_phone">Owner contact number (In case rented)&nbsp;:&nbsp;</label>
-                        <div class="input-group input-group-sm">
-                            <span class="input-group-text">+91</span>
-                            <input maxlength="10" type="text" name="owner_phone" id="owner_phone" class="form-control form-control-sm" placeholder="Owner Contact Number"/>
-                            <span class="text-danger validate-err-msg" id="owner_phone-error"></span>
+                            <span class="input-group-text" >KM</label>
                         </div>
                     </div>
                     <div class="col-md-3 col-sm-6 col-xs-12">
-                        <label class="form-label" for="gas_required_id">Natural gas required for&nbsp;:&nbsp;</label>
-                        <select name="gas_required_id" id="gas_required_id" class="form-select form-select-sm">
+                        <label class="form-label" for="fuel_type_id">Existing Fuel&nbsp;:&nbsp;</label>
+                        <select name="fuel_type_id" id="fuel_type_id" class="form-select form-select-sm">
                             <option value="">Select</option>
-                            @foreach ($gas_required_list as $list)
-                                <option value="{{ $list->id }}">{{ $list->name }}</option>
+                            @foreach ($fuel_types as $fuel)
+                                <option value="{{ $fuel->id }}">{{ $fuel->name }}</option>
                             @endforeach
                         </select>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-3 col-sm-6 col-xs-12">
-                        <label class="form-label" for="tenant_name">Tenant name&nbsp;:&nbsp;</label>
-                        <input type="text" name="tenant_name" id="tenant_name" class="form-control form-control-sm" placeholder="Tenant Name"/>
+                        <label class="form-label" for="dcq">Fuel Consumption per day&nbsp;:&nbsp;</label>
+                        <input type="text" name="dcq" id="dcq" class="form-control form-control-sm" placeholder="Consumption per day"/>
                     </div>
                     <div class="col-md-3 col-sm-6 col-xs-12">
-                        <label class="form-label" for="tenant_phone">Tenant contact number&nbsp;:&nbsp;</label>
-                        <div class="input-group input-group-sm">
-                            <span class="input-group-text">+91</span>
-                            <input maxlength="10" type="text" name="tenant_phone" id="tenant_phone" class="form-control form-control-sm" placeholder="Tenant Contact Number"/>
-                            <span class="text-danger validate-err-msg" id="tenant_phone-error"></span>
-                        </div>
+                        <label class="form-label" for="gst">GST No. for the unit&nbsp;:&nbsp;</label>
+                        <input type="text" name="gst" id="gst" class="form-control form-control-sm" placeholder="GST NO."/>
                     </div>
                     <div class="col-md-3 col-sm-6 col-xs-12">
-                        <label class="form-label" for="tenant_email">Tenant Email&nbsp;:&nbsp;</label>
-                        <input type="text" name="tenant_email" id="tenant_email" class="form-control form-control-sm" placeholder="Tenant Email"/>
+                        <label class="form-label" for="gas_required_id">Natural Gas Required for&nbsp;:&nbsp;</label>
+                        <select name="gas_required_id" id="gas_required_id" class="form-select form-select-sm">
+                            <option value="">Select</option>
+                            @foreach ($gas_required_list as $list)
+                                <option value="{{ $list->id }}">{{ $list->name }}</option>
+                            @endforeach
+                        </select>
                     </div>
                 </div>
                 <div class="mt-3 mb-1 fs-5 fw-semibold">Documents&nbsp;:</div>
@@ -343,7 +301,7 @@
                 <div class="mb-3 mt-4">
                     <div class="text-end">
                         <button class="btn btn-success" type="submit">
-                            <i class="bi bi-check2-square" aria-hidden="true">&nbsp;</i>Register Domestic Consumer
+                            <i class="bi bi-check2-square" aria-hidden="true">&nbsp;</i>Register Industrial Consumer
                         </button>
                         <a class="btn btn-warning" href="{{ url('consumers') }}"><i class="bi bi-chevron-left">&nbsp;</i>Back</a>
                     </div>
@@ -354,7 +312,7 @@
 @endsection
 {{-- Scripts --}}
 @push('scripts')
-    @include('scripts.ajax-file-submit', ['form' => 'add-domestic'])
+    @include('scripts.ajax-file-submit', ['form' => 'add-industrial'])
     @include('scripts.datepicker', ['list' => ['expected_date']])
     <script type="text/javascript">
         // Get Districts By GA

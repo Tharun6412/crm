@@ -7,9 +7,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 
 /**
- * Domestic form request handler
+ * Commecial Form request handler
  */
-class RegistrationValidationRequest extends FormRequest
+class CommercialValidationRequest extends FormRequest
 {
     /**
      * Validation rules
@@ -24,15 +24,16 @@ class RegistrationValidationRequest extends FormRequest
             'email' => 'nullable|email',
             'connection_type' => 'required',
             'scheme_id' => 'required',
-            'title' => 'required',
-            'fname' => 'required|regex:/^[A-Za-z ]+$/',
-            'lname' => 'required|regex:/^[A-Za-z ]+$/',
-            'aadhar' => 'required|numeric|digits:12',
+            'name' => 'required|regex:/^[A-Za-z ]+$/',
             'phone' => 'required|numeric|digits:10',
             'phone_alt' => 'nullable|numeric|digits:10',
+            'pan' => 'nullable|alpha_num|size:10',
+            'gst' => 'nullable|alpha_num',
+            'hours' => 'nullable|numeric',
+            'dcq' => 'nullable|numeric',
             'pincode' => 'required|numeric|digits:6',
+            'business_type_id' => 'required',
             'owner_phone' => 'nullable|numeric|digits:10',
-            'tenant_phone' => 'nullable|numeric|digits:10',
             'document_type.*' => 'required',
         ];
     }
