@@ -238,6 +238,13 @@ class ComplaintsController extends Controller
             'sub_category_id' => 'required',
             'notes' => 'required|max:225',
         ]);
+        // Check Complaint Docs
+        $docCount = ComplaintDocument::where('complaint_id', $id)->count();
+        if ($docCount >= 1) {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'dc_file_list_0' => 'Maximum 2 documents are allowed. Please delete existing documents first.'
+            ]);
+        }
         $now = Carbon::now();
         $category_details = ComplaintCategory::with(['department', 'type'])->where('id', $request->sub_category_id)->first();
         $resolution_val = (int)$category_details->resolution;
@@ -258,6 +265,7 @@ class ComplaintsController extends Controller
             'estimated_closed_at' => $est_close_at->toDateTimeString(),
             'updated_by' => Auth::id(),
         ]);
+        // Documemnts
         if(!empty($request->dc_file_list)) {
             $add_document = DocumentUpload::uploadBulk($request);
             foreach($request->dc_file_list as $key => $file) {
@@ -457,5 +465,17 @@ class ComplaintsController extends Controller
     public function complaintExport(Request $request)
     {
         return (new ComplaintExport($request))->download('complaints.xlsx');
+    }
+
+    /**
+     * Delete Complaint Document
+     */
+    public function deleteComplaintDocument(Request $request, $id)
+    {
+        // Delete Complaint Document
+        ComplaintDocument::where('file_id', $id)->delete();
+        // Delete Dc Files
+        DocumentUpload::delete($id);
+        return response()->json(['status' => 1]);
     }
 }

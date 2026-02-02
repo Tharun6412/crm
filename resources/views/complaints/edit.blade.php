@@ -114,6 +114,17 @@
                             <span class="text-danger validate-err-msg" id="notes-error"></span>
                         </div>
                     </div>
+                    <div class="row mb-2">
+                        <div class="col-sm-3 text-end fw-semibold"><i class="bi bi-paperclip"></i>Current Documents : </div>
+                        <div class="col-sm-7">
+                            @foreach ($complaint->complaintDocuments as $document)
+                                <span id="doc-{{ $document->file_id }}">
+                                    <a href="{{ url('dc/documents/' . $document->file_id) }}" title="{{ $document->file->file_name }}" target="_blank" class="btn btn-info btn-sm"><i class="bi bi-file-earmark-pdf"></i></a>        
+                                    <a type="button" onclick="deleteComplaintDoc({{ $document->file_id }})" title="{{ $document->file->file_name }}" class="btn btn-danger btn-sm"><i class="bi bi-trash"></i></a>&nbsp;&nbsp;       
+                                </span>
+                            @endforeach
+                        </div>
+                    </div>
                     <div class="row">
                         <label class="form-label col-sm-3 text-end">Documents&nbsp;:</label>
                         <div class="col-sm-7">
@@ -171,5 +182,20 @@
             $('#cmp_by').html(data.category_details.type.name);
             $('#est_close').html(data.estimation_time);
         });
+    }
+
+    // Delete Docuement
+    function deleteComplaintDoc(doc_id)
+    {
+        if(confirm("Are you sure you want to delete the document")) {
+            $.post("{{ url('calls/deleteComplaintDocument') }}/"+doc_id, {_token:"{{ csrf_token() }}"}, function(data) {
+                // Response
+                if(data.status == 1) {
+                    $('#doc-'+doc_id).remove();
+                }
+            }).fail(function() {
+                alert("Document Deletion Failed");
+            });
+        }
     }
 </script>

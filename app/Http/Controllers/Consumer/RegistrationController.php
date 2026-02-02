@@ -83,7 +83,6 @@ class RegistrationController extends Controller
             'property_type' => $request->property_type,
             'owner_name' => $request->owner_name,
             'owner_phone' => $request->owner_phone,
-            'gas_required_id' => $request->gas_required_id,
             'tenant_name' => $request->tenant_name,
             'tenant_phone' => $request->tenant_phone,
             'tenant_email' => $request->tenant_email,

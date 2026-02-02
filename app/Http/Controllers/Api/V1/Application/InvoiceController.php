@@ -55,6 +55,7 @@ class InvoiceController extends Controller
             'items:id,invoice_id,item_id,description,quantity,unit_price,total_price',
             'items.item:id,name',
             'creditNotes',
+            'payments:id,invoice_id,payment_date'
         ])->find($id);
         // Abort if Invoice not found
         if (! $invoice) {
@@ -105,6 +106,7 @@ class InvoiceController extends Controller
             'consumption:id,invoice_id,meter_id,date_from,date_to,prev_reading,curr_reading,net_consumption,unit_price',
             'childInvoices',
             'creditNotes',
+            'payments:id,invoice_id,payment_date'
         ])->where('type_id', InvoiceType::GAS_BILL->value)->find($id);
         // Abort if Invoice not found
         if (! $invoice) {
