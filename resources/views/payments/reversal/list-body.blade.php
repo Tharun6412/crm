@@ -5,12 +5,11 @@
                 <thead class="table-info">
                     <tr>
                         <th width="1%" nowrap>S.No</th>
-                        <th>CRN</th>
                         <th>Invoice Number</th>
                         <th>Invoice Type</th>
+                        <th>Transaction Number</th>
                         <th>Payment Date</th>
                         <th>Paid Amount</th>
-                        <th>Payment Type</th>
                         <th>Payment Status</th>
                         <th>Added By</th>
                         <th>Actions</th>
@@ -23,12 +22,11 @@
                     @foreach ($payments as $payment)
                         <tr>
                             <td>{{ $i++ }}</td>
-                            <td>{{ $payment->invoice->consumer->crn }}</td>
                             <td>{{ $payment->invoice->invoice_number }}</td>
-                            <td>{{ $payment->invoice->invoiceType->name ?? '' }}</td>
+                            <td>{{ $payment->invoiceType->name }}</td>
+                            <td>{{ $payment->transaction_id }}</td>
                             <td>{{ $payment->payment_date->format('d-m-Y') }}</td>
                             <td>{{ numberFormat($payment->amount, 2) }}</td>
-                            <td>{{ $payment->paymentType->name ?? '' }}</td>
                             <td>{{ $payment->status->name }}</td>
                             <td>{{ $payment->createdBy->name }}</td>
                             <td>
