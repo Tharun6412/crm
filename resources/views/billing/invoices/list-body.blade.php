@@ -1,16 +1,18 @@
 <div>
     @if ($invoices->count() > 0)
-        <div class="table-responsive" style="min-height: 500px;">
+        <div class="table-responsive" style="min-height: 300px;">
             <table class="table table-bordered table-hover">
                 <thead class="table-info">
                     <tr>
                         <th width="1%" nowrap>S.No</th>
                         <th>CRN</th>
-                        <th>Invoice Type</th>
+                        <th>Name</th>
                         <th>Invoice Number</th>
                         <th>Invoice Date</th>
+                        <th>Amount</th>
+                        <th>Balance</th>
                         <th>Status</th>
-                        <th>Added By</th>
+                        <th>Type</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -22,11 +24,13 @@
                         <tr>
                             <td>{{ $i++ }}</td>
                             <td><x-auth.link href="{{ url('consumers/'.$invoice->consumer_id) }}" target="_blank">{{ $invoice->consumer->crn }}</x-auth.link></td>
-                            <td>{{ $invoice->invoiceType->name }}</td>
-                            <td>{{ $invoice->invoice_number }}</td>
-                            <td>{{ $invoice->invoice_date->format('d-m-Y') }}</td>
+                            <td>{{ $invoice->consumer->name }}</td>
+                            <td><a href="{{ url('bill/invoice/' . $invoice->id) }}" target="_blank">{{ $invoice->invoice_number }}</a></td>
+                            <td>{{ $invoice->invoice_date?->format('d-m-Y') }}</td>
+                            <td class="text-end">{{ numberFormat($invoice->total_amount, 2) }}</td>
+                            <td class="text-end">{{ numberFormat($invoice->balance_amount, 2) }}</td>
                             <td>{{ $invoice->status->name }}</td>
-                            <td>{{ $invoice->createdBy->name }}</td>
+                            <td>{{ $invoice->invoiceType->name }}</td>
                             <td>
                                 <div class="dropdown">
                                     <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -49,8 +53,9 @@
                 </tbody>
             </table>
         </div>
-        <div>
-            {{ $invoices->links('utils.paginator', ['modDiv' => 'invoice-list']) }}
+        <div class="d-flex justify-content-between">
+            <div>({{ $invoices->total() }}) Invoices found</div>
+            <div>{{ $invoices->links('utils.paginator', ['modDiv' => 'invoice-list']) }}</div>
         </div>
     @else
         <div class="alert alert-info">
