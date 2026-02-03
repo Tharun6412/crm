@@ -45,6 +45,81 @@ return new class extends Migration
             $table->timestamps();
         });
 
+
+
+        /**
+         * Price groups
+         */
+        // mst_price_groups
+        Schema::create('mst_price_groups', function (Blueprint $table) {
+            $table->id();
+            $table->string('code', length: 32)->nullable();
+            $table->string('description', length: 120)->nullable();
+            $table->foreignId('ga_id')->index()->nullable()->constrained(table: 'mst_gas')->noActionOnUpdate()->noActionOnDelete();
+            $table->foreignId('segment_id')->index()->nullable()->constrained(table: 'mst_segments')->noActionOnUpdate()->noActionOnDelete();
+            $table->double('basic')->nullable();
+            $table->decimal('vat', 8, 2)->nullable();
+            $table->double('price')->nullable();
+            $table->date('effective_from')->nullable();
+            $table->foreignId('created_by')->nullable()->index()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();
+            $table->foreignId('updated_by')->nullable()->index()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();
+            $table->timestamps();
+        });
+        // mst_price_group_history
+        Schema::create('mst_price_group_history', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('price_group_id')->nullable()->index()->constrained(table:'mst_price_groups')->noActionOnDelete()->noActionOnUpdate();
+            $table->string('code', length: 32)->nullable();
+            $table->string('description', length: 120)->nullable();
+            $table->foreignId('ga_id')->index()->nullable()->constrained(table: 'mst_gas')->noActionOnUpdate()->noActionOnDelete();
+            $table->foreignId('segment_id')->index()->nullable()->constrained(table: 'mst_segments')->noActionOnUpdate()->noActionOnDelete();
+            $table->double('basic')->nullable();
+            $table->decimal('vat', 8, 2)->nullable();
+            $table->double('price')->nullable();
+            $table->date('effective_from')->nullable();
+            $table->foreignId('created_by')->nullable()->index()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();
+            $table->foreignId('updated_by')->nullable()->index()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();
+            $table->timestamps();
+        });
+
+        /**
+         * MRO tables
+         */
+        Schema::create('mst_mro_status', function (Blueprint $table) {
+            $table->id();
+            $table->string('name',length:32);
+        });
+
+        Schema::create('bil_mro_data', function(Blueprint $table) {
+            $table->id();
+            $table->foreignId('consumer_id')->nullable()->index()->constrained(table:'cns_consumers')->noActionOnUpdate()->noActionOnDelete();
+            $table->string('mro_number', length:64)->nullable()->index();
+            $table->date('schedule_date')->nullable();
+            $table->string('mro_data', length:400)->nullable();
+            $table->foreignId('invoice_id')->nullable()->index()->constrained(table:'bil_invoices')->noActionOnUpdate()->noActionOnDelete();
+            $table->foreignId('status_id')->nullable()->index()->constrained(table:'mst_mro_status')->noActionOnUpdate()->noActionOnDelete();
+            $table->timestamps();
+        });
+
+        Schema::create('bil_mro_data_history', function(Blueprint $table){
+            $table->id();
+            $table->foreignId('mro_data_id')->nullable()->index()->constrained(table:'bil_mro_data')->noActionOnUpdate()->noActionOnDelete();
+            $table->foreignId('status_id')->nullable()->index()->constrained(table:'mst_mro_status')->noActionOnUpdate()->noActionOnDelete();
+            $table->string('notes', length:400)->nullable();
+            $table->dateTime('created_at')->nullable();
+        });
+
+        Schema::create('bil_recharges', function(Blueprint $table) {
+            $table->id();
+            $table->foreignId('consumer_id')->nullable()->index()->constrained(table:'cns_consumers')->noActionOnUpdate()->noActionOnDelete();
+            $table->string('transaction_id')->nullable();
+            $table->double('amount')->nullable();
+            $table->dateTime('created_at')->nullable();
+        });
+
+        /**
+         * Updates
+         */
         // Update Scheme
         Schema::table('mst_cns_schemes', function (Blueprint $table) {
             $table->foreignId('connection_type_id')->nullable()->index()->after('rental_amount')->constrained(table:'mst_connection_types')->noActionOnUpdate()->noActionOnDelete();
@@ -54,32 +129,7 @@ return new class extends Migration
         // Update consumers
         Schema::table('cns_consumers', function (Blueprint $table) {
             $table->foreignId('connection_type_id')->nullable()->index()->after('segment_id')->constrained(table:'mst_connection_types')->noActionOnUpdate()->noActionOnDelete();
-        });
-
-        // New Onlinem Payment modules
-        Schema::create('mst_pay_modules', function (Blueprint $table) {
-            $table->id();
-            $table->string('name', length: 32);
-        });
-
-        // pay transactions
-        Schema::create('pay_transactions', function(Blueprint $table) {
-            $table->id();
-            $table->foreignId('payment_module_id')->index()->nullable()->constrained(table:'mst_pay_modules')->noActionOnDelete()->noActionOnUpdate();
-            $table->foreignId('consumer_id')->index()->nullable()->constrained(table:'cns_consumers')->noActionOnDelete()->noActionOnUpdate();
-            $table->foreignId('invoice_id')->index()->nullable()->constrained(table:'bil_invoices')->noActionOnDelete()->noActionOnUpdate();
-            $table->foreignId('gateway_id')->index()->nullable()->constrained(table:'mst_payment_gateways')->noActionOnDelete()->noActionOnUpdate();
-            $table->date('transaction_date')->nullable();
-            $table->string('transaction_id', length:128)->nullable();
-            $table->double('amount')->nullable();
-            $table->foreignId('transaction_status_id')->index()->nullable()->constrained(table:'mst_pay_transaction_status')->noActionOnDelete()->noActionOnUpdate();
-            $table->string('transaction_ref', length:128)->nullable();
-            $table->string('bank_ref', length:128)->nullable();
-            $table->string('pg_ref_id', length:128)->nullable();
-            $table->double('paid_amount')->nullable();
-            $table->string('payment_mode', length:32)->nullable();
-            $table->foreignId('updated_by')->nullable()->index()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();
-            $table->timestamps();
+            $table->foreignId('price_group_id')->nullable()->index()->after('status_id')->constrained(table:'mst_price_groups')->noActionOnUpdate()->noActionOnDelete();
         });
     }
 
@@ -92,6 +142,11 @@ return new class extends Migration
         Schema::dropIfExists('mst_connection_types');
         Schema::dropIfExists('pay_recharges');
         Schema::dropIfExists('cns_prepaid');
-        Schema::dropIfExists('pay_transactions');
+        Schema::dropIfExists('bil_mro_data_history');
+        Schema::dropIfExists('bil_mro_data');
+        Schema::dropIfExists('mst_mro_status');
+        Schema::dropIfExists('bil_recharges');
+        Schema::dropIfExists('mst_price_group_history');
+        Schema::dropIfExists('mst_price_groups');
     }
 };

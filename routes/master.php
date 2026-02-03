@@ -9,10 +9,12 @@ Route::middleware(['auth'])->group(function() {
     
     // Consumer master data
     Route::prefix('consumer')->group(function () {
-        Route::resource('schemes', App\Http\Controllers\Master\Consumer\SchemesController::class);
         Route::resource('prices', App\Http\Controllers\Master\Consumer\PriceController::class);
+        // Price groups
+        Route::resource('price-groups', App\Http\Controllers\Master\Consumer\PriceGroupsController::class);
+        // Schemes
+        Route::resource('schemes', App\Http\Controllers\Master\Consumer\SchemesController::class);
         Route::post('schemes/{id}/togglestatus', [App\Http\Controllers\Master\Consumer\SchemesController::class, 'toggleStatus']);
-
     });
 
     // Invoice master data
