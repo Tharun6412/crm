@@ -52,7 +52,7 @@ class InvoicePaymentsController extends Controller
             'invoice_id' => 'required',
             'payment_type' => 'required',
             'transaction_no' => 'required',
-            // 'amount' => ['required', 'numeric', 'gt:0', 'min:' . $request->invoice_balance, 'max:' . $request->invoice_balance]
+            'amount' => ['required', 'numeric', 'gt:0', 'min:' . $request->invoice_balance, 'max:' . $request->invoice_balance]
         ]);
 
         // Prepare data for Payment service

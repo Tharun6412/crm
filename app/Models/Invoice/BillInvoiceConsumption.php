@@ -8,6 +8,7 @@ use App\Models\DocumentCentre\Documents;
 use App\Models\Master\PriceHistory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class BillInvoiceConsumption extends Model
 {
@@ -83,5 +84,13 @@ class BillInvoiceConsumption extends Model
     public function meter(): BelongsTo
     {
         return $this->belongsTo(ConsumerMeter::class, 'meter_id');
+    }
+
+    /**
+     * Relation with consumption details
+     */
+    public function consumptionDetails(): HasMany
+    {
+        return $this->hasMany(BillInvoiceConsumptionDetails::class, 'invoice_consumption_id');
     }
 }

@@ -7,6 +7,8 @@
 @section('page-title', 'Gas Bill - ' . $invoice->invoice_number)
 
 @section('page-content')
+    @php 
+    @endphp
     <div class="previewPrint-area" id="print-area">
         <div class="bg-white overflow-hidden position-relative rounded-0 printView-table">
 
@@ -23,9 +25,8 @@
                                             </td>
                                             <td style="border-top: none;border-bottom: none;text-align: center;background-color: #FDD835;transform: skewX(-20deg);-webkit-transform: skewX(-20deg);vertical-align: middle;">
                                                 <p style="font-size: 7px;font-weight: bold;margin-top:5px;margin-bottom: 5px;line-height: initial;color: #055688;transform: skewX(20deg);-webkit-transform: skewX(20deg);">
-                                                    <span style="font-size: 12px;line-height: 2;text-transform: uppercase;">Megha City Gas Distribution Private Limited</span><br>
-                                                    RS 86/2D2, CHOPPARAMETLA VILLAGE, AGIRIPALLI MANDAL, Krishna, Andhra Pradesh                                                    <br/>
-                                                    HSN No : 27112100                                                </p>
+                                                    <span style="font-size: 12px;line-height: 2;text-transform: uppercase;">Megha City Gas Distribution Private Limited</span>
+                                                    <br>RS 86/2D2, CHOPPARAMETLA VILLAGE, AGIRIPALLI MANDAL, Krishna, Andhra Pradesh<br/>HSN No : 27112100 </p>
                                             </td>
                                             <td style="vertical-align: middle;border-top: none;border-bottom: none;width: auto;display: flex;align-items: center;text-align: right;">
                                                 <img src="{{ asset('img/bill/customer-service.png') }}" alt="24X7" width="45" style="padding-left: 10px;">
@@ -53,42 +54,41 @@
                                                         <tr>
                                                             <td style="text-align: left;width: 55px;font-size: 12px;">CRN</td>
                                                             <td style="width:1px;">:</td>
-                                                            <td style="font-size: 12px;">112500038</td>
+                                                            <td style="font-size: 12px;">{{ $invoice->consumer->crn }}</td>
                                                         </tr>
                                                         <tr>
                                                             <td style="text-align: left;width: 40px;">Name</td>
                                                             <td style="width:1px;">:</td>
-                                                            <td style="text-align: left;"><b>MEGHA ENGINEERING and INFRASTRUCTURE LTD (STAFF ACCOMMODATION AGP MAIN)</b></td>
+                                                            <td style="text-align: left;"><b>{{ $invoice->consumer->name }}</b></td>
                                                         </tr>
                                                         <tr>
                                                             <td style="text-align: left;width: 40px;">Address</td>
                                                             <td style="width:1px;">:</td>
                                                             <td style="text-align: left;">
-                                                                2-69/1/34,GROUND FLOOR, AGIRIPALLI,<br>
-                                                                Agiripalli,<br/>
-                                                                521211<br/>
-                                                                Krishna - Andhra Pradesh.<br/>
-                                                                Landmark : OPP: GOVT JUNIOR COLLEGE</td>
+                                                                {{ $invoice->consumer->hno }}<br>
+                                                                {{ $invoice->consumer->street }},{{ $invoice->consumer->city }}<br/>
+                                                                {{ $invoice->consumer->pincode }}<br/>
+                                                                {{ $invoice->consumer->district->name }} - {{ $invoice->consumer->state->name }}.</td>
                                                         </tr>
                                                         <tr>
                                                             <td style="text-align: left;width: 40px;">Mobile</td>
                                                             <td style="width:1px;">:</td>
-                                                            <td style="text-align: left;">9491982450</td>
+                                                            <td style="text-align: left;">{{ $invoice->consumer->phone }}</td>
                                                         </tr>
                                                         <tr>
                                                             <td style="text-align: left;width: 40px;">Email</td>
                                                             <td style="width:1px;">:</td>
-                                                            <td style="text-align: left;">testemail@gmail.com</td>
+                                                            <td style="text-align: left;">{{ $invoice->consumer->email }}</td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
                                                 <table class="table table-borderless mb-0" style="table-layout: fixed; width: 100%;">
                                                     <tbody>
                                                         <tr>
-                                                            <td colspan="3" style="background-color: #fdd835;text-align: center;font-size: 10px;padding: 5px !important;"><b>Current Bill Details ప్రస్తుత బిల్లు వివరాలు</b></td>
+                                                            <td colspan="3" style="background-color: #fdd835;text-align: center;font-size: 10px;padding: 5px !important;"><b>Current Bill Details {{ __('bill.current_bill_details') }}</b></td>
                                                         </tr>
                                                         <tr>
-                                                            <td colspan="3"><b>Bill Details - Tax Invoice<br/>బిల్లు వివరాలు - పన్ను ఇన్‌వాయిస్</b></td>
+                                                            <td colspan="3"><b>Bill Details - Tax Invoice<br/>{{ __('bill.bill_details'). ' - ' . __('bill.tax_invoice') }}</b></td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
@@ -96,53 +96,54 @@
                                                     <thead>
                                                         <tr>
                                                             <th style="border-right: 1px solid #000000;border-bottom: 1px solid #000000;width: 10%;">&nbsp;</th>
-                                                            <th style="text-align: center;border-right: 1px solid #000000;border-bottom: 1px solid #000000;">Part A (Sale Of Natural Gas )<br/>పార్ట్ - ఏ (సహజ వాయువు విక్రయం)</th>
+                                                            <th style="text-align: center;border-right: 1px solid #000000;border-bottom: 1px solid #000000;">Part A (Sale Of Natural Gas )<br/>{{ __('bill.part_a') }} ({{ __('bill.sale_of_natural_gas') }})</th>
                                                             <th style="text-align: right;border-bottom: 1px solid #000000;width: 27%;">(&nbsp;&#8377;&nbsp;)</th>
                                                         </tr>
                                                     </thead>
+                                                    @php
+                                                        $parta = $invoice->payable_amount+$lpc;
+                                                    @endphp
                                                     <tbody>
                                                         <tr>
                                                             <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">1.1</td>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">Gas Consumption Charges గ్యాస్ వినియోగ ఛార్జీలు</td>
-                                                            <td style="text-align: right;border-bottom: 1px solid #000000;">
-                                                                634.36                                                            </td>
+                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">Gas Consumption Charges {{ __('bill.gas_consumption_charges') }}</td>
+                                                            <td style="text-align: right;border-bottom: 1px solid #000000;">{{ $invoice->base_amount }}</td>
                                                         </tr>
                                                         <tr>
-                                                                                                                        <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">1.2</td>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">VAT Value @ 5.00%&nbsp;వ్యాట్ విలువ</td>
-                                                            <td style="text-align: right;border-bottom: 1px solid #000000;">
-                                                                31.72                                                            </td>
+                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">1.2</td>
+                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">VAT Value @ {{ numberFormat($invoice->taxvalue,2) }}%&nbsp;{{ __('bill.vat_value') }}</td>
+                                                            <td style="text-align: right;border-bottom: 1px solid #000000;">{{ $invoice->tax_amount }}</td>
                                                         </tr>
                                                         <tr>
                                                             <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">1.3</td>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">Arrears: Unpaid dues up to previous bill<br/>బకాయిలు:  గతంలో  చెల్లించని బిల్లు మొత్తం</td>
-                                                            <td style="text-align: right;border-bottom: 1px solid #000000;">6,961.34</td>
+                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">Arrears: Unpaid dues up to previous bill<br/>{{ __('bill.arrears') }}</td>
+                                                            <td style="text-align: right;border-bottom: 1px solid #000000;">0.00</td>
                                                         </tr>
                                                         <tr>
                                                             <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">1.4</td>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">Credit Balance:- Advance/Excess paid<br/>క్రెడిట్ బ్యాలెన్స్:- అడ్వాన్స్/అదనపు చెల్లింపు మొత్తం</td>
-                                                            <td style="text-align: right;border-bottom: 1px solid #000000;">0.00</td>
+                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">Credit Balance:- Advance/Excess paid<br/>{{ __('bill.credit_balance') }}</td>
+                                                            <td style="text-align: right;border-bottom: 1px solid #000000;">{{ numberFormat($invoice->credit_amount ?? 0,2) }}</td>
                                                     </tr>
                                                         <tr>
                                                             <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">1.5</td>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">Adjustment for Estimated Bills అంచనా వేసిన బిల్లుల సర్దుబాటు మొత్తం</td>
-                                                            <td style="text-align: right;border-bottom: 1px solid #000000;">0.00</td>
+                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">Adjustment for Estimated Bills {{ __('bill.adjustment_for_estimated_bills') }}</td>
+                                                            <td style="text-align: right;border-bottom: 1px solid #000000;">{{ $invoice->total_amount }}</td>
                                                         </tr>
                                                         <tr>
                                                             <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">1.6</td>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">Discount/Rebate డిస్కౌంట్/రిబేటు</td>
+                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">Discount/Rebate {{ __('bill.discount') }}</td>
                                                             <td style="text-align: right;border-bottom: 1px solid #000000;">0.00</td>
                                                         </tr>
                                                         <tr>
                                                             <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">1.7</td>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">Late Payment Charges</td>
-                                                            <td style="text-align: right;border-bottom: 1px solid #000000;">0.00</td>
+                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">Late Payment Charges {{ __('bill.late_payment_charges') }}</td>
+                                                            <td style="text-align: right;border-bottom: 1px solid #000000;">{{ numberFormat($lpc,2) }}</td>
                                                         </tr>
                                                         <tr>
                                                             <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">&nbsp;</td>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;"><b>Total Charges (Part A) మొత్తం ఛార్జీలు</b></td>
+                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;"><b>Total Charges (Part A) {{ __('bill.total_charges') }}</b></td>
                                                             <td style="text-align: right;border-bottom: 1px solid #000000;">
-                                                                <strong>7,627.42</strong>
+                                                                <strong>{{ numberFormat($parta,2) }}</strong>
                                                             </td>
                                                         </tr>
                                                     </tbody>
@@ -151,52 +152,53 @@
                                                     <thead>
                                                         <tr>
                                                             <th style="border-right: 1px solid #000000;border-bottom: 1px solid #000000;width: 10%;">&nbsp;</th>
-                                                            <th style="text-align: center;border-right: 1px solid #000000;border-bottom: 1px solid #000000;">Part - B (Charges) పార్ట్ - బి</th>
+                                                            <th style="text-align: center;border-right: 1px solid #000000;border-bottom: 1px solid #000000;">Part - B (Charges) {{ __('bill.part_b') }}</th>
                                                             <th style="text-align: right;border-bottom: 1px solid #000000;width: 27%;">(&nbsp;&#8377;&nbsp;)</th>
                                                         </tr>
                                                     </thead>
+                                                    @php
+                                                        $partb = $rental->balance_amount ?? 0;
+                                                    @endphp
                                                     <tbody>
-                                                                                                                        <tr>
+                                                        <tr>
                                                             <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">2.1</td>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">Fixed Daily Charges రోజువారీ ఛార్జీలు</td>
-                                                            <td style="text-align: right;border-bottom: 1px solid #000000;">0.00</td>
+                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">Fixed Daily Charges {{ __('bill.fixed_daily_charges') }}</td>
+                                                            <td style="text-align: right;border-bottom: 1px solid #000000;">{{ numberFormat($rental->base_amount ?? 0, 2); }}</td>
                                                         </tr>
                                                         <tr>
                                                             <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">2.2</td>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">Other Charges ఇతర ఛార్జీలు</td>
+                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">Other Charges {{ __('bill.other_charges') }}</td>
                                                             <td style="text-align: right;border-bottom: 1px solid #000000;">0.00</td>
                                                         </tr>
                                                         <tr>
                                                             <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">2.3</td>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">Minimum Consumption Charges కనిష్ట ఛార్జీలు</td>
-                                                            <td style="text-align: right;border-bottom: 1px solid #000000;">0</td>
+                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">Minimum Consumption Charges {{ __('bill.minimum_consumption_charges') }}</td>
+                                                            <td style="text-align: right;border-bottom: 1px solid #000000;">0.00</td>
                                                         </tr>
                                                         <tr>
                                                             <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">2.4</td>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">Total Taxable Charges పన్ను విధించదగిన మొత్తం</td>
-                                                            <td style="text-align: right;border-bottom: 1px solid #000000;">
-                                                                0.00                                                                    </td>
+                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">Total Taxable Charges {{ __('bill.total_taxable_charges') }}</td>
+                                                            <td style="text-align: right;border-bottom: 1px solid #000000;">{{ numberFormat($rental?->tax_amount,2) }}</td>
                                                         </tr>
                                                         <tr>
                                                             <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">2.5</td>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">SGST @ 9% రాష్ట్ర జిఎస్టి</td>
-                                                            <td style="text-align: right;border-bottom: 1px solid #000000;">0</td>
+                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">SGST @ 9% {{ __('bill.sgst') }}</td>
+                                                            <td style="text-align: right;border-bottom: 1px solid #000000;">{{ numberFormat($rental?->tax_amount/2,2) }}</td>
                                                         </tr>
                                                         <tr>
                                                             <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">2.6</td>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">CGST @ 9% కేంద్ర జిఎస్టి</td>
-                                                            <td style="text-align: right;border-bottom: 1px solid #000000;">0</td>
+                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">CGST @ 9% {{ __('bill.cgst') }}</td>
+                                                            <td style="text-align: right;border-bottom: 1px solid #000000;">{{ numberFormat($rental?->tax_amount/2,2) }}</td>
                                                         </tr>
                                                         <tr>
                                                             <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">2.7</td>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">Estimation Charges</td>
+                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">Estimation Charges {{ __('bill.estimation_charges') }}</td>
                                                             <td style="text-align: right;border-bottom: 1px solid #000000;">0.00</td>
                                                         </tr>
                                                         <tr>
                                                             <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">&nbsp;</td>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;"><b>Total Charges (Part B) పూర్తి మొత్తం</b></td>
-                                                            <td style="text-align: right;border-bottom: 1px solid #000000;">
-                                                                0.00                                                                    </td>
+                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;"><b>Total Charges (Part B) {{ __('bill.total_charges') }}</b></td>
+                                                            <td style="text-align: right;border-bottom: 1px solid #000000;">{{ $partb; }}</td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
@@ -204,37 +206,48 @@
                                                     <thead>
                                                         <tr>
                                                             <th style="border-right: 1px solid #000000;border-bottom: 1px solid #000000;width: 10%;">&nbsp;</th>
-                                                            <th style="text-align: center;border-right: 1px solid #000000;border-bottom: 1px solid #000000;">Part - C (Security Deposit) పార్ట్ - సి</th>
+                                                            <th style="text-align: center;border-right: 1px solid #000000;border-bottom: 1px solid #000000;">Part - C (Security Deposit) {{ __('bill.part_c') }} ({{ __('bill.security_deposit') }})</th>
                                                             <th style="text-align: right;border-bottom: 1px solid #000000;width: 27%;">(&nbsp;&#8377;&nbsp;)</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
+                                                        @php
+                                                            $sd = ($invoice->consumer->scheme->scheme->emi_amount > 0) ? $invoice->consumer->scheme->scheme->emi_amount : 0;
+                                                            $consumption_deposit = 0;
+                                                            $total_emis = ($sd > 0) ? round($invoice->consumer->scheme->security_deposit / $sd) : 0;
+                                                            $partc = $sd;
+                                                        @endphp
                                                         <tr>
                                                             <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">3.1</td>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">Security Deposit Payable<br/>చెల్లించవలసిన సెక్యూరిటీ డిపాజిట్</td>
-                                                            <td style="text-align: right;border-bottom: 1px solid #000000;">0.00</td>
+                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">Security Deposit Payable<br/>{{ __('bill.security_deposit_payable') }}</td>
+                                                            <td style="text-align: right;border-bottom: 1px solid #000000;">{{ $sd }}</td>
                                                         </tr>
                                                         <tr>
                                                             <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">3.2</td>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">Consumptioin Security Deposit<br/>వినియోగ భద్రతా డిపాజిట్</td>
-                                                            <td style="text-align: right;border-bottom: 1px solid #000000;">0.00</td>
+                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">Consumptioin Security Deposit<br/>{{ __('bill.consumption_security_deposit') }}</td>
+                                                            <td style="text-align: right;border-bottom: 1px solid #000000;">{{ numberFormat($consumption_deposit,2) }}</td>
                                                         </tr>
-                                                                                                                        <tr>
+                                                        @if ($sd > 0)
+                                                            <tr>
+                                                                <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">3.3</td>
+                                                                <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">Current EMI No<br/>{{ __('bill.consumption_security_deposit') }}</td>
+                                                                <td style="text-align: right;border-bottom: 1px solid #000000;">{{ $invoice->consumer->sdPayment->last()?->emi_no ." / ". $total_emis}}</td>
+                                                            </tr>
+                                                        @endif
+                                                        <tr>
                                                             <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">&nbsp;</td>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;"><b>Total Charges (Part C) మొత్తం ఛార్జీలు</b></td>
-                                                            <td style="text-align: right;border-bottom: 1px solid #000000;">
-                                                                0.00                                                                            
-                                                            </td>
+                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;"><b>Total Charges (Part C) {{ __('bill.total_charges') }}</b></td>
+                                                            <td style="text-align: right;border-bottom: 1px solid #000000;">{{ $partc }}</td>
                                                         </tr>
                                                         <tr>
                                                             <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">&nbsp;</td>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;"><b>Total Payable(A+B+C)<br/>చెల్లించవలసిన మొత్తం (ఎ+బి+సి)</b></td>
-                                                            <td style="text-align: right;border-bottom: 1px solid #000000;"><b>7,627.42</b></td>
+                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;"><b>Total Payable(A+B+C)<br/>{{ __('bill.total_payable') }} ({{ __('bill.a_b_c') }})</b></td>
+                                                            <td style="text-align: right;border-bottom: 1px solid #000000;"><b>{{ numberFormat($parta+$partb+$partc,2) }}</b></td>
                                                         </tr>
                                                         <tr>
                                                             <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">&nbsp;</td>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">Total Security Deposit Paid<br/>చెల్లించిన మొత్తం సెక్యూరిటీ డిపాజిట్</td>
-                                                            <td style="text-align: right;border-bottom: 1px solid #000000;">4,500.00</td>
+                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">Total Security Deposit Paid<br/>{{ __('bill.total_security_deposit_paid') }}</td>
+                                                            <td style="text-align: right;border-bottom: 1px solid #000000;">{{ numberFormat($invoice->consumer->scheme->paid_deposit,2) }}</td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
@@ -242,26 +255,25 @@
                                                 <table class="table table-borderless" style="width: 100%;border: 1px solid #000000;border-spacing: 0;border-collapse: collapse;margin-bottom: 5px;">
                                                 <tbody>
                                                     <tr>
-                                                        <td style="border-right: 1px solid #000000;border-bottom: 1px solid #000000;">Invoice No.&nbsp;:&nbsp;241211307036<br/>{{ __('bill.invoice_no') }}&nbsp;:</td>
-                                                        <td style="border-bottom: 1px solid #000000;">Bill Date&nbsp;:&nbsp;<strong>03-12-2024</strong><br/>{{ __('bill.bill_date') }}&nbsp;:</td>
+                                                        <td style="border-right: 1px solid #000000;border-bottom: 1px solid #000000;">Invoice No.&nbsp;:&nbsp;{{ $invoice->invoice_number }}<br/>{{ __('bill.invoice_no') }}&nbsp;:</td>
+                                                        <td style="border-bottom: 1px solid #000000;">Bill Date&nbsp;:&nbsp;<strong>{{ dateFormat($invoice->invoice_date) }}</strong><br/>{{ __('bill.bill_date') }}&nbsp;:</td>
                                                     </tr>
                                                     <tr>
-                                                        <td style="border-right: 1px solid #000000;border-bottom: 1px solid #000000;">Invoice Type&nbsp;:&nbsp;Retail<br/>{{ __('bill.invoice_type') }}&nbsp;:&nbsp;{{ __('bill.retail') }}</td>
-                                                        <td style="border-bottom: 1px solid #000000;">Due Date&nbsp;:&nbsp;<strong>18-12-2024</strong><br/>{{ __('bill.due_date') }}&nbsp;:</td>
+                                                        <td style="border-right: 1px solid #000000;border-bottom: 1px solid #000000;">Invoice Type&nbsp;:&nbsp;{{ $invoice->invoiceType->name }}<br/>{{ __('bill.invoice_type') }}&nbsp;:&nbsp;{{ __('bill.retail') }}</td>
+                                                        <td style="border-bottom: 1px solid #000000;">Due Date&nbsp;:&nbsp;<strong>{{ dateFormat($invoice->due_date) }}</strong><br/>{{ __('bill.due_date') }}&nbsp;:</td>
                                                     </tr>
                                                     <tr>
                                                         <td style="border-right: 1px solid #000000;border-bottom: 1px solid #000000;">Credit Amount (If any)<br/>{{ __('bill.credit_amount') }}&nbsp;:</td>
-                                                        <td style="border-bottom: 1px solid #000000;font-size: 12px;"><strong>&#8377;&nbsp;0.00</strong></td>
+                                                        <td style="border-bottom: 1px solid #000000;font-size: 12px;"><strong>&#8377;&nbsp;{{ numberFormat($invoice->credit_amount,2) }}</strong></td>
                                                     </tr>
                                                     <tr>
                                                         <td style="border-right: 1px solid #000000;border-bottom: 1px solid #000000;">Amount Payable<br/>{{ __('bill.payable_amount') }}</td>
-                                                        <td style="border-bottom: 1px solid #000000;font-size: 12px;"><strong>&#8377;&nbsp;7,627.34</strong>
+                                                        <td style="border-bottom: 1px solid #000000;font-size: 12px;"><strong>&#8377;&nbsp;{{ numberFormat($invoice->payable_amount,2) }}</strong>
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <td style="border-right: 1px solid #000000;border-bottom: 1px solid #000000;">After Due Date&nbsp;<span style="font-size: 8px;">(LPC Applicable)</span><br/>{{ __('bill.after_due_date') }}</td>
-                                                        <td style="border-bottom: 1px solid #000000;font-size: 12px;"><strong>&#8377;&nbsp;
-                                                            7,647.34</strong>
+                                                        <td style="border-bottom: 1px solid #000000;font-size: 12px;"><strong>&#8377;&nbsp;{{ numberFormat($invoice->payable_amount+20,2) }}</strong>
                                                         </td>
                                                     </tr>
                                                     <tr>
@@ -292,96 +304,88 @@
                                                 <table class="table table-borderless" style="table-layout: fixed; width: 100%;margin-bottom: 5px;">
                                                     <tbody>
                                                         <tr>
-                                                            <td colspan="3" style="background-color: #fdd835;text-align: center;padding: 5px !important;"><b>Bill Details Of Consumption Cycle వినియోగ చక్రానికి సంబంధించిన బిల్లు వివరాలు</b></td>
+                                                            <td colspan="3" style="background-color: #fdd835;text-align: center;padding: 5px !important;"><b>Bill Details Of Consumption Cycle {{ __('bill.bill_details_of_consumption_cycle') }}</b></td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
                                                 <table class="table table-borderless" style="table-layout: fixed; width: 100%;border: 1px solid #000000;border-spacing: 0;border-collapse: collapse;margin-bottom: 1px;margin-top: 1px;">
                                                     <tbody>
                                                         <tr>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 8px;width: 15%;text-align: center;">Meter No<br/>మీటర్ నం</td>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 8px;width: 13%;text-align: center;">Previous Billing Date<br/>మునుపటి తేదీ</td>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 8px;width: 13%;text-align: center;">Current Billing Date<br/>ప్రస్తుత తేది</td>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 8px;width: 10%;text-align: center;">Previous Meter Reading<br/>మునుపటి మీటర్ రీడింగ్</td>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 8px;width: 10%;text-align: center;">Current Meter Reading<br/>ప్రస్తుత మీటర్ రీడింగ్</td>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 8px;width: 7%;text-align: center;">No. of days<br/>రోజుల సంఖ్య</td>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 8px;width: 15%;text-align: center;">Units Consumed (SCM)<br/>వినియోగించిన యూనిట్లు (ఎస్సీఎమ్)</td>
+                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 8px;width: 15%;text-align: center;">Meter No<br/>{{ __('bill.meter_no') }}</td>
+                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 8px;width: 13%;text-align: center;">Previous Billing Date<br/>{{ __('bill.previous_billing_date') }}</td>
+                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 8px;width: 13%;text-align: center;">Current Billing Date<br/>{{ __('bill.current_billing_date') }}</td>
+                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 8px;width: 10%;text-align: center;">Previous Meter Reading<br/>{{ __('bill.previous_meter_reading') }}</td>
+                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 8px;width: 10%;text-align: center;">Current Meter Reading<br/>{{ __('bill.current_meter_reading') }}</td>
+                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 8px;width: 7%;text-align: center;">No. of days<br/>{{ __('bill.no_of_days') }}</td>
+                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 8px;width: 15%;text-align: center;">Units Consumed (SCM)<br/>{{ __('bill.units_consumed') }}</td>
                                                             <!-- <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 8px;width: 10%;text-align: center;">PRICE PER UNIT</td> -->
-                                                            <td style="border-bottom: 1px solid #000000;font-size: 8px;width: 17%;text-align: center;">Gas Consumption Charges(Exec. VAT)<br/>గ్యాస్ వినియోగ ఛార్జీలు<br/>(ఎగ్జిక్యూ. వ్యాట్)</td>
+                                                            <td style="border-bottom: 1px solid #000000;font-size: 8px;width: 17%;text-align: center;">Gas Consumption Charges(Exec. VAT)<br/>{{ __('bill.gas_consumption_charges(exec. vat)') }}</td>
                                                         </tr>
                                                         <tr>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 8px;text-align: center;">17703158</td>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 8px;text-align: center;">08-10-2024</td>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 8px;text-align: center;">03-12-2024</td>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 8px;text-align: center;">792.481</td>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 8px;text-align: center;">805.653</td>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 8px;text-align: center;">56</td>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 8px;text-align: center;">13.172</td>
+                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 8px;text-align: center;">{{ $invoice->consumer->activeMeter->meter_no }}</td>
+                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 8px;text-align: center;">{{ dateFormat($invoice->consumption->date_from) }}</td>
+                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 8px;text-align: center;">{{ dateFormat($invoice->consumption->date_to) }}</td>
+                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 8px;text-align: center;">{{ numberFormat($invoice->consumption->prev_reading,2) }}</td>
+                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 8px;text-align: center;">{{ numberFormat($invoice->consumption->curr_reading,2) }}</td>
+                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 8px;text-align: center;">{{ $invoice->consumption->days }}</td>
+                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 8px;text-align: center;">{{ numberFormat($invoice->consumption->net_consumption,3) }}</td>
                                                             <!-- <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 8px;text-align: center;"></td> -->
-                                                            <td style="text-align: right;border-bottom: 1px solid #000000;font-size: 8px;text-align: center;">634.36</td>
+                                                            <td style="text-align: right;border-bottom: 1px solid #000000;font-size: 8px;text-align: center;">{{ numberFormat($invoice->base_amount,2) }}</td>
                                                         </tr>
                                                         <tr>
                                                             <td colspan="5" style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;text-align: right;"><b>Total</b></td>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 8px;text-align: center;">56</td>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 8px;text-align: center;">13.172</td>
+                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 8px;text-align: center;">{{ $invoice->consumption->days }}</td>
+                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 8px;text-align: center;">{{ numberFormat($invoice->consumption->net_consumption,3) }}</td>
                                                             <!-- <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 8px;text-align: center;"></td> -->
-                                                            <td style="text-align: right;border-bottom: 1px solid #000000;font-size: 8px;text-align: center;">634.36</td>
+                                                            <td style="text-align: right;border-bottom: 1px solid #000000;font-size: 8px;text-align: center;">{{ numberFormat($invoice->base_amount,2) }}</td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
                                                 <table class="table table-borderless" style="table-layout: fixed; width: 100%;border: 1px solid #000000;border-spacing: 0;border-collapse: collapse;margin-bottom: 2px;">
                                                     <tbody>
                                                         <tr>
-                                                            <td colspan="3" style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;text-align: left;">Average Cons. in Last 3 billing cycles చివరి 3 బిల్లింగ్ వ్యవధిలో సగటు వినియోగం</td>
-                                                            <td colspan="2" style="text-align: center;border-bottom: 1px solid #000000;">15.145/0.234 scm/day ఎస్సీఎమ్/రోజు</td>
+                                                            <td colspan="3" style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;text-align: left;">Average Cons. in Last 3 billing cycles {{ __('bill.average_cons_in_last_3_billing_cycles') }}</td>
+                                                            <td colspan="2" style="text-align: center;border-bottom: 1px solid #000000;">{{ $avg_scm ?? 0 }}/{{ $avg_scm_per_day ?? 0 }} scm/day {{ __('bill.scm/day') }}</td>
                                                         </tr>
                                                         <tr>
-                                                            <td colspan="3" style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;text-align: left;">Price/SCM in INR (w.e.f 03.12.2024) ధర/ఎస్సీఎమ్</td>
+                                                            <td colspan="3" style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;text-align: left;">Price/SCM in INR (w.e.f 03.12.2024) {{ __('bill.price/scm_in_inr') }}</td>
                                                             <td colspan="2" style="text-align: center;border-bottom: 1px solid #000000;">
-                                                                51.00 (incl. VAT) వ్యాట్ తో సహా                                                            </td>
+                                                                {{ numberFormat($price->rsp,2) }} (incl. VAT) {{ __('bill.incl_vat') }}                                                         </td>
                                                         </tr>
                                                         <tr>
-                                                            <td colspan="5" style="text-align: center;border-bottom: 1px solid #000000;font-size: 12px;">Breakup Of Price /per SCM in INR రూపాయల ధర లో /ప్రతి ఎస్సీఎమ్ కి బ్రేక్అప్ (₹)(&#8377;)</td>
+                                                            <td colspan="5" style="text-align: center;border-bottom: 1px solid #000000;font-size: 12px;">Breakup Of Price /per SCM in INR (&#8377;) {{ __('bill.breakup_of_price/per_scm_in_inr') }}</td>
                                                         </tr>
                                                         <tr>                                                        
                                                             <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 8px;text-align: center;">Basic Cost of gas</td>
                                                             <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 8px;text-align: center;">Supply & Distribution cost</td>
                                                             <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 8px;text-align: center;">Margin</td>
                                                             <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 8px;text-align: center;">VAT</td>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 8px;text-align: center;">Total<br/>మొత్తం</td>
+                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 8px;text-align: center;">Total<br/>{{ __('bill.total') }}</td>
                                                         </tr>
                                                         <tr>                                                        
-                                                            <td style="border-bottom: 2px solid #000000;border-right: 1px solid #000000;font-size: 8px;text-align: center;">27.37</td>
-                                                            <td style="border-bottom: 2px solid #000000;border-right: 1px solid #000000;font-size: 8px;text-align: center;">19.96</td>
-                                                            <td style="border-bottom: 2px solid #000000;border-right: 1px solid #000000;font-size: 8px;text-align: center;">1.24</td>
-                                                            <td style="border-bottom: 2px solid #000000;border-right: 1px solid #000000;font-size: 8px;text-align: center;">2.43</td>
-                                                            <td style="border-bottom: 2px solid #000000;border-right: 1px solid #000000;font-size: 8px;text-align: center;">51.00</td>
+                                                            <td style="border-bottom: 2px solid #000000;border-right: 1px solid #000000;font-size: 8px;text-align: center;">{{ numberFormat($price->basic,2) }}</td>
+                                                            <td style="border-bottom: 2px solid #000000;border-right: 1px solid #000000;font-size: 8px;text-align: center;">{{ numberFormat($price->supply,2) }}</td>
+                                                            <td style="border-bottom: 2px solid #000000;border-right: 1px solid #000000;font-size: 8px;text-align: center;">{{ numberFormat($price->margin,2) }}</td>
+                                                            <td style="border-bottom: 2px solid #000000;border-right: 1px solid #000000;font-size: 8px;text-align: center;">{{ numberFormat($price->tax_price,2) }}</td>
+                                                            <td style="border-bottom: 2px solid #000000;border-right: 1px solid #000000;font-size: 8px;text-align: center;">{{ numberFormat($price->rsp,2) }}</td>
                                                         </tr>
                                                         <tr>                                                        
-                                                            <td colspan="2" style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 8px;text-align: center;">Billing Period<br/>బిల్లింగ్ వ్యవధి</td>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 8px;text-align: center;">Consumption(SCM)<br/>వినియోగం(ఎస్సీఎమ్)</td>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 8px;text-align: center;">Price<br/>ధర(₹)(&#8377;)</td>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 8px;text-align: center;">Total<br/>మొత్తం</td>
+                                                            <td colspan="2" style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 8px;text-align: center;">Billing Period<br/>{{ __('bill.billing_period') }}</td>
+                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 8px;text-align: center;">Consumption(SCM)<br/>{{ __('bill.consumption(scm)') }}</td>
+                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 8px;text-align: center;">Price (&#8377;)<br/>{{ __('bill.price') }}</td>
+                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 8px;text-align: center;">Total<br/>{{ __('bill.total') }}</td>
                                                         </tr>
-                                                        <tr>                                                        
-                                                            <td colspan="2" style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 8px;text-align: center;">
-                                                                08 Oct - 01 Nov                                                                        </td>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 8px;text-align: center;">
-                                                                5.645                                                                        </td>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 8px;text-align: center;">47.62</td>
-                                                            <td style="text-align: right;border-bottom: 1px solid #000000;font-size: 8px;text-align: center;">268.81</td>
-                                                        </tr>
-                                                        <tr>                                                        
-                                                            <td colspan="2" style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 8px;text-align: center;">
-                                                                01 Nov - 03 Dec                                                                        </td>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 8px;text-align: center;">
-                                                                7.526                                                                        </td>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 8px;text-align: center;">48.57</td>
-                                                            <td style="text-align: right;border-bottom: 1px solid #000000;font-size: 8px;text-align: center;">365.56</td>
-                                                        </tr>
+                                                        @foreach ($invoice->consumption->breakupPeriods as $row)
+                                                            <tr>                                                        
+                                                                <td colspan="2" style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 8px;text-align: center;">{{ dateFormat($row['start_date']) }} - {{ dateFormat($row['end_date']) }}</td>
+                                                                <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 8px;text-align: center;">{{ numberFormat($row['consumption'], 3) }}</td>
+                                                                <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 8px;text-align: center;">{{ numberFormat($row['unit_price'], 2) }}</td>
+                                                                <td style="text-align: right;border-bottom: 1px solid #000000;font-size: 8px;text-align: center;">{{ numberFormat($row['total_price'], 2) }}</td>
+                                                            </tr>
+                                                        @endforeach
                                                         <tr>
                                                             <td colspan="4" style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 8px;text-align: right;">Totals</td>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 8px;text-align: center;">634.36</td>
+                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 8px;text-align: center;">{{ numberFormat($invoice->consumption->consumptionDetails->sum('total_price'),2) }}</td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
@@ -393,15 +397,15 @@
                                     <tbody>
                                         <tr>
                                             <td colspan="3">
-                                                &gt;&nbsp;బిల్లింగ్ మరియు చెల్లింపులకు సంబంధించిన సమాచారం కొరకు దయచేసి మా వినియోగదారు పోర్టల్ www.meghagas.comని సందర్శించ గలరు మరియు PlayStore/  Appstoreలో అందుబాటులో ఉన్న మా MeghaGas యాప్‌ని డౌన్‌లోడ్ చేసుకో గలరు.&nbsp;/&nbsp;Please visit our consumer portal @www.meghagas.com for all billing and payments related information. Please download our MeghaGas app available on PlayStore and Appstore.<br />
-                                                &gt;&nbsp;గడువు తేదీ తర్వాత, చెల్లింపులో ఏదైనా ఆలస్యమైతే నెలకు @2% ఆలస్య చెల్లింపు ఛార్జీలను (LPC) విధించబడతాయని దయచేసి గమనించగలరు.&nbsp;/&nbsp;Please note that any delay in payment post due date, shall attract Late Payment Charges @2% per month.<br>
-                                                &gt;&nbsp;గమనిక : గడువు తేదీకి బిల్లు చెల్లించనట్లయితే, మరుసటి రోజు కనెక్షన్ డిస్‌కనెక్ట్ చేయబడుతుందని మనవి.&nbsp;/&nbsp;NOTICE: On event of non-payment of bill post due date, connection shall be disconnected on the following day.<br>
-                                                &gt;&nbsp;ఇప్పుడు మీరు మీ బిల్లులను ఆన్‌లైన్‌లో @ www.meghagas.com మరియు UPI (BHIM యాప్, GPay, PhonePe, Paytm, Amazon Pay మొదలైనవి) ద్వారా చెల్లించవచ్చు.&nbsp;/&nbsp;Now you can pay Online @www.meghagas.com or Pay via UPI (BHIM App, GPay, PhonePe, Paytm, Amazon Pay, etc.)<br>
-                                                &gt;&nbsp;మీరు "మేఘా సిటీ గ్యాస్ డిస్ట్రిబ్యూషన్ ప్రైవేట్ లిమిటెడ్"కి అనుకూలంగా మీరు NEFT/RTGS మాత్రమే చెల్లించగలరు.&nbsp;/&nbsp;You can  pay NEFT/RTGS only in favour of “Megha City Gas Distribution Private Limited”.<br>
-                                                &gt;&nbsp;ఏవైనా ఫిర్యాదులు/సూచనల కోసం దయచేసి 040-46565555లో సంప్రదించగలరు  లేదా customercare@meghagas.comలో మాకు వ్రాయగలరు&nbsp;/&nbsp;For any complaints/suggestions please Contact on 040-46565555 or write to us on customercare@meghagas.com.<br>
-                                                &gt;&nbsp;దయచేసి మీ బిల్లు చెల్లింపును మేఘా గ్యాస్ ప్రతినిధికి నగదు రూపంలో చెల్లించవద్దు.&nbsp;/&nbsp;Please do NOT PAY CASH against your Bill to any person/ Megha Gas representative.
+                                                &gt;&nbsp;{{ __('bill.please visit our consumer portal @www.meghagas.com for all billing and payments related information. please download our meghagas app available on playstore and appstore.') }}&nbsp;/&nbsp;Please visit our consumer portal @www.meghagas.com for all billing and payments related information. Please download our MeghaGas app available on PlayStore and Appstore.<br />
+                                                &gt;&nbsp;{{ __('bill.please note that any delay in payment post due date, shall attract late payment charges @2% per month.') }}&nbsp;/&nbsp;Please note that any delay in payment post due date, shall attract Late Payment Charges @2% per month.<br>
+                                                &gt;&nbsp;{{ __('bill.notice: on event of non-payment of bill post due date, connection shall be disconnected on the following day.') }}&nbsp;/&nbsp;NOTICE: On event of non-payment of bill post due date, connection shall be disconnected on the following day.<br>
+                                                &gt;&nbsp;{{ __('bill.now you can pay online @www.meghagas.com or pay via upi (bhim app, gpay, phonepe, paytm, amazon pay, etc.)') }}&nbsp;/&nbsp;Now you can pay Online @www.meghagas.com or Pay via UPI (BHIM App, GPay, PhonePe, Paytm, Amazon Pay, etc.)<br>
+                                                &gt;&nbsp;{{ __('bill.you can pay neft/rtgs only in favour of “megha city gas distribution private limited”.') }}&nbsp;/&nbsp;You can  pay NEFT/RTGS only in favour of “Megha City Gas Distribution Private Limited”.<br>
+                                                &gt;&nbsp;{{ __('bill.for any complaints/suggestions please Contact on 040-46565555 or write to us on customercare@meghagas.com.') }}&nbsp;/&nbsp;For any complaints/suggestions please Contact on 040-46565555 or write to us on customercare@meghagas.com.<br>
+                                                &gt;&nbsp;{{ __('bill.please do not pay cash against your bill to any person/ megha gas representative.') }}&nbsp;/&nbsp;Please do NOT PAY CASH against your Bill to any person/ Megha Gas representative.
                                                 <br>
-                                                &gt;&nbsp;మా సేవల టారిఫ్ కార్డ్ కోసం, దయచేసి www.meghagas.com/domestic-png సందర్శించండి.&nbsp;/&nbsp;For Tarrif card of our services, please visit www.meghagas.com/domestic-png
+                                                &gt;&nbsp;{{ __('bill.for tariff card of our services, please visit www.meghagas.com/domestic-png.') }}&nbsp;/&nbsp;For Tarrif card of our services, please visit www.meghagas.com/domestic-png
                                             </td>
                                         </tr>
                                         <tr style="border-top: 1px solid #000000;">
@@ -434,19 +438,13 @@
                                                             <td style="border-right: 1px solid #000000;border-bottom: 1px solid #000000;text-align: center;">Units (scm)</td>
                                                             <td style="border-bottom: 1px solid #000000;text-align: center;">Cons/day (scm)</td>
                                                         </tr>
-                                                        <tr>
-                                                            <td style="border-right: 1px solid #000000;border-bottom: 1px solid #000000;text-align: center;">
-                                                                03-08-2024  To  08-10-2024                                                                    </td>
-                                                            <td style="border-right: 1px solid #000000;border-bottom: 1px solid #000000;text-align: center;">
-                                                                14.755                                                                    </td>
-                                                            <td style="border-bottom: 1px solid #000000;text-align: center;">
-                                                                0.224                                                                    </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td style="border-right: 1px solid #000000;text-align: center;">01-06-2024  To  03-08-2024</td>
-                                                            <td style="border-right: 1px solid #000000;text-align: center;">17.122</td>
-                                                            <td style="text-align: center;">0.272</td>
-                                                        </tr>
+                                                        @foreach ($billHistory as $bill)
+                                                            <tr>
+                                                                <td style="border-right: 1px solid #000000;text-align: center;">{{ dateFormat($bill->consumption->bill_from) }} To {{ dateFormat($bill->consumption->bill_to) }}</td>
+                                                                <td style="border-right: 1px solid #000000;text-align: center;">{{ numberFormat($bill->net_consumption, 3) }}</td>
+                                                                <td style="text-align: center;">{{ numberFormat($bill->net_consumption / max($bill->consumption->days, 1),3) }}</td>
+                                                            </tr>
+                                                        @endforeach
                                                     </tbody>
                                                 </table>
                                             </td>
@@ -454,7 +452,7 @@
                                                 <table class="table table-borderless mb-0">
                                                     <tbody>
                                                         <tr>
-                                                            <td style="text-align: center;"><img src="{{ asset('img/bill/auth-signature.jpg') }}" alt="signature" width="80"><br/><strong style="font-size: 7px;">(&nbsp;Authorised Signatory&nbsp;/&nbsp;అధికారిక సంతకం&nbsp;)</strong></td>
+                                                            <td style="text-align: center;"><img src="{{ asset('img/bill/auth-signature.jpg') }}" alt="signature" width="80"><br/><strong style="font-size: 7px;">(&nbsp;Authorised Signatory&nbsp;/&nbsp;{{ __('bill.authorised_signatory') }}&nbsp;)</strong></td>
                                                         </tr>
                                                     </tbody>
                                                 </table>

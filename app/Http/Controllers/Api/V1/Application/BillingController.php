@@ -214,7 +214,7 @@ class BillingController extends Controller
             'payable_amount' => 0,
             'paid_amount' => 0,
             'balance_amount' => 0,
-            'due_date' => Carbon::now()->addDays(Constants::DPNG_DUEDAYS->value)->format('Y-m-d'),
+            'due_date' => Carbon::now()->addDays((int)Constants::DPNG_DUEDAYS->value)->format('Y-m-d'),
             'status_id' => InvoiceStatus::PAID->value, // paid
             'created_by' => Auth::id()
         ];
@@ -288,7 +288,7 @@ class BillingController extends Controller
             'payable_amount' => $inv_total,
             'paid_amount' => NULL,
             'balance_amount' => $inv_total,
-            'due_date' => Carbon::now()->addDays(Constants::DPNG_DUEDAYS->value)->format('Y-m-d'),
+            'due_date' => Carbon::now()->addDays((int)Constants::DPNG_DUEDAYS->value)->format('Y-m-d'),
             'status_id' => InvoiceStatus::NOT_PAID->value, // Not paid
             'created_by' => Auth::id()
         ];
@@ -373,7 +373,7 @@ class BillingController extends Controller
             'payable_amount' => $inv_total,
             'paid_amount' => NULL,
             'balance_amount' => $inv_total,
-            'due_date' => Carbon::now()->addDays(Constants::DPNG_DUEDAYS->value)->format('Y-m-d'),
+            'due_date' => Carbon::now()->addDays((int)Constants::DPNG_DUEDAYS->value)->format('Y-m-d'),
             'status_id' => InvoiceStatus::NOT_PAID->value, // Not paid
             'created_by' => Auth::id()
         ];
