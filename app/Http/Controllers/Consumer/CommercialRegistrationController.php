@@ -34,7 +34,6 @@ class CommercialRegistrationController extends Controller
     public function index()
     {
         $geo_areas = Ga::whereIn('id', session()->get('user')['gas'])->get();
-        $users = User::where('status', 1)->get();
         return view('consumers.registration.create-commercial', [
             'geo_areas' => $geo_areas,
             'districts' => [],

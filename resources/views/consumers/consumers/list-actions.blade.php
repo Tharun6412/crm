@@ -10,6 +10,11 @@
     <ul class="dropdown-menu">
         <li><x-auth.link class="dropdown-item" href="{{ url('consumers/' . $consumer->id) }}"><i class="bi bi-chevron-right"></i>&nbsp;View</x-auth.link></li>
         {{-- Registration Status Dropdown--}}
+        @if ($consumer->status_id == ConsumerStatus::PRE_REGISTER->value)
+            <x-auth.link class="dropdown-item link-modal" href="{{ url('consumers/trPayment/' . $consumer->id . '/edit') }}" action="pdep">
+                <i class="bi bi-info-circle"></i>&nbsp;Pay Deposit
+            </x-auth.link>
+        @endif
         @if ($consumer->status_id == ConsumerStatus::REGISTER->value)
             <li><x-auth.link class="dropdown-item link-modal" href="{{ url('consumers/accept/'.$consumer->id.'/edit') }}"><i class="bi bi-chevron-right"></i>&nbsp;Acceptance</x-auth.link></li>
             <li><x-auth.link class="dropdown-item link-modal" href="{{ url('consumers/payDeposit/'.$consumer->id.'/edit') }}"><i class="bi bi-chevron-right"></i>&nbsp;Pay Deposit</x-auth.link></li>

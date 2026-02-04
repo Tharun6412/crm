@@ -35,6 +35,7 @@ Route::middleware(['auth', ModuleAccess::class])->group(function() {
     Route::post('closeComplaint/{id}/{status}',[App\Http\Controllers\Complaints\ComplaintsController::class, 'closeComplaint']);
     // OTP
     Route::post('closeOTP',[App\Http\Controllers\Complaints\ComplaintsController::class, 'closeOTP']);
+    Route::post('resendOTP',[App\Http\Controllers\Complaints\ComplaintsController::class, 'resendOTP']);
     // resource
     Route::resource('feedback', App\Http\Controllers\Complaints\FeedbackController::class);
     // Export

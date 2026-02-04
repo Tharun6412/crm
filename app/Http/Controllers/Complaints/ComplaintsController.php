@@ -182,7 +182,7 @@ class ComplaintsController extends Controller
         $complaint_number = str_pad($add_complaint->id, 9, "0", STR_PAD_LEFT);
         Complaint::where('id', $add_complaint->id)->update(['code' => $complaint_number]);
         if(!empty($request->dc_file_list)) {
-            $add_document = DocumentUpload::uploadBulk($request);
+            $add_document = DocumentUpload::optionalBulkUpload($request);
             foreach($request->dc_file_list as $key => $file) {
                 ComplaintDocument::create([
                     'complaint_id' => $add_complaint->id,
@@ -229,6 +229,8 @@ class ComplaintsController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $files = $request->file('dc_file_list', []);
+        $count = is_array($files) ? count($files) : 0;
         $request->validate([
             'segment_id' => 'required',
             'type_id' => 'required',
@@ -239,8 +241,8 @@ class ComplaintsController extends Controller
             'notes' => 'required|max:225',
         ]);
         // Check Complaint Docs
-        $docCount = ComplaintDocument::where('complaint_id', $id)->count();
-        if ($docCount >= 1) {
+        $docCount = ComplaintDocument::where('complaint_id', $id)->count() + $count;
+        if ($docCount > 2) {
             throw \Illuminate\Validation\ValidationException::withMessages([
                 'dc_file_list_0' => 'Maximum 2 documents are allowed. Please delete existing documents first.'
             ]);
@@ -267,7 +269,7 @@ class ComplaintsController extends Controller
         ]);
         // Documemnts
         if(!empty($request->dc_file_list)) {
-            $add_document = DocumentUpload::uploadBulk($request);
+            $add_document = DocumentUpload::optionalBulkUpload($request);
             foreach($request->dc_file_list as $key => $file) {
                 ComplaintDocument::create([
                     'complaint_id' => $id,
@@ -368,6 +370,21 @@ class ComplaintsController extends Controller
         }
         $otp = OtpService::create($phone_no, OtpPurpose::COMPLAINT_CLOSE->value, OtpModule::USER->value);
         return response()->json('OTP Sent Successfully to your mobile number'.": ".$otp."<br/> and will expire in 60 seconds.");
+    }
+
+    /**
+     * Resend OTP
+     */
+    public function resendOTP(Request $request) 
+    {
+        // Fetch Complaint Details
+        $complaint = Complaint::find($request->id);
+        $phone_no = $complaint->consumer->phone ?? $complaint->phone;
+        if(empty($phone_no)){
+            return response()->json('OTP not Sent');
+        }
+        $otp = OtpService::create($phone_no, OtpPurpose::COMPLAINT_CLOSE->value, OtpModule::USER->value);
+        return response()->json('OTP Sent Successfully to your mobile number'.": ".$otp);
     }
 
     /**

@@ -42,6 +42,9 @@
                             <button type="submit" class="btn btn-success">
                                 <i class="bi bi-check2-all" aria-hidden="true">&nbsp;</i>Close complaint
                             </button>
+                            <button type="button" class="btn btn-info">
+                                <i class="bi bi-check2-all" aria-hidden="true" onclick="resendOTP({{ $complaint->id }})">&nbsp;</i>Resend OTP
+                            </button>
                         </div>
                     </div>
                 </form>
@@ -60,6 +63,14 @@
         $('#send_otp').addClass('d-none');
         $('#close_cmp').removeClass('d-none');
         $.post("{{ url('calls/closeOTP') }}", {'id' : complaint_id, '_token' : '{{ csrf_token() }}'}, function(data) {
+            $('#otp-msg').html(data);
+        });
+    }
+
+    // Resend OTP Function
+    function resendOTP(complaint_id)
+    {
+        $.post("{{ url('calls/resendOTP') }}", {'id' : complaint_id, '_token' : '{{ csrf_token() }}'}, function(data) {
             $('#otp-msg').html(data);
         });
     }

@@ -43,8 +43,10 @@ Route::middleware(['auth', ModuleAccess::class])->group(function() {
     // Consumer Meter Change 
     Route::resource('meterChange', App\Http\Controllers\Consumer\MeterChangeController::class);
     
+    // Consumers Filter
+    Route::get('filters/areaByCA', [App\Http\Controllers\Consumer\ConsumerFilterController::class, 'areaByCA']);
+    Route::resource('filters', App\Http\Controllers\Consumer\ConsumerFilterController::class);
     // Consumers list
-    Route::resource('tr', App\Http\Controllers\Consumer\TRController::class);
     Route::get('consumerExport', [App\Http\Controllers\Consumer\ConsumerController::class, 'consumerExport']);
     Route::get('/{id}', [App\Http\Controllers\Consumer\ConsumerController::class, 'show'])->whereNumber('id');
     Route::get('/{status:slug?}', [App\Http\Controllers\Consumer\ConsumerController::class, 'index']);
