@@ -19,13 +19,16 @@
         </div>
     </div>
     <div>
-        <a href="{{ url('consumers/filters') }}" class="btn btn-warning btn-sm link-modal" onclick="this.href='{{ url('consumers/filters') }}?' + $('#consumers-search-form').serialize();">
+        <button type="button" class="btn btn-sm btn-warning" onclick="$('#filterArea').toggleClass('d-none')">
             <i class="bi bi-funnel"></i>
-        </a>
+        </button>
         <a href="{{ url('consumers/consumerExport') }}?{{ http_build_query(request()->all()) }}" class="btn btn-primary btn-sm">
             <i class="bi bi-file-earmark-excel"></i>&nbsp;Export
         </a>
     </div>
+</div>
+<div class="bg-info-subtle border p-1 mb-1 {{ (request()->has('connection_type_id') OR request()->has('charge_area') OR request()->has('area')) ? '' : 'd-none' }}" id="filterArea">
+    @include('consumers.consumers.list-body-filter')
 </div>
 @php
     $sort_by = (request()->has('sortBy')) ? request()->get('sortBy') : 'created_at';

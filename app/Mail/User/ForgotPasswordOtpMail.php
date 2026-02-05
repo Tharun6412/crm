@@ -9,15 +9,14 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class RegisterOtpMail extends Mailable implements ShouldQueue
+class ForgotPasswordOtpMail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
     /**
-     * Mail data
-     * @var array
+     * MailData @array
      */
-    public $mailData;
+    public $mailData = [];
 
     /**
      * Create a new message instance.
@@ -34,7 +33,7 @@ class RegisterOtpMail extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'OTP to register your account',
+            subject: 'OTP to regenerate password',
         );
     }
 
@@ -44,7 +43,7 @@ class RegisterOtpMail extends Mailable implements ShouldQueue
     public function content(): Content
     {
         return new Content(
-            view: 'emails.user.register-otp',
+            view: 'emails.user.forgot-password-otp',
         );
     }
 

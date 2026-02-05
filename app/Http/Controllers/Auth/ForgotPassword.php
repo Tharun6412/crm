@@ -7,6 +7,7 @@ use App\Enums\OtpPurpose;
 use App\Enums\UserStatus;
 use App\Http\Controllers\Controller;
 use App\Mail\ForgotPasswordOtpMail;
+use App\Mail\User\ForgotPasswordOtpMail as UserForgotPasswordOtpMail;
 use App\Models\Admin\User;
 use App\Models\Admin\UserStatusHistory;
 use App\Models\UserOtp;
@@ -17,6 +18,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
+use Illuminate\Validation\ValidationException;
 
 class ForgotPassword extends Controller
 {
@@ -40,12 +42,32 @@ class ForgotPassword extends Controller
         // Get details of user
         $user = User::where(['emp_id' => $request->emp_id, 'status_id' => UserStatus::ACTIVE->value])->first();
         if(!$user)
-            abort(422, 'Invalid Emp Id / Employee disabled');
+            throw ValidationException::withMessages(['reg_otp' => 'Invalid Emp Id / Employee disabled']);
         // Generate OTP and send email
         $otp = $this->generateOtp($user);
 
         // Response
         return view('auth/forgot_user_details', ['user' => $user, 'otp' => $otp]);
+    }
+    
+    /**
+     * Resend email
+     */
+    public function resendEmail(Request $request, $id)
+    {
+        // Check email sent counts
+        $reset_pwd_otp_attempt = session('reset_pwd_otp_attempt');
+        // print_r($register_otp_attempt[$id]);
+        if(isset($reset_pwd_otp_attempt[$id]) AND $reset_pwd_otp_attempt[$id] <= 3) {
+            // Get details and send email
+            $user = User::find($id);
+            $otp = $this->generateOtp($user);
+
+            return response()->json(['success' => 'OTP sent to your email successfully!']);
+        }
+        else {
+            return response()->json(['success' => 'Tried maximum attempts, please try again later!']);
+        }
     }
 
     /**
@@ -54,14 +76,20 @@ class ForgotPassword extends Controller
     public function generateOtp($user)
     {
         // Generate, store and send OTP to the registered mobile number
-        $otp = OtpService::create($user->mobile, OtpPurpose::PASSWORD_RESET->value, OtpModule::USER->value);
+        $otp = OtpService::create($user->email, OtpPurpose::PASSWORD_RESET->value, OtpModule::USER->value);
 
         // Send OTP to email
         $mail_data = [
             'name' => $user->name,
             'otp' => $otp,
         ];
-        // Mail::to($user->email)->send(new ForgotPasswordOtpMail($mail_data));
+        Mail::to($user->email)->send(new UserForgotPasswordOtpMail($mail_data));
+
+        // Mail sent counter
+        $reset_pwd_otp_attempt = (session()->exists('reset_pwd_otp_attempt')) ? session()->pull('reset_pwd_otp_attempt') : [];
+        $reset_pwd_otp_attempt[$user->id] = isset($reset_pwd_otp_attempt[$user->id]) ? ($reset_pwd_otp_attempt[$user->id] + 1) : 1;
+        session()->put('reset_pwd_otp_attempt', $reset_pwd_otp_attempt);
+
         return $otp;
     }
 
@@ -78,12 +106,16 @@ class ForgotPassword extends Controller
         // Get User deatils
         $user = User::find($id);
 
-        // Update OTP table
-        $verify_otp = OtpService::verify($user->mobile, OtpPurpose::PASSWORD_RESET->value, $request->reg_otp, OtpModule::USER->value);
-
-        // Generate session and redirect or load password creation window
-        $request->session()->put('forgot_user', $request->id);
-        return response()->json(['status' => 1, 'url' => url('reGeneratePassword')]);
+        // Check and update OTP
+        if(OtpService::verify($user->email, OtpPurpose::PASSWORD_RESET->value, $request->reg_otp, OtpModule::USER->value)) {
+            // Generate session and redirect or load password creation window
+            $request->session()->put('forgot_user', $request->id);
+            return response()->json(['status' => 1, 'url' => url('reGeneratePassword')]);
+        }
+        else {
+            // Fali validation
+            throw ValidationException::withMessages(['reg_otp' => 'Invalid OTP, please enter correct OTP.']);
+        }
     }
 
     /**

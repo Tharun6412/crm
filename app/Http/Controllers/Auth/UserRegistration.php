@@ -8,6 +8,7 @@ use App\Enums\UserStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\UserRegistrationRequest;
 use App\Mail\RegisterOtpMail;
+use App\Mail\User\RegisterOtpMail as UserRegisterOtpMail;
 use App\Models\Admin\User;
 use App\Models\Admin\UserStatusHistory;
 use App\Services\OtpService;
@@ -19,6 +20,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
+use Illuminate\Validation\ValidationException;
 
 class UserRegistration extends Controller
 {
@@ -43,8 +45,7 @@ class UserRegistration extends Controller
         // Validation
         $request->validate([
             'emp_id' => [
-                'required',
-                'numeric', 
+                'required', 
                 Rule::exists('users')->where(function (Builder $query) {
                     $query->where('status_id', 3);
                 }),
@@ -66,11 +67,19 @@ class UserRegistration extends Controller
      */
     public function resendEmail(Request $request, $id)
     {
-        // Get details and send email
-        // $user_source = UserSource::find($id);
-        // $this->generateOtp($user_source);
+        // Check email sent counts
+        $register_otp_attempt = session('register_otp_attempt');
+        // print_r($register_otp_attempt[$id]);
+        if(isset($register_otp_attempt[$id]) AND $register_otp_attempt[$id] <= 3) {
+            // Get details and send email
+            $user = User::find($id);
+            $otp = $this->generateOtp($user);
 
-        return response()->json(['success' => 'OTP sent to your email successfully!']);
+            return response()->json(['success' => 'OTP sent to your email successfully!']);
+        }
+        else {
+            return response()->json(['success' => 'Tried maximum attempts, please try again later!']);
+        }
     }
 
     /**
@@ -79,14 +88,21 @@ class UserRegistration extends Controller
     public function generateOtp($user)
     {
         // Generate, store and send OTP to the registered mobile number
-        $otp = OtpService::create($user->mobile, OtpPurpose::REGISTER->value, OtpModule::USER->value);
-
+        $otp = OtpService::create($user->email, OtpPurpose::REGISTER->value, OtpModule::USER->value);
+        
         // Send OTP to email
         $mail_data = [
             'name' => $user->name,
             'otp' => $otp,
         ];
-        // Mail::to($user->email)->send(new RegisterOtpMail($mail_data));
+        Mail::to($user->email)->send(new UserRegisterOtpMail($mail_data));
+
+        // Mail sent counter
+        $register_otp_attempt = (session()->exists('register_otp_attempt')) ? session()->pull('register_otp_attempt') : [];
+        $register_otp_attempt[$user->id] = isset($register_otp_attempt[$user->id]) ? ($register_otp_attempt[$user->id] + 1) : 1;
+        session()->put('register_otp_attempt', $register_otp_attempt);
+
+        // Return
         return $otp;
     }
 
@@ -102,12 +118,15 @@ class UserRegistration extends Controller
         // Get User deatils
         $user = User::find($id);
 
-        // Update OTP table
-        $verify_otp = OtpService::verify($user->mobile, OtpPurpose::REGISTER->value, $request->reg_otp, OtpModule::USER->value);
-        
-        // Generate session and redirect or load password creation window
-        $request->session()->put('reg_user', $user->id);
-        return response()->json(['status' => 1, 'url' => url('generatePassword')]);
+        // Check OTP and update
+        if(OtpService::verify($user->email, OtpPurpose::REGISTER->value, $request->reg_otp, OtpModule::USER->value)) {
+            // Generate session and redirect or load password creation window
+            $request->session()->put('reg_user', $user->id);
+            return response()->json(['status' => 1, 'url' => url('generatePassword')]);
+        }
+        else {
+            throw ValidationException::withMessages(['reg_otp' => 'Invalid OTP, please enter correct OTP.']);
+        }
     }
     
     /**

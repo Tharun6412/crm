@@ -30,7 +30,7 @@
         <div class="row">
             <div class="offset-sm-2 col-sm-10">
                 <button type="submit" class="btn btn-success"><i class="bi bi-key"></i>&nbsp;Re-Generate password</button>
-                {{-- <a href="{{ url('resendEmail/' . $user_source->id) }}" class="btn btn-link" id="resend-link">Resend email</a> --}}
+                <a href="{{ url('forgotPassword/resendEmail/' . $user->id) }}" class="btn btn-link" id="resend-link">Resend email</a>
                 <div class="pt-2" id="mail-response">
                     <div class="alert alert-info">
                         OTP has been set to your email. {{ $otp }}

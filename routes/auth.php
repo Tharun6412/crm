@@ -18,6 +18,7 @@ Route::middleware('guest')->group(function(){
     // Forgot password
     Route::get('forgotPassword', [App\Http\Controllers\Auth\ForgotPassword::class, 'index']);
     Route::post('userVerify', [App\Http\Controllers\Auth\ForgotPassword::class, 'userVerify']);
+    Route::post('forgotPassword/resendEmail/{id}', [App\Http\Controllers\Auth\ForgotPassword::class, 'resendEmail']);
     Route::post('validateUserOtp/{id}', [App\Http\Controllers\Auth\ForgotPassword::class, 'validateUserOtp']);
     Route::get('reGeneratePassword', [App\Http\Controllers\Auth\ForgotPassword::class, 'reGeneratePassword']);
     Route::post('updatePassword/{id}', [App\Http\Controllers\Auth\ForgotPassword::class, 'updatePassword']);
