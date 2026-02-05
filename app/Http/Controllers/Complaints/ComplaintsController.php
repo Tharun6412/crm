@@ -377,14 +377,29 @@ class ComplaintsController extends Controller
      */
     public function resendOTP(Request $request) 
     {
+        // Session Creation for OTP
+        $count = session()->get("complaints.$request->id", 1);
+        // OTP Limit if exceeds
+        if($count > 2) {
+            return response()->json([
+                'message' => 'OTP resend limit exceeded',
+                'count' => $count,
+            ]);
+        }
+        // Session Updating
+        $count = $count+1;
+        session()->put("complaints.$request->id", $count);
         // Fetch Complaint Details
         $complaint = Complaint::find($request->id);
         $phone_no = $complaint->consumer->phone ?? $complaint->phone;
         if(empty($phone_no)){
-            return response()->json('OTP not Sent');
+            return response()->json(['message' => 'OTP not Sent']);
         }
         $otp = OtpService::create($phone_no, OtpPurpose::COMPLAINT_CLOSE->value, OtpModule::USER->value);
-        return response()->json('OTP Sent Successfully to your mobile number'.": ".$otp);
+        return response()->json([
+            'message' => 'OTP Sent Successfully to your mobile number'.": ".$otp,
+            'count' => $count,
+        ]);
     }
 
     /**

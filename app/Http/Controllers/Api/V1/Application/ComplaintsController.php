@@ -22,6 +22,7 @@ use App\Traits\ApiResponse;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 
 class ComplaintsController extends Controller
 {
@@ -74,7 +75,6 @@ class ComplaintsController extends Controller
     }
     /**
      * Store complaints
-     * 
      * @method POST
      */
     public function store(ComplaintValidationRequest $request, $id)
@@ -203,6 +203,35 @@ class ComplaintsController extends Controller
         return response()->json(['success' => 'Complaint closed successfully'], 200);
     }
 
+    /**
+     * Resend OTP
+     */
+    public function resendOTP(Request $request, $id) 
+    {
+        // Cache Creation for OTP
+        $count = Cache::get("complaints.$id", 1);
+        // OTP Limit if exceeds
+        if($count > 2) {
+            return response()->json([
+                'message' => 'OTP resend limit exceeded',
+                'count' => $count,
+            ], 422);
+        }
+        // Session Updating
+        $count = $count + 1;
+        Cache::put("complaints.$id", $count, now()->addMinutes(10));
+        // Fetch Complaint Details
+        $complaint = Complaint::find($id);
+        $phone_no = $complaint->consumer->phone ?? $complaint->phone;
+        if(empty($phone_no)){
+            return response()->json(['message' => 'OTP not Sent'], 422);
+        }
+        $otp = OtpService::create($phone_no, OtpPurpose::COMPLAINT_CLOSE->value, OtpModule::USER->value);
+        return response()->json([
+            'message' => 'OTP Sent Successfully to your mobile number'.": ".$otp,
+            'count' => $count,
+        ], 200);
+    }
     /**
      * Status Update
      * @param $complaint_id, $status_id

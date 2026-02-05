@@ -42,6 +42,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('closeOTP/{id}', [App\Http\Controllers\Api\V1\Application\ComplaintsController::class, 'closeOTP']);
         Route::post('closeComplaint/{id}/{status_id}', [App\Http\Controllers\Api\V1\Application\ComplaintsController::class, 'closeComplaint']);
         Route::post('comments/{id}/', [App\Http\Controllers\Api\V1\Application\ComplaintsController::class, 'comments']);
+        Route::post('resendOTP/{id}', [App\Http\Controllers\Api\V1\Application\ComplaintsController::class, 'resendOTP']);
     });
     
     Route::prefix('bills')->group(function() {

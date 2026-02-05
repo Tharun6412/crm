@@ -42,8 +42,8 @@
                             <button type="submit" class="btn btn-success">
                                 <i class="bi bi-check2-all" aria-hidden="true">&nbsp;</i>Close complaint
                             </button>
-                            <button type="button" class="btn btn-info">
-                                <i class="bi bi-check2-all" aria-hidden="true" onclick="resendOTP({{ $complaint->id }})">&nbsp;</i>Resend OTP
+                            <button type="button" class="btn btn-info" id="resendOtp" onclick="resendOTP({{ $complaint->id }})">
+                                <i class="bi bi-check2-all" aria-hidden="true">&nbsp;</i>Resend OTP
                             </button>
                         </div>
                     </div>
@@ -70,8 +70,15 @@
     // Resend OTP Function
     function resendOTP(complaint_id)
     {
+        $('#close_cmp').removeClass('d-none');
         $.post("{{ url('calls/resendOTP') }}", {'id' : complaint_id, '_token' : '{{ csrf_token() }}'}, function(data) {
-            $('#otp-msg').html(data);
+            $('#otp-msg').html(data.message);
+            if(data.count > 2) {
+                $('#resendOtp').prop('disabled', true)
+                    .removeClass('btn-info')
+                    .addClass('btn-secondary')
+                    .text('Resend limit reached');
+            }
         });
     }
 </script>
