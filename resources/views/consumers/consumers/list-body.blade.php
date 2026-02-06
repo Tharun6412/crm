@@ -123,25 +123,3 @@
     {{ $consumers->links('utils.paginator', ['modDiv' => 'consumers-list']) }}
 </div>
 @include('scripts.link-modal')
-<script type="text/javascript">
-    function consumer_filter(e) {
-        e.preventDefault();
-        const params = $('#advance-search-form').serializeArray();
-        // Inject advance filters into MAIN form
-        params.forEach(p => {
-            let input = $('#consumers-search-form [name="' + p.name + '"]');
-            if (input.length) {
-                input.val(p.value);
-            } else {
-                $('<input>', {
-                    type: 'hidden',
-                    name: p.name,
-                    value: p.value
-                }).appendTo('#consumers-search-form');
-            }
-        });
-        // Submit MAIN form (global AJAX handles it)
-        $('#consumers-search-form').trigger('submit');
-        unLoadModal();
-    }
-</script>

@@ -41,7 +41,7 @@
             </div>
             <div class="col">
                 <div class="border rounded text-end py-1 px-2 fs-5">
-                    <a href="{{ url('reports/consumer/statusReport') }}?{{ http_build_query([
+                    <a href="{{ url('reports/consumer/onboardingStatusReport') }}?{{ http_build_query([
                         'status_id' => \App\Enums\ConsumerStatus::PRE_REGISTER->value, 
                         'ga_id' => $ga->id,
                         'date_from' => request()->date_from,
@@ -53,7 +53,7 @@
             </div>
             <div class="col">
                 <div class="border rounded text-end py-1 px-2 fs-5">
-                    <a href="{{ url('reports/consumer/statusReport') }}?{{ http_build_query([
+                    <a href="{{ url('reports/consumer/onboardingStatusReport') }}?{{ http_build_query([
                         'status_id' => \App\Enums\ConsumerStatus::REGISTER->value, 
                         'ga_id' => $ga->id,
                         'date_from' => request()->date_from,
@@ -65,7 +65,7 @@
             </div>
             <div class="col">
                 <div class="border rounded text-end py-1 px-2 fs-5">
-                    <a href="{{ url('reports/consumer/statusReport') }}?{{ http_build_query([
+                    <a href="{{ url('reports/consumer/onboardingStatusReport') }}?{{ http_build_query([
                         'status_id' => \App\Enums\ConsumerStatus::ACCEPT->value, 
                         'ga_id' => $ga->id,
                         'date_from' => request()->date_from,
@@ -77,7 +77,7 @@
             </div>
             <div class="col">
                 <div class="border rounded text-end py-1 px-2 fs-5">
-                    <a href="{{ url('reports/consumer/statusReport') }}?{{ http_build_query([
+                    <a href="{{ url('reports/consumer/onboardingStatusReport') }}?{{ http_build_query([
                         'status_id' => \App\Enums\ConsumerStatus::EXECUTE->value, 
                         'ga_id' => $ga->id,
                         'date_from' => request()->date_from,
@@ -89,7 +89,7 @@
             </div>
             <div class="col">
                 <div class="border rounded text-end py-1 px-2 fs-5">
-                    <a href="{{ url('reports/consumer/statusReport') }}?{{ http_build_query([
+                    <a href="{{ url('reports/consumer/onboardingStatusReport') }}?{{ http_build_query([
                         'status_id' => \App\Enums\ConsumerStatus::HSC->value, 
                         'ga_id' => $ga->id,
                         'date_from' => request()->date_from,
@@ -101,7 +101,7 @@
             </div>
             <div class="col">
                 <div class="border rounded text-end py-1 px-2 fs-5">
-                    <a href="{{ url('reports/consumer/statusReport') }}?{{ http_build_query([
+                    <a href="{{ url('reports/consumer/onboardingStatusReport') }}?{{ http_build_query([
                         'status_id' => \App\Enums\ConsumerStatus::ACTIVATE->value, 
                         'ga_id' => $ga->id,
                         'date_from' => request()->date_from,
@@ -113,7 +113,7 @@
             </div>
             <div class="col">
                 <div class="border rounded text-end py-1 px-2 fs-5">
-                    <a href="{{ url('reports/consumer/statusReport') }}?{{ http_build_query([
+                    <a href="{{ url('reports/consumer/onboardingStatusReport') }}?{{ http_build_query([
                         'status_id' => \App\Enums\ConsumerStatus::TD->value, 
                         'ga_id' => $ga->id,
                         'date_from' => request()->date_from,
@@ -125,7 +125,7 @@
             </div>
             <div class="col">
                 <div class="border rounded text-end py-1 px-2 fs-5">
-                    <a href="{{ url('reports/consumer/statusReport') }}?{{ http_build_query([
+                    <a href="{{ url('reports/consumer/onboardingStatusReport') }}?{{ http_build_query([
                         'status_id' => \App\Enums\ConsumerStatus::PD->value, 
                         'ga_id' => $ga->id,
                         'date_from' => request()->date_from,
@@ -137,7 +137,7 @@
             </div>
             <div class="col">
                 <div class="border rounded text-end py-1 px-2 fs-5">
-                    <a href="{{ url('reports/consumer/statusReport') }}?{{ http_build_query([
+                    <a href="{{ url('reports/consumer/onboardingStatusReport') }}?{{ http_build_query([
                         'status_id' => \App\Enums\ConsumerStatus::REJECT->value, 
                         'ga_id' => $ga->id,
                         'date_from' => request()->date_from,

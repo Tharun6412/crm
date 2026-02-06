@@ -22,15 +22,26 @@
                                     <td class="bg-light">Meter No</td>
                                     <td>{{ $consumer->activeMeter->meter_no }}</td>
                                 </tr>
+                                <tr>
+                                    <td class="bg-light">Price Group</td>
+                                    <td>
+                                        <select class="form-select" name="price_group_id" id="price_group_id">
+                                            <option value="">All</option>
+                                            @foreach ($price_groups as $price)
+                                                <option>{{ $price->code }}-{{ $price->price }}</option>
+                                            @endforeach
+                                        </select>
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
+                    <div class="text-danger mt-3" id="hes-submit-error"></div>
                     <div class="text-center">
                         <button type="submit" class="btn btn-success">
                             <i class="bi bi-rocket-takeoff"></i>&nbsp;Send To HES
                         </button>
                     </div>
-                    <div class="text-danger mt-3" id="hes-submit-error"></div>
                 </form>
             </div>
         </div>
@@ -39,4 +50,4 @@
         </div>
     </div>
 </div>
-@include('scripts.ajax-file-submit', ['form' => 'hes-submit'])
+@include('scripts.ajax-form-submit', ['form' => 'hes-submit'])

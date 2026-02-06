@@ -36,6 +36,25 @@
                 </tbody>
             </table>
         </div>
+        <div class="mt-2">
+            <h4 class="fw-semibold text-decoration-underline">Price Group Details</h4>
+            <table class="table table-bordered table-info"> 
+                <thead class="table-info">
+                    <tr>
+                        <th>Code</th>
+                        <th>Price</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{ $consumer->priceGroup?->code }}</td>
+                        <td class="text-start">{{ $consumer->priceGroup?->price }}</td>
+                        <td class="text-start">{{ $consumer->priceGroup?->description }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
         <div>
             <h4 class="fw-semibold text-decoration-underline">Security Deposit Paid History</h4>
             <table class="table table-bordered table-primary">

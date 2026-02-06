@@ -34,14 +34,14 @@
             <tr>
                 <th width="1%" nowrap>S No</th>
                 <th>CRN</th>
-                {{-- <th>Connection Type<x-consumer.type-filter class="float-end"/></th> --}}
                 <th>Name</th>
                 <th>Segment<x-master.segmentFilter class="float-end" /></th>
                 <th>Status<x-consumer.statusFilter class="float-end" /></th>
                 <th>GA<x-master.gaFilter class="float-end" /></th>
                 <th>District</th>
                 <th>Scheme</th>
-                <th>Created At<x-master.date-filter /></th>
+                <th>Price Group</th>
+                <th>Added Date<x-master.date-filter /></th>
                 <th>Meter Serial No</th>
                 <th>HES Status</th>
                 <th>HES Date<x-master.date-filter /></th>
@@ -54,12 +54,13 @@
                     <tr>
                         <td>{{ $loop->iteration }}</td>
                         <td>
-                            <i class="bi bi-{{ ($consumer->connection_type_id == 1) ? 'speedometer2' : 'wifi'}}"></i>
-                            <x-auth.link href="{{ url('consumers/' . $consumer->id) }}">
-                            {{ $consumer->crn }}
-                            </x-auth.link>
+                            <i class="bi bi-wifi"></i>
+                            <span>
+                                <x-auth.link href="{{ url('consumers/' . $consumer->id) }}">
+                                    {{ $consumer->crn }}
+                                </x-auth.link>
+                            </span>
                         </td>
-                        {{-- <td>{{ $consumer->connectType->name }}</td> --}}
                         <td>{{ $consumer->name }}</td>
                         <td>{{ $consumer->segment->name }}</td>
                         <td>
@@ -68,14 +69,15 @@
                         <td>{{ $consumer->ga->name }}</td>
                         <td>{{ $consumer->district->name }}</td>
                         <td>{{ $consumer->scheme?->scheme?->name }}</td>
+                        <td>{{ $consumer->priceGroup?->code }}</td>
                         <td>{{ dateFormat($consumer->created_at) }}</td>
-                        <td>{{ $consumer->activeMeter->meter_serial_no }}</td>
+                        <td>{{ $consumer?->activeMeter?->meter_serial_no }}</td>
                         <td>
                             <x-consumer.hes-status :status="$consumer->prepaidDate?->hes_status"/>
                         </td>
                         <td>{{ dateFormat($consumer->prepaidData?->hes_date) }}</td>
                         <td>
-                            @include('consumers.consumers.list-actions')
+                            @include('consumers.consumers.prepaid-actions')
                         </td>
                     </tr>
                 @endforeach

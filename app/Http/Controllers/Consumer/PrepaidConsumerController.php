@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Consumer;
 use App\Contracts\Prepaid\Acquisition;
 use App\Http\Controllers\Controller;
 use App\Models\Consumer\Consumer;
+use App\Models\Invoice\BillRecharge;
 use App\Models\Master\MasterConsumerStatus;
+use App\Models\Master\PriceGroups;
 use Illuminate\Http\Request;
 
 /**
@@ -53,7 +55,6 @@ class PrepaidConsumerController extends Controller
             return view('consumers.prepaid.list', ['consumers' => $consumers]);
         }
     }
-
     /**
      * Send consumer data to HES Server.
      * 
@@ -64,7 +65,9 @@ class PrepaidConsumerController extends Controller
         if(!$consumer) {
             abort(422, "Trying to send invalid consumer, Please check.");
         }
-        return view('consumers.prepaid.send-hes', ['consumer' => $consumer]);
+        // Get Price groups
+        $price_groups = PriceGroups::where(['ga_id' => $consumer->ga_id, 'segment_id' => $consumer->segment_id])->get();
+        return view('consumers.prepaid.send-hes', ['consumer' => $consumer, 'price_groups' => $price_groups]);
     }
 
     /**
@@ -73,10 +76,16 @@ class PrepaidConsumerController extends Controller
      */
     public function hesSubmit(Request $request, $id)
     {
+        // Validation
+        $request->validate([
+            'price_group_id' => 'required',
+        ]);
         // 1.Fetch consumer
-        $consumer = Consumer::where('connection_type_id', 2)
-        ->where('id', $id)
-        ->firstOrFail();
+        $consumer = Consumer::where('connection_type_id', 2)->where('id', $id)->firstOrFail();
+        // Update price_group_id in consumers
+        $consumer->update([
+            'price_group_id' => $request->price_group_id,
+        ]);
         // 2. Ensure prepaid data exists
         if (!$consumer->prepaidData) {
             return response()->json(['error' => 'Prepaid data not found for this consumer'], 422);
@@ -111,5 +120,14 @@ class PrepaidConsumerController extends Controller
     public function mroRequest(Request $request)
     {
         $consumer = Consumer::where('connection_type_id',2)->get();
+    }
+
+    /**
+     * View Details
+     */
+    public function consumerRechargeList(Request $request, $id)
+    {
+        $recharges = BillRecharge::where('consumer_id', $id)->orderBy('created_at', 'desc')->paginate(20)->withQueryString();
+        return view('consumers.consumers.show-recharge', ['recharges' => $recharges]);
     }
 }

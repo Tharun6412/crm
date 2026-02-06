@@ -17,6 +17,7 @@ use App\Models\Master\FuelType;
 use App\Models\Master\Ga;
 use App\Models\Master\MasterConsumerStatus;
 use App\Models\Master\PaymentType;
+use App\Models\Master\PriceGroups;
 use App\Models\Master\Segment;
 use App\Models\Master\State;
 use App\Models\Master\Title;
@@ -214,7 +215,7 @@ class Consumer extends Model
     }
 
     /**
-     * Relation with Price History
+     * Relation with CA
      */
     public function ca() :BelongsTo
     {
@@ -318,5 +319,13 @@ class Consumer extends Model
     public function prepaidData():HasOne
     {
         return $this->hasOne(Prepaid::class, 'consumer_id', 'id');
+    }
+
+    /**
+     * Relation with Price Group
+     */
+    public function priceGroup():BelongsTo
+    {
+        return $this->belongsTo(PriceGroups::class, 'price_group_id');
     }
 }

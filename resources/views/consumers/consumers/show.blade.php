@@ -53,6 +53,11 @@
                             <a href="#" class="list-group-item list-group-item-action list-group-item-light" id="nav-mdata-tab" data-bs-toggle="tab" data-bs-target="#nav-mdata" role="tab" aria-controls="nav-mdata" aria-selected="false">
                                 <i class="bi bi-telephone-inbound"></i>&nbsp;Maintanance Data
                             </a>
+                            @if ($consumer->connection_type_id == 2)
+                                <a href="#" class="list-group-item list-group-item-action list-group-item-light" id="nav-recharge-tab" data-bs-toggle="tab" data-bs-target="#nav-recharge" data-url="{{ url('consumers/prepaid/consumerRechargeList/' . $consumer->id) }}" role="tab" aria-controls="nav-recharge" aria-selected="true">
+                                    <i class="bi bi-wifi"></i>&nbsp;Recharge History
+                                </a>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -64,6 +69,7 @@
                     <div class="d-flex border rounded-top p-2 fs-4">
                         <div>{{ $consumer->crn }}</div>&nbsp;|&nbsp;
                         <div>{{ $consumer->segment->name ?? '' }}</div>&nbsp;|&nbsp;
+                        <div>{{ $consumer->connection_type_id == 2 ? 'Prepaid' : 'Postpaid' }}</div>&nbsp;|&nbsp;
                         <div><x-consumer.status :status="$consumer->status" /></div>
                     </div>
                 </div>
@@ -86,39 +92,55 @@
                                 $invoice_outstand = $consumer->invoices()->where('type_id', '!=', 1)->sum('balance_amount');
                                 $total_outstand = ($consumer->scheme->balance + $gasbill_outstand + $invoice_outstand);
                             @endphp
-                            <div class="card bg-{{ ($gasbill_outstand > 0) ? 'danger' : 'success' }}-subtle">
-                                <div class="card-body">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div>
-                                            <h4 class="card-title mb-0">{{ numberFormat($gasbill_outstand, 2) }}</h4>
-                                            <span>Gas Bills</span>
+                            @if ($consumer->connection_type_id == 1)
+                                <div class="card bg-{{ ($gasbill_outstand > 0) ? 'danger' : 'success' }}-subtle">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <h4 class="card-title mb-0">{{ numberFormat($gasbill_outstand, 2) }}</h4>
+                                                <span>Gas Bills</span>
+                                            </div>
+                                            <div class="p-2"><i class="bi bi-file-text fs-3"></i></div>
                                         </div>
-                                        <div class="p-2"><i class="bi bi-file-text fs-3"></i></div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="card bg-{{ ($invoice_outstand > 0) ? 'danger' : 'success' }}-subtle">
-                                <div class="card-body">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div>
-                                            <h4 class="card-title mb-0">{{ numberFormat($invoice_outstand, 2) }}</h4>
-                                            <span>Invoices</span>
+                                <div class="card bg-{{ ($invoice_outstand > 0) ? 'danger' : 'success' }}-subtle">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <h4 class="card-title mb-0">{{ numberFormat($invoice_outstand, 2) }}</h4>
+                                                <span>Invoices</span>
+                                            </div>
+                                            <div class="p-2"><i class="bi bi-file-ruled fs-3"></i></div>
                                         </div>
-                                        <div class="p-2"><i class="bi bi-file-ruled fs-3"></i></div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="card bg-{{ ($total_outstand > 0) ? 'danger' : 'success' }}-subtle">
-                                <div class="card-body">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div>
-                                            <h4 class="card-title mb-0">{{ numberFormat($total_outstand, 2) }}</h4>
-                                            <span>Total Outstanding</span>
+                                <div class="card bg-{{ ($total_outstand > 0) ? 'danger' : 'success' }}-subtle">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <h4 class="card-title mb-0">{{ numberFormat($total_outstand, 2) }}</h4>
+                                                <span>Total Outstanding</span>
+                                            </div>
+                                            <div class="p-2"><i class="bi bi-alarm fs-3"></i></div>
                                         </div>
-                                        <div class="p-2"><i class="bi bi-alarm fs-3"></i></div>
                                     </div>
                                 </div>
-                            </div>
+                            @endif
+                            @if ($consumer->connection_type_id == 2)
+                                <div class="card bg-primary-subtle">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <h4 class="card-title mb-0">{{ numberFormat($consumer->prepaidData->balance ?? 0, 2) }}</h4>
+                                                <span>Balance</span>
+                                                {{-- <span>Balance Date</span> --}}
+                                                <div class="p-2"><a type="button" onclick="getPrepaidBalance({{ $consumer->id }})"><i class="bi bi-arrow-counterclockwise fs-3"></i></a></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -150,6 +172,9 @@
                         </div>
                         <div class="tab-pane fade" id="nav-mdata" role="tabpanel" aria-labelledby="nav-mdata-tab" tabindex="0">
                             @include('consumers.consumers.show-maintanance')
+                        </div>
+                        <div class="tab-pane fade" id="nav-recharge" role="tabpanel" aria-labelledby="nav-mdata-tab" tabindex="0">
+                            {{-- @include('consumers.consumers.show-recharge') --}}
                         </div>
                     </div>
                 </div>

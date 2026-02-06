@@ -7,7 +7,7 @@
         </div>
         <div class="modal-body">
            <div id="reports-list">
-                @include('reports.consumer.status-report.list-body')
+                @include('reports.consumer.onboarding-status-report.list-body')
            </div>
         </div>
         <div class="modal-footer">

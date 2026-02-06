@@ -12,7 +12,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class ConsumerStatusReportController extends Controller
+class OnboardingStatusReportController extends Controller
 {
     /**
      * Index Page
@@ -27,7 +27,8 @@ class ConsumerStatusReportController extends Controller
         $reports = ConsumerStatus::join('cns_consumers', 'cns_consumers.id', '=', 'cns_consumer_status.consumer_id')
             ->join('mst_cns_status', 'mst_cns_status.id', '=', 'cns_consumer_status.status_id')
             ->join('mst_gas', 'mst_gas.id', '=', 'cns_consumers.ga_id')
-            ->select('mst_gas.name as ga_name', 'mst_cns_status.name as status_name', 'cns_consumers.fname' ,'cns_consumers.lname', 'cns_consumers.crn', 'cns_consumers.t_crn', 'cns_consumers.connection_type_id', 'cns_consumers.segment_id', 'cns_consumer_status.created_at as status_date')
+            ->join('users', 'users.id', '=', 'cns_consumer_status.created_by')
+            ->select('mst_gas.name as ga_name', 'mst_cns_status.name as status_name', 'cns_consumers.fname' ,'cns_consumers.lname', 'cns_consumers.crn', 'cns_consumers.t_crn', 'cns_consumers.connection_type_id', 'cns_consumers.segment_id', 'cns_consumer_status.created_at as status_date', 'users.first_name', 'users.last_name')
             ->whereBetween('cns_consumer_status.created_at', [$from, $to])
             ->when(($request->has('connection_type_id') AND !empty($request->connection_type_id)), function($q) use($request) {
                 $q->where('cns_consumers.connection_type_id', $request->connection_type_id);
@@ -41,8 +42,8 @@ class ConsumerStatusReportController extends Controller
             // dd($reports);
         // Render output
         if($request->ajax() and $request->page >= 1) {
-            return view('reports.consumer.status-report.list-body', ['reports' => $reports]);
+            return view('reports.consumer.onboarding-status-report.list-body', ['reports' => $reports]);
         }
-        return view('reports.consumer.status-report.list', ['reports' => $reports]);
+        return view('reports.consumer.onboarding-status-report.list', ['reports' => $reports]);
     }
 }

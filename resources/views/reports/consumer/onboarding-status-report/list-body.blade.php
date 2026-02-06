@@ -10,6 +10,7 @@
                         <th>Name</th>
                         <th>Status</th>
                         <th>Added Date</th>
+                        <th>Added By</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -24,6 +25,7 @@
                             <td>{{ $report->fname }}&nbsp;{{ $report->lname }}</td>
                             <td>{{ $report->status_name }}</td>
                             <td>{{ dateFormat($report->status_date) }}</td>
+                            <td>{{ $report->first_name }}&nbsp;{{ $report->last_name }}</td>
                         </tr>
                     @endforeach
                 </tbody>
