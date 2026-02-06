@@ -16,6 +16,7 @@ Route::middleware(['auth', ModuleAccess::class])->group(function() {
     Route::resource('activate', App\Http\Controllers\Consumer\ActivateController::class);
     Route::resource('tdisconnect', App\Http\Controllers\Consumer\TemporaryDisconnectController::class);
     Route::resource('pdisconnect', App\Http\Controllers\Consumer\PermanentDisconnectController::class);
+    Route::resource('prepaid', App\Http\Controllers\Consumer\PrepaidConsumerController::class);
     
     // Search
     Route::get('search', [App\Http\Controllers\Consumer\ConsumerSearchController::class, 'search']);
@@ -39,7 +40,7 @@ Route::middleware(['auth', ModuleAccess::class])->group(function() {
     Route::get('refunds/close/{id}',[App\Http\Controllers\Consumer\RefundController::class, 'close']);
     Route::post('refunds/closeRefund/{id}',[App\Http\Controllers\Consumer\RefundController::class, 'closeRefund']);
     Route::resource('refunds', App\Http\Controllers\Consumer\RefundController::class);
-
+    
     // Consumer Meter Change 
     Route::resource('meterChange', App\Http\Controllers\Consumer\MeterChangeController::class);
     
@@ -50,7 +51,7 @@ Route::middleware(['auth', ModuleAccess::class])->group(function() {
     Route::get('consumerExport', [App\Http\Controllers\Consumer\ConsumerController::class, 'consumerExport']);
     Route::get('/{id}', [App\Http\Controllers\Consumer\ConsumerController::class, 'show'])->whereNumber('id');
     Route::get('/{status:slug?}', [App\Http\Controllers\Consumer\ConsumerController::class, 'index']);
-
+    
     // Prepaid consumer send to HES
     Route::get('prepaid/sendToHes/{id}', [App\Http\Controllers\Consumer\PrepaidConsumerController::class, 'sendToHes']);
     Route::put('prepaid/hesSubmit/{id}', [App\Http\Controllers\Consumer\PrepaidConsumerController::class, 'hesSubmit']);
