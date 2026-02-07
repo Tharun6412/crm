@@ -39,7 +39,7 @@ return new class extends Migration
             $table->double('amount')->nullable();
             $table->double('balance')->nullable();
             $table->foreignId('payment_type_id')->nullable()->index()->constrained(table:'mst_pay_types')->noActionOnUpdate()->noActionOnDelete();
-            $table->string('transaction_id', length: 128)->nullable();
+            $table->foreignId('transaction_id')->nullable()->index()->constrained(table: 'pay_transactions')->noActionOnUpdate()->noActionOnDelete();
             $table->foreignId('created_by')->nullable()->index()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();
             $table->foreignId('updated_by')->nullable()->index()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();
             $table->timestamps();

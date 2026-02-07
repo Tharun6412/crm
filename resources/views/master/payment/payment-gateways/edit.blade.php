@@ -11,33 +11,34 @@
                     @csrf
                     @method('PUT')
                     <div class="row mb-2">
-                        <label for="gateway" class="col-sm-2 col-form-label text-end">Gateway</label>
-                        <div class="col-sm-9">
+                        <label for="gateway" class="col-sm-3 col-form-label text-end">Gateway</label>
+                        <div class="col-sm-8">
                             <input type="text" name="gateway" id="gateway" class="form-control" value="{{ $gateway->gateway }}">
                         </div>
                     </div>
                     <div class="row mb-2">
-                        <label for="status" class="col-sm-2 col-form-label text-end">Status</label>
-                        <div class="col-sm-9">
+                        <label for="status" class="col-sm-3 col-form-label text-end">Status</label>
+                        <div class="col-sm-8">
                             <select name="status" id="status" class="form-select">
                                 <option value="1" @selected($gateway->is_active == 1)>Enable</option>
                                 <option value="0" @selected($gateway->is_active == 0)>Disable</option>
                             </select>
                         </div>
                     </div>
-                    @if ($gateway->credentials)
-                        @foreach ($gateway->credentials as $key => $value)
-                            <div class="row mb-2">
-                                <label for="{{ $key }}" class="col-sm-2 col-form-label text-end">{{ $key }}</label>
-                                <div class="col-sm-9">
-                                    <input type="text" name="credentials[{{ $key }}]" id="{{ $key }}" value="{{ $value }}" class="form-control">
-                                </div>
+                    @php
+                        $sub_merchants = $gateway->details->pluck('sub_merchant_id', 'id')->toArray();
+                    @endphp
+                    @foreach ($geo_areas as $ga)
+                        <div class="row g-2 mb-2">
+                            <label for="sub_merchant{{ $ga->id }}" class="col-sm-3 col-form-label text-end">{{ $ga->name }}:</label>
+                            <div class="col-sm-8">
+                                <input type="text" name="sub_merchant[{{ $ga->id }}]" id="sub_merchant{{ $ga->id }}" value="{{ isset($sub_merchants[$ga->id]) ? $sub_merchants[$ga->id] : '' }}" class="form-control" placeholder="Sub Merchant ID">
                             </div>
-                        @endforeach
-                    @endif
+                        </div>
+                    @endforeach
                     <div id="gw-edit-error" class="text-danger"></div>
                     <div class="row">
-                        <div class="offset-sm-2 col-sm-9">
+                        <div class="offset-sm-3 col-sm-8">
                             <button type="submit" class="btn btn-success"><i class="bi bi-save"></i>&nbsp;Save</button>
                         </div>
                     </div>
