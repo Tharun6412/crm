@@ -4,9 +4,10 @@ namespace App\Http\Controllers\Consumer;
 use App\Contracts\Prepaid\Acquisition;
 use App\Http\Controllers\Controller;
 use App\Models\Consumer\Consumer;
-use App\Models\Invoice\BillRecharge;
+use App\Models\Payments\PayRecharge;
 use App\Models\Master\MasterConsumerStatus;
 use App\Models\Master\PriceGroups;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 /**
@@ -119,7 +120,20 @@ class PrepaidConsumerController extends Controller
      */
     public function mroRequest(Request $request)
     {
-        $consumer = Consumer::where('connection_type_id',2)->get();
+        // $target_date = Carbon::now()->addDays(2);
+        // $consumer = Consumer::where(function($query) use($target_date) {
+        //     $query->whereHas('invoices', function($q) use($target_date) {
+        //         // here invoice date > today_date should be greater than 30 days
+        //         $q->whereDate('invoice_date', '<=', $target_date->copy()->subDays(30));
+        //     })
+        //     ->orWhere(function ($q) use ($target_date) {
+        //         $q->whereDoesntHave('invoices')
+        //             ->whereHas('prepaid', function ($q1) use ($target_date) {
+        //                 $q1->whereDate('hes_date', '<=', $target_date->copy()->subDays(30));
+        //             });
+        //     });
+        // })
+        // ->where('connection_type_id',2)->get();
     }
 
     /**
@@ -127,7 +141,7 @@ class PrepaidConsumerController extends Controller
      */
     public function consumerRechargeList(Request $request, $id)
     {
-        $recharges = BillRecharge::where('consumer_id', $id)->orderBy('created_at', 'desc')->paginate(20)->withQueryString();
+        $recharges = PayRecharge::where('consumer_id', $id)->orderBy('created_at', 'desc')->paginate(20)->withQueryString();
         return view('consumers.consumers.show-recharge', ['recharges' => $recharges]);
     }
 }

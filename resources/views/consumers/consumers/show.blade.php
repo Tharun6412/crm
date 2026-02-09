@@ -132,9 +132,9 @@
                                     <div class="card-body">
                                         <div class="d-flex justify-content-between align-items-center">
                                             <div>
-                                                <h4 class="card-title mb-0">{{ numberFormat($consumer->prepaidData->balance ?? 0, 2) }}</h4>
+                                                <h4 class="card-title mb-0" id="balance">{{ numberFormat($consumer->prepaidData->balance ?? 0, 2) }}</h4>
                                                 <span>Balance</span>
-                                                {{-- <span>Balance Date</span> --}}
+                                                <small id="balance_date">Balance Date:</small>
                                                 <div class="p-2"><a type="button" onclick="getPrepaidBalance({{ $consumer->id }})"><i class="bi bi-arrow-counterclockwise fs-3"></i></a></div>
                                             </div>
                                         </div>
@@ -184,6 +184,24 @@
     <div>
 @endsection
 {{-- Scripts --}}
+<script type="text/javascript">
+    // To get Updated consumer Balance 
+    function getPrepaidBalance(consumer_id)
+    {
+        $.get("{{ url('consumers/prepaid/balance') }}/"+consumer_id, function(data) {
+            $('#balance').text(data.balance);
+            $('#balance_date').text('Balance Date: ' + data.balance_date);
+        }).fail(function (xhr) {
+            if (xhr.status === 429) {
+                // Too many requests
+                alert('Too many requests. Please try again in a minute.');
+            } else {
+                // Other errors
+                alert('Failed to fetch updated balance');
+            }
+        });
+    }
+</script>
 @push('scripts')
     <script type="module">
         $(function(){

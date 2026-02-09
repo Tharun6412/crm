@@ -56,5 +56,5 @@ Route::middleware(['auth', ModuleAccess::class])->group(function() {
     Route::get('prepaid/sendToHes/{id}', [App\Http\Controllers\Consumer\PrepaidConsumerController::class, 'sendToHes']);
     Route::put('prepaid/hesSubmit/{id}', [App\Http\Controllers\Consumer\PrepaidConsumerController::class, 'hesSubmit']);
     Route::get('prepaid/consumerRechargeList/{id}', [App\Http\Controllers\Consumer\PrepaidConsumerController::class, 'consumerRechargeList']);
-    Route::get('prepaid/balance/{id}', [App\Http\Controllers\Consumer\ConsumerPrepaidBalanceController::class, 'prepaidBalance']);
+    Route::get('prepaid/balance/{id}', [App\Http\Controllers\Consumer\ConsumerPrepaidBalanceController::class, 'prepaidBalance'])->middleware('throttle:balance-check');
 });

@@ -28,7 +28,7 @@
     <div class="col-sm-2 text-end fw-semibold">Segment : </div>
     <div class="col-sm-4">{{ $complaint->segment->name ?? '' }}</div>
     <div class="col-sm-2 text-end fw-semibold text-nowrap">Est. Closed Date : </div>
-    <div class="col-sm-4">{{ $complaint->estimated_closed_at?->format('d-m-Y H:i') }}</div>
+    <div class="col-sm-4">{{ $complaint->estimated_closed_at?->format('d-m-Y H:i') }} <x-complaint.day-hour-display :complaint="$complaint"/></div>
     <div class="col-sm-2 text-end fw-semibold">Raised Date : </div>
     <div class="col-sm-4">{{ $complaint->created_at->format('d-m-Y') }}</div>
     <div class="col-sm-2 text-end fw-semibold">Closed Date : </div>

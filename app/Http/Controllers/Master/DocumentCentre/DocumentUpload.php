@@ -110,7 +110,7 @@ class DocumentUpload extends Controller
     /**
      * Optional Bulk Documents
      */
-    static function optionalBulkUpload($request, $package = 'crm')
+    static function uploadIfPresent($request, $package = 'crm')
     {
         // Validations
         $request->validate([

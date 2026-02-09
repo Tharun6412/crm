@@ -18,7 +18,6 @@ class ConsumerController extends Controller
      */
     public function index(Request $request, MasterConsumerStatus $status)
     {
-        // dd($request->all());
         // Get consumers
         $sortBy = ($request->get('sortBy')) ? $request->get('sortBy') : 'created_at';
         $sortOr = ($request->get('sortOr')) ? $request->get('sortOr') : 'desc';

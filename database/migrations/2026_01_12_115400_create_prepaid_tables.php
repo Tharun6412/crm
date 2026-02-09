@@ -109,14 +109,6 @@ return new class extends Migration
             $table->dateTime('created_at')->nullable();
         });
 
-        Schema::create('bil_recharges', function(Blueprint $table) {
-            $table->id();
-            $table->foreignId('consumer_id')->nullable()->index()->constrained(table:'cns_consumers')->noActionOnUpdate()->noActionOnDelete();
-            $table->string('transaction_id')->nullable();
-            $table->double('amount')->nullable();
-            $table->dateTime('created_at')->nullable();
-        });
-
         /**
          * Updates
          */
@@ -145,7 +137,6 @@ return new class extends Migration
         Schema::dropIfExists('bil_mro_data_history');
         Schema::dropIfExists('bil_mro_data');
         Schema::dropIfExists('mst_mro_status');
-        Schema::dropIfExists('bil_recharges');
         Schema::dropIfExists('mst_price_group_history');
         Schema::dropIfExists('mst_price_groups');
     }

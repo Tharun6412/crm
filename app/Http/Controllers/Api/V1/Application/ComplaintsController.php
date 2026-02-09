@@ -108,7 +108,7 @@ class ComplaintsController extends Controller
         $complaint_number = str_pad($add_complaint->id, 9, "0", STR_PAD_LEFT);
         Complaint::where('id', $add_complaint->id)->update(['code' => $complaint_number]);
         if(!empty($request->dc_file_list)) {
-            $add_document = DocumentUpload::uploadBulk($request);
+            $add_document = DocumentUpload::uploadIfPresent($request);
             foreach($request->dc_file_list as $key => $file) {
                 ComplaintDocument::create([
                     'complaint_id' => $add_complaint->id,

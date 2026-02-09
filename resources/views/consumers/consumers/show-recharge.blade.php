@@ -9,18 +9,24 @@
                     <thead class="table-primary">
                         <tr>
                             <th width="1%" nowrap>S No</th>
-                            <th>Transaction Number</th>
-                            <th>Amount</th>
                             <th>Recharge Date</th>
+                            <th>Amount</th>
+                            <th>Balance</th>
+                            <th>Payment Type</th>
+                            <th>Transaction Number</th>
+                            <th>Added By</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($recharges as $recharge)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
-                                <td>{{ $recharge->transaction_id }}</td>
+                                <td>{{ dateFormat($recharge->recharge_date) }}</td>
                                 <td>{{ numberFormat($recharge->amount) }}</td>
-                                <td>{{ dateFormat($recharge->created_at) }}</td>
+                                <td>{{ numberFormat($recharge->balance) }}</td>
+                                <td>{{ $recharge->paymentType->name }}</td>
+                                <td>{{ $recharge->transaction_id }}</td>
+                                <td>{{ $recharge->createdBy->first_name }}&nbsp;{{ $recharge->createdBy->last_name }}</td>
                             </tr>
                         @endforeach
                     </tbody>

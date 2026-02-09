@@ -77,13 +77,14 @@
                         <td nowrap>{{ $complaint->segment->name }}</td>
                         <td nowrap>
                             {{ $complaint->estimated_closed_at?->format('d-m-y H:i') }}
-                            @if ($complaint->status_id != 5)
+                            <x-complaint.day-hour-display :complaint="$complaint"/>
+                            {{-- @if ($complaint->status_id != 5)
                                 @if ($now > $complaint->estimated_closed_at)
                                     <span class="badge text-bg-danger">{{ "Expired " . $difference }}</span>
                                 @else
                                     <span class="badge text-bg-success">{{ "Expires in " . $difference }}</span>
                                 @endif
-                            @endif
+                            @endif --}}
                         </td>
                         <td nowrap>{{ $complaint->closed_at?->format('d-m-Y H:i') }}</td>
                         <td nowrap>{{ $complaint->priority->name }}</td>
