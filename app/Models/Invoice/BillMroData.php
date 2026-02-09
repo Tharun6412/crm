@@ -1,0 +1,36 @@
+<?php
+namespace App\Models\Invoice;
+
+use Illuminate\Database\Eloquent\Model;
+
+class BillMroData extends Model
+{
+    /**
+     * The table associated with the model
+     * 
+     * @var string
+     */
+    protected $table = 'bil_mro_data';
+
+    /**
+     * The attributes that are mass assignable
+     * 
+     * @var array <int string>
+     */
+    protected $fillable = [
+        'consumer_id',
+        'mro_number',
+        'schedule_date',
+        'mro_data',
+        'invoice_id',
+        'status_id',
+    ];
+    /**
+     * Casts Dates
+     */
+    public function casts() {
+        return [
+            'schedule_date' => 'date',
+        ];
+    }
+}

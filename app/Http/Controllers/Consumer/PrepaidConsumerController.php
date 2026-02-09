@@ -2,6 +2,8 @@
 namespace App\Http\Controllers\Consumer;
 
 use App\Contracts\Prepaid\Acquisition;
+use App\Enums\InvoiceStatus;
+use App\Enums\InvoiceType;
 use App\Http\Controllers\Controller;
 use App\Models\Consumer\Consumer;
 use App\Models\Payments\PayRecharge;
@@ -113,27 +115,6 @@ class PrepaidConsumerController extends Controller
                     ?? 'HES API error. Please check logs.',
             ], 500);
         }
-    }
-
-    /**
-     * Mro Request API
-     */
-    public function mroRequest(Request $request)
-    {
-        // $target_date = Carbon::now()->addDays(2);
-        // $consumer = Consumer::where(function($query) use($target_date) {
-        //     $query->whereHas('invoices', function($q) use($target_date) {
-        //         // here invoice date > today_date should be greater than 30 days
-        //         $q->whereDate('invoice_date', '<=', $target_date->copy()->subDays(30));
-        //     })
-        //     ->orWhere(function ($q) use ($target_date) {
-        //         $q->whereDoesntHave('invoices')
-        //             ->whereHas('prepaid', function ($q1) use ($target_date) {
-        //                 $q1->whereDate('hes_date', '<=', $target_date->copy()->subDays(30));
-        //             });
-        //     });
-        // })
-        // ->where('connection_type_id',2)->get();
     }
 
     /**

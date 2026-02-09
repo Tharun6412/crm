@@ -56,6 +56,7 @@ class Acquisition
                     'CONNECTION_SECURITY_DEP_AMOUNT_RECEIVED' => $consumerData->scheme->security_deposit,
                     'CONSUMPTION_SECURITY_DEP_AMOUNT_RECEIVED' => $consumerData->scheme->consumption_deposit,
                     'customer_mode' => $con_type,
+                    'bp_grouping' => NULL,
                 ]]
             ]
         );
