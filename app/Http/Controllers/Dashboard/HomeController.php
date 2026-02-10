@@ -27,21 +27,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        // Sample Email
-        // $consumer = Consumer::find(1);
-        // $user = User::find(1);
-        // EmailService::dispatch($user, new RegisterOtpMail($user));
-        
-        // SmsService::send($user, new RegisterOtpSMS($user));
-        
-        // Test OTP
-        // echo $otp = OtpService::create('9703722588', 'registration', 'user');
-        // 519048, 295661, 272222, 230066
-        // if(OtpService::verify('9703722588', 'registration', '230066', 'user'))
-        //     echo 'YEs';
-        // else
-        //     echo 'No';
-        // echo OtpPurpose::REGISTER->value;
+        // Get counts
         $consumer_count = Consumer::when((!isAdmin() AND !isSuperAdmin()), function ($q) {
             $q->whereIn('ga_id', session('user')['gas']);
         })->count();
@@ -49,7 +35,9 @@ class HomeController extends Controller
         $payments_count = InvoicePayment::where('status_id', PaymentStatus::PROGRESS->value)->count();
         $calls_list = Complaint::when((!isAdmin() AND !isSuperAdmin()), function ($q) {
                 $q->whereIn('ga_id', session('user')['gas']);
-        })->count();
+            })->count();
+
+        // Render output
         return view('dashboard.home', [
             'consumer_count' => $consumer_count,
             'invoice_count' => $invoices_count,
