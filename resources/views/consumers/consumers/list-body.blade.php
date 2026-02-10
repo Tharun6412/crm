@@ -70,11 +70,11 @@
                 <th>Scheme<x-master.scheme-filter class="float-end"/></th>
                 <th>
                     <a href="{{ $consumers->appends(['sortBy' => 'created_at','sortOr' => $sort_order_inverse])->url($consumers->currentPage()) }}">
-                        Added Date<x-master.date-filter />
+                        Added Date
                         @if ($sort_by == 'created_at')
                             <i class="bi {{ $sort_icon }}"></i>
                         @endif
-                    </a>
+                    </a><x-master.date-filter />
                 </th>
                 <th width="2%" nowrap>Actions</th>
             </tr>

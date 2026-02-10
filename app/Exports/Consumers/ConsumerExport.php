@@ -40,9 +40,6 @@ class ConsumerExport implements FromQuery, WithHeadings, WithMapping
                     });
                 });
             })
-            ->when($this->request->has('key'), function ($q) {
-                $q->whereAny(['crn', 'fname', 'lname', 'email', 'phone'], 'like', '%' . $this->request->key . '%');
-            })
             ->when($this->request->has('segments'), function ($q) {
                 $q->whereIn('segment_id', $this->request->segments);
             })

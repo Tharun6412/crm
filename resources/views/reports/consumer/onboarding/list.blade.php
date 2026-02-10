@@ -2,7 +2,7 @@
 
 @extends('layouts.layout')
 
-@section('title', 'Repors')
+@section('title', 'Reports')
 
 @section('page-title', 'Consumer Onboarding')
 
