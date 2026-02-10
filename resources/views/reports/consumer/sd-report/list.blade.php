@@ -13,25 +13,31 @@
 @section('page-content')
     <div>
         <form action="{{ url('reports/consumer/sdReport') }}" id="sd-report-form">
-            <div class="row g-2 mb-2">
+            <div class="row g-2 align-items-center">
+                <label for="date_from" class="col-auto col-form-label">Registration Date</label>
                 <div class="col-auto">
                     <div class="input-group">
-                        <label for="dpr_date" class="input-group-text">From Date</label>
-                        <input type="text" class="form-control" placeholder="MM-YYYY" name="date_from" id="date_from">
+                        <span class="input-group-text">From Date</span>
+                        <input type="text" aria-label="From Date" class="form-control" name="date_from" id="date_from">  
+                        <span class="input-group-text">To Date</span>
+                        <input type="text" aria-label="To Date" class="form-control" name="date_to" id="date_to">
                     </div>
                 </div>
                 <div class="col-auto">
-                    <div class="input-group">
-                        <label for="dpr_date" class="input-group-text">To Date</label>
-                        <input type="text" class="form-control" placeholder="MM-YYYY" name="date_to" id="date_to">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="check_all" id="check_all" value="all" id="flexCheckDefault">
+                        <label class="form-check-label" for="flexCheckDefault">All</label>
                     </div>
                 </div>
                 <div class="col-auto">
-                    <button type="submit" class="btn btn-success"><i class="bi bi-arrow-right-circle"></i>&nbsp;Get Report</button>
+                    <button type="submit" class="btn btn-success">
+                        <i class="bi bi-arrow-right-circle"></i>&nbsp;Get Report
+                    </button>
                 </div>
             </div>
         </form>
-        <div id="sd-report-loader"></div>
+
+        <div id="sd-report-loader" class="mt-3"></div>
     </div>
 @endsection
 {{-- Scripts --}}

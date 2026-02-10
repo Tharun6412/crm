@@ -136,6 +136,7 @@
                                                 <span>Balance</span>
                                                 <small id="balance_date">Balance Date:</small>
                                                 <div class="p-2"><a type="button" onclick="getPrepaidBalance({{ $consumer->id }})"><i class="bi bi-arrow-counterclockwise fs-3"></i></a></div>
+                                                <small class="text-danger" id="message"></small>
                                             </div>
                                         </div>
                                     </div>
@@ -191,13 +192,16 @@
         $.get("{{ url('consumers/prepaid/balance') }}/"+consumer_id, function(data) {
             $('#balance').text(data.balance);
             $('#balance_date').text('Balance Date: ' + data.balance_date);
+            if(data.message) {
+                $('#message').text(data.message);
+            }
         }).fail(function (xhr) {
             if (xhr.status === 429) {
                 // Too many requests
-                alert('Too many requests. Please try again in a minute.');
+                $('#message').text("Too many requests. Please try again a minute");
             } else {
                 // Other errors
-                alert('Failed to fetch updated balance');
+                $('#message').text("Failed to fetch updated balance");
             }
         });
     }

@@ -25,9 +25,12 @@ class SDReportController extends Controller
         $geo_areas = Ga::where('status', 1)->orderBy('position')->get();
         if($request->ajax()) {
             // Validation
+            if(empty($request->check_all) AND empty($request->date_from) AND empty($request->date_to)) {
+                abort(422, 'please select');
+            }
             $request->validate([
-                'date_from' => 'required|date_format:d-m-Y',
-                'date_to' => 'required|date_format:d-m-Y',
+                'date_from' => 'nullable|date_format:d-m-Y',
+                'date_to' => 'nullable|date_format:d-m-Y',
             ]);
             // Query to sum of the amounts between the dates
             $sd_amounts = ConsumerScheme::join('cns_consumers', 'cns_consumers.id', '=', 'cns_consumer_schemes.consumer_id')
@@ -40,7 +43,7 @@ class SDReportController extends Controller
                     SUM(cns_consumer_schemes.paid_deposit) as paid_deposit,
                     SUM(cns_consumer_schemes.balance) as balance
                 ')
-                ->when((!empty($request->date_from) and !empty($request->date_to)), function($q) use($request) {
+                ->when(empty($request->check_all) and (!empty($request->date_from) and !empty($request->date_to)), function($q) use($request) {
                     $q->whereBetween('cns_consumer_schemes.created_at', [Carbon::createFromFormat('d-m-Y', $request->date_from)->startOfDay()->toDateTimeString(), Carbon::createFromFormat('d-m-Y', $request->date_to)->endOfDay()->toDateTimeString()]);
                 })
                 ->groupBy('cns_consumers.ga_id')
@@ -56,7 +59,7 @@ class SDReportController extends Controller
             return view('reports.consumer.sd-report.list-body', [
                 'geo_areas' => $geo_areas,
                 'sd_amount_by_ga' => $sd_amount_by_ga,
-            ]);    
+            ]);
         }
         return view('reports.consumer.sd-report.list');
     }
