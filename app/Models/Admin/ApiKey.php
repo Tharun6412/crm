@@ -4,7 +4,7 @@ namespace App\Models\Admin;
 
 use Illuminate\Database\Eloquent\Model;
 
-class APIKey extends Model
+class ApiKey extends Model
 {
     /**
      * The table associated with the model
@@ -21,6 +21,7 @@ class APIKey extends Model
     protected $fillable = [
         'name',
         'key',
+        'key_original',
         'is_active',
         'expires_at',
         'rate_limit'

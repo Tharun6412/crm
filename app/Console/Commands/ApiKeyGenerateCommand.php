@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Admin\APIKey;
+use App\Models\Admin\ApiKey;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
 
@@ -28,11 +28,12 @@ class ApiKeyGenerateCommand extends Command
     public function handle()
     {
         // Generate API Key
-        $key = 'mg_' . Str::random(40);
+        $key = 'MG' . Str::random(40);
 
-        APIKey::create([
+        ApiKey::create([
             'name' => 'Polaris',
             'key' => hash('sha256', $key),
+            'key_original' => $key,
             'expires_at' => now()->addYear(),
         ]);
         

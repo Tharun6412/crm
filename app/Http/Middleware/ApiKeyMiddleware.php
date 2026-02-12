@@ -2,7 +2,7 @@
 
 namespace App\Http\Middleware;
 
-use App\Models\Admin\APIKey;
+use App\Models\Admin\ApiKey;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -28,7 +28,7 @@ class ApiKeyMiddleware
         $apiKey = Cache::remember(
             'api_key_' . $hashedKey,
             60,
-            fn () => APIKey::where('key', $hashedKey)->first()
+            fn () => ApiKey::where('key', $hashedKey)->first()
         );
 
         if (

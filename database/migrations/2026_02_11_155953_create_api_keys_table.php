@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name')->nullable(); // client name
             $table->string('key')->unique();
+            $table->string('key_original')->nullable();
             $table->boolean('is_active')->default(true);
             $table->timestamp('expires_at')->nullable();
             $table->integer('rate_limit')->default(1000); // requests/day

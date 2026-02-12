@@ -16,4 +16,7 @@ Route::middleware([ModuleAccess::class, 'auth'])->group(function() {
     Route::get('modules/createSub/{id}', [App\Http\Controllers\Admin\ModuleController::class, 'createSub']);
     Route::resource('modules', App\Http\Controllers\Admin\ModuleController::class);
     Route::resource('packages', App\Http\Controllers\Admin\PackageController::class);
+
+    // API KEY
+    Route::resource('api-keys', App\Http\Controllers\Admin\ApiKeyController::class);
 });
