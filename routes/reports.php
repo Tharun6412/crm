@@ -11,3 +11,6 @@ Route::get('consumer/onboardingStatusReport', [App\Http\Controllers\Reports\Onbo
 Route::get('consumer/sdReport', [App\Http\Controllers\Reports\SDReportController::class, 'index']);
 Route::get('consumer/sdDetails', [App\Http\Controllers\Reports\SDReportController::class, 'sdDetails']);
 Route::get('consumer/sdReportExport', [App\Http\Controllers\Reports\SDReportController::class, 'sdReportExport']);
+Route::get('ageingReport', [App\Http\Controllers\Reports\AgeingReportController::class, 'index']);
+Route::get('ageingReport/invoicesList', [App\Http\Controllers\Reports\AgeingReportController::class, 'invoicesList']);
+Route::get('ageingReport/agingInvoicesExport', [App\Http\Controllers\Reports\AgeingReportController::class, 'agingInvoicesExport']);
