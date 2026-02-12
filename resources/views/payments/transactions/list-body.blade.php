@@ -30,6 +30,7 @@
                 <th>Gateway</th>
                 <th>Date</th>
                 <th>TXN ID</th>
+                <th>Amount</th>
                 <th>Status</th>
                 <th width="2%" nowrap>Actions</th>
             </tr>
@@ -42,16 +43,31 @@
                 @foreach ($transactions as $transaction)
                     <tr>
                         <td>{{ $sno + $loop->iteration }}</td>
-                        <td><x-auth.link href="{{ url('consumers/' . $transaction->consumer->id) }}">{{ $transaction->consumer->crn }}</x-auth.link></td>
+                        <td><x-auth.link href="{{ url('consumers/' . $transaction->consumer->id) }}" target="_blank">{{ $transaction->consumer->crn }}</x-auth.link></td>
                         <td>{{ $transaction->consumer->name }}</td>
                         <td>{{ $transaction->consumer->ga->name }}</td>
                         <td>{{ $transaction->module->name ?? '' }}</td>
                         <td>{{ $transaction->gateway->gateway ?? '' }}</td>
                         <td>{{ $transaction->transaction_date?->format('d-m-Y') }}</td>
                         <td>{{ $transaction->transaction_id ?? '' }}</td>
+                        <td>{{ numberFormat($transaction->amount ?? 0, 2) }}</td>
                         <td>{{ $transaction->status->name ?? '' }}</td>
                         <td>
-                            <a href="{{ url('payments/transactions/' . $transaction->id) }}" class="link-canvas">View</a>
+                            <div class="dropdown">
+                                <button class="btn btn-sm btn-primary dropdown-toggle" type="button" id="actionDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Actions
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="actionDropdown">
+                                    <li>
+                                        <a href="{{ url('payments/transactions/' . $transaction->id) }}" class="dropdown-item link-canvas">View</a>
+                                        @if (in_array($transaction->transaction_status_id ,[\App\Enums\TransactionStatus::SUCCESS->value, \App\Enums\TransactionStatus::INITIATED->value]))
+                                            <a href="{{ url('payments/transactions/' . $transaction->id.'/edit?status_id=3') }}" class="dropdown-item link-modal">Fail</a>      
+                                        @else
+                                            <a href="{{ url('payments/transactions/' . $transaction->id.'/edit?status_id=2') }}" class="dropdown-item link-modal">Success</a>      
+                                        @endif
+                                    </li>
+                                </ul>
+                            </div>
                         </td>
                     </tr>
                 @endforeach

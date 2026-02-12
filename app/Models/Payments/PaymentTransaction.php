@@ -5,11 +5,13 @@ namespace App\Models\Payments;
 use App\Models\Admin\User;
 use App\Models\Consumer\Consumer;
 use App\Models\Invoice\BillInvoice;
+use App\Models\Invoice\InvoicePayment;
 use App\Models\Master\PaymentGateway;
 use App\Models\Master\PaymentModule;
 use App\Models\Master\PaymentTransactionStatus;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class PaymentTransaction extends Model
 {
@@ -95,5 +97,13 @@ class PaymentTransaction extends Model
     public function updatedBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'updated_by')->withDefault();
+    }
+
+    /**
+     * Relation with Payments
+     */
+    public function payment(): HasOne
+    {
+        return $this->hasOne(InvoicePayment::class, 'pay_transaction_id', 'id');
     }
 }

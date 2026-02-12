@@ -29,8 +29,10 @@ class PayRecharge extends Model
         'balance',
         'payment_type_id',
         'transaction_id',
+        'status_id',
         'created_by',
-        'updated_by'
+        'updated_by',
+        'remarks',
     ];
 
     /**

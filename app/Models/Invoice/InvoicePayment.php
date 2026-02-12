@@ -6,6 +6,7 @@ use App\Models\Admin\User;
 use App\Models\Master\PaymentStatus;
 use App\Models\Master\PaymentTransactionStatus;
 use App\Models\Master\PaymentType;
+use App\Models\Payments\PaymentTransaction;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -31,6 +32,7 @@ class InvoicePayment extends Model
         'payment_date',
         'payment_type_id',
         'transaction_id',
+        'pay_transaction_id',
         'amount',
         'balance',
         'status_id',
@@ -101,5 +103,13 @@ class InvoicePayment extends Model
     public function ledger():MorphMany
     {
         return $this->morphMany(Ledger::class, 'legible');
+    }
+
+    /**
+     * Relation with transaction table
+     */
+    public function payTransaction(): BelongsTo
+    {
+        return $this->belongsTo(PaymentTransaction::class, 'pay_transaction_id');
     }
 }

@@ -14,7 +14,7 @@
                             <th>Balance</th>
                             <th>Payment Type</th>
                             <th>Transaction Number</th>
-                            <th>Added By</th>
+                            {{-- <th>Added By</th> --}}
                         </tr>
                     </thead>
                     <tbody>
@@ -26,7 +26,7 @@
                                 <td>{{ numberFormat($recharge->balance) }}</td>
                                 <td>{{ $recharge->paymentType->name }}</td>
                                 <td>{{ $recharge->transaction_id }}</td>
-                                <td>{{ $recharge->createdBy->first_name }}&nbsp;{{ $recharge->createdBy->last_name }}</td>
+                                {{-- <td>{{ $recharge->createdBy->first_name }}&nbsp;{{ $recharge->createdBy->last_name }}</td> --}}
                             </tr>
                         @endforeach
                     </tbody>
