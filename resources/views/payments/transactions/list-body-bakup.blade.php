@@ -60,7 +60,11 @@
                                 <ul class="dropdown-menu" aria-labelledby="actionDropdown">
                                     <li>
                                         <a href="{{ url('payments/transactions/' . $transaction->id) }}" class="dropdown-item link-canvas">View</a>
-                                        <a href="{{ url('payments/transactions/' . $transaction->id.'/edit') }}" class="dropdown-item link-modal">Edit</a>
+                                        @if (in_array($transaction->transaction_status_id ,[\App\Enums\TransactionStatus::SUCCESS->value, \App\Enums\TransactionStatus::INITIATED->value]))
+                                            <a href="{{ url('payments/transactions/' . $transaction->id.'/edit?status_id=3') }}" class="dropdown-item link-modal">Fail</a>      
+                                        @else
+                                            <a href="{{ url('payments/transactions/' . $transaction->id.'/edit?status_id=2') }}" class="dropdown-item link-modal">Success</a>      
+                                        @endif
                                     </li>
                                 </ul>
                             </div>

@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Enums\InvoiceStatus;
+use App\Enums\InvoiceType;
 use App\Enums\PaymentStatus;
 use App\Models\Invoice\BillInvoice;
 use App\Models\Invoice\InvoicePayment;
@@ -31,6 +32,7 @@ class PaymentService
             'payment_date' => $data['payment_date'],
             'payment_type_id' => $data['payment_type_id'],
             'transaction_id' => $data['transaction_id'],
+            'pay_transaction_id' => $data['pay_transaction_id'] ?? null,
             'amount' => $data['amount'],
             'balance' => $balance,
             'notes' => $data['notes'],
@@ -53,5 +55,45 @@ class PaymentService
 
         // Return payment object
         return $new_payment;
+    }
+
+    /**
+     * Payment Reversal
+     */
+    public static function reversal($data)
+    {
+        $payment = $data['payment'];
+        $amount = $payment->amount;
+
+        // Use fresh invoice instance
+        $invoice = BillInvoice::find($payment->invoice_id);
+        // Add to Ledger Record
+        $ledger_data = [
+            'model' => $payment,
+            'consumer_id' => $invoice->consumer_id,
+            'amount' => $amount,
+        ];
+        // dd($ledger_data);
+        $add_ledger = LedgerService::create($ledger_data, 'dr');
+        // Update Payment record
+        $payment->update([
+            'amount' => 0,
+            'balance' => $amount,
+            'status_id' => PaymentStatus::REVERSAL->value,
+        ]);
+        // Add Payment Reversal record
+        PaymentReversal::create([
+            'payment_id' => $payment->id,
+            'notes' => $data['notes'],
+            'created_by' => Auth::id(),
+        ]);
+        // Bill Invoice Update
+        $invoice->update([
+            'paid_amount' => 0,
+            'balance_amount' => $payment->invoice->payable_amount,
+            'status_id' => InvoiceStatus::NOT_PAID->value,
+            'updated_by' => Auth::id(),
+        ]);
+        return true;
     }
 }

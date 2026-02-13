@@ -34,7 +34,7 @@
                         <div class="col-sm-3 text-end fw-semibold">Current Status : </div>
                         <div class="col-sm-3">{{ $transaction->status->name }}</div>
                     </div>
-                    @if ($status_id == TransactionStatus::SUCCESS->value)    
+                    @if ($status == TransactionStatus::SUCCESS->value)    
                         <div class="row mb-2">
                             <label class="col-sm-3 col-form-label text-end">Remarks&nbsp;:<span class="text-danger">*</span></label>
                             <div class="col-sm-8">
@@ -49,9 +49,7 @@
                                 <select class="form-select" name="transaction_status" id="transaction_status">
                                     <option value="">Select</option>
                                     @foreach ($transaction_status as $status)
-                                        @if ($status->id == 2)
-                                            <option value="{{ $status->id }}">{{ $status->name }}</option>
-                                        @endif
+                                        <option value="{{ $status->id }}">{{ $status->name }}</option>
                                     @endforeach
                                 </select> 
                             </div>
@@ -60,7 +58,7 @@
                             <label for="amount" class="col-sm-4 col-form-label text-end">Amount&nbsp;:&nbsp;<i class="text-danger">*&nbsp;</i></label>
                             <div class="col-sm-7">
                                 <div class="input-group">
-                                    <input type="text" class="form-control text-end" id="amount" name="amount" placeholder="Enter the amount to be paid." value="{{ $transaction->amount ?? 0 }}">
+                                    <input type="text" class="form-control text-end" id="amount" name="amount" placeholder="Enter the amount to be paid." value="{{ $bill->balance_amount ?? 0 }}">
                                     <span class="input-group-text"><i class="bi-currency-rupee"></i></span>
                                 </div>
                             </div>
@@ -77,20 +75,13 @@
                                 <input type="text" class="form-control" id="bank_ref" name="bank_ref" placeholder="Enter the Bank Ref. number.">
                             </div>
                         </div>
-                        <div class="row mb-2">
-                            <label class="col-sm-3 col-form-label text-end">Remarks&nbsp;:<span class="text-danger">*</span></label>
-                            <div class="col-sm-8">
-                                <textarea name="notes" id="notes" class="form-control"></textarea>
-                                <span class="text-danger validate-err-msg" id="notes-error"></span>
-                            </div>
-                        </div>
                     @endif
                     <div class="m-1" id="update-transaction-error"></div>
                     <div class="row">
                         <div class="offset-sm-3 col-sm-8">
                             <button type="submit" class="btn btn-success">
                                 <i class="bi bi-upload" aria-hidden="true">&nbsp;</i>
-                                Update
+Update
                             </button>
                         </div>
                     </div>

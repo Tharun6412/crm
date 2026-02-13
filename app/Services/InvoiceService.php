@@ -2,10 +2,14 @@
 
 namespace App\Services;
 
+use App\Enums\InvoiceStatus;
+use App\Enums\InvoiceType;
 use App\Models\Invoice\BillInvoice;
+use App\Models\Invoice\BillInvoiceCancel;
 use App\Models\Invoice\InvoiceCounter;
 use App\Models\Invoice\InvoiceItem;
 use App\Models\Invoice\Ledger;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class InvoiceService
@@ -74,5 +78,50 @@ class InvoiceService
 
         // Return generated invoice number
         return $inv_number;
+    }
+
+    /**
+     * To Cancel Invoice
+     * @param $invoiceId
+     */
+    public static function cancel(array $data)
+    {
+        // Fetch Invoice Details
+        $invoice = BillInvoice::find($data['id']);
+        // Add to Ledger Record
+        $ledger_data = [
+            'model' => $invoice,
+            'consumer_id' => $invoice->consumer_id,
+            'amount' => $invoice->balance_amount,
+        ];
+        $add_ledger = LedgerService::create($ledger_data, 'cr');
+        // Bill Invoice Update
+        $invoice->update([
+            'paid_amount' => $invoice->paid_amount + $invoice->balance_amount,
+            'balance_amount' => 0,
+            'status_id' => InvoiceStatus::CANCEL->value,
+            'created_by' => Auth::id(),
+        ]);
+        // Check if it is GAS Invoice
+        if($invoice->invoice_type == InvoiceType::GAS_BILL->value) {
+            if($invoice->childInvoices->isNotEmpty()) {
+                foreach($invoice->childInvoices as $childInvoice) {
+                    $childInvoice->update([
+                        'paid_amount' => 0,
+                        'balance_amount' => $childInvoice->payable_amount,
+                        'status_id' => InvoiceStatus::CANCEL->value,
+                        'updated_by' => Auth::id(),
+                    ]);
+                }
+            }
+        }
+        // Add Invoice Cancel Record
+        BillInvoiceCancel::create([
+            'invoice_id' => $data['id'],
+            'reason' => $data['notes'],
+            'created_by' => Auth::id(),
+        ]);
+        // response
+        return true;
     }
 }
