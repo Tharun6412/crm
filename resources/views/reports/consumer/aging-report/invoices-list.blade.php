@@ -1,4 +1,4 @@
-<div class="modal-dialog modal-lg">
+<div class="modal-dialog modal-xl">
     <div class="modal-content">
         <div class="modal-header">
             <h5>Aging Invoice List</h5>
@@ -7,9 +7,9 @@
         <div class="modal-body">
             {{-- Filters --}}
             <form id="aging-invoices-search-form" name="aging-invoices-search-form" action="{{ url('reports/ageingReport/invoicesList') }}">
-                @csrf
                 <input type="hidden" name="ga_id" value="{{ request('ga_id') }}">
                 <input type="hidden" name="range" value="{{ request('range') }}">
+                <input type="hidden" name="invoice_type" value="{{ request('invoice_type') }}">
                 <input type="hidden" name="is_filter" id="is_filter" value="1">
                 <div class="d-flex justify-content-between">
                     <div class="row gx-1 mb-1">

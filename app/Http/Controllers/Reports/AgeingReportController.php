@@ -6,6 +6,7 @@ use App\Enums\InvoiceType;
 use App\Exports\Reports\AgingInvoicesExport;
 use App\Http\Controllers\Controller;
 use App\Models\Invoice\BillInvoice;
+use App\Models\Master\BillInvoiceType;
 use App\Models\Master\Ga;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -20,8 +21,9 @@ class AgeingReportController extends Controller
      */
     public function index(Request $request)
     {  
+        $invoice_types = BillInvoiceType::all();
         $gasAging = Ga::leftJoin('cns_consumers', 'mst_gas.id', '=', 'cns_consumers.ga_id')
-            ->leftJoin('bil_invoices', function ($join) {
+            ->leftJoin('bil_invoices', function ($join) use ($request) {
                 $join->on('bil_invoices.consumer_id', '=', 'cns_consumers.id')
                     ->where('bil_invoices.status_id', InvoiceStatus::NOT_PAID->value)
                     ->whereNotIn('bil_invoices.type_id', [
@@ -29,23 +31,26 @@ class AgeingReportController extends Controller
                         InvoiceType::RENTAL_CHARGES->value,
                         InvoiceType::SD_EMI->value
                     ]);
+                if ($request->filled('invoice_type')) {
+                    $join->where('bil_invoices.type_id', $request->invoice_type);
+                }
             })
             ->selectRaw("mst_gas.id as ga_id,
                 mst_gas.name as ga_name,
-                COUNT(CASE WHEN DATEDIFF(NOW(), due_date) BETWEEN 1 AND 15 THEN 1 END) as range_1_15,
-                COUNT(CASE WHEN DATEDIFF(NOW(), due_date) BETWEEN 16 AND 30 THEN 1 END) as range_16_30,
-                COUNT(CASE WHEN DATEDIFF(NOW(), due_date) BETWEEN 31 AND 60 THEN 1 END) as range_31_60,
-                COUNT(CASE WHEN DATEDIFF(NOW(), due_date) BETWEEN 61 AND 90 THEN 1 END) as range_61_90,
-                COUNT(CASE WHEN DATEDIFF(NOW(), due_date) > 90 THEN 1 END) as range_gt90
+                SUM(CASE WHEN DATEDIFF(NOW(), due_date) BETWEEN 1 AND 15 THEN bil_invoices.balance_amount ELSE 0 END) as range_1_15,
+                SUM(CASE WHEN DATEDIFF(NOW(), due_date) BETWEEN 16 AND 30 THEN bil_invoices.balance_amount ELSE 0 END) as range_16_30,
+                SUM(CASE WHEN DATEDIFF(NOW(), due_date) BETWEEN 31 AND 60 THEN bil_invoices.balance_amount ELSE 0 END) as range_31_60,
+                SUM(CASE WHEN DATEDIFF(NOW(), due_date) BETWEEN 61 AND 90 THEN bil_invoices.balance_amount ELSE 0 END) as range_61_90,
+                SUM(CASE WHEN DATEDIFF(NOW(), due_date) > 90 THEN bil_invoices.balance_amount ELSE 0 END) as range_gt90
             ")
             ->groupBy('mst_gas.id', 'mst_gas.name')
             ->orderBy('mst_gas.id', 'asc')
             ->get();
         // Render output
-        if($request->ajax() and $request->page >= 1) {
-            return view('reports.consumer.aging-report.list-body', ['gasAging' => $gasAging]);
+        if($request->ajax()) {
+            return view('reports.consumer.aging-report.list-body', ['gasAging' => $gasAging, 'invoice_types' => $invoice_types]);
         }
-        return view('reports.consumer.aging-report.list', ['gasAging' => $gasAging]);
+        return view('reports.consumer.aging-report.list', ['gasAging' => $gasAging, 'invoice_types' => $invoice_types]);
     }
 
     /**
@@ -63,6 +68,9 @@ class AgeingReportController extends Controller
                     InvoiceType::SD_EMI->value
                 ])
             ->where('bil_invoices.status_id', InvoiceStatus::NOT_PAID->value);
+        if ($request->filled('invoice_type')) {
+            $query->where('bil_invoices.type_id', $request->invoice_type);
+        }
         // Aging Filter
         switch ($request->range) 
         {
@@ -95,8 +103,8 @@ class AgeingReportController extends Controller
                 break;
         }
         // Search Filters
-        $query->when(($request->has('key')), function($q) use($request) {
-            $q->where('bil_invoices.invoice_number', $request->key);
+        $query->when(($request->filled('key')), function($q) use($request) {
+            $q->where('bil_invoices.invoice_number', 'like', '%' . $request->key . '%');
         });
         $invoices = $query->select('invoice_number','invoice_date','type_id','due_date','total_amount', 'payable_amount', 'balance_amount', 'consumer_id')
             ->orderBy('invoice_date', 'desc')

@@ -1,8 +1,8 @@
-<div class="table-responsive" style="min-height: 500px;">
+<div class="table-responsive">
     <table class="table table-bordered table-hover page-sort">
         <thead class="table-success">
             <tr>
-                <th>GA ID</th>
+                <th nowrap="nowrap">S No.</th>
                 <th>GA Name</th>
                 <th>1–15 Days</th>
                 <th>16–30 Days</th>
@@ -31,7 +31,8 @@
                             <a href="{{ url('reports/ageingReport/invoicesList') }}?{{ http_build_query([
                                 'ga_id' => $ga->ga_id,
                                 'range' => $range,
-                                ]) }}" class="aging-link link-modal">{{ $ga->$field }}
+                                'invoice_type' => request()->invoice_type,
+                                ]) }}" class="aging-link link-modal">{{ numberFormat($ga->$field,2) }}
                             </a>
                         </td>
 
@@ -46,16 +47,14 @@
         <tfoot>
             <tr>
                 <th colspan="2">Total</th>
-                <th>{{ $gasAging->sum('range_1_15') }}</th>
-                <th>{{ $gasAging->sum('range_16_30') }}</th>
-                <th>{{ $gasAging->sum('range_31_60') }}</th>
-                <th>{{ $gasAging->sum('range_61_90') }}</th>
-                <th>{{ $gasAging->sum('range_gt90') }}</th>
+                <th>{{ numberFormat($gasAging->sum('range_1_15'),2) }}</th>
+                <th>{{ numberFormat($gasAging->sum('range_16_30'),2) }}</th>
+                <th>{{ numberFormat($gasAging->sum('range_31_60'),2) }}</th>
+                <th>{{ numberFormat($gasAging->sum('range_61_90'),2) }}</th>
+                <th>{{ numberFormat($gasAging->sum('range_gt90'),2) }}</th>
             </tr>
         </tfoot>
     </table>
 </div>
 {{-- Scripts --}}
-@push('scripts')
-    @include('scripts.link-modal')
-@endpush
+@include('scripts.link-modal')
