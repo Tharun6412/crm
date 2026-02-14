@@ -60,40 +60,39 @@ class PaymentService
     /**
      * Payment Reversal
      */
-    public static function reversal($data)
+    public static function reversal($payment, string $notes) : bool
     {
-        $payment = $data['payment'];
-        $amount = $payment->amount;
-
+        if($payment->status_id == PaymentStatus::REVERSAL->value) {
+            return true;
+        }
         // Use fresh invoice instance
         $invoice = BillInvoice::find($payment->invoice_id);
         // Add to Ledger Record
         $ledger_data = [
             'model' => $payment,
             'consumer_id' => $invoice->consumer_id,
-            'amount' => $amount,
+            'amount' => $invoice->payable_amount,
         ];
-        // dd($ledger_data);
         $add_ledger = LedgerService::create($ledger_data, 'dr');
+        // Bill Invoice Update
+        $invoice->update([
+            'paid_amount' => 0,
+            'balance_amount' => $invoice->payable_amount,
+            'status_id' => InvoiceStatus::NOT_PAID->value,
+            'updated_by' => Auth::id(),
+        ]);
         // Update Payment record
         $payment->update([
             'amount' => 0,
-            'balance' => $amount,
+            'balance' => $invoice->payable_amount,
             'status_id' => PaymentStatus::REVERSAL->value,
         ]);
         // Add Payment Reversal record
         PaymentReversal::create([
             'payment_id' => $payment->id,
-            'notes' => $data['notes'],
+            'notes' => $notes,
             'created_by' => Auth::id(),
         ]);
-        // Bill Invoice Update
-        $invoice->update([
-            'paid_amount' => 0,
-            'balance_amount' => $payment->invoice->payable_amount,
-            'status_id' => InvoiceStatus::NOT_PAID->value,
-            'updated_by' => Auth::id(),
-        ]);
-        return true;
+        return (int) true;
     }
 }

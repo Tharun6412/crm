@@ -42,6 +42,7 @@ class PaymentTransaction extends Model
         'paid_amount',
         'payment_mode',
         'updated_by',
+        'remarks',
     ];
 
     /**

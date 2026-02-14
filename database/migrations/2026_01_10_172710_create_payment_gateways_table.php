@@ -62,6 +62,7 @@ return new class extends Migration
             $table->double('paid_amount')->nullable();
             $table->string('payment_mode', length:32)->nullable();
             $table->foreignId('updated_by')->nullable()->index()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();
+            $table->string('remarks', length:128)->nullable();
             $table->timestamps();
         });
     }

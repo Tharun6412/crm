@@ -3,20 +3,24 @@
 namespace App\Http\Controllers\Payments;
 
 use App\Contracts\Prepaid\Recharge;
+use App\Enums\Constants;
 use App\Enums\InvoiceStatus;
 use App\Enums\InvoiceType;
 use App\Enums\PaymentStatus;
+use App\Enums\PaymentType;
+use App\Enums\TaxType;
 use App\Enums\TransactionStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Invoice\BillInvoice;
 use App\Models\Invoice\InvoicePayment;
 use App\Models\Invoice\PaymentReversal;
 use App\Models\Master\PaymentTransactionStatus;
-use App\Models\Master\PaymentType;
 use App\Models\Payments\PaymentTransaction;
 use App\Models\Payments\PayRecharge;
+use App\Services\InvoiceService;
 use App\Services\LedgerService;
 use App\Services\PaymentService;
+use App\Services\RechargeService;
 use Carbon\Carbon;
 use Faker\Provider\Payment;
 use Illuminate\Http\Request;
@@ -83,39 +87,53 @@ class TransactionsController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'transaction_status_id' => 'required',
+            'notes' => 'required|max:128',
+        ]);
         // Fetch Transaction Details
         $transaction = PaymentTransaction::find($id);
-        if($transaction->transaction_status_id == TransactionStatus::SUCCESS->value) {
-            // Validation
+        if($request->transaction_status_id == TransactionStatus::SUCCESS->value) {
             $request->validate([
-                'notes' => 'required',
-            ]);
-        }else {
-            $request->validate([
-                'transaction_status' => 'required',
                 'amount' => 'required|numeric|min:'.$transaction->amount.'|max:'.$transaction->amount,
                 'payment_mode' => 'required',
                 'bank_ref' => 'required',
-                'notes' => 'required',
             ]);
         }
         // Global Data Preparation
-        $global_details = [
-            'transaction' => $transaction,
+        $transaction_details = [
             'notes' => $request->notes ?? null,
             'amount' => $request->amount ?? null,
-            'transaction_no' => $request->transaction_no ?? null,
+            'transaction_no' => $transaction->transaction_id ?? null,
             'bank_ref' => $request->bank_ref ?? null,
             'payment_mode' => $request->payment_mode ?? null,
             'invoice_id' => $transaction->invoice_id,
         ];
-        if(!empty($request->transaction_status) and $request->transaction_status == TransactionStatus::SUCCESS->value) {
-            $result = $this->processSuccessfulTransaction($global_details);
+        if($request->transaction_status_id == TransactionStatus::SUCCESS->value) {
+            $result = $this->processSuccessfulTransaction($transaction, $transaction_details);
+            // Update Transaction Table
+            if(isset($result['status']) and $result['status'] == 1) {
+                $transaction->update([
+                    'transaction_status_id' => TransactionStatus::SUCCESS->value,
+                    'payment_mode' => $transaction_details['payment_mode'],
+                    'bank_ref' => $transaction_details['bank_ref'],
+                    'paid_amount' => $transaction_details['amount'],
+                    'remarks' => $transaction_details['notes'],
+                ]);
+            }
         }else {
-            $result = $this->processFailedTransaction($global_details);
+            $result = $this->processFailedTransaction($transaction, $transaction_details);
+            // Update Transaction Table
+            if(isset($result['status']) and $result['status'] == 1) {
+                $transaction->update([
+                    'transaction_status_id' => TransactionStatus::FAIL->value,
+                    'paid_amount' => 0,
+                    'remarks' => $transaction_details['notes'],
+                ]);
+            }
         }
         // Response
-        if(isset($result['status']) and $result['status'] == true) {
+        if(isset($result['status']) and $result['status'] == 1) {
             return response()->json(['success' => $result['message']]);
         }else {
             return response()->json(['success' => $result['message'] ?? 'Error found in transaction']);
@@ -125,29 +143,30 @@ class TransactionsController extends Controller
     /**
      * Success
      */
-    public function processSuccessfulTransaction($global_details)
+    public function processSuccessfulTransaction($transaction, $transaction_details)
     {
-        $transaction = $global_details['transaction'];
         // success transactions
         switch($transaction->payment_module_id) {
             case 1: //Pay Deposit
                 $result = ['status' => true, 'message' => 'Module under progress'];
                 break;
             case 2: //Security Deposit
-                $result = $this->processSecurityDeposit($global_details);
+                $result = $this->processSecurityDeposit($transaction_details);
                 break;
             case 3://Gas Bill
+                $result = $this->processGasInvoicePayment($transaction->id, $transaction_details);
+                break;
             case 4: //Invoice Payments
-                $result = $this->processInvoicePayment($transaction->id, $global_details);
+                $result = $this->processInvoicePayment($transaction->id, $transaction_details);
                 break;
             case 5: //Recharges
                 // Array Preparation
                 $transaction_data['recharge'] = [
                     'consumer_id' => $transaction->consumer_id,
                     'ca_num' => $transaction->consumer->crn,
-                    'amount' => $global_details['amount'],
-                    'ref_num' => $global_details['transaction_no'],
-                    'utr_num' => $global_details['bank_ref'],
+                    'amount' => $transaction_details['amount'],
+                    'ref_num' => $transaction_details['transaction_no'],
+                    'utr_num' => $transaction_details['bank_ref'],
                     'trans_date' => $transaction->transaction_date,
                     'mobile_num' => '+91'. $transaction->consumer->phone,
                 ];
@@ -155,38 +174,27 @@ class TransactionsController extends Controller
                 break;
             default;
         }
-        // Update Transaction
-        if(isset($result) and $result['status'] == true) {
-            $data = [
-                'transaction_status_id' => TransactionStatus::SUCCESS->value,
-                'payment_mode' => $global_details['payment_mode'],
-                'bank_ref' => $global_details['bank_ref'],
-                'paid_amount' => $global_details['amount'],
-                'remarks' => $global_details['notes'],
-            ];
-            $transaction->update($data);
-        }
+        // response
         return $result;
     }
 
     /**
      * Fail
      */
-    public function processFailedTransaction($global_details)
+    public function processFailedTransaction($transaction, $transaction_details)
     {
-        $transaction = $global_details['transaction'];
         switch($transaction->payment_module_id) {
             case 1: //Pay Deposit
                 $result = ['status' => true, 'message' => 'Module under progress'];
                 break;
             case 2: //Security Deposit
                 // Data Preparation
-                $result = $this->reverseSecurityDeposit($global_details);
+                $result = $this->reverseSecurityDeposit($transaction_details);
                 break;
             case 3://Gas Bill
-                $result = $this->reverseGasInvoicePayment($transaction->id, $global_details);
+                $result = $this->reverseGasInvoicePayment($transaction->id, $transaction_details);
             case 4: //Invoice Payments
-                $result = $this->reverseInvoicePayment($transaction->id, $global_details);
+                $result = $this->reverseInvoicePayment($transaction->id, $transaction_details);
                 break;
             case 5: //Recharges
                 // Array Preparation
@@ -202,84 +210,94 @@ class TransactionsController extends Controller
                 break;
             default;
         }
-        // Update Transaction
-        if(isset($result['status']) and $result['status'] == true) {
-            $data = [
-                'transaction_status_id' => TransactionStatus::FAIL->value,
-                'paid_amount' => 0,
-                'remarks' => $global_details['notes'],
-            ];
-            $transaction->update($data);
-        }
+        // response
         return $result;
     }
-    /**
-     * Payment Reversal
-     * @param $id
-     */
-    public function reverseGasInvoicePayment(int $id, array $global_data)
-    {
-        // fetch Payment record
-        $payments = InvoicePayment::where('pay_transaction_id', $id)->where('status_id', PaymentStatus::COMPLETED->value)->where('amount', '>', 0)->orderBy('id', 'desc')->get();
-        $flag = true;
-        if($payments->count() > 0) {
-            // using foreach loop
-            foreach($payments as $payment) {
-                $payment_data = [
-                    'payment' => $payment,
-                    'notes' => $global_data['notes'],
-                ];
-                $response = PaymentService::reversal($payment_data);
-                if(!$response) {
-                    $flag = false;
-                    break;
-                }
-            }
-            // Call Payment Service - Reversal 
-            if($flag) {
-                return [
-                    'status' => true,
-                    'message' => "Payment reversed successfully",
-                ];
-            }else {
-                return [
-                    'status' => false,
-                    'message' => "Some payments not found",
-                ];
-            }
-        }
-        return [
-            'status' => false,
-            'message' => "Payment not reversed", 
-        ];
-    }
+
     /**
      * Payment Success
      * @param $id
      */
-    public function processInvoicePayment(int $id, array $global_data)
+    public function processGasInvoicePayment(int $id, array $transaction_details)
     {
+        $invoice = BillInvoice::find($transaction_details['invoice_id']);
+        // Check LPC applicable
+        $lpc = 0;
+        if(Carbon::parse($invoice->due_date)->isBefore(Carbon::today()))
+            if($invoice->childInvoices->where('type_id', InvoiceType::LATE_PAYMENT_CHARGES->value)->count() <= 0)
+                $lpc = Constants::DPNG_LPC->value;
         // Call Payment service
         $payment = PaymentService::create([
-            'invoice_id' => $global_data['invoice_id'] ?? null,
+            'invoice_id' => $invoice->id,
             'payment_date' => Carbon::now()->toDateString(),
-            'payment_type_id' => 2,
-            'transaction_id' => $global_data['transaction_no'],
+            'payment_type_id' => PaymentType::ONLINE->value,
+            'transaction_id' => $transaction_details['transaction_no'],
             'pay_transaction_id' => $id,
-            'amount' => $global_data['amount'],
+            'amount' => $invoice['payable_amount'],
             'status_id' => PaymentStatus::COMPLETED->value,
-            'notes' => $global_data['notes'],
+            'notes' => $transaction_details['notes'],
             'created_by' => Auth::id(),
         ]);
+        // Generate Latepayment charges if LPC > 0
+        if($lpc > 0) {
+            $gst_calculated_amt = 1.18; //(1+18%)
+            $base_amt = round($lpc / $gst_calculated_amt, 3);
+            $tax_amt = round($lpc - $base_amt, 3);
+            $invoice_items[] = [
+                'item_id' => 1,
+                'quantity' => 1,
+                'unit_price' => $base_amt,
+                'total_price' => $base_amt,
+                'created_at' => Carbon::now(),
+            ];
+            $invoice_data = [
+                'config' => [
+                    'state_id' => $invoice->consumer->state_id,
+                    'tax_id' => TaxType::GST->value, //GST = 2
+                ],
+                'headers' => [
+                    'type_id' => InvoiceType::LATE_PAYMENT_CHARGES->value, // 3 = LPC
+                    'consumer_id' => $invoice->consumer_id,
+                    'invoice_date' => Carbon::now()->toDateString(),
+                    'base_amount' => $base_amt,
+                    'taxable_amount' => $base_amt,
+                    'tax_id' => TaxType::GST->value,
+                    'tax_value' => 18,
+                    'tax_amount' => $tax_amt,
+                    'total_amount' => $lpc,
+                    'payable_amount' => $lpc,
+                    'paid_amount' => 0,
+                    'balance_amount' => $lpc,
+                    'status_id' => InvoiceStatus::NOT_PAID->value, //Not Paid
+                    'parent_invoice_id' => $invoice->id,
+                    'created_by' => Auth::id(),
+                ],
+                'items' => $invoice_items,
+            ];
+            // Generate Invoice with Invoice Service
+            $inv_number = InvoiceService::create($invoice_data);
+            // Update payment
+            $inv_payment = PaymentService::create([
+                'invoice_id' => $inv_number['invoice_id'], //InvoiceID
+                'payment_date' => Carbon::now()->toDateString(),
+                'payment_type_id' => PaymentType::ONLINE->value,
+                'transaction_id' => $transaction_details['transaction_no'],
+                'pay_transaction_id' => $id,
+                'amount' => $lpc,
+                'notes' => $transaction_details['notes'],
+                'status_id' => PaymentStatus::COMPLETED->value,
+            ]);
+        }
+        // response
         if($payment->id) {
             // response
             return [
-                'status' => true,
+                'status' => (int) true,
                 'message' => "Payment updated successfully",
             ];
         }else {
             return [
-                'status' => false,
+                'status' => (int) false,
                 'message' => 'Error in updating Payment',
             ];
         }
@@ -288,33 +306,90 @@ class TransactionsController extends Controller
      * Payment Reversal
      * @param $id
      */
-    public function reverseInvoicePayment(int $id, array $global_data)
+    public function reverseGasInvoicePayment(int $id, array $transaction_details)
     {
         // fetch Payment record
-        $payment = InvoicePayment::where('pay_transaction_id', $id)->orderBy('id', 'desc')->first();
-        if($payment) {
-            $payment_data = [
-                'payment' => $payment,
-                'notes' => $global_data['notes'],
-            ];
+        $payments = InvoicePayment::where('pay_transaction_id', $id)->where('status_id', PaymentStatus::COMPLETED->value)->orderBy('id', 'desc')->get();
+        $flag = (int) true;
+        if($payments->count() > 0) {
+            // using foreach loop
+            foreach($payments as $payment) {
+                $response = PaymentService::reversal($payment, $transaction_details['notes']);
+                if(!$response) {
+                    $flag = (int) false;
+                    break;
+                }
+            }
             // Call Payment Service - Reversal 
-            $response = PaymentService::reversal($payment_data);
-            if(isset($response) and $response == true) {
+            if($flag) {
                 return [
-                    'status' => true,
+                    'status' => (int) true,
                     'message' => "Payment reversed successfully",
                 ];
             }else {
                 return [
-                    'status' => false,
-                    'message' => "No payment details found",
+                    'status' => (int) false,
+                    'message' => "Some payments not found",
                 ];
             }
         }
         return [
-            'status' => false,
+            'status' => (int) false,
             'message' => "Payment not reversed", 
         ];
+    }
+    /**
+     * Payment Success
+     * @param $id
+     */
+    public function processInvoicePayment(int $id, array $transaction_details)
+    {
+        // Call Payment service
+        $payment = PaymentService::create([
+            'invoice_id' => $transaction_details['invoice_id'] ?? null,
+            'payment_date' => Carbon::now()->toDateString(),
+            'payment_type_id' => PaymentType::ONLINE->value,
+            'transaction_id' => $transaction_details['transaction_no'],
+            'pay_transaction_id' => $id,
+            'amount' => $transaction_details['amount'],
+            'status_id' => PaymentStatus::COMPLETED->value,
+            'notes' => $transaction_details['notes'],
+            'created_by' => Auth::id(),
+        ]);
+        if($payment->id) {
+            // response
+            return [
+                'status' => (int) true,
+                'message' => "Payment updated successfully",
+            ];
+        }else {
+            return [
+                'status' => (int) false,
+                'message' => 'Error in updating Payment',
+            ];
+        }
+    }
+    /**
+     * Payment Reversal
+     * @param $id
+     */
+    public function reverseInvoicePayment(int $id, array $transaction_details)
+    {
+        // fetch Payment record
+        $payment = InvoicePayment::where('pay_transaction_id', $id)->orderBy('id', 'desc')->first();
+        // Call Payment Service - Reversal 
+        $response = PaymentService::reversal($payment, $transaction_details['notes']);
+        if(isset($response) and $response == true) {
+            return [
+                'status' => (int) true,
+                'message' => "Payment reversed successfully",
+            ];
+        }else {
+            return [
+                'status' => (int) false,
+                'message' => "Payment not reversed due to invalid payment",
+            ];
+        }
     }
 
     /**
@@ -323,43 +398,27 @@ class TransactionsController extends Controller
      */
     public function processRecharge(array $transaction_data, int $id)
     {
-        // Recharge Data Preparation
-        $recharge_data = [
-            'recharge_request' => [
-                'ca_num' => $transaction_data['ca_num'],
-                'amount' => $transaction_data['amount'],
-                'ref_num' => $transaction_data['ref_num'],
-                'utr_num' => $transaction_data['utr_num'],
-                'trans_date' => Carbon::now()->toDateString(),
-                'mobile_num' => $transaction_data['mobile_num'],
-            ]
-        ];
-        //-- Send data to Polaris HES
-        $recharge_success = new Recharge;
-        $response = $recharge_success->push($recharge_data);
-        $response_data = $response->json();
+        // Call Recharge Service
+        $add_recharge = RechargeService::create($transaction_data, [
+            'consumer_id' => $transaction_data['consumer_id'],
+            'recharge_date' => Carbon::now()->toDateString(),
+            'amount' => $transaction_data['amount'],
+            'balance' => 0,
+            'payment_type_id' => PaymentType::ONLINE->value,
+            'transaction_id' => $id,
+            'status_id' => PaymentStatus::COMPLETED->value,
+            'created_by' => Auth::id(),
+        ]);
         // response
-        if($response_data['recharge_response']['error_code'] == 1) {
+        if($add_recharge['status'] == 1) {
             return [
-                'status' => false,
-                'message' => $response_data['recharge_response']['message'],
+                'status' => (int) true,
+                'message' => $add_recharge['message'],
             ];
         }else {
-            // Add Recharge record
-            PayRecharge::create([
-                'consumer_id' => $transaction_data['consumer_id'],
-                'recharge_date' => Carbon::now()->toDateString(),
-                'amount' => $transaction_data['amount'],
-                'balance' => 0,
-                'payment_type_id' => 6,
-                'transaction_id' => $id,
-                'status_id' => PaymentStatus::COMPLETED->value,
-                'created_by' => Auth::id(),
-            ]);
-            //response 
             return [
-                'status' => true,
-                'message' => "Recharge success",
+                'status' => (int) false,
+                'message' => $add_recharge['message'],
             ];
         }
     }
@@ -371,38 +430,17 @@ class TransactionsController extends Controller
     public function reverseRecharge(array $transaction_data, int $id)
     {
         // Data Preparation
-        $recharge_cancel_data = array(
-            'crn' => $transaction_data['ca_num'],
-            'meter_serial_no' => $transaction_data['meter_serial_no'],
-            'utr_num' => $transaction_data['ref_num'],
-            'ref_num' => $transaction_data['utr_num'],
-            'trans_date' => $transaction_data['trans_date'],
-            'amount' => $transaction_data['amount'],
-        );
-        //-- Send data to Polaris HES
-        $recharge_success = new Recharge;
-        $response = $recharge_success->cancelRecharge($recharge_cancel_data);
-        $response_data = $response->json();
-        if($response_data['responseCode'] == 404) {
+        $response = RechargeService::cancel($transaction_data, $id);
+        // Response
+        if($response == true) {
             return [
-                'status' => false,
-                'message' => "Consumer recharge data not found",
+                'status' => (int) true,
+                'message' => $response['message'],
             ];
         }else {
-            $recharge = PayRecharge::where('transaction_id', $id)->first();
-            if($recharge) {
-                // Update Payment record
-                $recharge->update([
-                    'amount' => $recharge->balance,
-                    'balance' => $recharge->amount,
-                    'status_id' => PaymentStatus::REVERSAL->value,
-                    'updated_by' => Auth::id(),
-                ]);
-            }
-            // response
             return [
-                'status' => true,
-                'message' => "Recharge updated to failed successfully", 
+                'status' => (int) false,
+                'message' => $response['message'],
             ];
         }
     }
@@ -415,7 +453,7 @@ class TransactionsController extends Controller
     {
         // fetch Payment record
         return [
-            'status' => true,
+            'status' => (int) true,
             'message' => 'SD payment updated successfully',
         ];
     }
@@ -428,7 +466,7 @@ class TransactionsController extends Controller
     {
         // fetch Payment record
         return [
-            'status' => true,
+            'status' => (int) true,
             'message' => 'SD payment updated successfuly',
         ];
     }

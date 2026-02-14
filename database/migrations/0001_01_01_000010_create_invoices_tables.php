@@ -142,6 +142,7 @@ return new class extends Migration
             $table->date('payment_date')->nullable();
             $table->foreignId('payment_type_id')->index()->nullable()->constrained(table:'mst_pay_types')->noActionOnDelete()->noActionOnUpdate();
             $table->string('transaction_id', length:225)->nullable();
+            $table->foreignId('pay_transaction_id')->index()->nullable()->constrained(table:'pay_transactions')->noActionOnDelete()->noActionOnUpdate();
             $table->double('amount')->nullable();
             $table->double('balance')->nullable();
             $table->foreignId('status_id')->index()->nullable()->constrained(table:'mst_pay_status')->noActionOnDelete()->noActionOnUpdate();

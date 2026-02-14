@@ -34,7 +34,8 @@
                         <div class="col-sm-3 text-end fw-semibold">Current Status : </div>
                         <div class="col-sm-3">{{ $transaction->status->name }}</div>
                     </div>
-                    @if ($status_id == TransactionStatus::SUCCESS->value)    
+                    @if ($status_id == TransactionStatus::SUCCESS->value)
+                        <input type="hidden" name="transaction_status_id" id="transaction_status_id" value="{{ TransactionStatus::FAIL->value }}"/>    
                         <div class="row mb-2">
                             <label class="col-sm-3 col-form-label text-end">Remarks&nbsp;:<span class="text-danger">*</span></label>
                             <div class="col-sm-8">
@@ -46,10 +47,10 @@
                         <div class="row mb-2">
                             <label for="payment_type" class="col-sm-4 col-form-label text-end">Transaction Status&nbsp;:&nbsp;<i class="text-danger">*&nbsp;</i></label>
                             <div class="col-sm-7">
-                                <select class="form-select" name="transaction_status" id="transaction_status">
+                                <select class="form-select" name="transaction_status_id" id="transaction_status_id">
                                     <option value="">Select</option>
                                     @foreach ($transaction_status as $status)
-                                        @if ($status->id == 2)
+                                        @if ($status->id == TransactionStatus::SUCCESS->value)
                                             <option value="{{ $status->id }}">{{ $status->name }}</option>
                                         @endif
                                     @endforeach
