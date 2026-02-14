@@ -10,7 +10,7 @@ class Recharge
     /**
      * Push recharge to HES
      */
-    public function push($rechargeData)
+    public static function push($rechargeData)
     {
         // Call API
         $response = Http::withHeaders([
@@ -29,7 +29,7 @@ class Recharge
     /**
      * Cancel Recharge to HES
      */
-    public function cancelRecharge($rechargeData)
+    public static function cancelRecharge($rechargeData)
     {
         // Call API
         $response = Http::withHeaders([
