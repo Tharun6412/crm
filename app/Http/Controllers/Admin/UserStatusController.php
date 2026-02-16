@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\UserStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Admin\User;
 use App\Models\Admin\UserStatusHistory;
@@ -31,9 +32,14 @@ class UserStatusController extends Controller
             'status' => 'required',
             'notes' => 'required|max:200',
         ]);
-
+        // Fetch User Details
+        $user = User::find($id);
         // Update user status
-        User::where('id', $id)->update(['status_id' => $request->status]);
+        $user->update(['status_id' => $request->status]);
+        // destry tokens
+        if($request->status == UserStatus::INACTIVE->value) {
+            $user->tokens()->delete();
+        }
         // Add status history record
         UserStatusHistory::create([
             'user_id' => $id,

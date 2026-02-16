@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1\Application;
 
+use App\Enums\ConnectionType;
 use App\Http\Controllers\Controller;
 use App\Models\Consumer\Consumer;
 use App\Models\Invoice\BillInvoice;
@@ -72,11 +73,29 @@ class ConsumerController extends Controller
 
         // Abort if consumer not found
         if (! $consumer) {
-            return response()->json(['error' => 'Consumer not found'], 403);
+            return response()->json(['error' => 'Consumer not found'], 404);
         }
-        // Get consumer details
+        // Get Consumer Outstanding balance + security Deposit balance
+        $invoices = $consumer->invoices()->select('type_id','balance_amount')->get();
+        $gasbill = $invoices->where('type_id', 1)->sum('balance_amount');
+        $invoice = $invoices->where('type_id', '!=', 1)->sum('balance_amount');
+        if($consumer->connection_type_id == ConnectionType::PREPAID->value) {
+            $balance = [
+                'sd_amount' => numberFormat($consumer->scheme->balance ?? 0, 2),
+                'recharge_balance' => numberFormat($consumer->prepaidData->balance ?? 0, 2),
+            ];
+        }else {
+            $balance = [
+                'sd_amount' => numberFormat($consumer->scheme->balance ?? 0, 2),
+                'gas_bills' => numberFormat($gasbill, 2),
+                'invoices' => numberFormat($invoice, 2),
+                'outstanding' => numberFormat(($consumer->scheme->balance ?? 0) + $gasbill + $invoice, 2),
+            ];
+        }
+        // response
         return response()->json([
             'consumer' => $consumer,
+            'outstanding' => $balance,
         ], 200);
     }
 }

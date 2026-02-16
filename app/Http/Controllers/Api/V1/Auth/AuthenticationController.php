@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\AuthenticationRequest;
 use App\Models\Admin\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -12,19 +13,10 @@ class AuthenticationController extends Controller
     /**
      * Login
      */
-    public function login(Request $request)
+    public function login(AuthenticationRequest $request)
     {
-        $request->validate([
-            'emp_id' => 'required',
-            'password' => 'required',
-        ]);
-
-        $user = User::where('emp_id', $request->emp_id)->first();
-
-        if (! $user || ! Hash::check($request->password, $user->password)) {
-            return response()->json(['message' => 'Invalid credentials'], 401);
-        }
-
+        $request->authenticate();
+        $user = $request->user();
         // Create a new token for API access
         $token = $user->createToken('api-token')->plainTextToken;
 

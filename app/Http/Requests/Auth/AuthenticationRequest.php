@@ -26,7 +26,6 @@ class AuthenticationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            // 'email' => 'required|email',
             'emp_id' => 'required',
             'password' => 'required',
         ];
@@ -38,7 +37,6 @@ class AuthenticationRequest extends FormRequest
     public function authenticate()
     {
         // Authentication with database table with status active
-        // if(!Auth::attempt($this->only('emp_id', 'password'))) {
         if(!Auth::attempt(['emp_id' => $this->emp_id, 'password' => $this->password, 'status_id' => UserStatus::ACTIVE->value])) {
             // Set validation message
             throw ValidationException::withMessages([

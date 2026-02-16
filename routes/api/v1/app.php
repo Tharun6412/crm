@@ -12,6 +12,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('getSubCategories', [App\Http\Controllers\Api\V1\Common\CommonController::class, 'getSubCategories']);
     Route::get('gaSchemesByType', [App\Http\Controllers\Api\V1\Common\CommonController::class, 'gaSchemesByType']);
 
+    // Dashboard
+    Route::get('dashboard/list', [App\Http\Controllers\Api\V1\Application\DashboardController::class, 'list']);
     // Consumers routes
     Route::prefix('consumer')->group(function () {
         // Consumer Controller
@@ -31,7 +33,6 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('payDeposit/{id}', [App\Http\Controllers\Api\V1\Application\ConsumerOperationsController::class, 'payDeposit'])->whereNumber('id');
         Route::post('refundRequest/{id}', [App\Http\Controllers\Api\V1\Application\ConsumerOperationsController::class, 'refundRequest'])->whereNumber('id');
     });
-
     // Complaints routes
     Route::prefix('complaint')->group(function() {
         Route::get('list/{id}', [App\Http\Controllers\Api\V1\Application\ComplaintsController::class, 'list']);
