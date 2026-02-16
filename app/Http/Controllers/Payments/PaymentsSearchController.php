@@ -10,6 +10,7 @@ use App\Models\Invoice\BillInvoice;
 use App\Models\Invoice\InvoicePayment;
 use App\Models\Invoice\PaymentReversal;
 use App\Services\LedgerService;
+use App\Services\PaymentService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -78,33 +79,13 @@ class PaymentsSearchController extends Controller
         ]);
         // fetch Payment record
         $payment = InvoicePayment::find($id);
-        // Add to Ledger Record
-        $ledger_data = [
-            'model' => $payment,
-            'consumer_id' => $payment->invoice->consumer_id,
-            'amount' => $payment->amount,
-        ];
-        $add_ledger = LedgerService::create($ledger_data, 'dr');
-        // Update Payment record
-        $payment->update([
-            'amount' => 0,
-            'balance' => $payment->amount,
-            'status_id' => PaymentStatus::REVERSAL->value,
-        ]);
-        // Add Payment Reversal record
-        PaymentReversal::create([
-            'payment_id' => $id,
-            'notes' => $request->notes,
-            'created_by' => Auth::id(),
-        ]);
-        // Bill Invoice Update
-        BillInvoice::where('id', $payment->invoice_id)->update([
-            'paid_amount' => 0,
-            'balance_amount' => $payment->invoice->payable_amount,
-            'status_id' => InvoiceStatus::NOT_PAID->value,
-            'created_by' => Auth::id(),
-        ]);
-        // Response
-        return response()->json(['success' => 'Payment reversal completed successfully']);
+        // Call Payment Service - Reversal 
+        $response = PaymentService::reversal($payment, $request->notes);
+        // response
+        if($response == 1) {
+            return response()->json(['success' => 'Payment reversal completed successfully']);
+        }else {
+            return response()->json(['success' => 'Payment not reversed due to invalid details']);
+        }
     }
 }

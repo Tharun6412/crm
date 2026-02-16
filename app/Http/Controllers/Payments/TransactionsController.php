@@ -379,7 +379,7 @@ class TransactionsController extends Controller
         $payment = InvoicePayment::where('pay_transaction_id', $id)->orderBy('id', 'desc')->first();
         // Call Payment Service - Reversal 
         $response = PaymentService::reversal($payment, $transaction_details['notes']);
-        if(isset($response) and $response == true) {
+        if($response == 1) {
             return [
                 'status' => (int) true,
                 'message' => "Payment reversed successfully",
@@ -432,7 +432,7 @@ class TransactionsController extends Controller
         // Data Preparation
         $response = RechargeService::cancel($transaction_data, $id);
         // Response
-        if($response == true) {
+        if($response['status'] == 1) {
             return [
                 'status' => (int) true,
                 'message' => $response['message'],
@@ -454,7 +454,7 @@ class TransactionsController extends Controller
         // fetch Payment record
         return [
             'status' => (int) true,
-            'message' => 'SD payment updated successfully',
+            'message' => 'SD payment Module under progress',
         ];
     }
 
@@ -467,7 +467,7 @@ class TransactionsController extends Controller
         // fetch Payment record
         return [
             'status' => (int) true,
-            'message' => 'SD payment updated successfuly',
+            'message' => 'SD payment module under progress',
         ];
     }
 }

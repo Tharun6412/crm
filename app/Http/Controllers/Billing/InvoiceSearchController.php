@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Consumer\Consumer;
 use App\Models\Invoice\BillInvoice;
 use App\Models\Invoice\BillInvoiceCancel;
+use App\Services\InvoiceService;
 use App\Services\LedgerService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -83,28 +84,12 @@ class InvoiceSearchController extends Controller
         $request->validate([
             'notes' => 'required',
         ]);
-        $invoice = BillInvoice::find($id);
-        // Add to Ledger Record
-        $ledger_data = [
-            'model' => $invoice,
-            'consumer_id' => $invoice->consumer_id,
-            'amount' => $invoice->balance_amount,
-            ];
-        $add_ledger = LedgerService::create($ledger_data, 'cr');
-        // Bill Invoice Update
-        $invoice->update([
-            'paid_amount' => $invoice->paid_amount + $invoice->balance_amount,
-            'balance_amount' => 0,
-            'status_id' => InvoiceStatus::CANCEL->value,
-            'created_by' => Auth::id(),
-        ]);
-        // Add Invoice Cancel Record
-        BillInvoiceCancel::create([
-            'invoice_id' => $id,
-            'reason' => $request->notes,
-            'created_by' => Auth::id(),
-        ]);
+        $result = InvoiceService::cancel($id, $request->notes);
         // Response
-        return response()->json(['success' => 'Invoice cancelled successfully']);
+        if($result == 1) {
+            return response()->json(['success' => 'Invoice cancelled successfully']);
+        }else {
+            return response()->json(['success' => 'Invoice cannot be cancelled']);
+        }
     }
 }

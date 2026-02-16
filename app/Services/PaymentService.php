@@ -63,7 +63,7 @@ class PaymentService
     public static function reversal($payment, string $notes) : bool
     {
         if($payment->status_id == PaymentStatus::REVERSAL->value) {
-            return true;
+            return (int) true;
         }
         // Use fresh invoice instance
         $invoice = BillInvoice::find($payment->invoice_id);

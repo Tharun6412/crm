@@ -62,7 +62,7 @@ class RechargeService
         $response_data = $response->json();
         if($response_data['responseCode'] == 404) {
             return [
-                'status' =>(int) false,
+                'status' => (int) false,
                 'message' => "Consumer recharge data not found",
             ];
         }else {

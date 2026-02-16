@@ -84,10 +84,10 @@ class InvoiceService
      * To Cancel Invoice
      * @param $invoiceId
      */
-    public static function cancel(array $data)
+    public static function cancel(int $id, string $notes)
     {
         // Fetch Invoice Details
-        $invoice = BillInvoice::find($data['id']);
+        $invoice = BillInvoice::find($id);
         // Add to Ledger Record
         $ledger_data = [
             'model' => $invoice,
@@ -112,16 +112,22 @@ class InvoiceService
                         'status_id' => InvoiceStatus::CANCEL->value,
                         'updated_by' => Auth::id(),
                     ]);
+                    // Child Invoice Cancel
+                    BillInvoiceCancel::create([
+                        'invoice_id' => $childInvoice->id,
+                        'reason' => $notes,
+                        'created_by' => Auth::id(),
+                    ]);
                 }
             }
         }
         // Add Invoice Cancel Record
         BillInvoiceCancel::create([
-            'invoice_id' => $data['id'],
-            'reason' => $data['notes'],
+            'invoice_id' => $id,
+            'reason' => $notes,
             'created_by' => Auth::id(),
         ]);
         // response
-        return true;
+        return (int) true;
     }
 }
