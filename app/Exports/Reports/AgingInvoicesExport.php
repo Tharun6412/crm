@@ -37,6 +37,9 @@ class AgingInvoicesExport implements FromQuery, WithHeadings, WithMapping
                     InvoiceType::SD_EMI->value
                 ])
             ->where('bil_invoices.status_id', InvoiceStatus::NOT_PAID->value);
+        if ($this->request->filled('invoice_type')) {
+            $query->where('bil_invoices.type_id', $this->request->invoice_type);
+        }
         // Aging Filter
         switch ($this->request->range) 
         {
@@ -68,13 +71,12 @@ class AgingInvoicesExport implements FromQuery, WithHeadings, WithMapping
                 $query->where('bil_invoices.due_date', '<', $today->copy()->subDays(90));
                 break;
         }
-        // Additional Filters
-        $query->when(($this->request->has('key')), function($q) {
-            $q->where('bil_invoices.invoice_number', $this->request->key);
+        // Search Filters
+        $query->when($this->request->filled('key'), function ($q) {
+            $q->where('invoice_number', 'like', '%' . $this->request->key . '%');
         });
         $invoices = $query->select('invoice_number','invoice_date','type_id','due_date','payable_amount', 'total_amount', 'balance_amount', 'consumer_id')
-            ->orderBy('invoice_date', 'desc')
-            ->get();
+            ->orderBy('invoice_date', 'desc');
         return $invoices;
     }
 
@@ -83,7 +85,7 @@ class AgingInvoicesExport implements FromQuery, WithHeadings, WithMapping
      */
     public function headings():array
     {
-        return ['S.No', 'Invoice Number', 'Invoice Date', 'Invoice Type', 'CRN', 'Name', 'Segment', 'Due Date', 'Amount'];
+        return ['S.No', 'Invoice Number', 'Invoice Date', 'Invoice Type', 'CRN', 'Name', 'Segment', 'Due Date', 'Invoice Amount', 'Balance Amount'];
     }
 
     /**
@@ -101,6 +103,7 @@ class AgingInvoicesExport implements FromQuery, WithHeadings, WithMapping
             $invoice->consumer->name,
             $invoice->consumer->segment->name,
             dateFormat($invoice->due_date),
+            numberFormat($invoice->payable_amount),
             numberFormat($invoice->balance_amount),
         ];
     }

@@ -9,6 +9,7 @@
                 <th nowrap>CRN</th>
                 <th nowrap>Consumer Name</th>
                 <th nowrap>Segment</th>
+                <th nowrap>Consumption</th>
                 <th nowrap>Due Date</th>
                 <th class="text-end" nowrap>Invoice Amount</th>
                 <th class="text-end" nowrap>Balance Amount</th>
@@ -27,6 +28,7 @@
                     <td>{{ $inv->consumer->crn }}</td>
                     <td>{{ $inv->consumer->name }}</td>
                     <td>{{ $inv->consumer->segment->name }}</td>
+                    <td>{{ $inv->consumption->net_consumption ?? 0 }}</td>
                     <td>{{ dateFormat($inv->due_date) }}</td>
                     <td class="text-end">{{ numberFormat($inv->payable_amount, 2) }}</td>
                     <td class="text-end">{{ numberFormat($inv->balance_amount, 2) }}</td>

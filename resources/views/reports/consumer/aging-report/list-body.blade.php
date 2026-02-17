@@ -28,11 +28,11 @@
                     ] as $field => $range)
 
                         <td>
-                            <a href="{{ url('reports/ageingReport/invoicesList') }}?{{ http_build_query([
+                            <a href="{{ url('reports/invoiceReport') }}?{{ http_build_query([
                                 'ga_id' => $ga->ga_id,
                                 'range' => $range,
                                 'invoice_type' => request()->invoice_type,
-                                ]) }}" class="aging-link link-modal">{{ numberFormat($ga->$field,2) }}
+                                ]) }}" class="aging-link" target="_blank">{{ numberFormat($ga->$field,2) }}
                             </a>
                         </td>
 
@@ -57,4 +57,4 @@
     </table>
 </div>
 {{-- Scripts --}}
-@include('scripts.link-modal')
+{{-- @include('scripts.link-modal') --}}

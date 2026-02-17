@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Actions\Prepaid\MroRequestAction;
 use Illuminate\Console\Command;
 
 class MroRequestCommand extends Command
@@ -25,6 +26,7 @@ class MroRequestCommand extends Command
      */
     public function handle()
     {
-        //
+        // Call the MRO request action.
+        $action = MroRequestAction::getConsumer();
     }
 }

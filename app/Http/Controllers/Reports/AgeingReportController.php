@@ -26,6 +26,7 @@ class AgeingReportController extends Controller
             ->leftJoin('bil_invoices', function ($join) use ($request) {
                 $join->on('bil_invoices.consumer_id', '=', 'cns_consumers.id')
                     ->where('bil_invoices.status_id', InvoiceStatus::NOT_PAID->value)
+                    ->whereNot('bil_invoices.status_id', InvoiceStatus::CANCEL->value)
                     ->whereNotIn('bil_invoices.type_id', [
                         InvoiceType::LATE_PAYMENT_CHARGES->value,
                         InvoiceType::RENTAL_CHARGES->value,
@@ -67,7 +68,8 @@ class AgeingReportController extends Controller
                     InvoiceType::RENTAL_CHARGES->value,
                     InvoiceType::SD_EMI->value
                 ])
-            ->where('bil_invoices.status_id', InvoiceStatus::NOT_PAID->value);
+            ->where('bil_invoices.status_id', InvoiceStatus::NOT_PAID->value)
+            ->whereNot('bil_invoices.status_id', InvoiceStatus::CANCEL->value);
         if ($request->filled('invoice_type')) {
             $query->where('bil_invoices.type_id', $request->invoice_type);
         }

@@ -14,3 +14,5 @@ Route::get('consumer/sdReportExport', [App\Http\Controllers\Reports\SDReportCont
 Route::get('ageingReport', [App\Http\Controllers\Reports\AgeingReportController::class, 'index']);
 Route::get('ageingReport/invoicesList', [App\Http\Controllers\Reports\AgeingReportController::class, 'invoicesList']);
 Route::get('ageingReport/agingInvoicesExport', [App\Http\Controllers\Reports\AgeingReportController::class, 'agingInvoicesExport']);
+Route::get('gasSaleReport', [App\Http\Controllers\Reports\GasSaleReportController::class, 'index']);
+Route::get('invoiceReport', [App\Http\Controllers\Reports\InvoicesReportController::class, 'index']);

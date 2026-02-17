@@ -2,6 +2,7 @@
 
 namespace App\Actions\Prepaid;
 
+use App\Contracts\Prepaid\Mro;
 use App\Enums\ConnectionType;
 use App\Enums\ConsumerStatus;
 use App\Models\Consumer\Consumer;
@@ -18,6 +19,7 @@ class MroRequestAction
     public static function getConsumer()
     {
         $req_start_date = date('Y-m-d');
+        $schedule_date = date('Y-m-t');
         // Get latest MRO requests of consumer
         $latestMro = BillMroData::selectRaw('MAX(created_at)')
             ->whereColumn('consumer_id', 'bil_mro_data.consumer_id');
@@ -38,17 +40,26 @@ class MroRequestAction
         $batch_id = Str::uuid();
         // Prepare bulk insert array along with API input
         $mro_data_bulk = [];
+        $mro_req_bulk = [];
         foreach($consumers as $consumer) {
             $mro_data_bulk[] = [
                 'consumer_id' => $consumer->id,
                 'mro_number' => '',
-                'schedule_date' => '',
+                'schedule_date' => $schedule_date,
                 'status_id' => 1,
                 'batch_id' => $batch_id,
             ];
             // API Array
+            $mro_req_bulk[] = [
+                'mro_order_id' => '',
+                'mech_meter_serial_number' => $consumer->activeMeter->meter_no,
+                'prepaid_mod_number' => $consumer->activeMeter->meter_serial_no,
+                'scheduled_mr_date' => $schedule_date,
+                'crn' => $consumer->crn
+            ];
         }
         // Insert into MRO data
+        $mro_data_batch_insert = BillMroData::insert($mro_data_bulk);
         // Insert into MRO data history
         $mro_history_batch_insert = BillMroDataHistory::insertUsing(
             ['mro_data_id', 'status_id', 'created_at'],
@@ -56,5 +67,6 @@ class MroRequestAction
         );
 
         // Send to HES
+        $mro_request = Mro::request($mro_req_bulk);
     }
 }
