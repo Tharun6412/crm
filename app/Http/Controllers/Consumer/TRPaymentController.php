@@ -107,53 +107,55 @@ class TRPaymentController extends Controller
 
             //-- Generate service invoice for registration
             // Calculations
-            $amt = $consumer_scheme->scheme->registration;
+            $amt = $consumer_scheme->scheme->registration ?? 0;
             $gst_calculated_amt = 1.18; //(1+18%)
             $base_amt = round($amt / $gst_calculated_amt, 3);
             $tax_amt = round($amt - $base_amt, 3);
-            $invoice_items[] = [
-                'item_id' => 1,
-                'quantity' => 1,
-                'unit_price' => $base_amt,
-                'total_price' => $base_amt,
-                'created_at' => Carbon::now(),
-            ];
-            $invoice_data = [
-                'config' => [
-                    'state_id' => $consumer_scheme->consumer->ga->state_id,
-                    'tax_id' => TaxType::GST->value, //GST = 2
-                ],
-                'headers' => [
-                    'type_id' => InvoiceType::SERVICE_INVOICE->value, // 2 = Service Invoice
-                    'consumer_id' => $consumer_scheme->consumer_id,
-                    'invoice_date' => Carbon::now()->toDateString(),
-                    'base_amount' => $base_amt,
-                    'taxable_amount' => $base_amt,
-                    'tax_id' => TaxType::GST->value,
-                    'tax_value' => 18,
-                    'tax_amount' => $tax_amt,
-                    'total_amount' => $amt,
-                    'payable_amount' => $amt,
-                    'paid_amount' => 0,
-                    'balance_amount' => $amt,
-                    'status_id' => InvoiceStatus::NOT_PAID->value, // Paid
+            if($amt > 0) {
+                $invoice_items[] = [
+                    'item_id' => 1,
+                    'quantity' => 1,
+                    'unit_price' => $base_amt,
+                    'total_price' => $base_amt,
+                    'created_at' => Carbon::now(),
+                ];
+                $invoice_data = [
+                    'config' => [
+                        'state_id' => $consumer_scheme->consumer->ga->state_id,
+                        'tax_id' => TaxType::GST->value, //GST = 2
+                    ],
+                    'headers' => [
+                        'type_id' => InvoiceType::SERVICE_INVOICE->value, // 2 = Service Invoice
+                        'consumer_id' => $consumer_scheme->consumer_id,
+                        'invoice_date' => Carbon::now()->toDateString(),
+                        'base_amount' => $base_amt,
+                        'taxable_amount' => $base_amt,
+                        'tax_id' => TaxType::GST->value,
+                        'tax_value' => 18,
+                        'tax_amount' => $tax_amt,
+                        'total_amount' => $amt,
+                        'payable_amount' => $amt,
+                        'paid_amount' => 0,
+                        'balance_amount' => $amt,
+                        'status_id' => InvoiceStatus::NOT_PAID->value, // Paid
+                        'created_by' => Auth::id(),
+                    ],
+                    'items' => $invoice_items,
+                ];
+                // Generate Invoice with Invoice Service
+                $inv_number = InvoiceService::create($invoice_data);
+                // Adding payment record for service invoice
+                $inv_payment = PaymentService::create([
+                    'invoice_id' => $inv_number['invoice_id'],
+                    'payment_date' => Carbon::now()->toDateString(),
+                    'payment_type_id' => $request->payment_type,
+                    'transaction_id' => $request->transaction_no,
+                    'amount' => $amt,
+                    'status_id' => PaymentStatus::COMPLETED->value,
+                    'notes' => !empty($request->notes) ? $request->notes : null,
                     'created_by' => Auth::id(),
-                ],
-                'items' => $invoice_items,
-            ];
-            // Generate Invoice with Invoice Service
-            $inv_number = InvoiceService::create($invoice_data);
-            // Adding payment record for service invoice
-            $inv_payment = PaymentService::create([
-                'invoice_id' => $inv_number['invoice_id'],
-                'payment_date' => Carbon::now()->toDateString(),
-                'payment_type_id' => $request->payment_type,
-                'transaction_id' => $request->transaction_no,
-                'amount' => $amt,
-                'status_id' => PaymentStatus::COMPLETED->value,
-                'notes' => !empty($request->notes) ? $request->notes : null,
-                'created_by' => Auth::id(),
-            ]);
+                ]);
+            }
             // Add consumer status history record
             ConsumerStatus::create([
                 'consumer_id' => $consumer_scheme->consumer_id,

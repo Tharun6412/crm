@@ -23,7 +23,7 @@ class OtpService
             'purpose' => $purpose,
             'module' => $module,
             'otp' => Hash::make($plainOtp),
-            'expires_at' => now()->addMinutes(1),
+            'expires_at' => now()->addMinutes(30),
         ]);
 
         // Return
