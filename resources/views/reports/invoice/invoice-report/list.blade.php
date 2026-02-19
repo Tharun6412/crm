@@ -10,8 +10,15 @@
 @endsection
 
 @section('page-content')
-    
-    <div id="invoices-list">
-        @include('reports.invoice.invoice-report.list-body')
-    </div>
+    <form id="invoices-search-form" name="invoices-search-form" action="{{ url('reports/invoiceReport') }}">
+        <div id="invoices-list" class="current-page-reload">
+            @include('reports.invoice.invoice-report.list-body')
+        </div>
+    </form>
 @endsection
+
+@once
+    @push('scripts')
+        @include('scripts.ajax-form-search', ['form' => 'invoices'])
+    @endpush
+@endonce

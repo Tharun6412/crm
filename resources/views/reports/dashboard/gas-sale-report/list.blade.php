@@ -17,14 +17,14 @@
                     <div class="col-auto">
                         <div class="input-group input-group-sm mb-3">
                             <span class="input-group-text">From Date</span>
-                            <input type="text" class="form-control" aria-label="From Date" name="from_date" id="from_date">
+                            <input type="text" class="form-control" aria-label="From Date" name="date_from" id="date_from">
                             <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
                         </div>
                     </div>
                     <div class="col-auto">
                         <div class="input-group input-group-sm mb-3">
                             <span class="input-group-text">To Date</span>
-                            <input type="text" class="form-control" aria-label="To Date" name="to_date" id="to_date">
+                            <input type="text" class="form-control" aria-label="To Date" name="date_to" id="date_to">
                             <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
                         </div>
                     </div>
@@ -42,5 +42,5 @@
 {{-- Scripts --}}
 @push('scripts')
     @include('scripts.ajax-form-search', ['form' => 'gas-sale-report'])
-    @include('scripts.datepicker', ['list' => ['from_date', 'to_date']])
+    @include('scripts.datepicker', ['list' => ['date_from', 'date_to']])
 @endpush

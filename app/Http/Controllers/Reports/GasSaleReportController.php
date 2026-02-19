@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Reports;
 use App\Enums\InvoiceType;
 use App\Http\Controllers\Controller;
 use App\Models\Master\Ga;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 /**
@@ -17,15 +18,13 @@ class GasSaleReportController extends Controller
      */
     public function index(Request $request)
     {
+
         $gaGasSales = Ga::leftJoin('cns_consumers','cns_consumers.ga_id','=','mst_gas.id')
             ->leftJoin('bil_invoices', function ($join) use ($request) {
                 $join->on('bil_invoices.consumer_id', '=', 'cns_consumers.id')
                 ->where('bil_invoices.type_id', InvoiceType::GAS_BILL->value);
-                if ($request->filled('from_date') && $request->filled('to_date')) {
-                    $join->whereBetween('bil_invoices.invoice_date', [
-                        $request->from_date,
-                        $request->to_date
-                    ]);
+                if ($request->filled('date_from') && $request->filled('date_to')) {
+                    $join->whereBetween('bil_invoices.invoice_date', [Carbon::createFromFormat('d-m-Y', $request->date_from)->startOfDay()->toDateTimeString(), Carbon::createFromFormat('d-m-Y', $request->date_to)->endOfDay()->toDateTimeString()]);
                 }
             })
             ->leftJoin('bil_invoice_consumption', 'bil_invoice_consumption.invoice_id','=','bil_invoices.id')
@@ -60,7 +59,6 @@ class GasSaleReportController extends Controller
             ->groupBy('mst_gas.id', 'mst_gas.name')
             ->orderBy('mst_gas.id', 'asc')
             ->get();
-            // dd($gaGasSales);
         // Render output
         if($request->ajax()) {
             return view('reports.dashboard.gas-sale-report.list-body', ['gaGasSales' => $gaGasSales]);

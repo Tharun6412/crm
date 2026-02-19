@@ -4,6 +4,7 @@
             <tr>
                 <th nowrap="nowrap">S No.</th>
                 <th>GA Name</th>
+                <th>No Due Days</th>
                 <th>1–15 Days</th>
                 <th>16–30 Days</th>
                 <th>31–60 Days</th>
@@ -20,6 +21,7 @@
                     <td>{{ $i++ }}</td>
                     <td>{{ $ga->ga_name }}</td>
                     @foreach([
+                        'no_due_days' => '0',
                         'range_1_15' => '1-15',
                         'range_16_30' => '16-30',
                         'range_31_60' => '31-60',
@@ -29,9 +31,9 @@
 
                         <td>
                             <a href="{{ url('reports/invoiceReport') }}?{{ http_build_query([
-                                'ga_id' => $ga->ga_id,
+                                'geo_area' => [$ga->ga_id],
                                 'range' => $range,
-                                'invoice_type' => request()->invoice_type,
+                                'invoice_type' => [request()->invoice_type],
                                 ]) }}" class="aging-link" target="_blank">{{ numberFormat($ga->$field,2) }}
                             </a>
                         </td>
@@ -47,6 +49,7 @@
         <tfoot>
             <tr>
                 <th colspan="2">Total</th>
+                <th>{{ numberFormat($gasAging->sum('no_due_days'),2) }}</th>
                 <th>{{ numberFormat($gasAging->sum('range_1_15'),2) }}</th>
                 <th>{{ numberFormat($gasAging->sum('range_16_30'),2) }}</th>
                 <th>{{ numberFormat($gasAging->sum('range_31_60'),2) }}</th>
@@ -56,5 +59,3 @@
         </tfoot>
     </table>
 </div>
-{{-- Scripts --}}
-{{-- @include('scripts.link-modal') --}}

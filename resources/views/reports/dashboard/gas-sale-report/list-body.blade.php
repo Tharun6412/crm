@@ -20,37 +20,45 @@
                     <td>{{ $ga->ga_name }}</td>
                     <td>
                         <a href="{{ url('reports/invoiceReport') }}?{{ http_build_query([
-                            'ga_id' => $ga->ga_id,
-                            'segment_id' => \App\Enums\SegmentType::DOMESTIC->value,
+                            'geo_area' => [$ga->ga_id],
+                            'segment_id' => [\App\Enums\SegmentType::DOMESTIC->value],
                             'connection_type_id' => \App\Enums\ConnectionType::PREPAID->value,
-                            'invoice_type' => \App\Enums\InvoiceType::GAS_BILL->value,
+                            'invoice_type' => [\App\Enums\InvoiceType::GAS_BILL->value],
+                            'date_from'=> request()->date_from,
+                            'date_to' => request()->date_to,
                             ]) }}" class="aging-link" target="_blank">{{ numberFormat($ga->dom_pre,2) }}
                         </a>
                     </td>
                     <td>
                         <a href="{{ url('reports/invoiceReport') }}?{{ http_build_query([
-                            'ga_id' => $ga->ga_id,
-                            'segment_id' => \App\Enums\SegmentType::DOMESTIC->value,
+                            'geo_area' => [$ga->ga_id],
+                            'segment_id' => [\App\Enums\SegmentType::DOMESTIC->value],
                             'connection_type_id' => \App\Enums\ConnectionType::POSTPAID->value,
-                            'invoice_type' => \App\Enums\InvoiceType::GAS_BILL->value,
+                            'invoice_type' => [\App\Enums\InvoiceType::GAS_BILL->value],
+                            'date_from'=> request()->date_from,
+                            'date_to' => request()->date_to,
                             ]) }}" class="aging-link" target="_blank">{{ numberFormat($ga->dom_post,2) }}
                         </a>
                     </td>
                     <td>
                         <a href="{{ url('reports/invoiceReport') }}?{{ http_build_query([
-                            'ga_id' => $ga->ga_id,
-                            'segment_id' => \App\Enums\SegmentType::COMMERCIAL->value,
+                            'geo_area' => [$ga->ga_id],
+                            'segment_id' => [\App\Enums\SegmentType::COMMERCIAL->value],
                             'connection_type_id' => \App\Enums\ConnectionType::PREPAID->value,
-                            'invoice_type' => \App\Enums\InvoiceType::GAS_BILL->value,
+                            'invoice_type' => [\App\Enums\InvoiceType::GAS_BILL->value],
+                            'date_from'=> request()->date_from,
+                            'date_to' => request()->date_to,
                             ]) }}" class="aging-link" target="_blank">{{ numberFormat($ga->com_pre,2) }}
                         </a>
                     </td>
                     <td>
                         <a href="{{ url('reports/invoiceReport') }}?{{ http_build_query([
-                            'ga_id' => $ga->ga_id,
-                            'segment_id' => \App\Enums\SegmentType::COMMERCIAL->value,
+                            'geo_area' => [$ga->ga_id],
+                            'segment_id' => [\App\Enums\SegmentType::COMMERCIAL->value],
                             'connection_type_id' => \App\Enums\ConnectionType::POSTPAID->value,
-                            'invoice_type' => \App\Enums\InvoiceType::GAS_BILL->value,
+                            'invoice_type' => [\App\Enums\InvoiceType::GAS_BILL->value],
+                            'date_from'=> request()->date_from,
+                            'date_to' => request()->date_to,
                             ]) }}" class="aging-link" target="_blank">{{ numberFormat($ga->com_post,2) }}
                         </a>
                     </td>
