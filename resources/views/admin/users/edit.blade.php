@@ -106,7 +106,7 @@
                 </div>
                 <hr>
                 {{-- SPot Roles --}}
-                <div class="row">
+                {{-- <div class="row">
                     <div class="col-sm-2 text-end">
                         <h5>SPot Roles</h5>
                     </div>
@@ -125,7 +125,7 @@
                             @endforeach
                         </div>
                     </div>
-                </div>
+                </div> --}}
                 <div class="mb-3" id="user-edit-error"></div>
                 <div class="text-center">
                     <button type="submit" class="btn btn-success"><i class="bi bi-save"></i>&nbsp;Update details</button>

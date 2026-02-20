@@ -9,4 +9,7 @@ enum DocumentType: int
     case HSC_IMAGE = 26;
     case ACTIVATION_IMAGE = 27;
     case BILL_IMAGE = 28;
+    case LOAD_ASSESSMENT_SHEET = 29;
+    case OFFER = 30;
+    case GSA = 31;
 }

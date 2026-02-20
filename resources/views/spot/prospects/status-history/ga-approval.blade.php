@@ -9,7 +9,7 @@
                 <select class="form-select form-select-sm" name="offer_document" id="offer_document">
                     <option value="">All</option>
                     @foreach ($offer_type_docs as $doc_val)
-                        <option value="{{ $doc_val->id }}">Offer&nbsp;-&nbsp;{{ $doc_val->offer_count }}&nbsp;({{ $doc_val->file->file_name_original }})</option>
+                        <option value="{{ $doc_val->id }}">Offer&nbsp;-&nbsp;{{ $doc_val->offer_count }}&nbsp;({{ $doc_val->file->file_name }})</option>
                     @endforeach
                 </select>
                 <small class="text-danger" id="offer_document-error"></small>

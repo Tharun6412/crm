@@ -123,7 +123,10 @@ class MasterConsumerDataSeeder extends Seeder
            ['id' => '25', 'name' => 'Isometric Image', 'type' => '2'], 
            ['id' => '26', 'name' => 'HSC', 'type' => '2'], 
            ['id' => '27', 'name' => 'Activate', 'type' => '2'], 
-           ['id' => '28', 'name' => 'Bill Image', 'type' => '3'], 
+           ['id' => '28', 'name' => 'Bill Image', 'type' => '3'],
+           ['id' => '29', 'name' => 'Load Assessment Sheet', 'type' => '4'],
+           ['id' => '30', 'name' => 'Offer', 'type' => '4'],
+           ['id' => '31', 'name' => 'GSA', 'type' => '4'],
         ]);
 
         // mst cns meter status

@@ -2,7 +2,7 @@
 namespace App\Http\Controllers\Spot;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Master\DocumentCentre\DocumentUpload;
-use App\Models\Spot\DocumentTypes;
+use App\Models\DocumentCentre\DocumentTypes;
 use App\Models\Spot\ProspectDocuments;
 use App\Models\Spot\Prospects;
 use Carbon\Carbon;
@@ -23,7 +23,7 @@ class ProspectDocumentController extends Controller
     // Add Document Based on Prospect ID
     public function create(Request $request, $id)
     {
-        $document_types = DocumentTypes::all();
+        $document_types = DocumentTypes::where('type', 4)->get();
         $prospect = Prospects::find($id);
         if($request->type == "2") {
             return view('spot.prospects.documents.create', [

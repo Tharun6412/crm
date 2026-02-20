@@ -4,6 +4,7 @@ namespace App\Models\Spot;
 
 use App\Models\DocumentCentre\Documents;
 use App\Models\Admin\User;
+use App\Models\DocumentCentre\DocumentTypes;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 

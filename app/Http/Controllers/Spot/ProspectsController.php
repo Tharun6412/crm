@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Spot;
 
+use App\Enums\SpotStages;
+use App\Enums\SpotStatus;
 use App\Exports\Spot\ProspectsExport;
 use App\Http\Controllers\Controller;
 use App\Models\Master\Cluster;
@@ -18,6 +20,7 @@ use App\Models\Spot\ProspectDocuments;
 use App\Models\Spot\ProspectPipeline;
 use App\Models\Spot\Prospects;
 use App\Models\Spot\ProspectStatusHistory;
+use App\Models\Spot\Stage;
 use App\Models\Spot\Status;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -41,7 +44,8 @@ class ProspectsController extends Controller
                 $q->where('name', 'like', '%'.$request->get('search_key').'%');
                 $q->orWhere('code', 'like', '%'.$request->get('search_key').'%');
             });
-        })->where('status_id', '!=', 12)
+        })
+        // ->where('status_id', '!=', 12)
         ->When($request->has('geo_area'), function($q) use($request) {
             $q->whereIn('ga_id', $request->get('geo_area'));
         })->When($request->has('industrial_area_id'), function($q) use($request) {
@@ -61,7 +65,7 @@ class ProspectsController extends Controller
             $query->whereIn('ga_id', session()->get('user')['gas']);
         } 
         $prospects = $query->orderBy($sortBy, $sortOr)->paginate($records)->withQueryString();
-        $stages = Status::where('type', 1)->where('parent_id', NULL)->get();
+        $stages = Stage::where('type', 1)->where('parent_id', NULL)->get();
         if($request->ajax()) {
             return view('spot.prospects.list-body', ['prospects' => $prospects, 'stages' => $stages]);
         }
@@ -104,8 +108,8 @@ class ProspectsController extends Controller
             'industrial_area_id' => 'required',
         ]);
         // $stage = 1;
-        $status = 31;
-        $stage_id =7;
+        $status = SpotStatus::IN_PROGRESS->value;
+        $stage_id = SpotStages::RESEARCH->value;
 
         $ga_val = Ga::find($request->ga_id); 
         // TO insert into the Vehicle
@@ -139,31 +143,6 @@ class ProspectsController extends Controller
             // Prospect Code Update
             $prospect_code = 'SP' . date('ym') . str_pad($add_prospect->id, 4, '0', STR_PAD_LEFT);
             Prospects::where('id', $add_prospect->id)->update(['code' => $prospect_code]);
-            // Pipeline Availability
-            if ($request->pipeline_availability == 2) {
-                $pipe_ar = [];
-                if ($request->steel_pipeline > 0) {
-                    $pipe_ar[] = array(
-                        'prospect_id' => $add_prospect->id,
-                        'pipe_type' => 1,
-                        'length' => $request->steel_pipeline,
-                        'status' => 0,
-                        'created_by' => Auth::id(), 
-                    );
-                }
-                if ($request->mdpe_pipeline > 0) {
-                    $pipe_ar[] = array(
-                        'prospect_id' => $add_prospect->id,
-                        'pipe_type' => 2,
-                        'length' => $request->mdpe_pipeline,
-                        'status' => 0,
-                        'created_by' => Auth::id(), 
-                    );
-                }
-                if(!empty($pipe_ar)) {
-                    ProspectPipeline::upsert($pipe_ar, ['prospect_id', 'pipe_type', 'status'], ['length', 'status', 'created_by']);
-                }
-            }
             // Insert into Status History
             ProspectStatusHistory::create([
                 'prospect_id'        => $add_prospect->id,
@@ -175,7 +154,7 @@ class ProspectsController extends Controller
             // Insert into Prospect Approval
             ProspectApproval::create([
                 'prospect_id' => $add_prospect->id,
-                'status_id' => 3,
+                'status_id' => SpotStages::APPROACH->value, //Approach
                 'status' => 0,
                 'notes' => $request->notes,
                 'created_by' => Auth::id(),
@@ -338,30 +317,7 @@ class ProspectsController extends Controller
             'updated_by' => Auth::id(),
         ]);
         // Pipeline Availability
-        if ($request->pipeline_availability == 2) {
-            $pipe_ar = [];
-            if ($request->steel_pipeline > 0) {
-                $pipe_ar[] = array(
-                    'prospect_id' => $id,
-                    'pipe_type' => 1,
-                    'length' => $request->steel_pipeline,
-                    'status' => 0,
-                    'created_by' => Auth::id(), 
-                );
-            }
-            if ($request->mdpe_pipeline > 0) {
-                $pipe_ar[] = array(
-                    'prospect_id' => $id,
-                    'pipe_type' => 2,
-                    'length' => $request->mdpe_pipeline,
-                    'status' => 0,
-                    'created_by' => Auth::id(), 
-                );
-            }
-            if(!empty($pipe_ar)) {
-                ProspectPipeline::upsert($pipe_ar, ['prospect_id', 'pipe_type', 'status'], ['length', 'status', 'created_by']);
-            }
-        }else {
+        if ($request->pipeline_availability == 1) {
             // Delete if any record exists
            $delete_prospect =  ProspectPipeline::where('prospect_id', $id)->delete();
         }

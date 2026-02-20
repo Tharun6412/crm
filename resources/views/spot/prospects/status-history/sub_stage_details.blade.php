@@ -47,7 +47,7 @@
                     <select name="offer-document" id="offer-document" class="form-select form-select-sm">
                         <option value="">Select Offer</option>
                         @foreach ($offer_type_docs as $doc_value)
-                            <option value="{{ $doc_value->id }}">Offer&nbsp;-&nbsp;{{ $doc_value->offer_count }}&nbsp;({{ $doc_value->file->file_name_original }})</option>
+                            <option value="{{ $doc_value->id }}">Offer&nbsp;-&nbsp;{{ $doc_value->offer_count }}&nbsp;({{ $doc_value->file->file_name }})</option>
                         @endforeach
                     </select>
                     <span class="text-danger" id="offer-document-error"></span>

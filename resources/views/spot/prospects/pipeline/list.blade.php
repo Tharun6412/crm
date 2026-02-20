@@ -21,7 +21,7 @@
                     <tr class="spot-table-bg">
                         <th nowrap class="text-center">S.No</th>
                         <th nowrap >Type of pipeline</th>
-                        <th nowrap >Length <small>(Km)</small></th>
+                        <th nowrap >Length <small>(Mts)</small></th>
                         <th nowrap >Status</th>
                         <th nowrap >Added By</th>
                         <th nowrap >Added Date</th>
@@ -37,7 +37,7 @@
                     @foreach ($prospect->pipeLineHistory as $pipeline)
                         <tr>
                             <td class="text-center">{{ $i++ }}</td>
-                            <td>{{ $pipeline->pipe_type == "1" ? "Steel Pipeline" : "MDPE Pipeline"}}</td>
+                            <td>{{ $pipeline->pipeType->name }}&nbsp;-&nbsp;({{ $pipeline->pipeType->size }}mm)</td>
                             <td class="text-end"> {{ $pipeline->length }}</td>
                             <td class="text-center">
                                 @if ($pipeline->status == 1)

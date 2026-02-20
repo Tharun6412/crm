@@ -13,6 +13,8 @@ Route::middleware(['auth', RouteAccess::class])->group(function() {
     // Prospects 
     Route::get('prospects/prospectsExport', [App\Http\Controllers\Spot\ProspectsController::class, 'prospectsExport']);
     Route::resource('prospects', App\Http\Controllers\Spot\ProspectsController::class);
+    // Prospect Pipeline
+    Route::resource('prospect/pipeline', App\Http\Controllers\Spot\ProspectPipelineController::class);
     // Prospect Documents
     Route::get('prospectDocument/create/{id}', [App\Http\Controllers\Spot\ProspectDocumentController::class, 'create']);
     Route::post('prospectDocument/store/{id}', [App\Http\Controllers\Spot\ProspectDocumentController::class, 'store']);

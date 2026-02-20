@@ -166,14 +166,14 @@ class UserController extends Controller
         $geo_areas = Ga::all();
         $departments = Department::all();
         $roles = Role::all();
-        $spot_roles = SpotRoles::all();
+        // $spot_roles = SpotRoles::all();
 
         return view('admin.users.edit', [
             'user' => $user,
             'geo_areas' => $geo_areas,
             'departments' => $departments,
             'roles' => $roles,
-            'spot_roles' => $spot_roles,
+            // 'spot_roles' => $spot_roles,
         ]);
     }
 
@@ -211,7 +211,7 @@ class UserController extends Controller
         ]);
         $user->ga()->sync($validated['geo_areas'] ?? []);
         $user->roles()->sync($validated['roles'] ?? []);
-        $user->spotRoles()->sync($validated['spot_roles'] ?? []);;
+        // $user->spotRoles()->sync($validated['spot_roles'] ?? []);;
         
         // Response
         return response()->json(['success' => 'User details updated successfully!']);

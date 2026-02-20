@@ -120,16 +120,16 @@
                         <label class="col-form-label col-sm-3 text-end">NG Pipeline available at the Industrial gate?&nbsp;<span class="error text-danger"></span>&nbsp;:</label>
                         <div class="col-sm-8">
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="pipeline_availability" id="pipeline_availability_1" value="1" onclick="pipelineCheck(this.value)">
+                                <input class="form-check-input" type="radio" name="pipeline_availability" id="pipeline_availability_1" value="1">
                                 <label class="form-check-label" for="pipeline_availability_1">Yes</label>
                             </div>
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="pipeline_availability" id="pipeline_availability_2" value="2" onclick="pipelineCheck(this.value)">
+                                <input class="form-check-input" type="radio" name="pipeline_availability" id="pipeline_availability_2" value="2">
                                 <label class="form-check-label" for="pipeline_availability_2">No</label>
                             </div>
                         </div>
                     </div>
-                    <div class="row mb-2 d-none" id="steel_pipeline_div">
+                    {{-- <div class="row mb-2 d-none" id="steel_pipeline_div">
                         <label class="col-form-label col-sm-3 text-end">Steel Pipeline&nbsp;<span class="error text-danger"></span>&nbsp;:</label>
                         <div class="col-sm-8">
                             <div class="input-group input-group-sm">
@@ -146,7 +146,7 @@
                                 <span class="input-group-text">Kms</span>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
                     <div class="row mb-2">
                         <label class="col-form-label col-sm-3 text-end">Notes&nbsp;<span class="error text-danger"></span>&nbsp;:</label>
                         <div class="col-sm-8">
@@ -176,27 +176,27 @@
         $('#expected_date').datepicker({format : 'dd-mm-yyyy', startDate:'today', autoHide :true});
 
         // Pipeline Availability Check
-        var pipeline = $("input[name='pipeline_availability']:checked").val()
-        if (pipeline == 2) {
-            $('#steel_pipeline_div').removeClass('d-none');
-            $('#mdpe_pipeline_div').removeClass('d-none');
-        }
-        else {
-            $('#steel_pipeline_div').addClass('d-none');
-            $('#mdpe_pipeline_div').addClass('d-none');
-        }
+        // var pipeline = $("input[name='pipeline_availability']:checked").val()
+        // if (pipeline == 2) {
+        //     $('#steel_pipeline_div').removeClass('d-none');
+        //     $('#mdpe_pipeline_div').removeClass('d-none');
+        // }
+        // else {
+        //     $('#steel_pipeline_div').addClass('d-none');
+        //     $('#mdpe_pipeline_div').addClass('d-none');
+        // }
     });
     // PipeLine Check Function
-    function  pipelineCheck(val) {
-        if (val == 2) {
-            $('#steel_pipeline_div').removeClass('d-none');
-            $('#mdpe_pipeline_div').removeClass('d-none');
-        }
-        else {
-            $('#steel_pipeline_div').addClass('d-none');
-            $('#mdpe_pipeline_div').addClass('d-none');
-        }
-    }
+    // function  pipelineCheck(val) {
+    //     if (val == 2) {
+    //         $('#steel_pipeline_div').removeClass('d-none');
+    //         $('#mdpe_pipeline_div').removeClass('d-none');
+    //     }
+    //     else {
+    //         $('#steel_pipeline_div').addClass('d-none');
+    //         $('#mdpe_pipeline_div').addClass('d-none');
+    //     }
+    // }
     // Industrial Area Based on GA
     function getDetailsByGA(ga)
     {

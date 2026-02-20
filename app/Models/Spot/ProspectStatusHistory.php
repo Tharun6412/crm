@@ -44,7 +44,7 @@ class ProspectStatusHistory extends Model
      */
     public function stage():BelongsTo
     {
-        return $this->belongsTo(Status::class, 'stage_id')->withDefault();
+        return $this->belongsTo(Stage::class, 'stage_id')->withDefault();
     }
     /**
      * Relation with User

@@ -125,6 +125,11 @@
                                             <i class="bi bi-info-circle"></i>&nbsp;View
                                         </a>
                                     </li>
+                                    @if ($prospect->pipeline_availability == 2)
+                                        <li>
+                                            <a class="dropdown-item link-modal" href="{{ url('spot/prospect/pipeline/'.$prospect->id.'/edit') }}"><i class="bi bi-folder2-open"></i>&nbsp;Manage PipeLine</a>
+                                        </li>
+                                    @endif
                                     @if (checkProspectHold($prospect->status_id)) 
                                         @if (isInProgress($prospect->status_id) AND (isSpotAdmin() OR isSpotGaHead() OR isSpotClusterHead() OR isSpotSalesofficer()) AND (in_array($prospect->ga_id, session()->get('user')['gas'])))    
                                             <li>
@@ -158,7 +163,7 @@
                                             @if (isSpotAdmin() OR isSpotGaHead() OR isSpotClusterHead() OR isSpotSalesOfficer())    
                                                 <li>
                                                     <a class="dropdown-item link-modal" href="{{ url('spot/prospectStatus/gaApprove/'.$prospect->id) }}">
-                                                        <i class="bi bi-check2-circle"></i>&nbsp;Ga Approval{{ $prospect->status_id }}
+                                                        <i class="bi bi-check2-circle"></i>&nbsp;Ga Approval
                                                     </a>
                                                 </li>
                                             @endif
@@ -168,7 +173,7 @@
                                                 </a>
                                             </li>
                                         @else
-                                            @if ($prospect->status_id == 35)    
+                                            @if ($prospect->status_id == 5)    
                                                 <li>
                                                     <a class="dropdown-item" id="unhold_status" href="{{ url('spot/prospectStatus/unHold/'.$prospect->id) }}">
                                                         <i class="bi bi-ban"></i>&nbsp;UnHold

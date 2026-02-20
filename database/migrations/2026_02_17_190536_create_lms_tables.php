@@ -14,6 +14,7 @@ return new class extends Migration
         // Pipe sizes
         Schema::create('pms_pipes', function (Blueprint $table) {
             $table->id();
+            $table->tinyInteger('type')->nullable();
             $table->string('name', length: 60)->nullable();
             $table->integer('size')->nullable();
             $table->timestamps();

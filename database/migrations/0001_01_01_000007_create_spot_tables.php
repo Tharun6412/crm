@@ -12,27 +12,20 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // spt Roles
-        Schema::create('spt_roles', function(Blueprint $table) {
+        // spt Status
+        Schema::create('spt_stages', function(Blueprint $table) {
             $table->id();
             $table->string('name', length:225)->nullable();
-            $table->timestamps();
-        });
-        
-        // spt User roles
-        Schema::create('spt_user_roles', function(Blueprint $table) {
-            $table->id();
-            $table->foreignId('user_id')->nullable()->index()->constrained(table: 'users')->noActionOnDelete()->noActionOnUpdate();
-            $table->foreignId('spot_role_id')->nullable()->index()->constrained(table:'spt_roles')->noActionOnDelete()->noActionOnUpdate();
+            $table->integer('type')->nullable();
+            $table->foreignId('parent_id')->nullable()->constrained('spt_stages')->nullOnDelete();
+            $table->integer('position')->nullable();
         });
 
         // spt Status
         Schema::create('spt_status', function(Blueprint $table) {
             $table->id();
             $table->string('name', length:225)->nullable();
-            $table->integer('type')->nullable();
-            $table->foreignId('parent_id')->nullable()->constrained('spt_status')->nullOnDelete();
-            $table->integer('position')->nullable();
+            $table->timestamps();
         });
 
         // spt prospects Table
@@ -97,18 +90,11 @@ return new class extends Migration
             $table->foreignId('approved_by')->nullable()->index()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();
             $table->dateTime('approved_at')->nullable();
         });
-        // spt Document Types
-        Schema::create('spt_document_types', function(Blueprint $table) {
-            $table->id();
-            $table->string('name', length:225)->nullable();
-            $table->dateTime('created_at')->nullable();
-            $table->foreignId('created_by')->nullable()->index()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();
-        });
         // spt Documents
         Schema::create('spt_prospect_documents', function (Blueprint $table) {
             $table->id();
             $table->foreignId('prospect_id')->nullable()->index()->constrained(table:'spt_prospects')->noActionOnDelete()->noActionOnUpdate();
-            $table->foreignId('document_type_id')->nullable()->index()->constrained(table:'spt_document_types')->noActionOnDelete()->noActionOnUpdate();
+            $table->foreignId('document_type_id')->nullable()->index()->constrained(table:'dc_file_types')->noActionOnDelete()->noActionOnUpdate();
             $table->foreignId('doc_file_id')->nullable()->index()->constrained(table:'dc_files')->noActionOnDelete()->noActionOnUpdate();
             $table->integer('offer_count')->nullable();
             $table->tinyInteger('status')->nullable();
@@ -120,13 +106,13 @@ return new class extends Migration
         Schema::create('spt_prospect_pipeline', function (Blueprint $table) {
             $table->id();
             $table->foreignId('prospect_id')->nullable()->index()->constrained(table:'spt_prospects')->noActionOnDelete()->noActionOnUpdate();
-            $table->tinyInteger('pipe_type')->nullable();
+            $table->foreignId('pipe_type_id')->nullable()->index()->constrained(table:'pms_pipes')->noActionOnDelete()->noActionOnUpdate();
             $table->double('length')->nullable();
             $table->tinyInteger('status')->nullable();
             $table->timestamps();
             $table->foreignId('created_by')->nullable()->index()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();
             $table->foreignId('updated_by')->nullable()->index()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();
-            $table->unique(['prospect_id', 'pipe_type', 'status']);
+            $table->unique(['prospect_id', 'pipe_type_id', 'status']);
         });
         // spt Status History
         Schema::create('spt_prospect_status_history', function (Blueprint $table) {
@@ -149,13 +135,6 @@ return new class extends Migration
             $table->foreignId('created_by')->nullable()->index()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();
             $table->unique(['ga_id', 'target_date', 'segment_id']);
         });
-        // Prospects and Users
-        Schema::create('spt_prospect_users', function(Blueprint $table) {
-            $table->id();
-            $table->foreignId('prospect_id')->nullable()->index()->constrained(table:'spt_prospects')->noActionOnDelete()->noActionOnUpdate();
-            $table->foreignId('role_id')->nullable()->index()->constrained(table:'spt_roles')->noActionOnDelete()->noActionOnUpdate();
-            $table->foreignId('user_id')->nullable()->index()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();
-        });
     }
 
     /**
@@ -165,21 +144,17 @@ return new class extends Migration
     {
         // Disable Foreign Keys
         DB::statement('SET FOREIGN_KEY_CHECKS = 0;');
-        Schema::dropIfExists('spt_prospect_users');
         Schema::dropIfExists('spt_targets');
         Schema::dropIfExists('spt_prospect_status_history');
         Schema::dropIfExists('spt_prospect_pipeline');
         Schema::dropIfExists('spt_prospect_documents');
-        Schema::dropIfExists('spt_document_types');
         Schema::dropIfExists('spt_prospect_date_change_history');
         Schema::dropIfExists('spt_prospect_comments');
         Schema::dropIfExists('spt_prospect_approval');
         Schema::dropIfExists('spt_prospects');
         Schema::dropIfExists('spt_prospect_status');
-        Schema::dropIfExists('spt_propect_roles');
         Schema::dropIfExists('spt_status');
         Schema::dropIfExists('spt_roles');
-        Schema::dropIfExists('spt_user_roles');
         // Enable Foreign Keys
         DB::statement('SET FOREIGN_KEY_CHECKS = 1;');
     }

@@ -130,30 +130,6 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row mb-2 d-none" id="steel_pipeline_div">
-                        <label class="col-form-label col-sm-3 text-end">Steel Pipeline&nbsp;<span class="error text-danger"></span>&nbsp;:</label>
-                        <div class="col-sm-8">
-                            <div class="input-group input-group-sm">
-                                <input type="text" name="steel_pipeline" id="steel_pipeline" class="form-control form-control-sm" placeholder="Enter Steel Pipeline in Kms" value="{{ $steel_pipe?->length }}" @if ($steel_pipe?->status == "1") readonly @endif>
-                                <span class="input-group-text">Kms</span>
-                                @if ($steel_pipe?->status == "1")
-                                    <span class="text-success"><i class="bi bi-check2-circle"></i>Completed</span>
-                                @endif
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row mb-2 d-none" id="mdpe_pipeline_div">
-                        <label class="col-form-label col-sm-3 text-end">MDPE Pipeline&nbsp;<span class="error text-danger"></span>&nbsp;:</label>
-                        <div class="col-sm-8">
-                            <div class="input-group input-group-sm">
-                                <input type="text" name="mdpe_pipeline" id="mdpe_pipeline" class="form-control form-control-sm" value="{{ $mdpe_pipe?->length }}" placeholder="Enter MDPE Pipeline in Kms" @if ($mdpe_pipe?->status == "1") readonly @endif>
-                                <span class="input-group-text">Kms</span>
-                                @if ($mdpe_pipe?->status == "1")
-                                    <span class="text-success"><i class="bi bi-check2-circle"></i>Completed</span>
-                                @endif
-                            </div>
-                        </div>
-                    </div>
                     <div class="row mb-2">
                         <label class="col-form-label col-sm-3 text-end">Notes&nbsp;<span class="error text-danger"></span>&nbsp;:</label>
                         <div class="col-sm-8">
@@ -181,17 +157,6 @@
 <script type="text/javascript">
     $(function(){
         $('#expected_date').datepicker({format : 'dd-mm-yyyy', startDate:'today', autoHide :true});
-
-        // Pipeline Availability Check
-        var pipeline = $("input[name='pipeline_availability']:checked").val()
-        if (pipeline == 2) {
-            $('#steel_pipeline_div').removeClass('d-none');
-            $('#mdpe_pipeline_div').removeClass('d-none');
-        }
-        else {
-            $('#steel_pipeline_div').addClass('d-none');
-            $('#mdpe_pipeline_div').addClass('d-none');
-        }
     });
     // Industrial Area Based on GA
     function getEditDetailsByGA(ga)
@@ -199,16 +164,5 @@
         $.get("{{ url('spot/prospects/getEditDetailsByGA') }}", {ga_id : ga}, function(data) {
             $('#edit-sub-form').html(data);
         });
-    }
-    // PipeLine Check Function
-    function  pipelineCheck(val) {
-        if (val == 2) {
-            $('#steel_pipeline_div').removeClass('d-none');
-            $('#mdpe_pipeline_div').removeClass('d-none');
-        }
-        else {
-            $('#steel_pipeline_div').addClass('d-none');
-            $('#mdpe_pipeline_div').addClass('d-none');
-        }
     }
 </script>

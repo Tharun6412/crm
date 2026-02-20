@@ -6,14 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Status extends Model
+class Stage extends Model
 {
     /**
      * The table associated with the model
      * 
      * @var string
      */
-    protected $table = 'spt_status';
+    protected $table = 'spt_stages';
 
     /**
      * The attributes that are mass assignable
@@ -22,7 +22,23 @@ class Status extends Model
      */
     protected $fillable = [
         'name',
+        'type',
+        'parent_id',
     ];
 
-    public $timestamps = true;
+    /**
+     * Parent Relation 
+     */
+    public function parent():BelongsTo
+    {
+        return $this->belongsTo(Stage::class, 'parent_id')->withDefault();
+    }
+
+    /**
+     * Child Relation
+     */
+    public function children():HasMany
+    {
+        return $this->hasMany(Stage::class, 'parent_id');
+    }
 }

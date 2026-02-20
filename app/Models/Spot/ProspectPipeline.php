@@ -3,6 +3,7 @@
 namespace App\Models\Spot;
 
 use App\Models\Admin\User;
+use App\Models\Master\PipeTypes;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -22,7 +23,7 @@ class ProspectPipeline extends Model
      */
     protected $fillable = [
         'prospect_id',
-        'pipe_type',
+        'pipe_type_id',
         'length',
         'status',
         'created_by',
@@ -43,5 +44,13 @@ class ProspectPipeline extends Model
     public function updatedBy() : BelongsTo
     {
         return $this->belongsTo(User::class, 'updated_by')->withDefault();
+    }
+
+    /**
+     * Relation with Pipe Type
+     */
+    public function pipeType(): BelongsTo
+    {
+        return $this->belongsTo(PipeTypes::class, 'pipe_type_id', 'id')->withDefault();
     }
 }
