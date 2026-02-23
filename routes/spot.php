@@ -2,11 +2,12 @@
 
 use App\Http\Middleware\RouteAccess;
 use Illuminate\Support\Facades\Route;
-Route::get('/', function () {
-    return view('welcome');
-});
+
 // Prospects 
 Route::middleware(['auth', RouteAccess::class])->group(function() {
+    // Dashboard
+    Route::get('/', [App\Http\Controllers\Spot\DashboardController::class, 'index']);
+
     Route::get('prospects/getEditDetailsByGA', [App\Http\Controllers\Spot\ProspectsController::class, 'getEditDetailsByGA']);
     Route::get('prospects/getDetailsByGA', [App\Http\Controllers\Spot\ProspectsController::class, 'getDetailsByGA']);
     Route::post('prospects/updatePipeLine', [App\Http\Controllers\Spot\ProspectsController::class, 'updatePipeLine']);

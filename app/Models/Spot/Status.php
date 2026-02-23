@@ -22,7 +22,25 @@ class Status extends Model
      */
     protected $fillable = [
         'name',
+        'type',
+        'parent_id',
+        'icon',
+        'color',
     ];
 
-    public $timestamps = true;
+    /**
+     * Parent Relation 
+     */
+    public function parent():BelongsTo
+    {
+        return $this->belongsTo(Status::class, 'parent_id')->withDefault();
+    }
+
+    /**
+     * Child Relation
+     */
+    public function children():HasMany
+    {
+        return $this->hasMany(Status::class, 'parent_id');
+    }
 }

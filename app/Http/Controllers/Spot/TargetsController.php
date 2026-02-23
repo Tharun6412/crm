@@ -38,7 +38,7 @@ class TargetsController extends Controller
         $data['y_end'] = $data['y_start']->copy()->addYear()->subMonth()->endOfMonth();
         $data['target_data'] = Target::where('ga_id', $id)->whereBetween('target_date', [$data['y_start'], $data['y_end']])->get();
         $data['ga'] = Ga::find($id);
-        $data['segments'] = Segment::whereIn('id', [2,3])->get();
+        $data['segments'] = Segment::whereIn('id', [2, 3])->get();
         return view('spot.targets.edit', $data);
     }
 
