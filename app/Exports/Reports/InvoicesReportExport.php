@@ -1,22 +1,33 @@
 <?php
-namespace App\Http\Controllers\Reports;
+namespace App\Exports\Reports;
 
 use App\Enums\InvoiceStatus;
 use App\Enums\InvoiceType;
-use App\Exports\Reports\InvoicesReportExport;
-use App\Http\Controllers\Controller;
 use App\Models\Invoice\BillInvoice;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
+use Maatwebsite\Excel\Concerns\Exportable;
+use Maatwebsite\Excel\Concerns\FromQuery;
+use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithMapping;
 
-/**
- * All invoices report controller
- * 
- */
-class InvoicesReportController extends Controller
+class InvoicesReportExport implements FromQuery, WithHeadings, WithMapping 
 {
-    public function index(Request $request)
+    use Exportable;
+    /**
+     * Construct Method
+     */
+    protected $request;
+    protected $i = 0;
+    public function __construct($request)
     {
+        $this->request = $request;
+    }
+    /**
+    * @return query
+    */
+    public function query()
+    {
+        $request = $this->request;
         $sortBy = ($request->get('sortBy')) ? $request->get('sortBy') : 'bil_invoices.created_at';
         $sortOr = ($request->get('sortOr')) ? $request->get('sortOr') : 'desc';
         $records = ($request->get('records')) ? $request->get('records') : 20;
@@ -92,19 +103,40 @@ class InvoicesReportController extends Controller
                 $q->whereBetween('bil_invoices.invoice_date', [Carbon::createFromFormat('d-m-Y', $request->date_from)->startOfDay()->toDateTimeString(), Carbon::createFromFormat('d-m-Y', $request->date_to)->endOfDay()->toDateTimeString()]);
             })
             ->select('bil_invoices.id','invoice_number','invoice_date','type_id','due_date','total_amount', 'payable_amount', 'balance_amount', 'consumer_id', 'bil_invoice_consumption.net_consumption', 'bil_invoices.status_id')
-            ->orderBy($sortBy, $sortOr)->paginate($records)->withQueryString();
-        // Render output
-        if ($request->ajax()) {
-            return view('reports.invoice.invoice-report.list-body', ['invoices' => $invoices]);
-        }
-        return view('reports.invoice.invoice-report.list', ['invoices' => $invoices]);
+            ->orderBy($sortBy, $sortOr);
+        return $invoices;
     }
 
     /**
-     * Export the invoices based on GA and range of due days.
+     * Headings 
      */
-    public function invoicesReportExport(Request $request)
+    public function headings():array
     {
-        return (new InvoicesReportExport($request))->download('InvoicesReport.xlsx');
+        return ['S.No', 'Invoice Number', 'Invoice Date', 'Invoice Type', 'CRN', 'Name', 'Segment','Connection Type','GA','District','Consumption', 'Due Date', 'Invoice Amount', 'Balance Amount', 'Payment Status'];
+    }
+
+    /**
+     * Mapping [Loop the data from the query]
+     */
+    public function map($invoice): array
+    {
+        $this->i++; //Increment serial Number
+        return [
+            $this->i,
+            $invoice->invoice_number ?? '',
+            dateFormat($invoice->invoice_date) ?? '',
+            $invoice->invoiceType->name,
+            $invoice->consumer->crn,
+            $invoice->consumer->name,
+            $invoice->consumer->segment->name,
+            $invoice->consumer->connectType->name,
+            $invoice->consumer->ga->name,
+            $invoice->consumer->district->name,
+            numberFormat($invoice->net_consumption,2),
+            dateFormat($invoice->due_date),
+            numberFormat($invoice->payable_amount),
+            numberFormat($invoice->balance_amount),
+            $invoice->status->name,
+        ];
     }
 }

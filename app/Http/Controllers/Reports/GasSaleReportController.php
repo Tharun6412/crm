@@ -18,14 +18,19 @@ class GasSaleReportController extends Controller
      */
     public function index(Request $request)
     {
+        $fromDate = $request->filled('date_from')
+            ? Carbon::createFromFormat('d-m-Y', $request->date_from)->startOfDay()
+            : Carbon::now()->subMonthNoOverflow()->startOfMonth()->startOfDay();
+
+        $toDate = $request->filled('date_to')
+            ? Carbon::createFromFormat('d-m-Y', $request->date_to)->endOfDay()
+            : Carbon::now()->subMonthNoOverflow()->endOfMonth()->endOfDay();
 
         $gaGasSales = Ga::leftJoin('cns_consumers','cns_consumers.ga_id','=','mst_gas.id')
-            ->leftJoin('bil_invoices', function ($join) use ($request) {
+            ->leftJoin('bil_invoices', function ($join) use ($fromDate, $toDate) {
                 $join->on('bil_invoices.consumer_id', '=', 'cns_consumers.id')
                 ->where('bil_invoices.type_id', InvoiceType::GAS_BILL->value);
-                if ($request->filled('date_from') && $request->filled('date_to')) {
-                    $join->whereBetween('bil_invoices.invoice_date', [Carbon::createFromFormat('d-m-Y', $request->date_from)->startOfDay()->toDateTimeString(), Carbon::createFromFormat('d-m-Y', $request->date_to)->endOfDay()->toDateTimeString()]);
-                }
+                $join->whereBetween('bil_invoices.invoice_date', [$fromDate,$toDate]);
             })
             ->leftJoin('bil_invoice_consumption', 'bil_invoice_consumption.invoice_id','=','bil_invoices.id')
             ->selectRaw('
@@ -61,9 +66,9 @@ class GasSaleReportController extends Controller
             ->get();
         // Render output
         if($request->ajax()) {
-            return view('reports.dashboard.gas-sale-report.list-body', ['gaGasSales' => $gaGasSales]);
+            return view('reports.dashboard.gas-sale-report.list-body', ['gaGasSales' => $gaGasSales,'date_from' => $fromDate,'date_to' => $toDate]);
         }
-        return view('reports.dashboard.gas-sale-report.list', ['gaGasSales' => $gaGasSales]);
+        return view('reports.dashboard.gas-sale-report.list', ['gaGasSales' => $gaGasSales, 'date_from' => $fromDate, 'date_to' => $toDate]);
 
     }
 }

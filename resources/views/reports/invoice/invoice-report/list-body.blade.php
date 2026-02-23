@@ -1,56 +1,66 @@
-<div class="d-flex justify-content-between">
-    <div class="row gx-1 mb-1">
-        <div class="col-auto">
-            <div class="input-group input-group-sm">
-                <span class="input-group-text" id="key">Search</span>
-                <input type="text" name="key" id="key" class="form-control" value="{{ request()->key }}">
-            </div>
+<div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-3">
+    <!-- LEFT SIDE FILTERS -->
+    <div class="d-flex flex-wrap align-items-center gap-2">
+        <!-- Search -->
+        <div class="input-group input-group-sm w-auto">
+            <span class="input-group-text">Search</span>
+            <input type="text" name="key" id="key" class="form-control" value="{{ request()->key }}">
         </div>
-        <div class="col-auto">
-            <select name="connection_type_id" id="connection_type_id" class="form-select form-select-sm">
-                <option value="">All Connection Types</option>
-                <option value="{{ \App\Enums\ConnectionType::POSTPAID->value }}" @selected(\App\Enums\ConnectionType::POSTPAID->value == request()->connection_type_id)>Postpaid</option>
-                <option value="{{ \App\Enums\ConnectionType::PREPAID->value }}" @selected(\App\Enums\ConnectionType::PREPAID->value == request()->connection_type_id)>Prepaid</option>
-            </select>
-        </div>
-        <div class="col-auto">
-            <select name="status_id" id="status_id" class="form-select form-select-sm">
-                <option value="">All Status</option>
-                <option value="{{ \App\Enums\InvoiceStatus::PAID->value }}" @selected(\App\Enums\InvoiceStatus::PAID->value == request()->status_id)>Paid</option>
-                <option value="{{ \App\Enums\InvoiceStatus::PARTIALLY_PAID->value }}" @selected(\App\Enums\InvoiceStatus::PARTIALLY_PAID->value == request()->status_id)>Partially paid</option>
-                <option value="{{ \App\Enums\InvoiceStatus::NOT_PAID->value }}" @selected(\App\Enums\InvoiceStatus::NOT_PAID->value == request()->status_id)>Not paid</option>
-            </select>
-        </div>
+        <!-- Range Dropdown -->
         @if (request()->has('range'))
-            <div class="col-auto">
-                <select name="range" id="range" class="form-select form-select-sm">
-                    <option value="">All Days Range</option>
-                    @foreach([
-                        'no_due_days' => '0',
-                        'range_1_15' => '1-15',
-                        'range_16_30' => '16-30',
-                        'range_31_60' => '31-60',
-                        'range_61_90' => '61-90',
-                        'range_gt90'  => '90+'
-                    ] as $field => $range)
-                        <option value="{{ $range }}" @selected($range == request()->range)>{{ $range }} Days</option>
-                    @endforeach
-                </select>
-            </div>
+            <select name="range" id="range" class="form-select form-select-sm w-auto">
+                <option value="">All Days Range</option>
+                @foreach([
+                    '0',
+                    '1-15',
+                    '16-30',
+                    '31-60',
+                    '61-90',
+                    '90+'
+                ] as $range)
+                    <option value="{{ $range }}"
+                        @selected($range == request()->range)>
+                        {{ $range }} Days
+                    </option>
+                @endforeach
+            </select>
         @endif
-        <div class="col-auto">
-            <button type="submit" class="btn btn-sm btn-success"><i class="bi bi-search"></i></button>
-        </div>
-        <div class="col-auto">
-            <a href="{{ url('reports/invoiceReport') }}" class="btn btn-warning btn-sm"><i class="bi bi-arrow-clockwise"></i></a>
-        </div>
-        <div class="col-auto">
+        <!-- Calendar Toggle Button -->
+        <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#invoiceDateFilter" aria-expanded="false"><i class="bi bi-calendar3"></i></button>
+        <!-- Submit -->
+        <button type="submit" class="btn btn-success btn-sm"><i class="bi bi-search"></i></button>
+        <!-- Reset -->
+        <a href="{{ url('reports/invoiceReport') }}" class="btn btn-warning btn-sm"><i class="bi bi-arrow-clockwise"></i></a>
+        <!-- Record Count -->
+        <span class="small text-muted">
             ({{ $invoices->total() }}) Records found
+        </span>
+    </div>
+    <div>
+        <x-auth.link :href="url('reports/invoiceReport/invoicesReportExport') . '?' . request()->getQueryString()" class="btn btn-secondary btn-sm"><i class="bi bi-plus-lg"></i>&nbsp;Export</x-auth.link>
+    </div>
+</div>
+<!-- COLLAPSIBLE DATE FILTER -->
+<div class="collapse {{ request()->filled('date_from') || request()->filled('date_to') ? 'show' : '' }} mt-2 mb-3" id="invoiceDateFilter">
+    <div class="card border-primary bg-light">
+        <div class="card-body py-2 px-3">
+            <div class="d-flex align-items-center flex-wrap gap-3">
+                <span class="fw-semibold">
+                    Invoice Date :
+                </span>
+                <!-- From Date -->
+                <div class="input-group input-group-sm w-auto">
+                    <span class="input-group-text">From</span>
+                    <input type="text" class="form-control" name="date_from" id="date_from" value="{{ request()->date_from }}"><span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                </div>
+                <!-- To Date -->
+                <div class="input-group input-group-sm w-auto">
+                    <span class="input-group-text">To</span>
+                    <input type="text" class="form-control" name="date_to" id="date_to" value="{{ request()->date_to }}"><span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                </div>
+            </div>
         </div>
     </div>
-    {{-- <div>
-        <x-auth.link href="{{ url('reports/ageingReport/agingInvoicesExport') }}?{{ http_build_query(request()->all()) }}" class="btn btn-secondary btn-sm"><i class="bi bi-plus-lg"></i>&nbsp;Export</x-auth.link>
-    </div> --}}
 </div>
 @php
     $sort_by = (request()->has('sortBy')) ? request()->get('sortBy') : 'created_at';
@@ -106,6 +116,7 @@
                     </a>
                 </th>
                 <th nowrap>Segment<x-master.segment-filter /></th>
+                <th nowrap>Connection Type<x-master.connection-type-filter /></th>
                 <th nowrap>GA<x-master.ga-filter /></th>
                 <th nowrap>District
                     @if (request()->has('geo_area'))
@@ -151,10 +162,10 @@
                             <i class="bi {{ $sort_icon }}"></i>
                         @endif
                     </a>
-                    {{-- @php
+                    @php
                         $inv_status = [1 => 'Paid', 2 => 'Not-Paid', 3 => 'Partial-Paid'];
                     @endphp
-                    <x-admin.status-filter name="status_id" :data="$inv_status" /> --}}
+                    <x-admin.status-filter name="status_id" :data="$inv_status" />
                 </th>
             </tr>
         </thead>
@@ -171,6 +182,7 @@
                     <td><a href="{{ url('consumers/' . $inv->consumer_id) }}" target="_blank">&nbsp;{{ $inv->consumer->crn }}</a></td>
                     <td>{{ $inv->consumer->name }}</td>
                     <td>{{ $inv->consumer->segment->name }}</td>
+                    <td>{{ $inv->consumer->connectType->name }}</td>
                     <td>{{ $inv->consumer->ga->name }}</td>
                     <td>{{ $inv->consumer->district->name }}</td>
                     <td>{{ $inv->net_consumption ?? 0 }}</td>
@@ -181,13 +193,13 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="14" class="text-center">No Records Found</td>
+                    <td colspan="15" class="text-center">No Records Found</td>
                 </tr>
             @endforelse
         </tbody>
         <tfoot>
             <tr>
-                <th class="text-end" colspan="9">Total</th>
+                <th class="text-end" colspan="10">Total</th>
                 <th>{{ numberFormat($invoices->sum('net_consumption'),2) }}</th>
                 <th></th>
                 <th class="text-end">{{ numberFormat($invoices->sum('payable_amount'),2) }}</th>
@@ -204,3 +216,7 @@
 <div>
     {{ $invoices->links('utils.paginator', ['modDiv' => 'invoices-list']) }}
 </div>
+{{-- Scripts --}}
+@push('scripts')
+    @include('scripts.datepicker', ['list' => ['date_from', 'date_to']])
+@endpush

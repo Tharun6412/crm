@@ -3,12 +3,9 @@ namespace App\Http\Controllers\Reports;
 
 use App\Enums\InvoiceStatus;
 use App\Enums\InvoiceType;
-use App\Exports\Reports\AgingInvoicesExport;
 use App\Http\Controllers\Controller;
-use App\Models\Invoice\BillInvoice;
 use App\Models\Master\BillInvoiceType;
 use App\Models\Master\Ga;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 /**
@@ -25,15 +22,10 @@ class AgeingReportController extends Controller
         $gasAging = Ga::leftJoin('cns_consumers', 'mst_gas.id', '=', 'cns_consumers.ga_id')
             ->leftJoin('bil_invoices', function ($join) use ($request) {
                 $join->on('bil_invoices.consumer_id', '=', 'cns_consumers.id')
-                    ->where('bil_invoices.status_id', InvoiceStatus::NOT_PAID->value)
-                    ->whereNot('bil_invoices.status_id', InvoiceStatus::CANCEL->value)
-                    ->whereNotIn('bil_invoices.type_id', [
-                        InvoiceType::LATE_PAYMENT_CHARGES->value,
-                        InvoiceType::RENTAL_CHARGES->value,
-                        InvoiceType::SD_EMI->value
-                    ]);
+                    ->whereIn('bil_invoices.status_id', [InvoiceStatus::NOT_PAID->value,InvoiceStatus::PARTIALLY_PAID->value])
+                    ->whereNot('bil_invoices.status_id', InvoiceStatus::CANCEL->value);
                 if ($request->filled('invoice_type')) {
-                    $join->where('bil_invoices.type_id', $request->invoice_type);
+                    $join->whereIn('bil_invoices.type_id', $request->invoice_type);
                 }
             })
             ->selectRaw("mst_gas.id as ga_id,
@@ -54,11 +46,5 @@ class AgeingReportController extends Controller
         }
         return view('reports.consumer.aging-report.list', ['gasAging' => $gasAging, 'invoice_types' => $invoice_types]);
     }
-    /**
-     * Export the invoices based on GA and range of due days.
-     */
-    public function agingInvoicesExport(Request $request)
-    {
-        return (new AgingInvoicesExport($request))->download('AgingReport.xlsx');
-    }
+    
 }

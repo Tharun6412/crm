@@ -1,3 +1,15 @@
+<form name="aging-reports-search-form" id="aging-reports-search-form"  action="{{ url('reports/ageingReport') }}" method="get">
+    <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
+        <!-- Invoice Type Filter Card -->
+        <div class="border rounded px-2 py-2 d-flex align-items-center gap-2">
+            <span class="fw-semibold mb-0">Invoice Type</span>
+            <div class="w-auto"><x-master.invoice-type-filter /></div>
+        </div>
+        <button type="submit" class="btn btn-sm btn-success"><i class="bi bi-search"></i></button>
+        <!-- Reset -->
+        <a href="{{ url('reports/ageingReport') }}" class="btn btn-warning btn-sm"><i class="bi bi-arrow-clockwise"></i></a>
+    </div>
+</form>
 <div class="table-responsive">
     <table class="table table-bordered table-hover page-sort">
         <thead class="table-success">
@@ -33,7 +45,8 @@
                             <a href="{{ url('reports/invoiceReport') }}?{{ http_build_query([
                                 'geo_area' => [$ga->ga_id],
                                 'range' => $range,
-                                'invoice_type' => [request()->invoice_type],
+                                'invoice_type' => request()->invoice_type ?? [],
+                                'status_id' => [\App\Enums\InvoiceStatus::NOT_PAID->value, \App\Enums\InvoiceStatus::PARTIALLY_PAID->value]
                                 ]) }}" class="aging-link" target="_blank">{{ numberFormat($ga->$field,2) }}
                             </a>
                         </td>
