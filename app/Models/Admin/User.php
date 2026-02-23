@@ -129,10 +129,10 @@ class User extends Authenticatable
     /**
      * Relation with Spot Roles table via pivot spot_user_roles
      */
-    public function spotRoles():BelongsToMany
-    {
-        return $this->belongsToMany(SpotRoles::class, 'spt_user_roles', 'user_id', 'spot_role_id');
-    }
+    // public function spotRoles():BelongsToMany
+    // {
+    //     return $this->belongsToMany(SpotRoles::class, 'spt_user_roles', 'user_id', 'spot_role_id');
+    // }
 
     /**
      * Poly Morph Relation with Complaint comments
