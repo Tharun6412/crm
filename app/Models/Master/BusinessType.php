@@ -1,19 +1,18 @@
 <?php
 
-namespace App\Models\Spot;
+namespace App\Models\Master;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Status extends Model
+class BusinessType extends Model
 {
     /**
      * The table associated with the model
      * 
      * @var string
      */
-    protected $table = 'spt_status';
+    protected $table = 'mst_business_types';
 
     /**
      * The attributes that are mass assignable
@@ -22,5 +21,6 @@ class Status extends Model
      */
     protected $fillable = [
         'name',
+        'status',
     ];
 }

@@ -276,6 +276,21 @@ class MasterDataSeeder extends Seeder
             ['name' => 'CA-02', 'ca_id' => '1', 'status' => 1],
             ['name' => 'CA-03', 'ca_id' => '1', 'status' => 1],
         ]);
+
+        // Business Types
+        DB::table('mst_business_types')->insert([
+            ['name' => 'Hotels/Restaurants', 'status' => 1],
+            ['name' => 'Hostels', 'status' => 1],
+            ['name' => 'Bakeries', 'status' => 1],
+            ['name' => 'Food Court', 'status' => 1],
+            ['name' => 'Educational Institute', 'status' => 1],
+            ['name' => 'Cold Storages', 'status' => 1],
+            ['name' => 'Hospitals', 'status' => 1],
+            ['name' => 'Shopping Complexes/Malls', 'status' => 1],
+            ['name' => 'Industrial Pantry/Canteen', 'status' => 1],
+            ['name' => 'Corporate Offices', 'status' => 1],
+            ['name' => 'Others', 'status' => 1],
+        ]);
     }
 }
  

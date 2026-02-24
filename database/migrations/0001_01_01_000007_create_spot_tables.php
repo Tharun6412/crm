@@ -48,10 +48,11 @@ return new class extends Migration
             $table->string('longitude', length:225)->nullable();
             $table->foreignId('ga_head')->nullable()->index()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();
             $table->foreignId('cluster_head')->nullable()->index()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();
+            $table->foreignId('sales_officer')->nullable()->index()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();
             $table->integer('segment_id')->nullable()->index(); 
             $table->tinyInteger('pipeline_availability')->nullable();
             $table->text('notes')->nullable();
-            $table->foreignId('stage_id')->nullable()->index()->constrained(table:'spt_status')->noActionOnDelete()->noActionOnUpdate();
+            $table->foreignId('stage_id')->nullable()->index()->constrained(table:'spt_stages')->noActionOnDelete()->noActionOnUpdate();
             $table->foreignId('status_id')->nullable()->index()->constrained(table:'spt_status')->noActionOnDelete()->noActionOnUpdate();
             $table->dateTime('status_date')->nullable();
             $table->foreignId('created_by')->nullable()->index()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();
@@ -118,7 +119,7 @@ return new class extends Migration
         Schema::create('spt_prospect_status_history', function (Blueprint $table) {
             $table->id();
             $table->foreignId('prospect_id')->nullable()->index()->constrained(table:'spt_prospects')->noActionOnDelete()->noActionOnUpdate();
-            $table->foreignId('stage_id')->nullable()->index()->constrained(table:'spt_status')->noActionOnDelete()->noActionOnUpdate();
+            $table->foreignId('stage_id')->nullable()->index()->constrained(table:'spt_stages')->noActionOnDelete()->noActionOnUpdate();
             $table->text('notes')->nullable();
             $table->dateTime('created_at')->nullable();
             $table->foreignId('created_by')->nullable()->index()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();
@@ -154,6 +155,7 @@ return new class extends Migration
         Schema::dropIfExists('spt_prospects');
         Schema::dropIfExists('spt_prospect_status');
         Schema::dropIfExists('spt_status');
+        Schema::dropIfExists('spt_stages');
         Schema::dropIfExists('spt_roles');
         // Enable Foreign Keys
         DB::statement('SET FOREIGN_KEY_CHECKS = 1;');

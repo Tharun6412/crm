@@ -4,6 +4,9 @@
 @section('title', 'Date Change Requests')
 
 @section('page-title', 'Date Change Requests')
+@section('breadcrumb')
+    <li class="breadcrumb-item"><a href="{{ url('spot') }}">SPot</a></li>
+@endsection
 @section('page-content')
     <div class="bd-callout bd-callout-info mt-0 mb-3">Displaying latest 50 date change requests</div>
     @if ($date_requests)

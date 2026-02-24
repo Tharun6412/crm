@@ -122,6 +122,15 @@ return new class extends Migration
             $table->timestamps();
             $table->foreignId('created_by')->nullable()->index()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();
         });
+
+        // Pipe sizes
+        Schema::create('pms_pipes', function (Blueprint $table) {
+            $table->id();
+            $table->tinyInteger('type')->nullable();
+            $table->string('name', length: 60)->nullable();
+            $table->integer('size')->nullable();
+            $table->timestamps();
+        });
     }
 
     /**
@@ -140,6 +149,7 @@ return new class extends Migration
         Schema::dropIfExists('mst_states');
         Schema::dropIfExists('mst_clusters');
         Schema::dropIfExists('mst_segments');
+        Schema::dropIfExists('pms_pipes');
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
 };

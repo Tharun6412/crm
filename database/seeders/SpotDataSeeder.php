@@ -14,7 +14,7 @@ class SpotDataSeeder extends Seeder
     public function run(): void
     {
         // Status
-        DB::table('spt_status')->insert([
+        DB::table('spt_stages')->insert([
             ['id' => 1, 'name' => 'Suspect', 'type' => 1, 'parent_id' => null, 'position' => 1],
             ['id' => 2, 'name' => 'Prospect', 'type' => 1, 'parent_id' => null, 'position' => 2],
             ['id' => 3, 'name' => 'Approach', 'type' => 1, 'parent_id' => null, 'position' => 3],
@@ -34,31 +34,17 @@ class SpotDataSeeder extends Seeder
             ['id' => 17, 'name' => 'Lose', 'type' => 1, 'parent_id' => 5, 'position' => 2],
             ['id' => 18, 'name' => 'Execution', 'type' => 1, 'parent_id' => 6, 'position' => 1],
             ['id' => 19, 'name' => 'Commission', 'type' => 1, 'parent_id' => 6, 'position' => 2],
-            ['id' => 31, 'name' => 'IN Progress', 'type' => 2, 'parent_id' => null, 'position' => 1],
-            ['id' => 32, 'name' => 'Requested for approval', 'type' => 2, 'parent_id' => null, 'position' => 2],
-            ['id' => 33, 'name' => 'Approved', 'type' => 2, 'parent_id' => null, 'position' => 3],
-            ['id' => 34, 'name' => 'Closed Won', 'type' => 2, 'parent_id' => null, 'position' => 4],
-            ['id' => 35, 'name' => 'Hold', 'type' => 2, 'parent_id' => null, 'position' => 5],
-            ['id' => 36, 'name' => 'Cancel', 'type' => 2, 'parent_id' => null, 'position' => 6],
-            ['id' => 37, 'name' => 'Closed Lost', 'type' => 2, 'parent_id' => null, 'position' => 7],
-            ['id' => 38, 'name' => 'Rejected', 'type' => 2, 'parent_id' => null, 'position' => 8],
+            ['id' => 20, 'name' => 'Closed Lost', 'type' => 2, 'parent_id' => null, 'position' => 7],
+            ['id' => 21, 'name' => 'Rejected', 'type' => 2, 'parent_id' => null, 'position' => 8],
         ]);
-
         // Roles
-        DB::table('spt_roles')->insert([
-            ['id' => 1, 'name' => 'Admin', 'created_at' => now(), 'updated_at' => now()],
-            ['id' => 2, 'name' => 'Cluster Head', 'created_at' => now(), 'updated_at' => now()],
-            ['id' => 3, 'name' => 'GA Head', 'created_at' => now(), 'updated_at' => now()],
-            ['id' => 4, 'name' => 'Sales Officer', 'created_at' => now(), 'updated_at' => now()],
-            ['id' => 5, 'name' => 'HO Sales', 'created_at' => now(), 'updated_at' => now()],
-            ['id' => 6, 'name' => 'Viewer', 'created_at' => now(), 'updated_at' => now()],
-        ]);
-
-        // Document Types
-        DB::table('spt_document_types')->insert([
-            ['id' => 1, 'name' => 'Load assesment sheet', 'created_at' => now(), 'created_by' => NULL],
-            ['id' => 2, 'name' => 'Offer', 'created_at' => now(), 'created_by' => NULL],
-            ['id' => 3, 'name' => 'GSA', 'created_at' => now(), 'created_by' => NULL],
+        DB::table('spt_status')->insert([
+            ['id' => 1, 'name' => 'IN Progress'],
+            ['id' => 2, 'name' => 'Requested for approval'],
+            ['id' => 3, 'name' => 'Approved'],
+            ['id' => 4, 'name' => 'Closed Won'],
+            ['id' => 5, 'name' => 'Hold'],
+            ['id' => 6, 'name' => 'Cancel'],
         ]);
     }
 }

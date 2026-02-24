@@ -293,6 +293,35 @@ return new class extends Migration
             $table->string('name', length:60)->nullable();
             $table->timestamps();
         });
+
+        // Payment gateway payment modules - mst_pay_modules
+        Schema::create('mst_pay_modules', function (Blueprint $table) {
+            $table->id();
+            $table->string('name', length: 32);
+        });
+
+        /**
+         * Payment gateways
+         */
+        Schema::create('mst_payment_gateways', function (Blueprint $table) {
+            $table->id();
+            $table->string('gateway')->nullable(); // Easebuzz, BBPS
+            $table->enum('mode', ['test', 'production'])->nullable();
+            $table->json('credentials')->nullable(); // encrypted
+            $table->boolean('is_active')->default(true);
+            $table->timestamps();
+            $table->unique(['gateway', 'mode']);
+        });
+
+        /**
+         * Business Types
+         */
+        Schema::create('mst_business_types', function(Blueprint $table) {
+            $table->id();
+            $table->string('name', length:225)->index()->nullable();
+            $table->tinyInteger('status')->nullable();
+            $table->timestamps();
+        });
     }
 
     /**
@@ -327,11 +356,16 @@ return new class extends Migration
         Schema::dropIfExists('mst_price_history');
         Schema::dropIfExists('mst_price');
         Schema::dropIfExists('mst_taxes');
+        Schema::dropIfExists('mst_tax_groups');
         Schema::dropIfExists('mst_bil_invoice_item_types');
         Schema::dropIfExists('mst_pay_transaction_status');
         Schema::dropIfExists('mst_cns_scheme_ga');
         Schema::dropIfExists('mst_cns_schemes');
         Schema::dropIfExists('mst_cns_scheme_payments');
+        Schema::dropIfExists('mst_pay_modules');
+        Schema::dropIfExists('mst_payment_gateways');
+        Schema::dropIfExists('mst_titles');
+        Schema::dropIfExists('mst_business_types');
         DB::statement('SET FOREIGN_KEY_CHECKS = 1;');
     }
 };

@@ -121,11 +121,11 @@
                         <label class="col-form-label col-sm-3 text-end">NG Pipeline available at the Industrial gate?&nbsp;<span class="error text-danger"></span>&nbsp;:</label>
                         <div class="col-sm-8">
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="pipeline_availability" id="pipeline_availability_1" value="1" @checked($prospect->pipeline_availability == "1") onclick="pipelineCheck(this.value)">
+                                <input class="form-check-input" type="radio" name="pipeline_availability" id="pipeline_availability_1" value="1" @checked($prospect->pipeline_availability == "1")>
                                 <label class="form-check-label" for="pipeline_availability_1">Yes</label>
                             </div>
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="pipeline_availability" id="pipeline_availability_2" value="2" @checked($prospect->pipeline_availability == "2") onclick="pipelineCheck(this.value)">
+                                <input class="form-check-input" type="radio" name="pipeline_availability" id="pipeline_availability_2" value="2" @checked($prospect->pipeline_availability == "2")>
                                 <label class="form-check-label" for="pipeline_availability_2">No</label>
                             </div>
                         </div>

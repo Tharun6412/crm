@@ -12,13 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         // Pipe sizes
-        Schema::create('pms_pipes', function (Blueprint $table) {
-            $table->id();
-            $table->tinyInteger('type')->nullable();
-            $table->string('name', length: 60)->nullable();
-            $table->integer('size')->nullable();
-            $table->timestamps();
-        });
+        // Schema::create('pms_pipes', function (Blueprint $table) {
+        //     $table->id();
+        //     $table->tinyInteger('type')->nullable();
+        //     $table->string('name', length: 60)->nullable();
+        //     $table->integer('size')->nullable();
+        //     $table->timestamps();
+        // });
 
         // Network tiers
         Schema::create('pms_network_tiers', function (Blueprint $table) {
@@ -116,6 +116,5 @@ return new class extends Migration
         Schema::dropIfExists('lms_lead_status');
         Schema::dropIfExists('pms_network_areas');
         Schema::dropIfExists('pms_network_tiers');
-        Schema::dropIfExists('pms_pipes');
     }
 };

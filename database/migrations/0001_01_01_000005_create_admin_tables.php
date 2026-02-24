@@ -50,6 +50,7 @@ return new class extends Migration
     {
         DB::statement('SET FOREIGN_KEY_CHECKS = 0;');
         Schema::dropIfExists('mst_departments');
+        Schema::dropIfExists('adm_user_status_history');
         Schema::dropIfExists('adm_user_status');
         Schema::dropIfExists('adm_user_ga');
         DB::statement('SET FOREIGN_KEY_CHECKS = 1;');

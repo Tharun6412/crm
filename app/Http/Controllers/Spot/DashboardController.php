@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Master\Segment;
 use App\Models\Spot\Prospects;
 use App\Models\Spot\ProspectStatusHistory;
+use App\Models\Spot\Stage;
 use App\Models\Spot\Status;
 use App\Models\Spot\Target;
 use Carbon\Carbon;
@@ -25,7 +26,8 @@ class DashboardController extends Controller
         $data['y_start'] = Carbon::create($data['target_year'], 4, 1);
         $data['y_end'] = $data['y_start']->copy()->addYear()->subMonth()->endOfMonth();
         
-        $data['status_list'] = Status::where('type', 1)->whereNull('parent_id')->get();
+        $data['status_list'] = Stage::where('type', 1)->whereNull('parent_id')->get();
+        // $data['status_list'] = Status::where('type', 1)->whereNull('parent_id')->get();
         $data['prospect_data'] = Prospects::select('stage_id',DB::raw('COUNT(stage_id) as status_count'))
             ->When($request->has('geo_area'), function($q) use($request) {
                 $q->whereIn('ga_id', $request->get('geo_area'));

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Spot;
 
+use App\Enums\Role;
 use App\Enums\SpotStages;
 use App\Enums\SpotStatus;
 use App\Exports\Spot\ProspectsExport;
@@ -63,7 +64,7 @@ class ProspectsController extends Controller
         });
         if(! (isSpotAdmin() OR isSpotGaHead() OR isSpotClusterHead())) {
             $query->whereIn('ga_id', session()->get('user')['gas']);
-        } 
+        }
         $prospects = $query->orderBy($sortBy, $sortOr)->paginate($records)->withQueryString();
         $stages = Stage::where('type', 1)->where('parent_id', NULL)->get();
         if($request->ajax()) {
@@ -173,8 +174,8 @@ class ProspectsController extends Controller
     {
         $users_list = User::select('id', 'first_name', 'last_name')->whereHas('ga', function($q) use($request) {
             $q->where('ga_id', $request->ga_id);
-        })->whereHas('spotRoles', function($q) use($request) {
-            $q->whereIn('spot_role_id', [2,3,4]);
+        })->whereHas('roles', function($q) use($request) {
+            $q->whereIn('role_id', [Role::CLUSTER_HEAD->value, Role::GA_HEAD->value, Role::SALES_OFFICER->value]);
         })->get();
         $industrial_areas = IndustrialArea::where('ga_id', $request->ga_id)->get();
         return view('spot.prospects.add-sub-form-list', [
@@ -232,9 +233,6 @@ class ProspectsController extends Controller
     public function edit(string $id)
     {
         $prospect = Prospects::find($id);
-        // PipeLine Availability
-        $steel_pipe = ProspectPipeline::where('prospect_id', $id)->where('pipe_type', 1)->first();
-        $mdpe_pipe = ProspectPipeline::where('prospect_id', $id)->where('pipe_type', 2)->first();
         $geo_areas = Ga::all();
         $clusters = Cluster::all();
         $firm_types = FirmType::all();
@@ -242,8 +240,8 @@ class ProspectsController extends Controller
         $segments = Segment::all();
         $users_list = User::select('id', 'first_name', 'last_name')->whereHas('ga', function($q) use($prospect) {
             $q->where('ga_id', $prospect->ga_id);
-        })->whereHas('spotRoles', function($q) {
-            $q->whereIn('spot_role_id', [2,3,4]);
+        })->whereHas('roles', function($q) {
+            $q->whereIn('role_id', [Role::CLUSTER_HEAD->value,Role::GA_HEAD->value,Role::SALES_OFFICER->value]);
         })->get();
         $industrial_areas = IndustrialArea::where('ga_id', $prospect->ga_id)->get();
         return view('spot.prospects.edit', [
@@ -253,8 +251,6 @@ class ProspectsController extends Controller
             'firm_types' => $firm_types,
             'fuel_types' => $fuel_types,
             'industrial_areas' => $industrial_areas,
-            'steel_pipe' => $steel_pipe,
-            'mdpe_pipe' => $mdpe_pipe,
             'segments' => $segments,
             'users_list' => $users_list,
         ]);
@@ -267,8 +263,8 @@ class ProspectsController extends Controller
     {
         $users_list = User::select('id', 'first_name', 'last_name')->whereHas('ga', function($q) use($request) {
             $q->where('ga_id', $request->ga_id);
-        })->whereHas('spotRoles', function($q) use($request) {
-            $q->whereIn('spot_role_id', [2,3,4]);
+        })->whereHas('roles', function($q) use($request) {
+            $q->whereIn('role_id', [Role::CLUSTER_HEAD->value,Role::GA_HEAD->value,Role::SALES_OFFICER->value]);
         })->get();
         $industrial_areas = IndustrialArea::where('ga_id', $request->ga_id)->get();
         return view('spot.prospects.add-sub-form-list', [

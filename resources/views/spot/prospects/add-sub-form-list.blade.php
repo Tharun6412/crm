@@ -4,7 +4,7 @@
         <select name='cluster_head' id='cluster_head' class="form-select">
             <option value=''>Select Cluster Head</option>
             @if(!empty($users_list))
-                @foreach($users_list->filter(fn($user) => $user->spotRoles->contains('id', 2)) as $list)
+                @foreach($users_list->filter(fn($user) => $user->roles->contains('id', 3)) as $list)
                     <option value='{{ $list->id }}'>{{ $list->first_name }}&nbsp;{{ $list->last_name }}</option>
                 @endforeach
             @endif
@@ -17,7 +17,7 @@
         <select name='ga_head' id='ga_head' class="form-select">
             <option value=''>Select Ga Head</option>
             @if(!empty($users_list))
-                @foreach($users_list->filter(fn($user) => $user->spotRoles->contains('id', 3)) as $list)
+                @foreach($users_list->filter(fn($user) => $user->roles->contains('id', 4)) as $list)
                     <option value='{{ $list->id }}'>{{ $list->first_name }}&nbsp;{{ $list->last_name }}</option>
                 @endforeach
             @endif
@@ -30,7 +30,7 @@
         <select name='sales_officer' id='sales_officer' class="form-select">
             <option value=''>Select sales officer</option>
             @if (!empty($users_list))    
-                @foreach($users_list->filter(fn($user) => $user->spotRoles->contains('id', 4)) as $list)
+                @foreach($users_list->filter(fn($user) => $user->roles->contains('id', 5)) as $list)
                     <option value='{{ $list->id }}'>{{ $list->first_name }}&nbsp;{{ $list->last_name }}</option>
                 @endforeach
             @endif
