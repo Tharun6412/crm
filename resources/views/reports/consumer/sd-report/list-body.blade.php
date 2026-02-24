@@ -3,8 +3,9 @@
     <table class="table table-bordered table-hover" id="monthly-sale">
         <thead>
             <tr class="bg-light">
-                <th with="1%" nowrap>S No</th>
+                <th width="1%" nowrap>S No</th>
                 <th>GA</th>
+                <th class="text-end">Consumers</th>
                 <th class="text-end">Total Deposit</th>
                 <th class="text-end">Paid Deposit</th>
                 <th class="text-end">Balance Deposit</th>
@@ -25,6 +26,7 @@
                 <tr>
                     <td>{{ $loop->iteration }}</td>
                     <td nowrap>{{ $ga->name }}-{{ $ga->code }}</td>
+                    <td class="text-end">100</td>
                     <td class="text-end"><a href="{{ url('reports/consumer/sdDetails') }}?{{ $append_data }}">{{ numberFormat($sd_amount_by_ga[$ga->id]['total_deposit'] ?? 0) }}</a></td>
                     <td class="text-end"><a href="{{ url('reports/consumer/sdDetails') }}?{{ $append_data }}">{{ numberFormat($sd_amount_by_ga[$ga->id]['paid_deposit'] ?? 0) }}</a></td>
                     <td class="text-end"><a href="{{ url('reports/consumer/sdDetails') }}?{{ $append_data }}">{{ numberFormat($sd_amount_by_ga[$ga->id]['balance'] ?? 0) }}</a></td>
@@ -32,6 +34,7 @@
             @endforeach
             <tr class="fw-semibold">
                 <td colspan="2" class="text-end">Totals</td>
+                <td class="text-end">TT</td>
                 <td class="text-end">{{ numberFormat($total_dep) }}</td>
                 <td class="text-end">{{ numberFormat($paid_dep) }}</td>
                 <td class="text-end">{{ numberFormat($balance_dep) }}</td>

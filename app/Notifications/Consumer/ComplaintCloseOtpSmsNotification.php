@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class RegistrationSmsNotification extends Notification
+class ComplaintCloseOtpSmsNotification extends Notification
 {
     use Queueable;
 
@@ -42,7 +42,7 @@ class RegistrationSmsNotification extends Notification
     public function toSms($notifiable)
     {
         return [
-            'message' => "REGISTRATION DLT SMS",
+            'message' => "Your complaint closure OTP is " . $this->consumer->otp . ". Thank you for your cooperation. -MeghaGas",
             'phone' => $this->consumer->mobile,
         ];
     }

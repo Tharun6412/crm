@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class RegistrationSmsNotification extends Notification
+class GasbillSmsNotification extends Notification
 {
     use Queueable;
 
@@ -42,7 +42,7 @@ class RegistrationSmsNotification extends Notification
     public function toSms($notifiable)
     {
         return [
-            'message' => "REGISTRATION DLT SMS",
+            'message' => "Your bill for CRN " . $this->consumer->crn . " of Rs. " . $this->consumer->total_price . " against usage of " . $this->consumer->invoice->total_reading . " SCM is generated vide bill no " . $this->consumer->invoice->invoice_no . " on " . date('d-m-y') . ". Due date:" . date('d-m-y',strtotime($this->consumer->invoice->due_date)) . ". Please note that any delay in payment post due date, late payment charges @2% per month shall be levied. Please pay online https://consumer.meghagas.com/quickBillPay MEGHAGAS.",
             'phone' => $this->consumer->mobile,
         ];
     }

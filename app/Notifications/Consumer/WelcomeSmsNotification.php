@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class RegistrationSmsNotification extends Notification
+class WelcomeSmsNotification extends Notification
 {
     use Queueable;
 
@@ -42,7 +42,7 @@ class RegistrationSmsNotification extends Notification
     public function toSms($notifiable)
     {
         return [
-            'message' => "REGISTRATION DLT SMS",
+            'message' => "Dear MeghaGas consumer your successfully registered with MeghaGas. your consumer number " . $this->consumer->crn . ". Thanks for choosing MeghaGas",
             'phone' => $this->consumer->mobile,
         ];
     }

@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class RegistrationSmsNotification extends Notification
+class GasbillPaymentSmsNotification extends Notification
 {
     use Queueable;
 
@@ -42,7 +42,7 @@ class RegistrationSmsNotification extends Notification
     public function toSms($notifiable)
     {
         return [
-            'message' => "REGISTRATION DLT SMS",
+            'message' => "Dear MeghaGas consumer your payment Rs. " . $this->consumer->total_price . " towards your MeghaGas bill with invoice number " . $this->consumer->invoice->invoice_no . " has been received on " . date('d-m-Y'),
             'phone' => $this->consumer->mobile,
         ];
     }
