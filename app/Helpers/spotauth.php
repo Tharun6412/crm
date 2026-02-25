@@ -115,4 +115,22 @@ if(!function_exists('isRequestForApproval')) {
         return false;
     }
 }
+
+if(!function_exists('isApproved')) {
+    function isApproved($status_id = null) {
+        if($status_id == SpotStatus::APPROVED->value) {
+            return true;
+        }
+        return false;
+    }
+}
+
+if(!function_exists('isClosedWon')) {
+    function isClosedWon($status_id = null) {
+        if($status_id == SpotStatus::CLOSED_WON->value) {
+            return true;
+        }
+        return false;
+    }
+}
 ?>

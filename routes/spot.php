@@ -10,11 +10,11 @@ Route::middleware(['auth', RouteAccess::class])->group(function() {
 
     Route::get('prospects/getEditDetailsByGA', [App\Http\Controllers\Spot\ProspectsController::class, 'getEditDetailsByGA']);
     Route::get('prospects/getDetailsByGA', [App\Http\Controllers\Spot\ProspectsController::class, 'getDetailsByGA']);
-    Route::post('prospects/updatePipeLine', [App\Http\Controllers\Spot\ProspectsController::class, 'updatePipeLine']);
     // Prospects 
     Route::get('prospects/prospectsExport', [App\Http\Controllers\Spot\ProspectsController::class, 'prospectsExport']);
     Route::resource('prospects', App\Http\Controllers\Spot\ProspectsController::class);
     // Prospect Pipeline
+    Route::post('prospect/pipeline/updatePipeLine', [App\Http\Controllers\Spot\ProspectPipelineController::class, 'updatePipeLine']);
     Route::resource('prospect/pipeline', App\Http\Controllers\Spot\ProspectPipelineController::class);
     // Prospect Documents
     Route::get('prospectDocument/create/{id}', [App\Http\Controllers\Spot\ProspectDocumentController::class, 'create']);

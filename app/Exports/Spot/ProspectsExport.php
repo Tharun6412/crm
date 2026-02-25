@@ -46,7 +46,10 @@ class ProspectsExport implements FromQuery, WithHeadings, WithMapping
             });
         })->When($this->request->has('sub_stage_id'), function($q) {
             $q->whereIn('stage_id', $this->request->get('sub_stage_id'));
-        })->when((!empty($this->request->date_from) and !empty($this->request->date_to)), function($q) {
+        })->When($this->request->has('status_id'), function($q) {
+            $q->whereIn('status_id', $this->request->get('status_id'));
+        })
+        ->when((!empty($this->request->date_from) and !empty($this->request->date_to)), function($q) {
             $q->whereBetween('expected_date', [Carbon::createFromFormat('d-m-Y', $this->request->date_from)->startOfDay()->toDateTimeString(), Carbon::createFromFormat('d-m-Y', $this->request->date_to)->endOfDay()->toDateTimeString()]);
         });
         $prospects = $query->orderBy($sortBy, $sortOr);
@@ -58,7 +61,7 @@ class ProspectsExport implements FromQuery, WithHeadings, WithMapping
      */
     public function headings():array
     {
-        return ['S.No', 'GA', 'Name', 'Industrial Area', 'Current Fuel', 'Potential', 'Expected Date', 'Stage', 'Sub Stage', 'Last Status Date'];
+        return ['S.No', 'GA', 'Name', 'Industrial Area', 'Current Fuel', 'Potential', 'Expected Date', 'Stage', 'Sub Stage', 'Status', 'Last Status Date'];
     }
 
     /**
@@ -77,6 +80,7 @@ class ProspectsExport implements FromQuery, WithHeadings, WithMapping
             !empty($prospect->expected_date) ? Carbon::parse($prospect->expected_date)->format('d-m-Y') : '',
             $prospect->stage->parent->name,
             $prospect->stage->name,
+            $prospect->statusType->name,
             !empty($prospect->status_date) ? Carbon::parse($prospect->status_date)->format('d-m-Y') : '',
         ];
     }

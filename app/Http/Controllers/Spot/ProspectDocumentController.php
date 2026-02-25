@@ -14,13 +14,12 @@ require_once app_path('Helpers/spotauth.php');
 
 class ProspectDocumentController extends Controller
 {
-    // Index Function
-    public function index()
-    {
-
-    }
-
-    // Add Document Based on Prospect ID
+    /**
+     * Display the Document Status form
+     * Loads the DocuementTypes with type = 4 and prospect details
+     * type = 2 [document-status]
+     * @return view
+     */
     public function create(Request $request, $id)
     {
         $document_types = DocumentTypes::where('type', 4)->get();
@@ -40,7 +39,16 @@ class ProspectDocumentController extends Controller
         ]);
     }
 
-    // To Insert Document
+    /**
+     * Adds the Document.
+     * 
+     * This Method:
+     * - Validates the document_type.
+     * -count the document types (No. of documents based on type)
+     * Loads the DocumentUpload Class to upload documents.
+     * 
+     * @return response string
+     */
     public function store(Request $request, $id)
     {
         // Validation
@@ -63,6 +71,12 @@ class ProspectDocumentController extends Controller
     }
     /**
      * To delete the Document
+     * 
+     * This Method:
+     * - Fetch the ProspectDocuments details
+     * - Load the DocumentUpload class to implement the delete functionality
+     * 
+     * @return response string
      */
     public function destroy($id)
     {

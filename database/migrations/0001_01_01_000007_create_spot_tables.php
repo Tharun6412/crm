@@ -19,6 +19,8 @@ return new class extends Migration
             $table->integer('type')->nullable();
             $table->foreignId('parent_id')->nullable()->constrained('spt_stages')->nullOnDelete();
             $table->integer('position')->nullable();
+            $table->string('icon', length:50)->nullable();
+            $table->string('color', length:50)->nullable();
         });
 
         // spt Status

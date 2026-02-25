@@ -14,7 +14,7 @@
                         <thead class="table-secondary">
                             <tr>
                                 <th>Pipe Type</th>
-                                <th class="text-end">Length</th>
+                                <th class="text-end">Length&nbsp;(Mts)</th>
                                 <th class="text-center">Actions</th>
                             </tr>
                         </thead>
@@ -94,7 +94,7 @@
 
             // Change "+" to "-" and class to remove
             clonedRow.find('.add-row')
-                .removeClass('btn-success add-row')
+                .removeClass('btn-outline-success add-row')
                 .addClass('btn-outline-danger remove-row')
                 .html('<i class="bi bi-dash-square"></i>').on('click', function() {
                     $(this).closest('tr').remove();

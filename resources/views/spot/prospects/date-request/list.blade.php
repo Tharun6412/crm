@@ -81,7 +81,7 @@
         <div class='alert alert-warning mb-0'>No records found!</div>
     @endif
 </div>
-@include('scripts.ajax-link-id', ['mod' => 'add-date-request', 'div' => 'action-type'])
+@include('scripts.ajax-link-id', ['mod' => 'add-date-request', 'div' => 'action-type', 'modal_scroll' => "$('.modal-body').scrollTop(0);"])
 <script type="text/javascript">
 // To Approve the request
     function approveDateRequest(id, prospect_id)

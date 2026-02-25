@@ -36,9 +36,7 @@ class DashboardController extends Controller
                     $q2->whereIn('cluster_id', $request->get('cluster'));
                 });
             })
-            ->groupBy('stage_id')->get();
-        // print "<pre>"; print_r($data['status_list']);
-        
+            ->groupBy('stage_id')->get();        
         
         if($request->ajax()) {
             // Render output

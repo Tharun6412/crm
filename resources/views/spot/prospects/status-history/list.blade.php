@@ -17,6 +17,7 @@
                     <th width="1%" class="text-center">S.No.</th>
                     <th class="text-center">Stage</th>
                     <th class="text-center">Sub Stage</th>
+                    <th class="text-center">Status</th>
                     <th>Notes</th>
                     <th>Updated By</th>
                     <th>Updated Date</th>
@@ -32,6 +33,7 @@
                             <td class="text-center">{{ $i++ }}</td>
                             <td class="align-middle">{{ $history->stage->parent->name ?? $history->stage->name }}</td>
                             <td class="align-middle">{{ $history->stage->name }}</td>
+                            <td class="align-middle">{{ $history->status->name ?? '' }}</td>
                             <td>{{ $history->notes }}</td>
                             <td>{{ $history->createdBy->first_name }}</td>
                             <td>{{ $history->created_at->format('d-m-Y') }}</td>

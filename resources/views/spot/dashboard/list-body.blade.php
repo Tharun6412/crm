@@ -41,27 +41,31 @@
 				<div class="row g-2">
 					@foreach ($status_list as $list)
 						<div class="col-6">
-							<div class="d-flex align-items-center bg-{{ $list->color ?? 'success' }}-subtle rounded">
-								<div class="flex-fill w-50 fs-2 text-center">
-									<i class="bi bi-{{ $list->icon ?? 'flash' }} text-{{ $list->color ?? 'dark' }}"></i>
+							<a href="{{ url('spot/prospects') }}?{{ http_build_query(['stage_id'=> [$list->id]]) }}" target="_blank">
+								<div class="d-flex align-items-center bg-{{ $list->color ?? 'success' }}-subtle rounded">
+									<div class="flex-fill w-50 fs-2 text-center">
+										<i class="bi bi-{{ $list->icon ?? 'flash' }} text-{{ $list->color ?? 'dark' }}"></i>
+									</div>
+									<div class="flex-fill w-50 text-center">
+										<div class="pt-2 fs-4">{{ $prospect_list[$list->name] ?? 0 }}</div>
+										<div class="pb-2">{{ $list->name }}</div>
+									</div>
 								</div>
-								<div class="flex-fill w-50 text-center">
-									<div class="pt-2 fs-4">{{ $prospect_list[$list->name] ?? 0 }}</div>
-									<div class="pb-2">{{ $list->name }}</div>
-								</div>
-							</div>
+							</a>
 						</div>
 					@endforeach
 					<div class="col">
-						<div class="d-flex align-items-center bg-primary-subtle rounded">
-							<div class="flex-fill w-50 fs-2 text-center">
-								<i class="bi bi-people"></i>
+						<a href="{{ url('spot/prospects') }}" target="_blank">
+							<div class="d-flex align-items-center bg-primary-subtle rounded">
+								<div class="flex-fill w-50 fs-2 text-center">
+									<i class="bi bi-people"></i>
+								</div>
+								<div class="flex-fill w-50 text-center">
+									<div class="pt-2 fs-4">{{ $prospect_sum }}</div>
+									<div class="pb-2">Total</div>
+								</div>
 							</div>
-							<div class="flex-fill w-50 text-center">
-								<div class="pt-2 fs-4">{{ $prospect_sum }}</div>
-								<div class="pb-2">Total</div>
-							</div>
-						</div>
+						</a>
 					</div>
 				</div>
 			</div>

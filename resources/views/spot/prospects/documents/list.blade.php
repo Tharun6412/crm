@@ -62,7 +62,7 @@
     @endif
 </div>
 
-@include('scripts.ajax-link-id', ['mod' => 'add-doc', 'div' => 'action-type'])
+@include('scripts.ajax-link-id', ['mod' => 'add-doc', 'div' => 'action-type', 'modal_scroll' => "$('.modal-body').scrollTop(0);"])
 @include('scripts.ajax-link-file-delete', ['callback' => 'reloadDocForm()'])
 <script type="text/javascript">
     function reloadDocForm()

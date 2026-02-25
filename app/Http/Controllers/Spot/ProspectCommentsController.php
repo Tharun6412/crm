@@ -9,7 +9,15 @@ use Illuminate\Support\Facades\Auth;
 
 class ProspectCommentsController extends Controller
 {
-    // Index Method
+    /**
+     * Display the List of comments of all prospects and limited to 50
+     * 
+     * This Method:
+     * - Fetch the ProspectComments details
+     * - Latest 50 records to be displayed
+     * 
+     * @return view
+     */
     public function index()
     {
         $comments = ProspectComments::orderBy('id', 'desc')->limit(50)->get();
@@ -17,7 +25,13 @@ class ProspectCommentsController extends Controller
     }
 
     /**
-     * To insert a Comment
+     * Add/Insert the comment based on Prospect
+     * 
+     * This Method:
+     * - Validates the required field (notes)
+     * - creates a record in the ProspectComments table.
+     * 
+     * @param int $prospect_id
      */
     public function store(Request $request, $id)
     {
@@ -34,7 +48,7 @@ class ProspectCommentsController extends Controller
     }
 
     /**
-     * To delete the Comment By ID
+     * Deletes the selected Comment from the ProspectComments table.
      */
     public function destroy(Request $request, $id)
     {

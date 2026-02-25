@@ -1,4 +1,7 @@
 {{-- Comments for Prospect --}}
+@php
+    use \App\Enums\SpotStatus;
+@endphp
 <a class="visually-hidden" href="{{ url('spot/prospects/'.$prospect->id.'?reload=true&type=5') }}" data-custom-attr="value" id="reload-comments">Hidden Link</a>
 <div class="bd-callout bd-callout-primary bg-transparent card mt-0 border-primary mb-3">
     <h4>Comments</h4>
@@ -19,19 +22,21 @@
     @else
         <div class="alert alert-secondary mb-0">No comments!</div>
     @endif
-    <div class="border rounded p-3 mt-3">
-        <form action="{{ url('spot/comments/store/'.$prospect->id) }}" id="prsp-comment-form" method="POST">
-            @csrf
-            <div class="form-floating mb-2">
-                <textarea name="comments" class="form-control" placeholder="Leave a comment here" id="comments"></textarea>
-                {{-- <label for="floatingComments">Comment as {{ $this->session->userdata('emp')['firstname'] }} ({{ $this->session->userdata('emp')['user_name'] }})</label> --}}
-                <label for="floatingComments">Comment as {{ Auth::user()->first_name }}&nbsp;{{ Auth::user()->last_name }}</label>
-                <div class="text-danger" id="comments-error"></div>
-                <div class="form-text text-end fst-italic">Maximum length of comment is 600 characters </div>
-            </div>
-            <button type="submit" class="btn btn-sm btn-success"><i class="bi bi-chat"></i>&nbsp;Add Comment</button>
-        </form>
-    </div>
+    @if (isInProgress($prospect->status_id) OR isRequestForApproval($prospect->status_id) OR isApproved($prospect->status_id) OR ($prospect->status_id == SpotStatus::HOLD->value))
+        <div class="border rounded p-3 mt-3">
+            <form action="{{ url('spot/comments/store/'.$prospect->id) }}" id="prsp-comment-form" method="POST">
+                @csrf
+                <div class="form-floating mb-2">
+                    <textarea name="comments" class="form-control" placeholder="Leave a comment here" id="comments"></textarea>
+                    {{-- <label for="floatingComments">Comment as {{ $this->session->userdata('emp')['firstname'] }} ({{ $this->session->userdata('emp')['user_name'] }})</label> --}}
+                    <label for="floatingComments">Comment as {{ Auth::user()->first_name }}&nbsp;{{ Auth::user()->last_name }}</label>
+                    <div class="text-danger" id="comments-error"></div>
+                    <div class="form-text text-end fst-italic">Maximum length of comment is 600 characters </div>
+                </div>
+                <button type="submit" class="btn btn-sm btn-success"><i class="bi bi-chat"></i>&nbsp;Add Comment</button>
+            </form>
+        </div>
+    @endif
 </div>
 @include('scripts.ajax-file-submit', ['form' => 'prsp-comment', 'callback' => 'reloadComments()'])
 <script type="text/javascript">

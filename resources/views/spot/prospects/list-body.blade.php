@@ -6,6 +6,9 @@
         </div>
     @endif
 </div>
+@php
+    use \App\Enums\SpotStatus;
+@endphp
 <form id="prospects-search-form" action="{{ url('spot/prospects') }}" method="GET">
     <div class="d-flex align-items-center justify-content-between pb-2 flex-wrap">
         <div class="d-flex align-items-center gap-2 flex-wrap">
@@ -85,7 +88,9 @@
                 <th nowrap class="text-center">Sub Stage
                     <x-spot.sub-stage-filter :stages="$stages"/>
                 </th>
-                <th npwrap>Status</th>
+                <th npwrap>Status
+                    <x-spot.status-filter :status="$status_list"/>
+                </th>
                 <th nowrap class="text-center">
                     <a href="{{ $prospects->appends(['sortBy' => 'status_date','sortOr' => $sort_order_inverse])->url($prospects->currentPage()) }}">
                         Last Status date
@@ -115,6 +120,7 @@
                         <td>{{ $prospect->statusType->name }}</td>
                         <td>{{ $prospect->status_date->format('d-m-Y') }}</td>
                         <td>
+                            {{-- Prospects Actions Dropdown --}}
                             <div class="dropdown">
                                 <button class="btn btn-sm btn-primary dropdown-toggle" type="button" id="actionDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                                     Actions
@@ -125,25 +131,30 @@
                                             <i class="bi bi-info-circle"></i>&nbsp;View
                                         </a>
                                     </li>
-                                    @if ($prospect->pipeline_availability == 2)
+                                    {{-- Check Pipeline Availability --}}
+                                    @if (isPipeLineAvailable($prospect->pipeline_availability, $prospect->status_id))
                                         <li>
                                             <a class="dropdown-item link-modal" href="{{ url('spot/prospect/pipeline/'.$prospect->id.'/edit') }}"><i class="bi bi-folder2-open"></i>&nbsp;Manage PipeLine</a>
                                         </li>
                                     @endif
+                                    {{-- Check user not in Hold Status --}}
                                     @if (checkProspectHold($prospect->status_id)) 
-                                        @if (isInProgress($prospect->status_id) AND (isSpotAdmin() OR isSpotGaHead() OR isSpotClusterHead() OR isSpotSalesofficer()) AND (in_array($prospect->ga_id, session()->get('user')['gas'])))    
+                                        @if (isInProgress($prospect->status_id) AND (isAdmin() OR isGaHead() OR isClusterHead() OR isSalesofficer()) AND (in_array($prospect->ga_id, session()->get('user')['gas'])))    
                                             <li>
                                                 <a class="dropdown-item link-modal" href="{{ url('spot/prospects/'.$prospect->id.'/edit') }}">
                                                     <i class="bi bi-pencil"></i>&nbsp;Edit
                                                 </a>
                                             </li>
                                         @endif
-                                        @if (isInProgress($prospect->status_id))    
+                                        @if (isInProgress($prospect->status_id) OR isApproved($prospect->status_id) OR isClosedWon($prospect->stage_id))    
                                             <li>
                                                 <a class="dropdown-item link-modal" href="{{ url('spot/prospectStatus/editStatus/'.$prospect->id) }}">
                                                     <i class="bi bi-check2-circle"></i>&nbsp;Update Status
                                                 </a>
                                             </li>
+                                        @endif
+                                        {{-- Check Prospect is in Progress --}}
+                                        @if (isInProgress($prospect->status_id))    
                                             <li>
                                                 <a class="dropdown-item link-modal" href="{{ url('spot/dateChangeRequest/create/'.$prospect->id) }}">
                                                     <i class="bi bi-info-circle"></i>&nbsp;Request For Date Change
@@ -159,8 +170,9 @@
                                                     <i class="bi bi-chat"></i>&nbsp;Add Comment
                                                 </a>
                                             </li>
+                                        {{-- Check Prospect is in Request for Approval Status --}}
                                         @elseif (isRequestForApproval($prospect->status_id))
-                                            @if (isSpotAdmin() OR isSpotGaHead() OR isSpotClusterHead() OR isSpotSalesOfficer())    
+                                            @if (isAdmin() OR isGaHead() OR isClusterHead() OR isSalesOfficer())    
                                                 <li>
                                                     <a class="dropdown-item link-modal" href="{{ url('spot/prospectStatus/gaApprove/'.$prospect->id) }}">
                                                         <i class="bi bi-check2-circle"></i>&nbsp;Ga Approval
@@ -168,31 +180,40 @@
                                                 </li>
                                             @endif
                                             <li>
+                                                <a class="dropdown-item link-modal" href="{{ url('spot/prospectDocument/create/'.$prospect->id) }}">
+                                                    <i class="bi bi-folder2-open"></i>&nbsp;Manage Documents
+                                                </a>
+                                            </li>
+                                            <li>
                                                 <a class="dropdown-item link-modal" href="{{ url('spot/prospects/'.$prospect->id) }}">
                                                     <i class="bi bi-chat"></i>&nbsp;Add Comment
                                                 </a>
                                             </li>
+                                        {{-- No Action performed when Closed Lost --}}
+                                        @elseif($prospect->status_id == SpotStatus::CLOSED_LOST->value)
                                         @else
-                                            @if ($prospect->status_id == 5)    
+                                            @if ($prospect->status_id == SpotStatus::HOLD->value)    
                                                 <li>
                                                     <a class="dropdown-item" id="unhold_status" href="{{ url('spot/prospectStatus/unHold/'.$prospect->id) }}">
                                                         <i class="bi bi-ban"></i>&nbsp;UnHold
                                                     </a>
                                                 </li>
-                                            @else
-                                                <li>
-                                                    <a class="dropdown-item link-modal" href="{{ url('spot/prospectStatus/hold/'.$prospect->id) }}">
-                                                        <i class="bi bi-ban"></i>&nbsp;Hold
-                                                    </a>
-                                                </li>
-                                                @if (isSpotAdmin() OR isSpotClusterHead())    
-                                                    <li>
-                                                        <a class="dropdown-item link-modal" href="{{ url('spot/prospectStatus/cancel/'.$prospect->id) }}">
-                                                            <i class="bi bi-x-circle"></i>&nbsp;Cancel/Delete
-                                                        </a>
-                                                    </li>
-                                                @endif
                                             @endif
+                                        @endif
+                                    @endif
+                                    {{-- Hold will be available when prospect not in InProgress, ClosedLost,HOLD,CANCEL --}}
+                                    @if ($prospect->status_id != SpotStatus::IN_PROGRESS->value AND $prospect->status_id != SpotStatus::CLOSED_LOST->value AND $prospect->status_id != SpotStatus::HOLD->value AND $prospect->status_id != SpotStatus::CANCEL->value)
+                                        <li>
+                                            <a class="dropdown-item link-modal" href="{{ url('spot/prospectStatus/hold/'.$prospect->id) }}">
+                                                <i class="bi bi-ban"></i>&nbsp;Hold
+                                            </a>
+                                        </li>
+                                        @if (isAdmin() OR isClusterHead())    
+                                            <li>
+                                                <a class="dropdown-item link-modal" href="{{ url('spot/prospectStatus/cancel/'.$prospect->id) }}">
+                                                    <i class="bi bi-x-circle"></i>&nbsp;Cancel/Delete
+                                                </a>
+                                            </li>
                                         @endif
                                     @endif
                                 </ul>
@@ -233,8 +254,15 @@
         </div>
     </div>
 </form>
+<script type="text/javascript">
+    function reloadProspects() {
+        $.get("{{ url('spot/prospects') }}", function(data) {
+            $('#prospects-list').html(data);
+        });
+    }
+</script>
 @include('scripts.link-modal')
 @include('scripts.ajax-form-search', ['form' => 'prospects'])
-@include('scripts.ajax-link-id-change', ['mod' => 'unhold_status', 'msg' => 'Are you sure you want to unhold the status.'])
+@include('scripts.ajax-link-id-change', ['mod' => 'unhold_status', 'msg' => 'Are you sure you want to unhold the status.', 'callback' => 'reloadProspects()'])
 
 

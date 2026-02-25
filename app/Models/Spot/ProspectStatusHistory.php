@@ -22,6 +22,7 @@ class ProspectStatusHistory extends Model
     protected $fillable = [
         'prospect_id',
         'stage_id',
+        'status_id',
         'notes',
         'created_at',
         'created_by',
@@ -46,6 +47,15 @@ class ProspectStatusHistory extends Model
     {
         return $this->belongsTo(Stage::class, 'stage_id')->withDefault();
     }
+
+    /**
+     * Relation with Status
+     */
+    public function status()
+    {
+        return $this->belongsTo(Status::class, 'status_id')->withDefault();
+    }
+    
     /**
      * Relation with User
      */

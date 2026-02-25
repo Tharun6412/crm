@@ -13,13 +13,29 @@ require_once app_path('Helpers/spotauth.php');
 
 class ProspectDateChangeRequestController extends Controller
 {
+    /**
+     * Display the DateChangeRequests from all prospects limited to 50
+     * 
+     * This Method:
+     * - Loads the ProspectDateChangeRequest details
+     * - Display latest 50 records
+     * 
+     * @return view
+     */
     public function index(Request $request)
     {
         $date_requests = ProspectDateChangeRequest::orderBy('id', 'desc')->limit(50)->get();
         return view('spot.prospects.date-request.list-body', ['date_requests' => $date_requests]);
     }
     /**
-     * To Create a Date Request
+     * Display the Date Request Form
+     * 
+     * This Method:
+     * - Loads the Prospect Details
+     * - Fetch the Active Requests with status = 0 (if exists , no new request can be added)
+     * - type = 4 (Date-request)
+     * 
+     * @return view
      */
     public function create(Request $request, $id)
     {
@@ -42,7 +58,15 @@ class ProspectDateChangeRequestController extends Controller
     }
 
     /**
-     * To store the Date request Details
+     * Adds the Date-request Details
+     * 
+     * This Method:
+     * - Validates the Dates(comparison between new_date, expected_date, today_date)
+     * - If there is pending request(status = 0) exists, no new request can be added
+     * - if new_date less than expected_date[status=1] -> Updates the expected_date with new_date value in Prospects master table and adds record in ProspectDateChangeRequest table.
+     * - if not, it adds record in ProspectDateChangeRequest table.
+     * 
+     * @return response string
      */
     public function store(Request $request, $id)
     {
@@ -93,11 +117,19 @@ class ProspectDateChangeRequestController extends Controller
             ]);
         }
         ProspectDateChangeRequest::create($addDateRequest);
+        // Response
         return response()->json(['success' => 'Date Request updated Successfully']);
     }
 
     /**
-     * To Approve the Date Request
+     * Approves the DateChange Request
+     * 
+     * This Method:
+     * - Loads the ProspectDateChangeRequest details
+     * - updates the ProspectDateChangeRequest Table (status=1)
+     * - Updates the Prospects table [only expected_date,updated_at,updated_by columns modify]
+     * 
+     * @return response string
      */
     public function approve(Request $request)
     {
@@ -120,7 +152,12 @@ class ProspectDateChangeRequestController extends Controller
     }
 
     /**
-     * To reject the Date Request
+     * Rejects the Date Request
+     * 
+     * This Method:
+     * - Updates the ProspectDateChangeRequest table with status=2
+     * 
+     * @return response string
      */
     public function reject(Request $request)
     {

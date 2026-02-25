@@ -27,12 +27,19 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
-require_once app_path('Helpers\spotauth.php');
 
 class ProspectsController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display Prospect List with Filters, Sorting , Pagination and Export
+     * 
+     * This Method:
+     * - Applies Dynamic Filters based on request
+     * - Restricts Data based on user role
+     * - supports dynamic sorting and pagination
+     * - return partial view if request is ajax
+     * 
+     * @return view
      */
     public function index(Request $request)
     {
@@ -46,7 +53,7 @@ class ProspectsController extends Controller
                 $q->orWhere('code', 'like', '%'.$request->get('search_key').'%');
             });
         })
-        // ->where('status_id', '!=', 12)
+        // ->where('status_id', '!=', SpotStatus::CANCEL->value)
         ->When($request->has('geo_area'), function($q) use($request) {
             $q->whereIn('ga_id', $request->get('geo_area'));
         })->When($request->has('industrial_area_id'), function($q) use($request) {
@@ -59,22 +66,28 @@ class ProspectsController extends Controller
             });
         })->When($request->has('sub_stage_id'), function($q) use($request) {
             $q->whereIn('stage_id', $request->get('sub_stage_id'));
-        })->when((!empty($request->date_from) and !empty($request->date_to)), function($q) use($request) {
+        })->When($request->has('status_id'), function($q) use($request) {
+            $q->whereIn('status_id', $request->get('status_id'));
+        })
+        ->when((!empty($request->date_from) and !empty($request->date_to)), function($q) use($request) {
             $q->whereBetween('expected_date', [Carbon::createFromFormat('d-m-Y', $request->date_from)->startOfDay()->toDateTimeString(), Carbon::createFromFormat('d-m-Y', $request->date_to)->endOfDay()->toDateTimeString()]);
         });
-        if(! (isSpotAdmin() OR isSpotGaHead() OR isSpotClusterHead())) {
+        if(! (isAdmin() OR isGaHead() OR isClusterHead())) {
             $query->whereIn('ga_id', session()->get('user')['gas']);
         }
         $prospects = $query->orderBy($sortBy, $sortOr)->paginate($records)->withQueryString();
         $stages = Stage::where('type', 1)->where('parent_id', NULL)->get();
+        $status = Status::all();
         if($request->ajax()) {
-            return view('spot.prospects.list-body', ['prospects' => $prospects, 'stages' => $stages]);
+            return view('spot.prospects.list-body', ['prospects' => $prospects, 'stages' => $stages, 'status_list' => $status]);
         }
-        return view('spot.prospects.list', ['prospects' => $prospects, 'stages' => $stages]);
+        return view('spot.prospects.list', ['prospects' => $prospects, 'stages' => $stages, 'status_list' => $status]);
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Display the create form.
+     * Fetch the Required details to load the form.
+     * @return view 
      */
     public function create()
     {
@@ -95,7 +108,22 @@ class ProspectsController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Add/Inserts the new prospect.
+     * 
+     * This Method:
+     * - Validates the required fields
+     * - Default $stage_id = Research, $status_id = INProgress
+     * - Loads the GA Details for state_id, cluster_id
+     * - Adds the Prospect Master Data
+     * - Tracks the user who added the prospect
+     *
+     * Tables Created in:
+     * - ProspectstatusHistory (If Prospect record exists)
+     * - ProspectApproval (If Prospect record exists)
+     * 
+     * Error Occured (If Prospect doesn't add)
+     * 
+     * @return response string
      */
     public function store(Request $request)
     {
@@ -113,7 +141,7 @@ class ProspectsController extends Controller
         $stage_id = SpotStages::RESEARCH->value;
 
         $ga_val = Ga::find($request->ga_id); 
-        // TO insert into the Vehicle
+        // TO insert into the Prospect
         $add_prospect = Prospects::create([
             'name' => $request->name,
             'firm_id' => $request->firm_id,
@@ -148,6 +176,7 @@ class ProspectsController extends Controller
             ProspectStatusHistory::create([
                 'prospect_id'        => $add_prospect->id,
                 'stage_id' => $stage_id,
+                'status_id' => $status,
                 'notes'          => $request->notes,
                 'created_at'       => Carbon::now(),
                 'created_by'       => Auth::id(),
@@ -184,7 +213,23 @@ class ProspectsController extends Controller
         ]);
     }
     /**
-     * Display the specified resource.
+     * Display Prospect Details Screen.
+     *
+     * This method:
+     * - Loads the selected prospect details.
+     * - Returns the full prospect detail view by default.
+     * - If "reload" parameter is present, it dynamically loads specific partial sections based on the requested type.
+     *
+     * Reload Types:
+     * 1 = Status History
+     * 2 = Documents
+     * 3 = Pipeline
+     * 4 = Date Request
+     * 5 = Comments
+     * 6 = Status Hold
+     * 7 = Status Cancel
+     * 8 = GA Approval
+     *
      */
     public function show(Request $request, string $id)
     {
@@ -221,6 +266,7 @@ class ProspectsController extends Controller
                     echo "";    
             }
         }
+        // Response
         return view('spot.prospects.show', [
             'prospect' => $prospect, 
             'type' => 0,
@@ -228,7 +274,10 @@ class ProspectsController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Display the Prospect Edit Form
+     * - Loads the selected prospect details.
+     * - Loads the required details for the Edit.
+     * @return view
      */
     public function edit(string $id)
     {
@@ -274,7 +323,15 @@ class ProspectsController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Updates the Prospect Details
+     * 
+     * This Method:
+     * 1.Validates the required fields
+     * 2.Retrieve the GA Details
+     * 3.Updates the Prospect Master Data
+     * 4.Handles pipeline availablity logic(if 1 then it deletes pipeline records related to that prospect)
+     * 5.Tracks the user who updated this prospect
+     * @return response string
      */
     public function update(Request $request, string $id)
     {
@@ -319,23 +376,6 @@ class ProspectsController extends Controller
         }
         // Response Message
         return response()->json(['success' => 'Prospect Details Updated Successfully']);        
-    }
-
-    /**
-     * TO Update Pipeline
-     */
-    public function updatePipeLine(Request $request)
-    {
-        $update_pipeline = ProspectPipeline::find($request->id);
-        if($update_pipeline) {
-            $update_pipeline->update([
-                'status' => 1,
-                'updated_at' => Carbon::now(),
-                'updated_by' => Auth::id(),
-            ]);
-        }
-        Session::flash('success', 'Pipeline updated successfully');
-        return response()->json(['success' => 'Pipeline Updated Successfully']);
     }
 
     /**
