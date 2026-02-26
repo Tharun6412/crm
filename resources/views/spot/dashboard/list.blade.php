@@ -50,9 +50,6 @@
         <div id="fy-year-loader" class="">
             @include('spot.dashboard.list-body')
         </div>
-        <div>
-            @include('spot.dashboard.targets')
-        </div>
     </div>
 @endsection
 @push('scripts')
