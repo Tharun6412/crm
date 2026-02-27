@@ -51,6 +51,7 @@
                 <th nowrap>GA
                     <x-master.ga-filter/>
                 </th>
+                <th nowrap>Segment <x-master.segment-filter/></th>
                 <th nowrap>
                     <a href="{{ $prospects->appends(['sortBy' => 'name','sortOr' => $sort_order_inverse])->url($prospects->currentPage()) }}">
                         Prospect Name
@@ -108,6 +109,7 @@
                     <tr>
                         <td>{{ $i++ }}</td>
                         <td>{{ $prospect->ga->name }}</td>
+                        <td>{{ $prospect->segment->name }}</td>
                         <td>
                             <a href="{{ url('spot/prospects/'.$prospect->id) }}" class="link-modal">{{ $prospect->name }}</a>
                         </td>

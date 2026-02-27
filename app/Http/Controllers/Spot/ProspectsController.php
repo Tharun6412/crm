@@ -68,8 +68,9 @@ class ProspectsController extends Controller
             $q->whereIn('stage_id', $request->get('sub_stage_id'));
         })->When($request->has('status_id'), function($q) use($request) {
             $q->whereIn('status_id', $request->get('status_id'));
-        })
-        ->when((!empty($request->date_from) and !empty($request->date_to)), function($q) use($request) {
+        })->When($request->has('segments'), function($q) use($request) {
+            $q->whereIn('segment_id', $request->get('segments'));
+        })->when((!empty($request->date_from) and !empty($request->date_to)), function($q) use($request) {
             $q->whereBetween('expected_date', [Carbon::createFromFormat('d-m-Y', $request->date_from)->startOfDay()->toDateTimeString(), Carbon::createFromFormat('d-m-Y', $request->date_to)->endOfDay()->toDateTimeString()]);
         });
         if(! (isAdmin() OR isGaHead() OR isClusterHead())) {

@@ -48,6 +48,8 @@ class ProspectsExport implements FromQuery, WithHeadings, WithMapping
             $q->whereIn('stage_id', $this->request->get('sub_stage_id'));
         })->When($this->request->has('status_id'), function($q) {
             $q->whereIn('status_id', $this->request->get('status_id'));
+        })->When($this->request->has('segments'), function($q) {
+            $q->whereIn('segment_id', $this->request->get('segments'));
         })
         ->when((!empty($this->request->date_from) and !empty($this->request->date_to)), function($q) {
             $q->whereBetween('expected_date', [Carbon::createFromFormat('d-m-Y', $this->request->date_from)->startOfDay()->toDateTimeString(), Carbon::createFromFormat('d-m-Y', $this->request->date_to)->endOfDay()->toDateTimeString()]);
@@ -61,7 +63,7 @@ class ProspectsExport implements FromQuery, WithHeadings, WithMapping
      */
     public function headings():array
     {
-        return ['S.No', 'GA', 'Name', 'Industrial Area', 'Current Fuel', 'Potential', 'Expected Date', 'Stage', 'Sub Stage', 'Status', 'Last Status Date'];
+        return ['S.No', 'GA', 'Segment', 'Name', 'Industrial Area', 'Current Fuel', 'Potential', 'Expected Date', 'Stage', 'Sub Stage', 'Status', 'Last Status Date'];
     }
 
     /**
@@ -73,6 +75,7 @@ class ProspectsExport implements FromQuery, WithHeadings, WithMapping
         return [
             $this->i,
             $prospect->ga->name ?? '',
+            $prospect->segment->name ?? '',
             $prospect->name,
             $prospect->industrialArea->name ?? '',
             $prospect->fuelType->name ?? '',

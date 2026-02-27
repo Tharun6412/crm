@@ -1,16 +1,26 @@
 @php
+	// Variables Declaration
+	$fuel_data = $total_potential = $group_potential = $prospect_list = $prospect_sum = $potential = $potential_chart = [];
 	// Fuel group counts
 	$fuel_group_names = [
 		1 => 'Gaseous',
 		2 => 'Liquid',
 		3 => 'Solid',
 	];
-	$prospect_list = [];
-	$prospect_sum = [];
-	// Get Status Count List
+	// Loop the fuel data into Fuel Type and Fuel Group in Array format
+	foreach($fuel_raw_data as $fuel) {
+		$fuel_data[$fuel->segment_id][$fuel->fuel_id] = $fuel->fuel_potential;
+		$total_potential[$fuel->segment_id] = ($total_potential[$fuel->segment_id] ?? 0) + $fuel->fuel_potential;
+		$group_potential[$fuel->segment_id][$fuel->fuelType->fuel_group] = ($group_potential[$fuel->segment_id][$fuel->fuelType->fuel_group] ?? 0) + $fuel->fuel_potential;
+	}
+	// Get Prospect Status Count List
 	foreach ($prospect_data as $status_id => $status_val) {
 		$prospect_list[$status_val->segment_id][$status_val->parent_id] = $status_val->status_count;
 		$prospect_sum[$status_val->segment_id] = ($prospect_sum[$status_val->segment_id] ?? 0) + $status_val->status_count;
+	}
+	// Potential Values based on stage
+	foreach($potentials as $pot) {
+		$potential[$pot->segment->id][$pot->stage->parent_id] = $pot->total_potential;
 	}
 @endphp
 @foreach ($segments as $segment)
@@ -18,6 +28,7 @@
 	@php
 		$fuel_chart[$segment->id] = [];
 		$fuel_chart_group[$segment->id] = [];
+		$fuel_grp_pot[$segment->id] = [];
 		// Fuel Types
 		foreach($fuel_types as $type) {
 			// Group Chart
@@ -26,18 +37,29 @@
 		// Fuel Groups
 		foreach($fuel_group_names as $key => $name) {
 			$fuel_chart_group[$segment->id][] = [$name, $group_potential[$segment->id][$key] ?? 0];
+			$fuel_grp_pot[$segment->id][$key] = $group_potential[$segment->id][$key] ?? 0;
+		}
+
+		// Potential Data Preparation - Funnel Chart
+		foreach($status_list as $list) {
+			$potential_chart[$segment->id][] = [
+				'name' => $list->name,
+				'shortCode' => strtoupper(substr($list->name, 0, 1)),
+				'y' => 15,
+				'scm' => $potential[$segment->id][$list->id] ?? 0,
+			];
 		}
 	@endphp
 	<div class="row p-2 g-2">
 		<div class="col-md-4">
 			<div class="card">
-				<div class="card-header fs-5 fw-semibold">Prospect Analysis : Fuels</div>
+				<div class="card-header fs-5 fw-semibold">&nbsp;{{ $segment->name }}&nbsp;-&nbsp;Prospect Analysis : Fuels</div>
 				<div class="card-body p-0" id="fuel_graph_{{ $segment->id }}">
 					<figure class="highcharts-figure mb-0">
 						<div id="fuel_chart_{{ $segment->id }}" class="rounded"></div>
 					</figure>
 					<div class="text-center fw-semibold">
-						Total : {{ $total_potential[$segment->id] ?? 0 }}
+						Total : {{ numberFormat(array_sum($fuel_grp_pot[$segment->id])) }}
 						<a href="javascript:void(0)" onclick="toggleFuelGraph(1, {{ $segment->id }})" class="fs-5 float-end" title="More details"><i class="bi bi-chevron-double-right"></i></a>
 					</div>
 				</div>
@@ -54,23 +76,23 @@
 		</div>
 		<div class="col-md-4">
 			<div class="card">
-				<div class="card-header fs-5 fw-semibold">Prospect Analysis : Potential</div>
+				<div class="card-header fs-5 fw-semibold">&nbsp;{{ $segment->name }}&nbsp;-&nbsp;Prospect Analysis : Potential</div>
 				<div class="card-body p-0">
 					<figure class="highcharts-figure mb-0">
 						<div id="container_{{ $segment->id }}_funnel" class="rounded"></div>
 					</figure>
-					<div class="text-center fw-semibold">Total : 0</div>
+					<div class="text-center fw-semibold">Total : {{ numberFormat(array_sum($potential[$segment->id] ?? [])) }}</div>
 				</div>
 			</div>
 		</div>
 		<div class="col-md-4">
 			<div class="card">
-				<div class="card-header fs-5 fw-semibold">Prospect Status Counts</div>
+				<div class="card-header fs-5 fw-semibold">&nbsp;{{ $segment->name }}&nbsp;-&nbsp;Prospect Status Counts</div>
 				<div class="card-body p-2">
 					<div class="row g-2">
 						@foreach ($status_list as $list)
 							<div class="col-6">
-								<a href="{{ url('spot/prospects') }}?{{ http_build_query(['stage_id'=> [$list->id]]) }}" target="_blank">
+								<a href="{{ url('spot/prospects') }}?{{ http_build_query(['segments' => [$segment->id],'stage_id'=> [$list->id]]) }}" target="_blank">
 									<div class="d-flex align-items-center bg-{{ $list->color ?? 'success' }}-subtle rounded">
 										<div class="flex-fill w-50 fs-2 text-center">
 											<i class="bi bi-{{ $list->icon ?? 'flash' }} text-{{ $list->color ?? 'dark' }}"></i>
@@ -84,7 +106,7 @@
 							</div>
 						@endforeach
 						<div class="col">
-							<a href="{{ url('spot/prospects') }}" target="_blank">
+							<a href="{{ url('spot/prospects') }}?{{ http_build_query(['segments' => [$segment->id]]) }}" target="_blank">
 								<div class="d-flex align-items-center bg-primary-subtle rounded">
 									<div class="flex-fill w-50 fs-2 text-center">
 										<i class="bi bi-people"></i>
@@ -200,11 +222,16 @@
 					text: ''
 				},
 				colors: ['#1874fd','#ffc927',' #e04d5b','#28d0f1','#349568','#80888e'],
+				tooltip: {
+					formatter: function () {
+						return `<b>${this.point.name}:</b><br/>Potential(SCMD): ${this.scm}`;
+					}
+				},
 				plotOptions: {
 					series: {
 						dataLabels: {
 							enabled: true,
-							format: '<b>{point.name}</b> ({point.y:,.0f})',
+							format: '<b>{point.shortCode}</b> ({point.scm})',
 							softConnector: true
 						},
 						center: ['40%', '50%'],
@@ -217,15 +244,8 @@
 					enabled: false
 				},
 				series: [{
-					name: 'Unique users',
-					data: [
-						['S', 1560],
-						['P', 2064],
-						['A', 1987],
-						['N', 976],
-						['C', 846],
-						['O', 846],
-					]
+					name: 'Potential(SCMD)',
+					data: @json($potential_chart[$segment->id])
 				}],
 				credits: [{enabled: false}],
 
