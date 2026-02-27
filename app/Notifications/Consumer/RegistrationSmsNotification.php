@@ -42,7 +42,7 @@ class RegistrationSmsNotification extends Notification
     public function toSms($notifiable)
     {
         return [
-            'message' => "REGISTRATION DLT SMS",
+            'message' => "Welcome to Megha City Gas! Thank you for registering with us. Your temporary registration number is {#var#} Click on the link below to pay your deposit online {#var#}",
             'phone' => $this->consumer->mobile,
         ];
     }

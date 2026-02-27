@@ -39,7 +39,7 @@
                         <label for="dob" class="col-sm-2 col-form-label text-end">DOB</label>
                         <div class="col-sm-4">
                             <div class="input-group">
-                                <input type="text" name="dob" id="dob" class="form-control" value="{{ (!empty($user->dob)) ? $user->dob->format('d-m-Y') : '' }}" placeholder="DD-MM-YYY">
+                                <input type="text" name="dob" id="dob" class="form-control" value="{{ $user->dob?->format('d-m-Y') }}" placeholder="DD-MM-YYY">
                                 <label for="dob" class="input-group-text"><i class="bi bi-calendar3"></i></label>
                             </div>
                         </div>
@@ -57,7 +57,7 @@
                         <label for="doj" class="col-sm-2 col-form-label text-end">DOJ</label>
                         <div class="col-sm-4">
                             <div class="input-group">
-                                <input type="text" name="doj" id="doj" class="form-control" value="{{ (!empty($user->doj)) ? $user->doj->format('d-m-Y') : '' }}" placeholder="DD-MM-YYY">
+                                <input type="text" name="doj" id="doj" class="form-control" value="{{ $user->doj?->format('d-m-Y') }}" placeholder="DD-MM-YYY">
                                 <label for="doj" class="input-group-text"><i class="bi bi-calendar3"></i></label>
                             </div>
                         </div>

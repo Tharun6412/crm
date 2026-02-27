@@ -63,16 +63,12 @@
                         <dd class="ps-2 mb-0">{{ $user->mobile }}</dd class="ps-2 mb-0">
                     </dl>
                     <dl class="d-flex">
-                        <dt>Gender:</dt>
-                        <dd class="ps-2 mb-0">{{ !empty($user->gender) ? (($user->gender == 1) ? 'Male' : 'Female') : '-' }}</dd class="ps-2 mb-0">
+                        <dt>DOJ:</dt>
+                        <dd class="ps-2 mb-0">{{ $user->doj?->format('d M Y') }}</dd class="ps-2 mb-0">
                     </dl>
                     <dl class="d-flex">
                         <dt>DOB:</dt>
-                        <dd class="ps-2 mb-0">
-                            @isset($user->dob)
-                            {{ $user->dob->format('d M Y') ?? '' }}
-                            @endisset
-                        </dd class="ps-2 mb-0">
+                        <dd class="ps-2 mb-0">{{ $user->dob?->format('d M Y') }}</dd class="ps-2 mb-0">
                     </dl>
                     
                     <dl class="d-flex">

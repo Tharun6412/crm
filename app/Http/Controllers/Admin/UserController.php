@@ -201,6 +201,7 @@ class UserController extends Controller
         $user->mobile = $request->mobile;
         $user->department_id = $request->department_id;
         $user->dob = ($request->dob) ? Carbon::createFromFormat('d-m-Y', $request->dob) : null;
+        $user->doj = ($request->doj) ? Carbon::createFromFormat('d-m-Y', $request->doj) : null;
         $user->save();
 
         // Sync Geo areas, roles and SPot roles with pivot relation
