@@ -35,6 +35,8 @@ class MasterConsumerScheme extends Model
         'rental_amount',
         'status',
         'scheme_payment_id',
+        'connection_type_id',
+        'bonus',
         'created_by',
     ];
 
@@ -44,6 +46,14 @@ class MasterConsumerScheme extends Model
     public function segment():BelongsTo
     {
         return $this->belongsTo(Segment::class, 'segment_id')->withDefault();
+    }
+
+    /**
+     * Relation with COnnection types
+     */
+    public function connectionType(): BelongsTo
+    {
+        return $this->belongsTo(ConnectionType::class)->withDefault();
     }
 
     /**

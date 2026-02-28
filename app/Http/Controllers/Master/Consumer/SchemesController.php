@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Master\Consumer;
 
 use App\Http\Controllers\Controller;
+use App\Models\Master\ConnectionType;
 use Illuminate\Http\Request;
 use App\Models\Master\ConsumerSchemeGa;
 use App\Models\Master\Ga;
@@ -42,13 +43,21 @@ class SchemesController extends Controller
     {
         $gas = Ga::all();
         $segments = Segment::all();
-        return view('master.consumer.schemes.create', ['gas' => $gas, 'segments' => $segments]);
+        $connection_types = ConnectionType::all();
+
+        // Render output
+        return view('master.consumer.schemes.create', [
+            'gas' => $gas,
+            'segments' => $segments,
+            'connection_types' => $connection_types,
+        ]);
     }
 
     public function store(Request $request)
     {
         $request->validate([
             'segment' => 'required',
+            'connection_type' => 'required',
             'name' => 'required',
             'registration' => 'required|numeric',
             'security' => 'required|numeric',
@@ -60,6 +69,7 @@ class SchemesController extends Controller
         // TO insert into the Schemes
         $add_scheme = MasterConsumerScheme::create([
             'segment_id' => $request->segment,
+            'connection_type_id' => $request->connection_type,
             'code' => $request->code,
             'name' => $request->name,
             'registration' => $request->registration,
@@ -93,7 +103,15 @@ class SchemesController extends Controller
         $scheme = MasterConsumerScheme::find($id);
         $gas = Ga::all();
         $segments = Segment::all();
-        return view('master.consumer.schemes.edit', ['gas' => $gas, 'segments' => $segments, 'scheme' => $scheme]);
+        $connection_types = ConnectionType::all();
+
+        // Render output
+        return view('master.consumer.schemes.edit', [
+            'scheme' => $scheme,
+            'gas' => $gas,
+            'segments' => $segments,
+            'connection_types' => $connection_types,
+        ]);
 
     }
 
@@ -101,6 +119,7 @@ class SchemesController extends Controller
     {
          $request->validate([
             'segment' => 'required',
+            'connection_type' => 'required',
             'name' => 'required',
             'registration' => 'required|numeric',
             'security' => 'required|numeric',
@@ -113,6 +132,7 @@ class SchemesController extends Controller
         // TO Update into the Schemes
         $update_scheme = $scheme->update([
             'segment_id' => $request->segment,
+            'connection_type_id' => $request->connection_type,
             'code' => $request->code,
             'name' => $request->name,
             'registration' => $request->registration,

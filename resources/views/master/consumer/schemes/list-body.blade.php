@@ -40,6 +40,7 @@
         <thead class="table-success">
             <tr>
                 <th width="1%" nowrap>S No.</th>
+                <th>Code</th>
                 <th nowrap>
                     <a href="{{ $schemes->appends(['sortBy' => 'name','sortOr' => $sort_order_inverse])->url($schemes->currentPage()) }}">
                         Scheme Name
@@ -48,7 +49,10 @@
                         @endif
                     </a>
                 </th>
-                <th>Total Deposit Amount</th>
+                <th>Segment</th>
+                <th>Connection</th>
+                <th>Deposit</th>
+                <th>Registration</th>
                 <th>Applicable GAs</th>
                 <th>Status</th>
                 <th width="2%" nowrap class="text-center">Actions</th>
@@ -59,10 +63,14 @@
                 @foreach ($schemes as $scheme)
                     <tr>
                         <td>{{ $i++ }}</td>
+                        <td>{{ $scheme->code }}</td>
                         <td>
                             <a href="{{ url('master/consumer/schemes/'.$scheme->id) }}" class="link-canvas">{{ $scheme->name }}</a>
                         </td>
-                        <td>{{ $scheme->total_deposit }}</td>
+                        <td><span class="badge text-bg-secondary">{{ $scheme->segment->name ?? '' }}</span></td>
+                        <td><span class="badge text-bg-secondary">{{ $scheme->connectionType->name ?? '' }}</span></td>
+                        <td class="text-end">{{ numberFormat($scheme->total_deposit) }}</td>
+                        <td class="text-end">{{ numberFormat($scheme->registration) }}</td>
                         <td>{{ $scheme->schemesGa->pluck('ga.name')->implode(', ') }}</td>
                         <td>@if ( $scheme->status == 1) <span class="badge bg-success">Enabled</span>
                         @else <span class="badge bg-warning">Disabled</span>
@@ -76,8 +84,8 @@
                                     <li><a href="{{ url('master/consumer/schemes/'.$scheme->id) }}" class="dropdown-item link-canvas"><i class="bi bi-eye">&nbsp;</i>View</a></li>
                                     <li><a href="{{ url('master/consumer/schemes/'.$scheme->id) }}/edit" class="dropdown-item link-modal"><i class="bi bi-pencil-square">&nbsp;</i>Edit</a></li>
                                     <li>
-                                        @if ( $scheme->status == 1) <a class="dropdown-item" href="javascript:statusToggle({{ $scheme->id }})">Disable</a>
-                                        @else <a class="dropdown-item" href="javascript:statusToggle({{ $scheme->id }})">Enable</a>
+                                        @if ( $scheme->status == 1) <a class="dropdown-item" href="javascript:statusToggle({{ $scheme->id }})"><i class="bi-ban"></i>&nbsp;Disable</a>
+                                        @else <a class="dropdown-item" href="javascript:statusToggle({{ $scheme->id }})"><i class="bi-check-lg"></i>&nbsp;Enable</a>
                                         @endif
                                     </li>
                                 </ul>

@@ -35,10 +35,21 @@ class TransactionsController extends Controller
     {
         // Get all transactions
         $transactions = PaymentTransaction::
-            when($request->has('key'), function ($q) use($request) {
-                $q->whereAny(['transaction_id', 'amount', 'transaction_ref', 'bank_ref', 'pg_ref_id','payment_mode'], 'like', '%' . $request->key . '%');
-                $q->orWhereHas('consumer', function ($q) use($request) {
-                    $q->where('crn', 'like', '%' . $request->key . '%');
+            when($request->has('payment_modules'), function ($q) use($request) {
+                $q->whereIn('payment_module_id', $request->payment_modules);
+            })
+            ->when($request->has('payment_gateways'), function ($q) use($request) {
+                $q->whereIn('gateway_id', $request->payment_gateways);
+            })
+            ->when((!empty($request->date_from) and !empty($request->date_to)), function ($q) use($request) {
+                $q->whereBetween('transaction_date', [Carbon::createFromFormat('d-m-Y', $request->date_from)->toDateTimeString(), Carbon::createFromFormat('d-m-Y', $request->date_to)->toDateTimeString()]);
+            })
+            ->when(($request->has('key') and !empty($request->key)), function ($q) use($request) {
+                $q->where(function ($q) use($request) {
+                    $q->whereAny(['transaction_id', 'amount', 'transaction_ref', 'bank_ref', 'pg_ref_id','payment_mode'], 'like', '%' . $request->key . '%');
+                    $q->orWhereHas('consumer', function ($q) use($request) {
+                        $q->where('crn', 'like', '%' . $request->key . '%');
+                    });
                 });
             })
             ->when($request->has('geo_area'), function($q) use($request) {

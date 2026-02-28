@@ -1,81 +1,71 @@
 {{-- Scheme details --}}
 <div class="offcanvas-header border-bottom">
-    <h5 class="offcanvas-title" id="offcanvasRightLabel">View Scheme</h5>
+    <h4 class="offcanvas-title" id="offcanvasRightLabel">Scheme - {{ $scheme->code }}</h4>
     <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
 </div>
 <div class="offcanvas-body">
     <div class="table-responsive">
-        <table class="table table-borderless">
+        <table class="table table-bordered">
             <tr>
-                <td nowrap="nowrap">Scheme Name</td>
-                <td>:</td>
+                <td nowrap="nowrap" class="bg-light">Scheme Name</td>
                 <td>{{ $scheme->name }}</td>
             </tr>
             <tr>
-                <td nowrap="nowrap">Scheme Code</td>
-                <td>:</td>
+                <td nowrap="nowrap" class="bg-light">Scheme Code</td>
                 <td>{{ $scheme->code }}</td>
             </tr>
             <tr>
-                <td nowrap="nowrap">Segment</td>
-                <td>:</td>
-                <td>{{ $scheme->segment->name }}</td>
+                <td nowrap="nowrap" class="bg-light">Segment</td>
+                <td><span class="badge text-bg-secondary">{{ $scheme->segment->name }}</span></td>
             </tr>
             <tr>
-                <td nowrap="nowrap">Registration Charges</td>
-                <td>:</td>
-                <td>{{ $scheme->registration }}</td>
+                <td nowrap="nowrap" class="bg-light">Connection Type</td>
+                <td><span class="badge text-bg-secondary">{{ $scheme->connectionType->name ?? '' }}</span></td>
             </tr>
             <tr>
-                <td nowrap="nowrap">Security Deposit</td>
-                <td>:</td>
-                <td>{{ $scheme->security }}</td>
+                <td nowrap="nowrap" class="bg-light">Registration Charges</td>
+                <td>{{ numberFormat($scheme->registration) }}</td>
             </tr>
             <tr>
-                <td nowrap="nowrap">Consumption Deposit</td>
-                <td>:</td>
-                <td>{{ $scheme->consumption }}</td>
+                <td nowrap="nowrap" class="bg-light">Security Deposit</td>
+                <td>{{ numberFormat($scheme->security) }}</td>
             </tr>
             <tr>
-                <td nowrap="nowrap">Total Deposit</td>
-                <td>:</td>
-                <td>{{ $scheme->total_deposit }}</td>
+                <td nowrap="nowrap" class="bg-light">Consumption Deposit</td>
+                <td>{{ numberFormat($scheme->consumption) }}</td>
             </tr>
             <tr>
-                <td nowrap="nowrap">Minimum Payable Amount</td>
-                <td>:</td>
-                <td>{{ $scheme->min_payment }}</td>
+                <td nowrap="nowrap" class="bg-light">Total Deposit</td>
+                <td>{{ numberFormat($scheme->total_deposit) }}</td>
             </tr>
             <tr>
-                <td nowrap="nowrap">Emi Amount</td>
-                <td>:</td>
-                <td>{{ $scheme->emi_amount }}</td>
+                <td nowrap="nowrap" class="bg-light">Minimum Payable Amount</td>
+                <td>{{ numberFormat($scheme->min_payment) }}</td>
             </tr>
             <tr>
-                <td nowrap="nowrap">Rental Amount</td>
-                <td>:</td>
-                <td>{{ $scheme->rental_amount }}</td>
+                <td nowrap="nowrap" class="bg-light">Emi Amount</td>
+                <td>{{ numberFormat($scheme->emi_amount) }}</td>
             </tr>
             <tr>
-                <td>Applicable GAs</td>
-                <td>:</td>
+                <td nowrap="nowrap" class="bg-light">Rental Amount</td>
+                <td>{{ numberFormat($scheme->rental_amount) }}</td>
+            </tr>
+            <tr>
+                <td class="bg-light">Applicable GAs</td>
                 <td>{{ $scheme->gas->pluck('name')->implode(', ') }}</td>
             </tr>
             <tr>
-                <td>Status</td>
-                <td>:</td>
+                <td class="bg-light">Status</td>
                 <td>@if ( $scheme->status == 1) <span class="badge bg-success">Enabled</span>
                     @else <span class="badge bg-warning">Disabled</span>
                     @endif</td>
             </tr>
             <tr>
-                <td>Created Date</td>
-                <td>:</td>
+                <td class="bg-light">Created Date</td>
                 <td>{{ $scheme->created_at->format('d-m-Y') }}</td>
             </tr>
             <tr>
-                <td>Created By</td>
-                <td>:</td>
+                <td class="bg-light">Created By</td>
                 <td></td>
             </tr>
         </table>

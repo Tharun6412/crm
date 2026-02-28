@@ -34,7 +34,7 @@
         <tbody>
             <tr>
                 <td class="bg-light">Status</td>
-                <td>{{ $transaction->status->name }}</td>
+                <td><x-payments.transaction-status :status="$transaction->status"/></td>
             </tr>
             <tr>
                 <td class="bg-light">Txn. Date</td>

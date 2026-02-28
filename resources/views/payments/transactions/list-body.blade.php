@@ -26,11 +26,11 @@
                 <th>CRN</th>
                 <th>Name</th>
                 <th>GA<x-master.gaFilter class="float-end" /></th>
-                <th>Module</th>
-                <th>Gateway</th>
-                <th>Date</th>
+                <th>Module<x-payments.paymentModuleFilter class="float-end" /></th>
+                <th>Gateway<x-payments.paymentGatewayFilter class="float-end" /></th>
+                <th>Date<x-master.date-filter /></th>
                 <th>TXN ID</th>
-                <th>Amount</th>
+                <th class="text-end">Amount</th>
                 <th>Status</th>
                 <th width="2%" nowrap>Actions</th>
             </tr>
@@ -50,8 +50,10 @@
                         <td>{{ $transaction->gateway->gateway ?? '' }}</td>
                         <td>{{ $transaction->transaction_date?->format('d-m-Y') }}</td>
                         <td>{{ $transaction->transaction_id ?? '' }}</td>
-                        <td>{{ numberFormat($transaction->amount ?? 0, 2) }}</td>
-                        <td>{{ $transaction->status->name ?? '' }}</td>
+                        <td class="text-end">{{ numberFormat($transaction->amount ?? 0, 2) }}</td>
+                        <td>
+                            <x-payments.transaction-status :status="$transaction->status"/>
+                        </td>
                         <td>
                             <div class="dropdown">
                                 <button class="btn btn-sm btn-primary dropdown-toggle" type="button" id="actionDropdown" data-bs-toggle="dropdown" aria-expanded="false">
@@ -69,7 +71,7 @@
                 @endforeach
             @else
                 <tr>
-                    <td colspan="9">
+                    <td colspan="11">
                         <x-layouts.callout-info>No records found!</x->
                     </td>
                 </tr>
