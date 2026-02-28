@@ -9,6 +9,13 @@
             </div>
         </div>
         <div class="col-auto">
+            <select name="status" id="status" class="form-select form-select-sm">
+                <option value="">Select</option>
+                <option value={{ \App\Enums\ConsumerStatus::PRE_REGISTER->value }} @selected(request()->status == 1)>TR</option>
+                <option value={{ \App\Enums\ConsumerStatus::REGISTER->value }} @selected(request()->status == 2)>Register</option>
+            </select>
+        </div>
+        <div class="col-auto">
             <button type="submit" class="btn btn-sm btn-success"><i class="bi bi-search"></i></button>
         </div>
         <div class="col-auto">
@@ -62,20 +69,20 @@
                 @endphp
                 @foreach ($sd_amounts as $amount)
                     @php
-                        $total_dep += ($amount->total_deposit ?? 0);
-                        $paid_dep += ($amount->paid_deposit ?? 0);
-                        $bal_dep += ($amount->balance ?? 0);
+                        $total_dep += ($amount->scheme->total_deposit ?? 0);
+                        $paid_dep += ($amount->scheme->paid_deposit ?? 0);
+                        $bal_dep += ($amount->scheme->balance ?? 0);
                     @endphp
                     <tr>
                         <td>{{ $i++ }}</td>
-                        <td><a href="{{ url('consumers/'.$amount->consumer->id) }}" target="_blank">{{ $amount->consumer?->crn }}</a></td>
-                        <td>{{ $amount->consumer->ga->name }}</td>
-                        <td>{{ $amount->consumer->segment->name }}</td>
-                        <td>{{ $amount->consumer->connectType->name }}</td>
-                        <td>{{ $amount->scheme->name }}</td>
-                        <td class="text-end">{{ $amount->total_deposit }}</td>
-                        <td class="text-end">{{ $amount->paid_deposit }}</td>
-                        <td class="text-end">{{ $amount->balance }}</td>
+                        <td><a href="{{ url('consumers/'.$amount->id) }}" target="_blank">{{ $amount->crn }}</a></td>
+                        <td>{{ $amount->ga->name }}</td>
+                        <td>{{ $amount->segment->name }}</td>
+                        <td>{{ $amount->connectType->name }}</td>
+                        <td>{{ $amount->scheme->scheme->name }}</td>
+                        <td class="text-end">{{ $amount->scheme->total_deposit }}</td>
+                        <td class="text-end">{{ $amount->scheme->paid_deposit }}</td>
+                        <td class="text-end">{{ $amount->scheme->balance }}</td>
                         <td>{{ $amount->created_at->format('d-m-Y') }}</td>
                     </tr>
                 @endforeach

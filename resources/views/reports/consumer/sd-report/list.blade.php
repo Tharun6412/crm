@@ -34,16 +34,20 @@
                         </div>
                     </div>
                 </div>
-                {{-- <div class="col-auto">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="check_all" id="check_all" value="all" id="flexCheckDefault">
-                        <label class="form-check-label" for="flexCheckDefault">All</label>
-                    </div>
-                </div> --}}
+                <div class="col-auto">
+                    <select name="status" id="status" class="form-select form-select-sm">
+                        <option value="">Select</option>
+                        <option value={{ \App\Enums\ConsumerStatus::PRE_REGISTER->value }}>TR</option>
+                        <option value={{ \App\Enums\ConsumerStatus::REGISTER->value }}>Register</option>
+                    </select>
+                </div>
                 <div class="col-auto">
                     <button type="submit" class="btn btn-success">
                         <i class="bi bi-arrow-right-circle"></i>&nbsp;Get Report
                     </button>
+                </div>
+                <div class="col-auto">
+                    <a href="{{ url('reports/consumer/sdReport') }}" class="btn btn-warning"><i class="bi bi-arrow-clockwise"></i></a>
                 </div>
             </div>
         </form>
