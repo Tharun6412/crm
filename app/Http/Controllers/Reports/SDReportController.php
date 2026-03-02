@@ -22,14 +22,12 @@ class SDReportController extends Controller
      */
     public function index(Request $request)
     {
-        // dd($request->all());
         // Get GeoAreas
         $geo_areas = Ga::where('status', 1)->orderBy('position')->get();
-        $schemes = MasterConsumerScheme::select('id', 'code')->get();
+        $schemes = MasterConsumerScheme::select('id', 'code')->where('status', 1)->get();
         if($request->ajax()) {
             // Validation
             if(($request->filter_name == "show") AND empty($request->date_from) AND empty($request->date_to)) {
-                // abort(422, 'please select');
                 $request->validate([
                     'date_from' => 'required|date_format:d-m-Y',
                     'date_to' => 'required|date_format:d-m-Y',
@@ -37,35 +35,40 @@ class SDReportController extends Controller
             }
             $request->validate(['status' => 'required']);
             // Query to sum of the amounts between the dates
-            $sd_amounts = Consumer::leftJoin('cns_consumer_schemes', 'cns_consumer_schemes.consumer_id', '=', 'cns_consumers.id')
-                ->leftJoin('cns_consumer_status', 'cns_consumer_status.consumer_id', '=', 'cns_consumers.id')
-                ->when(!isAdmin() && !isSuperAdmin(), function($q) {
+            $sd_amounts = Consumer::join('cns_consumer_schemes as schemes', 'schemes.consumer_id', '=', 'cns_consumers.id')
+                ->when(!isAdmin() && !isSuperAdmin(), function ($q) {
                     $q->whereIn('cns_consumers.ga_id', session('user')['gas']);
                 })
-                ->selectRaw('
-                    cns_consumers.ga_id,cns_consumer_schemes.scheme_id,
-                    COUNT(cns_consumer_status.consumer_id) as consumer_count,
-                    SUM(cns_consumer_schemes.total_deposit) as total_deposit,
-                    SUM(cns_consumer_schemes.paid_deposit) as paid_deposit,
-                    SUM(cns_consumer_schemes.balance) as balance
-                ')
-                ->when($request->filled('status'), function($q) use($request) {
-                    $q->where('cns_consumer_status.status_id', $request->status);
-                })
-                ->when(($request->filter_name == "show") and (!empty($request->date_from) and !empty($request->date_to)), function($q) use($request) {
-                    $q->whereBetween('cns_consumer_status.created_at', [Carbon::createFromFormat('d-m-Y', $request->date_from)->startOfDay()->toDateTimeString(), Carbon::createFromFormat('d-m-Y', $request->date_to)->endOfDay()->toDateTimeString()]);
-                })
-                ->groupBy('cns_consumers.ga_id', 'cns_consumer_schemes.scheme_id')
-                ->get();
+                // Status filtering using EXISTS (no duplication)
+                ->when($request->filled('status') || ($request->filter_name == "show" && !empty($request->date_from) && !empty($request->date_to)),
+                    function ($q) use ($request) {
+                        $q->whereExists(function ($sub) use ($request) {
+                            $sub->selectRaw(1)->from('cns_consumer_status as status')->whereColumn('status.consumer_id', 'cns_consumers.id');
+                            if ($request->filled('status')) {
+                                $sub->where('status.status_id', $request->status);
+                            }
+                            if ($request->filter_name == "show" and !empty($request->date_from) and !empty($request->date_to)) {
+                                $sub->whereBetween('status.created_at', [Carbon::createFromFormat('d-m-Y', $request->date_from)->startOfDay(), Carbon::createFromFormat('d-m-Y', $request->date_to)->endOfDay()]);
+                            }
+                        });
+                    }
+                )
+                ->selectRaw('cns_consumers.ga_id,schemes.scheme_id,
+                    COUNT(*) as consumer_count,
+                    SUM(schemes.total_deposit) as total_deposit,
+                    SUM(schemes.paid_deposit) as paid_deposit,
+                    SUM(schemes.balance) as balance
+                ')->groupBy('cns_consumers.ga_id', 'schemes.scheme_id')->get();
             $sd_amount_by_ga = [];
             // Data Preparation
-            foreach($sd_amounts as $key => $amount) {
-                $sd_amount_by_ga[$amount->ga_id][$amount->scheme_id]['total_deposit'] = $amount->total_deposit;
-                $sd_amount_by_ga[$amount->ga_id][$amount->scheme_id]['paid_deposit'] = $amount->paid_deposit;
-                $sd_amount_by_ga[$amount->ga_id][$amount->scheme_id]['balance'] = $amount->balance;
-                $sd_amount_by_ga[$amount->ga_id][$amount->scheme_id]['count'] = $amount->consumer_count;
+            foreach ($sd_amounts as $amount) {
+                $sd_amount_by_ga[$amount->ga_id][$amount->scheme_id] = [
+                    'total_deposit' => $amount->total_deposit,
+                    'paid_deposit'  => $amount->paid_deposit,
+                    'balance'       => $amount->balance,
+                    'count'         => $amount->consumer_count,
+                ];
             }
-            // dd($sd_amount_by_ga);
             // Response
             return view('reports.consumer.sd-report.list-body', [
                 'geo_areas' => $geo_areas,
@@ -82,23 +85,24 @@ class SDReportController extends Controller
      */
     public function sdDetails(Request $request)
     {
+        $status = $request->filled('status') ? $request->status : 1;
         // Get Security Deposit Details
         $sortBy = ($request->get('sortBy')) ? $request->get('sortBy') : 'created_at';
         $sortOr = ($request->get('sortOr')) ? $request->get('sortOr') : 'desc';
         $records = ($request->get('records')) ? $request->get('records') : 50;
-        $sd_amounts = Consumer::with([
-            'scheme:id,consumer_id,scheme_id,total_deposit,paid_deposit,balance',
-            'ga:id,name',
-            'segment:id,name',
-            'scheme.scheme:id,name',
-            'connectType:id,name'
+        $sd_amounts = ConsumerStatus::with([
+            'consumer.scheme:id,consumer_id,scheme_id,total_deposit,paid_deposit,balance',
+            'consumer.ga:id,name',
+            'consumer.segment:id,name',
+            'consumer.scheme.scheme:id,name',
+            'consumer.connectType:id,name',
+            'status:id,name'
         ])
-        ->when($request->filled('status'), function($q) use ($request) {
-            $q->whereHas('status', function($query) use ($request) {
-                $query->where('status_id', $request->status);
-            });
+        ->where('status_id', $status)
+        ->when($request->filled('date_from') && $request->filled('date_to'), function ($q) use ($request) {
+            $q->whereBetween('created_at', [Carbon::createFromFormat('d-m-Y', $request->date_from)->startOfDay(), Carbon::createFromFormat('d-m-Y', $request->date_to)->endOfDay()]);
         })
-        ->when($request->filled('geo_area') || $request->filled('segments') || $request->filled('connection_type_id') ||$request->filled('status'), function ($q) use ($request) {
+        ->whereHas('consumer', function ($q) use ($request) {
             // GA restriction
             if (!isAdmin() && !isSuperAdmin()) {
                 $q->whereIn('ga_id', session('user')['gas']);
@@ -112,24 +116,24 @@ class SDReportController extends Controller
             if ($request->filled('segments')) {
                 $q->whereIn('segment_id', $request->segments);
             }
-        })
-        ->when($request->filled('key'), function ($q) use ($request) {
-            $q->where(function ($query) use ($request) {
-                $query->whereAny(['crn', 'created_at'], 'like', '%' . $request->key . '%')
-                    ->orWhereHas('scheme', function ($q) use ($request) {
-                        $q->whereAny(['total_deposit', 'paid_deposit', 'balance'], 'like', '%' . $request->key . '%');
+            // Scheme filter
+            if ($request->filled('scheme')) {
+                $q->whereHas('scheme', function ($query) use ($request) {
+                    $query->whereIn('scheme_id', $request->scheme);
                 });
-            });
-        })
-        ->when($request->filled('scheme'), function ($q) use($request) {
-            $q->whereHas('scheme', function($query) use($request) {
-                $query->whereIn('scheme_id', $request->scheme);
-            });
-        })
-        ->when((!empty($request->date_from) and !empty($request->date_to)), function($q) use($request) {
-            $q->whereBetween('created_at', [Carbon::createFromFormat('d-m-Y', $request->date_from)->startOfDay()->toDateTimeString(), Carbon::createFromFormat('d-m-Y', $request->date_to)->endOfDay()->toDateTimeString()]);
-        })
-        ->orderBy($sortBy, $sortOr)->paginate($records)->withQueryString();
+            }
+            // Amount filter (balance inside scheme)
+            if ($request->filled('amount_range')) {
+                $q->whereHas('scheme', function ($query) use ($request) {
+                    if ($request->amount_range == "5000+") {
+                        $query->where('balance', '>=', 5000);
+                    } else {
+                        [$min, $max] = explode('-', $request->amount_range);
+                        $query->whereBetween('balance', [$min, $max]);
+                    }
+                });
+            }
+        })->orderBy($sortBy, $sortOr)->paginate($records)->withQueryString();
         // response
         if($request->ajax()) {
             return view('reports.consumer.sd-details.list-body', ['sd_amounts' => $sd_amounts]);
@@ -142,6 +146,10 @@ class SDReportController extends Controller
      */
     public function sdReportExport(Request $request)
     {
-        return (new SDReportExport($request))->download('sd-report.xlsx');
+        // Get export by status 1.PRE_REGISTER 2.REGISTER
+        if($request->status == 1) {
+            return (new SDReportExport($request))->download('sd-report-tr.xlsx');
+        }
+        return (new SDReportExport($request))->download('sd-report-register.xlsx');
     }
 }

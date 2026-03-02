@@ -2,6 +2,7 @@
 @php
     // Total counts by scheme
     $consumer_count = [];
+    $total_count = [];
 @endphp
 <div class="table-responsiveaa table-basic">
     <table class="table table-bordered table-hover" id="monthly-sale">
@@ -10,6 +11,7 @@
                 <th width="1%" nowrap rowspan="2">S No</th>
                 <th rowspan="2">GA</th>
                 <th colspan="{{ $schemes->count() }}" class="text-center">Scheme Code</th>
+                <th class="text-end" rowspan="2">Total Consumers</th>
                 <th class="text-end" rowspan="2">Total Deposit</th>
                 <th class="text-end" rowspan="2">Paid Deposit</th>
                 <th class="text-end" rowspan="2">Balance Deposit</th>
@@ -19,7 +21,7 @@
                     @php
                         $consumer_count[$scheme->id] = 0;
                     @endphp
-                    <th class="text-center" title="{{ $scheme->name }}">{{ $scheme->code }}</th>
+                    <th class="text-end" title="{{ $scheme->name }}">{{ $scheme->code }}</th>
                 @endforeach
             </tr>
         </thead>
@@ -32,6 +34,7 @@
                     // Append to URL
                     $append_data = 'date_from='.request()->date_from.'&date_to='.request()->date_to.'&geo_area[]='.$ga->id;
                     $ga_total_dep = $ga_paid_dep = $ga_balance_dep = 0;
+                    $total_count[$ga->id] = 0;
                 @endphp
                 <tr>
                     <td>{{ $loop->iteration }}</td>
@@ -39,6 +42,7 @@
                     @foreach ($schemes as $scheme_data)
                         @php
                             $consumer_count[$scheme_data->id] += ($sd_amount_by_ga[$ga->id][$scheme_data->id]['count'] ?? 0);
+                            $total_count[$ga->id] += ($sd_amount_by_ga[$ga->id][$scheme_data->id]['count'] ?? 0);
                             // Totals
                             $total = $sd_amount_by_ga[$ga->id][$scheme_data->id]['total_deposit'] ?? 0;
                             $paid = $sd_amount_by_ga[$ga->id][$scheme_data->id]['paid_deposit'] ?? 0;
@@ -48,8 +52,9 @@
                             $ga_paid_dep += $paid;
                             $ga_balance_dep += $balance;
                         @endphp
-                        <td class="text-center"><a href="{{ url('reports/consumer/sdDetails') }}?{{ $append_data }}&scheme[]={{ $scheme_data->id }}">{{ $sd_amount_by_ga[$ga->id][$scheme_data->id]['count'] ?? 0 }}</a></td>
+                        <td class="text-end"><a href="{{ url('reports/consumer/sdDetails') }}?{{ $append_data }}&scheme[]={{ $scheme_data->id }}&status={{ request()->status }}">{{ $sd_amount_by_ga[$ga->id][$scheme_data->id]['count'] ?? 0 }}</a></td>
                     @endforeach
+                    <td class="text-end"><a href="{{ url('reports/consumer/sdDetails') }}?{{ $append_data }}&status={{ request()->status }}" target="_blank">{{ numberFormat($total_count[$ga->id] ?? 0) }}</a></td>
                     <td class="text-end"><a href="{{ url('reports/consumer/sdDetails') }}?{{ $append_data }}&status={{ request()->status }}" target="_blank">{{ numberFormat($ga_total_dep ?? 0) }}</a></td>
                     <td class="text-end"><a href="{{ url('reports/consumer/sdDetails') }}?{{ $append_data }}&status={{ request()->status }}" target="_blank">{{ numberFormat($ga_paid_dep ?? 0) }}</a></td>
                     <td class="text-end"><a href="{{ url('reports/consumer/sdDetails') }}?{{ $append_data }}&status={{ request()->status }}" target="_blank">{{ numberFormat($ga_balance_dep ?? 0) }}</a></td>

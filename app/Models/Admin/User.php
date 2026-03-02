@@ -80,7 +80,7 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'dob' => 'date',
             'doj' => 'date',
-            'activated_at' => 'datetimes',
+            'activated_at' => 'datetime',
             'password' => 'hashed',
         ];
     }
