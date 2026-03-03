@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Consumer;
 
+use App\Enums\AwsPath;
 use App\Enums\ConsumerStatus as EnumsConsumerStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Master\DocumentCentre\DocumentUpload;
@@ -19,6 +20,8 @@ use App\Models\Master\Ga;
 use App\Models\Master\MasterConsumerScheme;
 use App\Models\Master\Segment;
 use App\Models\Master\Title;
+use App\Notifications\Consumer\RegistrationSmsNotification;
+use App\Services\SmsService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
@@ -90,15 +93,18 @@ class RegistrationController extends Controller
             'status_id' => EnumsConsumerStatus::PRE_REGISTER->value,
             'created_by' => Auth::id(),
         ]);
-        // Temporary CRN Generation
-        $crn_code = "TR".$request->geo_area.$request->charge_area.str_pad($add_consumer->id, 5,'0', STR_PAD_LEFT);
+        
+        // Generate Temporary CRN and update
+        $crn_code = 'TR' . $request->geo_area . $request->charge_area . str_pad($add_consumer->id, 5, '0', STR_PAD_LEFT);
         Consumer::where('id', $add_consumer->id)->update(['t_crn' => $crn_code, 'state_id' => $add_consumer->ga->state_id]);
+        
         // Consumer Status History
         ConsumerStatus::create([
             'consumer_id' => $add_consumer->id,
             'status_id' => EnumsConsumerStatus::PRE_REGISTER->value,
             'created_by' => Auth::id(),
         ]);
+
         // Consumer Scheme Preparation
         if($request->has('scheme_id') and !empty($request->scheme_id)) {
             $scheme_details = MasterConsumerScheme::find($request->scheme_id);
@@ -117,7 +123,10 @@ class RegistrationController extends Controller
         }
         // Documents Data Preparation
         if($request->has('document_type')) {
-            $documents_bulk = DocumentUpload::uploadBulk($request, 'domestic');
+            // Upload document with document package
+            $documents_bulk = DocumentUpload::uploadBulk($request, AwsPath::REGISTRATION->value);
+            
+            // Insert documents
             foreach($request->document_type as $key => $doc_type) {
                 $add_consumer_document = ConsumerDocument::create([
                     'consumer_id' => $add_consumer->id,
@@ -127,6 +136,7 @@ class RegistrationController extends Controller
                 ]);
             }
         }
+        
         // IF Connection Type=PREPAID Add record
         if($request->connection_type == 2) {
             Prepaid::create([
@@ -134,7 +144,10 @@ class RegistrationController extends Controller
                 'bonus' => $scheme_details->bonus,
             ]);
         }
-        // SMS and Email to send
+        
+        // Send SMS via Notification
+        $sms_response = SmsService::dispatch($add_consumer, new RegistrationSmsNotification(['tcrn' => $crn_code]));
+        
         // Response Message
         return response()->json([
             'success' => 'Consumer Created Successfully with TR number ' . $crn_code . ', click <a href="'.url('consumers').'">here</a> to see all consumers.'
