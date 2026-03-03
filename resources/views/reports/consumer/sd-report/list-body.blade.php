@@ -70,6 +70,7 @@
                 @foreach ($schemes as $total_data)
                     <td class="text-end">{{ $consumer_count[$total_data->id] ?? 0 }}</td>
                 @endforeach
+                <td class="text-end">{{ array_sum($consumer_count) }}</td>
                 <td class="text-end">{{ numberFormat($total_dep) }}</td>
                 <td class="text-end">{{ numberFormat($paid_dep) }}</td>
                 <td class="text-end">{{ numberFormat($balance_dep) }}</td>

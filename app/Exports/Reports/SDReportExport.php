@@ -5,6 +5,7 @@ namespace App\Exports\Reports;
 use App\Enums\ConsumerStatus;
 use App\Models\Consumer\Consumer;
 use App\Models\Consumer\ConsumerScheme;
+use App\Models\Consumer\ConsumerStatus as ConsumerConsumerStatus;
 use Carbon\Carbon;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\Exportable;
@@ -33,17 +34,19 @@ class SDReportExport implements FromQuery, WithHeadings, WithMapping
         // Get Security Deposit Details
         $sortBy = ($this->request->get('sortBy')) ? $this->request->get('sortBy') : 'created_at';
         $sortOr = ($this->request->get('sortOr')) ? $this->request->get('sortOr') : 'desc';
-        $sd_amounts = Consumer::with([
-            'scheme:id,consumer_id,scheme_id,total_deposit,paid_deposit,balance',
-            'ga:id,name',
-            'segment:id,name',
-            'scheme.scheme:id,name',
-            'connectType:id,name'
+        $sd_amounts = ConsumerConsumerStatus::with([
+            'consumer.scheme:id,consumer_id,scheme_id,total_deposit,paid_deposit,balance',
+            'consumer.ga:id,name',
+            'consumer.segment:id,name',
+            'consumer.scheme.scheme:id,name',
+            'consumer.connectType:id,name',
+            'status:id,name'
         ])
-        ->whereHas('status', function($query) use ($status) {
-            $query->where('status_id', $status);
+        ->where('status_id', $status)
+        ->when($this->request->filled('date_from') && $this->request->filled('date_to'), function ($q) {
+            $q->whereBetween('created_at', [Carbon::createFromFormat('d-m-Y', $this->request->date_from)->startOfDay(), Carbon::createFromFormat('d-m-Y', $this->request->date_to)->endOfDay()]);
         })
-        ->when($this->request->filled('geo_area') || $this->request->filled('segments') || $this->request->filled('connection_type_id') ||$this->request->filled('status'), function ($q) {
+        ->whereHas('consumer', function ($q) {
             // GA restriction
             if (!isAdmin() && !isSuperAdmin()) {
                 $q->whereIn('ga_id', session('user')['gas']);
@@ -57,32 +60,23 @@ class SDReportExport implements FromQuery, WithHeadings, WithMapping
             if ($this->request->filled('segments')) {
                 $q->whereIn('segment_id', $this->request->segments);
             }
-        })
-        ->when($this->request->filled('amount_range'), function ($q) {
-            $q->whereHas('scheme', function ($query) {
-                if ($this->request->amount_range == "5000+") {
-                    $query->where('balance', '>=', 5000);
-                } else {
-                    [$min, $max] = explode('-', $this->request->amount_range);
-                    $query->whereBetween('balance', [$min, $max]);
-                }
-            });
-        })
-        ->when($this->request->filled('key'), function ($q) {
-            $q->where(function ($query) {
-                $query->whereAny(['crn', 'created_at'], 'like', '%' . $this->request->key . '%')
-                    ->orWhereHas('scheme', function ($q) {
-                        $q->whereAny(['total_deposit', 'paid_deposit', 'balance'], 'like', '%' . $this->request->key . '%');
+            // Scheme filter
+            if ($this->request->filled('scheme')) {
+                $q->whereHas('scheme', function ($query) {
+                    $query->whereIn('scheme_id', $this->request->scheme);
                 });
-            });
-        })
-        ->when($this->request->filled('scheme'), function ($q) {
-            $q->whereHas('scheme', function($query) {
-                $query->whereIn('scheme_id', $this->request->scheme);
-            });
-        })
-        ->when((!empty($request->date_from) and !empty($request->date_to)), function($q) {
-            $q->whereBetween('created_at', [Carbon::createFromFormat('d-m-Y', $this->request->date_from)->startOfDay()->toDateTimeString(), Carbon::createFromFormat('d-m-Y', $this->request->date_to)->endOfDay()->toDateTimeString()]);
+            }
+            // Amount filter (balance inside scheme)
+            if ($this->request->filled('amount_range')) {
+                $q->whereHas('scheme', function ($query) {
+                    if ($this->request->amount_range == "5000+") {
+                        $query->where('balance', '>=', 5000);
+                    } else {
+                        [$min, $max] = explode('-', $this->request->amount_range);
+                        $query->whereBetween('balance', [$min, $max]);
+                    }
+                });
+            }
         })->orderBy($sortBy, $sortOr);
     return $sd_amounts;
     }
@@ -100,25 +94,19 @@ class SDReportExport implements FromQuery, WithHeadings, WithMapping
      */
     public function map($amount): array
     {
-        // Condition for status
-        if(request()->status == ConsumerStatus::PRE_REGISTER->value || request()->status == null) {
-            $status_val = 1;
-        }else {
-            $status_val = 2;
-        }
         $this->i++; //Increment serial Number
         return [
             $this->i,
-            $amount->crn ?? '',
-            $amount->ga->name ?? '',
-            $amount->status->name ?? '',
-            $amount->segment->name ?? '',
-            $amount->connectType->name ?? '',
-            $amount->scheme->scheme->name ?? '',
-            $amount->scheme->total_deposit ?? 0,
-            $amount->scheme->paid_deposit ?? 0,
-            $amount->scheme->balance ?? 0,
-            $amount->statusHistory->where('status_id', $status_val)->first()->created_at->format('d-m-Y'),
+            $amount->consumer->crn ?? '',
+            $amount->consumer->ga->name ?? '',
+            $amount->consumer->status->name ?? '',
+            $amount->consumer->segment->name ?? '',
+            $amount->consumer->connectType->name ?? '',
+            $amount->consumer->scheme->scheme->name ?? '',
+            $amount->consumer->scheme->total_deposit ?? 0,
+            $amount->consumer->scheme->paid_deposit ?? 0,
+            $amount->consumer->scheme->balance ?? 0,
+            $amount->created_at?->format('d-m-Y'),
         ];
     }
 }
