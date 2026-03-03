@@ -27,7 +27,7 @@
                 @isset($dashboard)
                     {{-- No Title bar --}}
                 @else
-                    <div class="d-flex justify-content-between p-2 bg-body-secondary">
+                    <div class="d-flex justify-content-between p-3 bg-secondary-subtle">
                         <h3 class="mb-0 fs-5 fw-bold">@yield('page-title')</h3>
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb mb-0">
@@ -38,7 +38,7 @@
                         </nav>
                     </div>
                 @endisset
-                <div class="content container-fluid p-3 pe-0">
+                <div class="content container-fluid p-3 pe-0 bg-light p-2 text-dark rounded-6 shadow-sm">
                     @yield('page-content')
                 </div>
                 {{-- Footer Component --}}

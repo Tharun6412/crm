@@ -377,6 +377,10 @@
     z-index: 1;
     position: relative
 }
+.button-toggle-menu i:hover {
+    color:rgb(0, 76, 255);
+    font-weight: 600;
+}
 .profile-dropdown {
     min-width: 170px
 }
@@ -468,5 +472,5 @@
     margin-left: 0rem !important;
 }
 .leftside-menu {
-    margin-top: 40px;
+    margin-top: 59px;
 }

@@ -1,12 +1,12 @@
 {{-- Header Componet --}}
 <div class="navbar-custom">
-    <div class="topbar container-fluid">
+    <div class="topbar container-fluid shadow-sm">
         <div class="d-flex align-items-center gap-lg-2 gap-1">
             <!-- Sidebar Menu Toggle Button -->
             <button class="button-toggle-menu">
                 <i class="bi bi-list"></i>
             </button>
-            <span style="width: 173px;">
+            <span style="width: 250px;">
                 <a href="{{ url('/') }}" title="Home">
                     <img src="{{ asset('img/logo.png') }}" alt="logo" class="img-fluid">
                 </a>

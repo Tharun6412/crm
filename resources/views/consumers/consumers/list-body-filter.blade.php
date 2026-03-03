@@ -1,7 +1,7 @@
 {{-- Consumers list body filter --}}
 <div class="row g-1">
     <div class="col-auto">
-        <select name="connection_type_id" id="connection_type_id" class="form-select form-select-sm">
+        <select name="connection_type_id" id="connection_type_id" class="form-select">
             <option value="">All Connection Types</option>
             <option value="1" @selected(1 == request()->connection_type_id)>Postpaid</option>
             <option value="2" @selected(2 == request()->connection_type_id)>Prepaid</option>

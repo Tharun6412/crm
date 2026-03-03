@@ -7,11 +7,11 @@
 @section('page-title', 'Commercial Registration')
 
 @section('page-content')
-    <div class="container">
+    <div class="container-fluid border border-secondary-subtle rounded-3">
         <div id="add-commercial-success">
             <form id="add-commercial-form" action="{{ url('consumers/register/commercial') }}" method="POST" enctype="multipart/form-data">
                 @csrf
-                <div class="row bg-success-subtle pb-3">
+                <div class="row bg-primary-subtle pb-3 rounded-1 p-2">
                     <div class="col-sm-4 col-md-3">
                         <label>Geo Area&nbsp;:<span class="text-danger">*</span></label>
                         <div>
@@ -61,61 +61,62 @@
                         </div>
                     </div>
                 </div>
-                <div class="mt-3 mb-1 fs-5 fw-semibold">Basic Details&nbsp;:</div>
+                <div class="mt-3 mb-1 fs-5 fw-semibold text-primary">Basic Details&nbsp;:</div>
                 <div class="row mb-2">
                     <div class="col-md-3 col-sm-6 col-xs-12">
                         <label class="form-label">Business Name&nbsp;:<span class="text-danger">*</span></label>
                         <div class="input-group">
-                            <input type="text" name="name" id="name" class="form-control form-control-sm" placeholder="Name"/>
+                            <input type="text" name="name" id="name" class="form-control" placeholder="Name"/>
                         </div>
                         <span class="text-danger validate-err-msg" id="name-error"></span>
                     </div>
                     <div class="col-md-3 col-sm-6 col-xs-12">
                         <label class="form-label">Contact Person Name&nbsp;:&nbsp;</label>
                         <div class="input-group">
-                            <select name="title" id="title" class="form-select form-select-sm">
+                            <select name="title" id="title" class="form-select">
                                 <option value="">Title</option>
                                 @foreach ($titles->where('type', 1) as $title)
                                     <option value="{{ $title->id }}">{{ $title->name }}</option>
                                 @endforeach
                             </select>
-                            <input name="cof_name" id="cof_name" class="form-control form-control-sm" placeholder="Name" type="text"/>
+                            <input name="cof_name" id="cof_name" class="form-control" placeholder="Name" type="text"/>
                         </div>
                         <span class="text-danger validate-err-msg" id="title-error"></span>
                     </div>
                     <div class="col-md-3 col-sm-6 col-xs-12">
                         <label class="form-label">Email&nbsp;:&nbsp;</label>
-                        <input type="text" name="email" id="email" class="form-control form-control-sm" placeholder="Email"/>
+                        <input type="text" name="email" id="email" class="form-control" placeholder="Email"/>
                         <span class="text-danger validate-err-msg" id="email-error"></span>
                     </div>
                     <div class="col-md-3 col-sm-6 col-xs-12">
                         <label class="form-label">Registered mobile&nbsp;:<span class="text-danger">*</span></label>
-                        <div class="input-group input-group-sm">
+                        <div class="input-group">
                             <span class="input-group-text">+91</span>
-                            <input maxlength="10" type="text" name="phone" id="phone" class="form-control form-control-sm" placeholder="Mobile Number" aria-label="Mobile" aria-describedby="mobile"/>
+                            <input maxlength="10" type="text" name="phone" id="phone" class="form-control" placeholder="Mobile Number" aria-label="Mobile" aria-describedby="mobile"/>
                         </div>
                         <span class="text-danger validate-err-msg" id="phone-error"></span>
                     </div>
                 </div>
-                <div class="row mb-2">
+                <div class="row mb-2 pt-2">
                     <div class="col-md-3 col-sm-6 col-xs-12">
                         <label class="form-label">Alternate number&nbsp;:&nbsp;</label>
-                        <div class="input-group input-group-sm">
+                        <div class="input-group">
                             <span class="input-group-text">+91</span>
-                            <input maxlength="10" type="text" name="phone_alt" id="phone_alt" class="form-control form-control-sm" placeholder="Alternate Contact Number" aria-label="Alt Mobile" aria-describedby="alt_mobile"/>
+                            <input maxlength="10" type="text" name="phone_alt" id="phone_alt" class="form-control" placeholder="Alternate Contact Number" aria-label="Alt Mobile" aria-describedby="alt_mobile"/>
                         </div>
                         <span class="text-danger validate-err-msg" id="phone_alt-error"></span>
                     </div>
                     <div class="col-md-3 col-sm-6 col-xs-12">
                         <label class="form-label">PAN number&nbsp;:</label>
-                        <input maxlength="10" name="pan" id="pan" class="form-control form-control-sm" placeholder="PAN Number" type="text"/>
+                        <input maxlength="10" name="pan" id="pan" class="form-control" placeholder="PAN Number" type="text"/>
                         <span class="text-danger validate-err-msg" id="pan-error"></span>
                     </div>
                 </div>
-                <div class="row mt-3">
-                    <div class="mt-3 mb-1 fs-5 fw-semibold">Security Deposit Scheme Details&nbsp;:</div>
+                <div class="pt-2 pb-2"><hr></div>
+                <div class="mb-1 fs-5 fw-semibold text-primary">Security Deposit Scheme Details&nbsp;:</div>
+                <div class="row">
                     <div class="col-md-2 col-sm-6 col-xs-12">
-                        <label>Connection Type&nbsp;:<span class="text-danger">*</span></label>
+                        <label class="form-label">Connection Type&nbsp;:<span class="text-danger">*</span></label>
                         <div>
                             <select name="connection_type" id="connection_type" class="form-select" onchange="getSchemesByType(this.value)">
                                 <option value="">Select Type</option>
@@ -127,7 +128,7 @@
                         <span class="text-danger validate-err-msg" id="connection_type-error"></span>
                     </div>
                     <div class="col-md-4 col-sm-6 col-xs-12">
-                        <label>Security Deposit Schemes&nbsp;:<span class="text-danger">*</span></label>
+                        <label class="form-label">Security Deposit Schemes&nbsp;:<span class="text-danger">*</span></label>
                         <div>
                             <select name="scheme_id" id="scheme_id" class="form-select" onchange="getSchemeDetails(this.value)">
                                 <option value="">Select scheme</option>
@@ -138,13 +139,15 @@
                         </div>
                         <span class="text-danger validate-err-msg" id="scheme_id-error"></span>
                     </div>
-                    <div class="col-md-6 col-sm-6 d-none" id="scheme_data">
+                </div>    
+                <div class="row">    
+                    <div class="col-md-8 col-sm-6 col-xs-12 d-none pt-3" id="scheme_data">
                         <table class="table table-bordered table-success mb-0">
-                            <thead class="table-success">
-                                <tr>
+                            <thead>
+                                <tr class="table-primary">
                                     <td colspan="5"><span class="fw-semibold" id="scheme_name_details"></span></td>
                                 </tr>
-                                <tr>
+                                <tr class="table-light text-end">
                                     <td>Meter Deposit</td>
                                     <td>Consumption Deposit</td>
                                     <td>Registration</td>
@@ -165,15 +168,15 @@
                     </div>
                 </div>
                 {{-- Nominee Details --}}
-                <div class="mt-3 mb-1 fs-5 fw-semibold">Nominee details&nbsp;:</div>
+                <div class="mt-3 mb-1 fs-5 fw-semibold text-primary">Nominee details&nbsp;:</div>
                 <div class="row">
                     <div class="col-md-3 col-sm-6 col-xs-12">
                         <label class="form-label" for="nominee">Nominee&nbsp;:&nbsp;</label>
-                        <input name="nominee" id="nominee" class="form-control form-control-sm" placeholder="Nominee name" type="text"/>
+                        <input name="nominee" id="nominee" class="form-control" placeholder="Nominee name" type="text"/>
                     </div>
                     <div class="col-md-3 col-sm-6 col-xs-12">
                         <label class="form-label">Nominee Relation&nbsp;:&nbsp;</label>
-                        <select name="nominee_relation_id" id="nominee_relation_id" class="form-select form-select-sm">
+                        <select name="nominee_relation_id" id="nominee_relation_id" class="form-select">
                             <option value="">Select</option>
                             @foreach ($nominee_relations as $relation)
                                 <option value="{{ $relation->id }}">{{ $relation->name }}</option>
@@ -182,41 +185,42 @@
                     </div>
                 </div>
                 {{-- Address Details --}}
-                <div class="mt-3 mb-1 fs-5 fw-semibold">Address details&nbsp;:</div>
-                <div class="row">
+                <div class="mt-3 mb-1 fs-5 fw-semibold text-primary">Address details&nbsp;:</div>
+                <div class="row mb-2">
                     <div class="col-md-3 col-sm-6 col-xs-12">
                         <label class="form-label" for="hno">Address line1&nbsp;:&nbsp;</label>
-                        <input name="hno" id="hno" class="form-control form-control-sm" placeholder="Example H.No:1-11" type="text" />
+                        <input name="hno" id="hno" class="form-control" placeholder="Example H.No:1-11" type="text" />
                     </div>
                     <div class="col-md-3 col-sm-6 col-xs-12">
                         <label class="form-label" for="street">Address line2&nbsp;:&nbsp;</label>
-                        <input name="street" id="street" class="form-control form-control-sm" placeholder="Example Street-No: 2A" type="text"/>
+                        <input name="street" id="street" class="form-control" placeholder="Example Street-No: 2A" type="text"/>
                     </div>
                     <div class="col-md-3 col-sm-6 col-xs-12">
                         <label class="form-label" for="colony">Locality/Colony name&nbsp;:&nbsp;</label>
-                        <input name="colony" id="colony" class="form-control form-control-sm" placeholder="Locality/Colony Name" type="text"/>
+                        <input name="colony" id="colony" class="form-control" placeholder="Locality/Colony Name" type="text"/>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row mb-2 pt-2">
                     <div class="col-md-3 col-sm-6 col-xs-12">
                         <label class="form-label" for="city">Town/Village/City&nbsp;:&nbsp;</label>
-                        <input name="city" id="city" class="form-control form-control-sm" placeholder="Town / Village / City" type="text"/>
+                        <input name="city" id="city" class="form-control" placeholder="Town / Village / City" type="text"/>
                     </div>
                     <div class="col-md-3 col-sm-6 col-xs-12">
                         <label class="form-label" for="ward">Ward No&nbsp;:&nbsp;</label>
-                        <input name="ward" id="ward" class="form-control form-control-sm" placeholder="Ward No" type="text"/>
+                        <input name="ward" id="ward" class="form-control" placeholder="Ward No" type="text"/>
                     </div>
                     <div class="col-md-3 col-sm-6 col-xs-12">
                         <label class="form-label" for="pincode">Pincode&nbsp;:<span class="text-danger">*</span></label>
-                        <input maxlength="6" name="pincode" id="pincode" class="form-control form-control-sm" placeholder="Pincode" type="text"/>
+                        <input maxlength="6" name="pincode" id="pincode" class="form-control" placeholder="Pincode" type="text"/>
                         <span class="text-danger validate-err-msg" id="pincode-error"></span>
                     </div>
                 </div>
-                <div class="mt-3 mb-1 fs-5 fw-semibold">Additional details&nbsp;:</div>
-                <div class="row">
+                <div class="pt-2 pb-2"><hr></div>
+                <div class="mb-1 fs-5 fw-semibold text-primary">Additional details&nbsp;:</div>
+                <div class="row mb-2 pt-2">
                     <div class="col-md-3 col-sm-6 col-xs-12">
                         <label class="form-label" for="business_type_id">Business Type&nbsp;:&nbsp;</label>
-                        <select name="business_type_id" id="business_type_id" class="form-select form-select-sm">
+                        <select name="business_type_id" id="business_type_id" class="form-select">
                             <option value="">Select</option>
                             @foreach ($firm_types as $type)
                                 <option value="{{ $type->id }}">{{ $type->name }}</option>
@@ -225,24 +229,24 @@
                     </div>
                     <div class="col-md-3 col-sm-6 col-xs-12">
                         <label class="form-label" for="expected_date">Expected Date&nbsp;:&nbsp;</label>
-                        <div class="input-group input-group-sm">
-                            <input name="expected_date" id="expected_date" class="form-control form-control-sm" placeholder="Expected Date( DD-MM-YYYY )" type="text"/>
+                        <div class="input-group">
+                            <input name="expected_date" id="expected_date" class="form-control" placeholder="Expected Date( DD-MM-YYYY )" type="text"/>
                             <span class="input-group-text"><i class="bi bi-calendar2-event"></i></span>
                         </div>
                     </div>
                     <div class="col-md-3 col-sm-6 col-xs-12">
                         <label class="form-label" for="distance">Distance From Pipeline&nbsp;:&nbsp;</label>
-                        <div class="input-group input-group-sm">
-                            <input type="text" name="distance" id="distance" class="form-control form-control-sm" placeholder="Distance"/>
+                        <div class="input-group">
+                            <input type="text" name="distance" id="distance" class="form-control" placeholder="Distance"/>
                             <span class="input-group-text" >KM</label>
                         </div>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row mb-2 pt-2">
                     <div class="col-md-3 col-sm-6 col-xs-12">
                         <!-- 1=> Own. 2=> Rented.-->
                         <label class="form-label" for="property_type">Property Type&nbsp;:&nbsp;</label>
-                        <select name="property_type" id="property_type" class="form-select form-select-sm">
+                        <select name="property_type" id="property_type" class="form-select">
                             <option value="">Select</option>
                             <option value="1">Own</option>
                             <option value="2">Rent</option>
@@ -251,58 +255,62 @@
                     </div>
                     <div class="col-md-3 col-sm-6 col-xs-12">
                         <label class="form-label" for="owner_name">Owner name (In case rented)&nbsp;:&nbsp;</label>
-                        <input type="text" name="owner_name" id="owner_name" class="form-control form-control-sm" placeholder="Owner Name"/>
+                        <input type="text" name="owner_name" id="owner_name" class="form-control" placeholder="Owner Name"/>
                     </div>
                     <div class="col-md-3 col-sm-6 col-xs-12">
                         <label class="form-label" for="owner_phone">Owner contact number (In case rented)&nbsp;:&nbsp;</label>
-                        <div class="input-group input-group-sm">
+                        <div class="input-group">
                             <span class="input-group-text">+91</span>
-                            <input maxlength="10" type="text" name="owner_phone" id="owner_phone" class="form-control form-control-sm" placeholder="Owner Contact Number"/>
+                            <input maxlength="10" type="text" name="owner_phone" id="owner_phone" class="form-control" placeholder="Owner Contact Number"/>
                             <span class="text-danger validate-err-msg" id="owner_phone-error"></span>
                         </div>
                     </div>
                     <div class="col-md-3 col-sm-6 col-xs-12">
                         <label class="form-label" for="fuel_type_id">Existing Fuel&nbsp;:&nbsp;</label>
-                        <select name="fuel_type_id" id="fuel_type_id" class="form-select form-select-sm">
+                        <select name="fuel_type_id" id="fuel_type_id" class="form-select">
                             <option value="">Select</option>
                             @foreach ($fuel_types as $fuel)
                                 <option value="{{ $fuel->id }}">{{ $fuel->name }}</option>
                             @endforeach
                         </select>
                     </div>
+                </div>
+                <div class="row mb-2 pt-2">    
                     <div class="col-md-3 col-sm-6 col-xs-12">
                         <label class="form-label" for="fuel_qty">Fuel Consumption per day&nbsp;:&nbsp;</label>
-                        <input type="text" name="fuel_qty" id="fuel_qty" class="form-control form-control-sm" placeholder="Consumption per day"/>
+                        <input type="text" name="fuel_qty" id="fuel_qty" class="form-control" placeholder="Consumption per day"/>
                     </div>
                     <div class="col-md-3 col-sm-6 col-xs-12">
                         <label class="form-label" for="dcq">Expected require PNG per day&nbsp;:&nbsp;</label>
-                        <input type="text" name="dcq" id="dcq" class="form-control form-control-sm" placeholder="Expected require PNG per day"/>
+                        <input type="text" name="dcq" id="dcq" class="form-control" placeholder="Expected require PNG per day"/>
                         <span class="text-danger validate-err-msg" id="dcq-error"></span>
                     </div>
                     <div class="col-md-3 col-sm-6 col-xs-12">
                         <label class="form-label" for="peak_qty">Peak Consumption per hour&nbsp;:&nbsp;</label>
-                        <input type="text" name="peak_qty" id="peak_qty" class="form-control form-control-sm" placeholder="Peak Consumption per day"/>
+                        <input type="text" name="peak_qty" id="peak_qty" class="form-control" placeholder="Peak Consumption per day"/>
                     </div>
                     <div class="col-md-3 col-sm-6 col-xs-12">
                         <label class="form-label" for="hours">Number of Peak Hours&nbsp;:&nbsp;</label>
-                        <input type="text" name="hours" id="hours" class="form-control form-control-sm" placeholder="Enter Hours"/>
+                        <input type="text" name="hours" id="hours" class="form-control" placeholder="Enter Hours"/>
                         <span class="text-danger validate-err-msg" id="hours-error"></span>
                     </div>
+                </div>
+                <div class="row mb-2 pt-2">    
                     <div class="col-md-3 col-sm-6 col-xs-12">
                         <label class="form-label" for="req_pressure">Required Pressure in KG/cm2&nbsp;:&nbsp;</label>
-                        <input type="text" name="req_pressure" id="req_pressure" class="form-control form-control-sm" placeholder="Required Pressure"/>
+                        <input type="text" name="req_pressure" id="req_pressure" class="form-control" placeholder="Required Pressure"/>
                     </div>
                     <div class="col-md-3 col-sm-6 col-xs-12">
                         <label class="form-label" for="req_flow">Required flow SCM/hr&nbsp;:&nbsp;</label>
-                        <input type="text" name="req_flow" id="req_flow" class="form-control form-control-sm" placeholder="Required flow"/>
+                        <input type="text" name="req_flow" id="req_flow" class="form-control" placeholder="Required flow"/>
                     </div>
                     <div class="col-md-3 col-sm-6 col-xs-12">
                         <label class="form-label" for="gst">GST No. for the unit&nbsp;:&nbsp;</label>
-                        <input type="text" name="gst" id="gst" class="form-control form-control-sm" placeholder="GST NO."/>
+                        <input type="text" name="gst" id="gst" class="form-control" placeholder="GST NO."/>
                     </div>
                     <div class="col-md-3 col-sm-6 col-xs-12">
                         <label class="form-label" for="gas_required_id">Natural gas required for&nbsp;:&nbsp;</label>
-                        <select name="gas_required_id" id="gas_required_id" class="form-select form-select-sm">
+                        <select name="gas_required_id" id="gas_required_id" class="form-select">
                             <option value="">Select</option>
                             @foreach ($gas_required_list as $list)
                                 <option value="{{ $list->id }}">{{ $list->name }}</option>
@@ -310,11 +318,11 @@
                         </select>
                     </div>
                 </div>
-                <div class="mt-3 mb-1 fs-5 fw-semibold">Documents&nbsp;:</div>
+                <div class="mt-3 mb-1 fs-5 fw-semibold text-primary">Documents&nbsp;:</div>
                 <div class="row">
                     <div class="col-md-3 col-sm-6 col-xs-6">
                         <label class="form-label">Document Type&nbsp;:<span class="text-danger">*</span></label>
-                        <select name="document_type[]" id="document_type_0" class="form-select form-select-sm">
+                        <select name="document_type[]" id="document_type_0" class="form-select">
                             <option value="">Select</option>
                             @foreach ($documents as $doc_val)
                                 <option value="{{ $doc_val->id }}">{{ $doc_val->name }}</option>
@@ -322,18 +330,18 @@
                         </select>
                         <span class="text-danger validate-err-msg" id="document_type_0-error"></span>
                     </div>
-                    <div class="col-md-3 col-sm-6 col-xs-6">
+                    <div class="col-md-4 col-sm-6 col-xs-6">
                         <label class="form-label">Documents&nbsp;:<span class="text-danger">*</span></label>
-                        <div class="input-group input-group-sm">
-                            <input type="file" name="dc_file_list[]" id="dc_file_list_0" class="form-control form-control-sm">
+                        <div class="input-group">
+                            <input type="file" name="dc_file_list[]" id="dc_file_list_0" class="form-control">
                             <span class="text-danger validate-err-msg" id="dc_file_list_0-error"></span>
                         </div>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row mb-2 pt-2">
                     <div class="col-md-3 col-sm-6 col-xs-6">
                         <label class="form-label">Document Type&nbsp;:<span class="text-danger">*</span></label>
-                        <select name="document_type[]" id="document_type_1" class="form-select form-select-sm">
+                        <select name="document_type[]" id="document_type_1" class="form-select">
                             <option value="">Select</option>
                             @foreach ($documents as $doc_val)
                                 <option value="{{ $doc_val->id }}">{{ $doc_val->name }}</option>
@@ -341,15 +349,15 @@
                         </select>
                         <span class="text-danger validate-err-msg" id="document_type_1-error"></span>
                     </div>
-                    <div class="col-md-3 col-sm-6 col-xs-6">
+                    <div class="col-md-4 col-sm-6 col-xs-6">
                         <label class="form-label">Documents&nbsp;:<span class="text-danger">*</span></label>
-                        <div class="input-group input-group-sm">
-                            <input type="file" name="dc_file_list[]" id="dc_file_list_1" class="form-control form-control-sm">
+                        <div class="input-group">
+                            <input type="file" name="dc_file_list[]" id="dc_file_list_1" class="form-control">
                             <span class="text-danger validate-err-msg" id="dc_file_list_1-error"></span>
                         </div>
                     </div>
                 </div>
-                <div class="mt-2">
+                <div class="mt-4">
                     <i class="bi bi-check-square"></i>&nbsp;I shared all details with consumer as per MeghaGas policy.<br/>
                     <i class="bi bi-check-square"></i>&nbsp;Consumer agreed with MeghaGas Policies.
                 </div>

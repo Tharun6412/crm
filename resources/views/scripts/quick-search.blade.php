@@ -34,9 +34,9 @@
                             data.forEach(item => {
                                 html += `
                                     <div class="list-group-item bg-light">
-                                        <div>${item.crn}, ${item.name}, ${item.ga.name}, ${item.status.name}</div>
-                                        <div class="ps-3 fs-sm">
-                                        <a href="consumers/${item.id}" class="link-primary me-2" target="_blank"><i class="bi bi-person"></i>&nbsp;Details</a>
+                                        <div><span class="text-warning-emphasis fw-semibold"><i class="bi bi-person"></i> ${item.crn}</span>, <span class="text-success-emphasis fw-semibold">${item.name}</span>, <span class="text-dark fw-semibold"><i class="bi bi-geo-alt"></i> ${item.ga.name}</span>, <span class="text-dark fw-semibold"><i class="bi bi-check2-square"></i> ${item.status.name}</span></div>
+                                        <div class="p-1 fs-sm">
+                                        <a href="consumers/${item.id}" class="link-primary me-2" target="_blank"><i class="bi bi-person-lines-fill"></i>&nbsp;Details</a>
                                         <a href="bill/gasInvoice/create/${item.id}" class="link-primary me-2" target="_blank"><i class="bi bi-receipt"></i>&nbsp;Gas Bill</a>
                                         <a href="bill/invoice/create/${item.id}" class="link-primary me-2" target="_blank"><i class="bi bi-file-ruled"></i>&nbsp;Add Invoice</a>
                                         </div>
