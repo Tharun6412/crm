@@ -27,8 +27,9 @@
             <tr>
                 <th width="1%" nowrap>S No</th>
                 <th>Consumer Number</th>
+                <th>GA<x-master.ga-filter class="float-end"/></th>
                 <th>Request Number</th>
-                <th>Status</th>
+                <th>Status<x-master.refund-status-filter class="float-end"/></th>
                 <th>Added Date</th>
                 <th width="2%" nowrap>Actions</th>
             </tr>
@@ -47,6 +48,7 @@
                     <tr>
                         <td>{{ $i++ }}</td>
                         <td><x-auth.link href="{{ url('consumers/'.$list->consumer_id) }}" target="_blank">{{ $list->consumer->crn }}</x-auth.link></td>
+                        <td>{{ $list->consumer->ga->name }}</td>
                         <td><x-auth.link href="{{ url('consumers/refunds/'.$list->id) }}" class="link-modal">{{ $list->request_no }}</x-auth.link></td>
                         <td>{{ $list->status?->name }}</td>
                         <td>{{ dateFormat($list->created_at) }}</td>

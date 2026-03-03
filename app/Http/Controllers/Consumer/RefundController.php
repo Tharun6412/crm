@@ -42,7 +42,16 @@ class RefundController extends Controller
         $records = ($request->get('records')) ? $request->get('records') : 50;
         $refunds_list = ConsumerRefund::with(['consumer'])->when($request->has('key'), function ($q) use($request) {
                 $q->whereAny(['request_no'], 'like', '%' . $request->key . '%');
-            })->orderBy($sortBy, $sortOr)->paginate($records)->withQueryString();
+            })
+            ->when($request->filled('geo_area'), function($q) use($request) {
+                $q->whereHas('consumer', function($query) use($request) {
+                    $query->whereIn('ga_id', $request->geo_area);
+                });
+            })
+            ->when($request->filled('refund_status'), function($q) use($request) {
+                $q->whereIn('status_id', $request->refund_status);
+            })
+            ->orderBy($sortBy, $sortOr)->paginate($records)->withQueryString();
         // Render output
         if($request->ajax()) {
             return view('consumers.refund.list-body', [

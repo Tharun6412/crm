@@ -84,7 +84,7 @@
                                 <td class="text-end">{{ numberFormat($sd->amount, 2) }}</td>
                                 <td class="text-end">{{ numberFormat($sd->balance, 2) }}</td>
                                 <td>{{ $sd->status->name }}</td>
-                                <td>{{ $sd->createdBy->emp_id }}</td>
+                                <td>{{ $sd->createdBy->name }}</td>
                                 <td>
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Actions</button>

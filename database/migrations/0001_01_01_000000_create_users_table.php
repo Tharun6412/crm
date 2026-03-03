@@ -29,7 +29,7 @@ return new class extends Migration
             $table->string('image', length: 120)->nullable();
             $table->integer('type')->nullable();
             $table->rememberToken();
-            $table->dateTime('activated_at');
+            $table->dateTime('activated_at')->nullable();
             $table->timestamps();
         });
 
