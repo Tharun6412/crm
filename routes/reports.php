@@ -19,3 +19,6 @@ Route::get('invoiceReport/invoicesReportExport', [App\Http\Controllers\Reports\I
 Route::get('consumer/consumerAgeingReport', [App\Http\Controllers\Reports\Consumer\ConsumerAgeingReport::class, 'index']);
 Route::get('consumer/consumerAgeingReport/consumersList', [App\Http\Controllers\Reports\Consumer\ConsumerAgeingReport::class, 'consumersList']);
 Route::get('consumer/consumerAgeingReport/consumerExport', [App\Http\Controllers\Reports\Consumer\ConsumerAgeingReport::class, 'consumerExport']);
+
+// Refund Reports
+Route::get('consumer/refundReport', [App\Http\Controllers\Reports\RefundReportController::class, 'index']);
