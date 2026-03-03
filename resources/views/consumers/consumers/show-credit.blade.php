@@ -1,7 +1,7 @@
 {{-- Show Credit / Debit note details, tab content --}}
 
 <div class="border rounded-top">
-    <div class="bg-light p-2 fs-5 fw-semibold">
+    <div class="bg-primary-subtle p-2 fs-5 fw-semibold">
         <i class="bi bi-file-diff"></i>&nbsp;Credit / Debit Notes&nbsp;-&nbsp;({{ $credit_notes->count() }})
     </div>
     <div class="p-2">

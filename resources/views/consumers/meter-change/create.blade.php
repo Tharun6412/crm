@@ -20,8 +20,8 @@
                 <form id="meter-change-form" action="{{ url('consumers/meterChange/'.$id) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
-                    <div class="fw-semibold text-decoration-underline">Current Meter Details</div>
-                    <div class="row g-2">
+                    <div class="bg-secondary-subtle p-2 fw-semibold text-dark rounded-2">Current Meter Details</div>
+                    <div class="row g-2 pt-2">
                         <div class="col-sm-2 text-end fw-semibold">Meter Number : </div>
                         <div class="col-sm-4">{{ $consumer_meter->meter_no }}</div>
                         <div class="col-sm-3 text-end fw-semibold">Meter Serial Number : </div>
@@ -55,7 +55,7 @@
                         </div>
                     </div>
                     <br/>
-                    <div class="fw-semibold text-decoration-underline">New Meter Details</div>
+                    <div class="bg-secondary-subtle p-2 fw-semibold text-dark rounded-2">New Meter Details</div>
                     <div class="row mb-2">  
                         <div class="col-md-4">
                             <label class="col-form-label">Meter Number&nbsp;:<span class="text-danger">*</span></label>
@@ -74,7 +74,7 @@
                         </div>
                     </div>
                     <div class="row mb-2">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <label class="form-label" for="request_date">Request Date&nbsp;:&nbsp;</label>
                             <div class="input-group input-group-sm">
                                 <input name="request_date" id="request_date" class="form-control form-control-sm" placeholder="Request Date( DD-MM-YYYY )" type="text"/>
@@ -82,7 +82,7 @@
                             </div>
                             <span class="text-danger validate-err-msg" id="request_date-error"></span>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <label class="form-label" for="release_date">Replace Date&nbsp;:&nbsp;</label>
                             <div class="input-group input-group-sm">
                                 <input name="release_date" id="release_date" class="form-control form-control-sm" placeholder="Release Date( DD-MM-YYYY )" type="text"/>
@@ -90,9 +90,7 @@
                             </div>
                             <span class="text-danger validate-err-msg" id="release_date-error"></span>
                         </div>
-                    </div>
-                    <div class="row mb-2">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <label class="col-form-label">Technician</label>
                             <select name="technician_id" id="technician_id" class="form-select form-select-sm">
                                 <option value="">All</option>
@@ -102,7 +100,9 @@
                             </select>
                             <span class="text-danger validate-err-msg" id="technician_id-error"></span>
                         </div>
-                        <div class="col-md-6">
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-md-12">
                             <label class="col-form-label">Reason&nbsp;:<span class="text-danger">*</span></label>
                             <textarea class="form-control form-control-sm" name="reason" id="reason"></textarea>
                             <span class="text-danger validate-err-msg" id="reason-error"></span>

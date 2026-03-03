@@ -19,10 +19,9 @@ class WelcomeSmsNotification extends Notification
     /**
      * Create a new notification instance.
      */
-    public function __construct($consumer)
+    public function __construct()
     {
-        // Assign
-        $this->consumer = $consumer;
+        // 
     }
 
     /**
@@ -42,8 +41,7 @@ class WelcomeSmsNotification extends Notification
     public function toSms($notifiable)
     {
         return [
-            'message' => "Dear MeghaGas consumer your successfully registered with MeghaGas. your consumer number " . $this->consumer->crn . ". Thanks for choosing MeghaGas",
-            'phone' => $this->consumer->mobile,
+            'message' => "Dear MeghaGas consumer your successfully registered with MeghaGas. your consumer number " . $notifiable->crn . ". Thanks for choosing MeghaGas",
         ];
     }
 }

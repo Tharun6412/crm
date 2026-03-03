@@ -7,22 +7,22 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class RegistrationSmsNotification extends Notification
+class RegistrationSmsNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
     /**
      * Consumer object
      */
-    protected $consumer;
+    protected $params;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct($consumer)
+    public function __construct($params)
     {
         // Assign
-        $this->consumer = $consumer;
+        $this->params = $params;
     }
 
     /**
@@ -42,8 +42,7 @@ class RegistrationSmsNotification extends Notification
     public function toSms($notifiable)
     {
         return [
-            'message' => "Welcome to Megha City Gas! Thank you for registering with us. Your temporary registration number is {#var#} Click on the link below to pay your deposit online {#var#}",
-            'phone' => $this->consumer->mobile,
+            'message' => "Welcome to Megha City Gas! Thank you for registering with us. Your temporary registration number is " . $this->params['tcrn'] . " Click on the link below to pay your deposit online https://consumer.meghagas.com/payDeposit",
         ];
     }
 }

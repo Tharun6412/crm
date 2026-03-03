@@ -1,7 +1,7 @@
 {{-- Show SD details, tab content --}}
 
 <div class="border rounded-top">
-    <div class="bg-light p-2 fs-5 fw-semibold">
+    <div class="bg-primary-subtle p-2 fs-5 fw-semibold">
         <i class="bi bi-cash-stack"></i>&nbsp;Security Deposit Details
     </div>
     <div class="p-2">
@@ -11,14 +11,14 @@
                     <tr>
                         <th>Scheme Name</th>
                         <th>#</th>
-                        <th>Security Deposit</th>
-                        <th>Consumption Deposit</th>
-                        <th>Total Deposit</th>
+                        <th class="text-end">Security Deposit</th>
+                        <th class="text-end">Consumption Deposit</th>
+                        <th class="text-end">Total Deposit</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td rowspan="3" class="text-center"><strong>{{ $consumer->scheme?->scheme?->name }}</strong></td>
+                        <td rowspan="3" class="text-center align-middle"><strong>{{ $consumer->scheme?->scheme?->name }}</strong></td>
                         <td>Charges</td>
                         <td class="text-end">{{ numberFormat($consumer->scheme?->security_deposit) }}</td>
                         <td class="text-end">{{ numberFormat($consumer->scheme?->consumption_deposit) }}</td>
@@ -30,8 +30,8 @@
                         <td class="text-end">{{ numberFormat($consumer->scheme?->paid_deposit) }}</td>
                     </tr>
                     <tr>
-                        <td colspan="3" class="text-end">Balance Deposit</td>
-                        <td class="text-end">{{ numberFormat($consumer?->scheme?->balance) }}</td>
+                        <td colspan="3" class="text-end text-success fw-bold">Balance Deposit</td>
+                        <td class="text-end text-success fw-bold">{{ numberFormat($consumer?->scheme?->balance) }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -58,7 +58,7 @@
             </div>
         @endif
         <div>
-            <h4 class="fw-semibold text-decoration-underline">Security Deposit Paid History</h4>
+            <h4 class="fw-semibold text-primary">Security Deposit Paid History</h4>
             <table class="table table-bordered table-primary">
                 <thead class="table-primary">
                     <tr>

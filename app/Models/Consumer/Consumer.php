@@ -27,9 +27,15 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Notifications\Notifiable;
 
 class Consumer extends Model
 {
+    /**
+     * Notifiable
+     */
+    use Notifiable;
+
     /**
      * The table associated with the model
      * 
@@ -94,6 +100,7 @@ class Consumer extends Model
         'created_by',
         'updated_by',
     ];
+
     /**
      * Casts Dates
      */
@@ -108,6 +115,14 @@ class Consumer extends Model
     protected function name(): Attribute
     {
         return Attribute::get(fn () => "{$this->fname} {$this->lname}");
+    }
+
+    /**
+     * Notifiable
+     */
+    public function routeNotificationForSms()
+    {
+        return $this->phone;
     }
 
     /**

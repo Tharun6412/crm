@@ -1,13 +1,13 @@
 {{-- Show consumer details, tab content --}}
 
 <div class="border rounded-top">
-    <div class="bg-light p-2 fs-5 fw-semibold">
+    <div class="bg-primary-subtle p-2 fs-5 fw-semibold">
         <i class="bi bi-person"></i>&nbsp;Consumer Details
     </div>
     <div class="p-2">
         <div class="row">
             <div class="col-md-6">
-                <h4 class="text-primary fw-semibold text-decoration-underline">Details</h4>
+                <h4 class="text-primary fw-semibold">Details</h4>
                 <dl class="row">
                     <dt class="col-sm-3">Segment</dt>
                     <dd class="col-sm-9">{{ $consumer->segment->name }}</dd>
@@ -26,7 +26,7 @@
                     <dt class="col-sm-3">Status</dt>
                     <dd class="col-sm-9">{{ $consumer->status->name }}</dd>
                 </dl>
-                <h4 class="text-primary mt-3 fw-semibold text-decoration-underline">Scheme Details</h4>
+                <h4 class="text-primary mt-3 fw-semibold">Scheme Details</h4>
                 <dl class="row">
                     <dt class="col-sm-3">Scheme Name</dt>
                     <dd class="col-sm-9">{{ $consumer->scheme?->scheme?->name }}</dd>
@@ -37,14 +37,14 @@
                     <dt class="col-sm-3">Consumption Deposit</dt>
                     <dd class="col-sm-9">{{ numberFormat($consumer->scheme?->consumption_deposit) }}</dd>
                 </dl>
-                <h4 class="text-primary mt-3 fw-semibold text-decoration-underline">Nominee Details</h4>
+                <h4 class="text-primary mt-3 fw-semibold">Nominee Details</h4>
                 <dl class="row">
                     <dt class="col-sm-3">Nominee Name</dt>
                     <dd class="col-sm-9">{{ $consumer->nominee }}</dd>
                     <dt class="col-sm-3">Nominee Relation</dt>
                     <dd class="col-sm-9">{{ $consumer->nomineeRelation->name }}</dd>
                 </dl>
-                <h4 class="text-primary mt-3 fw-semibold text-decoration-underline">Owner Details</h4>
+                <h4 class="text-primary mt-3 fw-semibold">Owner Details</h4>
                 <dl class="row">
                     <dt class="col-sm-3">Property Type</dt>
                     <dd class="col-sm-9">
@@ -66,7 +66,7 @@
                     <dt class="col-sm-3">Owner Phone</dt>
                     <dd class="col-sm-9">{{ maskNumber($consumer->owner_phone) }}</dd>
                 </dl>
-                <h4 class="text-primary mt-3 fw-semibold text-decoration-underline">Tenant Details</h4>
+                <h4 class="text-primary mt-3 fw-semibold">Tenant Details</h4>
                 <dl class="row">
                     <dt class="col-sm-3">Tenant Name</dt>
                     <dd class="col-sm-9">{{ $consumer->tenant_name }}</dd>
@@ -77,7 +77,7 @@
                 </dl>
             </div>
             <div class="col-md-6">
-                <h4 class="text-primary fw-semibold text-decoration-underline">Location</h4>
+                <h4 class="text-primary fw-semibold">Location</h4>
                 <dl class="row">
                     <dt class="col-sm-3">Geo Area</dt>
                     <dd class="col-sm-9">{{ $consumer->ga->name }}</dd>
@@ -86,7 +86,7 @@
                     <dt class="col-sm-3">Location</dt>
                     <dd class="col-sm-9">{{ $consumer->area->name }}</dd>
                 </dl>
-                <h4 class="text-primary mt-3 fw-semibold text-decoration-underline">Address</h4>
+                <h4 class="text-primary mt-3 fw-semibold">Address</h4>
                 <address>
                     <strong>{{ $consumer->name}}</strong><br>
                     {{ $consumer->cofDisplay?->name }} {{ $consumer->cof_name }}<br>
@@ -95,7 +95,7 @@
                     {{ $consumer->district->name ?? '' }}, {{ $consumer->ga->state->name ?? '' }} - {{ $consumer->pincode }}.
                 </address>
 
-                <h4 class="text-primary mt-3 fw-semibold text-decoration-underline">Meter Details</h4>
+                <h4 class="text-primary mt-3 fw-semibold">Meter Details</h4>
                 <dl class="row">
                     <dt class="col-sm-3">Meter Number</dt>
                     <dd class="col-sm-9">{{ $consumer_meter?->meter_no }}</dd>
@@ -108,7 +108,7 @@
                     <dt class="col-sm-3">Installed By</dt>
                     <dd class="col-sm-9">{{ $consumer_meter?->installBy?->first_name }}&nbsp;{{ $consumer_meter?->installBy?->last_name }}</dd>
                 </dl>
-                <h4 class="text-primary mt-3 fw-semibold text-decoration-underline">Additional Details</h4>
+                <h4 class="text-primary mt-3 fw-semibold">Additional Details</h4>
                 <dl class="row">
                     <dt class="col-sm-3">LPG Connections</dt>
                     <dd class="col-sm-9">{{ $consumer->lpg_connections }}</dd>
@@ -123,7 +123,7 @@
                 </dl>
             </div>
         </div>
-        <h4 class="text-primary fw-semibold text-decoration-underline">Status History</h4>
+        <h4 class="text-primary fw-semibold">Status History</h4>
         <table class="table table-bordered table-primary table-hover">
             <thead class="table-primary">
                 <tr>
@@ -138,7 +138,7 @@
                 @foreach ($consumer->statusHistory as $history)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
-                        <td>{{ $history->status->name }}</td>
+                        <td><x-consumer.status :status="$history->status" /></td>
                         <td>{{ $history->notes }}</td>
                         <td>{{ $history->created_at?->format('d-m-Y H:i:s') }}</td>
                         <td>{{ $history->createdBy?->first_name }}&nbsp;{{ $history->createdBy?->last_name }}</td>

@@ -28,14 +28,8 @@ class DocumentUpload extends Controller
             $upload_path = $package . '/' . date('ym');
 
             // Upload to AWS S3 bucket only in production
-            if(config('app.env') == 'production') {
-                // Upload file
-                $file_path = Storage::disk('s3')->put($upload_path, $request->dc_file);
-            }
-            else {
-                $file_path = $file_name;
-            }
-
+            $file_path = Storage::disk('s3')->put($upload_path, $request->dc_file);
+            
             // Create a DB record in Document Centre package
             $dc_insert = Documents::create([
                 'disk' => 's3',
@@ -73,14 +67,11 @@ class DocumentUpload extends Controller
             foreach($request->dc_file_list as $key => $file) {
                 $file_name = $file->getClientOriginalName();
                 $upload_path = $package . '/' . date('ym');
+                
                 // Upload to AWS S3 bucket only in production
-                if(config('app.env') == 'production') {
-                    // Upload file
-                    $file_path = Storage::disk('s3')->put($upload_path, $file);
-                }
-                else {
-                    $file_path = $file_name;
-                }
+                $file_path = Storage::disk('s3')->put($upload_path, $file);
+                
+                // Check file
                 if(!empty($file)) {
                     // Create a DB record in Document Centre package
                     $dc_insert = Documents::create([
@@ -123,14 +114,10 @@ class DocumentUpload extends Controller
             foreach($request->dc_file_list as $key => $file) {
                 $file_name = $file->getClientOriginalName();
                 $upload_path = $package . '/' . date('ym');
+                
                 // Upload to AWS S3 bucket only in production
-                if(config('app.env') == 'production') {
-                    // Upload file
-                    $file_path = Storage::disk('s3')->put($upload_path, $file);
-                }
-                else {
-                    $file_path = $file_name;
-                }
+                $file_path = Storage::disk('s3')->put($upload_path, $file);
+                
                 if(!empty($file)) {
                     // Create a DB record in Document Centre package
                     $dc_insert = Documents::create([
