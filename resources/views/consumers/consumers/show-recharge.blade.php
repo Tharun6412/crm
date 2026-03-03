@@ -1,5 +1,5 @@
 <div class="border rounded-top">
-    <div class="bg-light p-2 fs-5 fw-semibold">
+    <div class="bg-primary-subtle p-2 fs-5 fw-semibold">
         <i class="bi bi-files"></i>&nbsp;Recharge History - ({{ $recharges->total() }})
     </div>
     <div class="p-2">

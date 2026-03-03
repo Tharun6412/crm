@@ -28,9 +28,9 @@
             <div class="row g-3">
                 <div class="col-sm-3 col-md-4 col-lg-4 col-xl-3">
                     <div class="card con-card-bg p-2 text-dark bg-opacity-10 border-3 border-light">
-                        <div class="d-flex justify-content-between p-4">
+                        <div class="d-flex justify-content-between p-3">
                             <div>
-                                <h2 class="mb-0">{{ $consumer_count }}</h2>
+                                <h2 class="mb-2">{{ $consumer_count }}</h2>
                                 <span>Total Consumers</span>
                             </div>
                             <div>
@@ -48,9 +48,9 @@
                 </div>
                 <div class="col-sm-3 col-md-4 col-lg-4 col-xl-3">
                     <div class="card inv-card-bg p-2 text-dark bg-opacity-10 border-3 border-light">
-                        <div class="d-flex justify-content-between p-4">
+                        <div class="d-flex justify-content-between p-3">
                             <div>
-                                <h2 class="mb-0">{{ $invoice_count }}</h2>
+                                <h2 class="mb-2">{{ $invoice_count }}</h2>
                                 <span>Invoices</span>
                             </div>
                             <div>
@@ -67,9 +67,9 @@
                 </div>
                 <div class="col-sm-3 col-md-4 col-lg-4 col-xl-3">
                     <div class="card py-card-bg p-2 text-dark bg-opacity-10 border-3 border-light">
-                        <div class="d-flex justify-content-between p-4">
+                        <div class="d-flex justify-content-between p-3">
                             <div>
-                                <h2 class="mb-0">{{ $payments_count }}</h2>
+                                <h2 class="mb-2">{{ $payments_count }}</h2>
                                 <span>Payments</span>
                             </div>
                             <div>
@@ -86,9 +86,9 @@
                 </div>
                 <div class="col-sm-3 col-md-4 col-lg-4 col-xl-3">
                     <div class="card cls-card-bg p-2 text-dark bg-opacity-10 border-3 border-light">
-                        <div class="d-flex justify-content-between p-4">
+                        <div class="d-flex justify-content-between p-3">
                             <div>
-                                <h2 class="mb-0">{{ $calls_list }}</h2>
+                                <h2 class="mb-2">{{ $calls_list }}</h2>
                                 <span>Consumer Calls</span>
                             </div>
                             <div>

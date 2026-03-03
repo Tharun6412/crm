@@ -6,11 +6,11 @@
         </div>
         <div class="modal-body">
             {{-- Consumer basic details component --}}
-            <x-consumer.basic-details :consumer="$sd_payment->consumer" type="2" class="bg-info-subtle" />
+            <x-consumer.basic-details :consumer="$sd_payment->consumer" type="2" class="bg-info-subtle shadow-sm" />
             <div class="mt-3">
                 {{-- SD Payment details --}}
                 <div class="row g-2 pb-2 mb-2">
-                    <div class="fw-semibold text-decoration-underline">SD Transaction Details</div>
+                    <div class="fw-semibold bg-secondary-subtle p-2">SD Transaction Details</div>
                     <div class="col-sm-3 text-end fw-semibold">Paid Amount : </div>
                     <div class="col-sm-3">{{ $sd_payment->amount }}</div>
                     <div class="col-sm-3 text-end fw-semibold">Balance : </div>

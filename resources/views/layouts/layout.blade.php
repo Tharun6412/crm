@@ -38,7 +38,7 @@
                         </nav>
                     </div>
                 @endisset
-                <div class="content container-fluid p-3 pe-0 bg-light p-2 text-dark rounded-6 shadow-sm">
+                <div class="content container-fluid p-3 pe-0 bg-light text-dark rounded-6 shadow-sm">
                     @yield('page-content')
                 </div>
                 {{-- Footer Component --}}

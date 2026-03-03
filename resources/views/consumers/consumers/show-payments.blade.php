@@ -1,6 +1,6 @@
 {{-- Show Payments details, tab content --}}
 <div class="border rounded-top">
-    <div class="bg-light p-2 fs-5 fw-semibold">
+    <div class="bg-primary-subtle p-2 fs-5 fw-semibold">
         <i class="bi bi-file-text"></i>&nbsp;Payments&nbsp;-&nbsp;({{ $payments->total() }})
     </div>
     <div class="p-2">

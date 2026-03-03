@@ -7,7 +7,7 @@
         </div>
         <div class="modal-body">
             <div id="add-invoice-payment-success">
-                <x-consumer.invoice-details :invoice="$bill" class="bg-info-subtle"/>
+                <x-consumer.invoice-details :invoice="$bill" class="bg-info-subtle shadow-sm"/>
                 <div class="row mb-2">
                     <label class="col-sm-4 col-form-label text-end">Paid Amount :</label>
                     <label class="col-sm-4 col-form-label">{{ numberFormat($bill->paid_amount, 2) }}</label>
@@ -62,7 +62,7 @@
                             <div class="m-2" id="add-invoice-payment-error"></div>
                             <div class="row">
                                 <div class="offset-sm-4 col-sm-7">
-                                    <button type="submit" class="btn btn-success"><i class="bi bi-cash">&nbsp;</i>Confirm Payment</button>
+                                    <button type="submit" class="btn btn-success"><i class="bi bi-check-square">&nbsp;</i>Confirm Payment</button>
                                 </div>
                             </div>
                         </div>

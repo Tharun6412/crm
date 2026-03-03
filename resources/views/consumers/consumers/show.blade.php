@@ -4,7 +4,7 @@
 
 @section('title', 'Consumer Details')
 
-@section('page-title', ($consumer->crn ?? ''))
+@section('page-title', 'Consumer Details - '.($consumer->crn ?? ''))
 
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="{{ url('consumers') }}">Consumers</a></li>
@@ -66,15 +66,15 @@
         <div class="col-md-10">
             <div class="row g-2">
                 <div class="col-md-12">
-                    <div class="d-flex border rounded-top p-2 fs-4">
-                        <div>{{ $consumer->crn }}</div>&nbsp;|&nbsp;
-                        <div>{{ $consumer->segment->name ?? '' }}</div>&nbsp;|&nbsp;
-                        <div>{{ $consumer->connection_type_id == 2 ? 'Prepaid' : 'Postpaid' }}</div>&nbsp;|&nbsp;
-                        <div><x-consumer.status :status="$consumer->status" /></div>
+                    <div class="d-flex border rounded-top p-2 fs-5 bg-body-secondary">
+                        <div>{{ $consumer->crn }}</div>&nbsp;<span class="text-body-tertiary">|</span>&nbsp;
+                        <div>{{ $consumer->segment->name ?? '' }}</div>&nbsp;<span class="text-body-tertiary">|</span>&nbsp;
+                        <div>{{ $consumer->connection_type_id == 2 ? 'Prepaid' : 'Postpaid' }}</div>&nbsp;<span class="text-body-tertiary">|</span>&nbsp;
+                        <div class="mt-1"><x-consumer.status :status="$consumer->status" /></div>
                     </div>
                 </div>
                 <div class="col-md-12">
-                    <div class="">
+                    <div class="shadow-sm">
                         <div class="card-group">
                             <div class="card bg-{{ ($consumer->scheme->balance > 0) ? 'danger' : 'success' }}-subtle">
                                 <div class="card-body">
@@ -134,10 +134,11 @@
                                             <div>
                                                 <h4 class="card-title mb-0" id="balance">{{ numberFormat($consumer->prepaidData->balance ?? 0, 2) }}</h4>
                                                 <span>Balance</span>
-                                                <small id="balance_date">Balance Date:</small>
-                                                <div class="p-2"><a type="button" onclick="getPrepaidBalance({{ $consumer->id }})"><i class="bi bi-arrow-counterclockwise fs-3"></i></a></div>
+                                                <span class="text-body-tertiary">|</span>
+                                                <small id="balance_date">Balance Date: &nbsp;&nbsp; <a type="button" onclick="getPrepaidBalance({{ $consumer->id }})"><i class="bi bi-arrow-repeat fs-4 text-primary"></i></a></small>
                                                 <small class="text-danger" id="message"></small>
                                             </div>
+                                            <div class="p-2 text-end"><i class="bi bi-wallet fs-3"></i></div>
                                         </div>
                                     </div>
                                 </div>

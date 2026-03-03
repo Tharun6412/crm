@@ -1,7 +1,7 @@
 {{-- Show Call details, tab content --}}
 
 <div class="border rounded-top">
-    <div class="bg-light p-2 fs-5 fw-semibold">
+    <div class="bg-primary-subtle p-2 fs-5 fw-semibold">
         <i class="bi bi-telephone-inbound"></i>&nbsp;Calls&nbsp;-&nbsp;({{ $complaints->total() }})
     </div>
     <div class="p-2">
