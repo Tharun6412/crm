@@ -24,6 +24,9 @@ class BillMroData extends Model
         'mro_data',
         'invoice_id',
         'status_id',
+        'batch_id',
+        'created_at',
+        'updated_at'
     ];
     /**
      * Casts Dates
@@ -31,6 +34,8 @@ class BillMroData extends Model
     public function casts() {
         return [
             'schedule_date' => 'date',
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime'
         ];
     }
 }

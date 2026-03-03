@@ -13,7 +13,7 @@ class Mro
     public static function request($consumer_details)
     {
         $chunks = array_chunk($consumer_details, 100);
-        $resp_data_success =  array();
+        $responses =  array();
         foreach ($chunks as $key => $chunk) { 
             $cns_ar = [];
             $cns_ar['MT_MRO_Request']['MRO_Request'] = $chunk; 
@@ -30,8 +30,9 @@ class Mro
                 ]);
             }
             
-            print "<pre>"; print_r($response); print"</pre>";
+            $body = $response->json();
+            $responses = $body['MT_MRO_Response']['MRO_Response'] ?? [];
         }
-        // return $resp_data_success;
+        return $responses;
     }
 }
