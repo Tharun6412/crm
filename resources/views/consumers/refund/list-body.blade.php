@@ -19,6 +19,13 @@
     <div class="col-auto">
         ({{ $refunds_list->total() }}) Records found
     </div>
+    <div class="col-auto">
+        @if($refunds_list->count() > 0)
+            <a href="{{ url('reports/consumer/refundReportExport') }}?{{ http_build_query(request()->all()) }}" class="btn btn-primary btn-sm">
+                <i class="bi bi-file-earmark-excel"></i>&nbsp;Export
+            </a>
+        @endif
+    </div>
 </div>
 {{-- Consumers list --}}
 <div class="table-responsive" style="min-height: 500px;">
@@ -29,6 +36,8 @@
                 <th>Consumer Number</th>
                 <th>GA<x-master.ga-filter class="float-end"/></th>
                 <th>Request Number</th>
+                <th>Refund Amount&nbsp;(&#8377;)</th>
+                <th>Refunded&nbsp;(&#8377;)</th>
                 <th>Status<x-master.refund-status-filter class="float-end"/></th>
                 <th>Added Date</th>
                 <th width="2%" nowrap>Actions</th>
@@ -43,13 +52,26 @@
                     $sort_order_inverse = ($sort_order == 'asc') ? 'desc' : 'asc';
                     $sort_icon = ($sort_order == 'asc') ? 'bi-caret-down-fill' : 'bi-caret-up-fill';
                     $i = (($refunds_list->currentPage() - 1) * $refunds_list->perPage())+1;
+                    $tot_amt = $ref_amt = 0;
                 @endphp
                 @foreach ($refunds_list as $list)
+                    @php
+                        $tot_amt += ($list->refund_amount ?? 0);
+                    @endphp
                     <tr>
                         <td>{{ $i++ }}</td>
                         <td><x-auth.link href="{{ url('consumers/'.$list->consumer_id) }}" target="_blank">{{ $list->consumer->crn }}</x-auth.link></td>
                         <td>{{ $list->consumer->ga->name }}</td>
                         <td><x-auth.link href="{{ url('consumers/refunds/'.$list->id) }}" class="link-modal">{{ $list->request_no }}</x-auth.link></td>
+                        <td>{{ numberFormat($list->refund_amount ?? 0, 2) }}</td>
+                        @if ($list->status_id == \App\Enums\RefundStatus::CLOSE->value)
+                            @php
+                                $ref_amt += $list->refund_amount;
+                            @endphp
+                            <td>{{ numberFormat($list->refund_amount, 2) }}</td>
+                        @else 
+                            <td>0</td>
+                        @endif
                         <td>{{ $list->status?->name }}</td>
                         <td>{{ dateFormat($list->created_at) }}</td>
                         <td>
@@ -73,6 +95,12 @@
                         </td>
                     </tr>
                 @endforeach
+                <tr>
+                    <td colspan="4" class="text-end">Total</td>
+                    <td>{{ numberFormat($tot_amt, 2) }}</td>
+                    <td>{{ numberFormat($ref_amt, 2) }}</td>
+                    <td colspan="2"></td>
+                </tr>
             @else
                 <tr>
                     <td colspan="9">

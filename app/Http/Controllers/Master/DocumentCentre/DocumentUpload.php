@@ -29,6 +29,12 @@ class DocumentUpload extends Controller
 
             // Upload to AWS S3 bucket only in production
             $file_path = Storage::disk('s3')->put($upload_path, $request->dc_file);
+            // Upload to AWS S3 bucket only in production
+            if(config('app.env') == 'development') {
+                $file_path = $file_name;
+            } else {
+                $file_path = Storage::disk('s3')->put($upload_path, $request->dc_file);
+            }
             
             // Create a DB record in Document Centre package
             $dc_insert = Documents::create([
@@ -69,7 +75,11 @@ class DocumentUpload extends Controller
                 $upload_path = $package . '/' . date('ym');
                 
                 // Upload to AWS S3 bucket only in production
-                $file_path = Storage::disk('s3')->put($upload_path, $file);
+                if(config('app.env') == 'development') {
+                    $file_path = $file_name;
+                } else {
+                    $file_path = Storage::disk('s3')->put($upload_path, $file);
+                }
                 
                 // Check file
                 if(!empty($file)) {
@@ -116,8 +126,11 @@ class DocumentUpload extends Controller
                 $upload_path = $package . '/' . date('ym');
                 
                 // Upload to AWS S3 bucket only in production
-                $file_path = Storage::disk('s3')->put($upload_path, $file);
-                
+                if(config('app.env') == 'development') {
+                    $file_path = $file_name;
+                } else {
+                    $file_path = Storage::disk('s3')->put($upload_path, $file);
+                }
                 if(!empty($file)) {
                     // Create a DB record in Document Centre package
                     $dc_insert = Documents::create([

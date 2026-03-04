@@ -21,4 +21,7 @@ Route::get('consumer/consumerAgeingReport/consumersList', [App\Http\Controllers\
 Route::get('consumer/consumerAgeingReport/consumerExport', [App\Http\Controllers\Reports\Consumer\ConsumerAgeingReport::class, 'consumerExport']);
 
 // Refund Reports
+Route::get('consumer/refundReportExport', [App\Http\Controllers\Reports\RefundReportController::class, 'refundReportExport']);
 Route::get('consumer/refundReport', [App\Http\Controllers\Reports\RefundReportController::class, 'index']);
+// Employee Collection Report
+Route::get('employeeCollectionReport', [App\Http\Controllers\Reports\EmployeeCollectionReport::class, 'index']);

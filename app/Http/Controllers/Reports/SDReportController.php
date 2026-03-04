@@ -126,7 +126,7 @@ class SDReportController extends Controller
             if ($request->filled('amount_range')) {
                 $q->whereHas('scheme', function ($query) use ($request) {
                     if ($request->amount_range == "5000+") {
-                        $query->where('balance', '>=', 5000);
+                        $query->where('balance', '>', 5000);
                     } else {
                         [$min, $max] = explode('-', $request->amount_range);
                         $query->whereBetween('balance', [$min, $max]);

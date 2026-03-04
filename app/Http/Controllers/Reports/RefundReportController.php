@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers\Reports;
 
+use App\Exports\Reports\RefundReportExport;
 use App\Http\Controllers\Controller;
 use App\Models\Consumer\ConsumerRefund;
 use App\Models\Master\Ga;
@@ -18,19 +19,23 @@ class RefundReportController extends Controller
         $geo_areas = Ga::where('status', 1)->orderBy('position')->get();
         $refund_status = RefundStatus::all();
         $refund_data = [];
-        $data = ConsumerRefund::select('cns_consumers.ga_id', 'ref_refunds.status_id', DB::raw('COUNT(*) as status_count'))
+        $data = ConsumerRefund::select('cns_consumers.ga_id', 'ref_refunds.status_id', DB::raw('COUNT(*) as status_count'), DB::raw('SUM(refund_amount) as amount'))
             ->join('cns_consumers', 'ref_refunds.consumer_id', '=', 'cns_consumers.id')
             ->groupBy('cns_consumers.ga_id', 'ref_refunds.status_id')
             ->get();
         // Array Preparation
         foreach($data as $refund_count) {
-            $refund_data[$refund_count->ga_id][$refund_count->status_id] = $refund_count->status_count;
+            $refund_data[$refund_count->ga_id][$refund_count->status_id] = [
+                'count' => $refund_count->status_count,
+                'amount' => $refund_count->amount,
+            ];
             // Initialize total if not exists
             if (!isset($refund_data[$refund_count->ga_id]['total_count'])) {
                 $refund_data[$refund_count->ga_id]['total_count'] = 0;
             }
-            $refund_data[$refund_count->ga_id]['total_count'] += $refund_data[$refund_count->ga_id][$refund_count->status_id];
+            $refund_data[$refund_count->ga_id]['total_count'] += $refund_count->status_count;
         }
+        // print "<pre>"; print_r($refund_data);exit;
         // Response
         if($request->ajax()) {
             if(empty($request->filter_name)) {
@@ -43,5 +48,13 @@ class RefundReportController extends Controller
             ]);
         }
         return view('reports.consumer.refund-report.list');
+    }
+
+    /**
+     * Refund Report Export
+     */
+    public function refundReportExport(Request $request)
+    {
+        return (new RefundReportExport($request))->download('refund-report.xlsx');
     }
 } 

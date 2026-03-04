@@ -13,7 +13,10 @@
             $complaint_status = $complaint_segment = [];
             foreach ($complaints as $key => $value) {
                 # code...
-                $complaint_status[$value->status_id] = $value->status_count;
+                if (!isset($complaint_status[$value->status_id])) {
+                    $complaint_status[$value->status_id] = 0;
+                }
+                $complaint_status[$value->status_id] += $value->status_count;
                 // SEGMENT Based Count
                 if (!isset($complaint_segment[$value->segment_id])) {
                     $complaint_segment[$value->segment_id] = 0;

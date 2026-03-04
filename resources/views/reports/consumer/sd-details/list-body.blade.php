@@ -23,9 +23,9 @@
                 <span class="input-group-text">Balance Amount</span>
                 <select name="amount_range" id="amount_range" class="form-select">
                     <option value="">All</option>
-                    <option value="0-2000" @selected(request()->amount_range == "0-2000")>0 - 2,000</option>
-                    <option value="2000-5000" @selected(request()->amount_range == "2000-5000")>2,000 - 5,000</option>
-                    <option value="5000+" @selected(request()->amount_range == "5000+")>5,000+</option>
+                    <option value="0-2000" @selected(request()->amount_range == "0-2000")>&#8377;0 - &#8377;2,000</option>
+                    <option value="2001-5000" @selected(request()->amount_range == "2001-5000")>&#8377;2,001 - &#8377;5,000</option>
+                    <option value="5000+" @selected(request()->amount_range == "5000+")>&#8377;5,000+</option>
                 </select>
             </div>
         </div>
