@@ -13,7 +13,7 @@
             <div class="rounded bg-info-subtle p-3 mb-3">
                 <div class="row justify-content-sm-center">
                     <div class="col-sm-6">
-                        <h3 class="text-center">Invoice Search</h3>
+                        <h3 class="text-start">Invoice Search</h3>
                         <div class="position-relative">
                             {{-- Quick search input --}}
                             <div class="input-group input-group-lg">

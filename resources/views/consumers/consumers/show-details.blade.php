@@ -127,7 +127,7 @@
         <table class="table table-bordered table-primary table-hover">
             <thead class="table-primary">
                 <tr>
-                    <th>S.No</th>
+                    <th width="1%">S.No</th>
                     <th>Status</th>
                     <th>Notes</th>
                     <th>Created Date</th>

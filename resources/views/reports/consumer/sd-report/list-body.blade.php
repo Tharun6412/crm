@@ -4,12 +4,13 @@
     $consumer_count = [];
     $total_count = [];
 @endphp
-<div class="table-responsiveaa table-basic">
-    <table class="table table-bordered table-hover" id="monthly-sale">
-        <thead>
-            <tr class="bg-light">
+<div class="table-responsive">
+    <table class="table table-bordered table-hover table-striped" id="monthly-sale">
+        <thead class="table-success align-middle">
+            <tr>
                 <th width="1%" nowrap rowspan="2">S No</th>
-                <th rowspan="2">GA</th>
+                <th rowspan="2">GA Name</th>
+                <th rowspan="2">GA Code</th>
                 <th colspan="{{ $schemes->count() }}" class="text-center">Scheme Code</th>
                 <th class="text-end" rowspan="2">Total Consumers</th>
                 <th class="text-end" rowspan="2">Total Deposit</th>
@@ -38,7 +39,8 @@
                 @endphp
                 <tr>
                     <td>{{ $loop->iteration }}</td>
-                    <td nowrap>{{ $ga->name }}-{{ $ga->code }}</td>
+                    <td nowrap>{{ $ga->name }}</td>
+                    <td nowrap><i class="bi bi-geo text-secondary"></i> {{ $ga->code }}</td>
                     @foreach ($schemes as $scheme_data)
                         @php
                             $consumer_count[$scheme_data->id] += ($sd_amount_by_ga[$ga->id][$scheme_data->id]['count'] ?? 0);
@@ -65,8 +67,8 @@
                     $balance_dep += $ga_balance_dep;
                 @endphp
             @endforeach
-            <tr class="fw-semibold">
-                <td colspan="2" class="text-end">Totals</td>
+            <tr class="fw-semibold table-warning">
+                <td colspan="3" class="text-end">Totals</td>
                 @foreach ($schemes as $total_data)
                     <td class="text-end">{{ $consumer_count[$total_data->id] ?? 0 }}</td>
                 @endforeach

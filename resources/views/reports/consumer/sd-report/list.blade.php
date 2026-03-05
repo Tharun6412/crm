@@ -35,7 +35,7 @@
                     </div>
                 </div>
                 <div class="col-auto">
-                    <select name="status" id="status" class="form-select form-select-sm">
+                    <select name="status" id="status" class="form-select">
                         <option value="">Select</option>
                         <option value={{ \App\Enums\ConsumerStatus::PRE_REGISTER->value }}>TR</option>
                         <option value={{ \App\Enums\ConsumerStatus::REGISTER->value }}>Register</option>

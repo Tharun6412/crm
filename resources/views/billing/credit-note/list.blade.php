@@ -7,18 +7,19 @@
 @section('page-title', 'Credit Note')
 
 @section('page-content')
-    <div class="container">
-        <x-consumer.invoice-details :invoice="$invoice" class="bg-info-subtle"/>
+    <div class="container-fluid">
+        <div class="border p-2 rounded">
+        <x-consumer.invoice-details :invoice="$invoice" class="bg-info-subtle mt-1"/>
         @if ($invoice->status_id == 1)
-            <div class="alert alert-danger">
+            <div class="alert alert-danger text-center">
                 Invoice is fully paid. Credit or debit note cannot be issued. Please contact the administrator.
             </div>
         @else
             <div id="credit-note-create-success">
                 <form action="{{ url('bill/creditNote/create/' . $invoice->id) }}" id="credit-note-create-form">
                     @csrf
-                    <div class="d-flex justify-content-between mb-1">
-                        <div class="fs-5 fw-semibold">Note items</div>
+                    <div class="d-flex justify-content-between mb-1 p-1">
+                        <div class="fs-5 fw-semibold">Credit Note items</div>
                         <div>
                             <select name="note_type" id="note_type" class="form-select">
                                 <option value="">Select Type</option>
@@ -27,8 +28,8 @@
                             </select>
                         </div>
                     </div>
-                    <table class="table table-bordered table-info">
-                        <thead class="table-info">
+                    <table class="table table-bordered table-hover">
+                        <thead class="table-success">
                             <tr>
                                 <th width="1%" nowrap>#</th>
                                 <th>Description</th>
@@ -59,8 +60,8 @@
                                 <td colspan="2" rowspan="3" class="text-center">
                                     <button type="button" class="btn btn-outline-info btn-sm" id="add-credit-row"><i class="bi bi-plus-lg"></i>&nbsp;Add Row</button>
                                 </td>
-                                <td colspan="2" class="text-end">Total</td>
-                                <td class="text-end"><span id="cr-total"></span></td>
+                                <td colspan="2" class="text-end fw-bold">Total</td>
+                                <td class="text-end fw-bold"><span id="cr-total"></span></td>
                             </tr>
                             <tr>
                                 <td colspan="2">
@@ -79,8 +80,8 @@
                                 <td class="text-end"><span id="tax_amount"></span></td>
                             </tr>
                             <tr>
-                                <td colspan="2" class="text-end">Note Total</td>
-                                <td class="text-end"><span id="tax-total"></span></td>
+                                <td colspan="2" class="text-end bg-body-secondary fw-bold">Credit Note Total</td>
+                                <td class="bg-body-secondary text-end fw-bold"><span id="tax-total"></span></td>
                             </tr>
                         </tfoot>
                     </table>
@@ -93,10 +94,10 @@
         @endif
         <p>Notes: </p>
         <div>
-            <div class="fs-5 fw-semibold">Credit/Debit Notes ({{ $credit_notes->count() }})</div>
+            <div class="fs-5 fw-semibold mb-2">Credit/ Debit Notes ({{ $credit_notes->count() }})</div>
             @if ($credit_notes->count() > 0)
-                <table class="table table-bordered table-hover table-warning">
-                    <thead class="table-warning">
+                <table class="table table-bordered table-hover">
+                    <thead class="table-primary">
                         <tr>
                             <th width="1%" nowrap>S No</th>
                             <th>Type</th>
@@ -117,7 +118,7 @@
                                 <td class="text-end">{{ numberFormat($item->total_amount, 2) }}</td>
                                 <td>{{ $item->createdBy->emp_id }}</td>
                                 <td>
-                                    <a href="{{ url('bill/creditNote/' . $item->id) }}">View</a>
+                                    <a href="{{ url('bill/creditNote/' . $item->id) }}" class="btn btn-outline-primary btn-sm"><i class="bi bi-eye">&nbsp;</i>View</a>
                                 </td>
                             </tr>
                         @endforeach
@@ -129,6 +130,7 @@
                 </div>
             @endif
         </div>
+    </div>
     </div>
 @endsection()
 {{-- Scripts --}}

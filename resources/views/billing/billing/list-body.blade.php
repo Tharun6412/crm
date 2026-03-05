@@ -21,7 +21,8 @@
                             <td>{{ $i++ }}</td>
                             <td><x-auth.link class="link-modal" href="{{ url('consumers/'.$consumer->id) }}">{{ $consumer->crn }}</x-auth.link></td>
                             <td>{{ $consumer->name }}</td>
-                            <td>{{ $consumer->status->name }}</td>
+                            {{-- {{ $consumer->status->name }} --}}
+                            <td><x-consumer.status :status="$consumer->status" /></td>
                             <td>{{ $consumer->createdBy->name }}</td>
                             <td>
                                 <div class="dropdown">

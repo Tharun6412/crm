@@ -24,7 +24,7 @@
             </div>
             <div class="tab-pane fade" id="nav-cns-activity" role="tabpanel" aria-labelledby="nav-cns-activity-tab" tabindex="0">
                 <form action="{{ url('reports/consumer/onboarding/activity') }}" id="report-cns-activity-search-form" method="GET">
-                    <div class="d-flex justify-content-between align-items-center border my-2 bg-light p-2">
+                    <div class="d-flex justify-content-between align-items-center border my-2 bg-light p-2 bg-secondary-subtle rounded">
                         <h4 class="mb-0">Consumer Acitivity</h4>
                         <div class="row g-1">
                             <div class="col-auto">

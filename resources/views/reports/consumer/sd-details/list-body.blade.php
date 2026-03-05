@@ -1,15 +1,15 @@
 {{-- Consumers list body --}}
 {{-- Search form --}}
-<div class="d-flex justify-content-between">
+<div class="d-flex justify-content-between mb-2">
     <div class="row gx-1 mb-1">
         <div class="col-auto">
-            <div class="input-group input-group-sm">
+            <div class="input-group">
                 <span class="input-group-text" id="search-key">Search</span>
                 <input type="text" name="key" id="search-key" class="form-control" value="{{ request()->key }}">
             </div>
         </div>
         <div class="col-auto">
-            <div class="input-group input-group-sm">
+            <div class="input-group">
                 <span class="input-group-text">Type</span>
                 <select name="status" id="status" class="form-select form-select-sm">
                     <option value="">Select</option>
@@ -19,7 +19,7 @@
             </div>
         </div>
         <div class="col-auto">
-            <div class="input-group input-group-sm">
+            <div class="input-group">
                 <span class="input-group-text">Balance Amount</span>
                 <select name="amount_range" id="amount_range" class="form-select">
                     <option value="">All</option>
@@ -30,18 +30,18 @@
             </div>
         </div>
         <div class="col-auto">
-            <button type="submit" class="btn btn-sm btn-success"><i class="bi bi-search"></i></button>
+            <button type="submit" class="btn btn-success"><i class="bi bi-search"></i></button>
         </div>
         <div class="col-auto">
-            <a href="{{ url('reports/consumer/sdDetails') }}" class="btn btn-warning btn-sm"><i class="bi bi-arrow-clockwise"></i></a>
+            <a href="{{ url('reports/consumer/sdDetails') }}" class="btn btn-warning"><i class="bi bi-arrow-clockwise"></i></a>
         </div>
-        <div class="col-auto">
-            ({{ $sd_amounts->total() }}) Records found
+        <div class="col-auto mt-2">
+            <span class="fw-bold">({{ $sd_amounts->total() }})</span> Records found
         </div>
     </div>
     <div>
         @if($sd_amounts->count() > 0)
-            <a href="{{ url('reports/consumer/sdReportExport') }}?{{ http_build_query(request()->all()) }}" class="btn btn-primary btn-sm">
+            <a href="{{ url('reports/consumer/sdReportExport') }}?{{ http_build_query(request()->all()) }}" class="btn btn-outline-primary">
                 <i class="bi bi-file-earmark-excel"></i>&nbsp;Export
             </a>
         @endif
@@ -107,9 +107,10 @@
                     @endphp
                     <tr>
                         <td>{{ $i++ }}</td>
-                        <td><a href="{{ url('consumers/'.$amount->consumer_id) }}" target="_blank">{{ $amount->consumer->crn }}</a></td>
+                        <td><a href="{{ url('consumers/'.$amount->consumer_id) }}" target="_blank" title="{{ $amount->consumer->name }}">{{ $amount->consumer->crn }}</a></td>
                         <td>{{ $amount->consumer->ga->name }}</td>
-                        <td>{{ $amount->consumer->status->name }}</td>
+                         {{-- {{ $amount->consumer->status->name }} --}}
+                        <td><x-consumer.status :status="$amount->consumer->status" /></td>
                         <td>{{ $amount->consumer->segment->name }}</td>
                         <td>{{ $amount->consumer->connectType->name }}</td>
                         <td>{{ $amount->consumer->scheme->scheme->name }}</td>
@@ -119,11 +120,12 @@
                         <td>{{ $amount?->created_at->format('d-m-Y') }}</td>
                     </tr>
                 @endforeach
-                <tr class="fw-semibold">
+                <tr class="fw-semibold table-warning">
                     <td colspan="7" class="text-end">Totals</td>
                     <td class="text-end">{{ numberFormat($total_dep) }}</td>
                     <td class="text-end">{{ numberFormat($paid_dep) }}</td>
                     <td class="text-end">{{ numberFormat($bal_dep) }}</td>
+                    <td></td>
                 </tr>
             @else
                 <tr>

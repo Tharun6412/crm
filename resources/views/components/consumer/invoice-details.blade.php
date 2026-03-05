@@ -5,7 +5,7 @@
 {{-- Consumer basic details --}}
 <x-consumer.basic-details :consumer="$invoice->consumer" {{ $attributes->merge(['class']) }} />
 {{-- Invoice details --}}
-<div class="row g-2 pb-2 my-2 bg-warning-subtle rounded">
+<div class="row g-1 pb-2 my-2 m-1 bg-warning-subtle shadow-sm rounded">
     <div class="col-sm-2 text-end fw-semibold">Invoice No :</div>
     <div class="col-sm-4"><x-auth.link href="{{ url('bill/invoice/'.$invoice->id) }}" target="_blank">{{ $invoice->invoice_number }}</x-auth.link></div>
     <div class="col-sm-2 text-end fw-semibold">Invoice Type :</div>

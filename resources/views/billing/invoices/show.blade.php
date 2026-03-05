@@ -10,15 +10,15 @@
     <div class="d-flex align-content-md-start">
         <div class="a4-page pb-2 border bg-white">
             <div class="row p-4">
-                <div class="col-sm-4">
+                <div class="col-sm-4 border-bottom border-success-subtle">
                     <img src="{{ asset('img/logo.png') }}" alt="MeghaGas" class="img-fluid">
                 </div>
-                <div class="col-sm-8 text-end">
+                <div class="col-sm-8 text-end border-bottom border-success-subtle">
                     <span class="fs-3 fw-semibold">INVOICE</span>
                 </div>
             </div>
             <div class="row px-4">
-                <div class="col-sm-6">
+                <div class="col-sm-8">
                     <address>
                         <span class="fw-semibold">Megha Gas Distribution Privated Limited. </span><br>
                         S-2, Technocrat Industrial Estate, <br>
@@ -26,7 +26,7 @@
                         Telangana - 500 037
                     </address>
                 </div>
-                <div class="col-sm-6">
+                <div class="col-sm-4">
                     <div class="row gy-1 gx-2">
                         <div class="col-sm-6 text-end">Invoice Number:</div>
                         <div class="col-sm-6">{{ $invoice->invoice_number }}</div>
@@ -47,12 +47,11 @@
                         {{ $invoice->consumer->district->name ?? '' }}, {{ $invoice->consumer->ga->state->name ?? '' }} - {{ $invoice->consumer->pincode }}.
                     </address>
                 </div>
-                <div class="col-sm-6 text-center">
-                    {{ $invoice->invoiceType->name ?? '' }}
+                <div class="col-sm-6 text-end">
+                    <span class="fw-semibold text-primary">{{ $invoice->invoiceType->name ?? '' }}</span>                </div>
                 </div>
-            </div>
             <div class="px-4">
-                <div class="fw-semibold">Invoice items</div>
+                <div class="fw-semibold fs-5">Invoice items</div>
                 <table class="table table-bordered table-success">
                     <thead class="table-success">
                         <tr>
@@ -85,7 +84,7 @@
                             <td colspan="4" class="text-end">Tax ({{ $invoice->tax->name ??'' }} - {{ $invoice->tax_value }}%)</td>
                             <td class="text-end">{{ numberFormat($invoice->tax_amount, 2) }}</td>
                         </tr>
-                        <tr>
+                        <tr class="fw-semibold">
                             <td colspan="4" class="text-end">Invoice Total</td>
                             <td class="text-end">{{ numberFormat($invoice->total_amount, 2) }}</td>
                         </tr>
@@ -93,7 +92,7 @@
                             <td colspan="4" class="text-end">Credit / Debit Amount</td>
                             <td class="text-end">{{ numberFormat($invoice->credit_amount, 2) }}</td>
                         </tr>
-                        <tr>
+                        <tr class="fw-semibold">
                             <td colspan="4" class="text-end">Invoice Payable Total</td>
                             <td class="text-end">{{ numberFormat($invoice->payable_amount, 2) }}</td>
                         </tr>
@@ -126,7 +125,7 @@
                                     <td class="text-end">{{ numberFormat($invoice_item->total_amount, 2) }}</td>
                                     <td>{{ $invoice_item->status->name ?? '' }}</td>
                                     <td>
-                                        <a href="{{ url('bill/invoice/' . $invoice_item->id) }}">View</a>
+                                        <a class="btn btn-outline-info btn-sm" href="{{ url('bill/invoice/' . $invoice_item->id) }}"><i class="bi bi-eye">&nbsp;</i>View</a>
                                     </td>
                                 </tr>
                             @endforeach
@@ -155,7 +154,7 @@
                                 <td class="text-end">{{ numberFormat($invoice->parentInvoice->total_amount, 2) }}</td>
                                 <td>{{ $invoice->parentInvoice->status->name ?? '' }}</td>
                                 <td>
-                                    <a href="{{ url('bill/invoice/' . $invoice->parentInvoice->id) }}">View</a>
+                                    <a class="btn btn-outline-info btn-sm" href="{{ url('bill/invoice/' . $invoice->parentInvoice->id) }}"><i class="bi bi-eye">&nbsp;</i>View</a>
                                 </td>
                             </tr>
                         </tbody>
@@ -187,7 +186,7 @@
                                     <td>{{ ($item->type == 1) ? 'Credit' : 'Debit' }} Note</td>
                                     <td class="text-end">{{ numberFormat($item->total_amount, 2) }}</td>
                                     <td>
-                                        <a href="{{ url('bill/creditNote/' . $item->id) }}">View</a>
+                                        <a class="btn btn-outline-info btn-sm" href="{{ url('bill/creditNote/' . $item->id) }}"><i class="bi bi-eye">&nbsp;</i>View</a>
                                     </td>
                                 </tr>
                             @endforeach

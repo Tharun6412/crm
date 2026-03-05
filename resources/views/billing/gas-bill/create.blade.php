@@ -6,12 +6,12 @@
 @section('page-title', 'Gas Invoice Generation')
 
 @section('page-content')
-<div id="add-gas-bill-success">
+<div id="add-gas-bill-success" class="mt-2">
     <form action="{{ url('bill/gasInvoice/') }}" name="add-gas-bill-form" id="add-gas-bill-form" method="post">
         @csrf
         <input type="hidden" id="id" name="id" value="{{ $consumer->id }}">
         <input type="hidden" id="meter_init_reading" name="meter_init_reading" value="{{ $consumer->activeMeter->initial_reading }}">
-        <div class="mb-2">
+        <div class="mb-2 border">
             @php
                     $start_date = (!empty($invoice)) ? $invoice->consumption->date_to->format('Y-m-d') : ($consumer->statusHistory->first()->created_at->format('Y-m-d'));
                     $invEndReading = (!empty($invoice) and $invoice->consumption()->exists())
@@ -28,10 +28,10 @@
                     }
             @endphp
             @if (!empty($invoice))
-                <x-consumer.invoice-details :invoice="$invoice" type="3" class="bg-info-subtle" />
+                <x-consumer.invoice-details :invoice="$invoice" type="3" class="bg-info-subtle mt-2" />
                 <input type="hidden" id="inv_end_reading" name="inv_end_reading" value={{ $invEndReading }} >
-                <div class="bg-secondary-subtle rounded mt-3">
-                    <div class="row g-2 pb-2 mb-2">
+                <div class="bg-secondary-subtle rounded m-2 p-2">
+                    <div class="row">
                         <div class="col-sm-2 text-end fw-semibold">Scheme Name : </div>
                         <div class="col-sm-4">{{ $consumer->scheme->scheme->name }}</div>
                         <div class="col-sm-2 text-end fw-semibold">Scheme Amount : </div>
@@ -47,15 +47,15 @@
                             <div class="col-sm-4">{{ $consumer->sdPayment->last()->emi_no ?? 0 }}</div>
                         @endif
                     </div>
-                </iv>
+                </div>
             @else
                 <div>
                     <x-consumer.basic-details :consumer="$consumer" type="3" class="bg-info-subtle"/>
                 </div>
-                <div class="alert alert-warning mb-0">No Previous Invoices Found..!</div>
+                <div class="alert alert-warning m-2">No Previous Invoices Found..!</div>
                 <input type="hidden" id="inv_end_reading" name="inv_end_reading" value={{ $invEndReading }} >
-                <div class="bg-secondary-subtle rounded mt-3">
-                    <div class="row g-2 pb-2 mb-2">
+                <div class="bg-secondary-subtle rounded m-2">
+                    <div class="row p-2 mb-2">
                         <div class="col-sm-2 text-end fw-semibold">Scheme Name : </div>
                         <div class="col-sm-4">{{ $consumer->scheme->scheme->name }}</div>
                         <div class="col-sm-2 text-end fw-semibold">Scheme Amount : </div>
@@ -63,7 +63,7 @@
                         <div class="col-sm-2 text-end fw-semibold">Paid Amount : </div>
                         <div class="col-sm-4">{{ $consumer->sdPayment->sum('amount') ?? 0 }}</div>
                         <div class="col-sm-2 text-end fw-semibold">Balance : </div>
-                        <div class="col-sm-4">{{ $consumer->sdPayment->last()->balance ?? $consumer->scheme->scheme->total_deposit }}</div>
+                        <div class="col-sm-4">{{ $consumer->sdPayment->last()->balance ?? $consumer->scheme->scheme->total_deposit }}   </div>
                         @if ($consumer->scheme->scheme->emi_amount > 0)
                             <div class="col-sm-2 text-end fw-semibold">Emi Amount :</div>
                             <div class="col-sm-4">{{ $consumer->scheme->scheme->emi_amount }}</div>
@@ -73,14 +73,13 @@
                     </div>
                 </div>
             @endif
-        </div>
         @if (!empty($consumer->activeMeter->meter_no) AND $startReading >= 0)
             @if ($start_date == date('Y-m-d'))
-                <div class="alert alert-danger">Invoice already generated or consumer activated today.</div>
+                <div class="alert alert-danger  m-2 text-center">Invoice already generated or consumer activated today.</div>
             @elseif ($bill_days < 10)
-                <div class="alert alert-danger">Billing Frequency should be greater than equal to 10 days.</div>
+                <div class="alert alert-danger  m-2 text-center">Billing Frequency should be greater than equal to 10 days.</div>
             @elseif ($prices->isEmpty() OR $prices->last()->basic_price <= 0 OR $prices->last()->tax_value <= 0)
-                <div class="alert alert-danger">No price record found. Please update the price.</div>
+                <div class="alert alert-danger  m-2 text-center">No price record found. Please update the price.</div>
             @else
                 <div class="bg-light rounded">
                     <div class="row">
@@ -152,8 +151,9 @@
                 
             @endif
         @else
-            <div class="alert alert-danger">Please update the Meter number / Initial meter reading.</div>
+            <div class="alert alert-danger  m-2 text-center">Please update the Meter number / Initial meter reading.</div>
         @endif
+    </div>
     </form>
 </div>
 @endsection()

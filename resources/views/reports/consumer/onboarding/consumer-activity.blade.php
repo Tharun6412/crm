@@ -152,50 +152,50 @@
     {{-- Totals --}}
     <div class="row row-cols-10 g-2 mb-2">
         <div class="col-2">
-            <div class="bg-success-subtle rounded py-1 px-2 fs-5 fw-semibold text-truncate">Totals</div>
+            <div class="bg-info-subtle rounded py-1 px-2 fs-5 fw-semibold text-truncate text-end">Totals</div>
         </div>
         <div class="col">
-            <div class="bg-light border rounded text-end py-1 px-2 fs-5 fw-semibold">
+            <div class="bg-info-subtle border rounded text-end py-1 px-2 fs-5 fw-semibold">
                 {{ $status_sum[\App\Enums\ConsumerStatus::PRE_REGISTER->value] ?? 0 }}
             </div>
         </div>
         <div class="col">
-            <div class="bg-light border rounded text-end py-1 px-2 fs-5 fw-semibold">
+            <div class="bg-info-subtle border rounded text-end py-1 px-2 fs-5 fw-semibold">
                 {{ $status_sum[\App\Enums\ConsumerStatus::REGISTER->value] ?? 0 }}
             </div>
         </div>
         <div class="col">
-            <div class="bg-light border rounded text-end py-1 px-2 fs-5 fw-semibold">
+            <div class="bg-info-subtle border rounded text-end py-1 px-2 fs-5 fw-semibold">
                 {{ $status_sum[\App\Enums\ConsumerStatus::ACCEPT->value] ?? 0 }}
             </div>
         </div>
         <div class="col">
-            <div class="bg-light border rounded text-end py-1 px-2 fs-5 fw-semibold">
+            <div class="bg-info-subtle border rounded text-end py-1 px-2 fs-5 fw-semibold">
                 {{ $status_sum[\App\Enums\ConsumerStatus::EXECUTE->value] ?? 0 }}
             </div>
         </div>
         <div class="col">
-            <div class="bg-light border rounded text-end py-1 px-2 fs-5 fw-semibold">
+            <div class="bg-info-subtle border rounded text-end py-1 px-2 fs-5 fw-semibold">
                 {{ $status_sum[\App\Enums\ConsumerStatus::HSC->value] ?? 0 }}
             </div>
         </div>
         <div class="col">
-            <div class="bg-light border rounded text-end py-1 px-2 fs-5 fw-semibold">
+            <div class="bg-info-subtle border rounded text-end py-1 px-2 fs-5 fw-semibold">
                 {{ $status_sum[\App\Enums\ConsumerStatus::ACTIVATE->value] ?? 0 }}
             </div>
         </div>
         <div class="col">
-            <div class="bg-light border rounded text-end py-1 px-2 fs-5 fw-semibold">
+            <div class="bg-info-subtle border rounded text-end py-1 px-2 fs-5 fw-semibold">
                 {{ $status_sum[\App\Enums\ConsumerStatus::TD->value] ?? 0 }}
             </div>
         </div>
         <div class="col">
-            <div class="bg-light border rounded text-end py-1 px-2 fs-5 fw-semibold">
+            <div class="bg-info-subtle border rounded text-end py-1 px-2 fs-5 fw-semibold">
                 {{ $status_sum[\App\Enums\ConsumerStatus::PD->value] ?? 0 }}
             </div>
         </div>
         <div class="col">
-            <div class="bg-light border rounded text-end py-1 px-2 fs-5 fw-semibold">
+            <div class="bg-info-subtle border rounded text-end py-1 px-2 fs-5 fw-semibold">
                 {{ $status_sum[\App\Enums\ConsumerStatus::REJECT->value] ?? 0 }}
             </div>
         </div>

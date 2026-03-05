@@ -1,8 +1,8 @@
 <div>
     @if ($invoices->count() > 0)
-        <div class="table-responsive" style="min-height: 300px;">
+        <div class="table-responsive">
             <table class="table table-bordered table-hover">
-                <thead class="table-info">
+                <thead class="table-success">
                     <tr>
                         <th width="1%" nowrap>S.No</th>
                         <th>CRN</th>
@@ -22,7 +22,7 @@
                     @endphp
                     @foreach ($invoices as $invoice)
                         <tr>
-                            <td>{{ $i++ }}</td>
+                            <td class="text-center">{{ $i++ }}</td>
                             <td><x-auth.link href="{{ url('consumers/'.$invoice->consumer_id) }}" target="_blank">{{ $invoice->consumer->crn }}</x-auth.link></td>
                             <td>{{ $invoice->consumer->name }}</td>
                             <td><a href="{{ url('bill/invoice/' . $invoice->id) }}" target="_blank">{{ $invoice->invoice_number }}</a></td>
@@ -33,7 +33,7 @@
                             <td>{{ $invoice->invoiceType->name }}</td>
                             <td>
                                 <div class="dropdown">
-                                    <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <button class="btn btn-sm btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                         Actions
                                     </button>
                                     <ul class="dropdown-menu">
@@ -53,12 +53,12 @@
                 </tbody>
             </table>
         </div>
-        <div class="d-flex justify-content-between">
-            <div>({{ $invoices->total() }}) Invoices found</div>
+        <div class="d-flex justify-content-between mb-2">
+            <div><span class="fw-bold">({{ $invoices->total() }})</span> Invoices found</div>
             <div>{{ $invoices->links('utils.paginator', ['modDiv' => 'invoice-list']) }}</div>
         </div>
     @else
-        <div class="alert alert-info">
+        <div class="alert alert-info text-center mb-1">
             No invoices found
         </div>
     @endif

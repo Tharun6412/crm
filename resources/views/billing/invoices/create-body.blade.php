@@ -5,7 +5,7 @@
         $total = 0;
     @endphp
     @csrf
-    <div class="table-responsive">
+    <div class="table-responsive p-2">
         <table class="table table-bordered table-success mb-0">
             <thead class="table-success">
                 <tr>
@@ -68,7 +68,7 @@
         </table>
     </div>
     <div id="invoice-create-error" class="my-1"></div>
-    <div class="text-end">
+    <div class="text-end p-2">
         <button type="button" onclick="invoiceBody()" class="btn btn-warning"><i class="bi bi-arrow-clockwise"></i>&nbsp;Refresh</button>
         <button type="submit" class="btn btn-success"><i class="bi bi-file-earmark-plus"></i>&nbsp;Create Invoice</button>
     </div>

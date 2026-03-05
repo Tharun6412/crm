@@ -13,15 +13,15 @@
     <div class="d-flex align-content-md-start">
         <div class="a4-page pb-2 border bg-white">
             <div class="row p-4">
-                <div class="col-sm-4">
+                <div class="col-sm-4 border-bottom border-success-subtle">
                     <img src="{{ asset('img/logo.png') }}" alt="MeghaGas" class="img-fluid">
                 </div>
-                <div class="col-sm-8 text-end">
+                <div class="col-sm-8 text-end border-bottom border-success-subtle">
                     <span class="fs-3 fw-semibold">{{ ($note->type == 1) ? 'Credit' : 'Debit' }} Note</span>
                 </div>
             </div>
             <div class="row px-4">
-                <div class="col-sm-6">
+                <div class="col-sm-8">
                     <address>
                         <span class="fw-semibold">Megha Gas Distribution Privated Limited. </span><br>
                         S-2, Technocrat Industrial Estate, <br>
@@ -29,7 +29,7 @@
                         Telangana - 500 037
                     </address>
                 </div>
-                <div class="col-sm-6">
+                <div class="col-sm-4">
                     <div class="row gy-1 gx-2">
                         <div class="col-sm-6 text-end">Note Number:</div>
                         <div class="col-sm-6">{{ $note->code }}</div>
@@ -50,12 +50,12 @@
                         {{ $invoice->consumer->district->name ?? '' }}, {{ $invoice->consumer->ga->state->name ?? '' }} - {{ $invoice->consumer->pincode }}.
                     </address>
                 </div>
-                <div class="col-sm-6 text-center">
-                    Reference Invoice: {{ $invoice->invoice_number}}
+                <div class="col-sm-6 text-end">
+                    <span class="fw-semibold">Reference Invoice:</span> {{ $invoice->invoice_number}}
                 </div>
             </div>
             <div class="px-4">
-                <div class="fw-semibold">Note items</div>
+                <div class="fw-semibold fs-5">{{ ($note->type == 1) ? 'Credit' : 'Debit' }} Note items</div>
                 <table class="table table-bordered table-success">
                     <thead class="table-success">
                         <tr>
@@ -88,7 +88,7 @@
                             <td colspan="4" class="text-end">Tax ({{ $note->tax->name ?? 'N/A' }} - {{ $note->tax_value }}%)</td>
                             <td class="text-end">{{ numberFormat($note->tax_amount, 2) }}</td>
                         </tr>
-                        <tr>
+                        <tr class="fw-semibold">
                             <td colspan="4" class="text-end">Note Total</td>
                             <td class="text-end">{{ numberFormat($note->total_amount, 2) }}</td>
                         </tr>
