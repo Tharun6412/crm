@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers\Api\V1\Application;
 
+use App\Enums\AwsPath;
 use App\Enums\ConsumerStatus as EnumsConsumerStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Consumer\ConsumerDocument;
@@ -98,7 +99,7 @@ class ConsumerRegistrationController extends Controller
         ]);
         // Documents Data Preparation
         if($request->has('document_type')) {
-            $documents_bulk = DocumentUpload::uploadBulk($request, 'domestic');
+            $documents_bulk = DocumentUpload::uploadBulk($request, AwsPath::REGISTRATION->value);
             foreach($request->document_type as $key => $doc_type) {
                 $add_consumer_document = ConsumerDocument::create([
                     'consumer_id' => $add_consumer->id,

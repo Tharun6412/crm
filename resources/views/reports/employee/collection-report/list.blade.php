@@ -12,7 +12,7 @@
 
 @section('page-content')
     <div>
-        <form action="{{ url('reports/employeeCollectionReport') }}" id="employee-report-form">
+        <form action="{{ url('reports/employee/collection') }}" id="employee-report-form">
             <div class="row g-2 align-items-center">
                 <div class="col-auto">
                     <input type="radio" class="btn-check" name="filter_name" id="success-outlined" value="show" autocomplete="off" checked>
@@ -35,16 +35,26 @@
                     </div>
                 </div>
                 <div class="col-auto">
+                    <div class="input-group">
+                        <label class="input-group-text">Geo Area</label>
+                        <select class="form-select" name="ga_id" id="ga_id">
+                            <option value="">select</option>
+                            @foreach ($geo_areas as $ga)
+                                <option value="{{ $ga->id }}">{{ $ga->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="col-auto">
                     <button type="submit" class="btn btn-success">
                         <i class="bi bi-arrow-right-circle"></i>&nbsp;Get Report
                     </button>
                 </div>
                 <div class="col-auto">
-                    <a href="{{ url('reports/employeeCollectionReport') }}" class="btn btn-warning"><i class="bi bi-arrow-clockwise"></i></a>
+                    <a href="{{ url('reports/employee/collection') }}" class="btn btn-warning"><i class="bi bi-arrow-clockwise"></i></a>
                 </div>
             </div>
         </form>
-
         <div id="employee-report-loader" class="mt-3"></div>
     </div>
 @endsection

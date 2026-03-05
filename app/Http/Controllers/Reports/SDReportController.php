@@ -36,7 +36,7 @@ class SDReportController extends Controller
             $request->validate(['status' => 'required']);
             // Query to sum of the amounts between the dates
             $sd_amounts = Consumer::join('cns_consumer_schemes as schemes', 'schemes.consumer_id', '=', 'cns_consumers.id')
-                ->when(!isAdmin() && !isSuperAdmin(), function ($q) {
+                ->when(!isAdmin() AND !isSuperAdmin(), function ($q) {
                     $q->whereIn('cns_consumers.ga_id', session('user')['gas']);
                 })
                 // Status filtering using EXISTS (no duplication)

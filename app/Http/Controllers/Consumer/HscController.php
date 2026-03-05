@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers\Consumer;
 
+use App\Enums\AwsPath;
 use App\Enums\ConsumerStatus as EnumsConsumerStatus;
 use App\Enums\DocumentType;
 use App\Http\Controllers\Controller;
@@ -39,7 +40,7 @@ class HscController extends Controller
         $request->validate([
             'notes' => 'required|max:255',
         ]);
-        $doc_upload = DocumentUpload::upload($request, 'domestic');
+        $doc_upload = DocumentUpload::upload($request, AwsPath::HSC->value);
         //HSC Image Upload
         ConsumerDocument::create([
             'consumer_id' => $id,

@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers\Consumer;
 
+use App\Enums\AwsPath;
 use App\Enums\ConsumerStatus as EnumsConsumerStatus;
 use App\Enums\DocumentType;
 use App\Http\Controllers\Controller;
@@ -39,7 +40,7 @@ class ActivateController extends Controller
             'notes' => 'required|max:255',
         ]);
         if($request->has('dc_file')) {
-            $doc_upload = DocumentUpload::upload($request, 'domestic');
+            $doc_upload = DocumentUpload::upload($request, AwsPath::ACTIVATION->value);
             //Activate Image Upload
             ConsumerDocument::create([
                 'consumer_id' => $id,

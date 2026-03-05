@@ -4,6 +4,7 @@
  */
 namespace App\Http\Controllers\Complaints;
 
+use App\Enums\AwsPath;
 use App\Enums\ComplaintStatus;
 use App\Enums\OtpModule;
 use App\Enums\OtpPurpose;
@@ -182,7 +183,7 @@ class ComplaintsController extends Controller
         $complaint_number = str_pad($add_complaint->id, 9, "0", STR_PAD_LEFT);
         Complaint::where('id', $add_complaint->id)->update(['code' => $complaint_number]);
         if(!empty($request->dc_file_list)) {
-            $add_document = DocumentUpload::uploadIfPresent($request);
+            $add_document = DocumentUpload::uploadIfPresent($request, AwsPath::COMPLAINTS->value);
             foreach($request->dc_file_list as $key => $file) {
                 ComplaintDocument::create([
                     'complaint_id' => $add_complaint->id,
@@ -269,7 +270,7 @@ class ComplaintsController extends Controller
         ]);
         // Documemnts
         if(!empty($request->dc_file_list)) {
-            $add_document = DocumentUpload::uploadIfPresent($request);
+            $add_document = DocumentUpload::uploadIfPresent($request, AwsPath::COMPLAINTS->value);
             foreach($request->dc_file_list as $key => $file) {
                 ComplaintDocument::create([
                     'complaint_id' => $id,

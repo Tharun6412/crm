@@ -11,4 +11,5 @@ enum AwsPath: string
     case BILLS = "bills";
     case COMPLAINTS = "complaints";
     case METER_CHANGE = "meter_change";
+    case SPOT = "spot";
 }

@@ -1,5 +1,7 @@
 <?php
 namespace App\Http\Controllers\Spot;
+
+use App\Enums\AwsPath;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Master\DocumentCentre\DocumentUpload;
 use App\Models\DocumentCentre\DocumentTypes;
@@ -55,7 +57,7 @@ class ProspectDocumentController extends Controller
         $request->validate([
             'document_type_id' => 'required',
         ]);
-        $document_upload = DocumentUpload::upload($request, 'spot');
+        $document_upload = DocumentUpload::upload($request, AwsPath::SPOT->value);
         $doc_offer_count = ProspectDocuments::where('prospect_id', $id)->where('document_type_id', $request->document_type_id)->count();
         // To insert into the Prospect Documents
         ProspectDocuments::create([

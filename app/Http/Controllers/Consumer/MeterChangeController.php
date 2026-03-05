@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Consumer;
 
+use App\Enums\AwsPath;
 use App\Enums\ConsumerStatus as EnumsConsumerStatus;
 use App\Enums\DocumentType;
 use App\Enums\MeterStatus;
@@ -94,7 +95,7 @@ class MeterChangeController extends Controller
         ], [
             'prev_reading.in' => "Previous Reading must be exactly ".$prev_reading,
         ]);
-        $doc_upload = DocumentUpload::upload($request, 'domestic');
+        $doc_upload = DocumentUpload::upload($request, AwsPath::METER_CHANGE->value);
         // Fetch Old Meter Details
         //Meter Image Upload
         ConsumerDocument::create([

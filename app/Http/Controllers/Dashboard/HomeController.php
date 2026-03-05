@@ -17,6 +17,7 @@ use App\Notifications\RegisterOtpSMS;
 use App\Services\EmailService;
 use App\Services\OtpService;
 use App\Services\SmsService;
+use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
@@ -25,13 +26,17 @@ class HomeController extends Controller
      * 
      * Dashboard
      */
-    public function index()
+    public function index(Request $request)
     {
         // Get counts
         $consumer_count = Consumer::when((!isAdmin() AND !isSuperAdmin()), function ($q) {
             $q->whereIn('ga_id', session('user')['gas']);
         })->count();
-        $invoices_count = BillInvoice::where('status_id', InvoiceStatus::NOT_PAID->value)->count();
+        $invoices_count = BillInvoice::whereHas('consumer', function($q) {
+            $q->when((!isAdmin() AND !isSuperAdmin()), function($q1) {
+                $q1->whereIn('ga_id', session('user')['gas']);
+            });
+        })->where('status_id', InvoiceStatus::NOT_PAID->value)->count();
         $payments_count = InvoicePayment::where('status_id', PaymentStatus::PROGRESS->value)->count();
         $calls_list = Complaint::when((!isAdmin() AND !isSuperAdmin()), function ($q) {
                 $q->whereIn('ga_id', session('user')['gas']);

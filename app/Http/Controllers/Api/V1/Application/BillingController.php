@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1\Application;
 
+use App\Enums\AwsPath;
 use App\Enums\Constants;
 use App\Enums\ConsumerStatus;
 use App\Enums\InvoiceStatus;
@@ -414,7 +415,7 @@ class BillingController extends Controller
         
         if($inv_insert) {
             // Meter image upload.
-            $doc_upload = DocumentUpload::upload($request, 'domestic');
+            $doc_upload = DocumentUpload::upload($request, AwsPath::BILLS->value);
             // 3. save the invoice id column with new consumption object.
             $invoice_data['consumption']['invoice_id'] = $inv_insert->id;
             $invoice_data['consumption']['file_id'] = $doc_upload['file_id'];

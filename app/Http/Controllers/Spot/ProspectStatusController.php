@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers\Spot;
 
+use App\Enums\AwsPath;
 use App\Enums\DocumentType;
 use App\Enums\SpotStages;
 use App\Enums\SpotStatus;
@@ -120,7 +121,7 @@ class ProspectStatusController extends Controller
             case SpotStages::TECHNICAL->value:
             case SpotStages::OFFER->value:
                 $doc_type = $request->sub_stage_id == SpotStages::TECHNICAL->value ? DocumentType::LOAD_ASSESSMENT_SHEET->value : DocumentType::OFFER->value;
-                $document_upload = DocumentUpload::upload($request, 'spot');
+                $document_upload = DocumentUpload::upload($request, AwsPath::SPOT->value);
                 $doc_offer_count = ProspectDocuments::where('prospect_id', $id)->where('document_type_id', $doc_type)->count();
                 // To insert into the Prospect Documents
                 ProspectDocuments::create([

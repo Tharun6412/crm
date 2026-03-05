@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Complaints;
 
+use App\Enums\AwsPath;
 use App\Enums\ComplaintStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Master\DocumentCentre\DocumentUpload;
@@ -104,7 +105,7 @@ class ExternalCallsController extends Controller
         $complaint_number = str_pad($add_complaint->id, 9, "0", STR_PAD_LEFT);
         Complaint::where('id', $add_complaint->id)->update(['code' => $complaint_number]);
         if(!empty($request->dc_file_list)) {
-            $add_document = DocumentUpload::uploadIfPresent($request);
+            $add_document = DocumentUpload::uploadIfPresent($request, AwsPath::COMPLAINTS->value);
             foreach($request->dc_file_list as $key => $file) {
                 ComplaintDocument::create([
                     'complaint_id' => $add_complaint->id,

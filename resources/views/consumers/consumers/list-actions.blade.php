@@ -8,7 +8,7 @@
         Actions
     </button>
     <ul class="dropdown-menu">
-        <li><x-auth.link class="dropdown-item" href="{{ url('consumers/' . $consumer->id) }}"><i class="bi bi-chevron-right"></i>&nbsp;View</x-auth.link></li>
+        <li><x-auth.link class="dropdown-item" href="{{ url('consumers/' . $consumer->id) }}" action="viewconsumer"><i class="bi bi-chevron-right"></i>&nbsp;View</x-auth.link></li>
         {{-- Registration Status Dropdown--}}
         @if ($consumer->status_id == ConsumerStatus::PRE_REGISTER->value)
             <x-auth.link class="dropdown-item link-modal" href="{{ url('consumers/trPayment/' . $consumer->id . '/edit') }}" action="pdep">

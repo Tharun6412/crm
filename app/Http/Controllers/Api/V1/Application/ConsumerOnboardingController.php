@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1\Application;
 
+use App\Enums\AwsPath;
 use App\Enums\ConsumerStatus as EnumsConsumerStatus;
 use App\Enums\DocumentType;
 use App\Enums\MeterStatus;
@@ -92,7 +93,7 @@ class ConsumerOnboardingController extends Controller
         ]);
         // Meter Images Upload
          // Documents Data Preparation
-        $documents_bulk = DocumentUpload::uploadBulk($request, 'domestic');
+        $documents_bulk = DocumentUpload::uploadBulk($request, AwsPath::EXECUTION->value);
         if($request->has('dc_file_list')) {
             $add_consumer_document = ConsumerDocument::create([
                 'consumer_id' => $id,
@@ -137,7 +138,7 @@ class ConsumerOnboardingController extends Controller
         $request->validate([
             'notes' => 'required|max:255',
         ]);
-        $doc_upload = DocumentUpload::upload($request, 'domestic');
+        $doc_upload = DocumentUpload::upload($request, AwsPath::HSC->value);
         //HSC Image Upload
         ConsumerDocument::create([
             'consumer_id' => $id,
@@ -171,7 +172,7 @@ class ConsumerOnboardingController extends Controller
         ]);
         //Check If Document has been uploaded [optional] 
         if($request->has('dc_file')) {
-            $doc_upload = DocumentUpload::upload($request, 'domestic');
+            $doc_upload = DocumentUpload::upload($request, AwsPath::ACTIVATION->value);
             //Activate Image Upload
             ConsumerDocument::create([
                 'consumer_id' => $id,
