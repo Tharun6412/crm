@@ -1,8 +1,7 @@
 <?php
 namespace App\Http\Controllers\Reports;
 
-use App\Enums\PaymentStatus;
-use App\Enums\SDPaymentStatus;
+use App\Enums\PaymentStatuuseuse App\Enums\SDPaymentStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Consumer\ConsumerSdPayment;
 use App\Models\Invoice\InvoicePayment;

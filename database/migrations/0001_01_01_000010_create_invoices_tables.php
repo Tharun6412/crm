@@ -236,7 +236,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('consumer_id')->index()->nullable()->constrained(table:'cns_consumers')->noActionOnUpdate()->noActionOnDelete();
             $table->foreignId('payment_type_id')->index()->nullable()->constrained(table:'mst_pay_types')->noActionOnUpdate()->noActionOnDelete();
-            $table->string('transaction_number', length:32)->nullable();
+            $table->string('transaction_number', length:50)->nullable();
             $table->double('amount')->nullable();
             $table->integer('emi_no')->nullable();
             $table->foreignId('status_id')->index()->nullable()->constrained(table:'mst_sd_payment_status')->noActionOnUpdate()->noActionOnDelete();

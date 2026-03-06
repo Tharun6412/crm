@@ -122,6 +122,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('prospect_id')->nullable()->index()->constrained(table:'spt_prospects')->noActionOnDelete()->noActionOnUpdate();
             $table->foreignId('stage_id')->nullable()->index()->constrained(table:'spt_stages')->noActionOnDelete()->noActionOnUpdate();
+            $table->foreignId('status_id')->nullable()->index()->constrained(table:'spt_status')->noActionOnDelete()->noActionOnUpdate();
             $table->text('notes')->nullable();
             $table->dateTime('created_at')->nullable();
             $table->foreignId('created_by')->nullable()->index()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();
