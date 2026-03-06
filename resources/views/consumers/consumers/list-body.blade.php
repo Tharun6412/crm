@@ -87,7 +87,7 @@
                         <td>
                             <i class="bi bi-{{ ($consumer->connection_type_id == 1) ? 'speedometer2' : 'wifi'}}"></i>
                             <x-auth.link href="{{ url('consumers/' . $consumer->id) }}">
-                            {{ $consumer->crn }}
+                                {{ $consumer->crn ?? $consumer->t_crn }}
                             </x-auth.link>
                         </td>
                         {{-- <td>{{ $consumer->connectType->name }}</td> --}}

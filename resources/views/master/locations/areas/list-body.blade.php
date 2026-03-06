@@ -53,6 +53,9 @@
             </tbody>
         </table>
     </div>
+    <div>
+        {{ $areas->links('utils.paginator', ['modDiv' => 'area-list']) }}
+    </div>
 @else
     <div class="alert alert-info">No records found!</div>
 @endif
