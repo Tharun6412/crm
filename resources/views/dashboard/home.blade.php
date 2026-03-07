@@ -585,7 +585,8 @@
                         }
                     ]
                 }
-            ]
+            ],
+            credits: [{enabled: false}]
         });
         //Line chart
         Highcharts.chart('lineChart', {
@@ -598,8 +599,7 @@
             },
             xAxis: {
                 categories: [
-                    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep',
-                    'Oct', 'Nov', 'Dec'
+                    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
                 ]
             },
             yAxis: {
@@ -618,16 +618,15 @@
             series: [{
                 name: 'Industrial',
                 data: [
-                    16.0, 18.2, 23.1, 27.9, 32.2, 36.4, 39.8, 38.4, 35.5, 29.2,
-                    22.0, 17.8
+                    16.0, 18.2, 23.1, 27.9, 32.2, 36.4, 39.8, 38.4, 35.5, 29.2, 22.0, 17.8
                 ]
             }, {
                 name: 'Commercial',
                 data: [
-                    -2.9, -3.6, -0.6, 4.8, 10.2, 14.5, 17.6, 16.5, 12.0, 6.5,
-                    2.0, -0.9
+                    -2.9, -3.6, -0.6, 4.8, 10.2, 14.5, 17.6, 16.5, 12.0, 6.5, 2.0, -0.9
                 ]
-            }]
+            }],
+            credits: [{enabled: false}]
         });
         // Bar chart
         Highcharts.chart('barChart', {
@@ -668,13 +667,11 @@
                     }
                 }
             },
-
             tooltip: {
                 headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
                 pointFormat: '<span style="color:{point.color}">{point.name}</span>: ' +
                     '<b>{point.y:.2f}%</b> of total<br/>'
             },
-
             series: [
                 {
                     name: 'GA Names',
@@ -957,7 +954,8 @@
                         ]
                     }
                 ]
-            }
+            },
+            credits: [{enabled: false}]
         });
 </script>
 @endpush
