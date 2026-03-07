@@ -38,8 +38,8 @@
                         </nav>
                     </div>
                 @endisset
-                <div class="content container-fluid mr-1 mt-0 bg-light text-dark rounded-6 shadow-sm">
-                    <div class="pt-2 pr-0 pb-1 pl-0">
+                <div class="container-fluid text-dark">
+                    <div class="content pt-2 pr-0 pb-1 pl-0">
                         @yield('page-content')
                     </div>    
                 </div>

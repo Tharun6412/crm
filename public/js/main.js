@@ -75,3 +75,10 @@ $(function(){
 		}
 	});
 })
+
+//font size change function
+function changeFontSize(s) {
+	let fs = parseInt($('body').css('font-size').replace('px', ''));
+	var fst = (s == '+') ? (fs + 1) : (s == 'a') ? 14.4 : (fs - 1);
+	$('body').css('font-size', fst + 'px');
+}

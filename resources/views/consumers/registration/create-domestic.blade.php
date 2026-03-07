@@ -155,7 +155,7 @@
                                 <tr class="table-primary">
                                     <td colspan="5"><span class="fw-semibold" id="scheme_name_details"></span></td>
                                 </tr>
-                                <tr class="table-light text-end">
+                                <tr class="table-secondary text-end">
                                     <td>Meter Deposit</td>
                                     <td>Consumption Deposit</td>
                                     <td>Registration</td>
