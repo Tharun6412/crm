@@ -31,7 +31,7 @@
                                 <td>{{ $invoice->invoice_date?->format('d-m-y') }}</td>
                                 <td class="text-end">{{ numberFormat($invoice->total_amount, 2) }}</td>
                                 <td><x-invoice.status :status="$invoice->status"/></td>
-                                <td>{{ $invoice->createdBy->emp_id }}</td>
+                                <td>{{ $invoice->createdBy->name }}</td>
                                 <td>
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Actions</button>

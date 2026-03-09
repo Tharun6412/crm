@@ -24,22 +24,19 @@ class OnboardingStatusReportController extends Controller
         $from = Carbon::parse($request->date_from)->startOfDay();
         $to   = Carbon::parse($request->date_to)->endOfDay();
         // Get data
-        $reports = ConsumerStatus::join('cns_consumers', 'cns_consumers.id', '=', 'cns_consumer_status.consumer_id')
-            ->join('mst_cns_status', 'mst_cns_status.id', '=', 'cns_consumer_status.status_id')
-            ->join('mst_gas', 'mst_gas.id', '=', 'cns_consumers.ga_id')
-            ->join('users', 'users.id', '=', 'cns_consumer_status.created_by')
-            ->select('mst_gas.name as ga_name', 'mst_cns_status.name as status_name', 'cns_consumers.fname' ,'cns_consumers.lname', 'cns_consumers.crn', 'cns_consumers.t_crn', 'cns_consumers.connection_type_id', 'cns_consumers.segment_id', 'cns_consumer_status.created_at as status_date', 'users.first_name', 'users.last_name')
-            ->whereBetween('cns_consumer_status.created_at', [$from, $to])
-            ->when(($request->has('connection_type_id') AND !empty($request->connection_type_id)), function($q) use($request) {
-                $q->where('cns_consumers.connection_type_id', $request->connection_type_id);
-            })
-            ->when(($request->has('segment_id') AND !empty($request->segment_id)), function($q) use($request) {
-                $q->where('cns_consumers.segment_id', $request->segment_id);
-            })
-            ->where(['cns_consumers.ga_id' => $request->ga_id, 'cns_consumer_status.status_id' => $request->status_id])
-            ->orderBy('cns_consumer_status.created_at', 'desc')
-            ->paginate(20)->withQueryString();
-            // dd($reports);
+        $reports = ConsumerStatus::whereHas('consumer', function($q) use($request) {
+            if($request->filled('connection_type_id')) {
+                $q->where('connection_type_id', $request->connection_type_id);
+            }
+            if($request->filled('segment_id')) {
+                $q->where('segment_id', $request->segment_id);
+            }
+            if($request->filled('ga_id')) {
+                $q->where('ga_id', $request->ga_id);
+            }
+        })
+        ->whereBetween('created_at', [$from, $to])
+        ->where('status_id', $request->status_id)->orderBy('created_at', 'desc')->paginate(20)->withQueryString();
         // Render output
         if($request->ajax() and $request->page >= 1) {
             return view('reports.consumer.onboarding-status-report.list-body', ['reports' => $reports]);

@@ -26,14 +26,11 @@ class DocumentUpload extends Controller
         if($request->file('dc_file')) {
             $file_name = $request->dc_file->getClientOriginalName();
             $upload_path = $package . '/' . date('ym');
-
             // Upload to AWS S3 bucket only in production
-            $file_path = Storage::disk('s3')->put($upload_path, $request->dc_file);
-            // Upload to AWS S3 bucket only in production
-            if(config('app.env') == 'development') {
-                $file_path = $file_name;
-            } else {
+            if(config('app.env') == 'production') {
                 $file_path = Storage::disk('s3')->put($upload_path, $request->dc_file);
+            } else {
+                $file_path = $file_name;
             }
             
             // Create a DB record in Document Centre package
@@ -75,10 +72,10 @@ class DocumentUpload extends Controller
                 $upload_path = $package . '/' . date('ym');
                 
                 // Upload to AWS S3 bucket only in production
-                if(config('app.env') == 'development') {
-                    $file_path = $file_name;
-                } else {
+                if(config('app.env') == 'production') {
                     $file_path = Storage::disk('s3')->put($upload_path, $file);
+                } else {
+                    $file_path = $file_name;
                 }
                 
                 // Check file
@@ -126,10 +123,10 @@ class DocumentUpload extends Controller
                 $upload_path = $package . '/' . date('ym');
                 
                 // Upload to AWS S3 bucket only in production
-                if(config('app.env') == 'development') {
-                    $file_path = $file_name;
-                } else {
+                if(config('app.env') == 'production') {
                     $file_path = Storage::disk('s3')->put($upload_path, $file);
+                } else {
+                    $file_path = $file_name;
                 }
                 if(!empty($file)) {
                     // Create a DB record in Document Centre package

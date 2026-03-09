@@ -5,6 +5,7 @@
                 <thead>
                     <tr>
                         <th>S.No</th>
+                        <th nowrap>Geo Area</th>
                         <th>CRN</th>
                         <th>Connection Type</th>
                         <th>Name</th>
@@ -20,12 +21,13 @@
                     @foreach ($reports as $report)
                         <tr>
                             <td>{{ $i++ }}</td>
-                            <td>{{ $report->crn }}</td>
-                            <td>{{ $report->connection_type_id == "1" ? "Postpaid" : "Prepaid" }}</td>
-                            <td>{{ $report->fname }}&nbsp;{{ $report->lname }}</td>
-                            <td>{{ $report->status_name }}</td>
-                            <td>{{ dateFormat($report->status_date) }}</td>
-                            <td>{{ $report->first_name }}&nbsp;{{ $report->last_name }}</td>
+                            <td nowrap>{{ $report->consumer->ga->name }}</td>
+                            <td>{{ $report->consumer->crn }}</td>
+                            <td>{{ $report->consumer->connection_type_id == "1" ? "Postpaid" : "Prepaid" }}</td>
+                            <td>{{ $report->consumer->fname }}&nbsp;{{ $report->consumer->lname }}</td>
+                            <td>{{ $report->status->name }}</td>
+                            <td>{{ dateFormat($report->created_at) }}</td>
+                            <td>{{ $report->createdBy?->name }}</td>
                         </tr>
                     @endforeach
                 </tbody>
