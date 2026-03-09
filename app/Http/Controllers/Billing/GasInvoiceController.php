@@ -20,7 +20,9 @@ use App\Enums\ConsumerStatus;
 use App\Enums\InvoiceStatus;
 use App\Enums\MeterChange;
 use App\Enums\TaxType;
+use App\Notifications\Consumer\GasbillSmsNotification;
 use App\Services\DependentInvoiceService;
+use App\Services\SmsService;
 
 class GasInvoiceController extends Controller
 {
@@ -138,7 +140,14 @@ class GasInvoiceController extends Controller
         else {
             $invoice_resp = $this->multiPriceInvoice($consumer, $prices, $request, $meterChange?->id);
         }
-        
+        // SMS Notification
+        $sms_response = SmsService::dispatch($consumer, new GasbillSmsNotification([
+            'crn' => $consumer->crn, 
+            'total_price' => $invoice_resp['total_price'], 
+            'total_reading' => $invoice_resp['net_consumption'], 
+            'invoice_no' => $invoice_resp['invoice_number'],
+            'due_date' => $invoice_resp['due_date'],
+        ]));
         if($invoice_resp) {   
             // Response Message
             return response()->json([
@@ -356,6 +365,7 @@ class GasInvoiceController extends Controller
      */ 
     public function invoiceInsert($consumer, $invoice_data)
     {
+        // print "<pre>"; print_r($invoice_data); exit;
         // 1. Invoice number generation via service.
         $inv_number = InvoiceService::generateNumber($consumer->ga->state_id, 1);
         // 2. Invoice insertion from the data received (excl. invoice number).
@@ -398,6 +408,12 @@ class GasInvoiceController extends Controller
                 }
             }
         }
-        return ['invoice_id' => $inv_insert->id, 'invoice_number' => $inv_number];
+        return [
+            'invoice_id' => $inv_insert->id, 
+            'invoice_number' => $inv_number, 
+            'net_consumption' => $invoice_data['consumption']['net_consumption'],
+            'total_price' => $invoice_data['invoice']['payable_amount'],
+            'due_date' => $invoice_data['invoice']['due_date'],
+        ];
     }
 }

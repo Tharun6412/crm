@@ -10,6 +10,8 @@ use App\Models\Consumer\Consumer;
 use App\Models\Consumer\ConsumerDocument;
 use App\Models\Consumer\ConsumerStatus;
 use App\Models\Consumer\ConsumerMeter;
+use App\Notifications\Consumer\ExecuteSmsNotification;
+use App\Services\SmsService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -92,6 +94,8 @@ class ExecuteController extends Controller
             'notes' => $request->notes,
             'created_by' => Auth::id(),
         ]);
+        // Sms Notification
+        $sms_response = SmsService::dispatch($consumer, new ExecuteSmsNotification(['crn' => $consumer->crn]));
         // Response
         return response()->json(['success' => 'Consumer executed successfully!']);
     }

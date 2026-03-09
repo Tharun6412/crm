@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Consumer;
 use App\Exports\Consumers\ConsumerExport;
 use App\Http\Controllers\Controller;
 use App\Models\Consumer\Consumer;
+use App\Models\Consumer\ConsumerDocument;
 use App\Models\Master\MasterConsumerStatus;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -103,6 +104,14 @@ class ConsumerController extends Controller
         ]);
     }
 
+    /**
+     * Consumer Documents
+     */
+    public function consumerDocs(Request $request, $id)
+    {
+        $documents_list = ConsumerDocument::where('consumer_id', $id)->get();
+        return view('consumers.consumers.show-documents', ['documents_list' => $documents_list]);
+    }
     /**
      * Consumers Export
      */

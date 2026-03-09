@@ -9,6 +9,9 @@ use App\Models\Consumer\Consumer;
 use App\Models\Consumer\ConsumerRefund;
 use App\Models\Consumer\ConsumerRefundStatus;
 use App\Models\Consumer\ConsumerStatus;
+use App\Notifications\Consumer\PdSmsNotification;
+use App\Notifications\Consumer\TdSmsNotification;
+use App\Services\SmsService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -23,7 +26,8 @@ class ConsumerOperationsController extends Controller
             'notes' => 'required|max:255',
         ]);
         // 7 = TD
-        Consumer::where('id', $id)->update([
+        $consumer = Consumer::find($id);
+        $consumer->update([
             'status_id' => EnumsConsumerStatus::TD->value,
             'updated_by' => Auth::id(),
         ]);
@@ -34,6 +38,8 @@ class ConsumerOperationsController extends Controller
             'notes' => $request->notes,
             'created_by' => Auth::id(),
         ]);
+        // Sms Response
+        $sms_response = SmsService::dispatch($consumer, new TdSmsNotification(['crn' => $consumer->crn]));
         // Response
         return response()->json(['success' => 'Consumer Temporarily Disconnected'], 200);
     }
@@ -49,7 +55,8 @@ class ConsumerOperationsController extends Controller
             'notes' => 'required|max:255',
         ]);
         // 8 = PD
-        Consumer::where('id', $id)->update([
+        $consumer = Consumer::find($id);
+        $consumer->update([
             'status_id' => EnumsConsumerStatus::PD->value,
             'updated_by' => Auth::id(),
         ]);
@@ -60,6 +67,8 @@ class ConsumerOperationsController extends Controller
             'notes' => $request->notes,
             'created_by' => Auth::id(),
         ]);
+        // Sms Response
+        $sms_response = SmsService::dispatch($consumer, new PdSmsNotification(['crn' => $consumer->crn]));
         // Response
         return response()->json(['success' => 'Consumer Permanently Disconnected.'], 200);
     }

@@ -15,6 +15,8 @@ use App\Models\Master\ComplaintPriority;
 use App\Models\Master\ComplaintSegment;
 use App\Models\Master\ComplaintType;
 use App\Models\Master\State;
+use App\Notifications\Consumer\ComplaintRegisterSmsNotification;
+use App\Services\SmsService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -119,6 +121,8 @@ class ExternalCallsController extends Controller
             'status_id' => ComplaintStatus::REGISTER->value,
             'created_by' => Auth::id(),
         ]);
+        // Sms Integration
+        $sms_response = SmsService::dispatch($add_complaint, new ComplaintRegisterSmsNotification(['complaint_no' => $complaint_number]));
         return response()->json(['success' => 'Complaint raised successfully<br/>GO to Calls <a href="'.url('calls').'">List</a>']);
     }
 }

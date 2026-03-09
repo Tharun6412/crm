@@ -18,7 +18,10 @@ use App\Models\Master\ComplaintMedia;
 use App\Models\Master\ComplaintPriority;
 use App\Models\Master\ComplaintSegment;
 use App\Models\Master\ComplaintType;
+use App\Notifications\Consumer\ComplaintCloseOtpSmsNotification;
+use App\Notifications\Consumer\ComplaintRegisterSmsNotification;
 use App\Services\OtpService;
+use App\Services\SmsService;
 use App\Traits\ApiResponse;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -123,6 +126,8 @@ class ComplaintsController extends Controller
             'status_id' => ComplaintStatus::REGISTER->value,
             'created_by' => Auth::id(),
         ]);
+         // Sms Integration
+        $sms_response = SmsService::dispatch($consumer, new ComplaintRegisterSmsNotification(['complaint_no' => $complaint_number]));
         return response()->json(['success' => 'Complaint raised successfully'], 200);
     }
 
@@ -168,6 +173,8 @@ class ComplaintsController extends Controller
             return response()->json(['message' => 'OTP not Sent'], 422);
         }
         $otp = OtpService::create($phone_no, OtpPurpose::COMPLAINT_CLOSE->value, OtpModule::USER->value);
+        // Sms Integration
+        $sms_response = SmsService::dispatch($complaint->consumer, new ComplaintCloseOtpSmsNotification(['otp' => $otp]));
         return response()->json(['message' => 'OTP Sent Successfully to your mobile number'.$otp], 200);
     }
 
@@ -228,6 +235,8 @@ class ComplaintsController extends Controller
             return response()->json(['message' => 'OTP not Sent'], 422);
         }
         $otp = OtpService::create($phone_no, OtpPurpose::COMPLAINT_CLOSE->value, OtpModule::USER->value);
+        // Sms Integration
+        $sms_response = SmsService::dispatch($complaint->consumer, new ComplaintCloseOtpSmsNotification(['otp' => $otp]));
         return response()->json([
             'message' => 'OTP Sent Successfully to your mobile number'.": ".$otp,
             'count' => $count,

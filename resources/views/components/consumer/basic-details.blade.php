@@ -21,6 +21,8 @@
         <div class="col-sm-4">{{ $consumer->district->name }}</div>
         <div class="col-sm-2 text-end fw-semibold">GA : </div>
         <div class="col-sm-4">{{ $consumer->ga->name }} ({{ $consumer->ga->code }})</div>
+        <div class="col-sm-2 text-end fw-semibold">Activation Date : </div>
+        <div class="col-sm-4">{{ $consumer->statusHistory()->where('status_id', \App\Enums\ConsumerStatus::ACTIVATE->value)->first()?->created_at->format('d-m-Y H:i:s') }}</div>
     </div>
     {{-- Scheme details --}}
     @if ($type == 1)

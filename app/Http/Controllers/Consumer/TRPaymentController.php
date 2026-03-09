@@ -17,9 +17,12 @@ use App\Models\Consumer\ConsumerStatus;
 use App\Models\Invoice\InvoicePayment;
 use App\Models\Invoice\Ledger;
 use App\Models\Master\PaymentType;
+use App\Notifications\Consumer\AcceptSmsNotification;
+use App\Notifications\Consumer\WelcomeSmsNotification;
 use App\Services\InvoiceService;
 use App\Services\LedgerService;
 use App\Services\PaymentService;
+use App\Services\SmsService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -165,6 +168,7 @@ class TRPaymentController extends Controller
             ]);
 
             // SMS and Email to send
+            $sms_response = SmsService::dispatch($consumer_scheme->consumer, new WelcomeSmsNotification(['crn' => $crn_no]));
 
             // Response
             return response()->json(['success' => 'CRN generated successfully with ' . $crn_no . ', click <a href="'.url('consumers').'">here</a> to go to consumers list.']);

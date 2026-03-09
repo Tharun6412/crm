@@ -7,21 +7,22 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class WelcomeSmsNotification extends Notification
+class WelcomeSmsNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
     /**
      * Consumer object
      */
-    protected $consumer;
+    protected $params;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct()
+    public function __construct($params)
     {
         // 
+        $this->params = $params;
     }
 
     /**
@@ -41,7 +42,7 @@ class WelcomeSmsNotification extends Notification
     public function toSms($notifiable)
     {
         return [
-            'message' => "Dear MeghaGas consumer your successfully registered with MeghaGas. your consumer number " . $notifiable->crn . ". Thanks for choosing MeghaGas",
+            'message' => "Dear MeghaGas consumer your successfully registered with MeghaGas. your consumer number " . $this->params['crn'] . ". Thanks for choosing MeghaGas",
         ];
     }
 }

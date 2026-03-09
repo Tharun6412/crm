@@ -305,7 +305,7 @@
                         <select name="document_type[]" id="document_type_0" class="form-select">
                             <option value="">Select</option>
                             @foreach ($documents as $doc_val)
-                                <option value="{{ $doc_val->id }}">{{ $doc_val->name }}</option>
+                                <option value="{{ $doc_val->id }}"@selected($doc_val->id == \App\Enums\DocumentType::AADHAR->value)>{{ $doc_val->name }}</option>
                             @endforeach
                         </select>
                         <span class="text-danger validate-err-msg" id="document_type_0-error"></span>

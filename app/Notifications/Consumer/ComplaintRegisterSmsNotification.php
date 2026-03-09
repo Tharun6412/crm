@@ -7,22 +7,22 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class ComplaintRegisterSmsNotification extends Notification
+class ComplaintRegisterSmsNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
     /**
      * Consumer object
      */
-    protected $consumer;
+    protected $params;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct($consumer)
+    public function __construct($params)
     {
         // Assign
-        $this->consumer = $consumer;
+        $this->params = $params;
     }
 
     /**
@@ -42,8 +42,7 @@ class ComplaintRegisterSmsNotification extends Notification
     public function toSms($notifiable)
     {
         return [
-            'message' => "Dear Customer, Your complaint no " . $this->consumer->complaint_no . ". is registered. We expect to attend it within 24 hours. Download Meghagas app https://bit.ly/3zPGMG3 & stay connected - Thanks, Megha Gas",
-            'phone' => $this->consumer->mobile,
+            'message' => "Dear Customer, Your complaint no " . $this->params['complaint_no'] . ". is registered. We expect to attend it within 24 hours. Download Meghagas app https://bit.ly/3zPGMG3 & stay connected - Thanks, Megha Gas",
         ];
     }
 }

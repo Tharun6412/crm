@@ -39,7 +39,7 @@
                                         <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Actions</button>
                                         <ul class="dropdown-menu">
                                             <li><a class="dropdown-item" href="{{ url('bill/invoice/' . $payment->invoice->id) }}" target="_blank"><i class="bi bi-file-text"></i>&nbsp;View</a></li>
-                                            @if (in_array($payment->invoice->status_id, [2,3]))
+                                            @if (in_array($payment->status_id, [\App\Enums\PaymentStatus::PROGRESS->value]))
                                                 <li><a class="dropdown-item link-modal" href="{{ url('payments/invoicePayments/create/'.$payment->invoice->id) }}"><i class="bi bi-cash"></i>&nbsp;Pay Invoice</a></li>
                                             @endif
                                             <li><a class="dropdown-item" href="#"><i class="bi bi-printer"></i>&nbsp;Print</a></li>
@@ -61,3 +61,5 @@
         @endif
     </div>
 </div>
+{{-- Scripts --}}
+@include('scripts.link-modal')

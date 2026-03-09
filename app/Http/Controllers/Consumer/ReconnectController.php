@@ -9,7 +9,9 @@ use App\Http\Controllers\Controller;
 use App\Models\Consumer\Consumer;
 use App\Models\Consumer\ConsumerStatus;
 use App\Models\Master\BillInvoiceItem;
+use App\Notifications\Consumer\ReconnectSmsNotification;
 use App\Services\InvoiceService;
+use App\Services\SmsService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -98,6 +100,8 @@ class ReconnectController extends Controller
             'notes' => !empty($request->notes) ? $request->notes : null,
             'created_by' => Auth::id(),
         ]);
+        // Sms Notification
+        $sms_response = SmsService::dispatch($consumer, new ReconnectSmsNotification(['crn' => $consumer->crn]));
         return response()->json(['success' => 'Consumer reconnected successfully']);
     }
 } 

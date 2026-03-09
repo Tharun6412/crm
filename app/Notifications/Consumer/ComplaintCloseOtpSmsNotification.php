@@ -7,22 +7,22 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class ComplaintCloseOtpSmsNotification extends Notification
+class ComplaintCloseOtpSmsNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
     /**
      * Consumer object
      */
-    protected $consumer;
+    protected $params;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct($consumer)
+    public function __construct($params)
     {
         // Assign
-        $this->consumer = $consumer;
+        $this->params = $params;
     }
 
     /**
@@ -42,8 +42,7 @@ class ComplaintCloseOtpSmsNotification extends Notification
     public function toSms($notifiable)
     {
         return [
-            'message' => "Your complaint closure OTP is " . $this->consumer->otp . ". Thank you for your cooperation. -MeghaGas",
-            'phone' => $this->consumer->mobile,
+            'message' => "Your complaint closure OTP is " . $this->params['otp'] . ". Thank you for your cooperation. -MeghaGas",
         ];
     }
 }

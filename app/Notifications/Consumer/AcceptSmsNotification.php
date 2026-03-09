@@ -14,15 +14,15 @@ class AcceptSmsNotification extends Notification implements ShouldQueue
     /**
      * Consumer object
      */
-    protected $consumer;
+    protected $params;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct($consumer)
+    public function __construct($params)
     {
         // Assign
-        $this->consumer = $consumer;
+        $this->params = $params;
     }
 
     /**
@@ -42,8 +42,7 @@ class AcceptSmsNotification extends Notification implements ShouldQueue
     public function toSms($notifiable)
     {
         return [
-            'message' => "Dear Meghagas consumer your Meghagas account " . $this->consumer->crn . " has been accepted successfully",
-            'phone' => $this->consumer->mobile,
+            'message' => "Dear Meghagas consumer your Meghagas account " . $this->params['crn'] . " has been accepted successfully",
         ];
     }
 }

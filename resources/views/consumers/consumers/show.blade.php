@@ -50,6 +50,9 @@
                             <a href="#" class="list-group-item list-group-item-action list-group-item-light" id="nav-calls-tab" data-bs-toggle="tab" data-bs-target="#nav-calls" data-url="{{ url('calls/consumerComplaints/' . $consumer->id) }}" role="tab" aria-controls="nav-calls" aria-selected="false">
                                 <i class="bi bi-telephone-inbound"></i>&nbsp;Calls
                             </a>
+                            <a href="#" class="list-group-item list-group-item-action list-group-item-light" id="nav-doc-tab" data-bs-toggle="tab" data-bs-target="#nav-doc" data-url="{{ url('consumers/consumerDocs/' . $consumer->id) }}" role="tab" aria-controls="nav-doc" aria-selected="false">
+                                <i class="bi bi-files"></i>&nbsp;Documents
+                            </a>
                             <a href="#" class="list-group-item list-group-item-action list-group-item-light" id="nav-mdata-tab" data-bs-toggle="tab" data-bs-target="#nav-mdata" role="tab" aria-controls="nav-mdata" aria-selected="false">
                                 <i class="bi bi-telephone-inbound"></i>&nbsp;Maintanance Data
                             </a>
@@ -172,10 +175,13 @@
                         <div class="tab-pane fade" id="nav-calls" role="tabpanel" aria-labelledby="nav-calls-tab" tabindex="0">
                             {{-- @include('consumers.consumers.show-calls') --}}
                         </div>
+                        <div class="tab-pane fade" id="nav-doc" role="tabpanel" aria-labelledby="nav-doc-tab" tabindex="0">
+                            {{-- @include('consumers.consumers.show-calls') --}}
+                        </div>
                         <div class="tab-pane fade" id="nav-mdata" role="tabpanel" aria-labelledby="nav-mdata-tab" tabindex="0">
                             @include('consumers.consumers.show-maintanance')
                         </div>
-                        <div class="tab-pane fade" id="nav-recharge" role="tabpanel" aria-labelledby="nav-mdata-tab" tabindex="0">
+                        <div class="tab-pane fade" id="nav-recharge" role="tabpanel" aria-labelledby="nav-recharge-tab" tabindex="0">
                             {{-- @include('consumers.consumers.show-recharge') --}}
                         </div>
                     </div>

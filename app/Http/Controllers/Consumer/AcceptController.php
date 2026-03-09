@@ -8,7 +8,10 @@ use App\Models\Consumer\ConsumerStatus;
 use App\Models\Invoice\BillInvoice;
 use App\Models\Invoice\InvoicePayment;
 use App\Models\Invoice\Ledger;
+use App\Notifications\Consumer\AcceptSmsNotification;
+use App\Notifications\Consumer\RejectSmsNotification;
 use App\Services\LedgerService;
+use App\Services\SmsService;
 use Carbon\Carbon;
 use Faker\Provider\Payment;
 use Illuminate\Http\Request;
@@ -54,7 +57,8 @@ class AcceptController extends Controller
             $status_val = "rejected";
         }
         // Consumer Update
-        Consumer::where('id', $id)->update([
+        $consumer = Consumer::find($id);
+        $consumer->update([
             'status_id' => $con_status,
             'updated_by' => Auth::id(),
         ]);
@@ -65,6 +69,12 @@ class AcceptController extends Controller
             'notes' => $request->notes,
             'created_by' => Auth::id(),
         ]);
+        // Sms Integration
+        if($con_status == EnumsConsumerStatus::ACCEPT->value) {
+            $sms_response = SmsService::dispatch($consumer, new AcceptSmsNotification(['crn' => $consumer->crn]));
+        }else {
+            $sms_response = SmsService::dispatch($consumer, new RejectSmsNotification(['crn' => $consumer->crn]));
+        }
         // Response
         return response()->json(['success' => 'Consumer status updated Successfully!']);
     }

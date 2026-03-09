@@ -23,7 +23,10 @@ use App\Models\Master\ComplaintMedia;
 use App\Models\Master\ComplaintPriority;
 use App\Models\Master\ComplaintSegment;
 use App\Models\Master\ComplaintType;
+use App\Notifications\Consumer\ComplaintCloseOtpSmsNotification;
+use App\Notifications\Consumer\ComplaintRegisterSmsNotification;
 use App\Services\OtpService;
+use App\Services\SmsService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -197,6 +200,8 @@ class ComplaintsController extends Controller
             'status_id' => ComplaintStatus::REGISTER->value,
             'created_by' => Auth::id(),
         ]);
+        // Sms Integration
+        $sms_response = SmsService::dispatch($consumer, new ComplaintRegisterSmsNotification(['complaint_no' => $complaint_number]));
         return response()->json(['success' => 'Complaint raised successfully'], 200);
     }
 
@@ -370,6 +375,8 @@ class ComplaintsController extends Controller
             return response()->json('OTP not Sent');
         }
         $otp = OtpService::create($phone_no, OtpPurpose::COMPLAINT_CLOSE->value, OtpModule::USER->value);
+        // Sms Integration
+        $sms_response = SmsService::dispatch($complaint->consumer, new ComplaintCloseOtpSmsNotification(['otp' => $otp]));
         return response()->json('OTP Sent Successfully to your mobile number'.": ".$otp."<br/> and will expire in 60 seconds.");
     }
 

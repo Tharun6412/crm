@@ -14,15 +14,15 @@ class TdSmsNotification extends Notification implements ShouldQueue
     /**
      * Consumer object
      */
-    protected $consumer;
+    protected $params;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct($consumer)
+    public function __construct($params)
     {
         // Assign
-        $this->consumer = $consumer;
+        $this->params = $params;
     }
 
     /**
@@ -42,8 +42,7 @@ class TdSmsNotification extends Notification implements ShouldQueue
     public function toSms($notifiable)
     {
         return [
-            'message' => "Dear MeghaGas consumer your account " . $this->consumer->crn . " has been disconnected successfully.",
-            'phone' => $this->consumer->mobile,
+            'message' => "Dear MeghaGas consumer your account " . $this->params['crn'] . " has been disconnected successfully.",
         ];
     }
 }

@@ -17,9 +17,11 @@ use App\Models\Invoice\BillInvoiceConsumption;
 use App\Models\Invoice\BillInvoiceConsumptionDetails;
 use App\Models\Master\PaymentType;
 use App\Models\Master\PriceHistory;
+use App\Notifications\Consumer\GasbillSmsNotification;
 use App\Services\DependentInvoiceService;
 use App\Services\InvoiceService;
 use App\Services\LedgerService;
+use App\Services\SmsService;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -177,7 +179,14 @@ class BillingController extends Controller
         else {
             $invoice_resp = $this->multiPriceInvoice($consumer, $prices, $request, $meterChange?->id);
         }
-        
+        // SMS Notification
+        $sms_response = SmsService::dispatch($consumer, new GasbillSmsNotification([
+            'crn' => $consumer->crn, 
+            'total_price' => $invoice_resp['total_price'], 
+            'total_reading' => $invoice_resp['net_consumption'], 
+            'invoice_no' => $invoice_resp['invoice_number'],
+            'due_date' => $invoice_resp['due_date'],
+        ]));
         if($invoice_resp) {   
             // Response Message
             return response()->json([
@@ -452,6 +461,12 @@ class BillingController extends Controller
                 }
             }
         }
-        return ['invoice_id' => $inv_insert->id, 'invoice_number' => $inv_number];
+        return [
+            'invoice_id' => $inv_insert->id, 
+            'invoice_number' => $inv_number,
+            'net_consumption' => $invoice_data['consumption']['net_consumption'],
+            'total_price' => $invoice_data['invoice']['payable_amount'],
+            'due_date' => $invoice_data['invoice']['due_date'],
+        ];
     }
 }

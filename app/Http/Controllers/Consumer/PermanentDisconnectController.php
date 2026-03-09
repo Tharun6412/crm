@@ -5,6 +5,8 @@ use App\Enums\ConsumerStatus as EnumsConsumerStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Consumer\Consumer;
 use App\Models\Consumer\ConsumerStatus;
+use App\Notifications\Consumer\PdSmsNotification;
+use App\Services\SmsService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -34,7 +36,8 @@ class PermanentDisconnectController extends Controller
             'notes' => 'required|max:255',
         ]);
         // 8 = PD
-        Consumer::where('id', $id)->update([
+        $consumer = Consumer::find($id);
+        $consumer->update([
             'status_id' => EnumsConsumerStatus::PD->value,
             'updated_by' => Auth::id(),
         ]);
@@ -45,6 +48,8 @@ class PermanentDisconnectController extends Controller
             'notes' => $request->notes,
             'created_by' => Auth::id(),
         ]);
+        // Sms Notification
+        $sms_response = SmsService::dispatch($consumer, new PdSmsNotification(['crn' => $consumer->crn]));
         // Response
         return response()->json(['success' => 'Consumer Permanently Disconnected.Go to <a href="'.url('consumers/pd').'">Consumers List</a>']);
     }

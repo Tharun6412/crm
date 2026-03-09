@@ -24,8 +24,9 @@ class MasterPaymentDataSeeder extends Seeder
         DB::table('mst_pay_modules')->insert([
             ['id' => 1, 'name' => 'Pay Deposit'],
             ['id' => 2, 'name' => 'Security Deposit'],
-            ['id' => 3, 'name' => 'Invoice'],
-            ['id' => 4, 'name' => 'Recharge'],
+            ['id' => 3, 'name' => 'Gas Invoice'],
+            ['id' => 4, 'name' => 'Invoice'],
+            ['id' => 5, 'name' => 'Recharge'],
         ]);
 
         // mst_pay_transaction_status

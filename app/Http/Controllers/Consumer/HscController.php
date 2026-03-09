@@ -9,6 +9,8 @@ use App\Http\Controllers\Master\DocumentCentre\DocumentUpload;
 use App\Models\Consumer\Consumer;
 use App\Models\Consumer\ConsumerDocument;
 use App\Models\Consumer\ConsumerStatus;
+use App\Notifications\Consumer\HscSmsNotification;
+use App\Services\SmsService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -49,7 +51,8 @@ class HscController extends Controller
             'file_id' => $doc_upload['file_id'],
         ]);
         // 5 = HSC
-        Consumer::where('id', $id)->update([
+        $consumer = Consumer::find($id);
+        $consumer->update([
             'status_id' => EnumsConsumerStatus::HSC->value,
             'updated_by' => Auth::id(),
         ]);
@@ -60,6 +63,7 @@ class HscController extends Controller
             'notes' => $request->notes,
             'created_by' => Auth::id(),
         ]);
+        $sms_response = SmsService::dispatch($consumer, new HscSmsNotification(['crn' => $consumer->crn]));
         // Response
         return response()->json(['success' => 'Consumer HSC successfully completed!']);
     }

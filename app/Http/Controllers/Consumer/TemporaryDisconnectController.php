@@ -5,6 +5,8 @@ use App\Enums\ConsumerStatus as EnumsConsumerStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Consumer\Consumer;
 use App\Models\Consumer\ConsumerStatus;
+use App\Notifications\Consumer\TdSmsNotification;
+use App\Services\SmsService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -34,7 +36,8 @@ class TemporaryDisconnectController extends Controller
             'notes' => 'required|max:255',
         ]);
         // 7 = TD
-        Consumer::where('id', $id)->update([
+        $consumer = Consumer::find($id);
+        $consumer->update([
             'status_id' => EnumsConsumerStatus::TD->value,
             'updated_by' => Auth::id(),
         ]);
@@ -45,6 +48,8 @@ class TemporaryDisconnectController extends Controller
             'notes' => $request->notes,
             'created_by' => Auth::id(),
         ]);
+        // Sms Response
+        $sms_response = SmsService::dispatch($consumer, new TdSmsNotification(['crn' => $consumer->crn]));
         // Response
         return response()->json(['success' => 'Consumer Temporarily Disconnected.Go to <a href="'.url('consumers/td').'">Consumers List</a>']);
     }

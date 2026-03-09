@@ -12,6 +12,12 @@ use App\Models\Consumer\Consumer;
 use App\Models\Consumer\ConsumerDocument;
 use App\Models\Consumer\ConsumerMeter;
 use App\Models\Consumer\ConsumerStatus;
+use App\Notifications\Consumer\AcceptSmsNotification;
+use App\Notifications\Consumer\ActivateSmsNotification;
+use App\Notifications\Consumer\ExecuteSmsNotification;
+use App\Notifications\Consumer\HscSmsNotification;
+use App\Notifications\Consumer\RejectSmsNotification;
+use App\Services\SmsService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -51,7 +57,8 @@ class ConsumerOnboardingController extends Controller
                 $status_val = "rejected";
             }
             // Consumer Update
-            Consumer::where('id', $id)->update([
+            $consumer = Consumer::find($id);
+            $consumer->update([
                 'status_id' => $con_status,
                 'updated_by' => Auth::id(),
             ]);
@@ -62,6 +69,12 @@ class ConsumerOnboardingController extends Controller
                 'notes' => $request->notes,
                 'created_by' => Auth::id(),
             ]);
+            // Sms Integration
+            if($con_status == EnumsConsumerStatus::ACCEPT->value) {
+                $sms_response = SmsService::dispatch($consumer, new AcceptSmsNotification(['crn' => $consumer->crn]));
+            }else {
+                $sms_response = SmsService::dispatch($consumer, new RejectSmsNotification(['crn' => $consumer->crn]));
+            }
             // Response
             return response()->json(['success' => 'Consumer status updated Successfully!'], 200);
         }
@@ -126,6 +139,8 @@ class ConsumerOnboardingController extends Controller
             'notes' => $request->notes,
             'created_by' => Auth::id(),
         ]);
+        // Sms Notification
+        $sms_response = SmsService::dispatch($consumer, new ExecuteSmsNotification(['crn' => $consumer->crn]));
         // Response
         return response()->json(['success' => 'Consumer executed successfully!'], 200);
     }
@@ -147,7 +162,8 @@ class ConsumerOnboardingController extends Controller
             'file_id' => $doc_upload['file_id'],
         ]);
         // 5 = HSC
-        Consumer::where('id', $id)->update([
+        $consumer = Consumer::find($id);
+        $consumer->update([
             'status_id' => 5,
             'updated_by' => Auth::id(),
         ]);
@@ -158,6 +174,8 @@ class ConsumerOnboardingController extends Controller
             'notes' => $request->notes,
             'created_by' => Auth::id(),
         ]);
+        // Sms Notification
+        $sms_response = SmsService::dispatch($consumer, new HscSmsNotification(['crn' => $consumer->crn]));
         // Response
         return response()->json(['success' => 'Consumer HSC successfully completed!'], 200);
     }
@@ -182,7 +200,8 @@ class ConsumerOnboardingController extends Controller
             ]);
         }
         // 6 = Activation
-        Consumer::where('id', $id)->update([
+        $consumer = Consumer::find($id);
+        $consumer->update([
             'status_id' => EnumsConsumerStatus::ACTIVATE->value,
             'updated_by' => Auth::id(),
         ]);
@@ -193,6 +212,8 @@ class ConsumerOnboardingController extends Controller
             'notes' => $request->notes,
             'created_by' => Auth::id(),
         ]);
+        // Sms Notification
+        $sms_response = SmsService::dispatch($consumer, new ActivateSmsNotification(['crn' => $consumer->crn]));
         // Response
         return response()->json(['success' => 'Consumer activated successfully!'], 200);
     }

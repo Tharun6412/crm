@@ -7,22 +7,22 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class GasbillPaymentSmsNotification extends Notification
+class GasbillPaymentSmsNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
     /**
      * Consumer object
      */
-    protected $consumer;
+    protected $params;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct($consumer)
+    public function __construct($params)
     {
         // Assign
-        $this->consumer = $consumer;
+        $this->params = $params;
     }
 
     /**
@@ -42,8 +42,7 @@ class GasbillPaymentSmsNotification extends Notification
     public function toSms($notifiable)
     {
         return [
-            'message' => "Dear MeghaGas consumer your payment Rs. " . $this->consumer->total_price . " towards your MeghaGas bill with invoice number " . $this->consumer->invoice->invoice_no . " has been received on " . date('d-m-Y'),
-            'phone' => $this->consumer->mobile,
+            'message' => "Dear MeghaGas consumer your payment Rs. " . $this->params['total_price'] . " towards your MeghaGas bill with invoice number " . $this->params['invoice_no'] . " has been received on " . date('d-m-Y'),
         ];
     }
 }

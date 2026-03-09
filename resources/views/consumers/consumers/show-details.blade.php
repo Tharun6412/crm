@@ -66,21 +66,25 @@
                     <dt class="col-sm-3">Owner Phone</dt>
                     <dd class="col-sm-9">{{ maskNumber($consumer->owner_phone) }}</dd>
                 </dl>
-                <h4 class="text-primary mt-3 fw-semibold">Tenant Details</h4>
-                <dl class="row">
-                    <dt class="col-sm-3">Tenant Name</dt>
-                    <dd class="col-sm-9">{{ $consumer->tenant_name }}</dd>
-                    <dt class="col-sm-3">Tenant Phone</dt>
-                    <dd class="col-sm-9">{{ maskNumber($consumer->tenant_phone) }}</dd>
-                    <dt class="col-sm-3">Tenant Email</dt>
-                    <dd class="col-sm-9">{{ $consumer->tenant_email }}</dd>
-                </dl>
+                @if ($consumer->segment_id == \App\Enums\SegmentType::DOMESTIC->value)
+                    <h4 class="text-primary mt-3 fw-semibold">Tenant Details</h4>
+                    <dl class="row">
+                        <dt class="col-sm-3">Tenant Name</dt>
+                        <dd class="col-sm-9">{{ $consumer->tenant_name }}</dd>
+                        <dt class="col-sm-3">Tenant Phone</dt>
+                        <dd class="col-sm-9">{{ maskNumber($consumer->tenant_phone) }}</dd>
+                        <dt class="col-sm-3">Tenant Email</dt>
+                        <dd class="col-sm-9">{{ $consumer->tenant_email }}</dd>
+                    </dl>
+                @endif
             </div>
             <div class="col-md-6">
                 <h4 class="text-primary fw-semibold">Location</h4>
                 <dl class="row">
                     <dt class="col-sm-3">Geo Area</dt>
                     <dd class="col-sm-9">{{ $consumer->ga->name }}</dd>
+                    <dt class="col-sm-3">District</dt>
+                    <dd class="col-sm-9">{{ $consumer->district->name }}</dd>
                     <dt class="col-sm-3">Charge Area</dt>
                     <dd class="col-sm-9">{{ $consumer->ca->name }}</dd>
                     <dt class="col-sm-3">Location</dt>

@@ -21,6 +21,8 @@ use App\Models\Consumer\ConsumerStatus;
 use App\Models\Consumer\Prepaid;
 use App\Models\Master\ConnectionType;
 use App\Models\Master\MasterConsumerScheme;
+use App\Notifications\Consumer\RegistrationSmsNotification;
+use App\Services\SmsService;
 
 /**
  * Consumer Registration Controller
@@ -139,6 +141,7 @@ class ConsumerRegistrationController extends Controller
             ]);
         }
         // Send SMS
+        $sms_response = SmsService::dispatch($add_consumer, new RegistrationSmsNotification(['tcrn' => $crn_code]));
         // Rsponse
         return response()->json(['data' => "Consumer created Successfully"], 200);
     }

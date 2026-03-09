@@ -24,6 +24,8 @@ use App\Models\Master\Ga;
 use App\Models\Master\MasterConsumerScheme;
 use App\Models\Master\Segment;
 use App\Models\Master\Title;
+use App\Notifications\Consumer\RegistrationSmsNotification;
+use App\Services\SmsService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
@@ -144,6 +146,7 @@ class CommercialRegistrationController extends Controller
             ]);
         }
         // SMS and Email to send
+        $sms_response = SmsService::dispatch($add_consumer, new RegistrationSmsNotification(['tcrn' => $crn_code]));
         // Response Message
         return response()->json([
             'success' => 'Consumer Created Successfully with TR number ' . $crn_code . ', click <a href="'.url('consumers').'">here</a> to see all consumers.'

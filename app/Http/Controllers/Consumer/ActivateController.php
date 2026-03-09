@@ -9,6 +9,8 @@ use App\Http\Controllers\Master\DocumentCentre\DocumentUpload;
 use App\Models\Consumer\Consumer;
 use App\Models\Consumer\ConsumerDocument;
 use App\Models\Consumer\ConsumerStatus;
+use App\Notifications\Consumer\ActivateSmsNotification;
+use App\Services\SmsService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -50,7 +52,8 @@ class ActivateController extends Controller
             ]);
         }
         // 6 = Activation
-        Consumer::where('id', $id)->update([
+        $consumer = Consumer::find($id);
+        $consumer->update([
             'status_id' => EnumsConsumerStatus::ACTIVATE->value,
             'updated_by' => Auth::id(),
         ]);
@@ -61,6 +64,9 @@ class ActivateController extends Controller
             'notes' => $request->notes,
             'created_by' => Auth::id(),
         ]);
+
+        // SmS Integration
+        $sms_response = SmsService::dispatch($consumer, new ActivateSmsNotification(['crn' => $consumer->crn]));
         // Response
         return response()->json(['success' => 'Consumer activated successfully!']);
     }

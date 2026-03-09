@@ -205,13 +205,14 @@
                 <div class="mb-1 fs-5 fw-semibold text-primary">Additional details&nbsp;:</div>
                 <div class="row mb-2 pt-2">
                     <div class="col-md-3 col-sm-6 col-xs-12">
-                        <label class="form-label" for="firm_type_id">Firm Type&nbsp;:&nbsp;</label>
+                        <label class="form-label" for="firm_type_id">Firm Type&nbsp;:<span class="text-danger">*</span></label>
                         <select name="firm_type_id" id="firm_type_id" class="form-select">
                             <option value="">Select</option>
                             @foreach ($firm_types as $type)
                                 <option value="{{ $type->id }}">{{ $type->name }}</option>
                             @endforeach
                         </select>
+                        <span class="text-danger validate-err-msg" id="firm_type_id-error"></span>
                     </div>
                     <div class="col-md-3 col-sm-6 col-xs-12">
                         <label class="form-label" for="expected_date">Expected Date&nbsp;:&nbsp;</label>
@@ -243,8 +244,9 @@
                         <input type="text" name="dcq" id="dcq" class="form-control" placeholder="Consumption per day"/>
                     </div>
                     <div class="col-md-3 col-sm-6 col-xs-12">
-                        <label class="form-label" for="gst">GST No. for the unit&nbsp;:&nbsp;</label>
+                        <label class="form-label" for="gst">GST No. for the unit&nbsp;:<span class="text-danger">*</span></label>
                         <input type="text" name="gst" id="gst" class="form-control" placeholder="GST NO."/>
+                        <span class="text-danger validate-err-msg" id="gst-error"></span>
                     </div>
                     <div class="col-md-3 col-sm-6 col-xs-12">
                         <label class="form-label" for="gas_required_id">Natural Gas Required for&nbsp;:&nbsp;</label>
@@ -263,7 +265,7 @@
                         <select name="document_type[]" id="document_type_0" class="form-select">
                             <option value="">Select</option>
                             @foreach ($documents as $doc_val)
-                                <option value="{{ $doc_val->id }}">{{ $doc_val->name }}</option>
+                                <option value="{{ $doc_val->id }}"@selected($doc_val->id == \App\Enums\DocumentType::AADHAR->value)>{{ $doc_val->name }}</option>
                             @endforeach
                         </select>
                         <span class="text-danger validate-err-msg" id="document_type_0-error"></span>
