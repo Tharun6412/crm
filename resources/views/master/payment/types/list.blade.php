@@ -12,8 +12,8 @@
 @section('page-content')
     @if ($payment_types->count() > 0)
         <div class="table-responsive">
-            <table class="table table-bordered table-hover table-primary">
-                <thead class="table-primary">
+            <table class="table table-bordered table-hover table-striped bg-white">
+                <thead class="table-success">
                     <tr>
                         <th width="1%" nowrap>S No</th>
                         <th>Name</th>
@@ -23,7 +23,7 @@
                 <tbody>
                     @foreach ($payment_types as $item)
                         <tr>
-                            <td>{{ $loop->iteration }}</td>
+                            <td class="text-center">{{ $loop->iteration }}</td>
                             <td>{{ $item->name }}</td>
                             <td><x-common.status :status="$item->status"/></td>
                         </tr>

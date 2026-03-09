@@ -28,7 +28,7 @@
                             </select>
                         </div>
                     </div>
-                    <table class="table table-bordered table-hover">
+                    <table class="table table-bordered table-hover table-striped bg-white">
                         <thead class="table-success">
                             <tr>
                                 <th width="1%" nowrap>#</th>
@@ -96,7 +96,7 @@
         <div>
             <div class="fs-5 fw-semibold mb-2">Credit/ Debit Notes ({{ $credit_notes->count() }})</div>
             @if ($credit_notes->count() > 0)
-                <table class="table table-bordered table-hover">
+                <table class="table table-bordered bg-white table-striped table-hover">
                     <thead class="table-primary">
                         <tr>
                             <th width="1%" nowrap>S No</th>

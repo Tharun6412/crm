@@ -1,7 +1,7 @@
 {{-- Invoice Types Filter --}}
 <div {{ $attributes->merge(['class' => 'dropdown']) }}>
-    <button type="button" class="btn btn-link bg-primary-subtle text-dark p-1" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
-        <i class="bi bi-funnel{{ (request()->has('invoice_type')) ? '-fill' : '' }} fs-6"></i>
+    <button type="button" class="btn btn-link text-dark p-1" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+        <i class="bi bi-funnel{{ (request()->has('invoice_type')) ? '-fill' : '' }} fs-6 text-primary"></i>
         @isset(request()->invoice_type)
         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
             {{ sizeof(request()->get('invoice_type')) }}

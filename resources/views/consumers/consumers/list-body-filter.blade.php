@@ -9,14 +9,14 @@
     </div>
     <div class="col-auto">
         @if (request()->has('geo_area'))
-            <div class="form-control form-control-sm">
+            <div class="form-control">
                 Charge Area<x-master.charge-area-filter class="float-end"/>
             </div>
         @endif
     </div>
     <div class="col-auto">
         @if (request()->has('charge_area'))
-            <div class="form-control form-control-sm">
+            <div class="form-control">
                 Area<x-master.area-filter class="float-end"/>
             </div>
         @endif

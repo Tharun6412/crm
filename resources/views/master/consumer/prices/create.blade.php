@@ -40,30 +40,30 @@
                         </div>
                     </div>
                     <div class="row">
-                        <label for="prce-details" class="col-sm-2 col-form-label text-end">Price Data</label>
+                        <label for="prce-details" class="col-sm-2 col-form-label text-end mt-3">Price Data</label>
                         <div class="col-sm-9">
-                            <div class="row mb-2">
+                            <div class="row p-1 mb-2 bg-body-tertiary">
                                 <div class="col-sm-4">
                                     <label for="basic" class="form-label">Basic(<i class="bi bi-currency-rupee"></i>)</label>
-                                    <input type="text" name="basic" class="form-control text-end" id="basic">
+                                    <input type="text" name="basic" class="form-control text-end" id="basic" placeholder="Basic Price">
                                 </div>
                                 <div class="col-sm-4">
                                     <label for="supply" class="form-label">Supply(<i class="bi bi-currency-rupee"></i>)</label>
-                                    <input type="text" name="supply" class="form-control text-end" id="supply">
+                                    <input type="text" name="supply" class="form-control text-end" id="supply" placeholder="Supply Price">
                                 </div>
                                 <div class="col-sm-4">
                                     <label for="margin" class="form-label">Margin(<i class="bi bi-currency-rupee"></i>)</label>
-                                    <input type="text" name="margin" class="form-control text-end" id="margin">
+                                    <input type="text" name="margin" class="form-control text-end" id="margin" placeholder="Margin Price">
                                 </div>
                             </div>
-                            <div class="row mb-2">
+                            <div class="row p-1 mb-2 bg-body-tertiary">
                                 <div class="col-sm-4">
                                     <label for="price" class="col-form-label">Price(<i class="bi bi-currency-rupee"></i>)</label>
                                     <input type="text" name="price" id="price" class="form-control text-end" disabled>
                                 </div>
                                 <div class="col-sm-4">
                                     <label for="vat" class="col-form-label">VAT(%)</label>
-                                    <input type="text" name="vat" id="vat" class="form-control text-end">
+                                    <input type="text" name="vat" id="vat" class="form-control text-end" placeholder="VAT Percentage">
                                 </div>
                                 <div class="col-sm-4">
                                     <label for="rsp" class="col-form-label">RSP(<i class="bi bi-currency-rupee"></i>)</label>
@@ -81,7 +81,7 @@
                             </div>
                         </div>
                     </div>
-                    <div id="cns-price-create-error" class="text-danger"></div>
+                    <div id="cns-price-create-error" class="text-danger m-2"></div>
                     <div class="row">
                         <div class="offset-sm-2 col-sm-9">
                             <button type="submit" class="btn btn-success"><i class="bi bi-plus-lg"></i>&nbsp;Create</button>

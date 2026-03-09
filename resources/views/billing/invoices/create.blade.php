@@ -7,7 +7,7 @@
 
 @section('page-content')
     <div class="container-fluid mt-2">
-        <div class="border rounded">
+        <div class="border rounded bg-white">
             <x-consumer.basic-details :consumer="$consumer" :type="0" class="bg-info-subtle" />
             <div class="p-2" id="add-items">
                 <form action="{{ url('bill/invoice/addItem') }}" method="POST" id="inv-add-item-form">

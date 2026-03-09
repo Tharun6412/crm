@@ -1,4 +1,4 @@
-<div>
+<div class="p-2">
     @if (session('success'))
         <div class="alert alert-success alert-dismissible fade show">
             <strong><i class="bi bi-check2-circle"></i>&nbsp;Success</strong>&nbsp;{{ session('success') }}
@@ -10,19 +10,19 @@
     <div class="d-flex align-items-center justify-content-between pb-2 flex-wrap">
         <div class="d-flex align-items-center gap-2 flex-wrap">
             <div>
-                <input type="text" name="search_key" id="search_key" class="form-control form-control-sm" placeholder="search here..." value="{{ request()->get('search_key') }}">
+                <input type="text" name="search_key" id="search_key" class="form-control" placeholder="search here..." value="{{ request()->get('search_key') }}">
             </div>
-            <button type="submit" class="btn btn-sm btn-primary" title="Search">
+            <button type="submit" class="btn btn-primary" title="Search">
                 <i class="bi bi-search"></i>
             </button>
-            <a href="{{ url('master/consumer/schemes') }}" class="btn btn-sm btn-warning ajax-link" title="Reset">
+            <a href="{{ url('master/consumer/schemes') }}" class="btn btn-warning ajax-link" title="Reset">
                 <i class="bi bi-arrow-clockwise"></i>
             </a>
-            <span>({{ $schemes->total() }}) Records found</span>
+            <span><strong>({{ $schemes->total() }})</strong> Records found</span>
         </div>
         {{-- Right Section --}}
         <div class="d-flex align-items-center gap-2">
-            <a href="{{ url('master/consumer/schemes/create') }}" class="btn btn-success btn-sm link-modal">
+            <a href="{{ url('master/consumer/schemes/create') }}" class="btn btn-success link-modal">
                 <i class="bi bi-plus-lg"></i>&nbsp;Create
             </a>
         </div>
@@ -36,7 +36,7 @@
         $i = (($schemes->currentPage() - 1) * $schemes->perPage())+1;
     @endphp
     <!-- Display prospects list -->
-    <table class="table table-bordered table-hover page-sort">
+    <table class="table table-bordered table-hover table-striped bg-white page-sort">
         <thead class="table-success">
             <tr>
                 <th width="1%" nowrap>S No.</th>
@@ -62,7 +62,7 @@
             @if ($schemes->count() > 0)
                 @foreach ($schemes as $scheme)
                     <tr>
-                        <td>{{ $i++ }}</td>
+                        <td class="text-center">{{ $i++ }}</td>
                         <td>{{ $scheme->code }}</td>
                         <td>
                             <a href="{{ url('master/consumer/schemes/'.$scheme->id) }}" class="link-canvas">{{ $scheme->name }}</a>
@@ -100,7 +100,7 @@
             @endif
         </tbody>
     </table>
-    <div class="row">
+    <div class="row mb-2">
         <div class="col-sm-6">
             <div class="row align-items-center g-1">
                 <div class="col-auto">

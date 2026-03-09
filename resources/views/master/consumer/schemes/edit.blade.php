@@ -87,15 +87,15 @@
                         </div>
                     </div>
                     <div class="mb-2 row">
-                        <label for="applicable_ga" class="col-sm-4 col-form-label text-end">Applicable GAs&nbsp;:&nbsp;<i class="text text-danger">*&nbsp;</i></label>
-                        <div class="col-sm-8">
+                        <label for="applicable_ga" class="col-sm-12 col-form-label text-start fw-bold">Applicable GAs&nbsp;:&nbsp;<i class="text text-danger">*&nbsp;</i></label>
+                        <div class="col-sm-12">
                             <div class="row g-2">
                                 @php
                                     $ga_selected = $scheme->gas->pluck('id')->toArray();
                                     // $ga_selected = $scheme->schemesGa->pluck('ga_id')->toArray();
                                 @endphp
                                 @foreach ($gas as $ga)
-                                    <div class="col-4">
+                                    <div class="col-3">
                                         <input class="form-check-input" id="app_ga_{{ $ga->id }}" type="checkbox" name="applicable_ga[]" value="{{ $ga->id }}" @checked(in_array($ga->id, $ga_selected))>
                                         <label class="form-check-label" for="app_ga_{{ $ga->id }}">{{ $ga->name }}</label>
                                     </div>

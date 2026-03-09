@@ -259,7 +259,7 @@
                         </div>
                         <div class="d-flex justify-content-between py-1 px-2 rounded-bottom">
                             <a href="#">View Consumers</a>
-                            <a href="#"><is class="bi bi-eye fs-5"></i></a>
+                            <a href="#"><is class="bi bi-box-arrow-up-right fs-5"></i></a>
                         </div>
                     </div>
                 </div>
@@ -278,7 +278,7 @@
                         </div>
                         <div class="d-flex justify-content-between py-1 px-2 rounded-bottom">
                             <a href="#">View All Registrations</a>
-                            <a href="#"><is class="bi bi-eye fs-5"></i></a>
+                            <a href="#"><is class="bi bi-box-arrow-up-right fs-5"></i></a>
                         </div>
                     </div>
                 </div>
@@ -297,7 +297,7 @@
                         </div>
                         <div class="d-flex justify-content-between py-1 px-2 rounded-bottom">
                             <a href="#">View Details</a>
-                            <a href="#"><is class="bi bi-eye fs-5"></i></a>
+                            <a href="#"><is class="bi bi-box-arrow-up-right fs-5"></i></a>
                         </div>
                     </div>
                 </div>
@@ -316,7 +316,7 @@
                         </div>
                         <div class="d-flex justify-content-between py-1 px-2 rounded-bottom">
                             <a href="#">View Details</a>
-                            <a href="#"><is class="bi bi-eye fs-5"></i></a>
+                            <a href="#"><is class="bi bi-box-arrow-up-right fs-5"></i></a>
                         </div>
                     </div>
                 </div>

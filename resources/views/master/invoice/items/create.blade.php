@@ -10,7 +10,7 @@
                 <form action="{{ url('master/invoice/items') }}" method="POST" id="inv-item-create-form">
                     @csrf
                     <div class="row mb-2">
-                        <label for="type_id" class="col-sm-2 col-form-label text-end">Item Type</label>
+                        <label for="type_id" class="col-sm-2 col-form-label text-end">Item Type&nbsp;:</label>
                         <div class="col-sm-9">
                             <select name="type_id" id="type_id" class="form-select">
                                 <option value="">Select Item Type</option>
@@ -21,25 +21,25 @@
                         </div>
                     </div>
                     <div class="row mb-2">
-                        <label for="code" class="col-sm-2 col-form-label text-end">Code</label>
+                        <label for="code" class="col-sm-2 col-form-label text-end">Code&nbsp;:</label>
                         <div class="col-sm-9">
                             <input type="text" name="code" id="code" class="form-control">
                         </div>
                     </div>
                     <div class="row mb-2">
-                        <label for="name" class="col-sm-2 col-form-label text-end">Name</label>
+                        <label for="name" class="col-sm-2 col-form-label text-end">Name&nbsp;:</label>
                         <div class="col-sm-9">
                             <input type="text" name="name" id="name" class="form-control">
                         </div>
                     </div>
                     <div class="row mb-2">
-                        <label for="hsn" class="col-sm-2 col-form-label text-end">HSN</label>
+                        <label for="hsn" class="col-sm-2 col-form-label text-end">HSN&nbsp;:</label>
                         <div class="col-sm-9">
                             <input type="text" name="hsn" id="hsn" class="form-control">
                         </div>
                     </div>
                     <div class="row mb-2">
-                        <label for="basic" class="col-sm-2 col-form-label text-end">Basic Price</label>
+                        <label for="basic" class="col-sm-2 col-form-label text-end">Basic Price&nbsp;:</label>
                         <div class="col-sm-9">
                             <div class="input-group">
                                 <input type="text" name="basic" id="basic" class="form-control text-end">
@@ -48,7 +48,7 @@
                         </div>
                     </div>
                     <div class="row mb-2">
-                        <label for="tax" class="col-sm-2 col-form-label text-end">Tax(%)</label>
+                        <label for="tax" class="col-sm-2 col-form-label text-end">Tax(%)&nbsp;:</label>
                         <div class="col-sm-9">
                             <div class="input-group">
                                 <input type="text" name="tax" id="tax" class="form-control text-end">
@@ -57,7 +57,7 @@
                         </div>
                     </div>
                     <div class="row mb-2">
-                        <label for="price" class="col-sm-2 col-form-label text-end">Price</label>
+                        <label for="price" class="col-sm-2 col-form-label text-end">Price&nbsp;:</label>
                         <div class="col-sm-9">
                             <div class="input-group">
                                 <input type="text" name="price" id="price" class="form-control text-end">
@@ -65,7 +65,7 @@
                             </div>
                         </div>
                     </div>
-                    <div id="inv-item-create-error" class="text-danger"></div>
+                    <div id="inv-item-create-error" class="text-danger p-2"></div>
                     <div class="row">
                         <div class="offset-sm-2 col-sm-9">
                             <button type="submit" class="btn btn-success"><i class="bi bi-plus-lg"></i>&nbsp;Create</button>

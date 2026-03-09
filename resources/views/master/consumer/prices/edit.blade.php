@@ -11,25 +11,27 @@
                     @csrf
                     @method('PUT')
                     <div class="row mb-2">
-                        <label for="segment_id" class="col-sm-2 col-form-label text-end">Segment</label>
+                        <label for="segment_id" class="col-sm-2 text-end">Segment&nbsp;:</label>
                         <div class="col-sm-9">
                             {{ $price_details->segment->name ?? '' }}
                         </div>
                     </div>
                     <div class="row mb-2">
-                        <label for="ga_id" class="col-sm-2 col-form-label text-end">Geo Area</label>
+                        <label for="ga_id" class="col-sm-2 text-end">Geo Area&nbsp;:</label>
                         <div class="col-sm-9">
                             {{ $price_details->district->ga->name ?? '' }}
                         </div>
                     </div>
                     <div class="row mb-2">
-                        <label for="district_id" class="col-sm-2 col-form-label text-end">District</label>
-                        {{ $price_details->district->name ?? '' }}
+                        <label for="district_id" class="col-sm-2 text-end">District&nbsp;:</label>
+                        <div class="col-sm-9">
+                            {{ $price_details->district->name ?? '' }}
+                        </div>
                     </div>
                     <div class="row">
-                        <label for="prce-details" class="col-sm-2 col-form-label text-end">Price Data</label>
+                        <label for="prce-details" class="col-sm-2 text-end">Price Data&nbsp;:</label>
                         <div class="col-sm-9">
-                            <div class="row mb-2">
+                            <div class="row p-1 mb-2 bg-body-tertiary">
                                 <div class="col-sm-4">
                                     <label for="basic" class="form-label">Basic(<i class="bi bi-currency-rupee"></i>)</label>
                                     <input type="text" name="basic" class="form-control text-end" id="basic" value="{{ $price_details->basic }}">
@@ -43,7 +45,7 @@
                                     <input type="text" name="margin" class="form-control text-end" id="margin" value="{{ $price_details->margin }}">
                                 </div>
                             </div>
-                            <div class="row mb-2">
+                            <div class="row p-1 mb-2 bg-body-tertiary">
                                 <div class="col-sm-4">
                                     <label for="price" class="col-form-label">Price(<i class="bi bi-currency-rupee"></i>)</label>
                                     <input type="text" name="price" id="price" class="form-control text-end" value="{{ $price_details->basic_price }}" disabled>
@@ -60,7 +62,7 @@
                         </div>
                     </div>
                     <div class="row mb-2">
-                        <label for="effective_from" class="col-sm-2 col-form-label text-end">Effective from</label>
+                        <label for="effective_from" class="col-sm-2 col-form-label text-end">Effective from&nbsp;:</label>
                         <div class="col-sm-9">
                             <div class="input-group">
                                 <input type="text" name="effective_from" id="effective_from" class="form-control" placeholder="DD-MM-YYYY">
@@ -69,7 +71,7 @@
                         </div>
                     </div>
                     <div class="row mb-2">
-                        <label for="effective_to" class="col-sm-2 col-form-label text-end">Effective to</label>
+                        <label for="effective_to" class="col-sm-2 col-form-label text-end">Effective to&nbsp;:</label>
                         <div class="col-sm-9">
                             <div class="input-group">
                                 <input type="text" name="effective_to" id="effective_to" class="form-control" placeholder="DD-MM-YYYY">

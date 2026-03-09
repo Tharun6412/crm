@@ -1,8 +1,8 @@
 <div class="table-responsive">
-    <table class="table table-bordered table-hover page-sort">
+    <table class="table table-bordered table-hover table-striped bg-white page-sort">
         <thead class="table-success">
             <tr>
-                <th rowspan="2" nowrap="nowrap">S No.</th>
+                <th rowspan="2" width="1%" nowrap="nowrap">S No.</th>
                 <th rowspan="2">GA Name</th>
                 <th colspan="4" class="text-center">Sale in SCMs</th>
             </tr>
@@ -24,7 +24,7 @@
             @endphp
             @forelse($gaGasSales as $ga)
                 <tr>
-                    <td>{{ $i++ }}</td>
+                    <td class="text-center">{{ $i++ }}</td>
                     <td>{{ $ga->ga_name }}</td>
                     <td>
                         <a href="{{ url('reports/invoiceReport') }}?{{ http_build_query(array_merge($commonParams, [
@@ -66,8 +66,8 @@
             @endforelse
         </tbody>
         <tfoot>
-            <tr>
-                <th colspan="2">Total</th>
+            <tr class="table-info fw-bold">
+                <th colspan="2" class="text-end">Total</th>
                 <th>{{ numberFormat($gaGasSales->sum('dom_pre'),2) }}</th>
                 <th>{{ numberFormat($gaGasSales->sum('dom_post'),2) }}</th>
                 <th>{{ numberFormat($gaGasSales->sum('com_pre'),2) }}</th>

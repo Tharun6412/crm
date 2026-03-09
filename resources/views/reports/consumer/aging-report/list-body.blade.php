@@ -11,7 +11,7 @@
     </div>
 </form>
 <div class="table-responsive">
-    <table class="table table-bordered table-hover page-sort table-striped">
+    <table class="table table-bordered table-hover page-sort table-striped bg-white">
         <thead class="table-success">
             <tr>
                 <th width="1%" nowrap="nowrap">S No.</th>

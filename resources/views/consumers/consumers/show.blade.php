@@ -147,7 +147,7 @@
                     </div>
                 </div>
                 <div class="col-md-12">
-                    <div class="tab-content">
+                    <div class="tab-content bg-white">
                         <div class="tab-pane fade show active" id="nav-details" role="tabpanel" aria-labelledby="nav-details-tab" tabindex="0">
                             @include('consumers.consumers.show-details')
                         </div>

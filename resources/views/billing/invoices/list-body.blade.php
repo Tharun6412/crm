@@ -1,7 +1,7 @@
 <div>
     @if ($invoices->count() > 0)
         <div class="table-responsive">
-            <table class="table table-bordered table-hover">
+            <table class="table table-bordered table-hover bg-white table-striped">
                 <thead class="table-success">
                     <tr>
                         <th width="1%" nowrap>S.No</th>

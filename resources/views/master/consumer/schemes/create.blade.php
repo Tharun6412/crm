@@ -11,7 +11,7 @@
                     <div class="mb-2 row">
                         <label for="segment" class="col-sm-4 col-form-label text-end">Segment&nbsp;:&nbsp;<i class="text text-danger">*&nbsp;</i></label>
                         <div class="col-sm-8">
-                            <select name="segment" id="segment" class="form-control">
+                            <select name="segment" id="segment" class="form-select">
                                 <option value="">Select Segment</option>
                                 @foreach ($segments as $segment)
                                     <option value="{{ $segment->id }}">{{ $segment->name }}</option>
@@ -22,7 +22,7 @@
                     <div class="mb-2 row">
                         <label for="connection_type" class="col-sm-4 col-form-label text-end">Connection Type&nbsp;:&nbsp;<i class="text text-danger">*&nbsp;</i></label>
                         <div class="col-sm-8">
-                            <select name="connection_type" id="connection_type" class="form-control">
+                            <select name="connection_type" id="connection_type" class="form-select">
                                 <option value="">Select Connection Type</option>
                                 @foreach ($connection_types as $connection_type)
                                     <option value="{{ $connection_type->id }}">{{ $connection_type->name }}</option>
@@ -79,11 +79,11 @@
                         </div>
                     </div>
                     <div class="mb-2 row">
-                        <label for="applicable_ga" class="col-sm-4 col-form-label text-end">Applicable GAs&nbsp;:&nbsp;<i class="text text-danger">*&nbsp;</i></label>
-                        <div class="col-sm-8">
+                        <label for="applicable_ga" class="col-sm-12 col-form-label text-start fw-bold">Applicable GAs&nbsp;:&nbsp;<i class="text text-danger">*&nbsp;</i></label>
+                        <div class="col-sm-12">
                             <div class="row g-2">
                                 @foreach ($gas as $ga)
-                                    <div class="col-4">
+                                    <div class="col-3">
                                         <input type="checkbox" name="applicable_ga[]" value="{{ $ga->id }}" id="app_ga_{{ $ga->id }}" class="form-check-input">
                                         <label for="app_ga_{{ $ga->id }}" class="form-check-label">{{ $ga->name }}</label>
                                     </div>

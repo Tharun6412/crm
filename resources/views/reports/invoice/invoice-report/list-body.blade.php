@@ -2,13 +2,13 @@
     <!-- LEFT SIDE FILTERS -->
     <div class="d-flex flex-wrap align-items-center gap-2">
         <!-- Search -->
-        <div class="input-group input-group-sm w-auto">
+        <div class="input-group w-auto">
             <span class="input-group-text">Search</span>
             <input type="text" name="key" id="key" class="form-control" value="{{ request()->key }}">
         </div>
         <!-- Range Dropdown -->
         @if (request()->has('range'))
-            <select name="range" id="range" class="form-select form-select-sm w-auto">
+            <select name="range" id="range" class="form-select w-auto">
                 <option value="">All Days Range</option>
                 @foreach([
                     '0',
@@ -26,35 +26,35 @@
             </select>
         @endif
         <!-- Calendar Toggle Button -->
-        <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#invoiceDateFilter" aria-expanded="false"><i class="bi bi-calendar3"></i></button>
+        <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#invoiceDateFilter" aria-expanded="false"><i class="bi bi-calendar3"></i></button>
         <!-- Submit -->
-        <button type="submit" class="btn btn-success btn-sm"><i class="bi bi-search"></i></button>
+        <button type="submit" class="btn btn-success"><i class="bi bi-search"></i></button>
         <!-- Reset -->
-        <a href="{{ url('reports/invoiceReport') }}" class="btn btn-warning btn-sm"><i class="bi bi-arrow-clockwise"></i></a>
+        <a href="{{ url('reports/invoiceReport') }}" class="btn btn-warning"><i class="bi bi-arrow-clockwise"></i></a>
         <!-- Record Count -->
         <span class="small text-muted">
-            ({{ $invoices->total() }}) Records found
+            <strong>({{ $invoices->total() }})</strong> Records found
         </span>
     </div>
     <div>
-        <x-auth.link :href="url('reports/invoiceReport/invoicesReportExport') . '?' . request()->getQueryString()" class="btn btn-secondary btn-sm"><i class="bi bi-plus-lg"></i>&nbsp;Export</x-auth.link>
+        <x-auth.link :href="url('reports/invoiceReport/invoicesReportExport') . '?' . request()->getQueryString()" class="btn btn-outline-info"><i class="bi bi-plus-lg"></i>&nbsp;Export</x-auth.link>
     </div>
 </div>
 <!-- COLLAPSIBLE DATE FILTER -->
 <div class="collapse {{ request()->filled('date_from') || request()->filled('date_to') ? 'show' : '' }} mt-2 mb-3" id="invoiceDateFilter">
-    <div class="card border-primary bg-light">
+    <div class="card border-info bg-info-subtle">
         <div class="card-body py-2 px-3">
             <div class="d-flex align-items-center flex-wrap gap-3">
                 <span class="fw-semibold">
                     Invoice Date :
                 </span>
                 <!-- From Date -->
-                <div class="input-group input-group-sm w-auto">
+                <div class="input-group w-auto">
                     <span class="input-group-text">From</span>
                     <input type="text" class="form-control" name="date_from" id="date_from" value="{{ request()->date_from }}"><span class="input-group-text"><i class="bi bi-calendar3"></i></span>
                 </div>
                 <!-- To Date -->
-                <div class="input-group input-group-sm w-auto">
+                <div class="input-group w-auto">
                     <span class="input-group-text">To</span>
                     <input type="text" class="form-control" name="date_to" id="date_to" value="{{ request()->date_to }}"><span class="input-group-text"><i class="bi bi-calendar3"></i></span>
                 </div>
@@ -70,9 +70,9 @@
     $i = (($invoices->currentPage() - 1) * $invoices->perPage())+1;
 @endphp
 <div class="table-responsive" style="min-height: 500px;">
-    <table class="table table-bordered table-hover page-sort">
-        <thead class="table-success">
-            <tr>
+    <table class="table table-bordered table-hover table-striped bg-white page-sort">
+        <thead class="table-success align-middle">
+            <tr class="bg-success-subtle">
                 <th width="1%" nowrap>S No</th>
                 <th nowrap>
                     <a href="{{ $invoices->appends(['sortBy' => 'invoice_number','sortOr' => $sort_order_inverse])->url($invoices->currentPage()) }}">
@@ -90,7 +90,7 @@
                         @endif
                     </a>
                 </th>
-                <th nowrap>
+                <th nowrap class="d-flex align-items-center mt-2 border-0">
                     <a href="{{ $invoices->appends(['sortBy' => 'type_id','sortOr' => $sort_order_inverse])->url($invoices->currentPage()) }}">
                     Invoice Type
                     @if ($sort_by == 'type_id')
@@ -115,9 +115,24 @@
                     @endif
                     </a>
                 </th>
-                <th nowrap>Segment<x-master.segment-filter /></th>
-                <th nowrap>Connection Type<x-master.connection-type-filter /></th>
-                <th nowrap>GA<x-master.ga-filter /></th>
+                <th>
+                    <div class="row">
+                        <div class="col-7">Segment</div>
+                        <div class="col-5 text-end"><x-master.segment-filter /></div>
+                    </div>                    
+                </th>
+                <th nowrap>
+                    <div class="row">
+                        <div class="col-12">Connection Type</div>
+                        <div class="col-12 text-center"><x-master.connection-type-filter /></div>
+                    </div>
+                </th>
+                <th nowrap>
+                    <div class="row">
+                        <div class="col-7">GA</div>
+                        <div class="col-5 text-end"><x-master.ga-filter /></div>
+                    </div>
+                </th>
                 <th nowrap>District
                     @if (request()->has('geo_area'))
                         <x-master.district-filter class="float-end"/>
@@ -155,13 +170,13 @@
                         @endif
                     </a>
                 </th>
-                <th class="text-end" nowrap>
+                <th class="d-flex" nowrap>
                     <a href="{{ $invoices->appends(['sortBy' => 'bil_invoices.status_id','sortOr' => $sort_order_inverse])->url($invoices->currentPage()) }}">
                         Payment Status
                         @if ($sort_by == 'bil_invoices.status_id')
                             <i class="bi {{ $sort_icon }}"></i>
                         @endif
-                    </a>
+                    </a>&nbsp;
                     @php
                         $inv_status = [1 => 'Paid', 2 => 'Not-Paid', 3 => 'Partial-Paid'];
                     @endphp
@@ -174,16 +189,16 @@
                 $i = (($invoices->currentPage() - 1) * $invoices->perPage())+1;
             @endphp
             @forelse($invoices as $inv)
-                <tr>
-                    <td>{{ $i++ }}</td>
+                <tr class="align-middle">
+                    <td class="text-center">{{ $i++ }}</td>
                     <td><a href="{{ url('bill/invoice/' . $inv->id) }}" target="_blank">&nbsp;{{ $inv->invoice_number }}</a></td>
                     <td>{{ dateFormat($inv->invoice_date) }}</td>
-                    <td>{{ $inv->invoiceType->name }}</td>
+                    <td nowrap>{{ $inv->invoiceType->name }}</td>
                     <td><a href="{{ url('consumers/' . $inv->consumer_id) }}" target="_blank">&nbsp;{{ $inv->consumer->crn }}</a></td>
                     <td>{{ $inv->consumer->name }}</td>
                     <td>{{ $inv->consumer->segment->name }}</td>
                     <td>{{ $inv->consumer->connectType->name }}</td>
-                    <td>{{ $inv->consumer->ga->name }}</td>
+                    <td nowrap>{{ $inv->consumer->ga->name }}</td>
                     <td>{{ $inv->consumer->district->name }}</td>
                     <td>{{ $inv->net_consumption ?? 0 }}</td>
                     <td>{{ dateFormat($inv->due_date) }}</td>
@@ -198,7 +213,7 @@
             @endforelse
         </tbody>
         <tfoot>
-            <tr>
+            <tr class="table-info">
                 <th class="text-end" colspan="10">Total</th>
                 <th>{{ numberFormat($invoices->sum('net_consumption'),2) }}</th>
                 <th></th>
@@ -213,7 +228,7 @@
 @php
     $invoices->appends(['sortBy' => $sort_by, 'sortOr' => $sort_order]);
 @endphp
-<div>
+<div class="p-1 mb-2">
     {{ $invoices->links('utils.paginator', ['modDiv' => 'invoices-list']) }}
 </div>
 {{-- Scripts --}}

@@ -1,7 +1,7 @@
 {{-- Segments filter --}}
 <div {{ $attributes->merge(['class' => 'dropdown']) }}>
     <button type="button" class="btn btn-link btn-sm p-0" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
-        <i class="bi bi-funnel{{ (request()->has('connection_type_id')) ? '-fill' : '' }}"></i>
+        <i class="bi bi-funnel{{ (request()->has('connection_type_id')) ? '-fill' : '' }} fs-6 text-primary"></i>
         @isset(request()->connection_type_id)
         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
             {{ sizeof(request()->get('connection_type_id')) }}

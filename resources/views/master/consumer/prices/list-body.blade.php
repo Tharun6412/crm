@@ -1,31 +1,31 @@
 {{-- Consumer price body --}}
 
 {{-- Search form --}}
-<div class="d-flex justify-content-between">
+<div class="d-flex justify-content-between mb-1">
     <div class="row gx-1 mb-1">
         <div class="col-auto">
-            <input type="text" name="key" class="form-control form-control-sm" placeholder="Search..." value="{{ request()->key }}">
+            <input type="text" name="key" class="form-control" placeholder="Search..." value="{{ request()->key }}">
         </div>
         <div class="col-auto">
-            <div class="d-flex justify-content-between">
+            <div class="d-flex justify-content-between border border-primary bg-light p-1 rounded">
                 <span>Segments</span>
                 <x-master.segment-filter/>
             </div>
         </div>
-        <div class="col-auto"><button type="submit" class="btn btn-success btn-sm"><i class="bi bi-search"></i></button></div>
-        <div class="col-auto"><a href="{{ url('master/consumer/prices') }}" class="btn btn-warning btn-sm"><i class="bi bi-arrow-clockwise"></i></a></div>
-        <div class="col-auto">({{ $gas_prices->total() }}) Records found</div>
+        <div class="col-auto"><button type="submit" class="btn btn-success"><i class="bi bi-search"></i></button></div>
+        <div class="col-auto"><a href="{{ url('master/consumer/prices') }}" class="btn btn-warning"><i class="bi bi-arrow-clockwise"></i></a></div>
+        <div class="col-auto mt-1"><strong>({{ $gas_prices->total() }})</strong> Records found</div>
     </div>
     <div>
-        <a href="{{ url('master/consumer/prices/create') }}" class="btn btn-sm btn-success link-modal">
+        <a href="{{ url('master/consumer/prices/create') }}" class="btn btn-success link-modal">
             <i class="bi bi-plus-lg"></i>&nbsp;Create
         </a>
     </div>
 </div>
 @if ($gas_prices->count() > 0)
     <div class="table-responsive">
-        <table class="table table-bordered table-primary">
-            <thead class="table-primary">
+        <table class="table table-bordered table-striped bg-white">
+            <thead class="table-success">
                 <tr>
                     <th width="1%" nowrap>S No</th>
                     <th>GA<x-master.ga-filter class="float-end"/></th>
@@ -50,15 +50,15 @@
                         <td>{{ $price->effective_from?->format('d-m-Y') }}</td>
                         <td>{{ $price->effective_to?->format('d-m-Y') }}</td>
                         <td>
-                            <a href="{{ url('master/consumer/prices/' . $price->id) }}" class="link-canvas fs-sm"><i class="bi bi-chevron-right"></i>&nbsp;View</a>
-                            <a href="{{ url('master/consumer/prices/' . $price->id . '/edit') }}" class="link-modal fs-sm"><i class="bi bi-pencil-square"></i>&nbsp;Edit</a>
+                            <a href="{{ url('master/consumer/prices/' . $price->id) }}" class="link-canvas fs-sm btn btn-outline-secondary"><i class="bi bi-chevron-right"></i>&nbsp;View</a>
+                            <a href="{{ url('master/consumer/prices/' . $price->id . '/edit') }}" class="link-modal fs-sm btn btn-outline-secondary"><i class="bi bi-pencil-square"></i>&nbsp;Edit</a>
                         </td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
     </div>
-    <div>
+    <div class="p-2">
         {{ $gas_prices->links('utils.paginator', ['modDiv' => 'cns-price-list']) }}
     </div>
 @else

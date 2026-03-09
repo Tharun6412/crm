@@ -5,21 +5,70 @@
     <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
 </div>
 <div class="offcanvas-body">
-    <div>Segment: {{ $price_details->segment->name ?? '' }}</div>
-    <div>GA: {{ $price_details->district->ga->name ?? '' }}</div>
-    <div>District: {{ $price_details->district->name ?? '' }}</div>
-    <div>Basic: {{ $price_details->basic ?? '' }}</div>
-    <div>Supply: {{ $price_details->supply ?? '' }}</div>
-    <div>Margin: {{ $price_details->margin ?? '' }}</div>
-    <div>Basic Price: {{ $price_details->basic_price ?? '' }}</div>
-    <div>Vat (%): {{ $price_details->tax_value ?? '' }}</div>
-    <div>RSP: {{ $price_details->rsp ?? '' }}</div>
-    <div>Effective from: {{ $price_details->effective_from?->format('d-m-Y') }}</div>
-    <div>Effective To: {{ $price_details->effective_to?->format('d-m-Y') }}</div>
-    <div>Created By: {{ $price_details->createdBy->emp_id ?? '' }}</div>
-    <div>Created Date: {{ $price_details->created_at?->format('d.m.Y H:i') }}</div>
-    <div>Last Updated By: {{ $price_details->updatedBy->emp_id ?? '' }}</div>
-    <div>Last Updated  Date: {{ $price_details->updated_at?->format('d.m.Y H:i') }}</div>
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <tr>
+                <td nowrap="nowrap" class="bg-light">Segment</td>
+                <td>{{ $price_details->segment->name ?? '' }}</td>
+            </tr>
+             <tr>
+                <td nowrap="nowrap" class="bg-light">GA</td>
+                <td>{{ $price_details->district->ga->name ?? '' }}</td>
+            </tr>
+             <tr>
+                <td nowrap="nowrap" class="bg-light">District</td>
+                <td>{{ $price_details->district->name ?? '' }}</td>
+            </tr>
+             <tr>
+                <td nowrap="nowrap" class="bg-light">Basic</td>
+                <td>{{ $price_details->basic ?? '' }}</td>
+            </tr>
+             <tr>
+                <td nowrap="nowrap" class="bg-light">Supply</td>
+                <td>{{ $price_details->supply ?? '' }}</td>
+            </tr>
+             <tr>
+                <td nowrap="nowrap" class="bg-light">Margin</td>
+                <td>{{ $price_details->margin ?? '' }}</td>
+            </tr>
+             <tr>
+                <td nowrap="nowrap" class="bg-light">Basic Price</td>
+                <td>{{ $price_details->basic_price ?? '' }}</td>
+            </tr>
+             <tr>
+                <td nowrap="nowrap" class="bg-light">Vat (%)</td>
+                <td>{{ $price_details->tax_value ?? '' }}</td>
+            </tr>
+             <tr>
+                <td nowrap="nowrap" class="bg-light">RSP</td>
+                <td>{{ $price_details->rsp ?? '' }}</td>
+            </tr>
+             <tr>
+                <td nowrap="nowrap" class="bg-light">Effective from</td>
+                <td>{{ $price_details->effective_from?->format('d-m-Y') }}</td>
+            </tr>
+             <tr>
+                <td nowrap="nowrap" class="bg-light">Effective To</td>
+                <td>{{ $price_details->effective_to?->format('d-m-Y') }}</td>
+            </tr>
+             <tr>
+                <td nowrap="nowrap" class="bg-light">Created By</td>
+                <td>{{ $price_details->createdBy->emp_id ?? '' }}</td>
+            </tr>
+             <tr>
+                <td nowrap="nowrap" class="bg-light">Created Date</td>
+                <td>{{ $price_details->created_at?->format('d.m.Y H:i') }}</td>
+            </tr>
+             <tr>
+                <td nowrap="nowrap" class="bg-light">Last Updated By</td>
+                <td>{{ $price_details->updatedBy->emp_id ?? '' }}</td>
+            </tr>
+             <tr>
+                <td nowrap="nowrap" class="bg-light">Last Updated  Date</td>
+                <td>{{ $price_details->updated_at?->format('d.m.Y H:i') }}</td>
+            </tr>               
+        </table>
+    </div> 
     @if ($price_details->history->count() > 0)
         <div class="fs-5 fw-semibold mt-2">History:</div>
         <div class="table-responsive">

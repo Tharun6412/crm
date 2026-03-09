@@ -12,8 +12,8 @@
 @section('page-content')
     @if ($invoice_types->count() > 0)
         <div class="table-responsive">
-            <table class="table table-bordered table-hover table-primary">
-                <thead class="table-primary">
+            <table class="table table-bordered table-hover table-striped bg-white">
+                <thead class="table-success">
                     <tr>
                         <th width="1%" nowrap>S No</th>
                         <th>Name</th>
