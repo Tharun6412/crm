@@ -1,18 +1,32 @@
 <?php
-
-namespace App\Http\Controllers\Reports;
+namespace App\Exports\Reports;
 
 use App\Enums\PaymentStatus;
-use App\Exports\Reports\PaymentsReportExport;
-use App\Http\Controllers\Controller;
 use App\Models\Invoice\InvoicePayment;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
+use Maatwebsite\Excel\Concerns\Exportable;
+use Maatwebsite\Excel\Concerns\FromQuery;
+use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithMapping;
 
-class PaymentsReportController extends Controller
+class PaymentsReportExport implements FromQuery, WithHeadings, WithMapping 
 {
-    public function index(Request $request)
+    use Exportable;
+    /**
+     * Construct Method
+     */
+    protected $request;
+    protected $i = 0;
+    public function __construct($request)
     {
+        $this->request = $request;
+    }
+    /**
+    * @return query
+    */
+    public function query()
+    {
+        $request = $this->request;
         $sortBy = ($request->get('sortBy')) ? $request->get('sortBy') : 'pay_invoice_payments.created_at';
         $sortOr = ($request->get('sortOr')) ? $request->get('sortOr') : 'desc';
         $records = ($request->get('records')) ? $request->get('records') : 20;
@@ -44,19 +58,38 @@ class PaymentsReportController extends Controller
             ->when($request->has('geo_area'), function ($q) use($request) {
                 $q->whereIn('cns_consumers.ga_id', $request->geo_area);
             })
-            ->orderBy($sortBy, $sortOr)->paginate($records)->withQueryString();
-        // Render output
-        if ($request->ajax()) {
-            return view('reports.payments.payment-report.list-body', ['payments' => $payments]);
-        }
-        return view('reports.payments.payment-report.list', ['payments' => $payments]);
+            ->orderBy($sortBy, $sortOr);
+        return $payments;
     }
 
     /**
-     * Export the payments.
+     * Headings 
      */
-    public function paymentsReportExport(Request $request)
+    public function headings():array
     {
-        return (new PaymentsReportExport($request))->download('PaymentsReport.xlsx');
+        return ['S.No', 'Payment Code','Payment Date','Amount','Payment Type','Invoice Number', 'Invoice Date', 'Invoice Type', 'CRN', 'Name', 'Segment','Connection Type','GA'];
+    }
+
+    /**
+     * Mapping [Loop the data from the query]
+     */
+    public function map($payment): array
+    {
+        $this->i++; //Increment serial Number
+        return [
+            $this->i,
+            $payment->code ?? '',
+            dateFormat($payment->payment_date) ?? '',
+            $payment->amount ?? '',
+            $payment->paymentType->name ?? '',
+            $payment->invoice->invoice_number ?? '',
+            dateFormat($payment->invoice->invoice_date) ?? '',
+            $payment->invoice->invoiceType->name,
+            $payment->invoice->consumer->crn,
+            $payment->invoice->consumer->name,
+            $payment->invoice->consumer->segment->name,
+            $payment->invoice->consumer->connectType->name,
+            $payment->invoice->consumer->ga->name,
+        ];
     }
 }

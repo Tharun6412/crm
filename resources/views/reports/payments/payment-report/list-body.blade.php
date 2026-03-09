@@ -24,9 +24,9 @@
             ({{ $payments->total() }}) Records found
         </span>
     </div>
-    {{-- <div>
-        <x-auth.link :href="url('reports/invoiceReport/invoicesReportExport') . '?' . request()->getQueryString()" class="btn btn-secondary btn-sm"><i class="bi bi-plus-lg"></i>&nbsp;Export</x-auth.link>
-    </div> --}}
+    <div>
+        <x-auth.link :href="url('reports/paymentsReport/paymentsReportExport') . '?' . request()->getQueryString()" class="btn btn-secondary btn-sm"><i class="bi bi-download"></i>&nbsp;Export</x-auth.link>
+    </div>
 </div>
 @php
     $sort_by = (request()->has('sortBy')) ? request()->get('sortBy') : 'created_at';
