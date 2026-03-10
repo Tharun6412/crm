@@ -129,6 +129,22 @@ return new class extends Migration
             $table->timestamps();
         });
 
+        // cns consumer schemes
+        Schema::create('cns_consumer_scheme_history', function(Blueprint $table) {
+            $table->id();
+            $table->foreignId('consumer_id')->index()->nullable()->constrained(table:'cns_consumers')->noActionOnUpdate()->noActionOnDelete();
+            $table->foreignId('scheme_id')->index()->nullable()->constrained(table:'mst_cns_schemes')->noActionOnUpdate()->noActionOnDelete();
+            $table->double('security_deposit')->nullable();
+            $table->double('consumption_deposit')->nullable();
+            $table->double('total_deposit')->nullable();
+            $table->decimal('emi_amount', total:8, places:2);
+            $table->decimal('rental_amount', total:8, places:2);
+            $table->double('paid_deposit')->nullable();
+            $table->double('balance')->nullable();
+            $table->integer('status')->nullable();
+            $table->timestamps();
+        });
+
         // cns consumer status
         Schema::create('cns_consumer_status', function(Blueprint $table) {
             $table->id();

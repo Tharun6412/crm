@@ -52,6 +52,9 @@ Route::middleware(['auth', ModuleAccess::class])->group(function() {
     Route::get('consumerDocs/{id}', [App\Http\Controllers\Consumer\ConsumerController::class, 'consumerDocs'])->whereNumber('id');
     Route::get('/{id}', [App\Http\Controllers\Consumer\ConsumerController::class, 'show'])->whereNumber('id');
     Route::get('/{status:slug?}', [App\Http\Controllers\Consumer\ConsumerController::class, 'index']);
+
+    // Conversion
+    Route::resource('conversion', App\Http\Controllers\prepaid\ConversionController::class);
     
     // Prepaid consumer send to HES
     Route::get('prepaid/sendToHes/{id}', [App\Http\Controllers\Consumer\PrepaidConsumerController::class, 'sendToHes']);

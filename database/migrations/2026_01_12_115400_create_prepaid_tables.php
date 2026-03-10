@@ -22,12 +22,22 @@ return new class extends Migration
         Schema::create('cns_prepaid', function (Blueprint $table) {
             $table->id();
             $table->foreignId('consumer_id')->nullable()->index()->constrained(table:'cns_consumers')->noActionOnUpdate()->noActionOnDelete();
+            $table->foreignId('post_scheme_id')->nullable()->index()->constrained(table:'mst_cns_schemes')->noActionOnUpdate()->noActionOnDelete();
+            $table->foreignId('pre_scheme_id')->nullable()->index()->constrained(table:'mst_cns_schemes')->noActionOnUpdate()->noActionOnDelete();
             $table->date('conversion_date')->nullable();
+            $table->dateTime('hes_date')->nullable();
+            $table->boolean('hes_status')->nullable();
             $table->decimal('bonus', 11, 2)->nullable();
             $table->boolean('bonus_status')->nullable();
             $table->boolean('bonus_date')->nullable();
             $table->double('balance')->nullable();
             $table->dateTime('balance_date')->nullable();
+            $table->date('bill_date')->nullable();
+            $table->decimal('bill_qty')->nullable();
+            $table->decimal('bill_amount')->nullable();
+            $table->boolean('bill_status')->nullable();
+            $table->text('notes')->nullable();
+            $table->foreignId('created_by')->nullable()->index()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();
             $table->timestamps();
         });
 

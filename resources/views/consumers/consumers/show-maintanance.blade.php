@@ -1,8 +1,8 @@
 <div class="mt-3">
     <div class="bg-primary-subtle p-2 fs-5 fw-semibold">
-        <i class="bi bi-card-heading"></i>&nbsp;Meter Details
+        <i class="bi bi-box"></i>&nbsp;Meter Details
     </div>
-    <div class="table-responsive">
+    <div class="table-responsive p-2">
         <table class="table table-bordered table-primary">
             <thead>
                 <tr class="bg-body-secondary">
@@ -21,10 +21,10 @@
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $meter->meter_no }}</td>
                             <td>{{ $meter->meter_serial_no }}</td>
-                            <td>{{ $meter->install_date->format('d-m-Y') }}</td>
+                            <td>{{ $meter->install_date?->format('d-m-Y') }}</td>
                             <td>{{ $meter->installBy->name }}</td>
-                            <td><x-consumer.status :status="$consumer->status" /></td>
-                            {{-- {{ $meter->meterStatus->name }} --}}
+                            <td>{{ $meter->meterStatus->name }}</td>
+                            {{--  --}}
                         </tr>
                     @endforeach
                 @else

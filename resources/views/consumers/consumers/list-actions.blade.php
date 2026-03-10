@@ -2,6 +2,7 @@
 @php
     // Enums Consumer Status 
     use \App\Enums\ConsumerStatus;
+    use \App\Enums\ConnectionType;
 @endphp
 <div class="dropdown">
     <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -47,5 +48,8 @@
         {{-- @if (in_array($consumer->status_id, [ConsumerStatus::HSC->value, ConsumerStatus::ACTIVATE->value], true) and $consumer->connection_type_id == 2 and $consumer->prepaidData->hes_status != 1) 
             <li><x-auth.link class="dropdown-item link-modal" href="{{ url('consumers/prepaid/sendToHes/'.$consumer->id) }}"><i class="bi bi-chevron-right"></i>&nbsp;Send To HES</x-auth.link></li>            
         @endif --}}
+        @if ($consumer->connection_type_id == ConnectionType::POSTPAID->value)
+            <li><x-auth.link class="dropdown-item link-modal" href="{{ url('consumers/conversion/' . $consumer->id . '/edit') }}"><i class="bi bi-chevron-right"></i>&nbsp;Convert to prepaid</x-auth.link></li>
+        @endif
     </ul>
 </div>

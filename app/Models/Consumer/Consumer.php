@@ -270,6 +270,14 @@ class Consumer extends Model
     }
 
     /**
+     * Relation with Scheme history
+     */
+    public function schemeHistory(): HasMany
+    {
+        return $this->hasMany(ConsumerSchemeHistory::class);
+    }
+
+    /**
      * Relation with SDPaymentHistory
      */
     public function sdPayment() : HasMany
@@ -324,14 +332,14 @@ class Consumer extends Model
     /**
      * Relation with Connection Type
      */
-    public function connectType():BelongsTo
+    public function connectType(): BelongsTo
     {
         return $this->belongsTo(ConnectionType::class, 'connection_type_id')->withDefault();
     }
     /**
      * Relation with prepaid table
      */
-    public function prepaidData():HasOne
+    public function prepaidData(): HasOne
     {
         return $this->hasOne(Prepaid::class, 'consumer_id', 'id');
     }
@@ -339,7 +347,7 @@ class Consumer extends Model
     /**
      * Relation with Price Group
      */
-    public function priceGroup():BelongsTo
+    public function priceGroup(): BelongsTo
     {
         return $this->belongsTo(PriceGroups::class, 'price_group_id');
     }

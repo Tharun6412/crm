@@ -4,7 +4,7 @@ namespace App\Enums;
 
 enum MeterStatus: int
 {
-    case Active = 1;
-    case InActive = 2;
-    case Replace = 3;
+    case ACTIVE = 1;
+    case INACTIVE = 2;
+    case REPLACE = 3;
 }

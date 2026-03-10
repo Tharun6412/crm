@@ -32,6 +32,9 @@
                             <a href="#" class="list-group-item list-group-item-action list-group-item-light" id="nav-sd-tab" data-bs-toggle="tab" data-bs-target="#nav-sd" role="tab" aria-controls="nav-sd" aria-selected="false">
                                 <i class="bi bi-cash-stack"></i>&nbsp;SD Details
                             </a>
+                            <a href="#" class="list-group-item list-group-item-action list-group-item-light" id="nav-mdata-tab" data-bs-toggle="tab" data-bs-target="#nav-mdata" role="tab" aria-controls="nav-mdata" aria-selected="false">
+                                <i class="bi bi-box"></i>&nbsp;Meter Data
+                            </a>
                             <a href="#" class="list-group-item list-group-item-action list-group-item-light" id="nav-bills-tab" data-bs-toggle="tab" data-bs-target="#nav-bills" data-url="{{ url('consumers/invoices/' . $consumer->id . '/1') }}" role="tab" aria-controls="nav-bills" aria-selected="true">
                                 <i class="bi bi-files"></i>&nbsp;Bills
                             </a>
@@ -52,9 +55,6 @@
                             </a>
                             <a href="#" class="list-group-item list-group-item-action list-group-item-light" id="nav-doc-tab" data-bs-toggle="tab" data-bs-target="#nav-doc" data-url="{{ url('consumers/consumerDocs/' . $consumer->id) }}" role="tab" aria-controls="nav-doc" aria-selected="false">
                                 <i class="bi bi-files"></i>&nbsp;Documents
-                            </a>
-                            <a href="#" class="list-group-item list-group-item-action list-group-item-light" id="nav-mdata-tab" data-bs-toggle="tab" data-bs-target="#nav-mdata" role="tab" aria-controls="nav-mdata" aria-selected="false">
-                                <i class="bi bi-telephone-inbound"></i>&nbsp;Maintanance Data
                             </a>
                             @if ($consumer->connection_type_id == 2)
                                 <a href="#" class="list-group-item list-group-item-action list-group-item-light" id="nav-recharge-tab" data-bs-toggle="tab" data-bs-target="#nav-recharge" data-url="{{ url('consumers/prepaid/consumerRechargeList/' . $consumer->id) }}" role="tab" aria-controls="nav-recharge" aria-selected="true">
