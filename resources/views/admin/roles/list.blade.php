@@ -11,15 +11,15 @@
         $sno = 1;
     @endphp
     <div class="mb-2">
-        ({{ $roles->count() }}) Records found
+        <span class="fw-bold">({{ $roles->count() }})</span> Records found
         {{-- Authenticated link --}}
         <x-auth.link href="{{ url('admin/roles/create') }}" class="btn btn-success btn-sm link-modal float-end mb-2" action="add">
             <i class="bi bi-plus-lg"></i>&nbsp;Add role
         </x-auth.link>
     </div>
-    <table class="table table-bordered table-hover">
+    <table class="table table-bordered table-hover table-striped bg-white">
         <thead>
-            <tr class="bg-light">
+            <tr class="table-success">
                 <th width="1%" nowrap>S.No</th>
                 <th>Name</th>
                 <th>Status</th>
@@ -29,7 +29,7 @@
         <tbody>
             @foreach ($roles as $role)
                 <tr>
-                    <td>{{ $sno++ }}</td>
+                    <td class="text-center">{{ $sno++ }}</td>
                     <td>{{ $role->name }}</td>
                     <td>
                         <span class="btn btn-outline-{{ ($role->status == 1) ? 'success' : 'warning' }} btn-sm">

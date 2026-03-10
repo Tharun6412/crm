@@ -7,7 +7,7 @@
 @section('page-title', 'Industrial Registration')
 
 @section('page-content')
-    <div class="container-fluid border border-secondary-subtle rounded-3">
+    <div class="container-fluid border border-secondary-subtle bg-white rounded-3">
         <div id="add-industrial-success">
             <form id="add-industrial-form" action="{{ url('consumers/register/industrial') }}" method="POST" enctype="multipart/form-data">
                 @csrf

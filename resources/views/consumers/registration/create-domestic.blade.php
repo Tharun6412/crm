@@ -7,7 +7,7 @@
 @section('page-title', 'Registration')
 
 @section('page-content')
-    <div class="container-fluid border border-secondary-subtle rounded-3">
+    <div class="container-fluid border border-secondary-subtle bg-white rounded-3">
         <div id="add-domestic-success">
             <form id="add-domestic-form" action="{{ url('consumers/register/domestic') }}" method="POST" enctype="multipart/form-data">
                 @csrf

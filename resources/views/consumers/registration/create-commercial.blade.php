@@ -7,7 +7,7 @@
 @section('page-title', 'Commercial Registration')
 
 @section('page-content')
-    <div class="container-fluid border border-secondary-subtle rounded-3">
+    <div class="container-fluid border border-secondary-subtle bg-white rounded-3">
         <div id="add-commercial-success">
             <form id="add-commercial-form" action="{{ url('consumers/register/commercial') }}" method="POST" enctype="multipart/form-data">
                 @csrf

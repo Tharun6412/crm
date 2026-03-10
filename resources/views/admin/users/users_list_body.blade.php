@@ -5,19 +5,19 @@
         <div class="row g-2 align-items-center pb-2">
             <div class="col-auto">
                 <div class="input-group">
-                    <input type="text" name="search_key" id="search_key" class="form-control form-control-sm" placeholder="search here..." value="{{ request()->get('search_key') }}">
-                    <button type="submit" class="btn btn-primary btn-sm"><i class="bi bi-search"></i></button>
+                    <input type="text" name="search_key" id="search_key" class="form-control" placeholder="search here..." value="{{ request()->get('search_key') }}">
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-search"></i></button>
                 </div>
             </div>
             <div class="col-auto">
-                <a href="{{ url('admin/users') }}" class="btn btn-sm btn-warning ajax-link"><i class="bi bi-arrow-clockwise"></i></a>
+                <a href="{{ url('admin/users') }}" class="btn btn-warning ajax-link"><i class="bi bi-arrow-clockwise"></i></a>
             </div>
             <div class="col-auto">
-                ({{ $users->total() }}) Records found
+                <span class="fw-bold">({{ $users->total() }})</span> Records found
             </div>
         </div>
         <div>
-            <a href="{{ url('admin/users/create') }}" class="btn btn-sm btn-success link-modal">
+            <a href="{{ url('admin/users/create') }}" class="btn btn-success link-modal">
                 <i class="bi bi-plus-lg"></i>&nbsp;Create
             </a>
         </div>
@@ -33,8 +33,8 @@
 {{-- Display --}}
 @if ($users->total() > 0)
     <div class="table-responsive" style="min-height: 500px;">
-        <table class="table table-bordered table-primary page-sort">
-            <thead class="table-primary">
+        <table class="table table-bordered table-striped bg-white page-sort">
+            <thead class="table-success">
                 <tr class="bg-light">
                     <th width="1%" nowrap>S No</th>
                     <th nowrap>
@@ -92,7 +92,7 @@
                             @foreach ($user->ga as $ga)
                                 @if ($loop->iteration == 1)
                                     <div class="btn-group w-100">
-                                        <button type="button" class="btn btn-outline-secondary btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <button type="button" class="btn btn-outline-dark btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                                             {{ $ga->code . '-' . $ga->name }}
                                         </button>
                                         <ul class="dropdown-menu">                

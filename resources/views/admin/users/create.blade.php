@@ -10,11 +10,11 @@
                 <form action="{{ url('admin/users') }}" method="POST" id="user-add-form">
                     @csrf
                     <div class="row mb-2">
-                        <label for="emp_id" class="col-sm-2 text-end">Emp ID:</label>
+                        <label for="emp_id" class="col-sm-2 text-end">Emp ID</label>
                         <div class="col-sm-4">
                             <input type="text" name="emp_id" id="emp_id" class="form-control">
                         </div>
-                        <label for="email" class="col-sm-2 text-end">Email:</label>
+                        <label for="email" class="col-sm-2 text-end">Email</label>
                         <div class="col-sm-4">
                             <input type="text" name="email" id="email" class="form-control">
                         </div>
@@ -60,7 +60,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="row mb-3">
+                <div class="row mb-3 d-none">
                     <label class="col-sm-2 col-form-label text-end">Cluster restriction</label>
                     <div class="col-sm-4 mt-2">
                         <div class="form-check form-check-inline">
@@ -86,11 +86,11 @@
                 </div>
                 {{-- Geo Areas --}}
                 <div class="row">
-                    <div class="col-sm-2 text-end">
-                        <h5>Geo Areas</h5>
+                    <div class="col-sm-12 text-start">
+                        <h4>Geo Areas</h4>
                     </div>
-                    <div class="col-sm-10">
-                        <div class="row row-cols-3">
+                    <div class="col-sm-12">
+                        <div class="row row-cols-5">
                             @foreach ($geo_areas as $ga)
                                 <div class="col">
                                     <div class="form-check">
@@ -104,11 +104,11 @@
                 </div>
                 <hr>
                 <div class="row">
-                    <div class="col-sm-2 text-end">
+                    <div class="col-sm-12 text-start">
                         <h5>Roles</h5>
                     </div>
-                    <div class="col-sm-10">
-                        <div class="row row-cols-3">
+                    <div class="col-sm-12">
+                        <div class="row row-cols-5">
                             @foreach ($roles as $role)
                                 <div class="col">
                                     <div class="form-check">
@@ -121,8 +121,8 @@
                     </div>
                 </div>
                 <div class="mb-3" id="user-add-error"></div>
-                <div class="text-center">
-                    <button type="submit" class="btn btn-success"><i class="bi bi-plus-square"></i>&nbsp;Create User</button>
+                <div class="text-start">
+                    <button type="submit" class="btn btn-success"><i class="bi bi-person-plus"></i>&nbsp;Create User</button>
                 </div>
             </form>
             </div>

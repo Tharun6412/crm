@@ -12,11 +12,11 @@
                     @method('PUT')
                     <input type="hidden" name="id" value="{{ $user->id }}">
                     <div class="row mb-2">
-                        <label for="emp_id" class="col-sm-2 text-end">Emp ID:</label>
+                        <label for="emp_id" class="col-sm-2 text-end">Emp ID</label>
                         <div class="col-sm-4">
                             <input type="text" name="emp_id" id="emp_id" class="form-control" value="{{ $user->emp_id }}">
                         </div>
-                        <label for="email" class="col-sm-2 text-end">Email:</label>
+                        <label for="email" class="col-sm-2 text-end">Email</label>
                         <div class="col-sm-4">
                             <input type="text" name="email" id="email" class="form-control" value="{{ $user->email }}">
                         </div>
@@ -64,11 +64,11 @@
                     </div>
                 {{-- Geo Areas --}}
                 <div class="row">
-                    <div class="col-sm-2 text-end">
+                    <div class="col-sm-12 text-start">
                         <h5>Geo Areas</h5>
                     </div>
-                    <div class="col-sm-10">
-                        <div class="row row-cols-3">
+                    <div class="col-sm-12">
+                        <div class="row row-cols-5">
                             @php
                                 $user_gas = $user->ga->pluck('id')->toArray();
                             @endphp
@@ -85,11 +85,11 @@
                 </div>
                 <hr>
                 <div class="row">
-                    <div class="col-sm-2 text-end">
+                    <div class="col-sm-12 text-start">
                         <h5>Roles</h5>
                     </div>
-                    <div class="col-sm-10">
-                        <div class="row row-cols-3">
+                    <div class="col-sm-12">
+                        <div class="row row-cols-5">
                             @php
                                 $user_roles = $user->roles->pluck('id')->toArray();
                             @endphp
