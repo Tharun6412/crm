@@ -3,6 +3,20 @@
 @section('page-title', 'Welcome')
 
 @section('page-content')
+    @php
+        $connection_data = [];
+        // Connection Types Graph Data Preparation
+        $connection_data[] = [
+            'name' => "Prepaid",
+            'y' => round(($consumer_count->prepaid_count/$consumer_count->total_count)*100, 2),
+            'count' => $consumer_count->prepaid_count,
+        ];
+        $connection_data[] = [
+            'name' => "Postpaid",
+            'y' => round(($consumer_count->postpaid_count/$consumer_count->total_count)*100, 2),
+            'count' => $consumer_count->postpaid_count,
+        ];
+    @endphp
     <div class="pb-5">
         {{-- Quick search --}}
         <div class="rounded p-4 mb-3">
@@ -26,184 +40,6 @@
             </div>
         </div>
         <div class="container">
-            <h3 class="d-none">Dashboard</h3>
-            <div class="row g-3 d-none">
-                <div class="col-sm-3 col-md-4 col-lg-4 col-xl-3">
-                    <div class="card con-card-bg p-2 text-dark bg-opacity-10 border-3 border-light">
-                        <div class="d-flex justify-content-between p-3">
-                            <div>
-                                <h2 class="mb-2">{{ $consumer_count }}</h2>
-                                <span>Total Consumers</span>
-                            </div>
-                            <div>
-                                <div class="con-card-bg p-2 bg-opacity-25 rounded-4 py-2 px-3">
-                                    <i class="bi bi-people-fill fs-2"></i>
-                                    {{-- <i class="bi bi-person fs-2 text-primary"></i> --}}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="d-flex justify-content-between py-1 px-2 rounded-bottom">
-                            <a href="{{ url('consumers') }}">All Consumers</a>
-                            <a href="{{ url('consumers') }}"><is class="bi bi-eye fs-5"></i></a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-3 col-md-4 col-lg-4 col-xl-3">
-                    <div class="card inv-card-bg p-2 text-dark bg-opacity-10 border-3 border-light">
-                        <div class="d-flex justify-content-between p-3">
-                            <div>
-                                <h2 class="mb-2">{{ $invoice_count }}</h2>
-                                <span>Invoices</span>
-                            </div>
-                            <div>
-                                <div class="inv-card-bg p-2 bg-opacity-25 rounded-4 py-2 px-3">
-                                    <i class="bi bi-receipt-cutoff fs-2"></i>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="d-flex justify-content-between py-1 px-2 rounded-bottom">
-                            <a href="">All Invoices</a>
-                            <a href=""><is class="bi bi-eye fs-5"></i></a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-3 col-md-4 col-lg-4 col-xl-3">
-                    <div class="card py-card-bg p-2 text-dark bg-opacity-10 border-3 border-light">
-                        <div class="d-flex justify-content-between p-3">
-                            <div>
-                                <h2 class="mb-2">{{ $payments_count }}</h2>
-                                <span>Payments</span>
-                            </div>
-                            <div>
-                                <div class="py-card-bg p-2 bg-opacity-25 rounded-4 py-2 px-3">
-                                    <i class="bi bi-currency-rupee fs-2"></i>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="d-flex justify-content-between py-1 px-2 rounded-bottom">
-                            <a href="">All Payments</a>
-                            <a href=""><is class="bi bi-eye fs-5"></i></a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-3 col-md-4 col-lg-4 col-xl-3">
-                    <div class="card cls-card-bg p-2 text-dark bg-opacity-10 border-3 border-light">
-                        <div class="d-flex justify-content-between p-3">
-                            <div>
-                                <h2 class="mb-2">{{ $calls_list }}</h2>
-                                <span>Consumer Calls</span>
-                            </div>
-                            <div>
-                                <div class="cls-card-bg p-2 bg-opacity-25 rounded-4 py-2 px-3">
-                                    <i class="bi bi-headset fs-2"></i>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="d-flex justify-content-between py-1 px-2 rounded-bottom">
-                            <a href="{{ url('calls') }}">All calls</a>
-                            <a href="{{ url('calls') }}"><is class="bi bi-eye fs-5"></i></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <h3 class="text-start d-none">Consumers</h3>
-            <div class="row row-cols-xs-1 row-cols-sm-1 row-cols-md-1 row-cols-lg-2 row-cols-xl-2 d-none">
-                <div class="col-xs-12 col-sm-6 col-md-12 col-lg-7 col-xl-7">
-                    <div class="row row-cols-xs-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-2 row-cols-xl-2">
-                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
-                            <div class="p-2">
-                                <div class="card prepaid-card-bg p-2 text-dark bg-opacity-10 border-3 border-light">
-                                    <div class="d-flex p-3 align-items-center">
-                                        <div class="mr-4">
-                                            <div class="bg-warning boxshadow rounded-circle p-2 py-2 px-3">
-                                                <i class="bi bi-people-fill fs-1 text-white"></i>
-                                                {{-- <i class="bi bi-person fs-2 text-primary"></i> --}}
-                                            </div>
-                                        </div>
-                                        <h4 class="p-2 text-warning-emphasis">Prepaid Consumers</h4>                            
-                                    </div>
-                                    <div class="d-flex justify-content-between py-1 px-2 rounded-bottom">
-                                        <div>
-                                            <h2 class="mb-2 text-warning-emphasis">13,222</h2>
-                                        </div>
-                                        <a href="#"><is class="bi bi-eye fs-5"></i></a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
-                            <div class="p-2"> 
-                                <div class="card postpaid-card-bg p-2 text-dark bg-opacity-10 border-3 border-light">
-                                    <div class="d-flex p-3 align-items-center">
-                                        <div class="mr-4">
-                                            <div class="bg-primary boxshadow rounded-circle p-2 py-2 px-3">
-                                                <i class="bi bi-people-fill fs-1 text-white"></i>
-                                                {{-- <i class="bi bi-person fs-2 text-primary"></i> --}}
-                                            </div>
-                                        </div>
-                                        <h4 class="p-2 text-primary-emphasis">Postpaid Consumers</h4>                            
-                                    </div>
-                                    <div class="d-flex justify-content-between py-1 px-2 rounded-bottom">
-                                        <div>
-                                            <h2 class="mb-2 text-primary-emphasis">15,325</h2>
-                                        </div>
-                                        <a href="#"><is class="bi bi-eye fs-5"></i></a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row row-cols-xs-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-2 row-cols-xl-2">
-                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
-                            <div class="p-2">
-                                <div class="card activated-card-bg p-2 text-dark bg-opacity-10 border-3 border-light">
-                                    <div class="d-flex p-3 align-items-center">
-                                        <div class="mr-4">
-                                            <div class="bg-success boxshadow rounded-circle p-2 py-2 px-3">
-                                                <i class="bi bi-person-check fs-1 text-white"></i>
-                                                {{-- <i class="bi bi-person fs-2 text-primary"></i> --}}
-                                            </div>
-                                        </div>
-                                        <h4 class="p-2 text-success-emphasis">Activated Consumers</h4>                            
-                                    </div>
-                                    <div class="d-flex justify-content-between py-1 px-2 rounded-bottom">
-                                        <div>
-                                            <h2 class="mb-2 text-success-emphasis">28,548</h2>
-                                        </div>
-                                        <a href="#"><is class="bi bi-eye fs-5"></i></a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
-                            <div class="p-2">
-                                <div class="card total-card-bg p-2 text-dark bg-opacity-10 border-3 border-light">
-                                    <div class="d-flex p-3 align-items-center">
-                                        <div class="mr-4">
-                                            <div class="bg-info boxshadow rounded-circle p-2 py-2 px-3">
-                                                <i class="bi bi-person-check fs-1 text-white"></i>
-                                                {{-- <i class="bi bi-person fs-2 text-primary"></i> --}}
-                                            </div>
-                                        </div>
-                                        <h4 class="p-2 text-info-emphasis">Total Consumers</h4>                            
-                                    </div>
-                                    <div class="d-flex justify-content-between py-1 px-2 rounded-bottom">
-                                        <div>
-                                            <h2 class="mb-2 text-info-emphasis">28,548</h2>
-                                        </div>
-                                        <a href="#"><is class="bi bi-eye fs-5"></i></a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xs-12 col-sm-6 col-md-5 col-lg-5 col-xl-5 gy-2">
-                    <div class="d-flex mb-3">
-                        &nbsp;
-                    </div>
-                </div>
-            </div>
             <div class="row g-3">
                 <div class="col-sm-3 col-md-4 col-lg-4 col-xl-4">
                     <div class="card con-card-bg p-1 text-dark bg-opacity-10 border-3 border-light">
@@ -215,7 +51,7 @@
                             </div>
                             <div class="py-3 px-3">
                                 <h4>Prepaid Consumers</h4>                            
-                                <h3>3,200</h3>
+                                <h3>{{ numberFormat($consumer_count->prepaid_count) }}</h3>
                             </div>
                         </div>
                     </div>
@@ -230,7 +66,7 @@
                             </div>
                             <div class="py-3 px-3">
                                 <h4>Postpaid Consumers</h4>                            
-                                <h3>3,200</h3>
+                                <h3>{{ numberFormat($consumer_count->postpaid_count) }}</h3>
                             </div>                          
                         </div>
                     </div>
@@ -238,8 +74,8 @@
                 <div class="col-sm-3 col-md-4 col-lg-4 col-xl-4">
                     <div class="card cls-card-bg p-1 text-dark bg-opacity-10 border-3 border-light align-items-center">
                         <figure class="highcharts-figure">
-                        <div id="container"></div>
-                    </figure>
+                            <div id="container"></div>
+                        </figure>
                     </div>
                 </div>
             </div>
@@ -248,7 +84,7 @@
                     <div class="card activated-card-bg p-2 text-dark bg-opacity-10 border-3 border-light">
                         <div class="d-flex justify-content-between p-3">
                             <div>
-                                <h2 class="mb-2">12,465</h2>
+                                <h2 class="mb-2">{{ numberFormat($consumer_count->activation_count) }}</h2>
                                 <span class="text-body-tertiary">Activated<br/> Consumers</span>
                             </div>
                             <div>
@@ -258,8 +94,8 @@
                             </div>
                         </div>
                         <div class="d-flex justify-content-between py-1 px-2 rounded-bottom">
-                            <a href="#">View Consumers</a>
-                            <a href="#"><is class="bi bi-box-arrow-up-right fs-5"></i></a>
+                            <a href="{{ url('consumers/activated') }}">View Consumers</a>
+                            <a href="{{ url('consumers/activated') }}" target="_blank"><is class="bi bi-box-arrow-up-right fs-5"></i></a>
                         </div>
                     </div>
                 </div>
@@ -267,7 +103,7 @@
                     <div class="card total-card-bg p-2 text-dark bg-opacity-10 border-3 border-light">
                         <div class="d-flex justify-content-between p-3">
                             <div>
-                                <h2 class="mb-2">18,634</h2>
+                                <h2 class="mb-2">{{ numberFormat($consumer_count->total_count) }}</h2>
                                 <span class="text-body-tertiary">Total<br> Registrations</span>
                             </div>
                             <div>
@@ -277,8 +113,8 @@
                             </div>
                         </div>
                         <div class="d-flex justify-content-between py-1 px-2 rounded-bottom">
-                            <a href="#">View All Registrations</a>
-                            <a href="#"><is class="bi bi-box-arrow-up-right fs-5"></i></a>
+                            <a href="{{ url('consumers') }}">View All Registrations</a>
+                            <a href="{{ url('consumers') }}" target="_blank"><is class="bi bi-box-arrow-up-right fs-5"></i></a>
                         </div>
                     </div>
                 </div>
@@ -286,7 +122,7 @@
                     <div class="card py-card-bg p-2 text-dark bg-opacity-10 border-3 border-light">
                         <div class="d-flex justify-content-between p-3">
                             <div>
-                                <h2 class="mb-2">168</h2>
+                                <h2 class="mb-2">{{ numberFormat($consumer_count->td_count) }}</h2>
                                 <span class="text-body-tertiary">Temporary<br/> Disconnections</span>
                             </div>
                             <div>
@@ -296,8 +132,8 @@
                             </div>
                         </div>
                         <div class="d-flex justify-content-between py-1 px-2 rounded-bottom">
-                            <a href="#">View Details</a>
-                            <a href="#"><is class="bi bi-box-arrow-up-right fs-5"></i></a>
+                            <a href="{{ url('consumers/td') }}">View Details</a>
+                            <a href="{{ url('consumers/td') }}" target="_blank"><is class="bi bi-box-arrow-up-right fs-5"></i></a>
                         </div>
                     </div>
                 </div>
@@ -305,7 +141,7 @@
                     <div class="card disconnect-card-bg p-2 text-dark bg-opacity-10 border-3 border-light">
                         <div class="d-flex justify-content-between p-3">
                             <div>
-                                <h2 class="mb-2">225</h2>
+                                <h2 class="mb-2">{{ numberFormat($consumer_count->pd_count) }}</h2>
                                 <span class="text-body-tertiary">Permanent<br/> Disconnections</span>
                             </div>
                             <div>
@@ -315,8 +151,8 @@
                             </div>
                         </div>
                         <div class="d-flex justify-content-between py-1 px-2 rounded-bottom">
-                            <a href="#">View Details</a>
-                            <a href="#"><is class="bi bi-box-arrow-up-right fs-5"></i></a>
+                            <a href="{{ url('consumers/pd') }}">View Details</a>
+                            <a href="{{ url('consumers/pd') }}" target="_blank"><is class="bi bi-box-arrow-up-right fs-5"></i></a>
                         </div>
                     </div>
                 </div>
@@ -356,146 +192,166 @@
                     </div>
                 </div>
                 <div class="col-sm-4 col-md-4 col-lg-2 col-xl-2 col-xs-6">
-                    <div class="card link-card-bg p-1 text-dark bg-opacity-10 border-3 border-light">
-                        <div class="d-flex justify-content-between p-2 align-items-center">
-                            <div>
-                                <div class="link-card-bg p-1 bg-opacity-25 rounded-4 py-1 px-2 mt-2">
-                                    <i class="bi bi-link-45deg fs-3"></i>
+                    <a href="{{ url('consumers/register/domestic') }}">
+                        <div class="card link-card-bg p-1 text-dark bg-opacity-10 border-3 border-light">
+                            <div class="d-flex justify-content-between p-2 align-items-center">
+                                <div>
+                                    <div class="link-card-bg p-1 bg-opacity-25 rounded-4 py-1 px-2 mt-2">
+                                        <i class="bi bi-link-45deg fs-3"></i>
+                                    </div>
+                                </div>
+                                <div class="py-2 px-2 text-start">
+                                    <small class="text-body">Domestic Registration</small>
                                 </div>
                             </div>
-                            <div class="py-2 px-2 text-start">
-                                <small class="text-body">Domestic Registration</small>
-                            </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
                 <div class="col-sm-4 col-md-4 col-lg-2 col-xl-2 col-xs-6">
-                    <div class="card link-card-bg p-1 text-dark bg-opacity-10 border-3 border-light">
-                        <div class="d-flex justify-content-between p-2 align-items-center">
-                            <div>
-                                <div class="link-card-bg p-1 bg-opacity-25 rounded-4 py-1 px-2 mt-2">
-                                    <i class="bi bi-link-45deg fs-3"></i>
+                    <a href="{{ url('consumers/tr') }}">
+                        <div class="card link-card-bg p-1 text-dark bg-opacity-10 border-3 border-light">
+                            <div class="d-flex justify-content-between p-2 align-items-center">
+                                <div>
+                                    <div class="link-card-bg p-1 bg-opacity-25 rounded-4 py-1 px-2 mt-2">
+                                        <i class="bi bi-link-45deg fs-3"></i>
+                                    </div>
+                                </div>
+                                <div class="py-2 px-2 text-start">
+                                    <small class="text-body">TR Consumers</small>
                                 </div>
                             </div>
-                            <div class="py-2 px-2 text-start">
-                                <small class="text-body">TR Consumers</small>
-                            </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
                 <div class="col-sm-4 col-md-4 col-lg-2 col-xl-2 col-xs-6">
-                    <div class="card link-card-bg p-1 text-dark bg-opacity-10 border-3 border-light">
-                        <div class="d-flex justify-content-between p-2 align-items-center">
-                            <div>
-                                <div class="link-card-bg p-1 bg-opacity-25 rounded-4 py-1 px-2 mt-2">
-                                    <i class="bi bi-link-45deg fs-3"></i>
+                    <a href="{{ url('consumers/registered') }}">
+                        <div class="card link-card-bg p-1 text-dark bg-opacity-10 border-3 border-light">
+                            <div class="d-flex justify-content-between p-2 align-items-center">
+                                <div>
+                                    <div class="link-card-bg p-1 bg-opacity-25 rounded-4 py-1 px-2 mt-2">
+                                        <i class="bi bi-link-45deg fs-3"></i>
+                                    </div>
+                                </div>
+                                <div class="py-2 px-2 text-start">
+                                    <small class="text-body">Registered Consumers</small>
                                 </div>
                             </div>
-                            <div class="py-2 px-2 text-start">
-                                <small class="text-body">Registered Consumers</small>
-                            </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
                 <div class="col-sm-4 col-md-4 col-lg-2 col-xl-2 col-xs-6">
-                    <div class="card link-card-bg p-1 text-dark bg-opacity-10 border-3 border-light">
-                        <div class="d-flex justify-content-between p-2 align-items-center">
-                            <div>
-                                <div class="link-card-bg p-1 bg-opacity-25 rounded-4 py-1 px-2 mt-2">
-                                    <i class="bi bi-link-45deg fs-3"></i>
+                    <a href="{{ url('consumers/meterChange') }}">
+                        <div class="card link-card-bg p-1 text-dark bg-opacity-10 border-3 border-light">
+                            <div class="d-flex justify-content-between p-2 align-items-center">
+                                <div>
+                                    <div class="link-card-bg p-1 bg-opacity-25 rounded-4 py-1 px-2 mt-2">
+                                        <i class="bi bi-link-45deg fs-3"></i>
+                                    </div>
+                                </div>
+                                <div class="py-2 px-2 text-start">
+                                    <small class="text-body">Meter change</small>
                                 </div>
                             </div>
-                            <div class="py-2 px-2 text-start">
-                                <small class="text-body">Meter change</small>
-                            </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
                 <div class="col-sm-4 col-md-4 col-lg-2 col-xl-2 col-xs-6">
-                    <div class="card link-card-bg p-1 text-dark bg-opacity-10 border-3 border-light">
-                        <div class="d-flex justify-content-between p-2 align-items-center">
-                            <div>
-                                <div class="link-card-bg p-1 bg-opacity-25 rounded-4 py-1 px-2 mt-2">
-                                    <i class="bi bi-link-45deg fs-3"></i>
+                    <a href="{{ url('bill/consumer/search') }}" target="_blank">
+                        <div class="card link-card-bg p-1 text-dark bg-opacity-10 border-3 border-light">
+                            <div class="d-flex justify-content-between p-2 align-items-center">
+                                <div>
+                                    <div class="link-card-bg p-1 bg-opacity-25 rounded-4 py-1 px-2 mt-2">
+                                        <i class="bi bi-link-45deg fs-3"></i>
+                                    </div>
+                                </div>
+                                <div class="py-2 px-2 text-start">
+                                    <small class="text-body">Search Gas Bills</small>
                                 </div>
                             </div>
-                            <div class="py-2 px-2 text-start">
-                                <small class="text-body">Search Gas Bills</small>
-                            </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
             </div>
             <div class="row mt-3">
                 <div class="col-sm-4 col-md-4 col-lg-2 col-xl-2 col-xs-6">
-                    <div class="card link-card-bg p-1 text-dark bg-opacity-10 border-3 border-light">
-                        <div class="d-flex justify-content-between p-2 align-items-center">
-                            <div>
-                                <div class="link-card-bg p-1 bg-opacity-25 rounded-4 py-1 px-2 mt-2">
-                                    <i class="bi bi-link-45deg fs-3"></i>
+                    <a href="{{ url('consumers/rejected') }}">
+                        <div class="card link-card-bg p-1 text-dark bg-opacity-10 border-3 border-light">
+                            <div class="d-flex justify-content-between p-2 align-items-center">
+                                <div>
+                                    <div class="link-card-bg p-1 bg-opacity-25 rounded-4 py-1 px-2 mt-2">
+                                        <i class="bi bi-link-45deg fs-3"></i>
+                                    </div>
+                                </div>
+                                <div class="py-2 px-2 text-start">
+                                    <small class="text-body">Rejected Consumers</small>
                                 </div>
                             </div>
-                            <div class="py-2 px-2 text-start">
-                                <small class="text-body">Rejected Consumers</small>
-                            </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
                 <div class="col-sm-4 col-md-4 col-lg-2 col-xl-2 col-xs-6">
-                    <div class="card link-card-bg p-1 text-dark bg-opacity-10 border-3 border-light">
-                        <div class="d-flex justify-content-between p-2 align-items-center">
-                            <div>
-                                <div class="link-card-bg p-1 bg-opacity-25 rounded-4 py-1 px-2 mt-2">
-                                    <i class="bi bi-link-45deg fs-3"></i>
+                    <a href="{{ url('consumers/meterChange') }}">
+                        <div class="card link-card-bg p-1 text-dark bg-opacity-10 border-3 border-light">
+                            <div class="d-flex justify-content-between p-2 align-items-center">
+                                <div>
+                                    <div class="link-card-bg p-1 bg-opacity-25 rounded-4 py-1 px-2 mt-2">
+                                        <i class="bi bi-link-45deg fs-3"></i>
+                                    </div>
+                                </div>
+                                <div class="py-2 px-2 text-start">
+                                    <small class="text-body">Meter Change</small>
                                 </div>
                             </div>
-                            <div class="py-2 px-2 text-start">
-                                <small class="text-body">Meter Change</small>
-                            </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
                 <div class="col-sm-4 col-md-4 col-lg-2 col-xl-2 col-xs-6">
-                    <div class="card link-card-bg p-1 text-dark bg-opacity-10 border-3 border-light">
-                        <div class="d-flex justify-content-between p-2 align-items-center">
-                            <div>
-                                <div class="link-card-bg p-1 bg-opacity-25 rounded-4 py-1 px-2 mt-2">
-                                    <i class="bi bi-link-45deg fs-3"></i>
+                    <a href="{{ url('bill/consumer/search') }}" target="_blank">
+                        <div class="card link-card-bg p-1 text-dark bg-opacity-10 border-3 border-light">
+                            <div class="d-flex justify-content-between p-2 align-items-center">
+                                <div>
+                                    <div class="link-card-bg p-1 bg-opacity-25 rounded-4 py-1 px-2 mt-2">
+                                        <i class="bi bi-link-45deg fs-3"></i>
+                                    </div>
+                                </div>
+                                <div class="py-2 px-2 text-start">
+                                    <small class="text-body">Invoice Generation</small>
                                 </div>
                             </div>
-                            <div class="py-2 px-2 text-start">
-                                <small class="text-body">Invoice Generation</small>
-                            </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
                 <div class="col-sm-4 col-md-4 col-lg-2 col-xl-2 col-xs-6">
-                    <div class="card link-card-bg p-1 text-dark bg-opacity-10 border-3 border-light">
-                        <div class="d-flex justify-content-between p-2 align-items-center">
-                            <div>
-                                <div class="link-card-bg p-1 bg-opacity-25 rounded-4 py-1 px-2 mt-2">
-                                    <i class="bi bi-link-45deg fs-3"></i>
+                    <a href="{{ url('bill/invoice/search') }}" target="_blank">
+                        <div class="card link-card-bg p-1 text-dark bg-opacity-10 border-3 border-light">
+                            <div class="d-flex justify-content-between p-2 align-items-center">
+                                <div>
+                                    <div class="link-card-bg p-1 bg-opacity-25 rounded-4 py-1 px-2 mt-2">
+                                        <i class="bi bi-link-45deg fs-3"></i>
+                                    </div>
+                                </div>
+                                <div class="py-2 px-2 text-start">
+                                    <small class="text-body">Creditnote Generation</small>
                                 </div>
                             </div>
-                            <div class="py-2 px-2 text-start">
-                                <small class="text-body">Creditnote Generation</small>
-                            </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
                 <div class="col-sm-4 col-md-4 col-lg-2 col-xl-2 col-xs-6">
-                    <div class="card link-card-bg p-1 text-dark bg-opacity-10 border-3 border-light">
-                        <div class="d-flex justify-content-between p-2 align-items-center">
-                            <div>
-                                <div class="link-card-bg p-1 bg-opacity-25 rounded-4 py-1 px-2 mt-2">
-                                    <i class="bi bi-link-45deg fs-3"></i>
+                    <a href="{{ url('reports/consumer/sdReport') }}">
+                        <div class="card link-card-bg p-1 text-dark bg-opacity-10 border-3 border-light">
+                            <div class="d-flex justify-content-between p-2 align-items-center">
+                                <div>
+                                    <div class="link-card-bg p-1 bg-opacity-25 rounded-4 py-1 px-2 mt-2">
+                                        <i class="bi bi-link-45deg fs-3"></i>
+                                    </div>
+                                </div>
+                                <div class="py-2 px-2 text-start">
+                                    <small class="text-body">Security Depost Report</small>
                                 </div>
                             </div>
-                            <div class="py-2 px-2 text-start">
-                                <small class="text-body">Security Depost Report</small>
-                            </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
                 <div class="col-sm-4 col-md-4 col-lg-2 col-xl-2 col-xs-6">
                     <div class="card link-card-bg p-1 text-dark bg-opacity-10 border-3 border-light">
@@ -546,7 +402,7 @@
                  }
             },
             tooltip: {
-                valueSuffix: '%'
+                pointFormat:'<b>{point.count}</b>'
             },
             plotOptions: {
                 pie: {
@@ -569,24 +425,12 @@
             },
             series: [
                 {
-                    name: 'Percentage',
+                    name: 'Count',
                     colorByPoint: true,
-                    data: [
-                        {
-                            name: 'Prepaid',
-                            color: 'orange',
-                            y: 55.02
-                        },
-                        {
-                            name: 'Postpaid',
-                            sliced: false,
-                            selected: true,
-                            y: 44.98
-                        }
-                    ]
+                    data: @json($connection_data),
                 }
             ],
-            credits: [{enabled: false}]
+            credits: {enabled: false}
         });
         //Line chart
         Highcharts.chart('lineChart', {

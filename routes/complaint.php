@@ -25,6 +25,7 @@ Route::middleware(['auth', ModuleAccess::class])->group(function() {
     Route::post('deleteComplaintDocument/{id}',[App\Http\Controllers\Complaints\ComplaintsController::class, 'deleteComplaintDocument']);
 
     // Status Change Routes
+    Route::get('usersListByDepartment',[App\Http\Controllers\Complaints\ComplaintsController::class, 'usersListByDepartment']);
     Route::get('assign/{id}',[App\Http\Controllers\Complaints\ComplaintsController::class, 'assign']);
     Route::get('inProgress/{id}',[App\Http\Controllers\Complaints\ComplaintsController::class, 'inProgress']);
     Route::get('investigate/{id}',[App\Http\Controllers\Complaints\ComplaintsController::class, 'investigate']);

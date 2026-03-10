@@ -23,6 +23,7 @@ use App\Models\Master\ComplaintMedia;
 use App\Models\Master\ComplaintPriority;
 use App\Models\Master\ComplaintSegment;
 use App\Models\Master\ComplaintType;
+use App\Models\Master\Department;
 use App\Notifications\Consumer\ComplaintCloseOtpSmsNotification;
 use App\Notifications\Consumer\ComplaintRegisterSmsNotification;
 use App\Services\OtpService;
@@ -291,12 +292,21 @@ class ComplaintsController extends Controller
     public function assign(Request $request, $id)
     {
         $complaint = Complaint::find($id);
-        $users = User::where('department_id', $complaint->category->department_id)->get();
+        $departments = Department::all();
         // Render output
         return view('complaints.assign', [
             'complaint' => $complaint,
-            'users' => $users,
+            'departments' => $departments,
         ]);
+    }
+
+    /**
+     * Users based on Department
+     * @request $department_id
+     */
+    public function usersListByDepartment(Request $request) {
+        $users = User::where('department_id', $request->department_id)->get();
+        return response()->json(['users' => $users]);
     }
     /**
      * To Update Assigned user
@@ -305,6 +315,7 @@ class ComplaintsController extends Controller
     public function assignTo(Request $request, $id)
     {
         $request->validate([
+            'department_id' => 'required',
             'assign_id' => 'required',
             'notes' => 'required',
         ]);
