@@ -340,8 +340,9 @@
         function getSchemesByType(type_id)
         {
             var ga = $('#geo_area').val();
+            var segment = "{{ \App\Enums\SegmentType::INDUSTRIAL->value }}";
             $('#scheme_data').addClass('d-none');
-            $.get("{{ url('common/gaSchemesByType') }}", { 'type_id' : type_id , 'ga_id' : ga}, function(data) {
+            $.get("{{ url('common/gaSchemesByType') }}", { 'type_id' : type_id , 'ga_id' : ga, 'segment_id' : segment}, function(data) {
                 $('#scheme_id').empty();
                 let options1 = '<option value="">Select scheme</option>'
                 if(data.schemes && data.schemes.length > 0) {

@@ -8,12 +8,12 @@
         // Connection Types Graph Data Preparation
         $connection_data[] = [
             'name' => "Prepaid",
-            'y' => round(($consumer_count->prepaid_count/$consumer_count->total_count)*100, 2),
+            'y' => $consumer_count->total_count > 0 ? round(($consumer_count->prepaid_count/$consumer_count->total_count)*100, 2) : 0,
             'count' => $consumer_count->prepaid_count,
         ];
         $connection_data[] = [
             'name' => "Postpaid",
-            'y' => round(($consumer_count->postpaid_count/$consumer_count->total_count)*100, 2),
+            'y' => $consumer_count->total_count > 0 ? round(($consumer_count->postpaid_count/$consumer_count->total_count)*100, 2) : 0,
             'count' => $consumer_count->postpaid_count,
         ];
     @endphp
