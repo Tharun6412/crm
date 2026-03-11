@@ -1,7 +1,7 @@
 {{-- Transaction details --}}
 
 <div class="offcanvas-header border-bottom">
-    <h4 class="offcanvas-title border-start border-5 border-success ps-2" id="offcanvasRightLabel">{{ $transaction->transaction_id }}</h4>
+    <h4 class="offcanvas-title border-start border-5 border-success ps-2" id="offcanvasRightLabel">{{ $transaction->module->name ?? '' }}</h4>
     <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
 </div>
 <div class="offcanvas-body">
@@ -21,11 +21,15 @@
             </tr>
             <tr>
                 <td class="bg-light">Module</td>
-                <td>{{ $transaction->module->name }}</td>
+                <td>{{ $transaction->module->name ?? '' }}</td>
             </tr>
             <tr>
                 <td class="bg-light">Gateway</td>
-                <td>{{ $transaction->gateway->gateway }}</td>
+                <td>{{ $transaction->gateway->gateway ?? '' }}</td>
+            </tr>
+            <tr>
+                <td class="bg-light">Source</td>
+                <td>{{ $transaction->source->name ?? '' }}</td>
             </tr>
         </tbody>
     </table>

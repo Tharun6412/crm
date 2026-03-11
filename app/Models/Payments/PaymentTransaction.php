@@ -9,6 +9,7 @@ use App\Models\Invoice\InvoicePayment;
 use App\Models\Master\PaymentGateway;
 use App\Models\Master\PaymentModule;
 use App\Models\Master\PaymentTransactionStatus;
+use App\Models\Master\TransactionSource;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -29,6 +30,7 @@ class PaymentTransaction extends Model
      */
     protected $fillable = [
         'payment_module_id',
+        'transaction_source_id',
         'consumer_id',
         'invoice_id',
         'gateway_id',
@@ -58,6 +60,14 @@ class PaymentTransaction extends Model
     public function module(): BelongsTo
     {
         return $this->belongsTo(PaymentModule::class, 'payment_module_id')->withDefault();
+    }
+
+    /**
+     * Relation with Transaction sources
+     */
+    public function source(): BelongsTo
+    {
+        return $this->belongsTo(TransactionSource::class, 'transaction_source_id');
     }
 
     /**

@@ -281,12 +281,14 @@ return new class extends Migration
             $table->string('name', length:60)->nullable(); //Low | Medium | High
             $table->timestamps();
         });
+        
         // mst bil invoice types
         Schema::create('mst_bil_invoice_types', function(Blueprint $table) {
             $table->id();
             $table->string('name', length:100)->nullable();
             $table->timestamps();
         });
+
         // mst pay transaction status
         Schema::create('mst_pay_transaction_status', function(Blueprint $table) {
             $table->id();
@@ -296,6 +298,12 @@ return new class extends Migration
 
         // Payment gateway payment modules - mst_pay_modules
         Schema::create('mst_pay_modules', function (Blueprint $table) {
+            $table->id();
+            $table->string('name', length: 32);
+        });
+
+        // MST Payment sources
+        Schema::create('mst_pay_transaction_sources', function(Blueprint $table) {
             $table->id();
             $table->string('name', length: 32);
         });

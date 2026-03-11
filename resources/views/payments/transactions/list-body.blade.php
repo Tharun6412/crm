@@ -49,7 +49,7 @@
                         <td>{{ $transaction->module->name ?? '' }}</td>
                         <td>{{ $transaction->gateway->gateway ?? '' }}</td>
                         <td>{{ $transaction->transaction_date?->format('d-m-Y') }}</td>
-                        <td>{{ $transaction->transaction_id ?? '' }}</td>
+                        <td><a href="{{ url('payments/transactions/' . $transaction->id) }}" class="dropdown-item link-canvas">{{ $transaction->transaction_id ?? '' }}</a></td>
                         <td class="text-end">{{ numberFormat($transaction->amount ?? 0, 2) }}</td>
                         <td>
                             <x-payments.transaction-status :status="$transaction->status"/>

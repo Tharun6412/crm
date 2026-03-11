@@ -34,7 +34,7 @@ function unLoadModal () {
 
 // Load Bootstrap Offcanvas
 function loadCanvas(data) {
-	var canvasD = '<div class="offcanvas offcanvas-end" tabindex="-1" id="mycanvas">' + data + '</div>';
+	var canvasD = '<div class="offcanvas offcanvas-end" tabindex="-1" id="mycanvas" style="width: 500px;">' + data + '</div>';
 	$('body').append(canvasD);
 	var myCanvas = new bootstrap.Offcanvas($("#mycanvas"), {backdrop: 'static'});
 	myCanvas.show();

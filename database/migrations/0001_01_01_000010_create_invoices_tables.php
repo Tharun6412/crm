@@ -140,6 +140,7 @@ return new class extends Migration
         Schema::create('pay_transactions', function(Blueprint $table) {
             $table->id();
             $table->foreignId('payment_module_id')->index()->nullable()->constrained(table:'mst_pay_modules')->noActionOnDelete()->noActionOnUpdate();
+            $table->foreignId('transaction_source_id')->index()->nullable()->constrained(table:'mst_pay_transaction_sources')->noActionOnDelete()->noActionOnUpdate();
             $table->foreignId('consumer_id')->index()->nullable()->constrained(table:'cns_consumers')->noActionOnDelete()->noActionOnUpdate();
             $table->foreignId('invoice_id')->index()->nullable()->constrained(table:'bil_invoices')->noActionOnDelete()->noActionOnUpdate();
             $table->foreignId('gateway_id')->index()->nullable()->constrained(table:'mst_payment_gateways')->noActionOnDelete()->noActionOnUpdate();
