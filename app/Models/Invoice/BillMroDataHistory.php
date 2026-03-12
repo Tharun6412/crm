@@ -21,5 +21,6 @@ class BillMroDataHistory extends Model
         'mro_data_id',
         'status_id',
         'notes',
+        'created_at',
     ];
 }

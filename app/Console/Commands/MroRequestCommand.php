@@ -3,6 +3,8 @@
 namespace App\Console\Commands;
 
 use App\Actions\Prepaid\MroRequestAction;
+use App\Contracts\Prepaid\Mro;
+use App\Enums\PrepaidApi;
 use Illuminate\Console\Command;
 
 class MroRequestCommand extends Command
@@ -12,7 +14,7 @@ class MroRequestCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'app:mro-preocess-command';
+    protected $signature = 'app:mro-request-command';
 
     /**
      * The console command description.
@@ -27,6 +29,15 @@ class MroRequestCommand extends Command
     public function handle()
     {
         // Call the MRO request action.
-        $action = MroRequestAction::getConsumer();
+        $data = MroRequestAction::getConsumer();
+        if($data) {
+            // Call Mro Request API.
+            $responses = Mro::request($data['mro_bulk_data'], PrepaidApi::mroRequest()->value);
+            // Send the API response to the update function.
+            MroRequestAction::updateMroRequest($responses, $data['batch_id']);
+        }
+        else {
+            logger()->error("No Mro Request Data.");
+        }
     }
 }

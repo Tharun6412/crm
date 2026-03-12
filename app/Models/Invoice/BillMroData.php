@@ -1,7 +1,9 @@
 <?php
 namespace App\Models\Invoice;
 
+use App\Models\Consumer\Consumer;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class BillMroData extends Model
 {
@@ -37,5 +39,13 @@ class BillMroData extends Model
             'created_at' => 'datetime',
             'updated_at' => 'datetime'
         ];
+    }
+
+    /**
+     * Relation with the consumer table.
+     */
+    public function consumer():BelongsTo
+    {
+        return $this->belongsTo(Consumer::class, 'consumer_id');
     }
 }

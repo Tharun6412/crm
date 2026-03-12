@@ -28,7 +28,7 @@
                                         <select class="form-select" name="price_group_id" id="price_group_id">
                                             <option value="">All</option>
                                             @foreach ($price_groups as $price)
-                                                <option>{{ $price->code }}-{{ $price->price }}</option>
+                                                <option value="{{ $price->id }}" @selected($consumer->price_group_id == $price->id)>{{ $price->code }}-{{ $price->price }}</option>
                                             @endforeach
                                         </select>
                                     </td>

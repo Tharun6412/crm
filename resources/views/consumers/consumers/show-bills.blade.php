@@ -28,7 +28,7 @@
                                 <td>{{ $invoice->invoice_number }}</td>
                                 <td>{{ $invoice->invoice_date?->format('d-m-y') }}</td>
                                 <td class="text-end">{{ numberFormat($invoice->consumption->net_consumption, 3) }}</td>
-                                <td>{{ $invoice->invoice_date?->format('d-m-y') }}</td>
+                                <td>{{ $invoice->due_date?->format('d-m-y') }}</td>
                                 <td class="text-end">{{ numberFormat($invoice->total_amount, 2) }}</td>
                                 <td><x-invoice.status :status="$invoice->status"/></td>
                                 <td>{{ $invoice->createdBy->name ?? '' }}</td>

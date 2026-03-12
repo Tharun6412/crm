@@ -18,8 +18,10 @@ class MroRequestAction
      */
     public static function getConsumer()
     {
-        $req_start_date = date('Y-m-d');
-        $schedule_date = date('Y-m-t');
+        $prevMonth = now()->subMonth();
+        $req_start_date = $prevMonth->copy()->setDay(15)->toDateString();
+        $schedule_date  = $prevMonth->copy()->endOfMonth()->toDateString();
+
         // Get latest MRO requests of consumer
         $latestMro = BillMroData::selectRaw('MAX(created_at)')
             ->whereColumn('consumer_id', 'bil_mro_data.consumer_id');
@@ -29,69 +31,86 @@ class MroRequestAction
             ->leftJoin('bil_mro_data', function($join) use($latestMro) {
                 $join->on('bil_mro_data.consumer_id', '=', 'cns_consumers.id')
                 ->where('bil_mro_data.created_at', $latestMro)
-                ->whereIn('bil_mro_data.status_id', [1, 2, 3]);
+                ->whereIn('bil_mro_data.status_id', [1, 2, 3, 4]); // 1 = requested, 2 = request_fail, 3 = data received, 4 = bill_process_fail
             })
             ->whereDate('cns_prepaid.hes_date', '<=', $req_start_date)
             ->whereNull('bil_mro_data.id')
+            ->where('cns_consumers.status_id',ConsumerStatus::ACTIVATE->value)
             ->get();
-        if($consumers) {
-            // Create Batch ID with Str uuid and insert in bulk
-            $batch_id = Str::uuid();
-            // Prepare bulk insert array along with API input
-            $mro_data_bulk = [];
-            $mro_req_bulk = [];
-            foreach($consumers as $consumer) {
-                $mro_data_bulk[] = [
-                    'consumer_id' => $consumer->id,
-                    'schedule_date' => $schedule_date,
-                    'status_id' => 1,
-                    'batch_id' => $batch_id,
-                ];
-            }
-            // Insert into MRO data
-            $mro_data_batch_insert = BillMroData::insert($mro_data_bulk);
-            if($mro_data_batch_insert)
-            {
-                // fetch inserted mro data for this batch.
-                $insertedRows = BillMroData::where('batch_id', $batch_id)->get();
+        if($consumers->isNotEmpty()) {
+            try {
+                // Create Batch ID with Str uuid and insert in bulk
+                $batch_id = Str::uuid();
+                // Prepare bulk insert array along with API input
+                $mro_data_bulk = [];
                 $mro_req_bulk = [];
-                $mro_update_bulk = [];
-                $history_bulk = [];
-                foreach ($insertedRows as $row) {
-                    // MRO order id generation
-                    $mro_order_id = 'MRO' . Str::padLeft($row->id, 9, '0');
-                    // Update the MRO Order id to BillMroData table
-                    $row->update(['mro_number' => $mro_order_id]);
-                    // Data for the MRO Request API.
-                    $mro_req_bulk[] = [
-                        'mro_order_id' => $mro_order_id,
-                        'mech_meter_serial_number' => $row->consumer->activeMeter->meter_no,
-                        'prepaid_mod_number' => $row->consumer->activeMeter->meter_serial_no,
-                        'scheduled_mr_date' => $row->schedule_date,
-                        'crn' => $row->consumer->crn
-                    ];
-                    // Array for the MRO Data history.
-                    $history_bulk[] = [
-                        'mro_data_id' => $row->id,
+                foreach($consumers as $consumer) {
+                    $mro_data_bulk[] = [
+                        'consumer_id' => $consumer->id,
+                        'schedule_date' => $schedule_date,
                         'status_id' => 1,
-                        'created_at' => now()
+                        'batch_id' => $batch_id,
+                        'created_at' => now(),
+                        'updated_at' => now()
                     ];
                 }
-                // Insert into MRO data history
-                $mro_history_batch_insert = BillMroDataHistory::insert($history_bulk);
-                // Sending data to Call MRO Request API function.
-                $reposnse = self::callMroRequest($mro_req_bulk, $batch_id);
+                // Insert into MRO data
+                $mro_data_batch_insert = BillMroData::insert($mro_data_bulk);
+                if($mro_data_batch_insert)
+                {
+                    // Instead of updating the mro order id row by row. Update the mro_order_id using this DB raw.
+                    DB::update("UPDATE bil_mro_data SET mro_number = CONCAT('MRO', LPAD(id, 9, '0')) WHERE batch_id = ?", [$batch_id]);
+                    // fetch inserted mro data for this batch.
+                    $insertedRows = BillMroData::with('consumer.activeMeter')->where('batch_id', $batch_id)->get();
+                    $mro_req_bulk = [];
+                    $history_bulk = [];
+                    foreach ($insertedRows as $row) {
+                        // MRO order id generation
+                        // $mro_order_id = 'MRO' . Str::padLeft($row->id, 9, '0');
+                        // Update the MRO Order id to BillMroData table
+                        // $row->update(['mro_number' => $mro_order_id]);
+                        $meter = $row->consumer?->activeMeter;
+                        // Data for the MRO Request API.
+                        $mro_req_bulk[] = [
+                            'mro_order_id' => $row->mro_number,
+                            'mech_meter_serial_number' => $meter?->meter_no,
+                            'prepaid_mod_number' => $meter?->meter_serial_no,
+                            'scheduled_mr_date' => $row->schedule_date,
+                            'crn' => $row->consumer->crn
+                        ];
+                        // Array for the MRO Data history.
+                        $history_bulk[] = [
+                            'mro_data_id' => $row->id,
+                            'status_id' => 1,
+                            'created_at' => now()
+                        ];
+                    }
+                    // Insert into MRO data history
+                    BillMroDataHistory::insert($history_bulk);
+                    logger()->info('MRO batch created', [
+                        'batch_id' => $batch_id,
+                        'consumer_count' => $consumers->count(),
+                    ]);
+                    // Sending data to Call MRO Request API function.
+                    return ['mro_bulk_data' => $mro_req_bulk, 'batch_id' => $batch_id];
+                }
+            } 
+            catch (\Throwable $e) {
+                logger()->error('MRO batch failed', [
+                    'message' => $e->getMessage()
+                ]);
             }
         }
         else{
-            print "No consumers found for billing";
+            logger()->info('No consumers found for MRO');
+            return;
         }
     }
 
-    public static function callMroRequest($api_data, $batch_id)
+    public static function updateMroRequest($responses, $batch_id)
     {
-        if($api_data) {
-            $responses = Mro::request($api_data);
+        if($responses) {
+            // $responses = Mro::request($api_data);
     
             foreach ($responses as $resp) {
 
@@ -103,19 +122,24 @@ class MroRequestAction
                     $status = $resp['status'] === 'success' ? 2 : 3;
                     $mroData->update([
                         'status_id' => $status,
-                        'error_code'=> $resp['error_code'],
+                        'error_code'=> $resp['error_code'] ?? null,
                         'error_message'=> $resp['error_message'] ?? null,
                     ]);    
-                    BillMroDataHistory::create([
+                    BillMroDataHistory::insert([
                         'mro_data_id' => $mroData->id,
                         'status_id'   => $status,
+                        'created_at' => now()
                     ]);
                 }
-                //  else case : MRO ordrer id not found.
             }
+            logger()->info('MRO API response received', [
+                'batch_id' => $batch_id,
+                'response_count' => count($responses)
+            ]);
         }
         else {
-            return response()->json(['msg' => 'No data to request'], 422);
+            logger()->info('No MRO data to send');
+            return;
         }
     }
 }

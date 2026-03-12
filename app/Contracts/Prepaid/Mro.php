@@ -9,8 +9,11 @@ class Mro
 {
     /**
      * Request
+     * @param data_array
+     * @param api_id
+     * @return api_response (array)
      */
-    public static function request($consumer_details)
+    public static function request($consumer_details, $api_id)
     {
         $chunks = array_chunk($consumer_details, 100);
         $responses =  array();
@@ -21,7 +24,7 @@ class Mro
             // Call API
             $response = Http::withHeaders([
                 'X-API-KEY' => 'YfRPGJH1S98n2l7tbC7k7gD9RmQdJ2j8TxLr9JKL4A3gF1pL5m'
-                    ])->acceptJson()->post(PrepaidApi::mroRequest()->value, $cns_ar);
+                    ])->acceptJson()->post($api_id, $cns_ar);
             if ($response->failed()) {
                 logger()->error('HES API FAILED', [
                     'status'  => $response->status(),
@@ -31,7 +34,7 @@ class Mro
             }
             
             $body = $response->json();
-            $responses = $body['MT_MRO_Response']['MRO_Response'] ?? [];
+            $responses = array_merge($responses,$body['MT_MRO_Response']['MRO_Response'] ?? []);
         }
         return $responses;
     }

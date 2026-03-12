@@ -97,6 +97,7 @@ class Consumer extends Model
         'req_flow',
         'payment_id',
         'status_id',
+        'price_group_id',
         'created_by',
         'updated_by',
     ];

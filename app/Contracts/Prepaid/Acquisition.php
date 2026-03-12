@@ -4,6 +4,7 @@ namespace App\Contracts\Prepaid;
 
 use App\Enums\PrepaidApi;
 use Illuminate\Support\Facades\Http;
+use PhpParser\Node\Stmt\Return_;
 
 class Acquisition
 {
@@ -27,7 +28,7 @@ class Acquisition
         $consumer_name = $consumerData->name;
         $cnsr_name = str_split($consumer_name, 40);
         $part1 = $cnsr_name[0] ?? "";
-        $part2 = $cnsr_name[1] ?? "";
+        $part2 = $cnsr_name[1] ?? ".";
         $consumer_details = array(
             'MT_Integ_Request' => [
                 'Integ_Request' => [[
@@ -56,7 +57,7 @@ class Acquisition
                     'CONNECTION_SECURITY_DEP_AMOUNT_RECEIVED' => $consumerData->scheme->security_deposit,
                     'CONSUMPTION_SECURITY_DEP_AMOUNT_RECEIVED' => $consumerData->scheme->consumption_deposit,
                     'customer_mode' => $con_type,
-                    'bp_grouping' => NULL,
+                    'bp_grouping' => $consumerData->priceGroup?->code,
                 ]]
             ]
         );
@@ -72,5 +73,7 @@ class Acquisition
             ]);
         }
         return $response;
+
+        // return $consumer_details;
     }
 }
