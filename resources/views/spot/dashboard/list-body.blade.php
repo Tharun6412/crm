@@ -97,7 +97,7 @@
 										<div class="flex-fill w-50 fs-2 text-center">
 											<i class="bi bi-{{ $list->icon ?? 'flash' }} text-{{ $list->color ?? 'dark' }}"></i>
 										</div>
-										<div class="flex-fill w-50 text-center">
+										<div class="flex-fill w-50 text-center text-{{ $list->color ?? 'dark' }}">
 											<div class="pt-2 fs-4">{{ $prospect_list[$segment->id][$list->id] ?? 0 }}</div>
 											<div class="pb-2">{{ $list->name }}</div>
 										</div>
@@ -111,7 +111,7 @@
 									<div class="flex-fill w-50 fs-2 text-center">
 										<i class="bi bi-people"></i>
 									</div>
-									<div class="flex-fill w-50 text-center">
+									<div class="flex-fill w-50 text-center }}">
 										<div class="pt-2 fs-4">{{ $prospect_sum[$segment->id] ?? 0 }}</div>
 										<div class="pb-2">Total</div>
 									</div>

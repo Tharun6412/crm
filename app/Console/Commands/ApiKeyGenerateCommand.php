@@ -31,7 +31,7 @@ class ApiKeyGenerateCommand extends Command
         $key = 'MG' . Str::random(40);
 
         ApiKey::create([
-            'name' => 'Polaris',
+            'name' => 'MeghaGas',
             'key' => hash('sha256', $key),
             'key_original' => $key,
             'expires_at' => now()->addYear(),

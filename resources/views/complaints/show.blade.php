@@ -36,9 +36,11 @@
                 <div class="col-sm-10">{{ $complaint->description }}</div>
                 <div class="col-sm-2 text-end fw-semibold"><i class="bi bi-paperclip"></i>Documents : </div>
                 <div class="col-sm-10">
-                    @foreach ($complaint->complaintDocuments as $document)
-                        <a href="{{ url('dc/documents/' . $document->file_id) }}" title="{{ $document->file->file_name }}" target="_blank"><i class="bi bi-file-earmark-pdf"></i></a>        
-                    @endforeach
+                    @if ($complaint->complaintDocuments->count() > 0)
+                        @foreach ($complaint->complaintDocuments as $document)
+                            <a href="{{ url('dc/documents/' . $document->file_id) }}" title="{{ $document->file->file_name }}" target="_blank"><i class="bi bi-file-earmark-pdf"></i></a>        
+                        @endforeach
+                    @endif
                 </div>
             </div>
             
