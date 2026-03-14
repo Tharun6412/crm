@@ -3,19 +3,19 @@
 <div class="d-flex justify-content-between">
     <div class="row gx-1 mb-1">
         <div class="col-auto">
-            <div class="input-group input-group-sm">
+            <div class="input-group">
                 <span class="input-group-text" id="search-key">Search</span>
                 <input type="text" name="key" id="search-key" class="form-control" value="{{ request()->key }}">
             </div>
         </div>
         <div class="col-auto">
-            <button type="submit" class="btn btn-sm btn-success"><i class="bi bi-search"></i></button>
+            <button type="submit" class="btn btn-success"><i class="bi bi-search"></i></button>
         </div>
         <div class="col-auto">
-            <a href="{{ url('reports/consumer/recharge/List') }}" class="btn btn-warning btn-sm"><i class="bi bi-arrow-clockwise"></i></a>
+            <a href="{{ url('reports/consumer/recharge/List') }}" class="btn btn-warning"><i class="bi bi-arrow-clockwise"></i></a>
         </div>
-        <div class="col-auto">
-            ({{ $consumers->total() }}) Records found
+        <div class="col-auto mt-1">
+           <span class="fw-semibold">({{ $consumers->total() }})</span> Records found
         </div>
     </div>
     {{-- <div>
@@ -33,7 +33,7 @@
 @endphp
 {{-- Consumers list --}}
 <div class="table-responsive" style="min-height: 500px;">
-    <table class="table table-bordered table-hover page-sort">
+    <table class="table table-bordered table-hover page-sort bg-white table-striped">
         <thead class="table-success">
             <tr>
                 <th width="1%" nowrap>S No</th>

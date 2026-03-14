@@ -10,7 +10,7 @@
         </div>
         <div class="modal-body">
             <div id="add-gas-payment-success">
-                <x-consumer.invoice-details :invoice="$bill" class="bg-info-subtle"/>
+                <x-consumer.invoice-details :invoice="$bill" class="bg-info-subtle p-2"/>
                 {{-- Get connected invoices --}}
                 @php
                     $child_inv_balance = 0;
@@ -91,16 +91,16 @@
                             @if ($lpc_applicable)
                                 <input type="hidden" name="late_fee" id="late_fee" value="{{ $late_fee }}">
                                 <div class="row mb-2">
-                                    <label class="col-sm-3 col-form-label text-end">Late Fee :</label>
+                                    <label class="col-sm-4 col-form-label text-end">Late Fee :</label>
                                     <label class="col-sm-3 col-form-label">{{ numberFormat(($late_fee), 2) }}</label>
                                 </div>    
                             @endif
                             <div class="row mb-2">
-                                <label class="col-sm-3 col-form-label text-end">Total Payable Amount:</label>
+                                <label class="col-sm-4 col-form-label text-end">Total Payable Amount:</label>
                                 <label class="col-sm-3 col-form-label">{{ numberFormat(($late_fee + $child_inv_balance + $bill->balance_amount), 2) }}</label>
                             </div>
                             <div class="row mb-2">
-                                <label for="payment_type" class="col-sm-3 col-form-label text-end">Payment Type&nbsp;:&nbsp;<i class="text-danger">*&nbsp;</i></label>
+                                <label for="payment_type" class="col-sm-4 col-form-label text-end">Payment Type<i class="text-danger">*&nbsp;</i>&nbsp;:&nbsp;</label>
                                 <div class="col-sm-7">
                                     <select class="form-select" name="payment_type" id="payment_type">
                                         <option value="">Select</option>
@@ -111,13 +111,13 @@
                                 </div>
                             </div>
                             <div class="row mb-2">
-                                <label for="transaction_no" class="col-sm-3 col-form-label text-end">Transaction No/ Cheque no&nbsp;:&nbsp;<i class="text-danger">*&nbsp;</i></label>
+                                <label for="transaction_no" class="col-sm-4 col-form-label text-end">Transaction No/ Cheque no<i class="text-danger">*&nbsp;</i>&nbsp;:&nbsp;</label>
                                 <div class="col-sm-7">
                                     <input type="text" class="form-control" id="transaction_no" name="transaction_no" placeholder="Enter the transaction number.">
                                 </div>
                             </div>
                             <div class="row mb-2">
-                                <label for="amount" class="col-sm-3 col-form-label text-end">Amount&nbsp;:&nbsp;<i class="text-danger">*&nbsp;</i></label>
+                                <label for="amount" class="col-sm-4 col-form-label text-end">Amount<i class="text-danger">*&nbsp;</i>&nbsp;:&nbsp;</label>
                                 <div class="col-sm-7">
                                     <div class="input-group">
                                         <input type="text" class="form-control text-end" id="amount" name="amount" placeholder="Enter the amount to be paid." value="{{ ($late_fee + $child_inv_balance + $bill->balance_amount) }}">
@@ -126,7 +126,7 @@
                                 </div>
                             </div>
                             <div class="row mb-2">
-                                <label for="notes" class="col-sm-3 col-form-label text-end">Notes&nbsp;:&nbsp;</label>
+                                <label for="notes" class="col-sm-4 col-form-label text-end">Notes&nbsp;:&nbsp;</label>
                                 <div class="col-sm-7">
                                     <textarea class="form-control" name="notes" id="notes" placeholder="Enter notes"></textarea>
                                 </div>

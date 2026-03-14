@@ -38,7 +38,7 @@
                 <div class="col-sm-10">
                     @if ($complaint->complaintDocuments->count() > 0)
                         @foreach ($complaint->complaintDocuments as $document)
-                            <a href="{{ url('dc/documents/' . $document->file_id) }}" title="{{ $document->file->file_name }}" target="_blank"><i class="bi bi-file-earmark-pdf"></i></a>        
+                            <a href="{{ url('dc/documents/' . $document->file_id) }}" title="{{ $document->file->file_name }}" target="_blank"><i class="bi bi-file-earmark-pdf fs-3"></i></a>        
                         @endforeach
                     @endif
                 </div>
@@ -84,7 +84,7 @@
             {{-- Feedback --}}
             @if ($complaint->feedback)
                 <div class="mx-3 p-3 border">
-                    <h4>Feedback Details:</h4>
+                    <h4 class="text-info text-decoration-underline">Feedback Details:</h4>
                     <div>
                         <span class="fw-semibold"><i class="bi bi-person-heart"></i>&nbsp;{{ $complaint->feedback->collectable->name }}</span>&nbsp;
                         <x-complaint.rating :rating="$complaint->feedback->rating"/>

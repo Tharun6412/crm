@@ -13,12 +13,12 @@
 @section('page-content')
     <div>
         <div class="mb-2">
-            ({{ $states->count() }}) Records found
+           <span class="fw-semibold">({{ $states->count() }})</span> Records found
         </div>
         @if ($states->count() > 0)
             <div class="table-responsive">
-                <table class="table table-bordered table-primary">
-                    <thead class="table-primary">
+                <table class="table table-bordered table-hover table-striped bg-white">
+                    <thead class="table-success">
                         <tr>
                             <th width="1%" nowrap>S No</th>
                             <th>Code</th>

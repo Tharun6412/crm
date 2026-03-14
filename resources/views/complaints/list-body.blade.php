@@ -6,29 +6,29 @@
 <div class="d-flex justify-content-between">
     <div class="row gx-1 mb-1">
         <div class="col-auto">
-            <div class="input-group input-group-sm">
+            <div class="input-group">
                 <span class="input-group-text" id="search-key">Search</span>
                 <input type="text" name="key" id="search-key" class="form-control" value="{{ request()->key }}" placeholder="search complaint no.">
             </div>
         </div>
         <div class="col-auto">
-            <button type="submit" class="btn btn-sm btn-success"><i class="bi bi-search"></i></button>
+            <button type="submit" class="btn btn-success"><i class="bi bi-search"></i></button>
         </div>
         <div class="col-auto">
-            <a href="{{ url('calls') }}" class="btn btn-warning btn-sm"><i class="bi bi-arrow-clockwise"></i></a>
+            <a href="{{ url('calls') }}" class="btn btn-warning"><i class="bi bi-arrow-clockwise"></i></a>
         </div>
-        <div class="col-auto">
-            ({{ $complaints->total() }}) Records found
+        <div class="col-auto mt-1">
+           <span class="fw-semibold">({{ $complaints->total() }})</span> Records found
         </div>
     </div>
     <div>
-        <x-auth.link href="{{ url('calls/complaintExport') }}?{{ http_build_query(request()->all()) }}" class="btn btn-secondary btn-sm"><i class="bi bi-plus-lg"></i>&nbsp;Export</x-auth.link>
+        <x-auth.link href="{{ url('calls/complaintExport') }}?{{ http_build_query(request()->all()) }}" class="btn btn-outline-primary"><i class="bi bi-file-earmark-excel"></i>&nbsp;Export</x-auth.link>
     </div>
 </div>
 {{-- Complaints / Calls list --}}
-<div class="table-responsive" style="min-height: 500px;">
-    <table class="table table-bordered table-hover">
-        <thead class="table-primary">
+<div class="table-responsive mt-2" style="min-height: 500px;">
+    <table class="table table-bordered table-hover table-striped bg-white">
+        <thead class="table-success">
             <tr>
                 <th width="1%" nowrap>S No</th>
                 <th>GA</th>
@@ -36,12 +36,27 @@
                 <th>Category</th>
                 <th>CRN</th>
                 <th>Consumer</th>
-                <th>Segment<x-complaint.segment-filter/></th>
-                <th>Estimated Close Date</th>
+                <th>
+                    <div class="d-flex">
+                        <div>Segment</div>
+                        <x-complaint.segment-filter  class="float-end"/>
+                    </div>                   
+                </th>
+                <th nowrap>Est. Close Date</th>
                 <th>Closed Date</th>
                 <th>Priority</th>
-                <th nowrap>Status<x-complaint.statusFilter class="float-end" /></th>
-                <th>Created At<x-master.date-filter /></th>
+                <th>
+                    <div class="d-flex">
+                        <div>Status</div>
+                        <x-complaint.statusFilter class="float-end" />
+                    </div> 
+                </th>
+                <th>
+                    <div class="d-flex">
+                        <div>Created At</div>
+                        <x-master.date-filter  class="float-end" />
+                    </div> 
+                </th>
                 <th width="2%" nowrap>Actions</th>
             </tr>
         </thead>
@@ -86,7 +101,7 @@
                         <td>
                             {{-- list actions --}}
                             <div class="dropdown">
-                                <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <button class="btn btn-sm btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     Actions
                                 </button>
                                 <ul class="dropdown-menu">

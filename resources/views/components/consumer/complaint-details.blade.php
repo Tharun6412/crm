@@ -6,7 +6,7 @@
 @if($complaint->consumer_id > 0)
     <x-consumer.basic-details :consumer="$complaint->consumer" {{ $attributes->merge(['class']) }} />
 @else
-    <div class="row g-2 pb-2 mb-2 bg-danger-subtle rounded">
+    <div class="row g-2 pb-2 mb-2 bg-danger-subtle rounded p-2">
         <div class="col-sm-2 text-end fw-semibold">Name : </div>
         <div class="col-sm-4">{{ $complaint->name }}</div>
         <div class="col-sm-2 text-end fw-semibold">District : </div>
@@ -20,7 +20,7 @@
     </div>
 @endif
 {{-- Complaint and Category details --}}
-<div class="row g-2 pb-2 my-2 bg-warning-subtle rounded">
+<div class="row g-2 pb-2 my-2 bg-warning-subtle rounded p-2">
     <div class="col-sm-2 text-end fw-semibold text-nowrap">Complaint No :</div>
     <div class="col-sm-4">{{ $complaint->code }}</div>
     <div class="col-sm-2 text-end fw-semibold">Status : </div>

@@ -1,10 +1,10 @@
 <div class="table-responsive">
-    <table class="table table-bordered table-hover page-sort">
+    <table class="table table-bordered table-hover page-sort bg-white table-striped">
         <thead class="table-success">
             <tr>
                 <th nowrap="nowrap" width="1%">S No.</th>
                 <th>GA Name</th>
-                <th>Recharged Amount</th>
+                <th class="text-end">Recharged Amount</th>
             </tr>
         </thead>
         <tbody>
@@ -19,7 +19,7 @@
                 <tr>
                     <td>{{ $i++ }}</td>
                     <td>{{ $ga->ga_name }}</td>
-                    <td>
+                    <td class="text-end">
                         <a href="{{ url('reports/consumer/recharge/List') }}?{{ http_build_query(array_merge($commonParams, [
                             'geo_area' => [$ga->ga_id],
                             'segments' => [\App\Enums\SegmentType::DOMESTIC->value],
@@ -33,10 +33,10 @@
                 </tr>
             @endforelse
         </tbody>
-        <tfoot>
+        <tfoot class="table-info">
             <tr>
-                <th colspan="2">Total</th>
-                <th>{{ numberFormat($gaRecharges->sum('recharged_amount'),2) }}</th>
+                <th colspan="2" class="text-end">Total</th>
+                <th class="text-end">{{ numberFormat($gaRecharges->sum('recharged_amount'),2) }}</th>
             </tr>
         </tfoot>
     </table>

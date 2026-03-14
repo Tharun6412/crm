@@ -13,12 +13,12 @@
 @section('page-content')
     <div>
         <div class="mb-2">
-            ({{ $clusters->count() }}) Records found
+            <span class="fw-semibold">({{ $clusters->count() }})</span> Records found
         </div>
         @if ($clusters->count() > 0)
             <div class="table-responsive">
-                <table class="table table-bordered table-primary">
-                    <thead class="table-primary">
+                <table class="table table-bordered table-striped bg-white table-hover">
+                    <thead class="table-success">
                         <tr>
                             <th width="1%" nowrap>S No</th>
                             <th>Code</th>

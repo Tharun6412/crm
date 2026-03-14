@@ -15,49 +15,49 @@
         <div class="col-md-2">
             <div class="row g-2">
                 <div class="col-md-12">
-                    <div class="border rounded-top p-2">
+                    <div class="border rounded-top p-2 bg-white">
                         <img src="{{ asset('img/consumer-iimage.png') }}" alt="MeghaGas" class="img-fluid img-thumb">
                         <div class="mt-3 text-center">
                             <h4 class="m-0">{{ $consumer->crn }}</h4>
-                            <h5 class="m-0">{{ $consumer->name }}</h5>
+                            <h5 class="m-0 text-secondary">{{ $consumer->name }}</h5>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-12">
                     <div class="border">
                         <div class="list-group list-group-flush" role="tablist">
-                            <a href="#" class="list-group-item list-group-item-action list-group-item-light active" id="nav-details-tab" data-bs-toggle="tab" data-bs-target="#nav-details" role="tab" aria-controls="nav-details" aria-selected="true">
+                            <a href="#" class="list-group-item list-group-item-action active" id="nav-details-tab" data-bs-toggle="tab" data-bs-target="#nav-details" role="tab" aria-controls="nav-details" aria-selected="true">
                                 <i class="bi bi-person"></i>&nbsp;Consumer Details
                             </a>
-                            <a href="#" class="list-group-item list-group-item-action list-group-item-light" id="nav-sd-tab" data-bs-toggle="tab" data-bs-target="#nav-sd" role="tab" aria-controls="nav-sd" aria-selected="false">
+                            <a href="#" class="list-group-item list-group-item-action" id="nav-sd-tab" data-bs-toggle="tab" data-bs-target="#nav-sd" role="tab" aria-controls="nav-sd" aria-selected="false">
                                 <i class="bi bi-cash-stack"></i>&nbsp;SD Details
                             </a>
-                            <a href="#" class="list-group-item list-group-item-action list-group-item-light" id="nav-mdata-tab" data-bs-toggle="tab" data-bs-target="#nav-mdata" role="tab" aria-controls="nav-mdata" aria-selected="false">
+                            <a href="#" class="list-group-item list-group-item-action" id="nav-mdata-tab" data-bs-toggle="tab" data-bs-target="#nav-mdata" role="tab" aria-controls="nav-mdata" aria-selected="false">
                                 <i class="bi bi-box"></i>&nbsp;Meter Data
                             </a>
-                            <a href="#" class="list-group-item list-group-item-action list-group-item-light" id="nav-bills-tab" data-bs-toggle="tab" data-bs-target="#nav-bills" data-url="{{ url('consumers/invoices/' . $consumer->id . '/1') }}" role="tab" aria-controls="nav-bills" aria-selected="true">
+                            <a href="#" class="list-group-item list-group-item-action" id="nav-bills-tab" data-bs-toggle="tab" data-bs-target="#nav-bills" data-url="{{ url('consumers/invoices/' . $consumer->id . '/1') }}" role="tab" aria-controls="nav-bills" aria-selected="true">
                                 <i class="bi bi-files"></i>&nbsp;Bills
                             </a>
-                            <a href="#" class="list-group-item list-group-item-action list-group-item-light" id="nav-inv-tab" data-bs-toggle="tab" data-bs-target="#nav-inv" data-url="{{ url('consumers/invoices/' . $consumer->id . '/2') }}" role="tab" aria-controls="nav-inv" aria-selected="false">
+                            <a href="#" class="list-group-item list-group-item-action" id="nav-inv-tab" data-bs-toggle="tab" data-bs-target="#nav-inv" data-url="{{ url('consumers/invoices/' . $consumer->id . '/2') }}" role="tab" aria-controls="nav-inv" aria-selected="false">
                                 <i class="bi bi-files-alt"></i>&nbsp;Invoices
                             </a>
-                            <a href="#" class="list-group-item list-group-item-action list-group-item-light" id="nav-pay-tab" data-bs-toggle="tab" data-bs-target="#nav-pay" data-url="{{ url('payments/invoicePayments/show/'.$consumer->id) }}" role="tab" aria-controls="nav-pay" aria-selected="true">
+                            <a href="#" class="list-group-item list-group-item-action" id="nav-pay-tab" data-bs-toggle="tab" data-bs-target="#nav-pay" data-url="{{ url('payments/invoicePayments/show/'.$consumer->id) }}" role="tab" aria-controls="nav-pay" aria-selected="true">
                                 <i class="bi bi-file-text"></i>&nbsp;Payments
                             </a>
-                            <a href="#" class="list-group-item list-group-item-action list-group-item-light" id="nav-crd-tab" data-bs-toggle="tab" data-bs-target="#nav-crd" data-url="{{ url('bill/creditNote/showCreditByConsumerId/'.$consumer->id) }}" role="tab" aria-controls="nav-crd" aria-selected="false">
+                            <a href="#" class="list-group-item list-group-item-action" id="nav-crd-tab" data-bs-toggle="tab" data-bs-target="#nav-crd" data-url="{{ url('bill/creditNote/showCreditByConsumerId/'.$consumer->id) }}" role="tab" aria-controls="nav-crd" aria-selected="false">
                                 <i class="bi bi-file-diff"></i>&nbsp;Credit / Debit Notes
                             </a>
-                            <a href="#" class="list-group-item list-group-item-action list-group-item-light" id="nav-ledger-tab" data-bs-toggle="tab" data-bs-target="#nav-ledger" data-url="{{ url('bill/ledger/'.$consumer->id) }}" role="tab" aria-controls="nav-ledger" aria-selected="true">
+                            <a href="#" class="list-group-item list-group-item-action" id="nav-ledger-tab" data-bs-toggle="tab" data-bs-target="#nav-ledger" data-url="{{ url('bill/ledger/'.$consumer->id) }}" role="tab" aria-controls="nav-ledger" aria-selected="true">
                                 <i class="bi bi-file-ruled"></i>&nbsp;Ledger
                             </a>
-                            <a href="#" class="list-group-item list-group-item-action list-group-item-light" id="nav-calls-tab" data-bs-toggle="tab" data-bs-target="#nav-calls" data-url="{{ url('calls/consumerComplaints/' . $consumer->id) }}" role="tab" aria-controls="nav-calls" aria-selected="false">
+                            <a href="#" class="list-group-item list-group-item-action" id="nav-calls-tab" data-bs-toggle="tab" data-bs-target="#nav-calls" data-url="{{ url('calls/consumerComplaints/' . $consumer->id) }}" role="tab" aria-controls="nav-calls" aria-selected="false">
                                 <i class="bi bi-telephone-inbound"></i>&nbsp;Calls
                             </a>
-                            <a href="#" class="list-group-item list-group-item-action list-group-item-light" id="nav-doc-tab" data-bs-toggle="tab" data-bs-target="#nav-doc" data-url="{{ url('consumers/consumerDocs/' . $consumer->id) }}" role="tab" aria-controls="nav-doc" aria-selected="false">
+                            <a href="#" class="list-group-item list-group-item-action" id="nav-doc-tab" data-bs-toggle="tab" data-bs-target="#nav-doc" data-url="{{ url('consumers/consumerDocs/' . $consumer->id) }}" role="tab" aria-controls="nav-doc" aria-selected="false">
                                 <i class="bi bi-files"></i>&nbsp;Documents
                             </a>
                             @if ($consumer->connection_type_id == 2)
-                                <a href="#" class="list-group-item list-group-item-action list-group-item-light" id="nav-recharge-tab" data-bs-toggle="tab" data-bs-target="#nav-recharge" data-url="{{ url('consumers/prepaid/consumerRechargeList/' . $consumer->id) }}" role="tab" aria-controls="nav-recharge" aria-selected="true">
+                                <a href="#" class="list-group-item list-group-item-action" id="nav-recharge-tab" data-bs-toggle="tab" data-bs-target="#nav-recharge" data-url="{{ url('consumers/prepaid/consumerRechargeList/' . $consumer->id) }}" role="tab" aria-controls="nav-recharge" aria-selected="true">
                                     <i class="bi bi-wifi"></i>&nbsp;Recharge History
                                 </a>
                             @endif

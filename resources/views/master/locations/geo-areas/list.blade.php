@@ -13,12 +13,12 @@
 @section('page-content')
     <div>
         <div class="mb-2">
-            ({{ $geo_areas->count() }}) Records found
+            <span class="fw-semibold">({{ $geo_areas->count() }})</span> found
         </div>
         @if ($geo_areas->count() > 0)
             <div class="table-responsive">
-                <table class="table table-bordered table-primary">
-                    <thead class="table-primary">
+                <table class="table table-bordered table-striped table-hover bg-white">
+                    <thead class="table-success">
                         <tr>
                             <th width="1%" nowrap>S No</th>
                             <th>GA Code</th>

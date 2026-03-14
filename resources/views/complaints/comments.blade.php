@@ -2,7 +2,7 @@
 
 <a class="visually-hidden" href="{{ url('calls/'.$complaint->id.'?reload=true') }}" data-custom-attr="value" id="reload-comments">Hidden Link</a>
 <div>
-    <h4 class="p-3 bg-light"><i class="bi bi-chat-square-text"></i>&nbsp;Comments&nbsp;({{ $complaint->comments->count() }})</h4>
+    <h4 class="p-3 bg-secondary-subtle"><i class="bi bi-chat-square-text"></i>&nbsp;Comments&nbsp;({{ $complaint->comments->count() }})</h4>
     @if ($complaint->comments->count() > 0)
         <ul class="list-group list-group-flush px-3">
             @foreach ($complaint->comments as $comment)

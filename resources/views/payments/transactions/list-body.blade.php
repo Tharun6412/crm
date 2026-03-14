@@ -2,19 +2,19 @@
 {{-- Search form --}}
 <div class="row gx-1 mb-1">
     <div class="col-auto">
-        <div class="input-group input-group-sm">
+        <div class="input-group">
             <span class="input-group-text" id="search-key">Search</span>
             <input type="text" name="key" id="search-key" class="form-control" value="{{ request()->key }}">
         </div>
     </div>
     <div class="col-auto">
-        <button type="submit" class="btn btn-sm btn-success"><i class="bi bi-search"></i></button>
+        <button type="submit" class="btn btn-success"><i class="bi bi-search"></i></button>
     </div>
     <div class="col-auto">
-        <a href="{{ url('payments/transactions') }}" class="btn btn-warning btn-sm"><i class="bi bi-arrow-clockwise"></i></a>
+        <a href="{{ url('payments/transactions') }}" class="btn btn-warning"><i class="bi bi-arrow-clockwise"></i></a>
     </div>
-    <div class="col-auto">
-        ({{ $transactions->total() }}) Records found
+    <div class="col-auto mt-1">
+        <span class="fw-semibold">({{ $transactions->total() }})</span> Records found
     </div>
 </div>
 {{-- transactions list --}}
@@ -50,7 +50,7 @@
                         <td>{{ $transaction->gateway->gateway ?? '' }}</td>
                         <td>{{ $transaction->transaction_date?->format('d-m-Y') }}</td>
                         <td><a href="{{ url('payments/transactions/' . $transaction->id) }}" class="dropdown-item link-canvas">{{ $transaction->transaction_id ?? '' }}</a></td>
-                        <td class="text-end">{{ numberFormat($transaction->amount ?? 0, 2) }}</td>
+                        <td class="text-end"><i class="bi bi-currency-rupee"></i>{{ numberFormat($transaction->amount ?? 0, 2) }}</td>
                         <td>
                             <x-payments.transaction-status :status="$transaction->status"/>
                         </td>

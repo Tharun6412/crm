@@ -10,8 +10,8 @@
 
 @section('page-content')
     <div class="bd-callout bd-callout-info mt-0 mb-3">Displaying latest 50 comments</div>
-        <table class="table table-bordered table-hover table-primary">
-            <thead>
+        <table class="table table-bordered table-striped table-hover bg-white">
+            <thead class="table-success">
                 <tr>
                     <th width="1%" nowrap>S No</th>
                     <th>Prospect</th>
@@ -31,7 +31,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="5">
+                        <td colspan="5" class="text-center bg-info-subtle fw-semibold">
                             No comments found
                         </td>
                     </tr>

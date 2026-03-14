@@ -11,26 +11,26 @@
 @endphp
 <form id="prospects-search-form" action="{{ url('spot/prospects') }}" method="GET">
     <div class="d-flex align-items-center justify-content-between pb-2 flex-wrap">
-        <div class="d-flex align-items-center gap-2 flex-wrap">
+        <div class="d-flex align-items-center gap-1 flex-wrap">
             <div>
-                <input type="text" name="search_key" id="search_key" class="form-control form-control-sm" placeholder="search here..." value="{{ request()->get('search_key') }}">
+                <input type="text" name="search_key" id="search_key" class="form-control" placeholder="search here..." value="{{ request()->get('search_key') }}">
             </div>
-            <button type="submit" class="btn btn-sm btn-primary" title="Search">
+            <button type="submit" class="btn btn-primary" title="Search">
                 <i class="bi bi-search"></i>
             </button>
-            <a href="{{ url('spot/prospects') }}" class="btn btn-sm btn-warning ajax-link" title="Reset">
+            <a href="{{ url('spot/prospects') }}" class="btn btn-warning ajax-link" title="Reset">
                 <i class="bi bi-arrow-clockwise"></i>
             </a>
-            <span>({{ $prospects->total() }}) Records found</span>
+            <span class="fw-semibold">({{ $prospects->total() }}) Records found</span>
         </div>
         {{-- Right Section --}}
         <div class="d-flex align-items-center gap-2">
             @if ($prospects->count() > 0)    
-                <a href="{{ url('spot/prospects/prospectsExport') }}?{{ http_build_query(request()->all()) }}" class="btn btn-secondary btn-sm">
+                <a href="{{ url('spot/prospects/prospectsExport') }}?{{ http_build_query(request()->all()) }}" class="btn btn-outline-primary">
                     <i class="bi bi-file-earmark-excel"></i>&nbsp;Export
                 </a>
             @endif
-            <a href="{{ url('spot/prospects/create') }}" class="btn btn-success btn-sm link-modal">
+            <a href="{{ url('spot/prospects/create') }}" class="btn btn-outline-success link-modal">
                 <i class="bi bi-plus-lg"></i>&nbsp;Create
             </a>
         </div>
@@ -44,14 +44,14 @@
         $i = (($prospects->currentPage() - 1) * $prospects->perPage())+1;
     @endphp
     <!-- Display prospects list -->
-    <table class="table table-bordered page-sort">
-        <thead>
+    <table class="table table-bordered table-hover bg-white page-sort">
+        <thead class="table-success">
             <tr>
                 <th nowrap>S No.</th>
                 <th nowrap>GA
-                    <x-master.ga-filter/>
+                    <x-master.ga-filter class="float-end"/>
                 </th>
-                <th nowrap>Segment <x-master.segment-filter/></th>
+                <th nowrap>Segment <x-master.segment-filter class="float-end"/></th>
                 <th nowrap>
                     <a href="{{ $prospects->appends(['sortBy' => 'name','sortOr' => $sort_order_inverse])->url($prospects->currentPage()) }}">
                         Prospect Name
@@ -61,10 +61,10 @@
                     </a>
                 </th>
                 <th nowrap>Industrial Area     
-                    <x-master.industrial-area-filter/>
+                    <x-master.industrial-area-filter class="float-end"/>
                 </th>
                 <th nowrap>Current Fuel
-                    <x-master.current-fuel-filter/>
+                    <x-master.current-fuel-filter class="float-end"/>
                 </th>
                 <th class="text-end">
                     <a href="{{ $prospects->appends(['sortBy' => 'potential','sortOr' => $sort_order_inverse])->url($prospects->currentPage()) }}">
@@ -84,13 +84,13 @@
                     <x-master.date-filter/>
                 </th>
                 <th nowrap class="text-center">Stage
-                    <x-spot.stage-filter :stages="$stages"/>
+                    <x-spot.stage-filter :stages="$stages" class="float-end"/>
                 </th>
                 <th nowrap class="text-center">Sub Stage
-                    <x-spot.sub-stage-filter :stages="$stages"/>
+                    <x-spot.sub-stage-filter :stages="$stages" class="float-end"/>
                 </th>
                 <th npwrap>Status
-                    <x-spot.status-filter :status="$status_list"/>
+                    <x-spot.status-filter :status="$status_list" class="float-end"/>
                 </th>
                 <th nowrap class="text-center">
                     <a href="{{ $prospects->appends(['sortBy' => 'status_date','sortOr' => $sort_order_inverse])->url($prospects->currentPage()) }}">
@@ -225,7 +225,7 @@
                 @endforeach
             @else
                 <tr>
-                    <td colspan="11">No records found</td>
+                    <td colspan="13" class="text-center bg-info-subtle fw-semibold">No records found</td>
                 </tr>
             @endif
         </tbody>
