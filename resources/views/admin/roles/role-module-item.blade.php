@@ -11,12 +11,14 @@
             <span><i class="bi {{ $module->icon }}"></i>&nbsp;{{ $module->name }}</span>&nbsp;<i class="bi bi-arrow-right"></i>&nbsp;
         </label>
         @if ($module->moduleActions->count() > 0)
-            @foreach ($module->moduleActions as $action)
-                <span class="px-2">
-                    <input type="checkbox" name="rights[{{ $action->id }}]" id="right_{{ $action->id }}" class="form-check-input" value="{{ $action->id }}" @checked(in_array($action->id, $rights))>
-                    <label for="right_{{ $action->id }}" class="text-primary">{{ $action->action }}</label>
-                <span>
-            @endforeach
+            <div class="row mb-0 g-1 p-2 bg-light">
+                @foreach ($module->moduleActions as $action)
+                    <div class="col-4 fs-sm">
+                        <input type="checkbox" name="rights[{{ $action->id }}]" id="right_{{ $action->id }}" class="form-check-input" value="{{ $action->id }}" @checked(in_array($action->id, $rights))>
+                        <label for="right_{{ $action->id }}" class="text-primary">{{ $action->action }} ({{ $action->slug }})</label>
+                    </div>
+                @endforeach
+            </div>
         @else
             <span class="badge text-bg-light">No actions defined!</span>
         @endif
