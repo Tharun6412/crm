@@ -5,7 +5,7 @@
         <h4 class="float-start">Status History</h4>
         <div class="float-end">
             @if (isInProgress($prospect->status_id))
-                <a class="btn btn-sm btn-success" id="add-status-link" href="{{ url('spot/prospectStatus/editStatus/'.$prospect->id.'?type=1') }}"><i class="bi bi-check2-circle"></i>&nbsp;Add / Update Status</a>
+                <x-auth.link class="btn btn-sm btn-success" id="add-status-link" href="{{ url('spot/prospectStatus/editStatus/'.$prospect->id.'?type=1') }}" action="update"><i class="bi bi-check2-circle"></i>&nbsp;Add / Update Status</x-auth.link>
             @endif
         </div>
     </div>

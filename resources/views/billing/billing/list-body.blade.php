@@ -30,8 +30,8 @@
                                         Actions
                                     </button>
                                     <ul class="dropdown-menu">
-                                        <li><x-auth.link class="dropdown-item link-modal" href="{{ url('bill/gasInvoice/create/' . $consumer->id) }}" target="_blank"><i class="bi bi-chevron-right"></i>&nbsp;Generate GasBill</x-auth.link></li>
-                                        <li><x-auth.link class="dropdown-item link-modal" href="{{ url('bill/invoice/create/' . $consumer->id) }}" target="_blank"><i class="bi bi-chevron-right"></i>&nbsp;Create Invoice</x-auth.link></li>
+                                        <li><x-auth.link class="dropdown-item link-modal" href="{{ url('bill/gasInvoice/create/' . $consumer->id) }}" action="gasb" target="_blank"><i class="bi bi-chevron-right"></i>&nbsp;Generate GasBill</x-auth.link></li>
+                                        <li><x-auth.link class="dropdown-item link-modal" href="{{ url('bill/invoice/create/' . $consumer->id) }}" action="inv" target="_blank"><i class="bi bi-chevron-right"></i>&nbsp;Create Invoice</x-auth.link></li>
                                     </ul>
                                 </div>
                             </td>

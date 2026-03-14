@@ -22,9 +22,9 @@
         <button type="button" class="btn btn-outline-warning" onclick="$('#filterArea').toggleClass('d-none')">
             <i class="bi bi-funnel"></i>
         </button>
-        <a href="{{ url('consumers/consumerExport') }}?{{ http_build_query(request()->all()) }}" class="btn btn-outline-primary">
+        <x-auth.link href="{{ url('consumers/consumerExport') }}?{{ http_build_query(request()->all()) }}" class="btn btn-outline-primary" action="export">
             <i class="bi bi-file-earmark-excel"></i>&nbsp;Export
-        </a>
+        </x-auth.link>
     </div>
 </div>
 <div class="bg-body-secondary p-2 mb-1 {{ (request()->has('connection_type_id') OR request()->has('charge_area') OR request()->has('area')) ? '' : 'd-none' }}" id="filterArea">

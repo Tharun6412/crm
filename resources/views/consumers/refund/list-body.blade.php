@@ -60,9 +60,9 @@
                     @endphp
                     <tr>
                         <td>{{ $i++ }}</td>
-                        <td><x-auth.link href="{{ url('consumers/'.$list->consumer_id) }}" target="_blank">{{ $list->consumer->crn }}</x-auth.link></td>
+                        <td><a href="{{ url('consumers/'.$list->consumer_id) }}" target="_blank">{{ $list->consumer->crn }}</a></td>
                         <td>{{ $list->consumer->ga->name }}</td>
-                        <td><x-auth.link href="{{ url('consumers/refunds/'.$list->id) }}" class="link-modal">{{ $list->request_no }}</x-auth.link></td>
+                        <td><a href="{{ url('consumers/refunds/'.$list->id) }}" class="link-modal">{{ $list->request_no }}</a></td>
                         <td>{{ numberFormat($list->refund_amount ?? 0, 2) }}</td>
                         @if ($list->status_id == \App\Enums\RefundStatus::CLOSE->value)
                             @php
@@ -80,15 +80,15 @@
                                     Actions
                                 </button>
                                 <ul class="dropdown-menu">
-                                    <li><x-auth.link class="dropdown-item link-modal" href="{{ url('consumers/refunds/' . $list->id) }}"><i class="bi bi-chevron-right"></i>&nbsp;View</x-auth.link></li>
+                                    <li><a class="dropdown-item link-modal" href="{{ url('consumers/refunds/' . $list->id) }}"><i class="bi bi-chevron-right"></i>&nbsp;View</a></li>
                                     @if ($list->status_id == RefundStatus::REQUEST->value)
-                                        <li><x-auth.link class="dropdown-item link-modal" href="{{ url('consumers/refunds/process/' . $list->id) }}"><i class="bi bi-chevron-right"></i>&nbsp;Process</x-auth.link></li>
+                                        <li><x-auth.link class="dropdown-item link-modal" href="{{ url('consumers/refunds/process/' . $list->id) }}" action="prcss"><i class="bi bi-chevron-right"></i>&nbsp;Process</x-auth.link></li>
                                     @endif
                                     @if ($list->status_id == RefundStatus::PROCESS->value)
-                                        <li><x-auth.link class="dropdown-item link-modal" href="{{ url('consumers/refunds/approve/' . $list->id) }}"><i class="bi bi-chevron-right"></i>&nbsp;Approve</x-auth.link></li>
+                                        <li><x-auth.link class="dropdown-item link-modal" href="{{ url('consumers/refunds/approve/' . $list->id) }}" action="apprv"><i class="bi bi-chevron-right"></i>&nbsp;Approve</x-auth.link></li>
                                     @endif
                                     @if ($list->status_id == RefundStatus::APPROVE->value)
-                                        <li><x-auth.link class="dropdown-item link-modal" href="{{ url('consumers/refunds/close/' . $list->id) }}"><i class="bi bi-chevron-right"></i>&nbsp;Close</x-auth.link></li>
+                                        <li><x-auth.link class="dropdown-item link-modal" href="{{ url('consumers/refunds/close/' . $list->id) }}" action="close"><i class="bi bi-chevron-right"></i>&nbsp;Close</x-auth.link></li>
                                     @endif
                                 </ul>
                             </div>

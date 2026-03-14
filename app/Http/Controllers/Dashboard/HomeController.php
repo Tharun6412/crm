@@ -50,7 +50,8 @@ class HomeController extends Controller
             ConsumerStatus::REGISTER->value,
             ConsumerStatus::TD->value,
             ConsumerStatus::PD->value
-        ])->first();
+        ])
+        ->first();
         // Render output
         return view('dashboard.home', [
             'consumer_count' => $consumer_count,

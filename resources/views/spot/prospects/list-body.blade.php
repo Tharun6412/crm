@@ -136,69 +136,69 @@
                                     {{-- Check Pipeline Availability --}}
                                     @if (isPipeLineAvailable($prospect->pipeline_availability, $prospect->status_id))
                                         <li>
-                                            <a class="dropdown-item link-modal" href="{{ url('spot/prospect/pipeline/'.$prospect->id.'/edit') }}"><i class="bi bi-folder2-open"></i>&nbsp;Manage PipeLine</a>
+                                            <x-auth.link class="dropdown-item link-modal" href="{{ url('spot/prospect/pipeline/'.$prospect->id.'/edit') }}"><i class="bi bi-folder2-open"></i>&nbsp;Manage PipeLine</x-auth.link>
                                         </li>
                                     @endif
                                     {{-- Check user not in Hold Status --}}
                                     @if (checkProspectHold($prospect->status_id)) 
                                         @if (isInProgress($prospect->status_id) AND (isAdmin() OR isGaHead() OR isClusterHead() OR isSalesofficer()) AND (in_array($prospect->ga_id, session()->get('user')['gas'])))    
                                             <li>
-                                                <a class="dropdown-item link-modal" href="{{ url('spot/prospects/'.$prospect->id.'/edit') }}">
+                                                <x-auth.link class="dropdown-item link-modal" href="{{ url('spot/prospects/'.$prospect->id.'/edit') }}" action="edit">
                                                     <i class="bi bi-pencil"></i>&nbsp;Edit
-                                                </a>
+                                                </x-auth.link>
                                             </li>
                                         @endif
                                         @if (isInProgress($prospect->status_id) OR isApproved($prospect->status_id) OR isClosedWon($prospect->stage_id))    
                                             <li>
-                                                <a class="dropdown-item link-modal" href="{{ url('spot/prospectStatus/editStatus/'.$prospect->id) }}">
+                                                <x-auth.link class="dropdown-item link-modal" href="{{ url('spot/prospectStatus/editStatus/'.$prospect->id) }}" action="update">
                                                     <i class="bi bi-check2-circle"></i>&nbsp;Update Status
-                                                </a>
+                                                </x-auth.link>
                                             </li>
                                         @endif
                                         {{-- Check Prospect is in Progress --}}
                                         @if (isInProgress($prospect->status_id))    
                                             <li>
-                                                <a class="dropdown-item link-modal" href="{{ url('spot/dateChangeRequest/create/'.$prospect->id) }}">
+                                                <x-auth.link class="dropdown-item link-modal" href="{{ url('spot/dateChangeRequest/create/'.$prospect->id) }}" action="dcreq">
                                                     <i class="bi bi-info-circle"></i>&nbsp;Request For Date Change
-                                                </a>
+                                                </x-auth.link>
                                             </li>
                                             <li>
-                                                <a class="dropdown-item link-modal" href="{{ url('spot/prospectDocument/create/'.$prospect->id) }}">
+                                                <x-auth.link class="dropdown-item link-modal" href="{{ url('spot/prospectDocument/create/'.$prospect->id) }}" action="mngdoc">
                                                     <i class="bi bi-folder2-open"></i>&nbsp;Manage Documents
-                                                </a>
+                                                </x-auth.link>
                                             </li>
                                             <li>
-                                                <a class="dropdown-item link-modal" href="{{ url('spot/prospects/'.$prospect->id) }}">
+                                                <x-auth.link class="dropdown-item link-modal" href="{{ url('spot/prospects/'.$prospect->id) }}" action="cmnt">
                                                     <i class="bi bi-chat"></i>&nbsp;Add Comment
-                                                </a>
+                                                </x-auth.link>
                                             </li>
                                         {{-- Check Prospect is in Request for Approval Status --}}
                                         @elseif (isRequestForApproval($prospect->status_id))
                                             @if (isAdmin() OR isGaHead() OR isClusterHead() OR isSalesOfficer())    
                                                 <li>
-                                                    <a class="dropdown-item link-modal" href="{{ url('spot/prospectStatus/gaApprove/'.$prospect->id) }}">
+                                                    <x-auth.link class="dropdown-item link-modal" href="{{ url('spot/prospectStatus/gaApprove/'.$prospect->id) }}" action="gapprv">
                                                         <i class="bi bi-check2-circle"></i>&nbsp;Ga Approval
-                                                    </a>
+                                                    </x-auth.link>
                                                 </li>
                                             @endif
                                             <li>
-                                                <a class="dropdown-item link-modal" href="{{ url('spot/prospectDocument/create/'.$prospect->id) }}">
+                                                <x-auth.link class="dropdown-item link-modal" href="{{ url('spot/prospectDocument/create/'.$prospect->id) }}" action="mngdoc">
                                                     <i class="bi bi-folder2-open"></i>&nbsp;Manage Documents
-                                                </a>
+                                                </x-auth.link>
                                             </li>
                                             <li>
-                                                <a class="dropdown-item link-modal" href="{{ url('spot/prospects/'.$prospect->id) }}">
+                                                <x-auth.link class="dropdown-item link-modal" href="{{ url('spot/prospects/'.$prospect->id) }}" action="cmnt">
                                                     <i class="bi bi-chat"></i>&nbsp;Add Comment
-                                                </a>
+                                                </x-auth.link>
                                             </li>
                                         {{-- No Action performed when Closed Lost --}}
                                         @elseif($prospect->status_id == SpotStatus::CLOSED_LOST->value)
                                         @else
                                             @if ($prospect->status_id == SpotStatus::HOLD->value)    
                                                 <li>
-                                                    <a class="dropdown-item" id="unhold_status" href="{{ url('spot/prospectStatus/unHold/'.$prospect->id) }}">
+                                                    <x-auth.link class="dropdown-item" id="unhold_status" href="{{ url('spot/prospectStatus/unHold/'.$prospect->id) }}" action="unhold">
                                                         <i class="bi bi-ban"></i>&nbsp;UnHold
-                                                    </a>
+                                                    </x-auth.link>
                                                 </li>
                                             @endif
                                         @endif
@@ -206,15 +206,15 @@
                                     {{-- Hold will be available when prospect not in InProgress, ClosedLost,HOLD,CANCEL --}}
                                     @if ($prospect->status_id != SpotStatus::IN_PROGRESS->value AND $prospect->status_id != SpotStatus::CLOSED_LOST->value AND $prospect->status_id != SpotStatus::HOLD->value AND $prospect->status_id != SpotStatus::CANCEL->value)
                                         <li>
-                                            <a class="dropdown-item link-modal" href="{{ url('spot/prospectStatus/hold/'.$prospect->id) }}">
+                                            <x-auth.link class="dropdown-item link-modal" href="{{ url('spot/prospectStatus/hold/'.$prospect->id) }}" action="hold">
                                                 <i class="bi bi-ban"></i>&nbsp;Hold
-                                            </a>
+                                            </x-auth.link>
                                         </li>
                                         @if (isAdmin() OR isClusterHead())    
                                             <li>
-                                                <a class="dropdown-item link-modal" href="{{ url('spot/prospectStatus/cancel/'.$prospect->id) }}">
+                                                <x-auth.link class="dropdown-item link-modal" href="{{ url('spot/prospectStatus/cancel/'.$prospect->id) }}" action="cancel">
                                                     <i class="bi bi-x-circle"></i>&nbsp;Cancel/Delete
-                                                </a>
+                                                </x-auth.link>
                                             </li>
                                         @endif
                                     @endif

@@ -12,7 +12,7 @@
         <h4 class="float-start">Documents</h4>
         <div class="float-end">
             @if (isInProgress($prospect->status_id))
-                <a class="btn btn-sm btn-success" id="add-doc-link" href="{{ url('spot/prospectDocument/create/'.$prospect->id.'?type=2') }}"><i class="bi bi-file-earmark-plus"></i>&nbsp;Add Document</a>
+                <x-auth.link class="btn btn-sm btn-success" id="add-doc-link" href="{{ url('spot/prospectDocument/create/'.$prospect->id.'?type=2') }}" action="mngdoc"><i class="bi bi-file-earmark-plus"></i>&nbsp;Add Document</x-auth.link>
             @endif
         </div>
     </div>

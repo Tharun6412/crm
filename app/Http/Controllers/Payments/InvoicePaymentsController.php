@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Payments;
 
+use App\Enums\Constants;
 use App\Enums\InvoiceType;
 use App\Http\Controllers\Controller;
 use App\Models\Consumer\Consumer;
@@ -34,10 +35,31 @@ class InvoicePaymentsController extends Controller
     {
         $bill = BillInvoice::find($id);
         $payment_types = PaymentType::all();
-
+        // Generate LPC if Due Date less than current date
+        $late_fee = '0';
+        if($bill->type_id == InvoiceType::GAS_BILL->value) {
+            if(Carbon::now()->toDateString() > $bill->due_date) {
+                // Check Late Fee invoice
+                if($bill->childInvoices->contains('type_id', 3)) {
+                    $late_fee = '0';
+                }else {
+                    switch($bill->consumer->segment_id) {
+                        case 1:
+                            $late_fee = Constants::DPNG_LPC->value;break;
+                        case 2:
+                            $late_fee = Constants::CPNG_LPC->value;break;
+                        case 3:
+                            $late_fee = Constants::IPNG_LPC->value;break;
+                        default:
+                            $late_fee = '0';
+                    }
+                }
+            }
+        }
         return view('payments.invoices.create',[
             'bill' => $bill,
-            'payment_types' => $payment_types
+            'payment_types' => $payment_types,
+            'late_fee' => $late_fee,
         ]);
     }
 

@@ -62,7 +62,7 @@
                                 <ul class="dropdown-menu" aria-labelledby="actionDropdown">
                                     <li>
                                         <a href="{{ url('payments/transactions/' . $transaction->id) }}" class="dropdown-item link-canvas">View</a>
-                                        <a href="{{ url('payments/transactions/' . $transaction->id.'/edit') }}" class="dropdown-item link-modal">Edit</a>
+                                        <x-auth.link href="{{ url('payments/transactions/' . $transaction->id.'/edit') }}" class="dropdown-item link-modal" action="edit">Edit</x-auth.link>
                                     </li>
                                 </ul>
                             </div>
