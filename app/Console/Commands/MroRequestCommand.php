@@ -6,6 +6,7 @@ use App\Actions\Prepaid\MroRequestAction;
 use App\Contracts\Prepaid\Mro;
 use App\Enums\PrepaidApi;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 class MroRequestCommand extends Command
 {
@@ -37,7 +38,7 @@ class MroRequestCommand extends Command
             MroRequestAction::updateMroRequest($responses, $data['batch_id']);
         }
         else {
-            logger()->error("No Mro Request Data.");
+            Log::info("No Mro Request Data.");
         }
     }
 }

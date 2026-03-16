@@ -2,6 +2,7 @@
 
 namespace App\Contracts\Prepaid;
 
+use App\Contracts\Prepaid\Contract\Polaris;
 use App\Enums\PrepaidApi;
 use Illuminate\Support\Facades\Http;
 use PhpParser\Node\Stmt\Return_;
@@ -62,18 +63,7 @@ class Acquisition
             ]
         );
         // Call API
-        $response = Http::withHeaders([
-            'X-API-KEY' => 'YfRPGJH1S98n2l7tbC7k7gD9RmQdJ2j8TxLr9JKL4A3gF1pL5m'
-                ])->acceptJson()->post(PrepaidApi::acquisition()->value, $consumer_details);
-        if ($response->failed()) {
-            logger()->error('HES API FAILED', [
-                'status'  => $response->status(),
-                'body'    => $response->body(),
-                'payload' => $consumer_details,
-            ]);
-        }
+        $response = Polaris::postData(PrepaidApi::acquisition()->value, $consumer_details);
         return $response;
-
-        // return $consumer_details;
     }
 }

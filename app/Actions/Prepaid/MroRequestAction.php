@@ -6,9 +6,11 @@ use App\Contracts\Prepaid\Mro;
 use App\Enums\ConnectionType;
 use App\Enums\ConsumerStatus;
 use App\Models\Consumer\Consumer;
+use App\Models\Invoice\BillMroBatch;
 use App\Models\Invoice\BillMroData;
 use App\Models\Invoice\BillMroDataHistory;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class MroRequestAction
@@ -41,6 +43,10 @@ class MroRequestAction
             try {
                 // Create Batch ID with Str uuid and insert in bulk
                 $batch_id = Str::uuid();
+                $batch_ar = BillMroBatch::create([
+                    'batch_id' => $batch_id,
+                    'schedule_date' => $schedule_date,
+                ]);
                 // Prepare bulk insert array along with API input
                 $mro_data_bulk = [];
                 $mro_req_bulk = [];
@@ -49,7 +55,7 @@ class MroRequestAction
                         'consumer_id' => $consumer->id,
                         'schedule_date' => $schedule_date,
                         'status_id' => 1,
-                        'batch_id' => $batch_id,
+                        'mro_batch_id' => $batch_ar->id,
                         'created_at' => now(),
                         'updated_at' => now()
                     ];
@@ -59,9 +65,9 @@ class MroRequestAction
                 if($mro_data_batch_insert)
                 {
                     // Instead of updating the mro order id row by row. Update the mro_order_id using this DB raw.
-                    DB::update("UPDATE bil_mro_data SET mro_number = CONCAT('MRO', LPAD(id, 9, '0')) WHERE batch_id = ?", [$batch_id]);
+                    DB::update("UPDATE bil_mro_data SET mro_number = CONCAT('MRO', LPAD(id, 9, '0')) WHERE mro_batch_id = ?", [$batch_ar->id]);
                     // fetch inserted mro data for this batch.
-                    $insertedRows = BillMroData::with('consumer.activeMeter')->where('batch_id', $batch_id)->get();
+                    $insertedRows = BillMroData::with('consumer.activeMeter')->where('mro_batch_id', $batch_ar->id)->get();
                     $mro_req_bulk = [];
                     $history_bulk = [];
                     foreach ($insertedRows as $row) {
@@ -87,22 +93,22 @@ class MroRequestAction
                     }
                     // Insert into MRO data history
                     BillMroDataHistory::insert($history_bulk);
-                    logger()->info('MRO batch created', [
+                    Log::info('MRO batch created', [
                         'batch_id' => $batch_id,
                         'consumer_count' => $consumers->count(),
                     ]);
                     // Sending data to Call MRO Request API function.
-                    return ['mro_bulk_data' => $mro_req_bulk, 'batch_id' => $batch_id];
+                    return ['mro_bulk_data' => $mro_req_bulk, 'batch_id' => $batch_ar->id];
                 }
             } 
             catch (\Throwable $e) {
-                logger()->error('MRO batch failed', [
+                Log::error('MRO batch failed', [
                     'message' => $e->getMessage()
                 ]);
             }
         }
         else{
-            logger()->info('No consumers found for MRO');
+            Log::info('No consumers found for MRO');
             return;
         }
     }
@@ -115,7 +121,7 @@ class MroRequestAction
             foreach ($responses as $resp) {
 
                 $mroData = BillMroData::where('mro_number', $resp['mro_order_id'])
-                    ->where('batch_id', $batch_id)
+                    ->where('mro_batch_id', $batch_id)
                     ->first();
 
                 if ($mroData) {
@@ -132,13 +138,13 @@ class MroRequestAction
                     ]);
                 }
             }
-            logger()->info('MRO API response received', [
+            Log::info('MRO API response received', [
                 'batch_id' => $batch_id,
                 'response_count' => count($responses)
             ]);
         }
         else {
-            logger()->info('No MRO data to send');
+            Log::info('No MRO data to send');
             return;
         }
     }

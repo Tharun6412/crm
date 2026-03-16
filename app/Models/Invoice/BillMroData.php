@@ -26,7 +26,7 @@ class BillMroData extends Model
         'mro_data',
         'invoice_id',
         'status_id',
-        'batch_id',
+        'mro_batch_id',
         'created_at',
         'updated_at'
     ];
@@ -47,5 +47,13 @@ class BillMroData extends Model
     public function consumer():BelongsTo
     {
         return $this->belongsTo(Consumer::class, 'consumer_id');
+    }
+
+    /**
+     * Relation with mro batches table
+     */
+    public function mroBatch():BelongsTo
+    {
+        return $this->belongsTo(BillMroBatch::class,'mro_batch_id');
     }
 }

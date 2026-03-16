@@ -2,6 +2,7 @@
 
 namespace  App\Contracts\Prepaid;
 
+use App\Contracts\Prepaid\Contract\Polaris;
 use App\Enums\PrepaidApi;
 use Illuminate\Support\Facades\Http;
 
@@ -13,14 +14,7 @@ class Balance
     public function balance($balanceData)
     {
         // Call API
-        $response = Http::acceptJson()->get(PrepaidApi::onDemandRead()->value, $balanceData);
-        if ($response->failed()) {
-            logger()->error('HES API FAILED', [
-                'status'  => $response->status(),
-                'body'    => $response->body(),
-                'payload' => $balanceData,
-            ]);
-        }
+        $response = Polaris::postData(PrepaidApi::onDemandRead()->value, $balanceData);
         return $response;
     }
 }

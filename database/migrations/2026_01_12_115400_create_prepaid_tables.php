@@ -99,10 +99,17 @@ return new class extends Migration
             $table->id();
             $table->string('name',length:32);
         });
+        Schema::create('bil_mro_batches', function(Blueprint $table){
+            $table->id();
+            $table->string('batch_id', length:400)->nullable();
+            $table->date('schedule_date')->nullable();
+            $table->timestamps();
+        });
 
         Schema::create('bil_mro_data', function(Blueprint $table) {
             $table->id();
             $table->foreignId('consumer_id')->nullable()->index()->constrained(table:'cns_consumers')->noActionOnUpdate()->noActionOnDelete();
+            $table->foreignId('mro_batch_id')->nullable()->index()->constrained(table:'bil_mro_batches')->noActionOnUpdate()->noActionOnDelete();
             $table->string('mro_number', length:64)->nullable()->index();
             $table->date('schedule_date')->nullable();
             $table->string('mro_data', length:400)->nullable();
