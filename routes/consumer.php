@@ -23,6 +23,8 @@ Route::middleware(['auth', ModuleAccess::class])->group(function() {
     
     // Deposit
     Route::resource('payDeposit', App\Http\Controllers\Consumer\PayDepositController::class);
+    Route::get('payDeposit/showReceipt/{id}', [App\Http\Controllers\Consumer\PayDepositController::class, 'showReceipt']);
+
     
     // Reconnect
     Route::resource('reconnect', App\Http\Controllers\Consumer\ReconnectController::class);

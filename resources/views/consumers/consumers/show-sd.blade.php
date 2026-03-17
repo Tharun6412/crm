@@ -57,7 +57,7 @@
                 </table>
             </div>
         @endif
-        <div class="table-responsive">
+        <div class="table-responsive" style="min-height: 200px;">
             <h4 class="fw-semibold text-primary">Security Deposit Paid History</h4>
             <table class="table table-bordered table-primary">
                 <thead class="table-primary">
@@ -90,7 +90,7 @@
                                         <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Actions</button>
                                         <ul class="dropdown-menu">
                                             <li><a class="dropdown-item link-modal" href="{{ url('consumers/payDeposit/'.$sd->id) }}"><i class="bi bi-file-text"></i>&nbsp;View</a></li>
-                                            <li><a class="dropdown-item" href="#"><i class="bi bi-printer"></i>&nbsp;Print</a></li>
+                                            <li><a class="dropdown-item" href="{{ url('consumers/payDeposit/showReceipt/'.$sd->id) }}"><i class="bi bi-printer"></i>&nbsp;Print</a></li>
                                         </ul>
                                     </div>
                                 </td>
