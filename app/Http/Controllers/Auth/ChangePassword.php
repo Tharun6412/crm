@@ -8,7 +8,7 @@ use App\Http\Requests\Auth\ChangePasswordRequest;
 use App\Models\Admin\UserStatusHistory;
 use Illuminate\Support\Facades\Auth;
 
-class changePassword extends Controller
+class ChangePassword extends Controller
 {
     /**
      * Index

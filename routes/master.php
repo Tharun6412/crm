@@ -19,6 +19,7 @@ Route::middleware(['auth'])->group(function() {
 
     // Invoice master data
     Route::prefix('invoice')->group(function () {
+        Route::resource('addresses', App\Http\Controllers\Master\Invoice\InvoiceAddressController::class);
         Route::resource('items', App\Http\Controllers\Master\Invoice\InvoiceItemsController::class);
         Route::resource('types', App\Http\Controllers\Master\Invoice\InvoiceTypesController::class);
         Route::resource('configuration', App\Http\Controllers\Master\Invoice\ConfigController::class);
