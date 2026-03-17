@@ -22,30 +22,29 @@
                     <div class="col-sm-7">
                         <address>
                             <span class="fw-semibold">Megha Gas Distribution Privated Limited. </span><br>
-                            S-2, Technocrat Industrial Estate, <br>
-                            Balanagar,Hyderabad, <br>
-                            Telangana - 500 037
+                             {{-- Address component --}}
+                            <x-master.gaAddress :ga-id="$sd_payment->consumer->ga_id"/>
                         </address>
                         <address>
-                            <strong>Sri vishnu M</strong><br>
-                            Ramulu<br>
-                            H.No 21/1, Road No 31, Bhagya nagar colony,<br>
-                            Agripalli village, Vijayawada,<br>
-                            Krishna, Andhra Pradesh - 500049.
+                            <strong>{{ $sd_payment->consumer->name}}</strong><br>
+                            {{ $sd_payment->consumer->cofDisplay?->name }} {{ $sd_payment->consumer->cof_name }}<br>
+                            {{ $sd_payment->consumer->hno }}, {{ $sd_payment->consumer->street }},<br>
+                            {{ $sd_payment->consumer->colony }}, {{ $sd_payment->consumer->city }},<br>
+                            {{ $sd_payment->consumer->district->name ?? '' }}, {{ $sd_payment->consumer->ga->state->name ?? '' }} - {{ $sd_payment->consumer->pincode }}.
                         </address>
                     </div>
                     <div class="col-sm-5">
                         <div class="row gy-1 gx-2">
                             <div class="col-sm-6 text-end">Receipt Number:</div>
-                            <div class="col-sm-6">MG00012</div>
+                            <div class="col-sm-6">{{ $sd_payment->code }}</div>
                             <div class="col-sm-6 text-end">Receipt Date:</div>
-                            <div class="col-sm-6">17-03-2026</div>
-                            <div class="col-sm-6 text-end">Consumer Type:</div>
-                            <div class="col-sm-6">Domastic</div>
+                            <div class="col-sm-6">{{ dateFormat($sd_payment->created_at) }}</div>
                             <div class="col-sm-6 text-end">CRN:</div>
-                            <div class="col-sm-6">1101000001</div>
+                            <div class="col-sm-6">{{ $sd_payment->consumer->crn }}</div>
+                            <div class="col-sm-6 text-end">Consumer Type:</div>
+                            <div class="col-sm-6">{{ $sd_payment->consumer->segment->name }}</div>
                             <div class="col-sm-6 text-end">Products:</div>
-                            <div class="col-sm-6">PNG/ CNG</div>
+                            <div class="col-sm-6">PNG</div>
                         </div>
                     </div>
                 </div>           
@@ -57,12 +56,12 @@
                                 <tr>
                                     <td>Security deposit(Rs)</td>
                                     <td>:</td>
-                                    <td>9,000.00</td>
+                                    <td>{{ numberFormat($sd_payment->consumer->scheme->security_deposit,2) }}</td>
                                 </tr>
                                 <tr>
                                     <td>Consumption deposit(Rs)</td>
                                     <td>:</td>
-                                    <td>9,000.00</td>
+                                    <td>{{ numberFormat($sd_payment->consumer->scheme->consumption_deposit,2) }}</td>
                                 </tr>
                             </table>
                         </td>
@@ -72,52 +71,54 @@
                                 <tr>
                                     <td>Total Paid Amount(Rs)</td>
                                     <td>:</td>
-                                    <td>9,000.00</td>
+                                    <td>{{ numberFormat($sd_payment->consumer->scheme->paid_deposit,2) }}</td>
                                 </tr>
                                 <tr>
                                     <td>Balance(Rs)</td>
                                     <td>:</td>
-                                    <td>9,000.00</td>
+                                    <td>{{ numberFormat($sd_payment->consumer->scheme->balance,2) }}</td>
                                 </tr>
                             </table>
                         </td>
                     </tr>
                 </table>
-                <div class="text-center p-2 border border-success text-success fw-semibold mt-1">Security deposit paid successfully.</div>
+                @if ($sd_payment->status_id == App\Enums\SDPaymentStatus::PAID->value)
+                    <div class="text-center p-2 border border-success text-success fw-semibold mt-1">Security deposit paid successfully.</div>
+                @endif
                 <div class="fw-semibold fs-5 mt-1">Security Deposit Details</div>
                 <table class="table table-bordered table-success fs-6 table-sm align-middle">                    
-                    <tbody>                        
-                        <tr>
-                            <td class="bg-light" width="40%">Consumer No</td>
-                            <td>310440159</td>
-                        </tr>
+                    <tbody>
                         <tr>
                             <td class="bg-light" width="40%">Payment Date</td>
-                            <td>17-03-2026</td>
+                            <td>{{ dateFormat($sd_payment->created_at) }}</td>
                         </tr>
                         <tr>
                             <td class="bg-light">Payment Type</td>
-                            <td>Online/ UPI/ CC</td>
+                            <td>{{ $sd_payment->paymentType?->name }}</td>
                         </tr>
                         <tr>
                             <td class="bg-light" width="40%">Cheque No/Transaction no</td>
-                            <td>E2512100QHWE8H</td>
+                            <td>{{ $sd_payment->transaction_number }}</td>
                         </tr>
-                        <tr>
+                        {{-- <tr>
                             <td class="bg-light" width="40%">Remarks</td>
                             <td>Lorem ipsum dolor sit amet consectetur adipisicing elit. Necessitatibus fuga temporibus molestias facere voluptatum? Doloribus iusto quos nihil.</td>
+                        </tr> --}}
+                        <tr>
+                            <td class="bg-light" width="40%">Payment Status</td>
+                            <td>{{ $sd_payment->status->name }}</td>
                         </tr>
                         <tr>
                             <td class="bg-light" width="40%">Payment received by</td>
-                            <td>Rajashekar G</td>
+                            <td>{{ $sd_payment->createdBy->name }}</td>
                         </tr>
                         <tr>
                             <td class="bg-light" width="40%">Paid amount (Rs)</td>
-                            <td class="fw-semibold">9,000.00</td>
+                            <td class="fw-semibold">{{ numberFormat($sd_payment->amount,2) }}</td>
                         </tr>
                         <tr>
                             <td class="bg-light" width="40%">Balance amount (Rs)</td>
-                            <td class="fw-semibold">3,000.00</td>
+                            <td class="fw-semibold">{{ numberFormat($sd_payment->balance,2) }}</td>
                         </tr>
                         <tr class="border-0">
                             <td class="border-0 text-start text-dark">Thank You.!</td>

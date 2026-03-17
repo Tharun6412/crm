@@ -5,6 +5,7 @@ namespace App\Actions\Prepaid;
 use App\Contracts\Prepaid\Mro;
 use App\Enums\ConnectionType;
 use App\Enums\ConsumerStatus;
+use App\Enums\MroStatus;
 use App\Models\Consumer\Consumer;
 use App\Models\Invoice\BillMroBatch;
 use App\Models\Invoice\BillMroData;
@@ -33,7 +34,7 @@ class MroRequestAction
             ->leftJoin('bil_mro_data', function($join) use($latestMro) {
                 $join->on('bil_mro_data.consumer_id', '=', 'cns_consumers.id')
                 ->where('bil_mro_data.created_at', $latestMro)
-                ->whereIn('bil_mro_data.status_id', [1, 2, 3, 4]); // 1 = requested, 2 = request_fail, 3 = data received, 4 = bill_process_fail
+                ->whereIn('bil_mro_data.status_id', [MroStatus::REQUESTED->value, MroStatus::REQUEST_ACK_FAIL->value, MroStatus::RECEIVED->value, MroStatus::PROCESS_FAIL->value]); // 1 = requested, 2 = request_fail, 3 = data received, 4 = bill_process_fail
             })
             ->whereDate('cns_prepaid.hes_date', '<=', $req_start_date)
             ->whereNull('bil_mro_data.id')
@@ -54,7 +55,7 @@ class MroRequestAction
                     $mro_data_bulk[] = [
                         'consumer_id' => $consumer->id,
                         'schedule_date' => $schedule_date,
-                        'status_id' => 1,
+                        'status_id' => MroStatus::REQUESTED->value,
                         'mro_batch_id' => $batch_ar->id,
                         'created_at' => now(),
                         'updated_at' => now()
@@ -87,7 +88,7 @@ class MroRequestAction
                         // Array for the MRO Data history.
                         $history_bulk[] = [
                             'mro_data_id' => $row->id,
-                            'status_id' => 1,
+                            'status_id' => MroStatus::REQUESTED->value,
                             'created_at' => now()
                         ];
                     }
@@ -125,7 +126,7 @@ class MroRequestAction
                     ->first();
 
                 if ($mroData) {
-                    $status = $resp['status'] === 'success' ? 2 : 3;
+                    $status = $resp['status'] === 'success' ? MroStatus::REQUEST_ACK_FAIL->value : MroStatus::RECEIVED->value;
                     $mroData->update([
                         'status_id' => $status,
                         'error_code'=> $resp['error_code'] ?? null,

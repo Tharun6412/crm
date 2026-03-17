@@ -1,6 +1,7 @@
 <?php
 namespace App\Actions\Prepaid;
 
+use App\Enums\MroStatus;
 use App\Models\Consumer\Consumer;
 use App\Models\Invoice\BillMroData;
 use App\Models\Invoice\BillMroDataHistory;
@@ -30,11 +31,11 @@ class MroPushAction
                             // save staging data
                             $mro->update([
                                 'mro_data' => json_encode($consumer),
-                                'status_id' => 3,
+                                'status_id' => MroStatus::RECEIVED->value,
                             ]);
                             BillMroDataHistory::insert([
                                 'mro_data_id' => $mro->id,
-                                'status_id' => 3,
+                                'status_id' => MroStatus::RECEIVED->value,
                                 'created_at' => now()
                             ]);
                             $error_ar['mro_response'][] = [

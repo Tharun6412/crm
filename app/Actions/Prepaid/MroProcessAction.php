@@ -4,6 +4,9 @@ namespace App\Actions\Prepaid;
 use App\Enums\Constants;
 use App\Enums\InvoiceStatus;
 use App\Enums\InvoiceType;
+use App\Enums\MroStatus;
+use App\Enums\PaymentStatus;
+use App\Enums\PaymentType;
 use App\Enums\TaxType;
 use App\Models\Consumer\Consumer;
 use App\Models\Invoice\BillInvoice;
@@ -14,6 +17,7 @@ use App\Models\Invoice\BillMroDataHistory;
 use App\Models\Master\PriceHistory;
 use App\Services\InvoiceService;
 use App\Services\LedgerService;
+use App\Services\PaymentService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 
@@ -22,7 +26,7 @@ class MroProcessAction
     public static function getBillingData()
     {   
         // 1. Fetch the MRO data which is not processed.
-        $billing_data = BillMroData::where('status_id',3)->get();
+        $billing_data = BillMroData::where('status_id',MroStatus::RECEIVED->value)->get();
 
         $ackPayload = [];
         $ackFailPayload = [];
@@ -119,7 +123,7 @@ class MroProcessAction
                             'paid_amount' => NULL,
                             'balance_amount' => $totalAmount,
                             'due_date' => Carbon::now()->addDays((int)Constants::DPNG_DUEDAYS->value)->format('Y-m-d'),
-                            'status_id' => InvoiceStatus::NOT_PAID->value, // Not paid
+                            'status_id' => InvoiceStatus::PAID->value, // paid
                         ];
                         // 12.Invoice Consumption Array.
                         $invoice['consumption'] = [
@@ -139,16 +143,29 @@ class MroProcessAction
 
                         // 13. Calling of insertion method from the same controller.
                         $inv_resp = self::invoiceInsert($consumer, $invoice);
-                        
+                        if($inv_resp)
+                        {
+                            // Create payment record for THIS invoice
+                            PaymentService::create([
+                                'invoice_id'      => $inv_resp['invoice_id'],
+                                'payment_date'    => date('Y-m-d'),
+                                'payment_type_id' => PaymentType::CASH_PAYMENT->value,
+                                'transaction_id'  => "CASH",
+                                'amount'          => 0,
+                                'balance'         => 0,
+                                'status_id'       => PaymentStatus::COMPLETED->value,
+                                'notes'           => NULL,
+                            ]);   
+                        }
                         // 14. Update of status and invoice id in the MRO Staging table.
                         $record->update([
-                            'status_id' => 6,
+                            'status_id' => MroStatus::BILL_SENT->value,
                             'invoice_id' => $inv_resp['invoice_id'],
                         ]);
                         // 15. Insertion of Status history records.
                         BillMroDataHistory::create([
                             'mro_data_id' => $record->id,
-                            'status_id' => 6
+                            'status_id' => MroStatus::BILL_SENT->value,
                         ]);
                         
                         // 16. MRO Acknowledgment payload array.
@@ -174,7 +191,7 @@ class MroProcessAction
                 }
             } catch (\Throwable $e) {
                 $record->update([
-                    'status_id' => 4,
+                    'status_id' => MroStatus::PROCESS_FAIL->value,
                     'message' => $e->getMessage()
                 ]);
             }
@@ -202,7 +219,7 @@ class MroProcessAction
                 // 3. if MRO found update the status id.
                 if ($mroData) {
                     // 4. based the api response, prearing the status ( 5 = bill sent, 4 = ack fail.)
-                    $status = $resp['status'] === 'success' ? 5 : 4;
+                    $status = $resp['status'] === 'success' ? MroStatus::BILL_SENT->value : MroStatus::PROCESS_FAIL->value;
                     $mroData->update([
                         'status_id' => $status,
                         'error_code'=> $resp['error_code'] ?? null,
@@ -232,7 +249,7 @@ class MroProcessAction
     public static function invoiceInsert($consumer, $invoice_data)
     {
         // 1. Invoice number generation via service.
-        $inv_number = InvoiceService::generateNumber($consumer->ga->state_id, 1);
+        $inv_number = InvoiceService::generateNumber($consumer->ga->state_id, TaxType::VAT->value);
         // 2. Invoice insertion from the data received (excl. invoice number).
         $invoice_data['invoice']['invoice_number'] = $inv_number;
         $inv_insert = BillInvoice::create($invoice_data['invoice']);
