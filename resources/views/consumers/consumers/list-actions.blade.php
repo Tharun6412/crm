@@ -49,11 +49,7 @@
             <li><x-auth.link class="dropdown-item link-modal" href="{{ url('consumers/prepaid/sendToHes/'.$consumer->id) }}"><i class="bi bi-chevron-right"></i>&nbsp;Send To HES</x-auth.link></li>            
         @endif --}}
         @if ($consumer->connection_type_id == ConnectionType::POSTPAID->value)
-<<<<<<< Updated upstream
             <li><x-auth.link class="dropdown-item link-modal" href="{{ url('consumers/conversion/' . $consumer->id . '/edit') }}" action="ctpp"><i class="bi bi-chevron-right"></i>&nbsp;Convert to prepaid</x-auth.link></li>
-=======
-            <li><x-auth.link class="dropdown-item link-modal" href="{{ url('consumers/conversion/' . $consumer->id . '/edit') }}"><i class="bi bi-chevron-right"></i>&nbsp;Convert to prepaid</x-auth.link></li>
->>>>>>> Stashed changes
         @endif
     </ul>
 </div>

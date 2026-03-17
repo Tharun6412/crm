@@ -32,17 +32,10 @@
                             <a href="#" class="list-group-item list-group-item-action" id="nav-sd-tab" data-bs-toggle="tab" data-bs-target="#nav-sd" role="tab" aria-controls="nav-sd" aria-selected="false">
                                 <i class="bi bi-cash-stack"></i>&nbsp;SD Details
                             </a>
-<<<<<<< Updated upstream
-                            <a href="#" class="list-group-item list-group-item-action" id="nav-mdata-tab" data-bs-toggle="tab" data-bs-target="#nav-mdata" role="tab" aria-controls="nav-mdata" aria-selected="false">
-                                <i class="bi bi-box"></i>&nbsp;Meter Data
-                            </a>
-                            <a href="#" class="list-group-item list-group-item-action" id="nav-bills-tab" data-bs-toggle="tab" data-bs-target="#nav-bills" data-url="{{ url('consumers/invoices/' . $consumer->id . '/1') }}" role="tab" aria-controls="nav-bills" aria-selected="true">
-=======
                             <a href="#" class="list-group-item list-group-item-action list-group-item-light" id="nav-mdata-tab" data-bs-toggle="tab" data-bs-target="#nav-mdata" role="tab" aria-controls="nav-mdata" aria-selected="false">
                                 <i class="bi bi-box"></i>&nbsp;Meter Data
                             </a>
                             <a href="#" class="list-group-item list-group-item-action list-group-item-light" id="nav-bills-tab" data-bs-toggle="tab" data-bs-target="#nav-bills" data-url="{{ url('consumers/invoices/' . $consumer->id . '/1') }}" role="tab" aria-controls="nav-bills" aria-selected="true">
->>>>>>> Stashed changes
                                 <i class="bi bi-files"></i>&nbsp;Bills
                             </a>
                             <a href="#" class="list-group-item list-group-item-action" id="nav-inv-tab" data-bs-toggle="tab" data-bs-target="#nav-inv" data-url="{{ url('consumers/invoices/' . $consumer->id . '/2') }}" role="tab" aria-controls="nav-inv" aria-selected="false">
