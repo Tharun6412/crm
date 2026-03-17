@@ -11,20 +11,20 @@
             {{ session('status') }}
         </div>
     @endif
-    <div class="border p-3">
+    <div class="border p-3 bg-white">
         <div class="row align-items-center">
             <div class="col-sm-4 text-center">
-                <span class="text-light" style="font-size: 254px; line-height:0;">
-                    <i class="bi bi-fingerprint"></i>
+                <span class="text-success text-opacity-25" style="font-size: 254px; line-height:0;">
+                    <i class="bi bi-emoji-smile"></i>
                 </span>
-                <h3 class="mt-3">{{ $user->first_name . ' ' . $user->last_name }}</h3>
+                <h3 class="mt-5">{{ $user->first_name . ' ' . $user->last_name }}</h3>
                 <h5>
                     @isset($user->role->name)
                         {{ $user->role->name }}
                     @endisset
                 </h5>
             </div>
-            <div class="col-sm-8">
+            <div class="col-sm-8 border-start">
                 <div class="">
                     <dl class="d-flex">
                         <dt>Emp Id:</dt>

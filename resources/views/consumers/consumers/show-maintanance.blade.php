@@ -3,7 +3,7 @@
         <i class="bi bi-box"></i>&nbsp;Meter Details
     </div>
     <div class="table-responsive p-2">
-        <table class="table table-bordered table-primary">
+        <table class="table table-bordered table-striped">
             <thead>
                 <tr class="bg-primary-subtle">
                     <th width="1%">S.No</th>

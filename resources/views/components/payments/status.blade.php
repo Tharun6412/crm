@@ -1,31 +1,25 @@
-{{-- Complaint status --}}
+{{-- Invoice status --}}
+{{-- <span>{{ $status->name }}</span> --}}
+
 @props(['status' => null, 'mode' => null])
 
 @php
     switch ($status->id) {
         case 1:
-            $class = 'secondary';
+            $class = 'success';
             $icon = 'check2-square';
             break;
         case 2:
-            $class = 'info';
-            $icon = 'check2';
+            $class = 'danger';
+            $icon = 'x-square';
             break;
         case 3:
             $class = 'primary';
             $icon = 'diamond-half';
             break;
         case 4:
-            $class = 'warning';
-            $icon = 'search';
-            break;
-        case 5:
-            $class = 'success';
-            $icon = 'check-circle';
-            break;
-        case 6:
             $class = 'danger';
-            $icon = 'x-circle-fill';
+            $icon = 'x-circle';
             break;
         default:
             $class = 'secondary';

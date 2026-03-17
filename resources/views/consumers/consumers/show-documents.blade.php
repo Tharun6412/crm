@@ -27,7 +27,10 @@
                             @endphp                            
                             {{-- <img src="/icons/{{ $icons[$ext] ?? 'file.png' }}" width="20">
                             {{ $doc->file->file_name }} --}}
-                            <a href="{{ url('master/dc/documents/' . $doc->id) }}" title="{{ $doc->file->file_name }}" target="_blank" class="fs-1">{!! $icons[$ext] ?? '<i class="bi bi-file-image"></i>' !!}</a>
+                            <a href="{{ url('master/dc/documents/' . $doc->id) }}" title="{{ $doc->file->file_name }} | added date: {{ $doc->created_at?->format('d-m-Y H:i:s') }}" target="_blank" class="fs-1">{!! $icons[$ext] ?? '<i class="bi bi-file-image"></i>' !!}</a>
+                            <div class="position-absolute bottom-0 end-0">
+                                <span class="text-secondary p-1" style="font-size: 9px;"><i class="bi bi-calendar3"></i> {{ $doc->created_at?->format('d-m-Y H:i:s') }}</span>
+                            </div>                          
                         </div>
                     </div>
                 @endforeach

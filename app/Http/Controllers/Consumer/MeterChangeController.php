@@ -106,7 +106,7 @@ class MeterChangeController extends Controller
         ]);
         // Old Consumer Meter Update status = Replaced[3]
         $old_meter->update([
-            'status' => MeterStatus::Replace->value,
+            'status' => MeterStatus::REPLACE->value,
             'updated_by' => Auth::id(),
         ]);
         // Add New Meter Record with Active Status
@@ -118,7 +118,7 @@ class MeterChangeController extends Controller
             'initial_reading' => $request->initial_reading,
             'install_date' => Carbon::now(),
             'install_by' => Auth::id(),
-            'status' => MeterStatus::Active->value,
+            'status' => MeterStatus::ACTIVE->value,
             'created_by' => Auth::id(),
         ]);
         // Meter Reading Calculations

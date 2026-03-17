@@ -7,7 +7,7 @@
     <div class="p-2">
         @if ($ledger_report->count() > 0)
             <div class="responsive">
-                <table class="table table-bordered table-primary">
+                <table class="table table-bordered table-striped">
                     <thead class="table-primary">
                         <tr>
                             <th width="1%" nowrap>S.No</th>

@@ -27,7 +27,7 @@
 </div>
 {{-- Complaints / Calls list --}}
 <div class="table-responsive mt-2" style="min-height: 500px;">
-    <table class="table table-bordered table-hover table-striped bg-white">
+    <table class="table table-bordered table-hover table-striped bg-white align-middle">
         <thead class="table-success">
             <tr>
                 <th width="1%" nowrap>S No</th>
@@ -43,15 +43,15 @@
                     </div>                   
                 </th>
                 <th nowrap>Est. Close Date</th>
-                <th>Closed Date</th>
-                <th>Priority</th>
-                <th>
+                <th nowrap>Closed Date</th>
+                <th nowrap>Priority</th>
+                <th nowrap>
                     <div class="d-flex">
                         <div>Status</div>
                         <x-complaint.statusFilter class="float-end" />
                     </div> 
                 </th>
-                <th>
+                <th nowrap>
                     <div class="d-flex">
                         <div>Created At</div>
                         <x-master.date-filter  class="float-end" />
@@ -79,7 +79,7 @@
                         }
                     @endphp
                     <tr>
-                        <td>{{ $i++ }}</td>
+                        <td class="text-center">{{ $i++ }}</td>
                         <td nowrap>{{ $complaint->ga->name ?? '' }}</td>
                         <td nowrap>
                             <x-auth.link href="{{ url('calls/'.$complaint->id) }}" class="link-modal">{{ $complaint->code }}</x-auth.link>
@@ -92,7 +92,7 @@
                         <td nowrap>{{ $complaint->segment->name }}</td>
                         <td nowrap>
                             {{ $complaint->estimated_closed_at?->format('d-m-y H:i') }}
-                            <x-complaint.day-hour-display :complaint="$complaint"/>
+                            <br/><x-complaint.day-hour-display :complaint="$complaint"/>
                         </td>
                         <td nowrap>{{ $complaint->closed_at?->format('d-m-Y H:i') }}</td>
                         <td nowrap>{{ $complaint->priority->name }}</td>

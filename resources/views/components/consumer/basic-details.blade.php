@@ -8,7 +8,26 @@
 
 <div {{ $attributes->merge(['class' => 'rounded mb-2']) }}>
     {{-- Consumer details --}}
-    <div class="row g-2 pb-2 mb-2 p-2">
+    <div class="p-2">
+        <table class="table table-borderless table-info table-sm">
+            <tr>
+                <td><span class="fw-semibold">CRN :</span>&nbsp;<x-auth.link href="{{ url('consumers/'.$consumer->id) }}" target="_blank">{{ $consumer->crn }}</x-auth.link></td>
+                <td><span class="fw-semibold">Status :</span>&nbsp;<x-consumer.status :status="$consumer->status" /></td>
+            </tr>
+            <tr>
+                <td><span class="fw-semibold">Name :</span>&nbsp;{{ $consumer->name }}</td>
+                <td><span class="fw-semibold">Segment :</span>&nbsp;{{ $consumer->segment->name ?? '' }}</td>
+            </tr>
+            <tr>
+                <td><span class="fw-semibold">District :</span>&nbsp;{{ $consumer->district->name }}</td>
+                <td><span class="fw-semibold">GA :</span>&nbsp;{{ $consumer->ga->name }} ({{ $consumer->ga->code }})</td>
+            </tr>
+            <tr>
+                <td><span class="fw-semibold">Activation Date :</span>&nbsp;{{ $consumer->statusHistory()->where('status_id', \App\Enums\ConsumerStatus::ACTIVATE->value)->first()?->created_at->format('d-m-Y H:i:s') }}</td>
+            </tr>    
+        </table>
+    </div>     
+    {{-- <div class="row g-2 pb-2 mb-2 p-2">
         <div class="col-sm-2 text-end fw-semibold">CRN : </div>
         <div class="col-sm-4"><x-auth.link href="{{ url('consumers/'.$consumer->id) }}" target="_blank">{{ $consumer->crn }}</x-auth.link></div>
         <div class="col-sm-2 text-end fw-semibold">Status : </div>
@@ -23,43 +42,50 @@
         <div class="col-sm-4">{{ $consumer->ga->name }} ({{ $consumer->ga->code }})</div>
         <div class="col-sm-2 text-end fw-semibold">Activation Date : </div>
         <div class="col-sm-4">{{ $consumer->statusHistory()->where('status_id', \App\Enums\ConsumerStatus::ACTIVATE->value)->first()?->created_at->format('d-m-Y H:i:s') }}</div>
-    </div>
+    </div> --}}
     {{-- Scheme details --}}
     @if ($type == 1)
-        <div class="row g-2 pb-2 mb-2">
-            <div class="col-sm-2 text-end fw-semibold">TR No : </div>
-            <div class="col-sm-4">{{ $consumer->t_crn }}</div>
-            <div class="col-sm-2 text-end fw-semibold">Scheme : </div>
-            <div class="col-sm-4">{{ $consumer->scheme->scheme->name }}</div>
-            <div class="col-sm-2 text-end fw-semibold">Connection : </div>
-            <div class="col-sm-2">{{ numberFormat($consumer->scheme->scheme->security) }}</div>
-            <div class="col-sm-2 text-end fw-semibold">Consumption : </div>
-            <div class="col-sm-2">{{ numberFormat($consumer->scheme->scheme->consumption) }}</div>
-            <div class="col-sm-2 text-end fw-semibold">Registration : </div>
-            <div class="col-sm-2">{{ numberFormat($consumer->scheme->scheme->registration) }}</div>
-        </div>
+        <div class="p-2 bg-warning-subtle">
+            <table class="table table-borderless table-info table-sm">
+                <tr>
+                    <td><span class="fw-semibold">TR No :</span>&nbsp;{{ $consumer->t_crn }}</td>
+                    <td><span class="fw-semibold">Scheme :</span>&nbsp;{{ $consumer->scheme->scheme->name }}</td>
+                </tr>
+                <tr>
+                    <td><span class="fw-semibold">Connection :</span>&nbsp;{{ numberFormat($consumer->scheme->scheme->security) }}</td>
+                    <td><span class="fw-semibold">Consumption :</span>&nbsp;{{ numberFormat($consumer->scheme->scheme->consumption) }}</td>
+                </tr>
+                <tr>
+                    <td><span class="fw-semibold">Registration :</span>&nbsp;{{ numberFormat($consumer->scheme->scheme->registration) }}</td>
+                </tr>
+            </table>
+        </div>        
     @endif
     {{-- SD details --}}
     @if ($type == 2)
-        <div class="row g-2 pb-2 mb-2">
-            <div class="col-sm-2 text-end fw-semibold">Scheme : </div>
-            <div class="col-sm-4">{{ $consumer->scheme->scheme->name }}</div>
-            <div class="col-sm-2 text-end fw-semibold">Deposit : </div>
-            <div class="col-sm-4">{{ numberFormat($consumer->scheme->total_deposit) }}</div>
-            <div class="col-sm-2 text-end fw-semibold">Paid : </div>
-            <div class="col-sm-4">{{ numberFormat($consumer->scheme->paid_deposit) }}</div>
-            <div class="col-sm-2 text-end fw-semibold">Balance : </div>
-            <div class="col-sm-4">{{ numberFormat($consumer->scheme->balance) }}</div>
+        <div class="p-2 bg-warning-subtle mt-2">
+            <table class="table table-borderless table-info table-sm">
+                <tr>
+                    <td><span class="fw-semibold">Scheme :</span>&nbsp;{{ $consumer->scheme->scheme->name }}</td>
+                    <td><span class="fw-semibold">Deposit :</span>&nbsp;{{ numberFormat($consumer->scheme->total_deposit) }}</td>
+                </tr>
+                <tr>
+                    <td><span class="fw-semibold">Paid :</span>&nbsp;{{ numberFormat($consumer->scheme->paid_deposit) }}</td>
+                    <td><span class="fw-semibold">Balance :</span>&nbsp;{{ numberFormat($consumer->scheme->balance) }}</td>
+                </tr>
+            </table>
         </div>
     @endif
 
     {{-- Bill details --}}
     @if ($type == 3)
-        <div class="row g-2 pb-2 mb-2">
-            <div class="col-sm-2 text-end fw-semibold">Meter No : </div>
-            <div class="col-sm-4">{{ $consumer->activeMeter->meter_no }}</div>
-            <div class="col-sm-2 text-end fw-semibold">Initial Reading : </div>
-            <div class="col-sm-4">{{ $consumer->activeMeter->initial_reading }}</div>
+        <div class="p-2 bg-warning-subtle mt-2">
+            <table class="table table-borderless table-info table-sm">
+                <tr>
+                    <td><span class="fw-semibold">Meter No :</span>&nbsp;{{ $consumer->activeMeter->meter_no }}</td>
+                    <td><span class="fw-semibold">Initial Reading :</span>&nbsp;{{ $consumer->activeMeter->initial_reading }}</td>
+                </tr>
+            </table>
         </div>
     @endif
 </div>

@@ -46,7 +46,7 @@
             
             {{-- Assigned details --}}
             @if ($complaint->assign)
-                <div class="row g-2 mt-3">
+                <div class="row g-2 mt-1">
                     <div class="col-sm-2 text-end fw-semibold">Assigned To : </div>
                     <div class="col-sm-4">{{ $complaint->assign->assigned->first_name }}&nbsp;{{ $complaint->assign->assigned->last_name }}&nbsp;({{ $complaint->assign->assigned->emp_id }})</div>
                     <div class="col-sm-2 text-end fw-semibold">Date : </div>
@@ -71,7 +71,7 @@
                         @foreach ($complaint->statushistory as $status_val)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
-                                <td>{{ $status_val->status->name }}</td>
+                                <td><x-complaint.status :status="$status_val->status"/></td>
                                 <td>{{ $status_val->notes }}</td>
                                 <td>{{ $status_val->createdBy->first_name }}&nbsp;{{ $status_val->createdBy->last_name }}</td>
                                 <td>{{ $status_val->created_at->format('d-m-Y') }}</td>

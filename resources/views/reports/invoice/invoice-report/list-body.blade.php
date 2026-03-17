@@ -70,7 +70,7 @@
     $i = (($invoices->currentPage() - 1) * $invoices->perPage())+1;
 @endphp
 <div class="table-responsive" style="min-height: 500px;">
-    <table class="table table-bordered table-hover table-striped bg-white page-sort">
+    <table class="table table-bordered table-hover table-striped bg-white page-sort text-middle">
         <thead class="table-success align-middle">
             <tr class="bg-success-subtle">
                 <th width="1%" nowrap>S No</th>
@@ -90,14 +90,15 @@
                         @endif
                     </a>
                 </th>
-                <th nowrap class="d-flex align-items-center mt-2 border-0">
-                    <a href="{{ $invoices->appends(['sortBy' => 'type_id','sortOr' => $sort_order_inverse])->url($invoices->currentPage()) }}">
-                    Invoice Type
-                    @if ($sort_by == 'type_id')
-                        <i class="bi {{ $sort_icon }}"></i>
-                    @endif
-                    </a>
-                    <x-master.invoice-type-filter />
+                <th nowrap>
+                    <div class="d-flex">
+                        <a href="{{ $invoices->appends(['sortBy' => 'type_id','sortOr' => $sort_order_inverse])->url($invoices->currentPage()) }}">Invoice Type
+                            @if ($sort_by == 'type_id')
+                                <i class="bi {{ $sort_icon }}"></i>
+                            @endif
+                        </a>
+                        <x-master.invoice-type-filter />
+                    </div>
                 </th>
                 <th nowrap>
                     <a href="{{ $invoices->appends(['sortBy' => 'crn','sortOr' => $sort_order_inverse])->url($invoices->currentPage()) }}">
@@ -115,22 +116,22 @@
                     @endif
                     </a>
                 </th>
-                <th>
-                    <div class="row">
-                        <div class="col-7">Segment</div>
-                        <div class="col-5 text-end"><x-master.segment-filter /></div>
+                <th nowrap>
+                    <div class="d-flex">
+                        <div>Segment</div>
+                        <div><x-master.segment-filter /></div>
                     </div>                    
                 </th>
                 <th nowrap>
-                    <div class="row">
-                        <div class="col-12">Connection Type</div>
-                        <div class="col-12 text-center"><x-master.connection-type-filter /></div>
+                    <div class="d-flex">
+                        <div>Connection Type</div>
+                        <div><x-master.connection-type-filter /></div>
                     </div>
                 </th>
                 <th nowrap>
-                    <div class="row">
-                        <div class="col-7">GA</div>
-                        <div class="col-5 text-end"><x-master.ga-filter /></div>
+                    <div class="d-flex">
+                        <div>GA</div>
+                        <div class="float-end"><x-master.ga-filter /></div>
                     </div>
                 </th>
                 <th nowrap>District
@@ -170,17 +171,19 @@
                         @endif
                     </a>
                 </th>
-                <th class="d-flex" nowrap>
-                    <a href="{{ $invoices->appends(['sortBy' => 'bil_invoices.status_id','sortOr' => $sort_order_inverse])->url($invoices->currentPage()) }}">
-                        Payment Status
-                        @if ($sort_by == 'bil_invoices.status_id')
-                            <i class="bi {{ $sort_icon }}"></i>
-                        @endif
-                    </a>&nbsp;
-                    @php
-                        $inv_status = [1 => 'Paid', 2 => 'Not-Paid', 3 => 'Partial-Paid'];
-                    @endphp
-                    <x-admin.status-filter name="status_id" :data="$inv_status" />
+                <th nowrap>
+                    <div class="d-flex">
+                        <a href="{{ $invoices->appends(['sortBy' => 'bil_invoices.status_id','sortOr' => $sort_order_inverse])->url($invoices->currentPage()) }}">
+                            Payment Status
+                            @if ($sort_by == 'bil_invoices.status_id')
+                                <i class="bi {{ $sort_icon }}"></i>
+                            @endif
+                        </a>&nbsp;
+                        @php
+                            $inv_status = [1 => 'Paid', 2 => 'Not-Paid', 3 => 'Partial-Paid'];
+                        @endphp
+                        <x-admin.status-filter name="status_id" :data="$inv_status" />
+                    </div>
                 </th>
             </tr>
         </thead>

@@ -9,7 +9,7 @@
             <x-consumer.basic-details :consumer="$consumer_meter->consumer" class="bg-info-subtle" type="3" />
                 {{-- Meter Change Details --}}
             <div class="row g-2 pb-2 mb-2">
-                <div class="fw-semibold text-decoration-underline">New Meter Details</div>
+                <div class="fw-semibold bg-secondary-subtle p-2">New Meter Details</div>
                 <div class="col-sm-2 text-end fw-semibold">Meter Number : </div>
                 <div class="col-sm-4">{{ $consumer_meter->newMeter->meter_no }}</div>
                 <div class="col-sm-2 text-end fw-semibold">Meter Serial Number : </div>
@@ -25,11 +25,17 @@
                 <div class="col-sm-2 text-end fw-semibold">Assigned Technician : </div>
                 <div class="col-sm-4">{{ $consumer_meter->technician->name }}</div>
                 <div class="col-sm-2 text-end fw-semibold">Status : </div>
-                <div class="col-sm-4">{{ $consumer_meter->status_id == "1" ? "Pending" : "Closed" }}</div>
+                <div class="col-sm-4">
+                    @if($consumer_meter->status_id == "1")
+                        <span class="badge text-bg-warning">Pending</span>
+                    @else
+                        <span class="badge text-bg-success">Closed</span>
+                    @endif
+                </div>
             </div>
             {{-- old Meter Details --}}
             <div class="row g-2 pb-2 mb-2">
-                <div class="fw-semibold text-decoration-underline">Old Meter Details</div>
+                <div class="fw-semibold bg-secondary-subtle p-2">Old Meter Details</div>
                 <div class="col-sm-2 text-end fw-semibold">Meter Number : </div>
                 <div class="col-sm-4">{{ $consumer_meter->meter->meter_no }}</div>
                 <div class="col-sm-2 text-end fw-semibold">Meter Serial Number : </div>
@@ -41,7 +47,7 @@
                 <div class="col-sm-2 text-end fw-semibold">Consumption(SCM) : </div>
                 <div class="col-sm-4">{{ $consumer_meter->consumption }}</div>
                 <div class="col-sm-2 text-end fw-semibold">Meter Status : </div>
-                <div class="col-sm-4">{{ $consumer_meter->meter->meterStatus->name }}</div>
+                <div class="col-sm-4"><span class="badge text-bg-info">{{ $consumer_meter->meter->meterStatus->name }}</span></div>
             </div>
         </div>
         <div class="modal-footer">
