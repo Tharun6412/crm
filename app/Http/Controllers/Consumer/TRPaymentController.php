@@ -60,10 +60,17 @@ class TRPaymentController extends Controller
     {
         // Get consumer scheme and scheme details
         $consumer_scheme = ConsumerScheme::where('consumer_id', $id)->first();
+        if($consumer_scheme->scheme_id != NULL) {
+            $min_payment = $consumer_scheme->scheme->min_payment ?? 0;
+            $max_payment = ($consumer_scheme->scheme->registration + $consumer_scheme->scheme->security + $consumer_scheme->scheme->consumption) ?? 0;
+        }else {
+            $min_payment = 0;
+            $max_payment = $consumer_scheme->total_deposit ?? 0;
+        }
         
         // Validations
         $request->validate([
-            'amount' => ['required', 'numeric', 'gt:0', 'min:' . $consumer_scheme->scheme->min_payment, 'max:' . ($consumer_scheme->scheme->registration + $consumer_scheme->scheme->security + $consumer_scheme->scheme->consumption)],
+            'amount' => ['required', 'numeric', 'gt:0', 'min:' . $min_payment, 'max:' . $max_payment],
             'payment_type' => 'required',
             'transaction_no' => 'required',
             'notes' => 'nullable',

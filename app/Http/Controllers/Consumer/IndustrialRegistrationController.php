@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Consumer;
 
 use App\Enums\AwsPath;
+use App\Enums\ConnectionType as EnumsConnectionType;
 use App\Enums\ConsumerStatus as EnumsConsumerStatus;
 use App\Enums\SegmentType;
 use App\Http\Controllers\Controller;
@@ -46,7 +47,7 @@ class IndustrialRegistrationController extends Controller
             'nominee_relations' => ConsumerNomineeRelation::all(),
             'documents' => DocumentTypes::where('type', 1)->get(),
             'gas_required_list' => ConsumerGasRequired::all(),
-            'firm_types' => FirmType::all(),
+            'firm_types' => FirmType::where('type', 1)->get(),
             'fuel_types' => FuelType::all(),
             'schemes' => [],
             'connection_types' => ConnectionType::all(),
@@ -62,7 +63,7 @@ class IndustrialRegistrationController extends Controller
         // Data Preparation
         $add_consumer = Consumer::create([
             'segment_id' => SegmentType::INDUSTRIAL->value,
-            'connection_type_id' => $request->connection_type,
+            'connection_type_id' => EnumsConnectionType::POSTPAID->value,
             'title' => $request->title,
             'fname' => $request->name,
             'cof_name' => $request->cof_name,
@@ -102,21 +103,19 @@ class IndustrialRegistrationController extends Controller
             'created_by' => Auth::id(),
         ]);
         // Consumer Scheme Preparation
-        if($request->has('scheme_id') and !empty($request->scheme_id)) {
-            $scheme_details = MasterConsumerScheme::find($request->scheme_id);
-            $add_consumer_scheme = ConsumerScheme::create([
-                'consumer_id' => $add_consumer->id,
-                'scheme_id' => $scheme_details->id,
-                'security_deposit' => $scheme_details->security,
-                'consumption_deposit' => $scheme_details->consumption,
-                'total_deposit' => $scheme_details->total_deposit,
-                'emi_amount' => $scheme_details->emi_amount,
-                'rental_amount' => $scheme_details->rental_amount,
-                'paid_deposit' => 0,
-                'balance' => $scheme_details->security + $scheme_details->consumption,
-                'status' => 0,
-            ]);
-        }
+        $add_consumer_scheme = ConsumerScheme::create([
+            'consumer_id' => $add_consumer->id,
+            'scheme_id' => NULL,
+            'security_deposit' => $request->sd_amount,
+            'consumption_deposit' => $request->consumption,
+            'total_deposit' => $request->sd_amount + $request->consumption,
+            'emi_amount' => 0,
+            'rental_amount' => 0,
+            'paid_deposit' => 0,
+            'balance' => $request->sd_amount + $request->consumption,
+            'status' => 0,
+        ]);
+    
         // Documents Data Preparation
         if($request->has('document_type')) {
             $documents_bulk = DocumentUpload::uploadBulk($request, AwsPath::REGISTRATION->value);
@@ -128,13 +127,6 @@ class IndustrialRegistrationController extends Controller
                     'file_id' => $documents_bulk['file_list'][$key]['file_id'],
                 ]);
             }
-        }
-        // IF Connection Type=PREPAID Add record
-        if($request->connection_type == 2) {
-            Prepaid::create([
-                'consumer_id' => $add_consumer->id,
-                'bonus' => $scheme_details->bonus,
-            ]);
         }
         // SMS and Email to send
         $sms_response = SmsService::dispatch($add_consumer, new RegistrationSmsNotification(['tcrn' => $crn_code]));

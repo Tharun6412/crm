@@ -39,7 +39,7 @@
                                     <ul class="dropdown-menu">
                                         <li><a class="dropdown-item" href="{{ url('bill/invoice/' . $payment->invoice->id) }}" target="_blank"><i class="bi bi-file-text"></i>&nbsp;View Invoice</a></li>
                                         @if (in_array($payment->status_id, [1,2]))
-                                            <li><x-auth.link class="dropdown-item link-modal" href="{{ url('payments/reversalPayment/' . $payment->id) }}" action="reverse"><i class="bi bi-cash"></i>&nbsp;Payment Reversal</x-auth.link></li>
+                                            <li><x-auth.link class="dropdown-item link-modal" href="{{ url('payments/reversalPayment/' . $payment->id) }}" action="payrev"><i class="bi bi-cash"></i>&nbsp;Payment Reversal</x-auth.link></li>
                                         @endif
                                     </ul>
                                 </div>

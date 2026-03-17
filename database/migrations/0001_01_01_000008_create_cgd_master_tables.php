@@ -320,16 +320,6 @@ return new class extends Migration
             $table->timestamps();
             $table->unique(['gateway', 'mode']);
         });
-
-        /**
-         * Business Types
-         */
-        Schema::create('mst_business_types', function(Blueprint $table) {
-            $table->id();
-            $table->string('name', length:225)->index()->nullable();
-            $table->tinyInteger('status')->nullable();
-            $table->timestamps();
-        });
     }
 
     /**

@@ -100,57 +100,33 @@
                 <div class="pt-2 pb-2"><hr></div>
                 {{-- Security Deposit Details --}}
                 <div class="mb-1 fs-5 fw-semibold text-primary">Security Deposit Scheme Details&nbsp;:</div>
-                <div class="row">
-                    <div class="col-md-2 col-sm-6 col-xs-12">
-                        <label class="form-label">Connection Type&nbsp;:<span class="text-danger">*</span></label>
-                        <div>
-                            <select name="connection_type" id="connection_type" class="form-select" onchange="getSchemesByType(this.value)">
-                                <option value="">Select Type</option>
-                                @foreach ($connection_types as $type)
-                                    <option value="{{ $type->id }}">{{ $type->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <span class="text-danger validate-err-msg" id="connection_type-error"></span>
+                <div class="row mb-2">
+                    <div class="col-md-3 col-sm-6 col-xs-12">
+                        <label class="form-label" for="registration">Connection Type&nbsp;:</label>
+                        <input name="type" id="type" class="form-control text-end" placeholder="POSTPAID" type="text" value="POSTPAID" disabled/>
                     </div>
-                    <div class="col-md-4 col-sm-6 col-xs-12">
-                        <label class="form-label">Security Deposit Schemes&nbsp;:<span class="text-danger">*</span></label>
-                        <div>
-                            <select name="scheme_id" id="scheme_id" class="form-select" onchange="getSchemeDetails(this.value)">
-                                <option value="">Select scheme</option>
-                                @foreach ($schemes as $scheme)
-                                    <option value="{{ $scheme->scheme->id }}">{{ $scheme->scheme->name }}</option>
-                                @endforeach
-                            </select>
+                    <div class="col-md-3 col-sm-6 col-xs-12">
+                        <label class="form-label" for="sd_amount">SD Amount&nbsp;:<span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <input name="sd_amount" id="sd_amount" class="form-control text-end" placeholder="SD Amount" type="text" />
+                            <span class="input-group-text">&#8377;</span>
                         </div>
-                        <span class="text-danger validate-err-msg" id="scheme_id-error"></span>
+                        <span class="text-danger validate-err-msg" id="sd_amount-error"></span>
                     </div>
-                </div>
-                <div class="row">    
-                    <div class="col-md-8 col-sm-6 d-none pt-3" id="scheme_data">
-                        <table class="table table-bordered table-success mb-0">
-                            <thead>
-                                <tr class="table-primary">
-                                    <td colspan="5"><span class="fw-semibold" id="scheme_name_details"></span></td>
-                                </tr>
-                                <tr class="table-secondary text-end">
-                                    <td>Meter Deposit</td>
-                                    <td>Consumption Deposit</td>
-                                    <td>Registration</td>
-                                    <td>EMI</td>
-                                    <td>Rental</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td class="text-end"><span id="security"></span></td>
-                                    <td class="text-end"><span id="consumption"></span></td>
-                                    <td class="text-end"><span id="registration"></span></td>
-                                    <td class="text-end"><span id="emi_amount"></span></td>
-                                    <td class="text-end"><span id="rental_amount"></span></td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <div class="col-md-3 col-sm-6 col-xs-12">
+                        <label class="form-label" for="consumption">Consumption Amount&nbsp;:<span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <input name="consumption" id="consumption" class="form-control text-end" placeholder="Consumption Amount" type="text"/>
+                            <span class="input-group-text">&#8377;</span>
+                        </div>
+                        <span class="text-danger validate-err-msg" id="consumption-error"></span>
+                    </div>
+                    <div class="col-md-3 col-sm-6 col-xs-12 d-none" id="deposit_details">
+                        <label class="form-label" for="total_deposit">Total Deposit</label>
+                        <div class="input-group">
+                            <input name="tot_deposit" id="tot_deposit" class="form-control text-end" placeholder="Total Amount" type="text" disabled/>
+                            <span class="input-group-text">&#8377;</span>
+                        </div>
                     </div>
                 </div>
                 {{-- Nominee Details --}}
@@ -335,43 +311,24 @@
                 $('#district').html(options);
             });
         }
+        // Document Ready
+        $(document).ready(function () {
+            $('#sd_amount, #consumption').on('input', function () {
+                let sdAmount = parseFloat($('#sd_amount').val()) || 0;
+                let consumption = parseFloat($('#consumption').val()) || 0;
 
-        // Get Schemes By Connection Type
-        function getSchemesByType(type_id)
-        {
-            var ga = $('#geo_area').val();
-            var segment = "{{ \App\Enums\SegmentType::INDUSTRIAL->value }}";
-            $('#scheme_data').addClass('d-none');
-            $.get("{{ url('common/gaSchemesByType') }}", { 'type_id' : type_id , 'ga_id' : ga, 'segment_id' : segment}, function(data) {
-                $('#scheme_id').empty();
-                let options1 = '<option value="">Select scheme</option>'
-                if(data.schemes && data.schemes.length > 0) {
-                    data.schemes.forEach(function(scheme) {
-                        options1 += `<option value="${scheme.scheme.id}">${scheme.scheme.name}</option>`;
-                    });
-                }
-                $('#scheme_id').html(options1);
-            });
-        }
-        // Get Scheme Details
-        function getSchemeDetails(scheme_id)
-        {
-            $.get("{{ url('common/schemeDetails') }}", {'scheme_id' : scheme_id}, function(data) {
-                if(data.scheme_details != null) {
-                    $('#scheme_name_details').html(data.scheme_details.name);
-                    $('#security').html(data.scheme_details.security);
-                    $('#consumption').html(data.scheme_details.consumption);
-                    $('#registration').html(data.scheme_details.registration);
-                    $('#emi_amount').html(data.scheme_details.emi_amount);
-                    $('#rental_amount').html(data.scheme_details.rental_amount);
-                    $('#scheme_data').removeClass('d-none');
-                }
-                else {
-                    $('#scheme_data').addClass('d-none');
+                // Check if all fields have values
+                if (sdAmount && consumption) {
+                    let total = sdAmount + consumption;
+                    $('#tot_deposit').val(total.toFixed(2));
+                    $('#deposit_details').removeClass('d-none');
+                } else {
+                    // If any field empty, hide total
+                    $('#tot_deposit').val(0);
+                    $('#deposit_details').addClass('d-none');
                 }
             });
-        }
-
+        });
         // Get Charge Areas By District
         function getCasByDistrict(district_id) {
             $.get("{{ url('common/districtCas') }}", { 'district_id' :district_id }, function(data) {

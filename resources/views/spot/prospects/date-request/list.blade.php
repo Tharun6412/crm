@@ -16,7 +16,7 @@
         <h4 class="float-start">Date Change Requests</h4>
         <div class="float-end">
             @if (isInProgress($prospect->status_id))
-                <x-auth.link class="btn btn-sm btn-success" id="add-date-request-link" href="{{ url('spot/dateChangeRequest/create/'.$prospect->id.'?type=4') }}" action="dcreq"><i class="bi bi-calender-plus"></i>&nbsp;Add Request</x-auth.link>
+                <x-auth.link class="btn btn-sm btn-success" id="add-date-request-link" href="{{ url('spot/dateChangeRequest/create/'.$prospect->id.'?type=4') }}" action="dtchng"><i class="bi bi-calender-plus"></i>&nbsp;Add Request</x-auth.link>
             @endif    
         </div>
     </div>

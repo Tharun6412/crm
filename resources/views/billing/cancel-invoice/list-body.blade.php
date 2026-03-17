@@ -29,7 +29,7 @@
                                         Actions
                                     </button>
                                     <ul class="dropdown-menu">
-                                        <li><x-auth.link class="dropdown-item link-modal" href="{{ url('bill/invoice/cancelInvoice/' . $invoice->id) }}" target="_blank" action="cancel"><i class="bi bi-chevron-right"></i>&nbsp;Cancel</x-auth.link></li>
+                                        <li><x-auth.link class="dropdown-item link-modal" href="{{ url('bill/invoice/cancelInvoice/' . $invoice->id) }}" target="_blank" action="caninv"><i class="bi bi-chevron-right"></i>&nbsp;Cancel</x-auth.link></li>
                                     </ul>
                                 </div>
                             </td>

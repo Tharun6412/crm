@@ -109,19 +109,19 @@
                                     {{--Complaint Status Dropdown--}}
                                     @if ($complaint->status_id == ComplaintStatus::REGISTER->value)
                                         <li><x-auth.link class="dropdown-item link-modal" href="{{ url('calls/'.$complaint->id.'/edit') }}" action="edit"><i class="bi bi-chevron-right"></i>&nbsp;Edit</x-auth.link></li>
-                                        <li><x-auth.link class="dropdown-item link-modal" href="{{ url('calls/assign/'.$complaint->id) }}" action="assign"><i class="bi bi-chevron-right"></i>&nbsp;Assign</x-auth.link></li>
+                                        <li><x-auth.link class="dropdown-item link-modal" href="{{ url('calls/assign/'.$complaint->id) }}" action="asgn"><i class="bi bi-chevron-right"></i>&nbsp;Assign</x-auth.link></li>
                                         <li><x-auth.link class="dropdown-item link-modal" href="{{ url('calls/close/'.$complaint->id) }}" action="close"><i class="bi bi-chevron-right"></i>&nbsp;Close</x-auth.link></li>
-                                        <li><x-auth.link class="dropdown-item link-modal" href="{{ url('calls/cancel/'.$complaint->id) }}" action="cancel"><i class="bi bi-chevron-right"></i>&nbsp;Cancel</x-auth.link></li>
+                                        <li><x-auth.link class="dropdown-item link-modal" href="{{ url('calls/cancel/'.$complaint->id) }}" action="cncl"><i class="bi bi-chevron-right"></i>&nbsp;Cancel</x-auth.link></li>
                                     @endif
                                     @if ($complaint->status_id == ComplaintStatus::ASSIGN->value and (isAdmin() || auth()->id() == $complaint->assign->assigned_to))
-                                        <li><x-auth.link class="dropdown-item link-modal" href="{{ url('calls/inProgress/'.$complaint->id) }}" action="inprgrs"><i class="bi bi-chevron-right"></i>&nbsp;In Progres</x-auth.link></li>
-                                        <li><x-auth.link class="dropdown-item link-modal" href="{{ url('calls/investigate/'.$complaint->id) }}" action="invstn"><i class="bi bi-chevron-right"></i>&nbsp;Investigate</x-auth.link></li>
+                                        <li><x-auth.link class="dropdown-item link-modal" href="{{ url('calls/inProgress/'.$complaint->id) }}" action="inprgs"><i class="bi bi-chevron-right"></i>&nbsp;In Progres</x-auth.link></li>
+                                        <li><x-auth.link class="dropdown-item link-modal" href="{{ url('calls/investigate/'.$complaint->id) }}" action="invstgn"><i class="bi bi-chevron-right"></i>&nbsp;Investigate</x-auth.link></li>
                                     @endif
                                     @if ($complaint->status_id == ComplaintStatus::IN_PROGRESS->value OR $complaint->status_id == ComplaintStatus::INVESTIGATION->value)
                                         <li><x-auth.link class="dropdown-item link-modal" href="{{ url('calls/close/'.$complaint->id) }}" action="close"><i class="bi bi-chevron-right"></i>&nbsp;Close</x-auth.link></li>
                                     @endif
                                     @if ($complaint->status_id == ComplaintStatus::CLOSE->value and $complaint->feedback == null)
-                                        <li><x-auth.link class="dropdown-item link-modal" href="{{ url('calls/feedback/'.$complaint->id.'/edit') }}" action="feedbk"><i class="bi bi-chevron-right"></i>&nbsp;Feedback</x-auth.link></li>
+                                        <li><x-auth.link class="dropdown-item link-modal" href="{{ url('calls/feedback/'.$complaint->id.'/edit') }}" action="fedbk"><i class="bi bi-chevron-right"></i>&nbsp;Feedback</x-auth.link></li>
                                     @endif
                                 </ul>
                             </div>

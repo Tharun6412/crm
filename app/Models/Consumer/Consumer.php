@@ -271,6 +271,14 @@ class Consumer extends Model
     }
 
     /**
+     * Relation with Consumer Data
+     */
+    public function consumerData(): HasOne
+    {
+        return $this->hasOne(ConsumerData::class, 'consumer_id', 'id');
+    }
+
+    /**
      * Relation with Scheme history
      */
     public function schemeHistory(): HasMany

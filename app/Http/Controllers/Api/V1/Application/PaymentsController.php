@@ -36,43 +36,36 @@ class PaymentsController extends Controller
             return response()->json(['error' => 'Search Key is required'], 422);
         }
         // Get Invoices
+        $ga_ids = $request->user()->ga()->pluck('ga_id')->toArray();
         $invoices_q = BillInvoice::with([
-            'invoiceType:id,name',
-            'status:id,name',
-        ])->whereHas('consumer', function($q) use($request) {
-            $q->where('crn', 'like', '%'.$request->key.'%');
-        })->orWhere('invoice_number', 'like', '%'.$request->key.'%')->paginate(20);
+                'consumer:id,fname,lname,crn,ga_id,district_id,status_id,segment_id',
+                'consumer.ga:id,name',
+                'consumer.district:id,name',
+                'consumer.status:id,name',
+                'consumer.segment:id,name',
+                'invoiceType:id,name',
+                'status:id,name',
+            ])
+            ->where(function($query) use($request, $ga_ids) {
+                $query->where('invoice_number', 'like', '%' . $request->key . '%')
+                    // Search by CRN or GA name via consumer relation
+                    ->orWhereHas('consumer', function($q) use($request, $ga_ids) {
+                        $q->where(function($q1) use($request) {
+                            $q1->where('crn', 'like', '%' . $request->key . '%')
+                            ->orWhereHas('ga', function($q2) use($request) {
+                                    $q2->where('name', 'like', '%' . $request->key . '%');
+                            });
+                        });
+                        if(!empty($ga_ids) AND (!$request->user()->isAdmin() AND !$request->user()->isSuperAdmin())) {
+                            $q->whereIn('ga_id', $ga_ids);
+                        }
+                    });
+            })
+            ->paginate(20);
         $invoices = $this->apiPagination($invoices_q);
-
+        // Response
         return response()->json(['invoices' => $invoices]);
     }
-
-    // commented [not used yet.]
-    /*public function edit(Request $request, $id)
-    {
-        // 1. check if the id is passed or not.
-        if(!$id) {
-            return response()->json(['error' => 'Invalid invoice Id'], 422);
-        }
-        // 2. Fetching of gas invoice 
-        $invoice = BillInvoice::with([
-            'consumer:id,crn,fname,lname',
-            'invoiceType:id,name',
-            'status:id,name',
-            'tax:id,name',
-            'consumption:id,invoice_id,meter_id,date_from,date_to,prev_reading,curr_reading,net_consumption,unit_price',
-            'consumption.meter:id,meter_no,meter_serial_no',
-            'childInvoices',
-            'childInvoices.invoiceType:id,name',
-            'creditNotes',
-        ])->where('id', $id)->get();
-        $payment_types = PaymentType::all();
-        // 3. check for invoice details.
-        if(!$invoice) {
-            return response()->json(['error' => 'No invoice details found'], 200);
-        }
-        return response()->json(['invoice' => $invoice, 'payment_types' => $payment_types]);
-    }*/
 
     /**
      * Payment submit for the invoice and dependent invoices.

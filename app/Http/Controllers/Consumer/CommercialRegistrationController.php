@@ -46,7 +46,7 @@ class CommercialRegistrationController extends Controller
             'titles' => Title::all(),
             'nominee_relations' => ConsumerNomineeRelation::all(),
             'documents' => DocumentTypes::where('type', 1)->get(),
-            'firm_types' => FirmType::all(),
+            'firm_types' => FirmType::where('type', 2)->get(),
             'fuel_types' => FuelType::all(),
             'gas_required_list' => ConsumerGasRequired::all(),
             'schemes' => [],

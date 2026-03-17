@@ -52,7 +52,7 @@
                             <td>{{ $pipeline->updated_at?->format('d-m-Y H:i:s') }}</td>
                             <td>
                                 @if ($pipeline->status == "0")
-                                    <a href="javascript:void(0);" onclick="compeltePipeline('{{ $pipeline->id }}', '{{ $pipeline->prospect_id }}');" class="btn btn-success btn-sm" title="Completed Pipeline"><i class="bi bi-check2-square"></i></a>                                    
+                                    <x-auth.link href="javascript:void(0);" onclick="compeltePipeline('{{ $pipeline->id }}', '{{ $pipeline->prospect_id }}');" class="btn btn-success btn-sm" title="Completed Pipeline" action="cmppln"><i class="bi bi-check2-square"></i></x-auth.link>                                    
                                 @endif
                             </td>
                         </tr>

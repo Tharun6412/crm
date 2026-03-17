@@ -4,18 +4,43 @@
 
 @section('page-content')
     @php
-        $connection_data = [];
+        $clusters_name = $consumer_total_data = $connection_data = [];
         // Connection Types Graph Data Preparation
         $connection_data[] = [
             'name' => "Prepaid",
-            'y' => $consumer_count->total_count > 0 ? round(($consumer_count->prepaid_count/$consumer_count->total_count)*100, 2) : 0,
-            'count' => $consumer_count->prepaid_count,
+            'y' => $total_count > 0 ? round(($total_prepaid/$total_count)*100, 2) : 0,
+            'count' => $total_prepaid,
         ];
         $connection_data[] = [
             'name' => "Postpaid",
-            'y' => $consumer_count->total_count > 0 ? round(($consumer_count->postpaid_count/$consumer_count->total_count)*100, 2) : 0,
-            'count' => $consumer_count->postpaid_count,
+            'y' => $total_count > 0 ? round(($total_postpaid/$total_count)*100, 2) : 0,
+            'count' => $total_postpaid,
         ];
+
+        // Clusters Totals Based on Status
+        foreach($clusters as $cluster) {
+            $clusters_name[] = $cluster->name;
+            if(!isset($consumer_total_data[$cluster->id])) {
+                $consumer_total_data[$cluster->id] = [
+                    'registration' => 0,
+                    'execution' => 0,
+                    'activation' => 0,
+                    'td' => 0,
+                    'pd' => 0,
+                ];
+            }
+            $consumer_total_data[$cluster->id]['registration'] += $consumer_data[$cluster->id]['registration_count'] ?? 0;
+            $consumer_total_data[$cluster->id]['execution'] += $consumer_data[$cluster->id]['execution_count'] ?? 0;
+            $consumer_total_data[$cluster->id]['activation'] += $consumer_data[$cluster->id]['activation_count'] ?? 0;
+            $consumer_total_data[$cluster->id]['td'] += $consumer_data[$cluster->id]['td_count'] ?? 0;
+            $consumer_total_data[$cluster->id]['pd'] += $consumer_data[$cluster->id]['pd_count'] ?? 0;
+        }
+        // Graphical Data Preparation
+        $registration = array_column($consumer_total_data, 'registration');
+        $activation = array_column($consumer_total_data, 'activation');
+        $execution = array_column($consumer_total_data, 'execution');
+        $td = array_column($consumer_total_data, 'td');
+        $pd = array_column($consumer_total_data, 'pd');
     @endphp
     <div class="pb-5">
         {{-- Quick search --}}
@@ -51,7 +76,7 @@
                             </div>
                             <div class="py-3 px-3">
                                 <h4>Prepaid Consumers DOM</h4>                            
-                                <h3>{{ numberFormat($consumer_count->prepaid_count) }}</h3>
+                                <h3>{{ numberFormat($consumer_segment[App\Enums\SegmentType::DOMESTIC->value]['prepaid']) }}</h3>
                             </div>
                         </div>
                     </div>
@@ -66,7 +91,7 @@
                             </div>
                             <div class="py-3 px-3">
                                 <h4>Prepaid Consumers COM</h4>                            
-                                <h3>{{ numberFormat($consumer_count->prepaid_count) }}</h3>
+                                <h3>{{ numberFormat($consumer_segment[App\Enums\SegmentType::COMMERCIAL->value]['prepaid']) }}</h3>
                             </div>                          
                         </div>
                     </div>
@@ -81,7 +106,7 @@
                             </div>
                             <div class="py-3 px-3">
                                 <h4>Postpaid Consumers</h4>                            
-                                <h3>{{ numberFormat($consumer_count->postpaid_count) }}</h3>
+                                <h3>{{ numberFormat($total_postpaid) }}</h3>
                             </div>                          
                         </div>
                     </div>
@@ -92,7 +117,7 @@
                     <div class="card activated-card-bg p-2 text-dark bg-opacity-10 border-3 border-light">
                         <div class="d-flex justify-content-between p-3">
                             <div>
-                                <h2 class="mb-2">{{ numberFormat($consumer_count->activation_count) }}</h2>
+                                <h2 class="mb-2">{{ numberFormat(array_sum(array_column($consumer_data, 'activation_count'))) }}</h2>
                                 <span class="text-body-tertiary">Activated<br/> Consumers</span>
                             </div>
                             <div>
@@ -111,7 +136,7 @@
                     <div class="card total-card-bg p-2 text-dark bg-opacity-10 border-3 border-light">
                         <div class="d-flex justify-content-between p-3">
                             <div>
-                                <h2 class="mb-2">{{ numberFormat($consumer_count->total_count) }}</h2>
+                                <h2 class="mb-2">{{ numberFormat($total_count) }}</h2>
                                 <span class="text-body-tertiary">Total<br> Registrations</span>
                             </div>
                             <div>
@@ -130,7 +155,7 @@
                     <div class="card py-card-bg p-2 text-dark bg-opacity-10 border-3 border-light">
                         <div class="d-flex justify-content-between p-3">
                             <div>
-                                <h2 class="mb-2">{{ numberFormat($consumer_count->td_count) }}</h2>
+                                <h2 class="mb-2">{{ numberFormat(array_sum(array_column($consumer_data, 'td_count'))) }}</h2>
                                 <span class="text-body-tertiary">Temporary<br/> Disconnections</span>
                             </div>
                             <div>
@@ -149,7 +174,7 @@
                     <div class="card disconnect-card-bg p-2 text-dark bg-opacity-10 border-3 border-light">
                         <div class="d-flex justify-content-between p-3">
                             <div>
-                                <h2 class="mb-2">{{ numberFormat($consumer_count->pd_count) }}</h2>
+                                <h2 class="mb-2">{{ numberFormat(array_sum(array_column($consumer_data, 'pd_count'))) }}</h2>
                                 <span class="text-body-tertiary">Permanent<br/> Disconnections</span>
                             </div>
                             <div>
@@ -450,7 +475,7 @@
                 text: 'Consumer Status Clusters',
             },
             xAxis: {
-                categories: ['AP & TS', 'Karnataka', 'Tamilnadu', 'Central', 'North']
+                categories: @json($clusters_name),
             },
             yAxis: {
                 min: 0,
@@ -482,19 +507,19 @@
             },
             series: [{
                 name: 'Registered',
-                data: [115, 90, 15, 24, 30]
+                data: @json($registration)
             }, {
                 name: 'Executed',
-                data: [50, 5, 16, 5, 8]
+                data: @json($execution)
             }, {
                 name: 'Activated',
-                data: [1150, 550, 650, 740, 800]
+                data: @json($activation)
             }, {
                 name: 'TD',
-                data: [110, 55, 65, 74, 0]
+                data: @json($td)
             }, {
                 name: 'PD',
-                data: [125, 50, 60, 70, 0]
+                data: @json($pd)
             }],
             credits: [{enabled: false}]
         });

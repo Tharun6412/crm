@@ -40,7 +40,7 @@
                                         <ul class="dropdown-menu">
                                             <li><a class="dropdown-item" href="{{ url('bill/invoice/' . $payment->invoice->id) }}" target="_blank"><i class="bi bi-file-text"></i>&nbsp;View</a></li>
                                             @if (in_array($payment->status_id, [\App\Enums\PaymentStatus::PROGRESS->value]))
-                                                <li><a class="dropdown-item link-modal" href="{{ url('payments/invoicePayments/create/'.$payment->invoice->id) }}"><i class="bi bi-cash"></i>&nbsp;Pay Invoice</a></li>
+                                                <li><x-auth.link class="dropdown-item link-modal" href="{{ url('payments/invoicePayments/create/'.$payment->invoice->id) }}" action="payinv"><i class="bi bi-cash"></i>&nbsp;Pay Invoice</x-auth.link></li>
                                             @endif
                                             <li><a class="dropdown-item" href="#"><i class="bi bi-printer"></i>&nbsp;Print</a></li>
                                         </ul>

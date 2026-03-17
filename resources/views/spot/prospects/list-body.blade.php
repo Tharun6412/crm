@@ -136,7 +136,7 @@
                                     {{-- Check Pipeline Availability --}}
                                     @if (isPipeLineAvailable($prospect->pipeline_availability, $prospect->status_id))
                                         <li>
-                                            <x-auth.link class="dropdown-item link-modal" href="{{ url('spot/prospect/pipeline/'.$prospect->id.'/edit') }}"><i class="bi bi-folder2-open"></i>&nbsp;Manage PipeLine</x-auth.link>
+                                            <x-auth.link class="dropdown-item link-modal" href="{{ url('spot/prospect/pipeline/'.$prospect->id.'/edit') }}" action="ppln"><i class="bi bi-folder2-open"></i>&nbsp;Manage PipeLine</x-auth.link>
                                         </li>
                                     @endif
                                     {{-- Check user not in Hold Status --}}
@@ -158,7 +158,7 @@
                                         {{-- Check Prospect is in Progress --}}
                                         @if (isInProgress($prospect->status_id))    
                                             <li>
-                                                <x-auth.link class="dropdown-item link-modal" href="{{ url('spot/dateChangeRequest/create/'.$prospect->id) }}" action="dcreq">
+                                                <x-auth.link class="dropdown-item link-modal" href="{{ url('spot/dateChangeRequest/create/'.$prospect->id) }}" action="dtchng">
                                                     <i class="bi bi-info-circle"></i>&nbsp;Request For Date Change
                                                 </x-auth.link>
                                             </li>

@@ -16,7 +16,7 @@
                             <label class="col-form-label col-sm-4 text-end">Minimum Amount Payable<span class="text-danger">&nbsp;*</span>&nbsp;:</label>
                             <div class="col-sm-6">
                                 <label class="col-form-label">
-                                    <strong>{{ numberFormat($consumer_scheme->scheme->min_payment) }}</strong>
+                                    <strong>{{ numberFormat($consumer_scheme->scheme->min_payment ?? 0) }}</strong>
                                 </label>
                             </div>
                         </div>

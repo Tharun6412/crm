@@ -39,7 +39,7 @@
                                             <li><a class="dropdown-item" href="{{ url('bill/invoice/' . $invoice->id) }}" target="_blank"><i class="bi bi-file-text"></i>&nbsp;View</a></li>
                                             <li><a class="dropdown-item" href="{{ url('bill/gasInvoice/' . $invoice->id) }}" target="_blank"><i class="bi bi-file-text"></i>&nbsp;View / Print Gas Bill</a></li>
                                             @if (in_array($invoice->status_id, [2,3]))
-                                                <li><a class="dropdown-item link-modal" href="{{ url('payments/gasPayments/create/'.$invoice->id) }}"><i class="bi bi-cash"></i>&nbsp;Pay Invoice</a></li>
+                                                <li><x-auth.link class="dropdown-item link-modal" href="{{ url('payments/gasPayments/create/'.$invoice->id) }}" action="payinv"><i class="bi bi-cash"></i>&nbsp;Pay Invoice</x-auth.link></li>
                                             @endif
                                             <li><a class="dropdown-item" href="#"><i class="bi bi-printer"></i>&nbsp;Print</a></li>
                                         </ul>

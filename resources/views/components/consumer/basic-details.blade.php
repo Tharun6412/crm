@@ -44,7 +44,7 @@
         <div class="col-sm-4">{{ $consumer->statusHistory()->where('status_id', \App\Enums\ConsumerStatus::ACTIVATE->value)->first()?->created_at->format('d-m-Y H:i:s') }}</div>
     </div> --}}
     {{-- Scheme details --}}
-    @if ($type == 1)
+    @if ($type == 1 AND $consumer->segment_id != 3)
         <div class="p-2 bg-warning-subtle">
             <table class="table table-borderless table-info table-sm">
                 <tr>
@@ -59,14 +59,27 @@
                     <td><span class="fw-semibold">Registration :</span>&nbsp;{{ numberFormat($consumer->scheme->scheme->registration) }}</td>
                 </tr>
             </table>
-        </div>        
+        </div> 
+    @elseif ($type == 1 AND $consumer->segment_id == 3) 
+        <div class="p-2 bg-warning-subtle">
+            <table class="table table-borderless table-info table-sm">
+                <tr>
+                    <td><span class="fw-semibold">TR No :</span>&nbsp;{{ $consumer->t_crn }}</td>
+                    <td><span class="fw-semibold">SD Amount :</span>&nbsp;{{ numberFormat($consumer->scheme->security_deposit) }}</td>
+                </tr>
+                <tr>
+                    <td><span class="fw-semibold">Consumption :</span>&nbsp;{{ numberFormat($consumer->scheme->consumption_deposit) }}</td>
+                    <td><span class="fw-semibold">Total Deposit :</span>&nbsp;{{ numberFormat($consumer->scheme->total_deposit) }}</td>
+                </tr>
+            </table>
+        </div>  
     @endif
     {{-- SD details --}}
     @if ($type == 2)
         <div class="p-2 bg-warning-subtle mt-2">
             <table class="table table-borderless table-info table-sm">
                 <tr>
-                    <td><span class="fw-semibold">Scheme :</span>&nbsp;{{ $consumer->scheme->scheme->name }}</td>
+                    <td><span class="fw-semibold">Scheme :</span>&nbsp;{{ $consumer->scheme->scheme->name ?? "Industrial" }}</td>
                     <td><span class="fw-semibold">Deposit :</span>&nbsp;{{ numberFormat($consumer->scheme->total_deposit) }}</td>
                 </tr>
                 <tr>

@@ -17,9 +17,14 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Notifications\Notifiable;
 
 class Complaint extends Model
 {
+    /**
+     * Notifiable
+     */
+    use Notifiable;
     /**
      * The table associated with the model
      * 
@@ -63,6 +68,13 @@ class Complaint extends Model
         ];
     }
 
+    /**
+     * Notifiable
+     */
+    public function routeNotificationForSms()
+    {
+        return $this->phone;
+    }
     /**
      * Relation with Segments
      */

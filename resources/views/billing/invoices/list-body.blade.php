@@ -39,8 +39,8 @@
                                     <ul class="dropdown-menu">
                                         <li><x-auth.link class="dropdown-item" href="{{ url('bill/invoice/' . $invoice->id) }}" target="_blank"><i class="bi bi-file-text"></i>&nbsp;View</x-auth.link></li>
                                         @if ($invoice->status_id == 2)
-                                            <li><x-auth.link class="dropdown-item" href="{{ url('bill/creditNote/create/' . $invoice->id) }}" target="_blank" action="crnt"><i class="bi bi-chevron-right"></i>&nbsp;Add Credit/Debit Note</x-auth.link></li>
-                                            <li><x-auth.link class="dropdown-item link-modal" href="{{ url('bill/invoice/cancelInvoice/' . $invoice->id) }}" target="_blank" action="cancel"><i class="bi bi-chevron-right"></i>&nbsp;Cancel Invoice</x-auth.link></li>
+                                            <li><x-auth.link class="dropdown-item" href="{{ url('bill/creditNote/create/' . $invoice->id) }}" target="_blank" action="gcrdr"><i class="bi bi-chevron-right"></i>&nbsp;Add Credit/Debit Note</x-auth.link></li>
+                                            <li><x-auth.link class="dropdown-item link-modal" href="{{ url('bill/invoice/cancelInvoice/' . $invoice->id) }}" target="_blank" action="caninv"><i class="bi bi-chevron-right"></i>&nbsp;Cancel Invoice</x-auth.link></li>
                                             <li><x-auth.link class="dropdown-item link-modal" href="{{ url('payments/invoicePayments/create/'.$invoice->id) }}" action="payinv"><i class="bi bi-cash"></i>&nbsp;Pay Invoice</x-auth.link></li>
                                         @else
                                             <li><a class="dropdown-item link-modal" href="{{ url('payments/invoicePayments/create/'.$invoice->id) }}"><i class="bi bi-cash"></i>&nbsp;Payment Info</a></li>
