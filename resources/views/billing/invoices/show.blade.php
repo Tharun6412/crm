@@ -21,9 +21,8 @@
                 <div class="col-sm-8">
                     <address>
                         <span class="fw-semibold">Megha Gas Distribution Privated Limited. </span><br>
-                        S-2, Technocrat Industrial Estate, <br>
-                        Balanagar,Hyderabad, <br>
-                        Telangana - 500 037
+                        {{-- Address component --}}
+                        <x-master.gaAddress :ga-id="$invoice->consumer->ga_id"/>
                     </address>
                 </div>
                 <div class="col-sm-4">
