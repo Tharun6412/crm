@@ -93,6 +93,7 @@ class HomeController extends Controller
             $data['consumer_data'][$count->cluster_id]['td_count'] += $count->td_count;
             $data['consumer_data'][$count->cluster_id]['pd_count'] += $count->pd_count;
         }
+        // dd($data);
         // Render output
         return view('dashboard.home', [
             'total_count' => $data['total_count'],

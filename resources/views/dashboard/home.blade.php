@@ -76,7 +76,7 @@
                             </div>
                             <div class="py-3 px-3">
                                 <h4>Prepaid Consumers DOM</h4>                            
-                                <h3>{{ numberFormat($consumer_segment[App\Enums\SegmentType::DOMESTIC->value]['prepaid']) }}</h3>
+                                <h3>{{ numberFormat($consumer_segment[App\Enums\SegmentType::DOMESTIC->value]['prepaid'] ?? 0) }}</h3>
                             </div>
                         </div>
                     </div>
@@ -91,7 +91,7 @@
                             </div>
                             <div class="py-3 px-3">
                                 <h4>Prepaid Consumers COM</h4>                            
-                                <h3>{{ numberFormat($consumer_segment[App\Enums\SegmentType::COMMERCIAL->value]['prepaid']) }}</h3>
+                                <h3>{{ numberFormat($consumer_segment[App\Enums\SegmentType::COMMERCIAL->value]['prepaid'] ?? 0) }}</h3>
                             </div>                          
                         </div>
                     </div>
