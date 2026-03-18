@@ -2,7 +2,7 @@
 
 {{-- Search form --}}
 <div class="d-flex justify-content-between align-items-center mb-2">
-    <div class="row gx-1 mb-1">
+    <div class="row gx-2 mb-1">
         <div class="col-auto">
             <input type="text" name="key" class="form-control" placeholder="Search..." value="{{ request()->key }}">
         </div>
@@ -24,7 +24,7 @@
 </div>
 @if ($items->count() > 0)
     <div class="table-responsive">
-        <table class="table table-bordered table-hover bg-white">
+        <table class="table table-bordered table-hover bg-white table-striped align-middle">
             <thead class="table-success">
                 <tr>
                     <th width="1%" nowrap>S No</th>
@@ -33,7 +33,7 @@
                     <th>Name</th>
                     <th>HSN</th>
                     <th class="text-end">Bsic</th>
-                    <th class="text-end">Tax %</th>
+                    <th nowrap class="text-end">Tax %</th>
                     <th class="text-end">Price</th>
                     <th>Actions</th>
                 </tr>
@@ -44,16 +44,16 @@
                         <td>{{ $loop->iteration }}</td>
                         <td>{{ $item->type->name ?? '' }}</td>
                         <td>{{ $item->code }}</td>
-                        <td>{{ $item->name }}</td>
+                        <td class="text-wrap" width="25%">{{ $item->name }}</td>
                         <td>{{ $item->hsn }}</td>
                         <td class="text-end">{{ numberFormat($item->basic, 2) }}</td>
                         <td class="text-end">{{ numberFormat($item->tax_value, 2) }}</td>
                         <td class="text-end">{{ numberFormat($item->price, 2) }}</td>
-                        <td>
-                            <a href="{{ url('master/invoice/items/' . $item->id) }}" class="link-canvas fs-sm btn btn-outline-secondary">
+                        <td nowrap>
+                            <a href="{{ url('master/invoice/items/' . $item->id) }}" class="link-canvas fs-sm btn btn-outline-secondary btn-sm">
                                 <i class="bi bi-chevron-right"></i>&nbsp;View
                             </a>
-                            <a href="{{ url('master/invoice/items/' . $item->id . '/edit') }}" class="link-modal fs-sm btn btn-outline-secondary">
+                            <a href="{{ url('master/invoice/items/' . $item->id . '/edit') }}" class="link-modal fs-sm btn btn-outline-secondary btn-sm">
                                 <i class="bi bi-pencil-square"></i>&nbsp;Edit
                             </a>
                         </td>

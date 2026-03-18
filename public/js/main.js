@@ -82,3 +82,14 @@ function changeFontSize(s) {
 	var fst = (s == '+') ? (fs + 1) : (s == 'a') ? 14.4 : (fs - 1);
 	$('body').css('font-size', fst + 'px');
 }
+
+//print function
+function printDiv(divName) {
+	var printContents = document.getElementById(divName).innerHTML;
+	var originalContents = document.body.innerHTML;
+
+	document.body.innerHTML = printContents;
+	window.print();
+	// Restore original content after printing
+	document.body.innerHTML = originalContents; 
+}

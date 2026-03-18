@@ -4,14 +4,14 @@
 
 @section('title', 'Credt Note')
 
-@section('page-title', 'Credit Note#' . $note->code)
+@section('page-title', (($note->type == 1) ? 'Credit Note#' : 'Debit Note#') . $note->code)
 
 @section('page-content')
     @php
         $invoice = $note->invoice;
     @endphp
     <div class="d-flex align-content-md-start">
-        <div class="a4-page pb-2 border bg-white">
+        <div class="a4-page pb-2 border bg-white" id="printableArea">
             <div class="row p-4">
                 <div class="col-sm-4 border-bottom border-success-subtle">
                     <img src="{{ asset('img/logo.png') }}" alt="MeghaGas" class="img-fluid">
@@ -20,28 +20,15 @@
                     <span class="fs-3 fw-semibold">{{ ($note->type == 1) ? 'Credit' : 'Debit' }} Note</span>
                 </div>
             </div>
+            <img src="{{ asset('img/logo-loader.png') }}" alt="MeghaGas" width="250" class="watermark-overlay">
             <div class="row px-4">
-                <div class="col-sm-8">
+                <div class="col-sm-7">
                     <address>
                         <span class="fw-semibold">Megha Gas Distribution Privated Limited. </span><br>
-                        S-2, Technocrat Industrial Estate, <br>
-                        Balanagar,Hyderabad, <br>
-                        Telangana - 500 037
+                       {{-- Address component --}}
+                        <x-master.gaAddress :ga-id="$invoice->consumer->ga_id"/>
                     </address>
-                </div>
-                <div class="col-sm-4">
-                    <div class="row gy-1 gx-2">
-                        <div class="col-sm-6 text-end">Note Number:</div>
-                        <div class="col-sm-6">{{ $note->code }}</div>
-                        <div class="col-sm-6 text-end">Date:</div>
-                        <div class="col-sm-6">{{ $note->created_at?->format('d-m-Y') }}</div>
-                        <div class="col-sm-6 text-end">CRN:</div>
-                        <div class="col-sm-6">{{ $invoice->consumer?->crn }}</div>
-                    </div>
-                </div>
-            </div>
-            <div class="row px-4">
-                <div class="col-sm-6">
+                    {{-- Consumer Address --}}
                     <address>
                         <strong>{{ $invoice->consumer->name}}</strong><br>
                         {{ $invoice->consumer->cofDisplay?->name }} {{ $invoice->consumer->cof_name }}<br>
@@ -49,9 +36,19 @@
                         {{ $invoice->consumer->colony }}, {{ $invoice->consumer->city }},<br>
                         {{ $invoice->consumer->district->name ?? '' }}, {{ $invoice->consumer->ga->state->name ?? '' }} - {{ $invoice->consumer->pincode }}.
                     </address>
+                    {{-- End Consumer Address --}}
                 </div>
-                <div class="col-sm-6 text-end">
-                    <span class="fw-semibold">Reference Invoice:</span> {{ $invoice->invoice_number}}
+                <div class="col-sm-5">
+                    <div class="row gy-1 gx-2">
+                        <div class="col-sm-6 text-end">Note Number:</div>
+                        <div class="col-sm-6">{{ $note->code }}</div>
+                        <div class="col-sm-6 text-end">Date:</div>
+                        <div class="col-sm-6">{{ $note->created_at?->format('d-m-Y') }}</div>
+                        <div class="col-sm-6 text-end">CRN:</div>
+                        <div class="col-sm-6">{{ $invoice->consumer?->crn }}</div>
+                        <div class="col-sm-6 text-end">Reference Invoice:</div>
+                        <div class="col-sm-6">{{ $invoice->invoice_number}}</div>
+                    </div>
                 </div>
             </div>
             <div class="px-4">
@@ -97,10 +94,10 @@
             </div>
         </div>
         <div class="ms-2 p-2 bg-white">
-            <button class="btn btn-primary"><i class="bi bi-printer"></i>&nbsp;Print</button>
+            <button class="btn btn-primary" onclick="printDiv('printableArea')"><i class="bi bi-printer"></i>&nbsp;Print Note</button>
             <button class="btn btn-primary"><i class="bi bi-file-text"></i>&nbsp;Options</button>
             <div class="p-2">
-                <a href="{{ url('bill/invoice/' . $invoice->id) }}">
+                <a href="{{ url('bill/invoice/' . $invoice->id) }}" class="btn btn-outline-info">
                     Back to invoice - {{ $invoice->invoice_number }}
                 </a>
             </div>

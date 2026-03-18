@@ -47,7 +47,7 @@
                         <td>{{ $item->areas->count() ?? 0 }}</td>
                         <td><x-common.status :status="$item->status"/></td>
                         <td>
-                            <a href="{{ url('master/location/charge-areas/' . $item->id . '/edit') }}" class="btn btn-outline-primary btn-sm link-moda"><i class="bi bi-pencil-square"></i>&nbsp;Edit</a>
+                            <a href="{{ url('master/location/charge-areas/' . $item->id . '/edit') }}" class="btn btn-outline-primary btn-sm link-modal"><i class="bi bi-pencil-square"></i>&nbsp;Edit</a>
                         </td>
                     </tr>
                 @endforeach

@@ -4,11 +4,11 @@
 
 @section('title', 'Security Deposit Receipt')
 
-@section('page-title', 'SD Report#')
+@section('page-title', 'SD Report#'.$sd_payment->code)
 
 @section('page-content')
     <div class="d-flex align-content-md-start">
-        <div class="a4-page pb-2 border bg-white">
+        <div class="a4-page pb-2 border bg-white" id="printableArea">
             <div class="row p-4 pb-2">
                 <div class="col-sm-4 border-bottom border-success-subtle">
                     <img src="{{ asset('img/logo.png') }}" alt="MeghaGas" class="img-fluid">
@@ -17,7 +17,8 @@
                     <span class="fs-4 fw-semibold">Security Deposit Receipt</span>
                 </div>
             </div> 
-             <div class="px-4">           
+            <div class="px-4">           
+                 <img src="{{ asset('img/logo-loader.png') }}" alt="MeghaGas" width="350" class="watermark-overlay">
                 <div class="row">
                     <div class="col-sm-7">
                         <address>
@@ -127,6 +128,9 @@
                     </tbody>
                 </table>
             </div>
+        </div>
+        <div class="p-3">
+            <button class="btn btn-primary" onclick="printDiv('printableArea')"><i class="bi bi-printer"></i>&nbsp;Print Receipt</button>
         </div>
     </div>
 @endsection

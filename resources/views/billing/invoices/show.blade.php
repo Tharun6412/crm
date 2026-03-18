@@ -8,7 +8,7 @@
 
 @section('page-content')
     <div class="d-flex align-content-md-start">
-        <div class="a4-page pb-2 border bg-white">
+        <div class="a4-page pb-2 border bg-white" id="printableArea">
             <div class="row p-4">
                 <div class="col-sm-4 border-bottom border-success-subtle">
                     <img src="{{ asset('img/logo.png') }}" alt="MeghaGas" class="img-fluid">
@@ -17,15 +17,25 @@
                     <span class="fs-3 fw-semibold">INVOICE</span>
                 </div>
             </div>
+            <img src="{{ asset('img/logo-loader.png') }}" alt="MeghaGas" width="300" class="watermark-overlay">
             <div class="row px-4">
-                <div class="col-sm-8">
+                <div class="col-sm-7">
                     <address>
-                        <span class="fw-semibold">Megha Gas Distribution Privated Limited. </span><br>
+                        <span class="fw-semibold">Megha Gas Distribution Privated Limited. </span><br/>                        
                         {{-- Address component --}}
                         <x-master.gaAddress :ga-id="$invoice->consumer->ga_id"/>
                     </address>
+                    {{-- Consumer Address --}}
+                     <address>
+                        <strong>{{ $invoice->consumer->name}}</strong><br>
+                        {{ $invoice->consumer->cofDisplay?->name }} {{ $invoice->consumer->cof_name }}<br>
+                        {{ $invoice->consumer->hno }}, {{ $invoice->consumer->street }},<br>
+                        {{ $invoice->consumer->colony }}, {{ $invoice->consumer->city }},<br>
+                        {{ $invoice->consumer->district->name ?? '' }}, {{ $invoice->consumer->ga->state->name ?? '' }} - {{ $invoice->consumer->pincode }}.
+                    </address>
+                    {{-- End Consumer Address --}}
                 </div>
-                <div class="col-sm-4">
+                <div class="col-sm-5">
                     <div class="row gy-1 gx-2">
                         <div class="col-sm-6 text-end">Invoice Number:</div>
                         <div class="col-sm-6">{{ $invoice->invoice_number }}</div>
@@ -33,25 +43,15 @@
                         <div class="col-sm-6">{{ $invoice->invoice_date?->format('d-m-Y') }}</div>
                         <div class="col-sm-6 text-end">CRN:</div>
                         <div class="col-sm-6">{{ $invoice->consumer?->crn }}</div>
+                        <div class="col-sm-12 text-end">
+                            <h4 class="fw-semibold text-primary mt-2 me-5">{{ $invoice->invoiceType->name ?? '' }}</h4>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="row px-4">
-                <div class="col-sm-6">
-                    <address>
-                        <strong>{{ $invoice->consumer->name}}</strong><br>
-                        {{ $invoice->consumer->cofDisplay?->name }} {{ $invoice->consumer->cof_name }}<br>
-                        {{ $invoice->consumer->hno }}, {{ $invoice->consumer->street }},<br>
-                        {{ $invoice->consumer->colony }}, {{ $invoice->consumer->city }},<br>
-                        {{ $invoice->consumer->district->name ?? '' }}, {{ $invoice->consumer->ga->state->name ?? '' }} - {{ $invoice->consumer->pincode }}.
-                    </address>
-                </div>
-                <div class="col-sm-6 text-end">
-                    <span class="fw-semibold text-primary">{{ $invoice->invoiceType->name ?? '' }}</span>                </div>
-                </div>
-            <div class="px-4">
-                <div class="fw-semibold fs-5">Invoice items</div>
-                <table class="table table-bordered table-success">
+            <div class="bg-white px-4">
+                <div class="fw-semibold fs-5">Invoice items</div>                    
+                <table class="table table-bordered">
                     <thead class="table-success">
                         <tr>
                             <th width="1%" nowrap>No</th>
@@ -98,7 +98,10 @@
                     </tfoot>
                 </table>
             </div>
-        </div>
+            <div class="p-3 text-end" id="printDiv">
+                <button class="btn btn-primary" onclick="printDiv('printableArea')"><i class="bi bi-printer"></i>&nbsp;Print Invoice</button>
+            </div>
+        </div>        
         <div class="ms-2 p-2 bg-white">
             {{-- Child or Connected Invoices --}}
             @if ($invoice->childInvoices->count() > 0)
@@ -160,7 +163,6 @@
                     </table>
                 </div>
             @endif
-
             {{-- Credit / Debit notes --}}
             @if ($invoice->creditNotes->count() > 0)
                 <h4>Credit/Debit Notes ({{ $invoice->creditNotes->count() }})</h4>
