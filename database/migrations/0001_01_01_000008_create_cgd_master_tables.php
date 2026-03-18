@@ -363,7 +363,6 @@ return new class extends Migration
         Schema::dropIfExists('mst_pay_modules');
         Schema::dropIfExists('mst_payment_gateways');
         Schema::dropIfExists('mst_titles');
-        Schema::dropIfExists('mst_business_types');
         DB::statement('SET FOREIGN_KEY_CHECKS = 1;');
     }
 };

@@ -98,6 +98,7 @@ return new class extends Migration
             $table->id();
             $table->string('name', length:225)->nullable();
             $table->tinyInteger('status')->nullable();
+            $table->integer('type')->nullable();
             $table->timestamps();
             $table->foreignId('created_by')->nullable()->index()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();
         });

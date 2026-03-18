@@ -99,6 +99,7 @@ class Consumer extends Model
         'status_id',
         'price_group_id',
         'created_by',
+        'self_register_status',
         'updated_by',
     ];
 

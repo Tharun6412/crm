@@ -93,14 +93,14 @@ class HomeController extends Controller
             $data['consumer_data'][$count->cluster_id]['td_count'] += $count->td_count;
             $data['consumer_data'][$count->cluster_id]['pd_count'] += $count->pd_count;
         }
-        // dd($data);
+        // dd($consumer_count);
         // Render output
         return view('dashboard.home', [
             'total_count' => $data['total_count'],
             'total_postpaid' => $data['total_postpaid'],
             'total_prepaid' => $data['total_prepaid'],
-            'consumer_data' => $data['consumer_data'],
-            'consumer_segment' => $data['consumer_segment'],
+            'consumer_data' => $data['consumer_data'] ?? [],
+            'consumer_segment' => $data['consumer_segment'] ?? [],
             'clusters' => Cluster::all(),
         ]);
     }

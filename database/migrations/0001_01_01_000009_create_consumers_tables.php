@@ -63,6 +63,7 @@ return new class extends Migration
             $table->foreignId('payment_id')->nullable()->index()->constrained(table:'mst_pay_types')->noActionOnDelete()->noActionOnUpdate();
             $table->foreignId('status_id')->nullable()->index()->constrained(table:'mst_cns_status')->noActionOnDelete()->noActionOnUpdate();
             $table->foreignId('created_by')->nullable()->index()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();
+            $table->tinyInteger('self_register_status')->default(0);
             $table->foreignId('updated_by')->nullable()->index()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();
             $table->timestamps();
         });
