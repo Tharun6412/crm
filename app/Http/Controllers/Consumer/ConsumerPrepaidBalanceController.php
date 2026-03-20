@@ -20,8 +20,8 @@ class ConsumerPrepaidBalanceController extends Controller
         if($consumer->connection_type_id == 2 and !empty($consumer->activeMeter->meter_serial_no)) {
             // Data Preparation for Updated Balance
             $consumer_data = [
-                'crn' => "111260R111", //$consumer->crn,
-                'meter_serial_no' => "PG0325004103",//$consumer->activeMeter->meter_serial_no,
+                'crn' => $consumer->crn,
+                'meter_serial_no' => $consumer->activeMeter->meter_serial_no,
             ];
             // Api Response
             $response = $consumerBalance->balance($consumer_data);
@@ -47,6 +47,13 @@ class ConsumerPrepaidBalanceController extends Controller
                     'message' => "Unable to fetch details due to network"
                 ]);
             }
+        }else {
+            // Failed Response
+            return response()->json([
+                'balance' => 0, 
+                'balance_date' => Carbon::now()->toDateTimeString(), 
+                'message' => "Unable to fetch consumer details"
+            ]);
         }
     }
 } 

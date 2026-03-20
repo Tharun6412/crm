@@ -138,7 +138,7 @@
                                                 <h4 class="card-title mb-0" id="balance">{{ numberFormat($consumer->prepaidData->balance ?? 0, 2) }}</h4>
                                                 <span>Balance</span>
                                                 <span class="text-body-tertiary">|</span>
-                                                <small id="balance_date">Balance Date: &nbsp;&nbsp; <a type="button" onclick="getPrepaidBalance({{ $consumer->id }})"><i class="bi bi-arrow-repeat fs-4 text-primary"></i></a></small>
+                                                <small id="balance_date">Balance Date: &nbsp;&nbsp;</small><a type="button" onclick="getPrepaidBalance({{ $consumer->id }})"><i class="bi bi-arrow-repeat fs-4 text-primary"></i></a>
                                                 <small class="text-danger" id="message"></small>
                                             </div>
                                             <div class="p-2 text-end"><i class="bi bi-wallet fs-3"></i></div>

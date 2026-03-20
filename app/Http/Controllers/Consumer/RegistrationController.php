@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Consumer;
 
 use App\Enums\AwsPath;
 use App\Enums\ConsumerStatus as EnumsConsumerStatus;
+use App\Enums\SegmentType;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Master\DocumentCentre\DocumentUpload;
 use App\Http\Requests\Consumer\RegistrationValidationRequest;
@@ -56,7 +57,7 @@ class RegistrationController extends Controller
         // dd($request->all());
         // Data Preparation
         $add_consumer = Consumer::create([
-            'segment_id' => 1,
+            'segment_id' => SegmentType::DOMESTIC->value,
             'connection_type_id' => $request->connection_type,
             'title' => $request->title,
             'fname' => $request->fname,

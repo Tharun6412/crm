@@ -137,6 +137,7 @@ class MasterConsumerDataSeeder extends Seeder
            ['id' => '29', 'name' => 'Load Assessment Sheet', 'type' => '4'],
            ['id' => '30', 'name' => 'Offer', 'type' => '4'],
            ['id' => '31', 'name' => 'GSA', 'type' => '4'],
+           ['id' => '32', 'name' => 'Application Form', 'type' => '1'],
         ]);
 
         // mst cns meter status
