@@ -20,7 +20,7 @@
                         <ul class="list-group list-group-horizontal list-group-flush">
                             @foreach ($module->recursiveActiveChilds as $sub_module)
                                 <li class="list-group-item border-0">
-                                    <a href="{{ url($sub_module->url) }}">
+                                    <a href="{{ url($sub_module->url) }}" class="btn btn-outline-success btn-lg">
                                         <i class="bi {{ $sub_module->icon }}"></i>&nbsp;{{ $sub_module->name }}
                                     </a>
                                 </li>

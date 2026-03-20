@@ -8,7 +8,7 @@
         </span>
         @endisset
     </button>
-    <ul class="dropdown-menu bg-light" style="min-width: 250px; max-height: 320px; overflow-y: auto;">
+    <ul class="dropdown-menu bg-white">
         <li class="dropdown-item">
             <input type="checkbox" class="form-check-input" id="stage_id_all">
             <label for="stage_id_all" class="form-check-label">All or clear</label>

@@ -6,7 +6,7 @@
             <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle"></span>
         @endif
     </button>
-    <div class="dropdown-menu p-3 bg-light">
+    <div class="dropdown-menu p-3 bg-white">
         <label for="created_at" class="form-label">Date from:</label>
         <div class="input-group input-group-sm">
             <input type="text" name="date_from" id="date_from" class="form-control" placeholder="DD-MM-YYYY" value="{{ request()->get('date_from') }}">

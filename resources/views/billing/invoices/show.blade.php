@@ -98,7 +98,7 @@
                     </tfoot>
                 </table>
             </div>
-            <div class="p-3 text-end" id="printDiv">
+             <div class="p-3 text-end" id="printDiv">
                 <button class="btn btn-primary" onclick="printDiv('printableArea')"><i class="bi bi-printer"></i>&nbsp;Print Invoice</button>
             </div>
         </div>        

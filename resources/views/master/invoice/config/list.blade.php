@@ -15,10 +15,10 @@
         <h4>Taxes</h4>
         @if ($taxes->count() > 0)
             <div class="table-responsive">
-                <table class="table table-bordered table-primary">
+                <table class="table table-bordered bg-white">
                     <thead class="table-primary">
                         <tr>
-                            <th width="1%" nowrap>S No</th>
+                            <th width="1%" nowrap>S.No</th>
                             <th>Tax</th>
                             <th>Group</th>
                         </tr>
@@ -26,7 +26,7 @@
                     <tbody>
                         @foreach ($taxes as $tax)
                             <tr>
-                                <td>{{ $loop->iteration }}</td>
+                                <td class="text-center">{{ $loop->iteration }}</td>
                                 <td>{{ $tax->name }}</td>
                                 <td>{{ $tax->taxGroup->name ?? '' }}</td>
                             </tr>
@@ -39,14 +39,14 @@
         {{-- Invoice Number TAX Counter --}}
         <div class="d-flex justify-content-between mb-2">
             <h4>Invoice Numbering</h4>
-            <a href="{{ url('master/invoice/configuration/create') }}" class="btn btn-success btn-sm link-modal">
+            <a href="{{ url('master/invoice/configuration/create') }}" class="btn btn-outline-success link-modal">
                 <i class="bi bi-plus-lg"></i>&nbsp;Add
             </a>
         </div>
         @if ($invoice_numbering->count() > 0)
             <div class="table-responsive">
-                <table class="table table-bordered table-primary">
-                    <thead class="table-primary">
+                <table class="table table-bordered bg-white">
+                    <thead class="table-success">
                         <tr>
                             <th width="1%" nowrap>S No</th>
                             <th>State</th>
@@ -60,7 +60,7 @@
                     <tbody>
                         @foreach ($invoice_numbering as $item)
                             <tr>
-                                <td>{{ $loop->iteration }}</td>
+                                <td class="text-center">{{ $loop->iteration }}</td>
                                 <td>{{ $item->state->name ?? '' }}</td>
                                 <td>{{ $item->taxGroup->name ?? '' }}</td>
                                 <td>{{ $item->invoice_code ?? '' }}</td>

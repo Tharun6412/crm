@@ -24,7 +24,7 @@ class SDReportController extends Controller
     {
         // Get GeoAreas
         $geo_areas = Ga::where('status', 1)->orderBy('position')->get();
-        $schemes = MasterConsumerScheme::select('id', 'code')->where('status', 1)->get();
+        $schemes = MasterConsumerScheme::select('id', 'code', 'security', 'consumption', 'total_deposit')->where('status', 1)->get();
         if($request->ajax()) {
             // Validation
             if(($request->filter_name == "show") AND empty($request->date_from) AND empty($request->date_to)) {

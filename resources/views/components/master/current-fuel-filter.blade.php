@@ -8,9 +8,9 @@
         </span>
         @endisset
     </button>
-    <ul class="dropdown-menu bg-light" style="min-width: 250px; max-height: 320px; overflow-y: auto;">
+    <ul class="dropdown-menu bg-white" style="min-width: 250px; max-height: 320px; overflow-y: auto;">
         {{-- Search Box --}}
-        <li class="dropdown-item p-0 mb-2 position-sticky top-0 bg-light">
+        <li class="dropdown-item p-0 mb-2 position-sticky top-0 bg-light p-1">
             <input type="text" class="form-control form-control-sm" id="fuel_search" placeholder="Search...">
         </li>
         <li class="dropdown-item">

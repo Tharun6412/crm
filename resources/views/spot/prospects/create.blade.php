@@ -71,8 +71,8 @@
                     <div class="row mb-2">
                         <label for="fuel_consumption" class="col-sm-3 col-form-label text-end">Fuel Consumption<span>&nbsp;:</span></label>
                         <div class="col-sm-8">
-                            <div class="input-group input-group-sm">
-                                <input type="text" name="fuel_consumption" id="fuel_consumption" class="form-control form-control-sm" value="" placeholder="Enter Fuel Consumption">
+                            <div class="input-group">
+                                <input type="text" name="fuel_consumption" id="fuel_consumption" class="form-control" value="" placeholder="Enter Fuel Consumption">
                                 <select name="unit_id" id="unit_id" class="form-select form-select-sm">
                                     <option value="">Select Unit</option>
                                     <option value="1">Liters</option>
@@ -85,8 +85,8 @@
                     <div class="row mb-2"> 
                         <label for="potential" class="col-sm-3 col-form-label text-end">Total Potential<span>&nbsp;:</span></label>
                         <div class="col-sm-8">
-                            <div class="input-group input-group-sm">
-                                <input type="text" name="potential" id="potential" class="form-control form-control-sm" value="" placeholder="Enter Potential">
+                            <div class="input-group">
+                                <input type="text" name="potential" id="potential" class="form-control" value="" placeholder="Enter Potential">
                                 <span class="input-group-text">SCMD</span>
                             </div>
                         </div>
@@ -94,7 +94,7 @@
                     <div class="row mb-2">
                         <label class="col-form-label col-sm-3 text-end">Expected date&nbsp;<span class="error text-danger"></span>&nbsp;:</label>
                         <div class="col-sm-8">
-                            <div class="input-group input-group-sm">
+                            <div class="input-group">
                                 <input type="text" name="expected_date" id="expected_date" class="form-control" value="" placeholder="DD-MM-YYYY">
                                 <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
                             </div>
@@ -103,16 +103,16 @@
                     <div class="row mb-2">
                         <label class="col-form-label col-sm-3 text-end">Latitude<span class="error text-danger"></span>&nbsp;:</label>
                         <div class="col-sm-8">
-                            <div class="input-group input-group-sm">
-                                <input type="text" name="latitude" id="latitude" class="form-control form-control-sm" value="" placeholder="Enter Latitude">
+                            <div class="input-group">
+                                <input type="text" name="latitude" id="latitude" class="form-control" value="" placeholder="Enter Latitude">
                             </div>
                         </div>
                     </div>
                     <div class="row mb-2">
                         <label class="col-form-label col-sm-3 text-end">Longitude<span class="error text-danger"></span>&nbsp;:</label>
                         <div class="col-sm-8">
-                            <div class="input-group input-group-sm">
-                                <input type="text" name="longitude" id="longitude" class="form-control form-control-sm" value="" placeholder="Enter Longitude">
+                            <div class="input-group">
+                                <input type="text" name="longitude" id="longitude" class="form-control" value="" placeholder="Enter Longitude">
                             </div>
                         </div>
                     </div>
@@ -151,7 +151,7 @@
                         <label class="col-form-label col-sm-3 text-end">Notes&nbsp;<span class="error text-danger"></span>&nbsp;:</label>
                         <div class="col-sm-8">
                             <div class="input-group input-group-sm">
-                                <textarea name="notes" id="notes" class="form-control form-control-sm" placeholder="Enter Notes"></textarea>
+                                <textarea name="notes" id="notes" class="form-control" placeholder="Enter Notes"></textarea>
                             </div>
                         </div>
                     </div>

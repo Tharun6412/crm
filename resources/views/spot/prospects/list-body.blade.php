@@ -44,7 +44,7 @@
         $i = (($prospects->currentPage() - 1) * $prospects->perPage())+1;
     @endphp
     <!-- Display prospects list -->
-    <table class="table table-bordered table-hover bg-white page-sort">
+    <table class="table table-bordered table-hover bg-white page-sort align-middle">
         <thead class="table-success">
             <tr>
                 <th nowrap>S No.</th>

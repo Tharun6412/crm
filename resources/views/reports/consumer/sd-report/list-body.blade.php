@@ -22,8 +22,8 @@
                     @php
                         $consumer_count[$scheme->id] = 0;
                     @endphp
-                    <th class="text-end" title="{{ $scheme->name }}">{{ $scheme->code }}</th>
-                @endforeach
+                    <th class="text-end" title="{{ $scheme->name }}"><button type="button" class="btn btn-outline-primary" data-bs-toggle="popover"  data-bs-trigger="hover focus" data-bs-placement="top" data-bs-title="Scheme details" data-bs-content="{{ 'Security : '.$scheme->security }}<br/>{{ 'Consumption: '.$scheme->consumption }}<br/>{{ 'Total Deposit: '.$scheme->total_deposit }}">{{ $scheme->code }}</button></th>
+                    @endforeach
             </tr>
         </thead>
         <tbody>
@@ -80,3 +80,4 @@
         </tbody>
     </table>
 </div>
+@include('scripts.bs-popover')

@@ -12,10 +12,10 @@
 @section('page-content')
     <div>
         @if ($addresses->count() > 0)
-            <table class="table table-bordered table-primary">
-                <thead class="table-primary">
+            <table class="table table-bordered table-striped align-middle bg-white">
+                <thead class="table-success">
                     <tr>
-                        <th width="1%" nowrap>S No</th>
+                        <th width="1%" nowrap>S.No</th>
                         <th>GA</th>
                         <th>Address</th>
                         <th>Actions</th>
@@ -24,7 +24,7 @@
                 <tbody>
                     @foreach ($addresses as $address)
                         <tr>
-                            <td>{{ $loop->iteration }}</td>
+                            <td class="text-center">{{ $loop->iteration }}</td>
                             <td>{{ $address->ga->name }}</td>
                             <td>
                                 {{ $address->line1 }},<br>
@@ -33,9 +33,8 @@
                                 {{ $address->state->name ?? '' }} - {{ $address->pincode }}.
                             </td>
                             <td>
-                                <a href="{{ url('master/invoice/addresses/' . $address->id) }}" class="link-canvas">View</a>
-                                &nbsp;|&nbsp;
-                                <a href="{{ url('master/invoice/addresses/' . $address->id . '/edit') }}" class="link-modal">Edit</a>
+                                <a href="{{ url('master/invoice/addresses/' . $address->id) }}" class="link-canvas btn btn-outline-info">View</a>
+                                <a href="{{ url('master/invoice/addresses/' . $address->id . '/edit') }}" class="link-modal btn btn-outline-info">Edit</a>
                             </td>
                         </tr>
                     @endforeach

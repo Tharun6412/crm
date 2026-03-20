@@ -8,7 +8,7 @@
         </span>
         @endisset
     </button>
-    <ul class="dropdown-menu bg-light" style="min-width: 250px; max-height: 320px; overflow-y: auto;">
+    <ul class="dropdown-menu bg-white" style="min-width: 250px; max-height: 320px; overflow-y: auto;">
         @if(request()->geo_area)    
             <li class="dropdown-item">
                 <input type="checkbox" class="form-check-input" id="industrial_area_id_all">
