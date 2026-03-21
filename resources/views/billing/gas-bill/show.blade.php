@@ -111,7 +111,7 @@
                                                         </tr>
                                                         <tr>
                                                             <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">1.2</td>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">VAT Value @ {{ numberFormat($invoice->taxvalue,2) }}%&nbsp;{{ __('bill.vat_value') }}</td>
+                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">VAT Value @ {{ numberFormat($invoice->tax_value,2) }}%&nbsp;{{ __('bill.vat_value') }}</td>
                                                             <td style="text-align: right;border-bottom: 1px solid #000000;">{{ $invoice->tax_amount }}</td>
                                                         </tr>
                                                         <tr>

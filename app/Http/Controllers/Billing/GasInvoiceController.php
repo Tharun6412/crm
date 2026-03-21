@@ -199,10 +199,12 @@ class GasInvoiceController extends Controller
             'prev_reading' => $request->start_reading,
             'curr_reading' => $request->end_reading,
             'consumption' => 0,
+            'cf' => Constants::CORRECTION_FACTOR->value,
             'old_consumption' => 0,
             'net_consumption' => 0,
             'unit_price' => $prices->avg('basic_price'), // average price.
             'meter_change_id' => $meterChangeId,
+            'total_price' => 0,
             'file_id' => NULL,
         ];
         // 4. Calling of insertion method from the same controller. 
@@ -284,10 +286,12 @@ class GasInvoiceController extends Controller
             'prev_reading' => $request->start_reading,
             'curr_reading' => $request->end_reading,
             'consumption' => $total_consumption,
+            'cf' => $cf,
             'old_consumption' => $old_consumption,
             'net_consumption' => $net_consumption,
             'unit_price' => $price->basic_price, // single price.
             'meter_change_id' => $meterChangeId,
+            'total_price' => $inv_base_amt,
             'file_id' => NULL,
         ];
         // 5. Calling of insertion method from the same controller.
@@ -366,10 +370,12 @@ class GasInvoiceController extends Controller
             'prev_reading' => $request->start_reading,
             'curr_reading' => $request->end_reading,
             'consumption' => $total_consumption,
+            'cf' => $cf,
             'old_consumption' => $old_consumption,
             'net_consumption' => $net_consumption,
             'unit_price' => $avg_price, // average price.
             'meter_change_id' => $meterChangeId,
+            'total_price' => $inv_base_amt,
             'file_id' => NULL,
         ];
 

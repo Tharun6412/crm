@@ -61,7 +61,7 @@ return new class extends Migration
             $table->double('prev_reading')->nullable();
             $table->double('curr_reading')->nullable();
             $table->double('consumption')->nullable();
-            $table->double('cf')->nullable();
+            $table->double('cf')->default(1);
             $table->foreignId('meter_change_id')->index()->nullable()->constrained(table:'cns_meter_changes')->noActionOnDelete()->noActionOnUpdate();
             $table->double('old_consumption')->nullable();
             $table->double('net_consumption')->nullable();

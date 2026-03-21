@@ -49,17 +49,21 @@ class InvoiceController extends Controller
     {
         // Find Invoice
         $invoice = BillInvoice::with([
-            'consumer:id,fname,lname,crn,ga_id,district_id,status_id,segment_id',
+            'consumer:id,fname,lname,crn,ga_id,state_id,district_id,status_id,segment_id,hno,street,colony,city,ward,pincode',
+            'consumer.state:id,name',
             'consumer.ga:id,name',
             'consumer.district:id,name',
             'consumer.status:id,name',
             'consumer.segment:id,name',
+            'consumer.activeMeter:id,consumer_id,meter_no,meter_serial_no,status',
+            'consumer.activeMeter.meterStatus:id,name',
             'invoiceType:id,name',
             'status:id,name',
             'tax:id,name',
             'items:id,invoice_id,item_id,description,quantity,unit_price,total_price',
             'items.item:id,name',
-            'consumption:id,invoice_id,meter_id,date_from,date_to,prev_reading,curr_reading,net_consumption,unit_price',
+            'consumption:id,invoice_id,meter_id,date_from,date_to,prev_reading,curr_reading,old_consumption,net_consumption,unit_price,total_price,cf',
+            'consumption.consumptionDetails',
             'creditNotes',
             'childInvoices:id,invoice_number,invoice_date,payable_amount,paid_amount,balance_amount,status_id,parent_invoice_id',
             'parentInvoice:id,invoice_number',
