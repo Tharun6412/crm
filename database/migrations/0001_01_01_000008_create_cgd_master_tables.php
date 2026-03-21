@@ -228,6 +228,12 @@ return new class extends Migration
             $table->string('name', length:60)->nullable();
             $table->timestamps();
         });
+        // mst cmp tags
+        Schema::create('mst_cmp_tags', function(Blueprint $table) {
+            $table->id();
+            $table->string('name', length:60)->nullable();
+            $table->timestamps();
+        });
         // mst cmp segments
         Schema::create('mst_cmp_segments', function(Blueprint $table) {
             $table->id();
@@ -262,6 +268,7 @@ return new class extends Migration
             $table->foreignId('type_id')->nullable()->index()->constrained(table:'mst_cmp_types')->noActionOnDelete()->noActionOnUpdate();
             $table->foreignId('department_id')->nullable()->index()->constrained(table:'mst_departments')->noActionOnDelete()->noActionOnUpdate();
             $table->foreignId('parent_id')->nullable()->constrained('mst_cmp_categories')->nullOnDelete();
+            $table->foreignId('tag_id')->nullable()->index()->constrained(table:'mst_cmp_tags')->noActionOnDelete()->noActionOnUpdate();
             $table->integer('position')->nullable();
             $table->boolean('status')->nullable();
             $table->foreignId('created_by')->nullable()->index()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();

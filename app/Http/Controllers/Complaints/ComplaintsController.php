@@ -48,12 +48,29 @@ class ComplaintsController extends Controller
         })
         ->when($request->filled('key'), function ($q) use($request) {
             $q->whereAny(['code'], 'like', '%' . $request->key . '%');
+            $q->orWhereHas('consumer', function ($subQuery) use ($request) {
+                $subQuery->where('crn', 'like', '%' . $request->key . '%')
+                        ->orWhere('name', 'like', '%' . $request->key . '%');
+            });
         })
         ->when($request->has('segment_id'), function($q) use($request) {
             $q->whereIn('segment_id', $request->segment_id);
         })
         ->when($request->has('cmp_status'), function($q) use($request) {
             $q->whereIn('status_id', $request->cmp_status);
+        })
+        ->when($request->filled('subcategory'), function($q) use($request) {
+            $q->whereIn('category_id', $request->subcategory);
+        })
+        ->when($request->filled('category') && !$request->filled('subcategory'), function($q) use($request) {
+            $subIds = ComplaintCategory::whereIn('parent_id', $request->category)->pluck('id');
+            $q->whereIn('category_id', $subIds);
+        })
+        ->when($request->has('geo_area'), function($q) use($request) {
+            $q->whereIn('ga_id', $request->geo_area);
+        })
+        ->when((!empty($request->date_from) and !empty($request->date_to)), function($q) use($request) {
+            $q->whereBetween('created_at', [Carbon::createFromFormat('d-m-Y', $request->date_from)->startOfDay()->toDateTimeString(), Carbon::createFromFormat('d-m-Y', $request->date_to)->endOfDay()->toDateTimeString()]);
         })
         ->orderBy($sortBy, $sortOr)->paginate($records)->withQueryString();
         

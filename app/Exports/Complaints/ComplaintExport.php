@@ -3,6 +3,7 @@
 namespace App\Exports\Complaints;
 
 use App\Models\Complaint\Complaint;
+use App\Models\Master\ComplaintCategory;
 use Carbon\Carbon;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromQuery;
@@ -28,14 +29,34 @@ class ComplaintExport implements FromQuery, WithHeadings, WithMapping
     {
         $sortBy = ($this->request->get('sortBy')) ? $this->request->get('sortBy') : 'created_at';
         $sortOr = ($this->request->get('sortOr')) ? $this->request->get('sortOr') : 'desc';
-        $complaints = Complaint::when($this->request->filled('key'), function ($q) {
+        $complaints = Complaint::when((!isAdmin() AND !isSuperAdmin()), function ($q) {
+                $q->whereIn('ga_id', session('user')['gas']);
+            })
+            ->when($this->request->filled('key'), function ($q) {
                 $q->whereAny(['code'], 'like', '%' . $this->request->key . '%');
+                $q->orWhereHas('consumer', function ($subQuery) {
+                    $subQuery->where('crn', 'like', '%' . $this->request->key . '%')
+                            ->orWhere('name', 'like', '%' . $this->request->key . '%');
+                });
             })
             ->when($this->request->has('segment_id'), function($q) {
                 $q->whereIn('segment_id', $this->request->segment_id);
             })
             ->when($this->request->has('cmp_status'), function($q) {
                 $q->whereIn('status_id', $this->request->cmp_status);
+            })
+            ->when($this->request->filled('subcategory'), function($q) {
+                $q->whereIn('category_id', $this->request->subcategory);
+            })
+            ->when($this->request->filled('category') && !$this->request->filled('subcategory'), function($q) {
+                $subIds = ComplaintCategory::whereIn('parent_id', $this->request->category)->pluck('id');
+                $q->whereIn('category_id', $subIds);
+            })
+            ->when($this->request->has('geo_area'), function($q) {
+                $q->whereIn('ga_id', $this->request->geo_area);
+            })
+            ->when((!empty($request->date_from) and !empty($request->date_to)), function($q) {
+                $q->whereBetween('created_at', [Carbon::createFromFormat('d-m-Y', $this->request->date_from)->startOfDay()->toDateTimeString(), Carbon::createFromFormat('d-m-Y', $this->request->date_to)->endOfDay()->toDateTimeString()]);
             })
             ->orderBy($sortBy, $sortOr);
         return $complaints;
@@ -46,7 +67,7 @@ class ComplaintExport implements FromQuery, WithHeadings, WithMapping
      */
     public function headings():array
     {
-        return ['S.No', 'GA', 'Complaint Number', 'Category', 'CRN', 'Name', 'Segment', 'Estimated Close Date', 'Closed Date', 'Priority', 'Status', 'Added Date'];
+        return ['S.No', 'GA', 'Complaint Number', 'Category', 'Sub Category', 'CRN', 'Name', 'Segment', 'Raised Date' , 'Estimated Close Date', 'Closed Date', 'Deviation', 'Priority', 'Status'];
     }
 
     /**
@@ -65,15 +86,17 @@ class ComplaintExport implements FromQuery, WithHeadings, WithMapping
             $this->i,
             $complaint->ga->name ?? '',
             $complaint->code,
+            $complaint->category->parent->name,
             $complaint->category->name,
             $complaint->consumer->crn,
             ($complaint->consumer_id > 0) ? $complaint->consumer->name : $complaint->name,
             $complaint->segment->name,
-            $complaint->estimated_closed_at?->format('d-m-y H:i')." ".$difference,
+            dateFormat($complaint->created_at),
+            $complaint->estimated_closed_at?->format('d-m-y H:i'),
             dateFormat($complaint->closed_at) ?? '',
+            $difference,
             $complaint->priority->name,
             $complaint->status->name,
-            dateFormat($complaint->created_at),
         ];
     }
 }

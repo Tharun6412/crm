@@ -31,9 +31,14 @@
         <thead class="table-success">
             <tr>
                 <th width="1%" nowrap>S No</th>
-                <th>GA</th>
+                <th>GA <x-master.ga-filter class="float-end"/></th>
                 <th>#Complaint</th>
-                <th>Category</th>
+                <th>Category <x-master.complaint-category-filter class="float-end"/></th>
+                <th nowrap>Sub Category
+                    @if (request()->has('category'))
+                        <x-master.complaint-sub-category-filter class="float-end" />
+                    @endif
+                </th>
                 <th>CRN</th>
                 <th>Consumer</th>
                 <th>
@@ -42,19 +47,20 @@
                         <x-complaint.segment-filter  class="float-end"/>
                     </div>                   
                 </th>
+                <th nowrap>
+                    <div class="d-flex">
+                        <div>Raised Date</div>
+                        <x-master.date-filter  class="float-end" />
+                    </div> 
+                </th>
                 <th nowrap>Est. Close Date</th>
                 <th nowrap>Closed Date</th>
+                <th nowrap>Deviation</th>
                 <th nowrap>Priority</th>
                 <th nowrap>
                     <div class="d-flex">
                         <div>Status</div>
                         <x-complaint.statusFilter class="float-end" />
-                    </div> 
-                </th>
-                <th nowrap>
-                    <div class="d-flex">
-                        <div>Created At</div>
-                        <x-master.date-filter  class="float-end" />
                     </div> 
                 </th>
                 <th width="2%" nowrap>Actions</th>
@@ -84,20 +90,21 @@
                         <td nowrap>
                             <x-auth.link href="{{ url('calls/'.$complaint->id) }}" class="link-modal">{{ $complaint->code }}</x-auth.link>
                         </td>
+                        <td nowrap>{{ $complaint->category->parent->name }}</td>
                         <td nowrap>{{ $complaint->category->name }}</td>
                         <td nowrap>
                             <x-auth.link href="{{ url('consumers/' . $complaint->consumer_id) }}" target="_blank">{{ $complaint->consumer->crn }}</x-auth.link>
                         </td>
                         <td nowrap>{{ ($complaint->consumer_id > 0) ? $complaint->consumer->name : $complaint->name }}</td>
                         <td nowrap>{{ $complaint->segment->name }}</td>
+                        <td nowrap>{{ dateFormat($complaint->created_at) }}</td>
                         <td nowrap>
                             {{ $complaint->estimated_closed_at?->format('d-m-y H:i') }}
-                            <br/><x-complaint.day-hour-display :complaint="$complaint"/>
                         </td>
                         <td nowrap>{{ $complaint->closed_at?->format('d-m-Y H:i') }}</td>
+                        <td><x-complaint.day-hour-display :complaint="$complaint"/></td>
                         <td nowrap>{{ $complaint->priority->name }}</td>
                         <td nowrap><x-complaint.status :status="$complaint->status"/></td>
-                        <td nowrap>{{ dateFormat($complaint->created_at) }}</td>
                         <td>
                             {{-- list actions --}}
                             <div class="dropdown">

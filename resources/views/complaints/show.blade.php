@@ -19,13 +19,15 @@
                 <div class="col-sm-4">{{ $complaint->category->parent->name }}</div>
                 <div class="col-sm-2 text-end fw-semibold">Department : </div>
                 <div class="col-sm-4">{{ $complaint->category->department->name }}</div>
+                <div class="col-sm-2 text-end fw-semibold">Tag : </div>
+                <div class="col-sm-4">{{ $complaint->category->tag?->name }}</div>
                 <div class="col-sm-2 text-end fw-semibold">Sub Category : </div>
                 <div class="col-sm-4">{{ $complaint->category->name }}</div>
                 <div class="col-sm-2 text-end fw-semibold">Resolution : </div>
                 <div class="col-sm-4">
                     {{ $complaint->category->resolution }}&nbsp;{{ ($complaint->category->resolution_type == 1) ? "Days" : "Hours" }}
                 </div>
-                <div class="col-sm-6"></div>
+                {{-- <div class="col-sm-6"></div> --}}
                 <div class="col-sm-2 text-end fw-semibold">Rating : </div>
                 <div class="col-sm-4">
                     @if ($complaint->feedback)

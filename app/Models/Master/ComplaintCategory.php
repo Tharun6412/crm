@@ -28,6 +28,7 @@ class ComplaintCategory extends Model
         'type_id',
         'department_id',
         'parent_id',
+        'tag_id',
         'position',
         'status',
         'created_by',
@@ -80,5 +81,12 @@ class ComplaintCategory extends Model
     public function updatedBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'updated_by');
+    }
+    /**
+     * Relation with Tag
+     */
+    public function tag(): BelongsTo
+    {
+        return $this->belongsTo(ComplaintTag::class, 'tag_id');
     }
 }

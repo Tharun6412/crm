@@ -31,11 +31,15 @@
             </tr>
             <tr>
                 <td><span class="fw-semibold">Segment :</span>&nbsp;{{ $complaint->segment->name ?? '' }}</td>
-                <td><span class="fw-semibold">Est. Closed Date :</span>&nbsp;{{ $complaint->estimated_closed_at?->format('d-m-Y H:i') }} <x-complaint.day-hour-display :complaint="$complaint"/></td>
+                <td><span class="fw-semibold">Est. Closed Date :</span>&nbsp;{{ $complaint->estimated_closed_at?->format('d-m-Y H:i') }}</td>
             </tr>
             <tr>
                 <td><span class="fw-semibold">Raised Date :</span>&nbsp;{{ $complaint->created_at->format('d-m-Y') }}</td>
                 <td><span class="fw-semibold">Closed Date :</span>&nbsp;{{ $complaint->closed_at?->format('d-m-Y H:i') }}</td>
+            </tr> 
+             <tr>
+                <td><span class="fw-semibold">&nbsp;</td>
+                <td><span class="fw-semibold">Deviation :</span>&nbsp;<x-complaint.day-hour-display :complaint="$complaint"/></td>
             </tr>  
         </table>
     </div>
