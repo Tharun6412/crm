@@ -80,7 +80,8 @@
                     @php
                         if ($complaint->category->resolution_type == 1) {
                             $difference = ceil(abs($now->diffInDays(\Carbon\Carbon::parse($complaint->estimated_closed_at))))."D";
-                        }else {
+                        }
+                        else {
                             $difference = numberFormat(abs($now->diffInHours(\Carbon\Carbon::parse($complaint->estimated_closed_at))), 2)."H";
                         }
                     @endphp
@@ -102,7 +103,7 @@
                             {{ $complaint->estimated_closed_at?->format('d-m-y H:i') }}
                         </td>
                         <td nowrap>{{ $complaint->closed_at?->format('d-m-Y H:i') }}</td>
-                        <td><x-complaint.day-hour-display :complaint="$complaint"/></td>
+                        <td class="text-center"><x-complaint.day-hour-display :complaint="$complaint"/></td>
                         <td nowrap>{{ $complaint->priority->name }}</td>
                         <td nowrap><x-complaint.status :status="$complaint->status"/></td>
                         <td>

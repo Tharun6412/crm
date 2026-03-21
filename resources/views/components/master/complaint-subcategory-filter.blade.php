@@ -17,14 +17,17 @@
             @php
                 $subcategory_checked = (request()->has('subcategory')) ? request()->get('subcategory') : [];
             @endphp
-                {{-- <li class="list-group-item fw-bold">
-                    {{ $item->parent->name }}
-                </li> --}}
-            @foreach ($sub_categories as $item)
-                <li class="list-group-item">
-                    <input type="checkbox" class="form-check-input subcategory_filter" name="subcategory[{{ $item->id }}]" id="subcategory_{{ $item->id }}" value="{{ $item->id }}" @checked(in_array($item->id, $subcategory_checked))>
-                    <label for="subcategory_{{ $item->id }}" class="form-check-label">{{ $item->name }}</label>
-                </li>
+            
+            @foreach ($categories as $category)
+                <li class="list-group-item fw-semibold">{{ $category->name }}</li>
+                @if ($category->children->count() > 0)
+                    @foreach ($category->children as $item)
+                        <li class="list-group-item">
+                            <input type="checkbox" class="form-check-input subcategory_filter" name="subcategory[{{ $item->id }}]" id="subcategory_{{ $item->id }}" value="{{ $item->id }}" @checked(in_array($item->id, $subcategory_checked))>
+                            <label for="subcategory_{{ $item->id }}" class="form-check-label">{{ $item->name }}</label>
+                        </li>
+                    @endforeach
+                @endif
             @endforeach
         </ul>
     </div>

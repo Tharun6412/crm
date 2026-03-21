@@ -25,9 +25,9 @@ class ComplaintSubCategoryFilter extends Component
         // Get all complain sub categories
         $sub_categories = [];
         if(request()->has('category')) {
-            $category = request()->get('category');
-            $sub_categories = ComplaintCategory::whereIn('parent_id', $category)->get();
+            $category = request()->category;
+            $categories = ComplaintCategory::whereIn('id', $category)->get();
         }
-        return view('components.master.complaint-subcategory-filter', ['sub_categories' => $sub_categories]);
+        return view('components.master.complaint-subcategory-filter', ['categories' => $categories]);
     }
 }

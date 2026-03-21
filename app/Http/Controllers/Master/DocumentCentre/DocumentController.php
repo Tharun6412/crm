@@ -123,7 +123,7 @@ class DocumentController extends Controller
         // Upload process
         if($request->file('file')) {
             $file_name = $request->file->getClientOriginalName();
-            $upload_path = 'proposals/' . date('ym');
+            $upload_path = 'general/' . date('ym');
             // Upload only in production
             
             if(config('app.env') == 'production') {
