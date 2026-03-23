@@ -21,9 +21,9 @@
     </div>
     <div class="col-auto">
         @if($refunds_list->count() > 0)
-            <a href="{{ url('reports/consumer/refundReportExport') }}?{{ http_build_query(request()->all()) }}" class="btn btn-primary btn-sm">
+            <x-auth.link href="{{ url('reports/consumer/refundReportExport') }}?{{ http_build_query(request()->all()) }}" class="btn btn-primary btn-sm" action="exprt">
                 <i class="bi bi-file-earmark-excel"></i>&nbsp;Export
-            </a>
+            </x-auth.link>
         @endif
     </div>
 </div>

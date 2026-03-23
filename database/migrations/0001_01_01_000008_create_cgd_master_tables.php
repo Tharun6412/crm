@@ -361,6 +361,7 @@ return new class extends Migration
         Schema::dropIfExists('mst_price_history');
         Schema::dropIfExists('mst_price');
         Schema::dropIfExists('mst_taxes');
+        Schema::dropIfExists('mst_cmp_tags');
         Schema::dropIfExists('mst_tax_groups');
         Schema::dropIfExists('mst_bil_invoice_item_types');
         Schema::dropIfExists('mst_pay_transaction_status');

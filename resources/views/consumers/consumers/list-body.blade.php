@@ -22,7 +22,7 @@
         <button type="button" class="btn btn-outline-warning" onclick="$('#filterArea').toggleClass('d-none')">
             <i class="bi bi-funnel"></i>
         </button>
-        <x-auth.link href="{{ url('consumers/consumerExport') }}?{{ http_build_query(request()->all()) }}" class="btn btn-outline-primary" action="export">
+        <x-auth.link href="{{ url('consumers/consumerExport') }}?{{ http_build_query(request()->all()) }}" class="btn btn-outline-primary" action="exprt">
             <i class="bi bi-file-earmark-excel"></i>&nbsp;Export
         </x-auth.link>
     </div>

@@ -26,7 +26,7 @@
                         <label for="department_id" class="col-sm-2 col-form-label text-end">Department</label>
                         <div class="col-sm-9">
                             <select name="department_id" id="department_id" class="form-select">
-                                <option value="">Select Departmentg</option>
+                                <option value="">Select Department</option>
                                 @foreach ($departments as $item)
                                     <option value="{{ $item->id }}" @selected($category->department_id == $item->id)>{{ $item->name }}</option>
                                 @endforeach

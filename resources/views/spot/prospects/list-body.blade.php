@@ -26,9 +26,9 @@
         {{-- Right Section --}}
         <div class="d-flex align-items-center gap-2">
             @if ($prospects->count() > 0)    
-                <a href="{{ url('spot/prospects/prospectsExport') }}?{{ http_build_query(request()->all()) }}" class="btn btn-outline-primary">
+                <x-auth.link href="{{ url('spot/prospects/prospectsExport') }}?{{ http_build_query(request()->all()) }}" class="btn btn-outline-primary" action="exprt">
                     <i class="bi bi-file-earmark-excel"></i>&nbsp;Export
-                </a>
+                </x-auth.link>
             @endif
             <a href="{{ url('spot/prospects/create') }}" class="btn btn-outline-success link-modal">
                 <i class="bi bi-plus-lg"></i>&nbsp;Create
@@ -212,7 +212,7 @@
                                         </li>
                                         @if (isAdmin() OR isClusterHead())    
                                             <li>
-                                                <x-auth.link class="dropdown-item link-modal" href="{{ url('spot/prospectStatus/cancel/'.$prospect->id) }}" action="cancel">
+                                                <x-auth.link class="dropdown-item link-modal" href="{{ url('spot/prospectStatus/cancel/'.$prospect->id) }}" action="cncl">
                                                     <i class="bi bi-x-circle"></i>&nbsp;Cancel/Delete
                                                 </x-auth.link>
                                             </li>

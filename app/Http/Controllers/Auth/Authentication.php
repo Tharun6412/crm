@@ -55,7 +55,7 @@ class Authentication extends Controller
         session()->put('user', $user);
 
         // Redirect to intended page or Home
-        return redirect()->intended('home');
+        return redirect()->intended('/');
     }
 
     /**
