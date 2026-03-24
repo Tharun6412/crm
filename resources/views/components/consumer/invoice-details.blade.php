@@ -5,7 +5,7 @@
 {{-- Consumer basic details --}}
 <x-consumer.basic-details :consumer="$invoice->consumer" {{ $attributes->merge(['class']) }} />
 {{-- Invoice details --}}
-<div class="bg-secondary-subtle p-2 mb-2">
+<div class="bg-secondary-subtle p-2 mb-2 rounded">
     <table class="table table-borderless table-info table-sm">
         <tr>
             <td><span class="fw-semibold">Invoice No :</span>&nbsp;<x-auth.link href="{{ url('bill/invoice/'.$invoice->id) }}" target="_blank">{{ $invoice->invoice_number }}</x-auth.link></td>

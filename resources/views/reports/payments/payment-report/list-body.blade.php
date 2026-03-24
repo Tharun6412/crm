@@ -1,13 +1,13 @@
 <div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-3">
     <!-- LEFT SIDE FILTERS -->
-    <div class="d-flex flex-wrap align-items-center gap-2">
+    <div class="d-flex flex-wrap align-items-center gap-1">
         <!-- Search -->
-        <div class="input-group input-group-sm w-auto">
+        <div class="input-group w-auto">
             <span class="input-group-text">Search</span>
             <input type="text" name="key" id="key" class="form-control" value="{{ request()->key }}">
         </div>
         <div class="d-flex align-items-center flex-wrap gap-3">
-            <div class="input-group input-group-sm w-auto">
+            <div class="input-group w-auto">
                 <span class="input-group-text">Payment Date</span>
                 <!-- From Date -->
                 <input type="text" class="form-control" name="date_from" id="date_from" value="{{ request()->date_from }}"><span class="input-group-text"><i class="bi bi-calendar3"></i></span>
@@ -16,16 +16,16 @@
             </div>
         </div>
         <!-- Submit -->
-        <button type="submit" class="btn btn-success btn-sm"><i class="bi bi-search"></i></button>
+        <button type="submit" class="btn btn-success"><i class="bi bi-search"></i></button>
         <!-- Reset -->
-        <a href="{{ url('reports/paymentsReport') }}" class="btn btn-warning btn-sm"><i class="bi bi-arrow-clockwise"></i></a>
+        <a href="{{ url('reports/paymentsReport') }}" class="btn btn-warning"><i class="bi bi-arrow-clockwise"></i></a>
         <!-- Record Count -->
         <span class="small text-muted">
-            ({{ $payments->total() }}) Records found
+          <span class="fw-semibold">({{ $payments->total() }})</span> Records found
         </span>
     </div>
     <div>
-        <x-auth.link :href="url('reports/paymentsReport/paymentsReportExport') . '?' . request()->getQueryString()" class="btn btn-secondary btn-sm"><i class="bi bi-download"></i>&nbsp;Export</x-auth.link>
+        <x-auth.link :href="url('reports/paymentsReport/paymentsReportExport') . '?' . request()->getQueryString()" class="btn btn-outline-info"><i class="bi bi-file-earmark-excel"></i>&nbsp;Export</x-auth.link>
     </div>
 </div>
 @php
@@ -36,8 +36,8 @@
     $i = (($payments->currentPage() - 1) * $payments->perPage())+1;
 @endphp
 <div class="table-responsive" style="min-height: 500px;">
-    <table class="table table-bordered table-hover page-sort">
-        <thead class="table-success">
+    <table class="table table-bordered bg-white table-striped page-sort">
+        <thead class="table-success align-middle">
             <tr>
                 <th width="1%" nowrap>S No</th>
                 <th nowrap>
@@ -48,7 +48,7 @@
                         @endif
                     </a>
                 </th>
-                <th nowrap>
+                <th nowrap class="text-center">
                     <a href="{{ $payments->appends(['sortBy' => 'pay_invoice_payments.payment_date','sortOr' => $sort_order_inverse])->url($payments->currentPage()) }}">
                         Payment Date
                         @if ($sort_by == 'pay_invoice_payments.payment_date')
@@ -80,7 +80,7 @@
                         @endif
                     </a>
                 </th>
-                <th nowrap>
+                <th nowrap class="text-center">
                     <a href="{{ $payments->appends(['sortBy' => 'bil_invoices.invoice_date','sortOr' => $sort_order_inverse])->url($payments->currentPage()) }}">
                     Invoice Date
                         @if ($sort_by == 'bil_invoices.invoice_date')
@@ -89,13 +89,15 @@
                     </a>
                 </th>
                 <th nowrap>
-                    <a href="{{ $payments->appends(['sortBy' => 'bil_invoices.type_id','sortOr' => $sort_order_inverse])->url($payments->currentPage()) }}">
-                    Invoice Type
-                    @if ($sort_by == 'bil_invoices.type_id')
-                        <i class="bi {{ $sort_icon }}"></i>
-                    @endif
-                    </a>
-                    <x-master.invoice-type-filter class="float-end" />
+                    <div class="d-flex">
+                        <div><a href="{{ $payments->appends(['sortBy' => 'bil_invoices.type_id','sortOr' => $sort_order_inverse])->url($payments->currentPage()) }}">
+                        Invoice Type
+                        @if ($sort_by == 'bil_invoices.type_id')
+                            <i class="bi {{ $sort_icon }}"></i>
+                        @endif
+                        </a></div>
+                        <x-master.invoice-type-filter class="float-end" />
+                    </div>
                 </th>
                 <th nowrap>
                     <a href="{{ $payments->appends(['sortBy' => 'cns_consumers.crn','sortOr' => $sort_order_inverse])->url($payments->currentPage()) }}">
@@ -113,28 +115,38 @@
                     @endif
                     </a>
                 </th>
-                <th nowrap>Segment<x-master.segment-filter class="float-end"  /></th>
-                <th nowrap>Connection Type<x-master.connection-type-filter class="float-end"  /></th>
-                <th nowrap>GA<x-master.ga-filter class="float-end"  /></th>
+                <th nowrap>
+                    <div class="d-flex">
+                    <div>Segment</div>
+                    <x-master.segment-filter class="float-end"  />
+                    </div>
+                </th>
+                <th nowrap>
+                    <div class="d-flex">
+                        <div>Connection Type</div>
+                        <x-master.connection-type-filter class="float-end"  />
+                    </div>
+                </th>
+                <th nowrap><div class="d-flex"><div>GA</div><x-master.ga-filter class="float-end"  /></div></th>
             </tr>
         </thead>
         <tbody>
              @forelse ($payments as $pay)
                 <tr>
-                    <td>{{ $i++ }}</td>
+                    <td class="text-center">{{ $i++ }}</td>
                     <td>{{ $pay->code }}</td>
-                    <td>{{ dateFormat($pay->payment_date) }}</td>
+                    <td class="text-center">{{ dateFormat($pay->payment_date) }}</td>
                     <td>{{ numberFormat($pay->amount,2) }}</td>
                     <td>{{ $pay->paymentType->name }}</td>
                     <td>
                         <a href="{{ url('bill/invoice/' . $pay->invoice->id) }}" target="_blank">{{ $pay->inv_number }} </a></td>
-                    <td>{{ dateFormat($pay->invoice->invoice_date) }}</td>
+                    <td class="text-center">{{ dateFormat($pay->invoice->invoice_date) }}</td>
                     <td>{{ $pay->invoice->invoiceType->name }}</td>
                     <td>{{ $pay->invoice->consumer->crn }}</td>
                     <td>{{ $pay->invoice->consumer->name }}</td>
                     <td>{{ $pay->invoice->consumer->segment->name }}</td>
                     <td>{{ $pay->invoice->consumer->connectType->name }}</td>
-                    <td>{{ $pay->invoice->consumer->ga->name }}</td>
+                    <td nowrap>{{ $pay->invoice->consumer->ga->name }}</td>
                 </tr>
             @empty
                 <tr>
@@ -143,7 +155,7 @@
             @endforelse
         </tbody>
         <tfoot>
-            <tr>
+            <tr class="bg-info-subtle">
                 <th class="text-end" colspan="3">Total</th>
                 <th>{{ numberFormat($payments->sum('amount'),2) }}</th>
                 <th colspan="9"></th>

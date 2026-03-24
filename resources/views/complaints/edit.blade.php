@@ -10,7 +10,7 @@
                 <form id="edit-complaint-form" action="{{ url('calls/update/'.$complaint->id) }}" method="POST">
                     @csrf
                     <div class="mt-2">
-                        <x-consumer.complaint-details :complaint="$complaint" class="bg-info-subtle"/>
+                        <x-consumer.complaint-details :complaint="$complaint"/>
                     </div>
                     <h4>Complaint Details</h4>
                     {{-- Complaint Segment --}}

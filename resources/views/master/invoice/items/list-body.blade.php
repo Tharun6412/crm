@@ -2,15 +2,13 @@
 
 {{-- Search form --}}
 <div class="d-flex justify-content-between align-items-center mb-2">
-    <div class="row gx-2 mb-1">
+    <div class="d-flex gap-1">
         <div class="col-auto">
             <input type="text" name="key" class="form-control" placeholder="Search..." value="{{ request()->key }}">
         </div>
-        <div class="col-auto p-1 border border-secondary rounded">
-            <div class="d-flex justify-content-between">
-                <span>Type</span>
-                <x-master.InvItemTypeFilter />
-            </div>
+        <div class="form-control">
+            <span>Type</span>
+            <x-master.InvItemTypeFilter class="float-end" />
         </div>
         <div class="col-auto"><button type="submit" class="btn btn-success"><i class="bi bi-search"></i></button></div>
         <div class="col-auto"><a href="{{ url('master/invoice/items') }}" class="btn btn-warning"><i class="bi bi-arrow-clockwise"></i></a></div>
@@ -50,10 +48,10 @@
                         <td class="text-end">{{ numberFormat($item->tax_value, 2) }}</td>
                         <td class="text-end">{{ numberFormat($item->price, 2) }}</td>
                         <td nowrap>
-                            <a href="{{ url('master/invoice/items/' . $item->id) }}" class="link-canvas fs-sm btn btn-outline-secondary btn-sm">
+                            <a href="{{ url('master/invoice/items/' . $item->id) }}" class="link-canvas fs-sm btn btn-outline-info btn-sm">
                                 <i class="bi bi-chevron-right"></i>&nbsp;View
                             </a>
-                            <a href="{{ url('master/invoice/items/' . $item->id . '/edit') }}" class="link-modal fs-sm btn btn-outline-secondary btn-sm">
+                            <a href="{{ url('master/invoice/items/' . $item->id . '/edit') }}" class="link-modal fs-sm btn btn-outline-info btn-sm">
                                 <i class="bi bi-pencil-square"></i>&nbsp;Edit
                             </a>
                         </td>

@@ -4,17 +4,23 @@
     <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
 </div>
 <div class="offcanvas-body">
-    <div class="row g-2 mb-2">
-        <div class="col-sm-6 text-end fw-semibold">Gateway:</div>
-        <div class="col-sm-6">{{ $gateway->gateway }}</div>
-        <div class="col-sm-6 text-end fw-semibold">Mode:</div>
-        <div class="col-sm-6">{{ $gateway->mode }}</div>
-        <div class="col-sm-6 text-end fw-semibold">Status:</div>
-        <div class="col-sm-6">{{ $gateway->is_active }}</div>
-    </div>
+<table class="table table-bordered mb-3">
+    <tr>
+        <td class="table-light">Gateway</td>
+        <td>{{ $gateway->gateway }}</td>
+    </tr>
+    <tr>
+        <td class="table-light">Mode</td>
+        <td>{{ $gateway->mode }}</td>
+    </tr>
+    <tr>
+        <td class="table-light">Status</td>
+        <td>{{ $gateway->is_active }}</td>
+    </tr>
+</table>  
     @if ($gateway->details->count() > 0)
         <table class="table table-bordered">
-            <thead class="table-light">
+            <thead class="table-primary">
                 <tr>
                     <th>GA</th>
                     <th>Sub-Merchant ID</th>

@@ -16,7 +16,7 @@
             <div class="accordion-item">
                 <h2 class="accordion-header">
                     <button class="accordion-button fs-5 fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#panel-segments" aria-expanded="true" aria-controls="panel-segments">
-                        <i class="bi bi-suit-club"></i>&nbsp;Segments
+                        <i class="bi bi-list-stars"></i>&nbsp;Segments
                     </button>
                 </h2>
                 <div id="panel-segments" class="accordion-collapse collapse show">
@@ -34,7 +34,7 @@
             <div class="accordion-item">
                 <h2 class="accordion-header">
                     <button class="accordion-button collapsed fs-5 fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#panel-types" aria-expanded="false" aria-controls="panel-types">
-                        <i class="bi bi-suit-club"></i>&nbsp;Types
+                        <i class="bi bi-chat-left-dots"></i>&nbsp;Types
                     </button>
                 </h2>
                 <div id="panel-types" class="accordion-collapse collapse">
@@ -52,7 +52,7 @@
             <div class="accordion-item">
                 <h2 class="accordion-header">
                     <button class="accordion-button collapsed fs-5 fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#panel-media" aria-expanded="true" aria-controls="panel-media">
-                        <i class="bi bi-suit-club"></i>&nbsp;Media
+                        <i class="bi bi-cast"></i>&nbsp;Media
                     </button>
                 </h2>
                 <div id="panel-media" class="accordion-collapse collapse">
@@ -70,7 +70,7 @@
             <div class="accordion-item">
                 <h2 class="accordion-header">
                     <button class="accordion-button collapsed fs-5 fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#panel-status" aria-expanded="true" aria-controls="panel-status">
-                        <i class="bi bi-suit-club"></i>&nbsp;Status
+                        <i class="bi bi-person-gear"></i>&nbsp;Status
                     </button>
                 </h2>
                 <div id="panel-status" class="accordion-collapse collapse">
@@ -88,7 +88,7 @@
             <div class="accordion-item">
                 <h2 class="accordion-header">
                     <button class="accordion-button collapsed fs-5 fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#panel-priorities" aria-expanded="true" aria-controls="panel-priorities">
-                        <i class="bi bi-suit-club"></i>&nbsp;Priorities
+                        <i class="bi bi-hourglass-split"></i>&nbsp;Priorities
                     </button>
                 </h2>
                 <div id="panel-priorities" class="accordion-collapse collapse">

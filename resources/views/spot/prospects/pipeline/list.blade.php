@@ -17,7 +17,7 @@
     @if ($prospect->pipeLineHistory->count() > 0)
         <div class="table-responsive spot-table">
             <table class="table table-bordered table-hover table-sm table-striped mb-0">
-                <thead>
+                <thead class="table-success">
                     <tr class="spot-table-bg">
                         <th nowrap class="text-center">S.No</th>
                         <th nowrap >Type of pipeline</th>

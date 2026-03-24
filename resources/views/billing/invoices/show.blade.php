@@ -17,7 +17,7 @@
                     <span class="fs-3 fw-semibold">INVOICE</span>
                 </div>
             </div>
-            <img src="{{ asset('img/logo-loader.png') }}" alt="MeghaGas" width="300" class="watermark-overlay">
+            <img src="{{ asset('img/watermark_logo.png') }}" alt="MeghaGas" width="320" class="watermark-overlay">
             <div class="row px-4">
                 <div class="col-sm-7">
                     <address>

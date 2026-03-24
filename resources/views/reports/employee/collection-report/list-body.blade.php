@@ -1,9 +1,9 @@
 <div>
-    <span>{{ $result->total() }}&nbsp;records found.</span>
-    <table class="table table-bordered">
-        <thead>
+    <div class="text-end p-1"><span class="fw-semibold">({{ $result->total() }})</span>&nbsp;Records Round.</div>
+    <table class="table table-bordered bg-white table-striped">
+        <thead class="table-success">
             <tr>
-                <th>S.No</th>
+                <th width="1%">S.No</th>
                 <th>Employee ID</th>
                 <th>Employee Name</th>
                 <th>GA Name</th>
@@ -24,7 +24,7 @@
                         $tot_amt += $emp->total_amount;
                     @endphp
                     <tr>
-                        <td>{{ $loop->iteration }}</td>
+                        <td class="text-center">{{ $loop->iteration }}</td>
                         <td>{{ $emp->emp_id }}</td>
                         <td>{{ $emp->emp_name }}</td>
                         <td>{{ $emp->ga_name }}</td>
@@ -33,14 +33,14 @@
                         <td class="text-end">{{ $emp->total_amount }}</td>
                     </tr>
                 @endforeach
-                <tr>
+                <tr class="bg-info-subtle fw-semibold">
                     <td colspan="4" class="text-end">Totals</td>
                     <td class="text-end">{{ numberFormat($inv_amt, 2) }}</td>
                     <td class="text-end">{{ numberFormat($sd_amt, 2) }}</td>
                     <td class="text-end">{{ numberFormat($tot_amt, 2) }}</td>
                 </tr>
             @else
-                <tr>
+                <tr class="bg-white text-center fw-semibold">
                     <td colspan="7">No records found</td>
                 </tr>
             @endif

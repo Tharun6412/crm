@@ -1,13 +1,17 @@
 <form name="aging-reports-search-form" id="aging-reports-search-form"  action="{{ url('reports/ageingReport') }}" method="get">
     <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
         <!-- Invoice Type Filter Card -->
-        <div class="border border-secondary rounded p-1 d-flex align-items-center gap-2">
-            <span class="fw-semibold mb-0">Invoice Type</span>
-            <div class="w-auto"><x-master.invoice-type-filter /></div>
+        <div>
+            <div class="form-control">
+                <span class="fw-semibold">Invoice Type</span>
+                <div class="w-auto float-end"><x-master.invoice-type-filter /></div>
+            </div>
         </div>
-        <button type="submit" class="btn btn-success"><i class="bi bi-search"></i></button>
-        <!-- Reset -->
-        <a href="{{ url('reports/ageingReport') }}" class="btn btn-warning"><i class="bi bi-arrow-clockwise"></i></a>
+        <div>
+            <button type="submit" class="btn btn-success"><i class="bi bi-search"></i></button>
+            <!-- Reset -->
+            <a href="{{ url('reports/ageingReport') }}" class="btn btn-warning"><i class="bi bi-arrow-clockwise"></i></a>
+        </div>
     </div>
 </form>
 <div class="table-responsive">
@@ -16,12 +20,12 @@
             <tr>
                 <th width="1%" nowrap="nowrap">S No.</th>
                 <th>GA Name</th>
-                <th>No Due Days</th>
-                <th>1–15 Days</th>
-                <th>16–30 Days</th>
-                <th>31–60 Days</th>
-                <th>61–90 Days</th>
-                <th>> 90 Days</th>
+                <th class="text-end">No Due Days</th>
+                <th class="text-end">1–15 Days</th>
+                <th class="text-end">16–30 Days</th>
+                <th class="text-end">31–60 Days</th>
+                <th class="text-end">61–90 Days</th>
+                <th class="text-end">> 90 Days</th>
             </tr>
         </thead>
         <tbody>
@@ -41,7 +45,7 @@
                         'range_gt90'  => '90+'
                     ] as $field => $range)
 
-                        <td>
+                        <td class="text-end">
                             <a href="{{ url('reports/invoiceReport') }}?{{ http_build_query([
                                 'geo_area' => [$ga->ga_id],
                                 'range' => $range,
@@ -60,7 +64,7 @@
             @endforelse
         </tbody>
         <tfoot>
-            <tr class="table-info">
+            <tr class="table-info text-end">
                 <th colspan="2" class="text-end">Total</th>
                 <th>{{ numberFormat($gasAging->sum('no_due_days'),2) }}</th>
                 <th>{{ numberFormat($gasAging->sum('range_1_15'),2) }}</th>

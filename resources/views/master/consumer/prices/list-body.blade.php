@@ -2,16 +2,14 @@
 
 {{-- Search form --}}
 <div class="d-flex justify-content-between mb-1">
-    <div class="row gx-1 mb-1">
-        <div class="col-auto">
-            <input type="text" name="key" class="form-control" placeholder="Search..." value="{{ request()->key }}">
-        </div>
-        <div class="col-auto">
-            <div class="d-flex justify-content-between border border-primary bg-light p-1 rounded">
-                <span>Segments</span>
-                <x-master.segment-filter/>
+    <div class="d-flex gap-1">
+            <div class="col-auto">
+                <input type="text" name="key" class="form-control" placeholder="Search..." value="{{ request()->key }}">
             </div>
-        </div>
+            <div class="form-control">
+                <span>Segments</span>
+                <x-master.segment-filter class="float-end"/>
+            </div>
         <div class="col-auto"><button type="submit" class="btn btn-success"><i class="bi bi-search"></i></button></div>
         <div class="col-auto"><a href="{{ url('master/consumer/prices') }}" class="btn btn-warning"><i class="bi bi-arrow-clockwise"></i></a></div>
         <div class="col-auto mt-1"><strong>({{ $gas_prices->total() }})</strong> Records found</div>
@@ -50,8 +48,8 @@
                         <td>{{ $price->effective_from?->format('d-m-Y') }}</td>
                         <td>{{ $price->effective_to?->format('d-m-Y') }}</td>
                         <td>
-                            <a href="{{ url('master/consumer/prices/' . $price->id) }}" class="link-canvas fs-sm btn btn-outline-secondary"><i class="bi bi-chevron-right"></i>&nbsp;View</a>
-                            <a href="{{ url('master/consumer/prices/' . $price->id . '/edit') }}" class="link-modal fs-sm btn btn-outline-secondary"><i class="bi bi-pencil-square"></i>&nbsp;Edit</a>
+                            <a href="{{ url('master/consumer/prices/' . $price->id) }}" class="link-canvas fs-sm btn btn-outline-info btn-sm"><i class="bi bi-chevron-right"></i>&nbsp;View</a>
+                            <a href="{{ url('master/consumer/prices/' . $price->id . '/edit') }}" class="link-modal fs-sm btn btn-outline-info btn-sm"><i class="bi bi-pencil-square"></i>&nbsp;Edit</a>
                         </td>
                     </tr>
                 @endforeach

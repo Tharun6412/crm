@@ -15,7 +15,7 @@
                 <form method="POST" id="update-transaction-form" action={{ url('payments/transactions/'.$transaction->id) }}>
                     @csrf
                     @method('PUT')
-                    <div class="alert alert-warning"> 
+                    <div> 
                         <x-consumer.basic-details :consumer="$transaction->consumer"/>
                     </div>
                     <div class="row g-2 mb-2 alert alert-info">

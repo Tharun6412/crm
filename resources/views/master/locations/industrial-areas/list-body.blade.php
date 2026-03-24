@@ -2,28 +2,28 @@
 <div class="d-flex justify-content-between">
     <div class="row gx-1 mb-1">
         <div class="col-auto">
-            <input type="text" name="key" class="form-control form-control-sm" placeholder="Search..." value="{{ request()->key }}"/>
+            <input type="text" name="key" class="form-control" placeholder="Search..." value="{{ request()->key }}"/>
         </div>
         <div class="col-auto">
-            <button type="submit" class="btn btn-success btn-sm"><i class="bi bi-search"></i></button>
+            <button type="submit" class="btn btn-success"><i class="bi bi-search"></i></button>
         </div>
         <div class="col-auto">
-            <a href="{{ url('master/location/industrial-areas') }}" class="btn btn-warning btn-sm"><i class="bi bi-arrow-clockwise"></i></a>
+            <a href="{{ url('master/location/industrial-areas') }}" class="btn btn-warning"><i class="bi bi-arrow-clockwise"></i></a>
         </div>
-        <div class="col-auto">
-            ({{ $industrial_areas->total() }}) Records found
+        <div class="col-auto mt-2">
+           <span class="fw-semibold">({{ $industrial_areas->total() }})</span> Records found
         </div>
     </div>
     <div>
-        <a href="{{ url('master/location/industrial-areas/create') }}" class="btn btn-sm btn-success link-modal">
+        <a href="{{ url('master/location/industrial-areas/create') }}" class="btn btn-outline-success link-modal">
             <i class="bi bi-plus-lg"></i>&nbsp;Create
         </a>
     </div>
 </div>
 @if ($industrial_areas->count() > 0)
-    <div class="table-responsive" style="min-height: 300px;">
-        <table class="table table-bordered table-primary">
-            <thead class="table-primary">
+    <div class="table-responsive mt-2" style="min-height: 300px;">
+        <table class="table table-bordered table-bordared bg-white table-striped">
+            <thead class="table-success">
                 <tr>
                     <th width="1%" nowrap>S No</th>
                     <th>Name</th>
@@ -35,12 +35,12 @@
             <tbody>
                 @foreach ($industrial_areas as $item)
                     <tr>
-                        <td>{{ $loop->iteration }}</td>
+                        <td class="text-center">{{ $loop->iteration }}</td>
                         <td>{{ $item->name }}</td>
                         <td>{{ $item->ga->name ?? '' }}</td>
                         <td>{{ $item->created_at?->format('d-m-Y') }}</td>
                         <td>
-                            <a href="{{ url('master/location/industrial-areas/' . $item->id . '/edit') }}" class="link-modal fs-sm"><i class="bi bi-pencil-square"></i>&nbsp;Edit</a>
+                            <a href="{{ url('master/location/industrial-areas/' . $item->id . '/edit') }}" class="link-modal fs-sm btn btn-outline-info btn-sm"><i class="bi bi-pencil-square"></i>&nbsp;Edit</a>
                         </td>
                     </tr>
                 @endforeach

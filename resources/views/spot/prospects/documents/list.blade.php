@@ -23,7 +23,7 @@
     @if ($prospect->documents->count() > 0)
         <div class="table-responsive spot-table">
             <table class="table table-bordered table-hover table-striped table-sm align-middle mb-0">
-                <thead>
+                <thead class="table-success">
                     <tr class="spot-table-bg">
                         <th class="text-center">S.No.</th>
                         <!-- <th nowrap class="text-center">Document</th> -->
@@ -39,7 +39,7 @@
                     @foreach ($prospect->documents as $key => $document)
                         <tr>
                             <td class="text-center">{{ $i++; }}</td>
-                            <td class="text-center">
+                            <td>
                                 <a href="{{ url('dc/documents/'.$document->doc_file_id) }}" title="{{ $document->file->file_name }}" target="_blank"><i class="bi bi-file-earmark-pdf fs-5 text-danger"></i></a>
                             </td>
                             <td>{{ $document->documentType->name }}&nbsp;{{ $document->offer_count }}</td>

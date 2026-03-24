@@ -29,16 +29,16 @@
                     @php
                         $i = 1;
                     @endphp
-                    <table class="table table-bordered"> 
-                        <thead>
+                    <table class="table table-bordered bg-white table-striped"> 
+                        <thead class="table-success align-middle">
                             <th>#</th>
                             <th>Description</th>
-                            <th>Credit</th>
-                            <th>Debit</th>
+                            <th class="text-end">Credit</th>
+                            <th class="text-end">Debit</th>
                         </thead>
-                        <tbody>
+                        <tbody class="align-middle">
                             <tr>
-                                <td>{{ $i++ }}</td>
+                                <td class="text-center">{{ $i++ }}</td>
                                 <td>Refundable Security Deposit</td>
                                 <td class="text-end">{{ numberFormat($refund_data->consumer->scheme->paid_deposit) }}</td>
                                 <td class="text-end"></td>
@@ -51,7 +51,7 @@
                                     <td class="text-end">{{ $inv_amt[$type_val->id] }}</td>
                                 </tr>
                             @endforeach
-                            <tr>
+                            <tr class="bg-warning-subtle fw-semibold">
                                 <td>{{ $i++ }}</td>
                                 <td>Disconnection Charges</td>
                                 <td></td>
@@ -65,19 +65,18 @@
                                     </div>
                                 </td>
                             </tr>
-                            <tr>
+                            <tr class="bg-info-subtle fw-semibold">
                                 <td colspan="2" class="text-end">Total</td>
                                 <td class="text-end" id="credit_amt">{{ $refund_data->consumer->scheme->paid_deposit }}</td>
                                 <td class="text-end" id="debit_amt">{{ $inv_tot_sum }}</td>
                             </tr>
                             <tr>
-
-                                <td colspan="3" class="text-end">Final Refundable Amount</td>
-                                <td class="text-end" colspan="2" id="refundable_amt">{{ $tot_refund_amt > 0 ? $tot_refund_amt : 0 }}</td>
+                                <td colspan="3" class="text-end fw-semibold">Final Refundable Amount</td>
+                                <td class="text-end fw-semibold" colspan="2" id="refundable_amt">{{ $tot_refund_amt > 0 ? $tot_refund_amt : 0 }}</td>
                             </tr>
                             <tr>
-                                <td colspan="3" class="text-end">Consumer Payable Amount</td>
-                                <td class="text-end" colspan="2" id="payable_amt">{{ $tot_refund_amt < 0 ? abs($tot_refund_amt) : 0 }}</td>
+                                <td colspan="3" class="text-end fw-semibold">Consumer Payable Amount</td>
+                                <td class="text-end fw-semibold" colspan="2" id="payable_amt">{{ $tot_refund_amt < 0 ? abs($tot_refund_amt) : 0 }}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -86,7 +85,7 @@
                         <div class="col-md-12 col-sm-12">
                             <div class="text-end">
                                 <button type="submit" class="btn btn-success" id="initiate_refund">
-                                    <i class="bi bi-check2-square" aria-hidden="true">&nbsp;</i>Initiate Redfund
+                                    <i class="bi bi-check2-square" aria-hidden="true">&nbsp;</i>Initiate Refund
                                 </button>
                             </div>
                         </div>

@@ -1,7 +1,7 @@
 {{-- List Body --}}
 <div class="table-responsive">
-    <table class="table table-bordered table-primary">
-        <thead class="table-primary">
+    <table class="table table-bordered table-striped bg-white align-middle">
+        <thead class="table-success align-middle">
             <tr>
                 <th width="1%" nowrap rowspan="2">S No</th>
                 <th rowspan="2">Action</th>
@@ -25,9 +25,9 @@
         <tbody>
             @foreach ($geo_areas as $ga)
                 <tr>
-                    <td nowrap>{{ $loop->iteration }}</td>
+                    <td nowrap class="text-center">{{ $loop->iteration }}</td>
                     <td nowrap>
-                        <x-auth.link type="button" class="btn btn-secondary btn-sm link-modal" action="trgt" href="{{ url('spot/targets/'.$ga->id.'/edit') }}?target_year={{ $target_year }}"><i class="bi bi-pencil"></i>&nbsp;Edit</x-auth.link>
+                        <x-auth.link type="button" class="btn btn-outline-info btn-sm link-modal" action="trgt" href="{{ url('spot/targets/'.$ga->id.'/edit') }}?target_year={{ $target_year }}"><i class="bi bi-pencil"></i>&nbsp;Edit</x-auth.link>
                     </td>
                     <td nowrap>{{ $ga->name }}</td>
                     @for ($date = $y_start->copy(); $date->lte($y_end); $date->addMonth())

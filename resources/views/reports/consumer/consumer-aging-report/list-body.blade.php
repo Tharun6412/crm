@@ -1,10 +1,12 @@
 <form name="consumer-aging-reports-search-form" id="consumer-aging-reports-search-form"  action="{{ url('reports/consumer/consumerAgeingReport') }}" method="get">
-    <div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-3">
+    <div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-2">
         <!-- LEFT: Filters -->
-        <div class="d-flex flex-wrap align-items-center gap-2">
-            <div class="border border-secondary rounded px-2 py-2 d-flex align-items-center gap-1">
-                <span class="fw-semibold mb-0">Segment</span>
-                <div class="w-auto"><x-master.segment-filter /></div>
+        <div class="d-flex flex-wrap align-items-center gap-1">
+            <div>
+                <div class="form-control">
+                    <span class="mb-0">Segment&nbsp;&nbsp;</span>
+                    <div class="w-auto float-end"><x-master.segment-filter /></div>
+                </div>
             </div>
             <div>
                 <button type="submit" class="btn btn-success">
@@ -17,19 +19,19 @@
         </div>
         <div>
             <!-- Export -->
-            <button type="button" id="exportBtn" class="btn btn-outline-info text-end"><i class="bi bi-download"></i>&nbsp;Export</button>
+            <button type="button" id="exportBtn" class="btn btn-outline-info text-end"><i class="bi bi-file-earmark-excel"></i>&nbsp;Export</button>
         </div>
     </div>
 </form>
 <ul class="nav nav-tabs" id="myTab" role="tablist">
     <li class="nav-item" role="presentation">
-        <button class="nav-link active fs-5" id="not_active-tab" data-bs-toggle="tab" data-bs-target="#not_active" type="button" role="tab" aria-controls="not_active" aria-selected="true"><i class="bi bi-x"></i>&nbsp;Not Activated</button>
+        <button class="nav-link active fs-5" id="not_active-tab" data-bs-toggle="tab" data-bs-target="#not_active" type="button" role="tab" aria-controls="not_active" aria-selected="true"><i class="bi bi-person-x"></i>&nbsp;Not Activated</button>
     </li>
     <li class="nav-item" role="presentation">
-        <button class="nav-link fs-5" id="active-tab" data-bs-toggle="tab" data-bs-target="#active" type="button" role="tab" aria-controls="active" aria-selected="false"><i class="bi bi-check2"></i>&nbsp;Activated</button>
+        <button class="nav-link fs-5" id="active-tab" data-bs-toggle="tab" data-bs-target="#active" type="button" role="tab" aria-controls="active" aria-selected="false"><i class="bi bi-person-check"></i>&nbsp;Activated</button>
     </li>
 </ul>
-<div class="tab-content" id="myTabContent">
+<div class="tab-content border border-top-0 bg-white p-2" id="myTabContent">
     <div class="tab-pane fade show active" id="not_active" role="tabpanel" aria-labelledby="not_active-tab">
          <div class="table-responsive">
             <table class="table table-bordered table-hover table-striped bg-white page-sort">
@@ -37,9 +39,9 @@
                     <tr>
                         <th nowrap="nowrap">S No.</th>
                         <th>GA Name</th>
-                        <th>< 90 Days</th>
-                        <th>90–120 Days</th>
-                        <th>> 120 Days</th>
+                        <th class="text-end">< 90 Days</th>
+                        <th class="text-end">90–120 Days</th>
+                        <th class="text-end">> 120 Days</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -48,7 +50,7 @@
                     @endphp
                     @forelse($not_active as $ga)
                         <tr>
-                            <td width="1%" nowrap>{{ $i++ }}</td>
+                            <td width="1%" nowrap class="text-center">{{ $i++ }}</td>
                             <td>{{ $ga->ga_name }}</td>
                             @foreach([
                                 'inactive_upto_90' => '90-',
@@ -56,7 +58,7 @@
                                 'inactive_gt_120'  => '120+'
                             ] as $field => $range)
 
-                                <td>
+                                <td class="text-end">
                                     <a href="{{ url('reports/consumer/consumerAgeingReport/consumersList') }}?{{ http_build_query([
                                         'geo_area' => [$ga->ga_id],
                                         'range' => $range,
@@ -79,9 +81,9 @@
                 <tfoot>
                     <tr class="table-info">
                         <th colspan="2" class="text-end">Total</th>
-                        <th>{{ numberFormat($not_active->sum('inactive_upto_90')) }}</th>
-                        <th>{{ numberFormat($not_active->sum('inactive_90_120')) }}</th>
-                        <th>{{ numberFormat($not_active->sum('inactive_gt_120')) }}</th>
+                        <th class="text-end">{{ numberFormat($not_active->sum('inactive_upto_90')) }}</th>
+                        <th class="text-end">{{ numberFormat($not_active->sum('inactive_90_120')) }}</th>
+                        <th class="text-end">{{ numberFormat($not_active->sum('inactive_gt_120')) }}</th>
                     </tr>
                 </tfoot>
             </table>
@@ -94,9 +96,9 @@
                     <tr>
                         <th nowrap="nowrap">S No.</th>
                         <th>GA Name</th>
-                        <th>< 90 Days</th>
-                        <th>90–120 Days</th>
-                        <th>> 120 Days</th>
+                        <th class="text-end">< 90 Days</th>
+                        <th class="text-end">90–120 Days</th>
+                        <th class="text-end">> 120 Days</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -105,7 +107,7 @@
                     @endphp
                     @forelse($active as $ga)
                         <tr>
-                            <td width="1%" nowrap>{{ $i++ }}</td>
+                            <td width="1%" nowrap class="text-center">{{ $i++ }}</td>
                             <td>{{ $ga->ga_name }}</td>
                             @foreach([
                                 'active_upto_90' => '90-',
@@ -113,7 +115,7 @@
                                 'active_gt_120'  => '120+'
                             ] as $field => $range)
     
-                                <td>
+                                <td class="text-end">
                                     <a href="{{ url('reports/consumer/consumerAgeingReport/consumersList') }}?{{ http_build_query([
                                         'geo_area' => [$ga->ga_id],
                                         'range' => $range,
@@ -136,9 +138,9 @@
                 <tfoot>
                     <tr class="table-info">
                         <th colspan="2" class="text-end">Total</th>
-                        <th>{{ numberFormat($active->sum('active_upto_90')) }}</th>
-                        <th>{{ numberFormat($active->sum('active_90_120')) }}</th>
-                        <th>{{ numberFormat($active->sum('active_gt_120')) }}</th>
+                        <th class="text-end">{{ numberFormat($active->sum('active_upto_90')) }}</th>
+                        <th class="text-end">{{ numberFormat($active->sum('active_90_120')) }}</th>
+                        <th class="text-end">{{ numberFormat($active->sum('active_gt_120')) }}</th>
                     </tr>
                 </tfoot>
             </table>

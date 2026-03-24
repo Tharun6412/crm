@@ -18,7 +18,7 @@
                 </div>
             </div> 
             <div class="px-4">           
-                 <img src="{{ asset('img/logo-loader.png') }}" alt="MeghaGas" width="350" class="watermark-overlay">
+                 <img src="{{ asset('img/watermark_logo.png') }}" alt="MeghaGas" width="320" class="watermark-overlay">
                 <div class="row">
                     <div class="col-sm-7">
                         <address>

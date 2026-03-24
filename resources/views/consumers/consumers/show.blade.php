@@ -69,7 +69,7 @@
         <div class="col-md-10">
             <div class="row g-2">
                 <div class="col-md-12">
-                    <div class="d-flex border rounded-top p-2 fs-5 bg-body-secondary">
+                    <div class="d-flex border rounded-top p-2 fs-5 bg-info-subtle">
                         <div>{{ $consumer->crn ?? $consumer->t_crn }}</div>&nbsp;<span class="text-body-tertiary">|</span>&nbsp;
                         <div>{{ $consumer->segment->name ?? '' }}</div>&nbsp;<span class="text-body-tertiary">|</span>&nbsp;
                         <div>{{ $consumer->connection_type_id == 2 ? 'Prepaid' : 'Postpaid' }}</div>&nbsp;<span class="text-body-tertiary">|</span>&nbsp;

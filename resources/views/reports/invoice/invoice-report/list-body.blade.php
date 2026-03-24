@@ -37,7 +37,7 @@
         </span>
     </div>
     <div>
-        <x-auth.link :href="url('reports/invoiceReport/invoicesReportExport') . '?' . request()->getQueryString()" class="btn btn-outline-info"><i class="bi bi-plus-lg"></i>&nbsp;Export</x-auth.link>
+        <x-auth.link :href="url('reports/invoiceReport/invoicesReportExport') . '?' . request()->getQueryString()" class="btn btn-outline-info"><i class="bi bi-file-earmark-excel"></i>&nbsp;Export</x-auth.link>
     </div>
 </div>
 <!-- COLLAPSIBLE DATE FILTER -->
@@ -139,7 +139,7 @@
                         <x-master.district-filter class="float-end"/>
                     @endif
                 </th>
-                <th nowrap>
+                <th nowrap class="text-end">
                     <a href="{{ $invoices->appends(['sortBy' => 'net_consumption','sortOr' => $sort_order_inverse])->url($invoices->currentPage()) }}">
                         Consumption
                         @if ($sort_by == 'net_consumption')
@@ -203,7 +203,7 @@
                     <td>{{ $inv->consumer->connectType->name }}</td>
                     <td nowrap>{{ $inv->consumer->ga->name }}</td>
                     <td>{{ $inv->consumer->district->name }}</td>
-                    <td>{{ $inv->net_consumption ?? 0 }}</td>
+                    <td class="text-end">{{ $inv->net_consumption ?? 0 }}</td>
                     <td>{{ dateFormat($inv->due_date) }}</td>
                     <td class="text-end">{{ numberFormat($inv->payable_amount, 2) }}</td>
                     <td class="text-end">{{ numberFormat($inv->balance_amount, 2) }}</td>
@@ -218,7 +218,7 @@
         <tfoot>
             <tr class="table-info">
                 <th class="text-end" colspan="10">Total</th>
-                <th>{{ numberFormat($invoices->sum('net_consumption'),2) }}</th>
+                <th class="text-end">{{ numberFormat($invoices->sum('net_consumption'),2) }}</th>
                 <th></th>
                 <th class="text-end">{{ numberFormat($invoices->sum('payable_amount'),2) }}</th>
                 <th class="text-end">{{ numberFormat($invoices->sum('balance_amount'),2) }}</th>

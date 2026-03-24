@@ -12,7 +12,7 @@
     <a class="visually-hidden" href="{{ url('spot/prospects/'.$prospect->id.'?reload=true&type=1') }}" data-custom-attr="value" id="reload-status">Hidden Link</a>
     <div class="table-responsive spot-table">
         <table class="table table-bordered table-hover table-sm table-striped mb-0">
-            <thead>
+            <thead class="table-success">
                 <tr class="spot-table-bg">
                     <th width="1%" class="text-center">S.No.</th>
                     <th class="text-center">Stage</th>

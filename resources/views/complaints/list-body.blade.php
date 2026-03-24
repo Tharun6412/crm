@@ -33,7 +33,11 @@
                 <th width="1%" nowrap>S No</th>
                 <th>GA <x-master.ga-filter class="float-end"/></th>
                 <th>#Complaint</th>
-                <th>Category <x-master.complaint-category-filter class="float-end"/></th>
+                <th nowrap>
+                    <div class="d-flex">
+                        <div>Category &nbsp;</div>
+                        <x-master.complaint-category-filter class="text-end float-end"/>
+                    </div></th>
                 <th nowrap>Sub Category
                     @if (request()->has('category'))
                         <x-master.complaint-sub-category-filter class="float-end" />
@@ -43,13 +47,13 @@
                 <th>Consumer</th>
                 <th>
                     <div class="d-flex">
-                        <div>Segment</div>
+                        <div>Segment&nbsp;</div>
                         <x-complaint.segment-filter  class="float-end"/>
                     </div>                   
                 </th>
                 <th nowrap>
                     <div class="d-flex">
-                        <div>Raised Date</div>
+                        <div>Raised Date&nbsp;</div>
                         <x-master.date-filter  class="float-end" />
                     </div> 
                 </th>
@@ -59,7 +63,7 @@
                 <th nowrap>Priority</th>
                 <th nowrap>
                     <div class="d-flex">
-                        <div>Status</div>
+                        <div>Status &nbsp;</div>
                         <x-complaint.statusFilter class="float-end" />
                     </div> 
                 </th>

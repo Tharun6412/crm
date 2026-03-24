@@ -20,7 +20,7 @@
                     <span class="fs-3 fw-semibold">{{ ($note->type == 1) ? 'Credit' : 'Debit' }} Note</span>
                 </div>
             </div>
-            <img src="{{ asset('img/logo-loader.png') }}" alt="MeghaGas" width="250" class="watermark-overlay">
+            <img src="{{ asset('img/watermark_logo.png') }}" alt="MeghaGas" width="320" class="watermark-overlay">
             <div class="row px-4">
                 <div class="col-sm-7">
                     <address>

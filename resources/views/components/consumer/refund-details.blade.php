@@ -8,13 +8,15 @@
 {{-- Consumer basic details --}}
 <x-consumer.basic-details :consumer="$refund->consumer" :type="$type" {{ $attributes->merge(['class']) }} />
 {{-- Refund details --}}
-<div class="row g-2 pb-2 my-2 bg-warning-subtle rounded">
-    <div class="col-sm-2 text-end fw-semibold">#Request : </div>
-    <div class="col-sm-4">{{ $refund->request_no }}</div>
-    <div class="col-sm-2 text-end fw-semibold">Status : </div>
-    <div class="col-sm-4">{{ $refund->status->name }}</div>
-    <div class="col-sm-2 text-end fw-semibold">Requested : </div>
-    <div class="col-sm-4">{{ $refund->createdBy->first_name . ' ' . $refund->createdBy->last_name }}</div>
-    <div class="col-sm-2 text-end fw-semibold">Date : </div>
-    <div class="col-sm-4">{{ $refund->created_at->format('d-m-Y') }}</div>
+<div class="bg-primary-subtle p-2 mt-2 mb-2 rounded">
+    <table class="table table-borderless table-info table-sm">
+        <tr>
+            <td><span class="fw-semibold">Request :</span>&nbsp;{{ $refund->request_no }}</td>
+            <td><span class="fw-semibold">Status :</span>&nbsp;{{ $refund->status->name }}</td>
+        </tr>
+        <tr>
+            <td><span class="fw-semibold">Requested :</span>&nbsp;{{ $refund->createdBy->first_name . ' ' . $refund->createdBy->last_name }}</td>
+            <td><span class="fw-semibold">Date :</span>&nbsp;{{ $refund->created_at->format('d-m-Y') }}</td>
+        </tr>
+    </table>
 </div>
