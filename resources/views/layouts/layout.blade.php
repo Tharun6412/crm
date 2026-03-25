@@ -24,24 +24,26 @@
             {{-- Navigation Component class --}}
             <x-layouts.navigation/>
             <div class="content-page ps-0">
-                @isset($dashboard)
-                    {{-- No Title bar --}}
-                @else
-                    <div class="d-flex justify-content-between p-3 bg-secondary-subtle">
-                        <h3 class="mb-0 fs-5 fw-bold">@yield('page-title')</h3>
-                        <nav aria-label="breadcrumb">
-                            <ol class="breadcrumb mb-0">
-                                <li class="breadcrumb-item"><a href="{{ url('/') }}">Home</a></li>
-                                @yield('breadcrumb')
-                                <li class="breadcrumb-item active" aria-current="page">@yield('page-title')</li>
-                            </ol>
-                        </nav>
+                <div class="content">
+                    @isset($dashboard)
+                        {{-- No Title bar --}}
+                    @else
+                        <div class="d-flex justify-content-between p-3 bg-secondary-subtle">
+                            <h3 class="mb-0 fs-5 fw-bold">@yield('page-title')</h3>
+                            <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb mb-0">
+                                    <li class="breadcrumb-item"><a href="{{ url('/') }}">Home</a></li>
+                                    @yield('breadcrumb')
+                                    <li class="breadcrumb-item active" aria-current="page">@yield('page-title')</li>
+                                </ol>
+                            </nav>
+                        </div>
+                    @endisset
+                    <div class="container-fluid text-dark">
+                        <div class="content pt-2 pr-0 pb-1 pl-0">
+                            @yield('page-content')
+                        </div>    
                     </div>
-                @endisset
-                <div class="container-fluid text-dark">
-                    <div class="content pt-2 pr-0 pb-1 pl-0">
-                        @yield('page-content')
-                    </div>    
                 </div>
                 {{-- Footer Component --}}
                 <x-layouts.footer/>

@@ -1,5 +1,5 @@
-<footer class="footer p-2 border-top">
-    <div class="row">
+<footer class="footer border-top">
+    <div class="row d-flex justify-content-between w-100">
         <div class="col-md-6">
             &copy;&nbsp;{{ date('Y') }}&nbsp;Megha City Gas Distribution Private Limited&reg;
         </div>

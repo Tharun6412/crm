@@ -72,8 +72,6 @@ a { text-decoration: none;}
   margin-bottom: 1.25rem;color: var(--bd-callout-color, inherit);background-color: var(--bd-callout-bg, var(--bs-gray-100));
   border-left: 0.25rem solid var(--bd-callout-border, var(--bs-gray-300));}
 /* Footer */
-.footer {font-size: 0.85rem;}
-.footer .ver {text-align: right;}
 @media (max-width:767.98px) { .footer {text-align: center !important;} .footer .ver {text-align: center !important; } }
 
 /* Custom styles */

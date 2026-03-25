@@ -12,7 +12,7 @@
             <button type="submit" class="btn btn-success"><i class="bi bi-search"></i></button>
         </div>
         <div class="col-auto">
-            <a href="{{ url('consumers') }}" class="btn btn-warning"><i class="bi bi-arrow-clockwise"></i></a>
+            <a href="{{ url()->current() }}" class="btn btn-warning"><i class="bi bi-arrow-clockwise"></i></a>
         </div>
         <div class="col-auto mt-2">
             <strong>({{ $consumers->total() }})</strong> Records found

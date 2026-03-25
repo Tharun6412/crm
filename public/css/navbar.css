@@ -1,17 +1,14 @@
 /* Sidebar */
-.wrapper {
-    height: 100vh;
-}
 .nav-user {
     font-size: 0.85rem;
 }
 .content-page {
-  position: relative;
-  margin-left: var(--bs-leftbar-width);
-  height: calc(100vh - var(--bs-topbar-height) - 4px);
-  padding: 0 0.75rem var(--bs-footer-height);
-  -webkit-transition: all .25s ease-in-out;
-  transition: all .25s ease-in-out;
+    position: relative;
+    margin-left: var(--bs-leftbar-width);
+    min-height: calc(100vh - var(--bs-topbar-height) - 4px);
+    padding: 0 0.75rem var(--bs-footer-height);
+    -webkit-transition: all .25s ease-in-out;
+    transition: all .25s ease-in-out;
 }
 .leftside-menu {
     z-index: 1000;
@@ -474,3 +471,16 @@
 .leftside-menu {
     margin-top: 59px;
 }
+.footer {
+    align-items: center;
+    bottom: 0;
+    display: flex;
+    font-size: 0.85rem;
+    height: var(--bs-footer-height);
+    left: 0;
+    padding: 0 1.5rem;
+    position: absolute;
+    right: 0;
+    background-color: #EEE;
+}
+.footer .ver {text-align: right;}
