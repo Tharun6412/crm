@@ -46,5 +46,9 @@ Route::middleware(['auth', ModuleAccess::class])->group(function() {
     Route::get('search',[App\Http\Controllers\Complaints\ConsumerSearchController::class, 'search']);
     // External Calls
     Route::resource('external', App\Http\Controllers\Complaints\ExternalCallsController::class);
-
+    // Reports
+    Route::get('reports/complaints',[App\Http\Controllers\Complaints\ReportsController::class, 'complaints']);
+    Route::get('reports/gaReport',[App\Http\Controllers\Complaints\ReportsController::class, 'gaReport']);
+    Route::get('reports/categoryReport',[App\Http\Controllers\Complaints\ReportsController::class, 'categoryReport']);
+    Route::get('reports/deviationReport',[App\Http\Controllers\Complaints\ReportsController::class, 'deviationReport']);
 });
