@@ -142,6 +142,7 @@ class ModuleDataSeeder extends Seeder
             ['id' => '83','name' => 'Invoice Configuration','slug' => NULL,'url' => 'master/invoice/configuration','parent_id' => '35','package_id' => '2','icon' => 'bi-tags','status' => '1','position' => '4'],
             ['id' => '84','name' => 'Firm Types','slug' => NULL,'url' => 'master/consumer/firmTypes','parent_id' => '34','package_id' => '2','icon' => 'bi-tags','status' => '1','position' => '3'],
             ['id' => '85','name' => 'Price Groups','slug' => NULL,'url' => 'master/consumer/price-groups','parent_id' => '34','package_id' => '2','icon' => 'bi-tags','status' => '1','position' => '4'],
+            // ['id' => '86','name' => 'Complaints Report','slug' => NULL,'url' => 'calls/reports/complaints','parent_id' => '6','package_id' => '7','icon' => 'bi-tags','status' => '1','position' => '10'],
         ]);
 
         /**

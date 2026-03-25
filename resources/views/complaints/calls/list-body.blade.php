@@ -19,7 +19,7 @@
                     @foreach ($consumers as $consumer)
                         <tr>
                             <td>{{ $i++ }}</td>
-                            <td><x-auth.link class="link-modal" href="{{ url('consumers/'.$consumer->id) }}">{{ $consumer->crn }}</x-auth.link></td>
+                            <td><x-auth.link href="{{ url('consumers/'.$consumer->id) }}">{{ $consumer->crn }}</x-auth.link></td>
                             <td>{{ $consumer->name }}</td>
                             <td>{{ $consumer->status->name }}</td>
                             <td>{{ $consumer->createdBy->name }}</td>

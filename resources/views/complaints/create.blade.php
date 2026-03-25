@@ -6,7 +6,7 @@
         </div>
         <div class="modal-body">
             <div id="complaint-success">
-                <form id="complaint-form" action="{{ url('calls/store/1') }}" method="POST" enctype="multipart/form-data">
+                <form id="complaint-form" action="{{ url('calls/store/'.$consumer->id) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="mt-2">
                         <x-consumer.basic-details :consumer="$consumer" class="bg-info-subtle"/>
