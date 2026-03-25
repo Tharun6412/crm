@@ -8,12 +8,12 @@
 @section('page-content')
     <div id="dashboard-list" class="current-page-reload bg-white p-2">
         <div class="row g-2 mb-2">
-            <div class="col-auto"><a href="{{ url('spot/prospects') }}" class="btn btn-primary btn-sm"><i class="bi bi-people"></i>&nbsp;All Prospects</a></div>
-            <div class="col-auto"><a href="{{ url('spot/comments') }}" class="btn btn-primary btn-sm"><i class="bi bi-chat-dots"></i>&nbsp;Latest Comments</a></div>
-            <div class="col-auto"><a href="{{ url('spot/dateChangeRequest') }}" class="btn btn-primary btn-sm"><i class="bi bi-calendar2-event"></i>&nbsp;Latest Date Requests</a></div>
-            <div class="col-auto"><a href="{{ url('spot/targets') }}" class="btn btn-primary btn-sm"><i class="bi bi-bullseye"></i>&nbsp;Targets</a></div>
+            <div class="col-auto"><a href="{{ url('spot/prospects') }}" class="btn btn-outline-primary"><i class="bi bi-people"></i>&nbsp;All Prospects</a></div>
+            <div class="col-auto"><a href="{{ url('spot/comments') }}" class="btn btn-outline-primary"><i class="bi bi-chat-dots"></i>&nbsp;Latest Comments</a></div>
+            <div class="col-auto"><a href="{{ url('spot/dateChangeRequest') }}" class="btn btn-outline-primary"><i class="bi bi-calendar2-event"></i>&nbsp;Latest Date Requests</a></div>
+            <div class="col-auto"><a href="{{ url('spot/targets') }}" class="btn btn-outline-primary"><i class="bi bi-bullseye"></i>&nbsp;Targets</a></div>
         </div>
-        <div class="d-flex justify-content-between align-items-center p-2 bg-light">
+        <div class="d-flex justify-content-between align-items-center p-2 bg-light rounded-3">
             <h3 class="mb-0">Analysis</h3>
             <form id="fy-year-form" method="GET" action="{{ url('spot/dashboard') }}">
                 <div class="row g-2 mb-0">

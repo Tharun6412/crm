@@ -13,49 +13,57 @@
 @section('page-content')
     <div>
         <form action="{{ url('reports/employee/collection') }}" id="employee-report-form">
-            <div class="row g-2 align-items-center">
-                <div class="col-auto">
-                    <input type="radio" class="btn-check" name="filter_name" id="success-outlined" value="show" autocomplete="off" checked>
-                    <label class="btn btn-outline-secondary" for="success-outlined">
-                        <i class="bi bi-calendar-range"></i>&nbsp;Between Days
-                    </label>
-                    <input type="radio" class="btn-check" name="filter_name" id="danger-outlined" value="hide" autocomplete="off">
-                    <label class="btn btn-outline-secondary" for="danger-outlined">
-                        <i class="bi bi-calendar-check"></i>&nbsp;All Data
-                    </label>
-                </div>
-                <div class="col-auto">
-                    <div id="tar-div">
-                        <div class="input-group">
-                            <label for="date_from" class="input-group-text"><i class="bi bi-calendar3"></i>&nbsp;From</label>
-                            <input type="text" aria-label="From Date" class="form-control" name="date_from" id="date_from" placeholder="DD-MM-YYYY">  
-                            <label for="date_to" class="input-group-text"><i class="bi bi-calendar3"></i>&nbsp;To</label>
-                            <input type="text" aria-label="To Date" class="form-control" name="date_to" id="date_to" placeholder="DD-MM-YYYY">
+            <div class="d-flex justify-content-between gap-2 mb-2">
+                <div class="d-flex gap-1">
+                    <div>
+                        <input type="radio" class="btn-check" name="filter_name" id="success-outlined" value="show" autocomplete="off" checked>
+                        <label class="btn btn-outline-secondary" for="success-outlined">
+                            <i class="bi bi-calendar-range"></i>&nbsp;Between Days
+                        </label>
+                        <input type="radio" class="btn-check" name="filter_name" id="danger-outlined" value="hide" autocomplete="off">
+                        <label class="btn btn-outline-secondary" for="danger-outlined">
+                            <i class="bi bi-calendar-check"></i>&nbsp;All Data
+                        </label>
+                    </div>
+                    <div>
+                        <div id="tar-div">
+                            <div class="input-group">
+                                <label for="date_from" class="input-group-text"><i class="bi bi-calendar3"></i>&nbsp;From</label>
+                                <input type="text" aria-label="From Date" class="form-control" name="date_from" id="date_from" placeholder="DD-MM-YYYY">  
+                                <label for="date_to" class="input-group-text"><i class="bi bi-calendar3"></i>&nbsp;To</label>
+                                <input type="text" aria-label="To Date" class="form-control" name="date_to" id="date_to" placeholder="DD-MM-YYYY">
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-auto">
-                    <div class="input-group">
-                        <label class="input-group-text">Geo Area</label>
-                        <select class="form-select" name="ga_id" id="ga_id">
-                            <option value="">select</option>
-                            @foreach ($geo_areas as $ga)
-                                <option value="{{ $ga->id }}">{{ $ga->name }}</option>
-                            @endforeach
-                        </select>
+                    <div>
+                        <div class="input-group">
+                            <label class="input-group-text">Geo Area</label>
+                            <select class="form-select" name="ga_id" id="ga_id">
+                                <option value="">select</option>
+                                @foreach ($geo_areas as $ga)
+                                    <option value="{{ $ga->id }}">{{ $ga->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
-                </div>
+                    <div>
+                        <button type="submit" class="btn btn-success">
+                            <i class="bi bi-arrow-right-circle"></i>&nbsp;Get Report
+                        </button>
+                    </div>
+                    <div>
+                        <a href="{{ url('reports/employee/collection') }}" class="btn btn-warning"><i class="bi bi-arrow-clockwise"></i></a>
+                    </div>
+                </div>    
                 <div class="col-auto">
-                    <button type="submit" class="btn btn-success">
-                        <i class="bi bi-arrow-right-circle"></i>&nbsp;Get Report
-                    </button>
-                </div>
-                <div class="col-auto">
-                    <a href="{{ url('reports/employee/collection') }}" class="btn btn-warning"><i class="bi bi-arrow-clockwise"></i></a>
-                </div>
+                    <!-- Export -->
+                    <button type="button" id="exportBtn" class="btn btn-outline-info text-end"><i class="bi bi-file-earmark-excel"></i>&nbsp;Export</button>
+                </div>                
             </div>
         </form>
-        <div id="employee-report-loader" class="mt-3"></div>
+        <div id="employee-report-loader" class="mt-3">
+            <div class="alert alert-info text-center">Pick Dates to Generate Report</div>
+        </div>
     </div>
 @endsection
 {{-- Scripts --}}

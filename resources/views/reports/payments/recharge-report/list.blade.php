@@ -36,6 +36,10 @@
                         <a href="{{ url('reports/consumer/recharge') }}" class="btn btn-warning"><i class="bi bi-arrow-clockwise"></i></a>
                     </div>
                 </div>
+                <div>
+                    <!-- Export -->
+                    <button type="button" id="exportBtn" class="btn btn-outline-info text-end"><i class="bi bi-file-earmark-excel"></i>&nbsp;Export</button>
+                </div>
             </div>
         </form>
         <div id="consumer-recharge-report-list">

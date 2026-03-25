@@ -1,10 +1,12 @@
-<div>
+<div class="mb-2 text-end">
     <!-- Export -->
-    <button type="button" id="exportBtn" class="btn btn-outline-info btn-sm text-end"><i class="bi bi-download"></i>&nbsp;Export</button>
+    <button type="button" id="exportBtn" class="btn btn-outline-info">
+        <i class="bi bi-file-earmark-excel"></i>&nbsp;Export
+    </button>
 </div>
 <div class="table-responsive mb-3">
-    <table class="table table-bordered" id="refund-report-table">
-        <thead>
+    <table class="table table-bordered align-middle table-striped bg-white" id="refund-report-table">
+        <thead class="table-success align-middle">
             <tr>
                 <th rowspan="2" width="1%">S.No</th>
                 <th rowspan="2">GA</th>

@@ -1,45 +1,48 @@
-<div class="mt-3">
+<div class="bg-white p-2 border border-top-0">
     <form class="report-filter-form" action="{{ url('calls/reports/categoryReport') }}" data-target="#nav-ga">
-        <div class="d-flex justify-content-between">
-            <div class="row gx-1 mb-1">
-                <div class="col-auto">
+        <div class="d-flex justify-content-between mt-2">
+            <div class="d-flex gap-2">
+                <div>
                     <div class="input-group mb-3">
                         <span class="input-group-text">From Date</span>
                         <input type="text" class="form-control" aria-label="From Date" name="date_from" id="date_from" value="{{ $date_from->format('d-m-Y') }}">
                         <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
                     </div>
                 </div>
-                <div class="col-auto">
+                <div>
                     <div class="input-group mb-3">
                         <span class="input-group-text">To Date</span>
                         <input type="text" class="form-control" aria-label="To Date" name="date_to" id="date_to" value="{{ $date_to->format('d-m-Y') }}">
                         <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
                     </div>
                 </div>
-                <div class="col-auto">
+                <div>
                     <button type="submit" class="btn btn-success"><i class="bi bi-search"></i></button>
                 </div>
                 <!-- Reset -->
-                <div class="col-auto">
+                <div>
                     <a href="{{ url('calls/reports/categoryReport') }}" class="btn btn-warning"><i class="bi bi-arrow-clockwise"></i></a>
                 </div>
+            </div>            
+            <div class="text-end">
+                <button type="button" id="exportDBtn" class="btn btn-outline-info text-end"><i class="bi bi-file-earmark-excel"></i>&nbsp;Export</button>
             </div>
         </div>
     </form>
-    <table class="table table-bordered">
-        <thead>
+    <table class="table table-bordered table-striped bg-white table-hover" id="deviation-report">
+        <thead class="table-success">
             <tr>
                 <th>GA</th>
-                <th>Not Deviated</th>
-                <th>Deviated</th>
-                <th>Total</th>
+                <th class="text-end">Not Deviated</th>
+                <th class="text-end">Deviated</th>
+                <th class="text-end">Total</th>
             </tr>
         </thead>
         <tbody>
             @foreach($deviationReports as $ga)
                 <tr>
                     <td nowrap>{{ $ga->name }}</td>
-                    <td>
+                    <td class="text-end">
                         <a href="{{ url('calls') }}?{{ http_build_query([
                         // 'geo_area' => [$ga->id],
                         'category' => [$ga->id],
@@ -47,7 +50,7 @@
                         'date_to' => $date_to->format('d-m-Y'), 
                         ])}}" class="aging-link" target="_blank" >{{ $ga->non_deviated_count }}</a>
                     </td>
-                    <td>
+                    <td class="text-end">
                         <a href="{{ url('calls') }}?{{ http_build_query([
                         // 'geo_area' => [$ga->id],
                         'category' => [$ga->id],
@@ -55,7 +58,7 @@
                         'date_to' => $date_to->format('d-m-Y'), 
                         ])}}" class="aging-link" target="_blank" >{{ $ga->deviated_count }}</a>
                     </td>
-                    <td>
+                    <td class="text-end">
                         <a href="{{ url('calls') }}?{{ http_build_query([
                         // 'geo_area' => [$ga->id],
                         'category' => [$ga->id],
@@ -65,10 +68,20 @@
                     </td>
                 </tr>
             @endforeach
-            <tr>
+            <tr class="table-info fw-semibold text-end">
                 <td>Total</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
             </tr>
         </tbody>
     </table>
 </div>
 @include('scripts.datepicker', ['list' => ['date_from', 'date_to']])
+@include('scripts.export-table', [
+    'table' => 'deviation-report',
+    'button' => 'exportDBtn',
+    'tabBased' => false,
+    'filename' => 'deviation_report',
+    'sheet'    => 'Report',
+])

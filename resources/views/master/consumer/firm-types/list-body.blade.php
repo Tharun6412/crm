@@ -2,23 +2,23 @@
 <div class="d-flex justify-content-between">
     <div class="row gx-1 mb-1">
         <div class="col-auto">
-            <input type="text" name="key" class="form-control form-control-sm" placeholder="Search..." value="{{ request()->key }}"/>
+            <input type="text" name="key" class="form-control" placeholder="Search..." value="{{ request()->key }}"/>
         </div>
         <div class="col-auto">
-            <button type="submit" class="btn btn-success btn-sm"><i class="bi bi-search"></i></button>
+            <button type="submit" class="btn btn-success"><i class="bi bi-search"></i></button>
         </div>
         <div class="col-auto">
-            <a href="{{ url('master/consumer/firmTypes') }}" class="btn btn-warning btn-sm"><i class="bi bi-arrow-clockwise"></i></a>
+            <a href="{{ url('master/consumer/firmTypes') }}" class="btn btn-warning"><i class="bi bi-arrow-clockwise"></i></a>
         </div>
-        <div class="col-auto">
-            ({{ $firm_types->count() }}) Records found
+        <div class="col-auto mt-1">
+           <span class="fw-semibold">({{ $firm_types->count() }})</span> Records found
         </div>
     </div>
 </div>
 @if ($firm_types->count() > 0)
-    <div class="table-responsive" style="min-height: 300px;">
-        <table class="table table-bordered table-primary">
-            <thead class="table-primary">
+    <div class="table-responsive mt-2" style="min-height: 300px;">
+        <table class="table table-bordered table-striped">
+            <thead class="table-success">
                 <tr>
                     <th width="1%" nowrap>S No</th>
                     <th>Name</th>

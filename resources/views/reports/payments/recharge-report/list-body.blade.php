@@ -1,7 +1,3 @@
-<div>
-    <!-- Export -->
-    <button type="button" id="exportBtn" class="btn btn-outline-info btn-sm text-end"><i class="bi bi-download"></i>&nbsp;Export</button>
-</div>
 <div class="table-responsive">
     <table class="table table-bordered table-hover page-sort bg-white table-striped" id="recharge_report">
         <thead class="table-success">

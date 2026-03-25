@@ -1,39 +1,42 @@
-<div class="mt-3">
+<div class="bg-white p-2 border border-top-0">
     <form class="report-filter-form" action="{{ url('calls/reports/categoryReport') }}" data-target="#nav-ga">
-        <div class="d-flex justify-content-between">
-            <div class="row gx-1 mb-1">
-                <div class="col-auto">
+        <div class="d-flex justify-content-between mt-2">
+            <div class="d-flex gap-2">
+                <div>
                     <div class="input-group mb-3">
                         <span class="input-group-text">From Date</span>
                         <input type="text" class="form-control" aria-label="From Date" name="date_from" id="date_from" value="{{ $date_from->format('d-m-Y') }}">
                         <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
                     </div>
                 </div>
-                <div class="col-auto">
+                <div>
                     <div class="input-group mb-3">
                         <span class="input-group-text">To Date</span>
                         <input type="text" class="form-control" aria-label="To Date" name="date_to" id="date_to" value="{{ $date_to->format('d-m-Y') }}">
                         <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
                     </div>
                 </div>
-                <div class="col-auto">
+                <div>
                     <button type="submit" class="btn btn-success"><i class="bi bi-search"></i></button>
                 </div>
                 <!-- Reset -->
-                <div class="col-auto">
+                <div>
                     <a href="{{ url('calls/reports/categoryReport') }}" class="btn btn-warning"><i class="bi bi-arrow-clockwise"></i></a>
                 </div>
+            </div>            
+            <div class="text-end">
+                <button type="button" id="exportCBtn" class="btn btn-outline-info text-end"><i class="bi bi-file-earmark-excel"></i>&nbsp;Export</button>
             </div>
         </div>
     </form>
-    <table class="table table-bordered">
-        <thead>
+    <table class="table table-bordered table-striped bg-white table-hover" id="category-report">
+        <thead class="table-success">
             <tr>
                 <th>Category</th>
                 @foreach($statuses as $status)
-                    <th nowrap>{{ $status->name }}</th>
+                    <th nowrap class="text-end">{{ $status->name }}</th>
                 @endforeach
-                <th>Total</th>
+                <th class="text-end">Total</th>
             </tr>
         </thead>
         <tbody>
@@ -52,7 +55,7 @@
                             $value = $ga->{'status_'.$status->id} ?? 0;
                             $statusTotals[$status->id] += $value;
                         @endphp
-                        <td>
+                        <td class="text-end">
                             <a href="{{ url('calls') }}?{{ http_build_query([
                             // 'geo_area' => [$ga->id],
                             'category' => [$ga->id],
@@ -62,13 +65,13 @@
                             ])}}" class="aging-link" target="_blank" >{{ $value }}</a>
                         </td>
                     @endforeach
-                    <td>{{ $ga->total }}</td>
+                    <td class="text-end">{{ $ga->total }}</td>
                     @php
                         $grandTotal += $ga->total;
                     @endphp
                 </tr>
             @endforeach
-            <tr>
+            <tr class="table-info fw-semibold text-end">
                 <td>Total</td>
                 @foreach($statuses as $status)
                     <td>{{ $statusTotals[$status->id] ?? 0 }}</td>
@@ -79,3 +82,10 @@
     </table>
 </div>
 @include('scripts.datepicker', ['list' => ['date_from', 'date_to']])
+@include('scripts.export-table', [
+    'table' => 'category-report',
+    'button' => 'exportCBtn',
+    'tabBased' => false,
+    'filename' => 'category_report',
+    'sheet'    => 'Report',
+])

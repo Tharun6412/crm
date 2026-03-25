@@ -1,22 +1,25 @@
 <form name="aging-reports-search-form" id="aging-reports-search-form"  action="{{ url('reports/ageingReport') }}" method="get">
-    <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
+    <div class="d-flex justify-content-between gap-2 mb-2">
         <!-- Invoice Type Filter Card -->
-        <div>
-            <div class="form-control">
-                <span class="fw-semibold">Invoice Type</span>
-                <div class="w-auto float-end"><x-master.invoice-type-filter /></div>
+        <div class="d-flex gap-2">
+            <div>
+                <div class="form-control">
+                    <span class="fw-semibold">Invoice Type</span>
+                    <div class="w-auto float-end"><x-master.invoice-type-filter /></div>
+                </div>
             </div>
+            <div>
+                <button type="submit" class="btn btn-success"><i class="bi bi-search"></i></button>
+                <!-- Reset -->
+            </div>
+            <div>
+                <a href="{{ url('reports/ageingReport') }}" class="btn btn-warning"><i class="bi bi-arrow-clockwise"></i></a>
+            </div>            
+            <!-- Export -->
         </div>
-        <div>
-            <button type="submit" class="btn btn-success"><i class="bi bi-search"></i></button>
-            <!-- Reset -->
-            <a href="{{ url('reports/ageingReport') }}" class="btn btn-warning"><i class="bi bi-arrow-clockwise"></i></a>
+        <div class="text-end">
+            <button type="button" id="exportBtn" class="btn btn-outline-info text-end"><i class="bi bi-file-earmark-excel"></i>&nbsp;Export</button>
         </div>
-        <button type="submit" class="btn btn-success"><i class="bi bi-search"></i></button>
-        <!-- Reset -->
-        <a href="{{ url('reports/ageingReport') }}" class="btn btn-warning"><i class="bi bi-arrow-clockwise"></i></a>
-        <!-- Export -->
-        <button type="button" id="exportBtn" class="btn btn-outline-info text-end"><i class="bi bi-download"></i>&nbsp;Export</button>
     </div>
 </form>
 <div class="table-responsive">

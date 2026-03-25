@@ -1,10 +1,10 @@
 <div>
     @if (count($reports) > 0)
         <div class="table-responsive">
-            <table class="table table-bordered">
-                <thead>
+            <table class="table table-bordered table-striped table-hover">
+                <thead class="table-info">
                     <tr>
-                        <th>S.No</th>
+                        <th width="1%">S.No</th>
                         <th nowrap>Geo Area</th>
                         <th>CRN</th>
                         <th>Connection Type</th>
@@ -20,7 +20,7 @@
                     @endphp
                     @foreach ($reports as $report)
                         <tr>
-                            <td>{{ $i++ }}</td>
+                            <td class="text-center">{{ $i++ }}</td>
                             <td nowrap>{{ $report->consumer->ga->name }}</td>
                             <td>{{ $report->consumer->crn }}</td>
                             <td>{{ $report->consumer->connection_type_id == "1" ? "Postpaid" : "Prepaid" }}</td>
@@ -34,7 +34,7 @@
             </table>
         </div>
         {{-- load utils file for pagination --}}
-        <div class="col-sm-6">
+        <div class="col-sm-12">
             {{ $reports->links('utils.paginator', ['modDiv' => 'reports-list']) }}
         </div>
     @else

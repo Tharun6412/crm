@@ -12,7 +12,7 @@
 
 @section('page-content')
     <div>
-        <div id="refund-report-loader" class="mt-3">
+        <div id="refund-report-loader" class="mt-2">
             @include('reports.consumer.refund-report.list-body')
         </div>
     </div>

@@ -97,14 +97,14 @@
         {{-- Call status counts --}}
         <h4>Call Status</h4>
         {{-- Calls Dynamic Count --}}
-        <div class="row g-2 mb-2 mt-2">
+        <div class="row g-2 mb-3 mt-2">
             <div class="col-sm-3">
                 <a href="{{ url('calls') }}?{{ http_build_query(['cmp_status'=> [ComplaintStatus::REGISTER->value]]) }}" target="_blank" class="text-body-secondary">
                     <div class="py-2 px-2 registered-bg border border-3 border-light shadow-sm rounded-3">
                         <div class="d-flex justify-content-between align-items-center p-2">
                             <div class="text-center">
                                 <div class="fs-3 fw-semibold">{{ $register }}</div>
-                                <div>Registered</div>
+                                <div class="fw-semibold text-secondary">Registered</div>
                             </div>
                             <div class="p-1 registered-bg bg-opacity-25 rounded-4 py-2 px-3 shadow-sm">
                                 <i class="fs-3 bi bi-telephone-inbound"></i>
@@ -119,7 +119,7 @@
                         <div class="d-flex justify-content-between align-items-center p-2">
                             <div class="text-center">
                                 <div class="fs-3 fw-semibold">{{ $assign }}</div>
-                                <div>Assigned</div>
+                                <div class="fw-semibold text-secondary">Assigned</div>
                             </div>
                             <div class="p-1 assign-bg bg-opacity-25 rounded-4 py-2 px-3 shadow-sm">
                                 <i class="fs-3 bi bi-arrow-left-right"></i>
@@ -134,7 +134,7 @@
                         <div class="d-flex justify-content-between align-items-center p-2">
                             <div class="text-center">
                                 <div class="fs-3 fw-semibold">{{ $inprogress }}</div>
-                                <div>In-Progress</div>
+                                <div class="fw-semibold text-secondary">In-Progress</div>
                             </div>
                             <div class="p-1 in-progress-bg bg-opacity-25 rounded-4 py-2 px-3 shadow-sm">
                                 <i class="fs-3 bi bi-hourglass-split"></i>
@@ -149,7 +149,7 @@
                         <div class="d-flex justify-content-between align-items-center p-2">
                             <div class="text-center">
                                 <div class="fs-3 fw-semibold">{{ $investigation }}</div>
-                                <div>Investigation</div>
+                                <div class="fw-semibold text-secondary">Investigation</div>
                             </div>
                             <div class="p-1 investigation-bg bg-opacity-25 rounded-4 py-2 px-3 shadow-sm">
                                 <i class="fs-3 bi bi-search"></i>
@@ -164,7 +164,7 @@
                         <div class="d-flex justify-content-between align-items-center p-2">
                             <div class="text-center">
                                 <div class="fs-3 fw-semibold">{{ $close }}</div>
-                                <div>Closed</div>
+                                <div class="fw-semibold text-secondary">Closed</div>
                             </div>
                             <div class="p-1 close-bg bg-opacity-25 rounded-4 py-2 px-3 shadow-sm">
                                 <i class="fs-3 bi bi-check2-circle"></i>
@@ -179,7 +179,7 @@
                         <div class="d-flex justify-content-between align-items-center p-2">
                             <div class="text-center">
                                 <div class="fs-3 fw-semibold">{{ $cancel }}</div>
-                                <div>Cancelled</div>
+                                <div class="fw-semibold text-secondary">Cancelled</div>
                             </div>
                             <div class="p-1 cancel-bg bg-opacity-25 rounded-4 py-2 px-3 shadow-sm">
                                 <i class="fs-3 bi bi-x-circle"></i>
@@ -194,7 +194,7 @@
                         <div class="d-flex justify-content-between align-items-center p-2">
                             <div class="text-center">
                                 <div class="fs-3 fw-semibold">{{ $total }}</div>
-                                <div>Total</div>
+                                <div class="fw-semibold text-secondary">Total</div>
                             </div>
                             <div class="p-1 totals-bg bg-opacity-25 rounded-4 py-2 px-3 shadow-sm">
                                 <i class="fs-3 bi bi-files"></i>
@@ -204,6 +204,43 @@
                 </a>
             </div>
         </div>
+         {{-- Reports --}}
+        <div>
+            <h4>Calls Reports</h4>
+        </div>
+        {{-- Calls Dynamic Count --}}
+        <div class="row g-2 mb-2 mt-2">
+            <div class="col-sm-2">
+                <a href="#" target="_blank" class="text-body-secondary">
+                    <div class="p-3 reports-bg border border-3 border-light shadow-sm rounded-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <div class="p-1 reports-bg rounded-4 py-2 px-3 shadow-sm"><i class="bi bi-geo-alt fs-4"></i></div>
+                            <div class="fs-6 fw-semibold text-center"><span>GA Report</span></div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-sm-2">
+                <a href="#" target="_blank" class="text-body-secondary">
+                    <div class="p-3 reports-bg border border-3 border-light shadow-sm rounded-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <div class="p-1 reports-bg rounded-4 py-2 px-3 shadow-sm"><i class="bi bi-list-check fs-4"></i></div>
+                            <div class="fs-6 fw-semibold text-center"><span>Category Report</span></div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-sm-2">
+                <a href="#" target="_blank" class="text-body-secondary">
+                    <div class="p-3 reports-bg border border-3 border-light shadow-sm rounded-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <div class="p-1 reports-bg rounded-4 py-2 px-3 shadow-sm"><i class="bi bi-signpost-split fs-4"></i></div>
+                            <div class="fs-6 fw-semibold text-center"><span>Deviaton Report</span></div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>    
     </div>
 @endsection
 <style>
@@ -215,8 +252,11 @@
     .registered-bg {background: #4de876;background: linear-gradient(180deg, rgba(77, 232, 118, 0.35) 14%, rgba(121, 222, 49, 0.47) 100%);}
     .assign-bg {background: #bdb0f5;background: linear-gradient(180deg, rgba(189, 176, 245, 0.27) 29%, rgba(234, 136, 247, 0.32) 100%);}
     .in-progress-bg {background: #6fe8ce;background: linear-gradient(180deg, rgba(111, 232, 206, 0.35) 14%, rgba(36, 212, 168, 0.47) 100%); }
-    .investigation-bg {background: #6fb2e8;background: linear-gradient(180deg, rgba(111, 178, 232, 0.35) 14%, rgba(36, 103, 212, 0.47) 100%);}
+    .investigation-bg {background: #418df0;
+background: linear-gradient(2deg, rgba(65, 141, 240, 0.3) 0%, rgba(210, 195, 250, 0.6) 100%, rgba(237, 221, 83, 0.3) 100%);}
     .close-bg {background: #f7dc79;background: linear-gradient(180deg, rgba(247, 220, 121, 0.35) 14%, rgba(81, 198, 240, 0.47) 100%);}
     .cancel-bg {background: #f77981;background: linear-gradient(180deg, rgba(247, 121, 129, 0.35) 14%, rgba(240, 81, 145, 0.47) 100%);}
     .totals-bg {background: #79e6f7;background: linear-gradient(180deg, rgba(121, 230, 247, 0.35) 14%, rgba(81, 208, 240, 0.47) 100%);}
+    .reports-bg {background: #418df0;
+background: linear-gradient(2deg, rgba(65, 141, 240, 0.3) 0%, rgba(210, 195, 250, 0.6) 100%, rgba(237, 221, 83, 0.3) 100%);}
 </style>   

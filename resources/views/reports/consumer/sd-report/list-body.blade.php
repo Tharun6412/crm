@@ -4,10 +4,10 @@
     $consumer_count = [];
     $total_count = [];
 @endphp
-<div>
+{{-- <div>
     <!-- Export -->
     <button type="button" id="exportBtn" class="btn btn-outline-info text-end"><i class="bi bi-download"></i>&nbsp;Export</button>
-</div>
+</div> --}}
 <div class="table-responsive">
     <table class="table table-bordered table-hover table-striped" id="monthly-sale">
         <thead class="table-success align-middle">
