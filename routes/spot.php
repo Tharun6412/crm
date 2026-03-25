@@ -6,8 +6,8 @@ use Illuminate\Support\Facades\Route;
 // Prospects 
 Route::middleware(['auth', RouteAccess::class])->group(function() {
     // Dashboard
-    Route::get('/', [App\Http\Controllers\Spot\DashboardController::class, 'index']);
-
+    // Route::get('/', [App\Http\Controllers\Spot\DashboardController::class, 'index']);
+ 
     Route::get('prospects/getEditDetailsByGA', [App\Http\Controllers\Spot\ProspectsController::class, 'getEditDetailsByGA']);
     Route::get('prospects/getDetailsByGA', [App\Http\Controllers\Spot\ProspectsController::class, 'getDetailsByGA']);
     // Prospects 

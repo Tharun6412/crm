@@ -1,13 +1,16 @@
-<div class="table-responsive">
-    <table class="table table-bordered table-striped bg-white">
-        <thead class="table-success align-middle">
+<div>
+    <!-- Export -->
+    <button type="button" id="exportBtn" class="btn btn-outline-info btn-sm text-end"><i class="bi bi-download"></i>&nbsp;Export</button>
+</div>
+<div class="table-responsive mb-3">
+    <table class="table table-bordered" id="refund-report-table">
+        <thead>
             <tr>
                 <th rowspan="2" width="1%">S.No</th>
                 <th rowspan="2">GA</th>
                 <th colspan="{{ $refund_status->count() }}" class="text-center">Refund Status</th>
                 <th rowspan="2" class="text-end">Total</th>
                 <th rowspan="2" class="text-end">Refund Amount&nbsp;(&#8377;)</th>
-                {{-- <th rowspan="2" class="text-end">Refunded&nbsp;(&#8377;)</th> --}}
             </tr>
             <tr>
                 @foreach ($refund_status as $status)
@@ -49,3 +52,10 @@
         </tbody>
     </table>
 </div>
+@include('scripts.export-table', [
+    'table' => 'refund-report-table',
+    'button' => 'exportBtn',
+    'tabBased' => false,
+    'filename' => 'refund_report',
+    'sheet'    => 'Report',
+])

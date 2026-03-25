@@ -35,19 +35,11 @@ class RefundReportController extends Controller
             }
             $refund_data[$refund_count->ga_id]['total_count'] += $refund_count->status_count;
         }
-        // print "<pre>"; print_r($refund_data);exit;
-        // Response
-        if($request->ajax()) {
-            if(empty($request->filter_name)) {
-                abort(422, 'Please select the button');
-            }
-            return view('reports.consumer.refund-report.list-body', [
-                'geo_areas' => $geo_areas, 
-                'refund_status' => $refund_status,
-                'refund_data' => $refund_data
-            ]);
-        }
-        return view('reports.consumer.refund-report.list');
+        return view('reports.consumer.refund-report.list', [
+            'geo_areas' => $geo_areas, 
+            'refund_status' => $refund_status,
+            'refund_data' => $refund_data
+        ]);
     }
 
     /**

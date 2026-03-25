@@ -5,7 +5,7 @@
 
 @section('page-title', 'Comments')
 @section('breadcrumb')
-    <li class="breadcrumb-item"><a href="{{ url('spot') }}">SPot</a></li>
+    <li class="breadcrumb-item"><a href="{{ url('spot/dashboard') }}">SPot</a></li>
 @endsection
 
 @section('page-content')

@@ -1,7 +1,9 @@
 <div>
-    <div class="text-end p-1"><span class="fw-semibold">({{ $result->total() }})</span>&nbsp;Records Round.</div>
-    <table class="table table-bordered bg-white table-striped">
-        <thead class="table-success">
+    <span>{{ $result->total() }}&nbsp;records found.</span>
+    <!-- Export -->
+    <button type="button" id="exportBtn" class="btn btn-outline-info btn-sm text-end"><i class="bi bi-download"></i>&nbsp;Export</button>
+    <table class="table table-bordered" id="employee-report">
+        <thead>
             <tr>
                 <th width="1%">S.No</th>
                 <th>Employee ID</th>
@@ -47,3 +49,12 @@
         </tbody>
     </table>
 </div>
+@push('scripts]')
+    @include('scripts.export-table', [
+        'table' => 'employee-report',
+        'button' => 'exportBtn',
+        'tabBased' => false,
+        'filename' => 'employee_report',
+        'sheet'    => 'Report',
+    ])
+@endpush

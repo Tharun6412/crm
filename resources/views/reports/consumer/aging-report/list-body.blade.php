@@ -12,10 +12,15 @@
             <!-- Reset -->
             <a href="{{ url('reports/ageingReport') }}" class="btn btn-warning"><i class="bi bi-arrow-clockwise"></i></a>
         </div>
+        <button type="submit" class="btn btn-success"><i class="bi bi-search"></i></button>
+        <!-- Reset -->
+        <a href="{{ url('reports/ageingReport') }}" class="btn btn-warning"><i class="bi bi-arrow-clockwise"></i></a>
+        <!-- Export -->
+        <button type="button" id="exportBtn" class="btn btn-outline-info text-end"><i class="bi bi-download"></i>&nbsp;Export</button>
     </div>
 </form>
 <div class="table-responsive">
-    <table class="table table-bordered table-hover page-sort table-striped bg-white">
+    <table class="table table-bordered table-hover page-sort table-striped bg-white" id="aging-report">
         <thead class="table-success">
             <tr>
                 <th width="1%" nowrap="nowrap">S No.</th>
@@ -76,3 +81,10 @@
         </tfoot>
     </table>
 </div>
+@include('scripts.export-table', [
+    'table' => 'aging-report',
+    'button' => 'exportBtn',
+    'tabBased' => false,
+    'filename' => 'aging_report',
+    'sheet'    => 'Report',
+])

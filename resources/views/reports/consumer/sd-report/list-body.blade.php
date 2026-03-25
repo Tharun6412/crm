@@ -4,6 +4,10 @@
     $consumer_count = [];
     $total_count = [];
 @endphp
+<div>
+    <!-- Export -->
+    <button type="button" id="exportBtn" class="btn btn-outline-info text-end"><i class="bi bi-download"></i>&nbsp;Export</button>
+</div>
 <div class="table-responsive">
     <table class="table table-bordered table-hover table-striped" id="monthly-sale">
         <thead class="table-success align-middle">
@@ -81,3 +85,10 @@
     </table>
 </div>
 @include('scripts.bs-popover')
+@include('scripts.export-table', [
+    'table' => 'monthly-sale',
+    'button' => 'exportBtn',
+    'tabBased' => false,
+    'filename' => 'sd_report',
+    'sheet'    => 'Report',
+])

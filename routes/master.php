@@ -15,6 +15,7 @@ Route::middleware(['auth'])->group(function() {
         // Schemes
         Route::resource('schemes', App\Http\Controllers\Master\Consumer\SchemesController::class);
         Route::post('schemes/{id}/togglestatus', [App\Http\Controllers\Master\Consumer\SchemesController::class, 'toggleStatus']);
+        Route::resource('firmTypes', App\Http\Controllers\Master\Consumer\FirmTypeController::class);
     });
 
     // Invoice master data
@@ -47,7 +48,6 @@ Route::middleware(['auth'])->group(function() {
         Route::resource('charge-areas', App\Http\Controllers\Master\Location\ChargeAreaController::class);
         Route::resource('areas', App\Http\Controllers\Master\Location\AreaController::class);
         Route::resource('industrial-areas', App\Http\Controllers\Master\Location\IndustrialAreaController::class);
-        Route::resource('business-types', App\Http\Controllers\Master\Location\BusinessTypeController::class);
     });
 
     // Documents

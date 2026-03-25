@@ -30,9 +30,9 @@
                     <i class="bi bi-file-earmark-excel"></i>&nbsp;Export
                 </x-auth.link>
             @endif
-            <a href="{{ url('spot/prospects/create') }}" class="btn btn-outline-success link-modal">
+            <x-auth.link href="{{ url('spot/prospects/create') }}" class="btn btn-outline-success link-modal" action="add">
                 <i class="bi bi-plus-lg"></i>&nbsp;Create
-            </a>
+            </x-auth.link>
         </div>
     </div>
     {{-- Parameters for sorting By column and Order --}}
