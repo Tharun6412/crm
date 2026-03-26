@@ -9,4 +9,5 @@ Route::middleware([ApiKeyMiddleware::class])->group(function(){
         return "Consumer Add API";
     });
     Route::post('mro/pushData', [App\Http\Controllers\Api\prepaid\MroPush::class, 'store']);
+    Route::post('smartConnect/activate', [App\Http\Controllers\Api\prepaid\SmartConnect::class, 'store']);
 });
