@@ -2,6 +2,7 @@
 
 namespace APP\Http\Controllers\Billing;
 
+use App\Enums\ConnectionType;
 use App\Enums\Constants;
 use App\Enums\InvoiceType;
 use App\Http\Controllers\Controller;
@@ -47,12 +48,13 @@ class GasInvoiceController extends Controller
         // 1. Check consumer is billable
         $consumer = Consumer::where('id', $id)
             ->where('status_id', ConsumerStatus::ACTIVATE->value)
+            ->where('connection_type_id', ConnectionType::POSTPAID->value)
             ->with(['statusHistory' => function ($q) {
                 $q->where('status_id', ConsumerStatus::ACTIVATE->value)->latest()->limit(1);
             }])->first();
         if($consumer) {
             // 2. Get latest gas invoice if exists
-            $invoice = BillInvoice::where('consumer_id', $id)->where('type_id', InvoiceType::GAS_BILL->value)->latest()->first();
+            $invoice = BillInvoice::where('consumer_id', $id)->where('type_id', InvoiceType::GAS_BILL->value)->whereNot('status_id', InvoiceStatus::CANCEL->value)->latest()->first();
             $start_date = (!empty($invoice)) ? $invoice->consumption->date_to->format('Y-m-d') : ($consumer->statusHistory->first()->created_at->format('Y-m-d'));
             $end_date = date('Y-m-d');
             $bill_days = Carbon::parse($start_date)->diffInDays($end_date);
@@ -105,6 +107,7 @@ class GasInvoiceController extends Controller
         // 3. Get the consumer details
         $consumer = Consumer::where('id', $request->id)
             ->where('status_id', ConsumerStatus::ACTIVATE->value)
+            ->where('connection_type_id', ConnectionType::POSTPAID->value)
             ->with(['statusHistory' => function ($q) {
                 $q->where('status_id', ConsumerStatus::ACTIVATE->value)->latest()->limit(1);
             }])->first();

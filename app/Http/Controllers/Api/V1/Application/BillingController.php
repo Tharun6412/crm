@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1\Application;
 
 use App\Enums\AwsPath;
+use App\Enums\ConnectionType;
 use App\Enums\Constants;
 use App\Enums\ConsumerStatus;
 use App\Enums\InvoiceStatus;
@@ -41,13 +42,13 @@ class BillingController extends Controller
             'meterChanges:id,consumer_id,meter_id,prev_reading,end_reading,consumption,new_meter_id,status_id',
             'activeMeter:id,consumer_id,meter_no,meter_serial_no,initial_reading,status',
         ])->select('id', 'segment_id', 't_crn', 'crn', 'title', 'fname', 'lname', 'segment_id', 'district_id', 'state_id', 'ga_id')->where('id', $id)
-            ->where('status_id', ConsumerStatus::ACTIVATE->value)->first();
+            ->where('status_id', ConsumerStatus::ACTIVATE->value)->where('connection_type_id', ConnectionType::POSTPAID->value)->first();
         // dd($consumer);
         // Check consumer is billable
         if($consumer) {
             // 1. Get latest gas invoice if exists
             // $invoice = BillInvoice::where('consumer_id', $id)->where('type_id', 1)->latest()->first();
-            $invoice = $consumer->invoices()->where('type_id', InvoiceType::GAS_BILL->value)->latest()->first();
+            $invoice = $consumer->invoices()->where('type_id', InvoiceType::GAS_BILL->value)->whereNot('status_id', InvoiceStatus::CANCEL->value)->latest()->first();
             $start_date = (!empty($invoice)) ? $invoice->consumption->date_to->format('Y-m-d') : ($consumer->statusHistory->where('status_id', ConsumerStatus::ACTIVATE->value)->sortByDesc('created_at')->first()?->created_at->format('Y-m-d'));
             $end_date = date('Y-m-d');
             $bill_days = Carbon::parse($start_date)->diffInDays($end_date);
@@ -102,7 +103,7 @@ class BillingController extends Controller
             'end_reading' => 'required|numeric|min:0',
             ]);
         // 2. Get the consumer details
-        $consumer = Consumer::where('id', $id)->where('status_id', ConsumerStatus::ACTIVATE->value)->first();
+        $consumer = Consumer::where('id', $id)->where('status_id', ConsumerStatus::ACTIVATE->value)->where('connection_type_id', ConnectionType::POSTPAID->value)->first();
         // 3.  error response, if consumer not found.
         if (!$consumer) {
             return response()->json([
@@ -110,7 +111,7 @@ class BillingController extends Controller
             ], 403);
         }
         // 4. Data preperation.
-        $invoice = $consumer->invoices()->where('type_id', InvoiceType::GAS_BILL->value)->latest()->first();
+        $invoice = $consumer->invoices()->where('type_id', InvoiceType::GAS_BILL->value)->whereNot('status_id', InvoiceStatus::CANCEL->value)->latest()->first();
         // 5. checking for meter replacement
         $meterChange = $consumer->meterChanges()->where('status_id', MeterChange::PENDING->value)->first();
 
