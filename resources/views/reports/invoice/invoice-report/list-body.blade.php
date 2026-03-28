@@ -63,7 +63,7 @@
     </div>
 </div>
 @php
-    $sort_by = (request()->has('sortBy')) ? request()->get('sortBy') : 'created_at';
+    $sort_by = (request()->has('sortBy')) ? request()->get('sortBy') : 'bil_invoices.created_at';
     $sort_order = (request()->has('sortOr')) ? request()->get('sortOr') : 'desc';
     $sort_order_inverse = ($sort_order == 'asc') ? 'desc' : 'asc';
     $sort_icon = ($sort_order == 'asc') ? 'bi-caret-down-fill' : 'bi-caret-up-fill';
@@ -75,25 +75,25 @@
             <tr class="bg-success-subtle">
                 <th width="1%" nowrap>S No</th>
                 <th nowrap>
-                    <a href="{{ $invoices->appends(['sortBy' => 'invoice_number','sortOr' => $sort_order_inverse])->url($invoices->currentPage()) }}">
+                    <a href="{{ $invoices->appends(['sortBy' => 'bil_invoices.invoice_number','sortOr' => $sort_order_inverse])->url($invoices->currentPage()) }}">
                         Invoice No
-                        @if ($sort_by == 'invoice_number')
+                        @if ($sort_by == 'bil_invoices.invoice_number')
                             <i class="bi {{ $sort_icon }}"></i>
                         @endif
                     </a>
                     </th>
                 <th nowrap>
-                    <a href="{{ $invoices->appends(['sortBy' => 'invoice_date','sortOr' => $sort_order_inverse])->url($invoices->currentPage()) }}">
+                    <a href="{{ $invoices->appends(['sortBy' => 'bil_invoices.invoice_date','sortOr' => $sort_order_inverse])->url($invoices->currentPage()) }}">
                     Invoice Date
-                        @if ($sort_by == 'invoice_date')
+                        @if ($sort_by == 'bil_invoices.invoice_date')
                         <i class="bi {{ $sort_icon }}"></i>
                         @endif
                     </a>
                 </th>
                 <th nowrap>
                     <div class="d-flex">
-                        <a href="{{ $invoices->appends(['sortBy' => 'type_id','sortOr' => $sort_order_inverse])->url($invoices->currentPage()) }}">Invoice Type
-                            @if ($sort_by == 'type_id')
+                        <a href="{{ $invoices->appends(['sortBy' => 'bil_invoices.type_id','sortOr' => $sort_order_inverse])->url($invoices->currentPage()) }}">Invoice Type
+                            @if ($sort_by == 'bil_invoices.type_id')
                                 <i class="bi {{ $sort_icon }}"></i>
                             @endif
                         </a>
@@ -101,7 +101,7 @@
                     </div>
                 </th>
                 <th nowrap>
-                    <a href="{{ $invoices->appends(['sortBy' => 'crn','sortOr' => $sort_order_inverse])->url($invoices->currentPage()) }}">
+                    <a href="{{ $invoices->appends(['sortBy' => 'cns_consumers.crn','sortOr' => $sort_order_inverse])->url($invoices->currentPage()) }}">
                     CRN
                     @if ($sort_by == 'crn')
                         <i class="bi {{ $sort_icon }}"></i>
@@ -109,7 +109,7 @@
                     </a>
                 </th>
                 <th nowrap>
-                    <a href="{{ $invoices->appends(['sortBy' => 'fname','sortOr' => $sort_order_inverse])->url($invoices->currentPage()) }}">
+                    <a href="{{ $invoices->appends(['sortBy' => 'cns_consumers.fname','sortOr' => $sort_order_inverse])->url($invoices->currentPage()) }}">
                     Consumer Name
                     @if ($sort_by == 'fname')
                         <i class="bi {{ $sort_icon }}"></i>
@@ -188,9 +188,6 @@
             </tr>
         </thead>
         <tbody>
-            @php
-                $i = (($invoices->currentPage() - 1) * $invoices->perPage())+1;
-            @endphp
             @forelse($invoices as $inv)
                 <tr class="align-middle">
                     <td class="text-center">{{ $i++ }}</td>
