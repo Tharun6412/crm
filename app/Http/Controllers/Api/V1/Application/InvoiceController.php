@@ -49,7 +49,7 @@ class InvoiceController extends Controller
     {
         // Find Invoice
         $invoice = BillInvoice::with([
-            'consumer:id,fname,lname,crn,ga_id,state_id,district_id,status_id,segment_id,hno,street,colony,city,ward,pincode',
+            'consumer:id,fname,lname,crn,ga_id,state_id,district_id,status_id,segment_id,hno,street,colony,city,ward,pincode,phone',
             'consumer.state:id,name',
             'consumer.ga:id,name',
             'consumer.district:id,name',
@@ -71,6 +71,12 @@ class InvoiceController extends Controller
             'payments.paymentType:id,name',
             'payments.status:id,name',
         ])->find($id);
+        $invoice->inv_date = $invoice->invoice_date->toDateTimeString();
+        $invoice->due_date_val = $invoice->due_date->toDateTimeString();
+        $invoice->consumer->mobile = maskNumber($invoice->consumer->phone);
+        $invoice->employee_id = $invoice->createdBy->emp_id;
+        unset($invoice->created_by, $invoice->consumer->phone, $invoice->invoice_date, $invoice->due_date);
+        $invoice->makeHidden(['createdBy']);
         $invoice->parentInvoice?->makeHidden(['inv_number']);
         $invoice->payments->each->makeHidden(['inv_number']);
         // Abort if Invoice not found

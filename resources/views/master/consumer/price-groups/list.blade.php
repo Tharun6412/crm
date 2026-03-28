@@ -26,7 +26,7 @@
                 <a href="{{ url('master/consumer/price-groups/create') }}" class="btn btn-success link-modal"><i class="bi bi-plus-lg"></i>&nbsp;Create</a>
             </div>
         </div>
-        <div id="price-group-list">
+        <div id="price-group-list" class="current-page-reload">
             @include('master.consumer.price-groups.list-body')
         </div>
     </form>

@@ -66,7 +66,7 @@
             </tr>
             <tr>
                 <td class="bg-light">Created By</td>
-                <td></td>
+                <td>{{ $scheme->createdBy->name }}</td>
             </tr>
         </table>
     </div>

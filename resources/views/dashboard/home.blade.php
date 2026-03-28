@@ -388,7 +388,7 @@
                     </a>
                 </div>
                 <div class="col-sm-4 col-md-4 col-lg-2 col-xl-2 col-xs-6">
-                    <a href="{{ url('spot') }}">
+                    <a href="{{ url('spot/dashboard') }}">
                         <div class="card link-card-bg p-1 text-dark bg-opacity-10 border-3 border-light">
                             <div class="d-flex justify-content-between p-2 align-items-center">
                                 <div>

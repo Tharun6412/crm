@@ -28,7 +28,7 @@ class PriceGroupsController extends Controller
             ->when($request->has('segments'), function($q) use($request) {
                 $q->whereIn('segment_id', $request->segments);
             })
-            ->paginate(2)->withQueryString();
+            ->paginate(20)->withQueryString();
 
         // Render output
         if($request->ajax())

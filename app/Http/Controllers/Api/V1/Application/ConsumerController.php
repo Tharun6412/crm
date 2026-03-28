@@ -67,12 +67,15 @@ class ConsumerController extends Controller
             'scheme.scheme:id,name,registration,min_payment',
             'sdPayment',
             'sdPayment.paymentType:id,name',
-            'activeMeter:id,meter_no,meter_serial_no,initial_reading,status',
+            'activeMeter:id,consumer_id,meter_no,meter_serial_no,initial_reading,status',
             'activeMeter.meterStatus:id,name',
             'consumerData:id,consumer_id,lat,lng'
         ])->when((!$request->user()->isAdmin() AND !$request->user()->isSuperAdmin()), function ($q) use($request) {
             $q->whereIn('ga_id', $request->user()->ga()->pluck('ga_id')->toArray());
         })->find($id);
+        $consumer->mobile = maskNumber($consumer->phone);
+        $consumer->aadhar_val = maskNumber($consumer->aadhar);
+        unset($consumer->phone, $consumer->aadhar);
 
         // Abort if consumer not found
         if (! $consumer) {

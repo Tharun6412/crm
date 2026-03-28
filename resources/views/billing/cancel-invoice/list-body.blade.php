@@ -19,7 +19,7 @@
                     @foreach ($invoices as $invoice)
                         <tr>
                             <td>{{ $i++ }}</td>
-                            <td><x-auth.link class="link-modal" href="{{ url('consumers/'.$invoice->consumer_id) }}">{{ $invoice->consumer->crn }}</x-auth.link></td>
+                            <td><x-auth.link href="{{ url('consumers/'.$invoice->consumer_id) }}" target="_blank">{{ $invoice->consumer->crn }}</x-auth.link></td>
                             <td>{{ $invoice->invoice_number }}</td>
                             <td>{{ $invoice->status->name }}</td>
                             <td>{{ $invoice->createdBy->name }}</td>

@@ -43,7 +43,7 @@
                 @foreach ($meterChange as $change)
                     <tr>
                         <td>{{ $i++ }}</td>
-                        <td>{{ $change->consumer->crn }}</td>
+                        <td><a href="{{ url('consumers/'.$change->consumer_id) }}" target="_blank">{{ $change->consumer->crn }}</a></td>
                         <td>{{ $change->meter->meter_no }}</td>
                         <td>{{ $change->consumption }}</td>
                         <td>{{ $change->newMeter->meter_no }}</td>

@@ -42,7 +42,7 @@ class ModuleDataSeeder extends Seeder
             ['id' => '8','name' => 'Spot','slug' => NULL,'url' => '#spot','parent_id' => NULL,'package_id' => '6','icon' => 'bi bi-file-earmark-check','status' => '1','position' => '8'],
             ['id' => '9','name' => 'Administration','slug' => NULL,'url' => '#admin','parent_id' => NULL,'package_id' => '1','icon' => 'bi-gear','status' => '1','position' => '9'],
             ['id' => '10','name' => 'Module Administration','slug' => NULL,'url' => 'admin/modules','parent_id' => NULL,'package_id' => '1','icon' => 'bi-gear','status' => '1','position' => '10'],
-            ['id' => '11','name' => 'Help','slug' => NULL,'url' => '#','parent_id' => NULL,'package_id' => '1','icon' => 'bi-gear','status' => '1','position' => '11'],
+            ['id' => '11','name' => 'Help','slug' => NULL,'url' => 'help','parent_id' => NULL,'package_id' => '1','icon' => 'bi-gear','status' => '1','position' => '11'],
             //child
             ['id' => '12','name' => 'Register','slug' => NULL,'url' => '#register','parent_id' => '2','package_id' => '3','icon' => 'bi-pencil-square','status' => '1','position' => '1'],
             ['id' => '13','name' => 'Consumers','slug' => NULL,'url' => '#consumers','parent_id' => '2','package_id' => '3','icon' => 'bi-people','status' => '1','position' => '2'],

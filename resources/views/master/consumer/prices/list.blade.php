@@ -12,7 +12,7 @@
 
 @section('page-content')
     <form action="{{ url('master/consumer/prices') }}" id="cns-price-search-form" method="GET">
-        <div id="cns-price-list">
+        <div id="cns-price-list" class="current-page-reload">
             @include('master.consumer.prices.list-body')
         </div>
     </form>
