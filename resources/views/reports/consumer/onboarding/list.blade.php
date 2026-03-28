@@ -14,11 +14,11 @@
     <div>
         <nav>
             <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                <button class="nav-link active fs-5" id="nav-consumers-tab" data-bs-toggle="tab" data-bs-target="#nav-consumers" type="button" role="tab" aria-controls="nav-consumers" aria-selected="true"><i class="bi bi-app-indicator"></i>&nbsp;All Consumers <span class="badge text-bg-success">{{ array_sum($consumer_status_sum) }}</span></button>
-                <button class="nav-link fs-5" id="nav-cns-activity-tab" data-bs-toggle="tab" data-bs-target="#nav-cns-activity" type="button" role="tab" aria-controls="nav-cns-activity" aria-selected="false"><i class="bi bi-app-indicator"></i>&nbsp;Consumer Onboard Activity</button>
+                <button class="nav-link active fs-5 border border-bottom-0 me-2" id="nav-consumers-tab" data-bs-toggle="tab" data-bs-target="#nav-consumers" type="button" role="tab" aria-controls="nav-consumers" aria-selected="true"><i class="bi bi-app-indicator"></i>&nbsp;All Consumers <span class="badge text-bg-success">{{ array_sum($consumer_status_sum) }}</span></button>
+                <button class="nav-link fs-5 border border-bottom-0" id="nav-cns-activity-tab" data-bs-toggle="tab" data-bs-target="#nav-cns-activity" type="button" role="tab" aria-controls="nav-cns-activity" aria-selected="false"><i class="bi bi-app-indicator"></i>&nbsp;Consumer Onboard Activity</button>
             </div>
         </nav>
-        <div class="tab-content" id="nav-tabContent">
+        <div class="tab-content bg-white p-2 border border-top-0" id="nav-tabContent">
             <div class="tab-pane fade show active" id="nav-consumers" role="tabpanel" aria-labelledby="nav-consumers-tab" tabindex="0">
                 @include('reports.consumer.onboarding.consumer-status')
             </div>

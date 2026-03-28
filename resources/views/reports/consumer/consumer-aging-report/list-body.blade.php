@@ -25,10 +25,10 @@
 </form>
 <ul class="nav nav-tabs" id="myTab" role="tablist">
     <li class="nav-item" role="presentation">
-        <button class="nav-link active fs-5" id="not_active-tab" data-bs-toggle="tab" data-bs-target="#not_active" type="button" role="tab" aria-controls="not_active" aria-selected="true"><i class="bi bi-person-x"></i>&nbsp;Not Activated</button>
+        <button class="nav-link active fs-5 border border-bottom-0 me-2" id="not_active-tab" data-bs-toggle="tab" data-bs-target="#not_active" type="button" role="tab" aria-controls="not_active" aria-selected="true"><i class="bi bi-person-x"></i>&nbsp;Not Activated</button>
     </li>
     <li class="nav-item" role="presentation">
-        <button class="nav-link fs-5" id="active-tab" data-bs-toggle="tab" data-bs-target="#active" type="button" role="tab" aria-controls="active" aria-selected="false"><i class="bi bi-person-check"></i>&nbsp;Activated</button>
+        <button class="nav-link fs-5 border border-bottom-0" id="active-tab" data-bs-toggle="tab" data-bs-target="#active" type="button" role="tab" aria-controls="active" aria-selected="false"><i class="bi bi-person-check"></i>&nbsp;Activated</button>
     </li>
 </ul>
 <div class="tab-content border border-top-0 bg-white p-2" id="myTabContent">

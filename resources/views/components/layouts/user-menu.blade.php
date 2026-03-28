@@ -1,8 +1,8 @@
 <ul class="topbar-menu d-flex align-items-center gap-3">
-    <li class="dropdown border-end border-light-subtle pe-3">
+    <li class="dropdown border-end border-light-subtle pe-3 d-none d-sm-inline-block">
         <a href="javascript:void(0)" onclick="changeFontSize('-')" style="font-size: 12px;">A</a>
-        <a href="javascript:void(0)" onclick="changeFontSize('a')" style="font-size: 14px;">A</a>
-        <a href="javascript:void(0)" onclick="changeFontSize('+')" style="font-size: 16px;">A</a>
+        <a href="javascript:void(0)" onclick="changeFontSize('a')" style="font-size: 16px;">A</a>
+        <a href="javascript:void(0)" onclick="changeFontSize('+')" style="font-size: 18px;">A</a>
     </li>
     <li class="d-none d-sm-inline-block">
         <div class="nav-link" id="light-dark-mode" data-bs-toggle="tooltip" data-bs-placement="left" aria-label="Theme Mode" data-bs-original-title="Theme Mode">

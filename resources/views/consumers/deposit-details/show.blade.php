@@ -22,7 +22,7 @@
                     <div class="col-sm-3 text-end fw-semibold">Payment Type : </div>
                     <div class="col-sm-3">{{ $sd_payment->paymentType->name }}</div>
                     <div class="col-sm-3 text-end fw-semibold">Status : </div>
-                    <div class="col-sm-3">{{ $sd_payment->status->name }}</div>
+                    <div class="col-sm-3"><x-payments.status :status="$sd_payment->status" /></div>
                     <div class="col-sm-3 text-end fw-semibold">Transaction Date : </div>
                     <div class="col-sm-3">{{ $sd_payment->created_at->format('d-m-Y') }}</div>
                     <div class="col-sm-3 text-end fw-semibold">Added By : </div>

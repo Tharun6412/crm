@@ -15,9 +15,9 @@
             {{-- @include('complaints.reports.ga.list-body') --}}
             <nav>
                 <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                    <a href="#" class="nav-link active fs-5" id="nav-ga-tab" data-bs-toggle="tab" data-bs-target="#nav-ga" type="button" role="tab" aria-controls="nav-ga" aria-selected="true" data-url="{{ url('calls/reports/gaReport') }}"><i class="bi bi-geo-alt"></i>&nbsp;Ga Report</a>
-                    <a href="#" class="nav-link fs-5" id="nav-category-tab" data-bs-toggle="tab" data-bs-target="#nav-category" type="button" role="tab" aria-controls="nav-category" aria-selected="false" data-url="{{ url('calls/reports/categoryReport') }}"><i class="bi bi-check2-circle"></i>&nbsp;Category Report</a>
-                    <a href="#" class="nav-link fs-5" id="nav-deviation-tab" data-bs-toggle="tab" data-bs-target="#nav-deviation" type="button" role="tab" aria-controls="nav-deviation" aria-selected="false" data-url="{{ url('calls/reports/deviationReport') }}"><i class="bi bi-signpost-split"></i>&nbsp;Deviation Report</a>
+                    <a href="#" class="nav-link border border-bottom-0 me-2 active fs-5" id="nav-ga-tab" data-bs-toggle="tab" data-bs-target="#nav-ga" type="button" role="tab" aria-controls="nav-ga" aria-selected="true" data-url="{{ url('calls/reports/gaReport') }}"><i class="bi bi-geo-alt"></i>&nbsp;Ga Report</a>
+                    <a href="#" class="nav-link border border-bottom-0 me-2  fs-5" id="nav-category-tab" data-bs-toggle="tab" data-bs-target="#nav-category" type="button" role="tab" aria-controls="nav-category" aria-selected="false" data-url="{{ url('calls/reports/categoryReport') }}"><i class="bi bi-check2-circle"></i>&nbsp;Category Report</a>
+                    <a href="#" class="nav-link border border-bottom-0  fs-5" id="nav-deviation-tab" data-bs-toggle="tab" data-bs-target="#nav-deviation" type="button" role="tab" aria-controls="nav-deviation" aria-selected="false" data-url="{{ url('calls/reports/deviationReport') }}"><i class="bi bi-signpost-split"></i>&nbsp;Deviation Report</a>
                 </div>
             </nav>
             <div class="tab-content" id="nav-tabContent">

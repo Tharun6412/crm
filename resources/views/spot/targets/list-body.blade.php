@@ -1,13 +1,13 @@
 {{-- List Body --}}
 <div class="table-responsive">
-    <table class="table table-bordered table-striped bg-white align-middle">
+    <table class="table table-bordered table-striped bg-white align-middle table-hover">
         <thead class="table-success align-middle">
             <tr>
                 <th width="1%" nowrap rowspan="2">S No</th>
                 <th rowspan="2">Action</th>
                 <th rowspan="2">GA</th>
                 @for ($date = $y_start->copy(); $date->lte($y_end); $date->addMonth())
-                    <th colspan="2" class="text-center">{{ $date->format('M-y') }}</th>
+                    <th colspan="2" class="table-warning text-center">{{ $date->format('M-y') }}</th>
                 @endfor
                 <th colspan="2" class="text-center">Totals</th>
             </tr>

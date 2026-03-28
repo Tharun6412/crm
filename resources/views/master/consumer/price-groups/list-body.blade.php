@@ -1,15 +1,15 @@
 {{-- Price groups list body --}}
 
-<div class="table-responsive">
-    <table class="table table-bordered table-primary">
-        <thead class="table-primary">
+<div class="table-responsive mb-2 mt-2" style="min-height: 300px;">
+    <table class="table table-bordered table-hover">
+        <thead class="table-success">
             <tr>
                 <th width="1%" nowrap>S No</th>
                 <th>Code</th>
                 <th>Description</th>
                 <th>GA<x-master.ga-filter class="float-end"/></th>
                 <th>Segment<x-master.segment-filter class="float-end"/></th>
-                <th class="text-end">Price</th>
+                <th class="text-end">Price(&#8377;)</th>
                 <th>Effective From</th>
                 <th>Actions</th>
             </tr>
@@ -26,9 +26,18 @@
                         <td class="text-end">{{ numberFormat($group->price, 2) }}</td>
                         <td>{{ $group->effective_from?->format('d-m-Y') }}</td>
                         <td>
-                            <a href="{{ url('master/consumer/price-groups/' . $group->id) }}" class="link-canvas"><i class="bi bi-info-square"></i></a>
-                            <a href="{{ url('master/consumer/price-groups/' . $group->id . '/edit') }}" class="link-modal"><i class="bi bi-pencil-square"></i></a>
-                            <a href="{{ url('master/consumer/price-groups/' . $group->id) }}" class="ajax-link-delete text-danger"><i class="bi bi-x-square"></i></a>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Action
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a href="{{ url('master/consumer/price-groups/' . $group->id) }}" class="dropdown-item link-canvas"><i class="bi bi-eye"></i> View</a></li>
+                                    <li><a href="{{ url('master/consumer/price-groups/' . $group->id . '/edit') }}" class="dropdown-item link-modal"><i class="bi bi-pencil-square"></i> Edit</a></li>
+                                    <li>
+                                        <a href="{{ url('master/consumer/price-groups/' . $group->id) }}" class="dropdown-item ajax-link-delete text-danger"><i class="bi bi-x-square"></i> Delete</a>
+                                    </li>
+                                </ul>
+                            </div>
                         </td>
                     </tr>
                 @endforeach

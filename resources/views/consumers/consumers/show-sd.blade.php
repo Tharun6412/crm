@@ -83,7 +83,7 @@
                                 <td>{{ $sd->transaction_number }}</td>
                                 <td class="text-end">{{ numberFormat($sd->amount, 2) }}</td>
                                 <td class="text-end">{{ numberFormat($sd->balance, 2) }}</td>
-                                <td>{{ $sd->status->name }}</td>
+                                <td><x-payments.status :status="$sd->status" /></td>
                                 <td>{{ $sd->createdBy->name }}</td>
                                 <td>
                                     <div class="btn-group">

@@ -31,14 +31,15 @@
                         if (data.length === 0) {
                             html = '<div class="list-group-item">No results found</div>';
                         } else {
+                            console.log(data);
+                            
                             data.forEach(item => {
                                 html += `
-                                    <div class="list-group-item bg-light">
-                                        <div><span class="text-warning-emphasis fw-semibold"><i class="bi bi-person"></i> ${item.crn}</span>, <span class="text-success-emphasis fw-semibold">${item.name}</span>, <span class="text-dark fw-semibold"><i class="bi bi-geo-alt"></i> ${item.ga.name}</span>, <span class="text-dark fw-semibold"><i class="bi bi-check2-square"></i> ${item.status.name}</span></div>
-                                        <div class="p-1 fs-sm">
-                                        <a href="consumers/${item.id}" class="link-primary me-2" target="_blank"><i class="bi bi-person-lines-fill"></i>&nbsp;Details</a>
-                                        <a href="bill/gasInvoice/create/${item.id}" class="link-primary me-2" target="_blank"><i class="bi bi-receipt"></i>&nbsp;Gas Bill</a>
-                                        <a href="bill/invoice/create/${item.id}" class="link-primary me-2" target="_blank"><i class="bi bi-file-ruled"></i>&nbsp;Add Invoice</a>
+                                    <div class="list-group-item bg-light p-2">
+                                        <div class="p-2"><span class="text-warning-emphasis fw-semibold"><i class="bi bi-${item.connection_type_id == 1 ? 'speedometer2' : 'wifi'}"></i> ${item.crn}</span>, <span class="text-success-emphasis fw-semibold">${item.name}</span>, <span class="text-dark fw-semibold"><i class="bi bi-geo-alt"></i> ${item.ga.name}</span>, <span class="badge text-bg-secondary"><i class="bi bi-gear">&nbsp;</i>${item.status.name}</span> <span class="text-body-tertiary">|</span>
+                                        <a href="consumers/${item.id}" title="Details" class="link-primary me-2 fs-5" target="_blank"><i class="bi bi-person-lines-fill">&nbsp;</i></a><span class="text-body-tertiary">|</span>
+                                        <a href="bill/gasInvoice/create/${item.id}" title="Gas Bill" class="link-primary me-2 fs-5" target="_blank"><i class="bi bi-receipt">&nbsp;</i></a><span class="text-body-tertiary">|</span>
+                                        <a href="bill/invoice/create/${item.id}" title="Add Invoice" class="link-primary me-2 fs-5" target="_blank"><i class="bi bi-file-ruled">&nbsp;</i></a>
                                         </div>
                                     </div>`;
                             });

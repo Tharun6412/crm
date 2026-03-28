@@ -24,7 +24,7 @@
                     <dt class="col-sm-3">Alternate Mobile</dt>
                     <dd class="col-sm-9">{{ maskNumber($consumer->phone_alt) }}</dd>
                     <dt class="col-sm-3">Status</dt>
-                    <dd class="col-sm-9">{{ $consumer->status->name }}</dd>
+                    <dd class="col-sm-9"><x-consumer.status :status="$consumer->status" /></dd>
                 </dl>
                 <h4 class="text-primary mt-3 fw-semibold">Scheme Details</h4>
                 <dl class="row">

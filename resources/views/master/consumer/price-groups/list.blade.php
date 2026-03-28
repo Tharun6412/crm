@@ -15,16 +15,15 @@
     <form action="{{ url('master/consumer/price-groups') }}" id="price-group-search-form" method="GET">
         <div class="d-flex justify-content-between">
             <div class="row g-2 mb-1">
-                <div class="col-auto">Search</div>
                 <div class="col-auto">
-                    <input type="text" name="key" id="key" class="form-control form-control-sm" value="{{ request()->key ?? '' }}">
+                    <input type="text" name="key" id="key" placeholder="Enter search keyword" class="form-control" value="{{ request()->key ?? '' }}">
                 </div>
                 <div class="col-auto">
-                    <button type="submit" class="btn btn-sm btn-success"><i class="bi bi-search"></i></button>
+                    <button type="submit" class="btn btn-success"><i class="bi bi-search"></i></button>
                 </div>
             </div>
             <div>
-                <a href="{{ url('master/consumer/price-groups/create') }}" class="btn btn-sm btn-success link-modal"><i class="bi bi-plus-lg"></i>&nbsp;Create</a>
+                <a href="{{ url('master/consumer/price-groups/create') }}" class="btn btn-success link-modal"><i class="bi bi-plus-lg"></i>&nbsp;Create</a>
             </div>
         </div>
         <div id="price-group-list">

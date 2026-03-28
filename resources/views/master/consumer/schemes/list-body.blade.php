@@ -8,11 +8,11 @@
 </div>
 <form id="schemes-search-form" action="{{ url('master/consumer/schemes') }}" method="GET">
     <div class="d-flex align-items-center justify-content-between pb-2 flex-wrap">
-        <div class="d-flex align-items-center gap-2 flex-wrap">
+        <div class="d-flex align-items-center gap-1 flex-wrap">
             <div>
                 <input type="text" name="search_key" id="search_key" class="form-control" placeholder="search here..." value="{{ request()->get('search_key') }}">
             </div>
-            <button type="submit" class="btn btn-primary" title="Search">
+            <button type="submit" class="btn btn-success" title="Search">
                 <i class="bi bi-search"></i>
             </button>
             <a href="{{ url('master/consumer/schemes') }}" class="btn btn-warning ajax-link" title="Reset">

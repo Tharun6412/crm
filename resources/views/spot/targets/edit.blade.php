@@ -9,8 +9,8 @@
             <div id="manage-target-success">
                 <form action={{ url('spot/targets/manageTargetData/'.$ga->id) }} method="post" id="manage-target-form" class="mb-0">
                     @csrf
-                    <table class="table table-bordered mb-0">
-                        <thead class="table-light">
+                    <table class="table table-bordered table-light table-hover mb-0">
+                        <thead class="table-success">
                             <tr>
                                 <td class="text-end">Month - Year</td>
                                 @foreach ($segments as $segment)
@@ -21,7 +21,7 @@
                         <tbody>
                             @for ($date = $y_start->copy(); $date->lte($y_end); $date->addMonth())
                                 <tr>
-                                    <td class="text-end">{{ $date->format('M-y') }}</td>
+                                    <td class="table-light text-end">{{ $date->format('M-y') }}</td>
                                     @foreach ($segments as $segment)
                                         @php
                                             $target_data_val = $target_data->where('ga_id', $ga->id)->where('segment_id', $segment->id)->where('target_date', $date->copy()->startOfMonth()->toDateString())->first();
@@ -29,7 +29,7 @@
                                         <td>
                                             <div class="input-group input-group-sm">
                                                 <input type="text" name="target_value[{{ $date->format('m-Y') }}][{{ $segment->id }}]" id="target_value[{{ $date->format('m-Y') }}][{{ $segment->id }}]" class="form-control text-end" value="{{ $target_data_val->target_value ?? '' }}"/>
-                                                <span class="input-group-text">SCMD</span>
+                                                <span class="input-group-text bg-info-subtle">SCMD</span>
                                             </div>
                                         </td>
                                     @endforeach
@@ -38,7 +38,7 @@
                         </tbody>
                     </table>
                     <div class="m-1" id="manage-target-error"></div>
-                    <div class="text-center p-2">
+                    <div class="text-end p-2">
                         <button type="submit" class="btn btn-success"><i class="bi bi-save"></i>&nbsp;Save</button>
                     </div>
                 </form>

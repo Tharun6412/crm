@@ -90,7 +90,7 @@
                                 @endforeach
                             </select>
                             <span class="text-danger validate-err-msg" id="sub_category_id-error"></span>
-                            <div class="mt-2 border border-info rounded d-none" id="cmp_details">
+                            <div class="mt-2 border border-warning bg-warning-subtle rounded d-none" id="cmp_details">
                                 <div class="row g-2">
                                     <div class="col-sm-4 text-end fw-semibold">Resolution : </div>
                                     <div class="col-sm-6" id="cmp_resolution"></div>
