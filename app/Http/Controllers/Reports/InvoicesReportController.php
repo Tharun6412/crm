@@ -182,16 +182,21 @@ class InvoicesReportController extends Controller
     {
         $sortBy  = $request->get('sortBy', 'created_at');
         $sortOr  = $request->get('sortOr', 'desc');
-        $records = (int) $request->get('records', 20);
+        $records = (int) $request->get('records', 0);
         // $today   = Carbon::today()->toDateString();
 
+        // Query
         $invoices = BillInvoice::with([
-            'invoiceType:id,name',
-            'status:id,name'
-            ])->when($request->filled('key'), fn ($q) => $q->where(fn ($q) =>
+                'consumer:id,crn,fname,lname,ga_id',
+                'consumer.ga:id,name',
+                'invoiceType:id,name',
+                'status:id,name'
+            ])
+            ->when($request->filled('key'), fn ($q) => $q->where(fn ($q) =>
                 $q->where('invoice_number', 'like', '%' . $request->key . '%')
+                    ->orWhereHas('consumer', fn ($q) => $q->where('crn', 'like', '%' . $request->key . '%'))
             ))
-            ->when(!empty($request->date_from) && !empty($request->date_to), fn ($q) =>
+            ->when(!empty($request->date_from) and !empty($request->date_to), fn ($q) =>
                 $q->whereBetween('invoice_date', [
                     Carbon::createFromFormat('d-m-Y', $request->date_from)->startOfDay(),
                     Carbon::createFromFormat('d-m-Y', $request->date_to)->endOfDay(),
@@ -200,9 +205,9 @@ class InvoicesReportController extends Controller
             ->when($request->filled('invoice_type'), fn ($q) => $q->whereIn('type_id', (array) $request->invoice_type))
             ->whereNot('status_id', InvoiceStatus::CANCEL->value)
             ->when($request->filled('status_id'), fn ($q) => $q->whereIn('status_id', (array) $request->status_id))
-            ->select([ 'id', 'invoice_number', 'invoice_date', 'due_date', 'payable_amount', 'balance_amount', 'status_id', 'type_id'])
+            ->select([ 'id', 'consumer_id' ,'invoice_number', 'invoice_date', 'due_date', 'payable_amount', 'balance_amount', 'status_id', 'type_id'])
             // ->when($sortBy !== 'id', fn($q) => $q->orderBy($sortBy, $sortOr))
-            ->orderBy('id', $sortOr) // ✅ Cursor pagination requires a unique column as tiebreaker
+            ->orderBy('id', $sortOr) // Cursor pagination requires a unique column as tiebreaker
             ->cursorPaginate($records)->withQueryString();
         // dd($invoices);
         if ($request->ajax()) {

@@ -1,6 +1,4 @@
-
-
-<div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-3">
+{{-- Invoices list --}}
 @php
     $sort_by = request()->get('sortBy', 'created_at');
     $sort_order = request()->get('sortOr', 'desc');
@@ -16,17 +14,17 @@
 @endphp
 
 <div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-3">
-    <div class="d-flex flex-wrap align-items-center gap-2">
+    <div class="d-flex flex-wrap align-items-center gap-1">
         <div class="input-group w-auto">
             <span class="input-group-text">Search</span>
-            <input type="text" name="key" id="key" class="form-control" value="{{ request()->key }}">
+            <input type="text" name="key" id="key" class="form-control" value="{{ request()->key }}" placeholder="Invoice Number, CRN">
         </div>
+        <button type="submit" class="btn btn-success"><i class="bi bi-search"></i></button>
         <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#invoiceDateFilter" aria-expanded="false">
             <i class="bi bi-calendar3"></i>
         </button>
-        <button type="submit" class="btn btn-success"><i class="bi bi-search"></i></button>
-        <a href="{{ url('reports/invoiceReport/list') }}" class="btn btn-warning"><i class="bi bi-arrow-clockwise"></i></a>
-        {{-- ✅ No total() available with cursor pagination --}}
+        <a href="{{ url('reports/invoices/list') }}" class="btn btn-warning"><i class="bi bi-arrow-clockwise"></i></a>
+        {{-- No total() available with cursor pagination --}}
     </div>
 </div>
 
@@ -64,6 +62,9 @@
                         Invoice Date @if($sort_by == 'invoice_date') <i class="bi {{ $sort_icon }}"></i> @endif
                     </a>
                 </th>
+                <th nowrap>CRN</th>
+                <th nowrap>Name</th>
+                <th nowrap>GA</th>
                 <th nowrap>
                     <div class="d-flex">
                         <a href="{{ $sortUrl('type_id') }}">
@@ -104,6 +105,9 @@
                     {{-- ✅ S.No removed — cursor pagination has no absolute position --}}
                     <td><a href="{{ url('bill/invoice/' . $inv->id) }}" target="_blank">{{ $inv->invoice_number }}</a></td>
                     <td>{{ dateFormat($inv->invoice_date) }}</td>
+                    <td>{{ $inv->consumer->crn ?? '' }}</td>
+                    <td>{{ $inv->consumer->name ?? '' }}</td>
+                    <td>{{ $inv->consumer->ga->name ?? '' }}</td>
                     <td nowrap>{{ $inv->invoiceType->name }}</td>
                     <td>{{ dateFormat($inv->due_date) }}</td>
                     <td class="text-end">{{ numberFormat($inv->payable_amount, 2) }}</td>
@@ -118,7 +122,7 @@
         </tbody>
         <tfoot>
             <tr class="table-info">
-                <th class="text-end" colspan="4">Page Total</th>
+                <th class="text-end" colspan="7">Page Total</th>
                 {{-- ✅ sum() on the current page collection (not DB total) --}}
                 <th class="text-end">{{ numberFormat($invoices->getCollection()->sum('payable_amount'), 2) }}</th>
                 <th class="text-end">{{ numberFormat($invoices->getCollection()->sum('balance_amount'), 2) }}</th>

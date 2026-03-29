@@ -62,14 +62,15 @@ class BillInvoice extends Model
 
     protected $appends = ['inv_number'];
 
-    protected function invNumber():Attribute
+    protected function invNumber(): Attribute
     {
         return Attribute::get(fn() => "{$this->invoice_number}");
     }
+
     /**
      * Relation with Consumer
      */
-    public function consumer() :BelongsTo
+    public function consumer(): BelongsTo
     {
         return $this->belongsTo(Consumer::class, 'consumer_id')->withDefault();
     }
@@ -85,7 +86,7 @@ class BillInvoice extends Model
     /**
      * Relation with Type
      */
-    public function invoiceType() :BelongsTo
+    public function invoiceType(): BelongsTo
     {
         return $this->belongsTo(BillInvoiceType::class, 'type_id')->withDefault();
     }
@@ -93,7 +94,7 @@ class BillInvoice extends Model
     /**
      * Status Relation
      */
-    public function status() :BelongsTo
+    public function status(): BelongsTo
     {
         return $this->belongsTo(BillStatus::class, 'status_id')->withDefault();
     }
@@ -101,7 +102,7 @@ class BillInvoice extends Model
     /**
      * Tax Relation
      */
-    public function tax() :BelongsTo
+    public function tax(): BelongsTo
     {
         return $this->belongsTo(Tax::class, 'tax_id')->withDefault();
     }
@@ -109,7 +110,7 @@ class BillInvoice extends Model
     /**
      * Relation with user
      */
-    public function createdBy():BelongsTo
+    public function createdBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by')->withDefault();
     }
@@ -117,7 +118,7 @@ class BillInvoice extends Model
     /**
      * Relation with user
      */
-    public function updatedBy():BelongsTo
+    public function updatedBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'updated_by')->withDefault();
     }
@@ -143,7 +144,7 @@ class BillInvoice extends Model
      * Each invoice may have multiple payments
      * 
      */
-    public function payments():HasMany
+    public function payments(): HasMany
     {
         return $this->hasMany(InvoicePayment::class, 'invoice_id');
     }
@@ -151,7 +152,7 @@ class BillInvoice extends Model
     /**
      * Parent invoice (original invoice)
      */
-    public function parentInvoice():BelongsTo
+    public function parentInvoice(): BelongsTo
     {
         return $this->belongsTo(BillInvoice::class, 'parent_invoice_id');
     }
@@ -159,7 +160,7 @@ class BillInvoice extends Model
     /**
      * Child invoices (late fee, penalty, adjustments, etc.)
      */
-    public function childInvoices():HasMany
+    public function childInvoices(): HasMany
     {
         return $this->hasMany(self::class, 'parent_invoice_id')->orderBy('id', 'desc');
     }
@@ -167,7 +168,7 @@ class BillInvoice extends Model
     /**
      * PolyMorphic Relation to Ledger
      */
-    public function ledger():MorphMany
+    public function ledger(): MorphMany
     {
         return $this->morphMany(Ledger::class, 'legible');
     }
