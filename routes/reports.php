@@ -38,4 +38,6 @@ Route::middleware(['auth', ModuleAccess::class])->group(function() {
     // GA Wise Recharge Report
     Route::get('consumer/recharge' , [App\Http\Controllers\Reports\Consumer\RechargeReportController::class,'index']);
     Route::get('consumer/recharge/List' , [App\Http\Controllers\Reports\Consumer\RechargeReportController::class,'rechargesList']);
+    
+    Route::get('invoices/list', [App\Http\Controllers\Reports\InvoicesReportController::class, 'list']);
 });
