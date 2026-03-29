@@ -16,7 +16,8 @@ class IndustrialAreaController extends Controller
      */
     public function index(Request $request)
     {
-        $industrial_areas = IndustrialArea::when($request->has('key'), function($q) use($request) {
+        $industrial_areas = IndustrialArea::with(['ga'])
+            ->when($request->has('key'), function($q) use($request) {
                 $q->whereAny(['name'], 'like', '%' . $request->key . '%');
             })
             ->when($request->has('geo_area'), function ($q) use($request) {

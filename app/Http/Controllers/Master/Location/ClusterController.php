@@ -12,7 +12,7 @@ class ClusterController extends Controller
      */
     public function index()
     {
-        $clusters = Cluster::all();
+        $clusters = Cluster::with(['gas'])->get();
 
         return view('master.locations.clusters.list', ['clusters' => $clusters]);
     }

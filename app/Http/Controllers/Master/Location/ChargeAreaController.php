@@ -14,15 +14,18 @@ class ChargeAreaController extends Controller
      */
     public function index(Request $request)
     {
-        $charge_areas = Ca::when($request->has('key'), function($q) use($request) {
+        $charge_areas = Ca::with(['district', 'ga','areas'])
+            ->when($request->has('key'), function($q) use($request) {
                 $q->whereAny(['code', 'name'], 'like', '%' . $request->key . '%');
             })
             ->when($request->has('geo_area'), function ($q) use($request) {
                 $q->whereIn('ga_id', $request->geo_area);
             })
             ->orderBy('name')
-        ->paginate(50);
-
+            ->orderBy('id')
+            ->cursorPaginate(50)
+            ->withQueryString();
+        // dd($charge_areas);
         // Render view
         if($request->ajax())
             return view('master.locations.charge-areas.list-body', ['charge_areas' => $charge_areas]);

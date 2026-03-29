@@ -14,7 +14,8 @@ class AreaController extends Controller
      */
     public function index(Request $request)
     {
-        $areas = Area::when($request->has('key'), function($q) use($request) {
+        $areas = Area::with(['ca', 'ca.ga', 'ca.district'])
+            ->when($request->has('key'), function($q) use($request) {
                 $q->where('name', 'like', '%' . $request->key . '%');
             })
             ->when($request->has('geo_area'), function ($q) use($request) {

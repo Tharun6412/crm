@@ -1,11 +1,11 @@
-<div class="p-2">
-    @if (session('success'))
+@if (session('success'))
+    <div class="p-2">
         <div class="alert alert-success alert-dismissible fade show">
             <strong><i class="bi bi-check2-circle"></i>&nbsp;Success</strong>&nbsp;{{ session('success') }}
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
-    @endif
-</div>
+    </div>
+@endif
 <form id="schemes-search-form" action="{{ url('master/consumer/schemes') }}" method="GET">
     <div class="d-flex align-items-center justify-content-between pb-2 flex-wrap">
         <div class="d-flex align-items-center gap-1 flex-wrap">

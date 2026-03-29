@@ -12,7 +12,7 @@
             <a href="{{ url('master/location/charge-areas') }}" class="btn btn-warning"><i class="bi bi-arrow-clockwise"></i></a>
         </div>
         <div class="col-auto">
-            <span class="fw-semibold">({{ $charge_areas->total() }})</span> Records found
+            {{-- <span class="fw-semibold">({{ $charge_areas->total() }})</span> Records found --}}
         </div>
     </div>
     <div>
@@ -31,7 +31,7 @@
                     <th>Name</th>
                     <th>District</th>
                     <th>GA<x-master.ga-filter class="float-end" /></th>
-                    <th>Areas Count</th>
+                    <th>Areas</th>
                     <th>Status</th>
                     <th>Actions</th>
                 </tr>
@@ -44,7 +44,7 @@
                         <td>{{ $item->name }}</td>
                         <td>{{ $item->district->name ?? '' }}</td>
                         <td>{{ $item->ga->name ?? '' }}</td>
-                        <td>{{ $item->areas->count() ?? 0 }}</td>
+                        <td class="text-end">{{ $item->areas->count() ?? 0 }}</td>
                         <td><x-common.status :status="$item->status"/></td>
                         <td>
                             <a href="{{ url('master/location/charge-areas/' . $item->id . '/edit') }}" class="btn btn-outline-primary btn-sm link-modal"><i class="bi bi-pencil-square"></i>&nbsp;Edit</a>
@@ -55,7 +55,8 @@
         </table>
     </div>
     <div>
-        {{ $charge_areas->links('utils.paginator', ['modDiv' => 'ca-list']) }}
+        {{-- {{ $charge_areas->links('utils.paginator', ['modDiv' => 'ca-list']) }} --}}
+        {{ $charge_areas->links('utils.cursor', ['modDiv' => 'ca-list']) }}
     </div>
 @else
     <div class="alert alert-info">No records found!</div>

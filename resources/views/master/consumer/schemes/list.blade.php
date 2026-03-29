@@ -1,8 +1,12 @@
 @extends('layouts.layout')
 
-@section('title', 'SD Schemes')
+@section('title', 'Consumer Schemes')
 
-@section('page-title', 'SD Schemes')
+@section('page-title', 'Consumer Schemes')
+
+@section('breadcrumb')
+    <li class="breadcrumb-item"><a href="{{ url('master') }}">Master</a></li>
+@endsection
 
 @section('page-content')
     <div id="schemes-list" class="current-page-reload">

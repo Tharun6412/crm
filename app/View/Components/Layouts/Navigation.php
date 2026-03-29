@@ -27,7 +27,7 @@ class Navigation extends Component
         // Get modules
         if(isSuperAdmin() OR isAdmin()) {
             // Get all active modules
-            $modules = Module::with('recursiveActiveChilds')->whereNull('parent_id')->where('status', 1)->orderBy('position')->get();
+            $modules = Module::with(['recursiveActiveChilds', 'children', 'parent'])->whereNull('parent_id')->where('status', 1)->orderBy('position')->get();
         }
         else {
             // Get module Ids from module actions from session

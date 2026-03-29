@@ -11,7 +11,7 @@
 @endsection
 
 @section('page-content')
-    <form action="{{ url('master/charge-areas') }}" id="ca-search-form" method="GET">
+    <form action="{{ url('master/location/charge-areas') }}" id="ca-search-form" method="GET">
         <div id="ca-list">
             @include('master.locations.charge-areas.list-body')
         </div>

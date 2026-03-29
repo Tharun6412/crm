@@ -33,7 +33,7 @@ class Ca extends Model
      */
     public function ga() : BelongsTo
     {
-        return $this->belongsTo(Ga::class)->withDefault();
+        return $this->belongsTo(Ga::class, 'ga_id')->withDefault();
     }
 
     /**
@@ -41,7 +41,7 @@ class Ca extends Model
      */
     public function district(): BelongsTo
     {
-        return $this->belongsTo(District::class);
+        return $this->belongsTo(District::class, 'district_id');
     }
 
     /**

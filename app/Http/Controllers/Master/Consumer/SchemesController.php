@@ -19,7 +19,10 @@ class SchemesController extends Controller
         $sortBy = ($request->get('sortBy')) ? $request->get('sortBy') : 'created_at';
         $sortOr = ($request->get('sortOr')) ? $request->get('sortOr') : 'desc';
         $records = ($request->get('records')) ? $request->get('records') : 10;
-        $query = MasterConsumerScheme::with(['segment', 'schemePayment', 'schemesGa.ga'])->when($request->has('search_key'), function($q) use($request) {
+
+        // 
+        $query = MasterConsumerScheme::with(['segment', 'connectionType', 'schemePayment', 'schemesGa.ga'])
+            ->when($request->has('search_key'), function($q) use($request) {
             $q->where(function($q) use($request) {
                 $q->where('name', 'like', '%'.$request->get('search_key').'%');
             });

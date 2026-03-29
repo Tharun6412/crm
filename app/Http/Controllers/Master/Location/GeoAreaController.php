@@ -12,7 +12,7 @@ class GeoAreaController extends Controller
      */
     public function index()
     {
-        $geo_areas = Ga::all();
+        $geo_areas = Ga::with(['state', 'cluster', 'districts'])->get();
 
         return view('master.locations.geo-areas.list', ['geo_areas' => $geo_areas]);
     }
