@@ -103,6 +103,86 @@ class ConsumerAgeingReport extends Controller
         }
         return view('reports.consumer.consumer-aging-report.list', ['not_active' => $not_active, 'active' => $active]);
     }
+    // public function index(Request $request)
+    // {
+    //     $statusDates = DB::table('cns_consumer_status')
+    //         ->selectRaw("
+    //             consumer_id,
+    //             MIN(CASE WHEN status_id = " . ConsumerStatus::REGISTER->value . " THEN created_at END) as register_date,
+    //             MIN(CASE WHEN status_id = " . ConsumerStatus::ACTIVATE->value . " THEN created_at END) as activation_date
+    //         ")
+    //         ->whereIn('status_id', [
+    //             ConsumerStatus::REGISTER->value,
+    //             ConsumerStatus::ACTIVATE->value
+    //         ])
+    //         ->groupBy('consumer_id');
+    //     $today = now()->toDateString();
+    //     $gasAging = DB::table('mst_gas as g')
+    //         ->leftJoin('cns_consumers as c', function ($join) use ($request) {
+    //             $join->on('g.id', '=', 'c.ga_id');
+    //             if ($request->filled('segments')) {
+    //                 $join->whereIn('c.segment_id', $request->segments);
+    //             }
+    //         })
+    //         ->leftJoinSub($statusDates, 'sd', function ($join) {
+    //             $join->on('c.id', '=', 'sd.consumer_id');
+    //         })
+    //         ->selectRaw("
+    //             g.id as ga_id,
+    //             g.name as ga_name,
+    //             /* Inactive */
+    //             SUM(IF(
+    //                 c.id IS NOT NULL
+    //                 AND c.status_id NOT IN (" . ConsumerStatus::ACTIVATE->value . "," . ConsumerStatus::REJECT->value . "," . ConsumerStatus::TD->value . "," . ConsumerStatus::PD->value . ")
+    //                 AND DATEDIFF('$today', sd.register_date) < 90, 1, 0)) as inactive_upto_90,
+    //             SUM(IF(
+    //                 c.id IS NOT NULL
+    //                 AND c.status_id NOT IN (" . ConsumerStatus::ACTIVATE->value . "," . ConsumerStatus::REJECT->value . "," . ConsumerStatus::TD->value . "," . ConsumerStatus::PD->value . ")
+    //                 AND DATEDIFF('$today', sd.register_date) BETWEEN 91 AND 120,1,0)) as inactive_90_120,
+    //             SUM(IF(
+    //                 c.id IS NOT NULL
+    //                 AND c.status_id NOT IN (" . ConsumerStatus::ACTIVATE->value . "," . ConsumerStatus::REJECT->value . "," . ConsumerStatus::TD->value . "," . ConsumerStatus::PD->value . ")
+    //                 AND DATEDIFF('$today', sd.register_date) > 120,1,0)) as inactive_gt_120, 
+    //             /* Active */
+    //             SUM(IF(
+    //                 c.status_id = " . ConsumerStatus::ACTIVATE->value . "
+    //                 AND DATEDIFF(sd.activation_date, sd.register_date) <= 90,1,0)) as active_upto_90,
+
+    //             SUM(IF(
+    //                 c.status_id = " . ConsumerStatus::ACTIVATE->value . "
+    //                 AND DATEDIFF(sd.activation_date, sd.register_date) BETWEEN 91 AND 120,1,0)) as active_90_120,
+    //             SUM(IF(
+    //                 c.status_id = " . ConsumerStatus::ACTIVATE->value . "
+    //                 AND DATEDIFF(sd.activation_date, sd.register_date) > 120,1,0)) as active_gt_120
+    //         ")
+    //         ->groupBy('g.id', 'g.name')
+    //         ->orderBy('g.id')
+    //         ->get();
+    //     $not_active = $gasAging->map(function ($row) {
+    //         return (object)[
+    //             'ga_id'   => $row->ga_id,
+    //             'ga_name' => $row->ga_name,
+    //             'inactive_upto_90' => $row->inactive_upto_90,
+    //             'inactive_90_120' => $row->inactive_90_120,
+    //             'inactive_gt_120'  => $row->inactive_gt_120,
+    //         ];
+    //     });
+
+    //     $active = $gasAging->map(function ($row) {
+    //         return (object)[
+    //             'ga_id'   => $row->ga_id,
+    //             'ga_name' => $row->ga_name,
+    //             'active_upto_90' => $row->active_upto_90,
+    //             'active_90_120' => $row->active_90_120,
+    //             'active_gt_120'  => $row->active_gt_120,
+    //         ];
+    //     });
+    //     // Render output
+    //     if($request->ajax()) {
+    //         return view('reports.consumer.consumer-aging-report.list-body', ['not_active' => $not_active, 'active' => $active]);
+    //     }
+    //     return view('reports.consumer.consumer-aging-report.list', ['not_active' => $not_active, 'active' => $active]);
+    // }
 
     public function consumersList(Request $request)
     {

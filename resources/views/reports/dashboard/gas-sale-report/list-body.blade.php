@@ -16,48 +16,29 @@
         <tbody>
             @php
                 $i = 1;
-                $commonParams = [
-                    'invoice_type' => [\App\Enums\InvoiceType::GAS_BILL->value],
-                    'date_from'    => $date_from->format('d-m-Y'),
-                    'date_to'      => $date_to->format('d-m-Y'),
-                ];
+                $total_dom_pre = $total_dom_post = $total_com_post = $total_com_pre = 0;
             @endphp
-            @forelse($gaGasSales as $ga)
+            @forelse($geo_areas as $ga)
+                @php
+                    $gas_consumption = $gas_sale[$ga->id] ?? null;
+                    $dom_pre = $gas_consumption->dom_pre ?? 0;
+                    $dom_post = $gas_consumption->dom_post ?? 0;
+                    $com_pre = $gas_consumption->com_pre ?? 0;
+                    $com_post = $gas_consumption->com_post ?? 0;
+
+                    // accumulate totals
+                    $total_dom_pre += $dom_pre;
+                    $total_dom_post += $dom_post;
+                    $total_com_pre += $com_pre;
+                    $total_com_post += $com_post;
+                @endphp
                 <tr>
                     <td class="text-center">{{ $i++ }}</td>
-                    <td>{{ $ga->ga_name }}</td>
-                    <td>
-                        <a href="{{ url('reports/invoiceReport') }}?{{ http_build_query(array_merge($commonParams, [
-                            'geo_area' => [$ga->ga_id],
-                            'segment_id' => [\App\Enums\SegmentType::DOMESTIC->value],
-                            'connection_type_id' => [\App\Enums\ConnectionType::PREPAID->value],
-                            ])) }}" class="aging-link" target="_blank">{{ numberFormat($ga->dom_pre,2) }}
-                        </a>
-                    </td>
-                    <td>
-                        <a href="{{ url('reports/invoiceReport') }}?{{ http_build_query(array_merge($commonParams, [
-                            'geo_area' => [$ga->ga_id],
-                            'segment_id' => [\App\Enums\SegmentType::DOMESTIC->value],
-                            'connection_type_id' => [\App\Enums\ConnectionType::POSTPAID->value],
-                            ])) }}" class="aging-link" target="_blank">{{ numberFormat($ga->dom_post,2) }}
-                        </a>
-                    </td>
-                    <td>
-                        <a href="{{ url('reports/invoiceReport') }}?{{ http_build_query(array_merge($commonParams, [
-                            'geo_area' => [$ga->ga_id],
-                            'segment_id' => [\App\Enums\SegmentType::COMMERCIAL->value],
-                            'connection_type_id' => [\App\Enums\ConnectionType::PREPAID->value],
-                            ])) }}" class="aging-link" target="_blank">{{ numberFormat($ga->com_pre,2) }}
-                        </a>
-                    </td>
-                    <td>
-                        <a href="{{ url('reports/invoiceReport') }}?{{ http_build_query(array_merge($commonParams, [
-                            'geo_area' => [$ga->ga_id],
-                            'segment_id' => [\App\Enums\SegmentType::COMMERCIAL->value],
-                            'connection_type_id' => [\App\Enums\ConnectionType::POSTPAID->value],
-                            ])) }}" class="aging-link" target="_blank">{{ numberFormat($ga->com_post,2) }}
-                        </a>
-                    </td>
+                    <td>{{ $ga->name }}</td>
+                    <td>{{ numberFormat($dom_pre,2) }}</td>
+                    <td>{{ numberFormat($dom_post,2) }}</td>
+                    <td>{{ numberFormat($com_pre,2) }}</td>
+                    <td>{{ numberFormat($com_post,2) }}</td>
                 </tr>
             @empty
                 <tr>
@@ -68,13 +49,11 @@
         <tfoot>
             <tr class="table-info fw-bold">
                 <th colspan="2" class="text-end">Total</th>
-                <th>{{ numberFormat($gaGasSales->sum('dom_pre'),2) }}</th>
-                <th>{{ numberFormat($gaGasSales->sum('dom_post'),2) }}</th>
-                <th>{{ numberFormat($gaGasSales->sum('com_pre'),2) }}</th>
-                <th>{{ numberFormat($gaGasSales->sum('com_post'),2) }}</th>
+                <th>{{ numberFormat($total_dom_pre, 2) }}</th>
+                <th>{{ numberFormat($total_dom_post, 2) }}</th>
+                <th>{{ numberFormat($total_com_pre, 2) }}</th>
+                <th>{{ numberFormat($total_com_post, 2) }}</th>
             </tr>
         </tfoot>
     </table>
 </div>
-{{-- Scripts --}}
-{{-- @include('scripts.link-modal') --}}

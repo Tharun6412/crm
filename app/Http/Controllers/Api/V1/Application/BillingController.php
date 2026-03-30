@@ -191,7 +191,7 @@ class BillingController extends Controller
         if($invoice_resp) {   
             // Response Message
             return response()->json([
-                'success' => 'Gas Invoice Created Successfully with invoice number ' . $invoice_resp['invoice_number'] . ', click <a href="'.url('gasInvoices').'">here</a> to see all invoices.'
+                'success' => 'Gas Invoice Created Successfully with invoice number ' . $invoice_resp['invoice_number']
             ]);
         }
     }

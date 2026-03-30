@@ -21,33 +21,36 @@ class ConsumerController extends Controller
      */
     public function list(Request $request)
     {
-        if(empty($request->key)) {
-            return response()->json(['message' => 'Please select consumer number'], 422);
+        if(!empty($request->cns_status)) {
+            // Get consumers list
+            $consumers_q = Consumer::with(['ga:id,code,name', 'status:id,name'])->select('id', 'crn', 'fname', 'lname', 'ga_id', 'status_id', 'segment_id', 'connection_type_id')
+                ->when((!$request->user()->isAdmin() AND !$request->user()->isSuperAdmin()), function ($q) use($request) {
+                    $q->whereIn('ga_id', $request->user()->ga()->pluck('ga_id')->toArray());
+                })
+                ->when($request->has('key'), function ($q) use($request) {
+                    $q->whereAny(['crn', 'fname', 'lname', 'email', 'phone'], 'like', '%' . $request->key . '%');
+                })
+                ->when($request->has('segments') and !empty($request->segments), function ($q) use($request) {
+                    $q->whereIn('segment_id', (array) $request->segments);
+                })
+                ->when($request->has('connection_type_id') and !empty($request->connection_type_id), function ($q) use($request) {
+                    $q->whereIn('connection_type_id', (array) $request->connection_type_id);
+                })
+                ->when($request->has('geo_area') and !empty($request->geo_area), function ($q) use($request) {
+                    $q->whereIn('ga_id', (array) $request->geo_area);
+                })
+                ->when($request->has('cns_status') and !empty($request->cns_status), function ($q) use($request) {
+                    $q->whereIn('status_id', (array) $request->cns_status);
+                })
+                ->paginate(10);
+                $consumers = $this->apiPagination($consumers_q);
+            
+            return response()->json(['consumers' => $consumers, 'user' => $request->user()->isAdmin()], 200);
+        }else {
+            if(empty($request->key)) {
+                return response()->json(['message' => 'Please select consumer number'], 422);
+            }
         }
-        // Get consumers list
-        $consumers_q = Consumer::with(['ga:id,code,name', 'status:id,name'])->select('id', 'crn', 'fname', 'lname', 'ga_id', 'status_id', 'segment_id', 'connection_type_id')
-            ->when((!$request->user()->isAdmin() AND !$request->user()->isSuperAdmin()), function ($q) use($request) {
-                $q->whereIn('ga_id', $request->user()->ga()->pluck('ga_id')->toArray());
-            })
-            ->when($request->has('key'), function ($q) use($request) {
-                $q->whereAny(['crn', 'fname', 'lname', 'email', 'phone'], 'like', '%' . $request->key . '%');
-            })
-            ->when($request->has('segments') and !empty($request->segments), function ($q) use($request) {
-                $q->whereIn('segment_id', (array) $request->segments);
-            })
-            ->when($request->has('connection_type_id') and !empty($request->connection_type_id), function ($q) use($request) {
-                $q->whereIn('connection_type_id', (array) $request->connection_type_id);
-            })
-            ->when($request->has('geo_area') and !empty($request->geo_area), function ($q) use($request) {
-                $q->whereIn('ga_id', (array) $request->geo_area);
-            })
-            ->when($request->has('cns_status') and !empty($request->cns_status), function ($q) use($request) {
-                $q->whereIn('status_id', (array) $request->cns_status);
-            })
-            ->paginate(10);
-            $consumers = $this->apiPagination($consumers_q);
-        
-        return response()->json(['consumers' => $consumers, 'user' => $request->user()->isAdmin()], 200);
     }
 
     /**
