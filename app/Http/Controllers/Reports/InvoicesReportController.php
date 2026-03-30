@@ -239,7 +239,7 @@ class InvoicesReportController extends Controller
             // ->when($sortBy !== 'id', fn($q) => $q->orderBy($sortBy, $sortOr))
             ->orderBy('id', $sortOr) // Cursor pagination requires a unique column as tiebreaker
             ->cursorPaginate($records)->withQueryString();
-        dd($invoices);
+        // dd($invoices);
         if ($request->ajax()) {
             return view('reports.invoice.invoice-report.invoices-list-body', compact('invoices','tRecords'));
         }
