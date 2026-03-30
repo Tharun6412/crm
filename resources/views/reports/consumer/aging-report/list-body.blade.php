@@ -38,12 +38,29 @@
         </thead>
         <tbody>
             @php
-                $i = 1;
+                $i = 1; 
+                $total_no_due = $total_range_15 = $total_range_30 = $total_range_60 = $total_range_90 = $total_range_gt90 = 0;
             @endphp
-            @forelse($gasAging as $ga)
+            @forelse($gas as $ga)
+                @php 
+                    $gaInvoices = $invoices[$ga->id] ?? '';
+                    $inv['no_due_days'] = $gaInvoices->no_due_days ?? 0;
+                    $inv['range_1_15'] = $gaInvoices->range_1_15 ?? 0;
+                    $inv['range_16_30'] = $gaInvoices->range_16_30 ?? 0;
+                    $inv['range_31_60'] = $gaInvoices->range_31_60 ?? 0;
+                    $inv['range_61_90'] = $gaInvoices->range_61_90 ?? 0;
+                    $inv['range_gt90'] = $gaInvoices->range_gt90 ?? 0;
+
+                    $total_no_due += $inv['no_due_days']; 
+                    $total_range_15 += $inv['range_1_15']; 
+                    $total_range_30 += $inv['range_16_30']; 
+                    $total_range_60 += $inv['range_31_60']; 
+                    $total_range_90 += $inv['range_61_90']; 
+                    $total_range_gt90 += $inv['range_gt90']; 
+                @endphp
                 <tr>
                     <td class="text-center">{{ $i++ }}</td>
-                    <td>{{ $ga->ga_name }}</td>
+                    <td>{{ $ga->name }}</td>
                     @foreach([
                         'no_due_days' => '0',
                         'range_1_15' => '1-15',
@@ -54,12 +71,12 @@
                     ] as $field => $range)
 
                         <td class="text-end">
-                            <a href="{{ url('reports/invoiceReport') }}?{{ http_build_query([
-                                'geo_area' => [$ga->ga_id],
+                            <a href="{{ url('reports/invoices/list') }}?{{ http_build_query([
+                                'geo_area' => [$ga->id],
                                 'range' => $range,
                                 'invoice_type' => request()->invoice_type ?? [],
                                 'status_id' => [\App\Enums\InvoiceStatus::NOT_PAID->value, \App\Enums\InvoiceStatus::PARTIALLY_PAID->value]
-                                ]) }}" class="aging-link" target="_blank">{{ numberFormat($ga->$field,2) }}
+                                ]) }}" class="aging-link" target="_blank">{{ numberFormat($inv[$field],2) }}
                             </a>
                         </td>
 
@@ -74,12 +91,12 @@
         <tfoot>
             <tr class="table-info text-end">
                 <th colspan="2" class="text-end">Total</th>
-                <th>{{ numberFormat($gasAging->sum('no_due_days'),2) }}</th>
-                <th>{{ numberFormat($gasAging->sum('range_1_15'),2) }}</th>
-                <th>{{ numberFormat($gasAging->sum('range_16_30'),2) }}</th>
-                <th>{{ numberFormat($gasAging->sum('range_31_60'),2) }}</th>
-                <th>{{ numberFormat($gasAging->sum('range_61_90'),2) }}</th>
-                <th>{{ numberFormat($gasAging->sum('range_gt90'),2) }}</th>
+                <th>{{ numberFormat($total_no_due,2) }}</th>
+                <th>{{ numberFormat($total_range_15,2) }}</th>
+                <th>{{ numberFormat($total_range_30,2) }}</th>
+                <th>{{ numberFormat($total_range_60,2) }}</th>
+                <th>{{ numberFormat($total_range_90,2) }}</th>
+                <th>{{ numberFormat($total_range_gt90,2) }}</th>
             </tr>
         </tfoot>
     </table>

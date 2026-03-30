@@ -4,9 +4,12 @@ namespace App\Http\Controllers\Reports;
 use App\Enums\InvoiceStatus;
 use App\Enums\InvoiceType;
 use App\Http\Controllers\Controller;
+use App\Models\Invoice\BillInvoice;
 use App\Models\Master\BillInvoiceType;
 use App\Models\Master\Ga;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Termwind\Components\Raw;
 
 /**
  * Ageing Report Controller (Invoices Ageing Report).
@@ -17,34 +20,32 @@ class AgeingReportController extends Controller
      * GA wise counts of the due date crossed invoices.
      */
     public function index(Request $request)
-    {  
-        $invoice_types = BillInvoiceType::all();
-        $gasAging = Ga::leftJoin('cns_consumers', 'mst_gas.id', '=', 'cns_consumers.ga_id')
-            ->leftJoin('bil_invoices', function ($join) use ($request) {
-                $join->on('bil_invoices.consumer_id', '=', 'cns_consumers.id')
-                    ->whereIn('bil_invoices.status_id', [InvoiceStatus::NOT_PAID->value,InvoiceStatus::PARTIALLY_PAID->value])
-                    ->whereNot('bil_invoices.status_id', InvoiceStatus::CANCEL->value);
-                if ($request->filled('invoice_type')) {
-                    $join->whereIn('bil_invoices.type_id', $request->invoice_type);
-                }
-            })
-            ->selectRaw("mst_gas.id as ga_id,
-                mst_gas.name as ga_name,
-                SUM(CASE WHEN DATEDIFF(NOW(), due_date) < 1 THEN bil_invoices.balance_amount ELSE 0 END) as no_due_days,
-                SUM(CASE WHEN DATEDIFF(NOW(), due_date) BETWEEN 1 AND 15 THEN bil_invoices.balance_amount ELSE 0 END) as range_1_15,
-                SUM(CASE WHEN DATEDIFF(NOW(), due_date) BETWEEN 16 AND 30 THEN bil_invoices.balance_amount ELSE 0 END) as range_16_30,
-                SUM(CASE WHEN DATEDIFF(NOW(), due_date) BETWEEN 31 AND 60 THEN bil_invoices.balance_amount ELSE 0 END) as range_31_60,
-                SUM(CASE WHEN DATEDIFF(NOW(), due_date) BETWEEN 61 AND 90 THEN bil_invoices.balance_amount ELSE 0 END) as range_61_90,
-                SUM(CASE WHEN DATEDIFF(NOW(), due_date) > 90 THEN bil_invoices.balance_amount ELSE 0 END) as range_gt90
-            ")
-            ->groupBy('mst_gas.id', 'mst_gas.name')
-            ->orderBy('mst_gas.id', 'asc')
-            ->get();
+    {
+        $gas = Ga::select('id', 'name')->get();
+        $invoices = DB::table('bil_invoices')
+        ->join('cns_consumers', 'bil_invoices.consumer_id', '=', 'cns_consumers.id')
+        ->select(
+                'cns_consumers.ga_id',
+                DB::raw("
+                    SUM(CASE WHEN due_date >= CURDATE()                                      THEN balance_amount ELSE 0 END) AS no_due_days,
+                    SUM(CASE WHEN due_date BETWEEN DATE_SUB(CURDATE(), INTERVAL 15 DAY)  AND DATE_SUB(CURDATE(), INTERVAL  1 DAY)  THEN balance_amount ELSE 0 END) AS range_1_15,
+                    SUM(CASE WHEN due_date BETWEEN DATE_SUB(CURDATE(), INTERVAL 30 DAY)  AND DATE_SUB(CURDATE(), INTERVAL 16 DAY)  THEN balance_amount ELSE 0 END) AS range_16_30,
+                    SUM(CASE WHEN due_date BETWEEN DATE_SUB(CURDATE(), INTERVAL 60 DAY)  AND DATE_SUB(CURDATE(), INTERVAL 31 DAY)  THEN balance_amount ELSE 0 END) AS range_31_60,
+                    SUM(CASE WHEN due_date BETWEEN DATE_SUB(CURDATE(), INTERVAL 90 DAY)  AND DATE_SUB(CURDATE(), INTERVAL 61 DAY)  THEN balance_amount ELSE 0 END) AS range_61_90,
+                    SUM(CASE WHEN due_date <  DATE_SUB(CURDATE(), INTERVAL 90 DAY)                                                THEN balance_amount ELSE 0 END) AS range_gt90
+                "),
+            )
+        ->whereIn('bil_invoices.status_id', [InvoiceStatus::NOT_PAID->value, InvoiceStatus::PARTIALLY_PAID->value])
+        ->when($request->filled('invoice_type'), fn($q) =>
+            $q->whereIn('bil_invoices.type_id', $request->invoice_type)
+        )
+        ->groupBy('cns_consumers.ga_id')
+        ->orderBy('cns_consumers.ga_id')->get()->keyBy('ga_id');
         // Render output
         if($request->ajax()) {
-            return view('reports.consumer.aging-report.list-body', ['gasAging' => $gasAging, 'invoice_types' => $invoice_types]);
+            return view('reports.consumer.aging-report.list-body', ['gas' => $gas,'invoices' => $invoices,]);
         }
-        return view('reports.consumer.aging-report.list', ['gasAging' => $gasAging, 'invoice_types' => $invoice_types]);
+        return view('reports.consumer.aging-report.list', ['gas' => $gas,'invoices' => $invoices,]);
     }
     
 }

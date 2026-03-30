@@ -19,6 +19,25 @@
             <span class="input-group-text">Search</span>
             <input type="text" name="key" id="key" class="form-control" value="{{ request()->key }}" placeholder="Invoice Number, CRN">
         </div>
+        <!-- Range Dropdown -->
+        @if (request()->has('range'))
+            <select name="range" id="range" class="form-select w-auto">
+                <option value="">All Days Range</option>
+                @foreach([
+                    '0',
+                    '1-15',
+                    '16-30',
+                    '31-60',
+                    '61-90',
+                    '90+'
+                ] as $range)
+                    <option value="{{ $range }}"
+                        @selected($range == request()->range)>
+                        {{ $range }} Days
+                    </option>
+                @endforeach
+            </select>
+        @endif
         <button type="submit" class="btn btn-success"><i class="bi bi-search"></i></button>
         <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#invoiceDateFilter" aria-expanded="false">
             <i class="bi bi-calendar3"></i>
@@ -64,7 +83,7 @@
                 </th>
                 <th nowrap>CRN</th>
                 <th nowrap>Name</th>
-                <th nowrap>GA</th>
+                <th nowrap>GA <x-master.ga-filter /></th>
                 <th nowrap>
                     <div class="d-flex">
                         <a href="{{ $sortUrl('type_id') }}">
