@@ -73,6 +73,10 @@ class InvoiceController extends Controller
         ])->find($id);
         $invoice->consumer->mobile = maskNumber($invoice->consumer->phone);
         $invoice->employee_id = $invoice->createdBy->emp_id;
+        foreach ($invoice->consumption->consumptionDetails as $consump_details) {
+            $consump_details->unit_price = number_format($consump_details->unit_price ?? 0, 3);
+            $consump_details->total_price = number_format($consump_details->total_price ?? 0, 2);
+        }
         unset($invoice->created_by, $invoice->consumer->phone);
         $invoice->makeHidden(['createdBy']);
         $invoice->parentInvoice?->makeHidden(['inv_number']);

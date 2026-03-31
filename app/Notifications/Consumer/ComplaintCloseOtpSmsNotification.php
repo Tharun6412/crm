@@ -7,10 +7,8 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class ComplaintCloseOtpSmsNotification extends Notification implements ShouldQueue
+class ComplaintCloseOtpSmsNotification extends Notification
 {
-    use Queueable;
-
     /**
      * Consumer object
      */
