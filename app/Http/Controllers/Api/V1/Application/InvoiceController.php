@@ -71,11 +71,9 @@ class InvoiceController extends Controller
             'payments.paymentType:id,name',
             'payments.status:id,name',
         ])->find($id);
-        $invoice->inv_date = $invoice->invoice_date->toDateTimeString();
-        $invoice->due_date_val = $invoice->due_date->toDateTimeString();
         $invoice->consumer->mobile = maskNumber($invoice->consumer->phone);
         $invoice->employee_id = $invoice->createdBy->emp_id;
-        unset($invoice->created_by, $invoice->consumer->phone, $invoice->invoice_date, $invoice->due_date);
+        unset($invoice->created_by, $invoice->consumer->phone);
         $invoice->makeHidden(['createdBy']);
         $invoice->parentInvoice?->makeHidden(['inv_number']);
         $invoice->payments->each->makeHidden(['inv_number']);

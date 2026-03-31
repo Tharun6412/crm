@@ -64,11 +64,11 @@ class ModuleDataSeeder extends Seeder
             ['id' => '25','name' => 'Schemes & Deposits','slug' => NULL,'url' => 'reports/consumer/sdReport','parent_id' => '6','package_id' => '7','icon' => 'bi-receipt','status' => '1','position' => '2'],
             ['id' => '26','name' => 'Consumer Ageing Report','slug' => NULL,'url' => 'reports/consumer/consumerAgeingReport','parent_id' => '6','package_id' => '7','icon' => 'bi-cash-stack','status' => '1','position' => '3'],
             ['id' => '27','name' => 'Refund Report','slug' => NULL,'url' => 'reports/consumer/refundReport','parent_id' => '6','package_id' => '7','icon' => 'bi-database','status' => '1','position' => '4'],
-            ['id' => '28','name' => 'Invoice Ageing Report','slug' => NULL,'url' => 'reports/ageingReport','parent_id' => '6','package_id' => '7','icon' => 'bi-compass','status' => '1','position' => '5'],
-            ['id' => '29','name' => 'Invoice Report','slug' => NULL,'url' => 'reports/invoiceReport','parent_id' => '6','package_id' => '7','icon' => 'bi-pencil-square','status' => '1','position' => '6'],
-            ['id' => '30','name' => 'Payments Report','slug' => NULL,'url' => 'reports/paymentsReport','parent_id' => '6','package_id' => '7','icon' => 'bi-droplet-half','status' => '1','position' => '7'],
-            ['id' => '31','name' => 'Recharge Report','slug' => NULL,'url' => 'reports/consumer/recharge','parent_id' => '6','package_id' => '7','icon' => 'bi-file-text','status' => '1','position' => '8'],
-            ['id' => '32','name' => 'Employee Collection Report','slug' => NULL,'url' => 'reports/employee/collection','parent_id' => '6','package_id' => '7','icon' => 'bi-receipt','status' => '1','position' => '9'],
+            ['id' => '28','name' => 'Invoice Ageing Report','slug' => NULL,'url' => 'reports/ageingReport','parent_id' => '6','package_id' => '7','icon' => 'bi-compass','status' => '1','position' => '6'],
+            ['id' => '29','name' => 'Invoice Report','slug' => NULL,'url' => 'reports/invoiceReport','parent_id' => '6','package_id' => '7','icon' => 'bi-pencil-square','status' => '1','position' => '7'],
+            ['id' => '30','name' => 'Payments Report','slug' => NULL,'url' => 'reports/paymentsReport','parent_id' => '6','package_id' => '7','icon' => 'bi-droplet-half','status' => '1','position' => '8'],
+            ['id' => '31','name' => 'Recharge Report','slug' => NULL,'url' => 'reports/consumer/recharge','parent_id' => '6','package_id' => '7','icon' => 'bi-file-text','status' => '1','position' => '9'],
+            ['id' => '32','name' => 'Employee Collection Report','slug' => NULL,'url' => 'reports/employee/collection','parent_id' => '6','package_id' => '7','icon' => 'bi-receipt','status' => '1','position' => '10'],
             
             ['id' => '33','name' => 'Locations','slug' => NULL,'url' => '#locations','parent_id' => '7','package_id' => '2','icon' => 'bi-compass','status' => '1','position' => '1'],
             ['id' => '34','name' => 'Consumer','slug' => NULL,'url' => '#consumer','parent_id' => '7','package_id' => '2','icon' => 'bi-people','status' => '1','position' => '2'],
@@ -142,7 +142,7 @@ class ModuleDataSeeder extends Seeder
             ['id' => '83','name' => 'Invoice Configuration','slug' => NULL,'url' => 'master/invoice/configuration','parent_id' => '35','package_id' => '2','icon' => 'bi-tags','status' => '1','position' => '4'],
             ['id' => '84','name' => 'Firm Types','slug' => NULL,'url' => 'master/consumer/firmTypes','parent_id' => '34','package_id' => '2','icon' => 'bi-tags','status' => '1','position' => '3'],
             ['id' => '85','name' => 'Price Groups','slug' => NULL,'url' => 'master/consumer/price-groups','parent_id' => '34','package_id' => '2','icon' => 'bi-tags','status' => '1','position' => '4'],
-            // ['id' => '86','name' => 'Complaints Report','slug' => NULL,'url' => 'calls/reports/complaints','parent_id' => '6','package_id' => '7','icon' => 'bi-tags','status' => '1','position' => '10'],
+            ['id' => '86','name' => 'Gas Sale Report','slug' => NULL,'url' => 'reports/gasSaleReport','parent_id' => '6','package_id' => '7','icon' => 'bi-file-text','status' => '1','position' => '5'],
         ]);
 
         /**

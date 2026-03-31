@@ -55,8 +55,8 @@ class BillInvoice extends Model
      */
     public function casts() {
         return [
-            'invoice_date' => 'date',
-            'due_date' => 'date',
+            'invoice_date' => 'date:Y-m-d',
+            'due_date' => 'date:Y-m-d',
         ];
     }
 

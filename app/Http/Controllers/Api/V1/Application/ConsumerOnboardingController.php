@@ -124,7 +124,7 @@ class ConsumerOnboardingController extends Controller
             'initial_reading' => $request->meter_reading,
             'install_date' => Carbon::now(),
             'install_by' => Auth::id(),
-            'status' => MeterStatus::Active->value,
+            'status' => MeterStatus::ACTIVE->value,
             'created_by' => Auth::id(),
         ]);
         // 4 = Execution

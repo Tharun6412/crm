@@ -51,7 +51,7 @@ class PaymentTransaction extends Model
      * Casting
      */
     protected $casts = [
-        'transaction_date' => 'date',
+        'transaction_date' => 'date:Y-m-d',
     ];
 
     /**

@@ -45,7 +45,7 @@ class InvoicePayment extends Model
      */
     public function casts() {
         return [
-            'payment_date' => 'date',
+            'payment_date' => 'date:Y-m-d',
         ];
     }
     

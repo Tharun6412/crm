@@ -21,8 +21,7 @@ class ConsumerController extends Controller
      */
     public function list(Request $request)
     {
-        if(!empty($request->cns_status)) {
-            // Get consumers list
+        if(!empty($request->key) OR !empty($request->cns_status) OR !empty($request->connection_type_id) OR !empty($request->geo_area) OR !empty($request->segments)) {            
             $consumers_q = Consumer::with(['ga:id,code,name', 'status:id,name'])->select('id', 'crn', 'fname', 'lname', 'ga_id', 'status_id', 'segment_id', 'connection_type_id')
                 ->when((!$request->user()->isAdmin() AND !$request->user()->isSuperAdmin()), function ($q) use($request) {
                     $q->whereIn('ga_id', $request->user()->ga()->pluck('ga_id')->toArray());
@@ -44,12 +43,10 @@ class ConsumerController extends Controller
                 })
                 ->paginate(10);
                 $consumers = $this->apiPagination($consumers_q);
-            
-            return response()->json(['consumers' => $consumers, 'user' => $request->user()->isAdmin()], 200);
+                // Response
+                return response()->json(['consumers' => $consumers, 'user' => $request->user()->isAdmin()], 200);
         }else {
-            if(empty($request->key)) {
-                return response()->json(['message' => 'Please select consumer number'], 422);
-            }
+            return response()->json(['message' => 'Please select consumer number'], 422);
         }
     }
 

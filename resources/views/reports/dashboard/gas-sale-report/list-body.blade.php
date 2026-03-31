@@ -20,12 +20,12 @@
             @endphp
             @forelse($geo_areas as $ga)
                 @php
-                    $gas_consumption = $gas_sale[$ga->id] ?? null;
-                    $dom_pre = $gas_consumption->dom_pre ?? 0;
-                    $dom_post = $gas_consumption->dom_post ?? 0;
-                    $com_pre = $gas_consumption->com_pre ?? 0;
-                    $com_post = $gas_consumption->com_post ?? 0;
-
+                    $gas_consumption = $gas_sale_array[$ga->id] ?? null;
+                    // Domestic Segment
+                    $dom_pre = $gas_consumption[\App\Enums\SegmentType::DOMESTIC->value][\App\Enums\ConnectionType::PREPAID->value] ?? 0;
+                    $dom_post = $gas_consumption[\App\Enums\SegmentType::DOMESTIC->value][\App\Enums\ConnectionType::POSTPAID->value] ?? 0;
+                    $com_pre = $gas_consumption[\App\Enums\SegmentType::COMMERCIAL->value][\App\Enums\ConnectionType::PREPAID->value] ?? 0;
+                    $com_post = $gas_consumption[\App\Enums\SegmentType::COMMERCIAL->value][\App\Enums\ConnectionType::POSTPAID->value] ?? 0;
                     // accumulate totals
                     $total_dom_pre += $dom_pre;
                     $total_dom_post += $dom_post;

@@ -48,8 +48,8 @@ class BillInvoiceConsumption extends Model
      */
     public function casts() {
         return [
-            'date_from' => 'date',
-            'date_to' => 'date',
+            'date_from' => 'date:Y-m-d',
+            'date_to' => 'date:Y-m-d',
         ];
     }
 
