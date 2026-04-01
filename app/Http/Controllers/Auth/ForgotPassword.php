@@ -28,7 +28,7 @@ class ForgotPassword extends Controller
     public function index()
     {
         // Response
-        return view('auth/forgot_password');
+        return view('auth.forgot_password');
     }
 
     /**
@@ -47,7 +47,7 @@ class ForgotPassword extends Controller
         $otp = $this->generateOtp($user);
 
         // Response
-        return view('auth/forgot_user_details', ['user' => $user, 'otp' => $otp]);
+        return view('auth.forgot_user_details', ['user' => $user]);
     }
     
     /**

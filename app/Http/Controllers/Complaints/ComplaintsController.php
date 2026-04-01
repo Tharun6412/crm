@@ -405,7 +405,7 @@ class ComplaintsController extends Controller
         $otp = OtpService::create($phone_no, OtpPurpose::COMPLAINT_CLOSE->value, OtpModule::USER->value);
         // Sms Integration
         $sms_response = SmsService::dispatch($complaint->consumer, new ComplaintCloseOtpSmsNotification(['otp' => $otp]));
-        return response()->json('OTP Sent Successfully to your mobile number'.": ".$otp."<br/> and will expire in 60 seconds.");
+        return response()->json('OTP Sent Successfully to your mobile number.');
     }
 
     /**
@@ -433,7 +433,7 @@ class ComplaintsController extends Controller
         }
         $otp = OtpService::create($phone_no, OtpPurpose::COMPLAINT_CLOSE->value, OtpModule::USER->value);
         return response()->json([
-            'message' => 'OTP Sent Successfully to your mobile number'.": ".$otp,
+            'message' => 'OTP Sent Successfully to your mobile number.',
             'count' => $count,
         ]);
     }

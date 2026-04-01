@@ -76,93 +76,70 @@ class MasterDataSeeder extends Seeder
 
         // Districts
         DB::table('mst_districts')->insert([
-            ['code'=> '1', 'name' => 'Krishna',  'state_id' => 1, 'cluster_id' => 1, 'ga_id' => 1, 'status' => 1],
-            ['code'=> '54', 'name' => 'NTR', 'state_id' => 1, 'cluster_id' => 1, 'ga_id' => 1, 'status' => 1],
-            ['code'=> '55', 'name' => 'Eluru', 'state_id' => 1, 'cluster_id' => 1, 'ga_id' => 1, 'status' => 1],
-
-            ['code'=> '7', 'name' => 'Medchal Malkajgiri', 'state_id' => 2, 'cluster_id' => 1, 'ga_id' => 2, 'status' => 1],
-            ['code'=> '11', 'name' => 'Rangareddy', 'state_id' => 2, 'cluster_id' => 1, 'ga_id' => 2, 'status' => 1],
-            ['code'=> '10', 'name' => 'Vikarabad', 'state_id' => 2, 'cluster_id' => 1, 'ga_id' => 2, 'status' => 1],
-            
-            ['code'=> '9', 'name' => 'Nalgonda', 'state_id' => 2, 'cluster_id' => 1, 'ga_id' => 3, 'status' => 1],
-            ['code'=> '8', 'name' => 'Suryapet', 'state_id' => 2, 'cluster_id' => 1, 'ga_id' => 3, 'status' => 1],
-            ['code'=> '4', 'name' => 'Yadadri Bhuvanagir', 'state_id' => 2, 'cluster_id' => 1, 'ga_id' => 3, 'status' => 1],
-            
-            ['code'=> '14', 'name' => 'J Boopalpally', 'state_id' => 2, 'cluster_id' => 1, 'ga_id' => 4, 'status' => 1],
-            ['code'=> '13', 'name' => 'Jangaon', 'state_id' => 2, 'cluster_id' => 1, 'ga_id' => 4, 'status' => 1],
-            ['code'=> '16', 'name' => 'Hanamkonda', 'state_id' => 2, 'cluster_id' => 1, 'ga_id' => 4, 'status' => 1],
-            ['code'=> '15', 'name' => 'Mahbubabad', 'state_id' => 2, 'cluster_id' => 1, 'ga_id' => 4, 'status' => 1],
-            ['code'=> '17', 'name' => 'Mulug', 'state_id' => 2, 'cluster_id' => 1, 'ga_id' => 4, 'status' => 1],
-            ['code'=> '5', 'name' => 'Warangal', 'state_id' => 2, 'cluster_id' => 1, 'ga_id' => 4, 'status' => 1],
-            
-            ['code'=> '12', 'name' => 'Bhadradri Kothagudem', 'state_id' => 2, 'cluster_id' => 1, 'ga_id' => 5, 'status' => 1],
-            ['code'=> '6', 'name' => 'Khammam', 'state_id' => 2, 'cluster_id' => 1, 'ga_id' => 5, 'status' => 1],
-            
-            ['code'=> '61', 'name' => 'Jogulamma Gadwal', 'state_id' => 2, 'cluster_id' => 1, 'ga_id' => 6, 'status' => 1],
-            ['code'=> '19', 'name' => 'Mahabubnagar', 'state_id' => 2, 'cluster_id' => 1, 'ga_id' => 6, 'status' => 1],
-            ['code'=> '42', 'name' => 'Nagarkurnool', 'state_id' => 2, 'cluster_id' => 1, 'ga_id' => 6, 'status' => 1],
-            ['code'=> '64', 'name' => 'Narayanpet', 'state_id' => 2, 'cluster_id' => 1, 'ga_id' => 6, 'status' => 1],
-            ['code'=> '63', 'name' => 'Wanaparthy', 'state_id' => 2, 'cluster_id' => 1, 'ga_id' => 6, 'status' => 1],
-            
-            ['code'=> '49', 'name' => 'Kallakurichi', 'state_id' => 3, 'cluster_id' => 2, 'ga_id' => 7, 'status' => 1],
-            ['code'=> '47', 'name' => 'Tiruvannamalai', 'state_id' => 3, 'cluster_id' => 2, 'ga_id' => 7, 'status' => 1],
-            ['code'=> '48', 'name' => 'Villupuram', 'state_id' => 3, 'cluster_id' => 2, 'ga_id' => 7, 'status' => 1],
-            
-            ['code'=> '46', 'name' => 'Padukkottai', 'state_id' => 3, 'cluster_id' => 2, 'ga_id' => 8, 'status' => 1],
-            ['code'=> '50', 'name' => 'Sivaganga', 'state_id' => 3, 'cluster_id' => 2, 'ga_id' => 8, 'status' => 1],
-            ['code'=> '51', 'name' => 'Thanjavur', 'state_id' => 3, 'cluster_id' => 2, 'ga_id' => 8, 'status' => 1],
-            
-            ['code'=> '20', 'name' => 'Ariyalur', 'state_id' => 3, 'cluster_id' => 2, 'ga_id' => 10, 'status' => 1],
-            ['code'=> '21', 'name' => 'Perambalur', 'state_id' => 3, 'cluster_id' => 2, 'ga_id' => 10, 'status' => 1],
-            
-            ['code'=> '45', 'name' => 'Dindigul', 'state_id' => 3, 'cluster_id' => 2, 'ga_id' => 9, 'status' => 1],
-            ['code'=> '52', 'name' => 'Karur', 'state_id' => 3, 'cluster_id' => 2, 'ga_id' => 9, 'status' => 1],
-            
-            ['code'=> '2', 'name' => 'Belgaum', 'state_id' => 4, 'cluster_id' => 3, 'ga_id' => 11, 'status' => 1],
-            
-            ['code'=> '3', 'name' => 'Tumkur', 'state_id' => 4, 'cluster_id' => 3, 'ga_id' => 12, 'status' => 1],
-            
-            ['code'=> '53', 'name' => 'Chikkballapur', 'state_id' => 4, 'cluster_id' => 3, 'ga_id' => 13, 'status' => 1],
-            
-            ['code'=> '62', 'name' => 'Yadgiri', 'state_id' => 4, 'cluster_id' => 3, 'ga_id' => 14, 'status' => 1],
-            
-            ['code'=> '59', 'name' => 'Bolangir', 'state_id' => 5, 'cluster_id' => 4, 'ga_id' => 15, 'status' => 1],
-            ['code'=> '58', 'name' => 'Kalahandi', 'state_id' => 5, 'cluster_id' => 4, 'ga_id' => 15, 'status' => 1],
-            ['code'=> '60', 'name' => 'Nuapada', 'state_id' => 5, 'cluster_id' => 4, 'ga_id' => 15, 'status' => 1],
-            ['code'=> '57', 'name' => 'Rayagada', 'state_id' => 5, 'cluster_id' => 4, 'ga_id' => 15, 'status' => 1],
-
-            ['code'=> '56', 'name' => 'Chandrapur', 'state_id' => 6, 'cluster_id' => 4, 'ga_id' => 16, 'status' => 1],
-            ['code'=> '18', 'name' => 'Wardha', 'state_id' => 6, 'cluster_id' => 4, 'ga_id' => 16, 'status' => 1],
-            
-            ['code'=> '39', 'name' => 'Hoshangabad', 'state_id' => 7, 'cluster_id' => 5, 'ga_id' => 17, 'status' => 1],
-            ['code'=> '40', 'name' => 'Narsinghpur', 'state_id' => 7, 'cluster_id' => 5, 'ga_id' => 17, 'status' => 1],
-            ['code'=> '28', 'name' => 'Sagar', 'state_id' => 7, 'cluster_id' => 5, 'ga_id' => 17, 'status' => 1],
-            ['code'=> '41', 'name' => 'Vidisha', 'state_id' => 7, 'cluster_id' => 5, 'ga_id' => 17, 'status' => 1],
-            
-            ['code'=> '33', 'name' => 'Balaghat', 'state_id' => 7, 'cluster_id' => 4, 'ga_id' => 18, 'status' => 1],
-            ['code'=> '31', 'name' => 'Betul', 'state_id' => 7, 'cluster_id' => 4, 'ga_id' => 18, 'status' => 1],
-            ['code'=> '26', 'name' => 'Chhindwara', 'state_id' => 7, 'cluster_id' => 4, 'ga_id' => 18, 'status' => 1],
-            ['code'=> '32', 'name' => 'Seoni', 'state_id' => 7, 'cluster_id' => 4, 'ga_id' => 18, 'status' => 1],
-
-            ['code'=> '34', 'name' => 'Damoh', 'state_id' => 7, 'cluster_id' => 4, 'ga_id' => 19, 'status' => 1],
-            ['code'=> '38', 'name' => 'Dindori', 'state_id' => 7, 'cluster_id' => 4, 'ga_id' => 19, 'status' => 1],
-            ['code'=> '27', 'name' => 'Jabalpur', 'state_id' => 7, 'cluster_id' => 4, 'ga_id' => 19, 'status' => 1],
-            ['code'=> '35', 'name' => 'Katni', 'state_id' => 7, 'cluster_id' => 4, 'ga_id' => 19, 'status' => 1],
-            ['code'=> '36', 'name' => 'Mandla', 'state_id' => 7, 'cluster_id' => 4, 'ga_id' => 19, 'status' => 1],
-            ['code'=> '37', 'name' => 'Umaria', 'state_id' => 7, 'cluster_id' => 4, 'ga_id' => 19, 'status' => 1],
-
-            ['code'=> '25', 'name' => 'Agar Malwa', 'state_id' => 7, 'cluster_id' => 5, 'ga_id' => 20, 'status' => 1],
-            ['code'=> '30', 'name' => 'Mandasaur', 'state_id' => 7, 'cluster_id' => 5, 'ga_id' => 20, 'status' => 1],
-            ['code'=> '29', 'name' => 'Neemuch', 'state_id' => 7, 'cluster_id' => 5, 'ga_id' => 20, 'status' => 1],
-
-            ['code'=> '24', 'name' => 'Tarn Taran', 'state_id' => 8, 'cluster_id' => 5, 'ga_id' => 21, 'status' => 1],
-            
-            ['code'=> '23', 'name' => 'Amroha', 'state_id' => 9, 'cluster_id' => 5, 'ga_id' => 22, 'status' => 1],
-            ['code'=> '22', 'name' => 'Sambhal', 'state_id' => 9, 'cluster_id' => 5, 'ga_id' => 22, 'status' => 1],
-
-            ['code'=> '44', 'name' => 'Kasganj', 'state_id' => 9, 'cluster_id' => 5, 'ga_id' => 23, 'status' => 1],
-
-            ['code'=> '43', 'name' => 'Jhalawar', 'state_id' => 10, 'cluster_id' => 5, 'ga_id' => 24, 'status' => 1],
+            ['id' => '1','code' => '1','name' => 'Krishna','display_name' => NULL,'state_id' => '1','cluster_id' => '1','ga_id' => '1','status' => '1','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL,'ccavenue_name' => 'Krishna'],
+            ['id' => '2','code' => '54','name' => 'NTR','display_name' => NULL,'state_id' => '1','cluster_id' => '1','ga_id' => '1','status' => '1','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL,'ccavenue_name' => 'Krishna'],
+            ['id' => '3','code' => '55','name' => 'Eluru','display_name' => NULL,'state_id' => '1','cluster_id' => '1','ga_id' => '1','status' => '1','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL,'ccavenue_name' => 'Krishna'],
+            ['id' => '4','code' => '7','name' => 'Medchal Malkajgiri','display_name' => NULL,'state_id' => '2','cluster_id' => '1','ga_id' => '2','status' => '1','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL,'ccavenue_name' => 'MEDCHALMALKAJGIRI'],
+            ['id' => '5','code' => '11','name' => 'Rangareddy','display_name' => NULL,'state_id' => '2','cluster_id' => '1','ga_id' => '2','status' => '1','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL,'ccavenue_name' => 'RANGAREDDY'],
+            ['id' => '6','code' => '10','name' => 'Vikarabad','display_name' => NULL,'state_id' => '2','cluster_id' => '1','ga_id' => '2','status' => '1','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL,'ccavenue_name' => 'VIKARABAD'],
+            ['id' => '7','code' => '9','name' => 'Nalgonda','display_name' => NULL,'state_id' => '2','cluster_id' => '1','ga_id' => '3','status' => '1','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL,'ccavenue_name' => 'NALGONDA'],
+            ['id' => '8','code' => '8','name' => 'Suryapet','display_name' => NULL,'state_id' => '2','cluster_id' => '1','ga_id' => '3','status' => '1','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL,'ccavenue_name' => 'SURYAPET'],
+            ['id' => '9','code' => '4','name' => 'Yadadri Bhuvanagir','display_name' => NULL,'state_id' => '2','cluster_id' => '1','ga_id' => '3','status' => '1','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL,'ccavenue_name' => 'YADADRIBHUVANAGIR'],
+            ['id' => '10','code' => '14','name' => 'J Boopalpally','display_name' => NULL,'state_id' => '2','cluster_id' => '1','ga_id' => '4','status' => '1','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL,'ccavenue_name' => 'JBOOPALPALLY'],
+            ['id' => '11','code' => '13','name' => 'Jangaon','display_name' => NULL,'state_id' => '2','cluster_id' => '1','ga_id' => '4','status' => '1','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL,'ccavenue_name' => 'JANGAON'],
+            ['id' => '12','code' => '16','name' => 'Hanamkonda','display_name' => NULL,'state_id' => '2','cluster_id' => '1','ga_id' => '4','status' => '1','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL,'ccavenue_name' => 'HANUMAKONDA'],
+            ['id' => '13','code' => '15','name' => 'Mahbubabad','display_name' => NULL,'state_id' => '2','cluster_id' => '1','ga_id' => '4','status' => '1','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL,'ccavenue_name' => 'MAHABUBABAD'],
+            ['id' => '14','code' => '17','name' => 'Mulug','display_name' => NULL,'state_id' => '2','cluster_id' => '1','ga_id' => '4','status' => '1','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL,'ccavenue_name' => 'MULUGU'],
+            ['id' => '15','code' => '5','name' => 'Warangal','display_name' => NULL,'state_id' => '2','cluster_id' => '1','ga_id' => '4','status' => '1','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL,'ccavenue_name' => 'WARANGAL'],
+            ['id' => '16','code' => '12','name' => 'Bhadradri Kothagudem','display_name' => NULL,'state_id' => '2','cluster_id' => '1','ga_id' => '5','status' => '1','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL,'ccavenue_name' => 'BHADRADRIKOTHAGUDEM'],
+            ['id' => '17','code' => '6','name' => 'Khammam','display_name' => NULL,'state_id' => '2','cluster_id' => '1','ga_id' => '5','status' => '1','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL,'ccavenue_name' => 'KHAMMAM'],
+            ['id' => '18','code' => '61','name' => 'Jogulamma Gadwal','display_name' => NULL,'state_id' => '2','cluster_id' => '1','ga_id' => '6','status' => '1','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL,'ccavenue_name' => 'Jogulamma Gadwal'],
+            ['id' => '19','code' => '19','name' => 'Mahabubnagar','display_name' => NULL,'state_id' => '2','cluster_id' => '1','ga_id' => '6','status' => '1','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL,'ccavenue_name' => 'Mahabubnagar'],
+            ['id' => '20','code' => '42','name' => 'Nagarkurnool','display_name' => NULL,'state_id' => '2','cluster_id' => '1','ga_id' => '6','status' => '1','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL,'ccavenue_name' => 'Nagarkurnool'],
+            ['id' => '21','code' => '64','name' => 'Narayanpet','display_name' => NULL,'state_id' => '2','cluster_id' => '1','ga_id' => '6','status' => '1','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL,'ccavenue_name' => 'Narayanpet'],
+            ['id' => '22','code' => '63','name' => 'Wanaparthy','display_name' => NULL,'state_id' => '2','cluster_id' => '1','ga_id' => '6','status' => '1','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL,'ccavenue_name' => 'Wanaparthy'],
+            ['id' => '23','code' => '49','name' => 'Kallakurichi','display_name' => NULL,'state_id' => '3','cluster_id' => '2','ga_id' => '7','status' => '1','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL,'ccavenue_name' => 'Kallakurichi'],
+            ['id' => '24','code' => '47','name' => 'Tiruvannamalai','display_name' => NULL,'state_id' => '3','cluster_id' => '2','ga_id' => '7','status' => '1','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL,'ccavenue_name' => 'Tiruvannamalai'],
+            ['id' => '25','code' => '48','name' => 'Villupuram','display_name' => NULL,'state_id' => '3','cluster_id' => '2','ga_id' => '7','status' => '1','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL,'ccavenue_name' => 'Villupuram'],
+            ['id' => '26','code' => '46','name' => 'Padukkottai','display_name' => NULL,'state_id' => '3','cluster_id' => '2','ga_id' => '8','status' => '1','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL,'ccavenue_name' => 'Padukkottai'],
+            ['id' => '27','code' => '50','name' => 'Sivaganga','display_name' => NULL,'state_id' => '3','cluster_id' => '2','ga_id' => '8','status' => '1','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL,'ccavenue_name' => 'Sivaganga'],
+            ['id' => '28','code' => '51','name' => 'Thanjavur','display_name' => NULL,'state_id' => '3','cluster_id' => '2','ga_id' => '8','status' => '1','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL,'ccavenue_name' => 'Thanjavur'],
+            ['id' => '29','code' => '20','name' => 'Ariyalur','display_name' => NULL,'state_id' => '3','cluster_id' => '2','ga_id' => '10','status' => '1','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL,'ccavenue_name' => 'Ariyalur'],
+            ['id' => '30','code' => '21','name' => 'Perambalur','display_name' => NULL,'state_id' => '3','cluster_id' => '2','ga_id' => '10','status' => '1','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL,'ccavenue_name' => 'Perambalur'],
+            ['id' => '31','code' => '45','name' => 'Dindigul','display_name' => NULL,'state_id' => '3','cluster_id' => '2','ga_id' => '9','status' => '1','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL,'ccavenue_name' => 'Dindigul'],
+            ['id' => '32','code' => '52','name' => 'Karur','display_name' => NULL,'state_id' => '3','cluster_id' => '2','ga_id' => '9','status' => '1','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL,'ccavenue_name' => 'Karur'],
+            ['id' => '33','code' => '2','name' => 'Belgaum','display_name' => NULL,'state_id' => '4','cluster_id' => '3','ga_id' => '11','status' => '1','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL,'ccavenue_name' => 'Belgaum'],
+            ['id' => '34','code' => '3','name' => 'Tumkur','display_name' => NULL,'state_id' => '4','cluster_id' => '3','ga_id' => '12','status' => '1','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL,'ccavenue_name' => 'Tumkur'],
+            ['id' => '35','code' => '53','name' => 'Chikkballapur','display_name' => NULL,'state_id' => '4','cluster_id' => '3','ga_id' => '13','status' => '1','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL,'ccavenue_name' => 'Chikkballapur'],
+            ['id' => '36','code' => '62','name' => 'Yadgiri','display_name' => NULL,'state_id' => '4','cluster_id' => '3','ga_id' => '14','status' => '1','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL,'ccavenue_name' => 'Yadgiri'],
+            ['id' => '37','code' => '59','name' => 'Bolangir','display_name' => NULL,'state_id' => '5','cluster_id' => '4','ga_id' => '15','status' => '1','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL,'ccavenue_name' => 'Bolangir'],
+            ['id' => '38','code' => '58','name' => 'Kalahandi','display_name' => NULL,'state_id' => '5','cluster_id' => '4','ga_id' => '15','status' => '1','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL,'ccavenue_name' => 'Kalahandi'],
+            ['id' => '39','code' => '60','name' => 'Nuapada','display_name' => NULL,'state_id' => '5','cluster_id' => '4','ga_id' => '15','status' => '1','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL,'ccavenue_name' => 'Nuapada'],
+            ['id' => '40','code' => '57','name' => 'Rayagada','display_name' => NULL,'state_id' => '5','cluster_id' => '4','ga_id' => '15','status' => '1','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL,'ccavenue_name' => 'Rayagada'],
+            ['id' => '41','code' => '56','name' => 'Chandrapur','display_name' => NULL,'state_id' => '6','cluster_id' => '4','ga_id' => '16','status' => '1','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL,'ccavenue_name' => 'Chandrapur'],
+            ['id' => '42','code' => '18','name' => 'Wardha','display_name' => NULL,'state_id' => '6','cluster_id' => '4','ga_id' => '16','status' => '1','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL,'ccavenue_name' => 'Wardha'],
+            ['id' => '43','code' => '39','name' => 'Hoshangabad','display_name' => NULL,'state_id' => '7','cluster_id' => '5','ga_id' => '17','status' => '1','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL,'ccavenue_name' => 'Hoshangabad'],
+            ['id' => '44','code' => '40','name' => 'Narsinghpur','display_name' => NULL,'state_id' => '7','cluster_id' => '5','ga_id' => '17','status' => '1','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL,'ccavenue_name' => 'Narsinghpur'],
+            ['id' => '45','code' => '28','name' => 'Sagar','display_name' => NULL,'state_id' => '7','cluster_id' => '5','ga_id' => '17','status' => '1','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL,'ccavenue_name' => 'Sagar'],
+            ['id' => '46','code' => '41','name' => 'Vidisha','display_name' => NULL,'state_id' => '7','cluster_id' => '5','ga_id' => '17','status' => '1','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL,'ccavenue_name' => 'Vidisha'],
+            ['id' => '47','code' => '33','name' => 'Balaghat','display_name' => NULL,'state_id' => '7','cluster_id' => '4','ga_id' => '18','status' => '1','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL,'ccavenue_name' => 'Balaghat'],
+            ['id' => '48','code' => '31','name' => 'Betul','display_name' => NULL,'state_id' => '7','cluster_id' => '4','ga_id' => '18','status' => '1','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL,'ccavenue_name' => 'Betul'],
+            ['id' => '49','code' => '26','name' => 'Chhindwara','display_name' => NULL,'state_id' => '7','cluster_id' => '4','ga_id' => '18','status' => '1','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL,'ccavenue_name' => 'Chhindwara'],
+            ['id' => '50','code' => '32','name' => 'Seoni','display_name' => NULL,'state_id' => '7','cluster_id' => '4','ga_id' => '18','status' => '1','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL,'ccavenue_name' => 'Seoni'],
+            ['id' => '51','code' => '34','name' => 'Damoh','display_name' => NULL,'state_id' => '7','cluster_id' => '4','ga_id' => '19','status' => '1','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL,'ccavenue_name' => 'Damoh'],
+            ['id' => '52','code' => '38','name' => 'Dindori','display_name' => NULL,'state_id' => '7','cluster_id' => '4','ga_id' => '19','status' => '1','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL,'ccavenue_name' => 'Dindori'],
+            ['id' => '53','code' => '27','name' => 'Jabalpur','display_name' => NULL,'state_id' => '7','cluster_id' => '4','ga_id' => '19','status' => '1','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL,'ccavenue_name' => 'Jabalpur'],
+            ['id' => '54','code' => '35','name' => 'Katni','display_name' => NULL,'state_id' => '7','cluster_id' => '4','ga_id' => '19','status' => '1','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL,'ccavenue_name' => 'Katni'],
+            ['id' => '55','code' => '36','name' => 'Mandla','display_name' => NULL,'state_id' => '7','cluster_id' => '4','ga_id' => '19','status' => '1','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL,'ccavenue_name' => 'Mandla'],
+            ['id' => '56','code' => '37','name' => 'Umaria','display_name' => NULL,'state_id' => '7','cluster_id' => '4','ga_id' => '19','status' => '1','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL,'ccavenue_name' => 'Umaria'],
+            ['id' => '57','code' => '25','name' => 'Agar Malwa','display_name' => NULL,'state_id' => '7','cluster_id' => '5','ga_id' => '20','status' => '1','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL,'ccavenue_name' => 'Agar Malwa'],
+            ['id' => '58','code' => '30','name' => 'Mandasaur','display_name' => NULL,'state_id' => '7','cluster_id' => '5','ga_id' => '20','status' => '1','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL,'ccavenue_name' => 'Mandasaur'],
+            ['id' => '59','code' => '29','name' => 'Neemuch','display_name' => NULL,'state_id' => '7','cluster_id' => '5','ga_id' => '20','status' => '1','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL,'ccavenue_name' => 'Neemuch'],
+            ['id' => '60','code' => '24','name' => 'Tarn Taran','display_name' => NULL,'state_id' => '8','cluster_id' => '5','ga_id' => '21','status' => '1','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL,'ccavenue_name' => 'Tarn Taran'],
+            ['id' => '61','code' => '23','name' => 'Amroha','display_name' => NULL,'state_id' => '9','cluster_id' => '5','ga_id' => '22','status' => '1','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL,'ccavenue_name' => 'Amroha'],
+            ['id' => '62','code' => '22','name' => 'Sambhal','display_name' => NULL,'state_id' => '9','cluster_id' => '5','ga_id' => '22','status' => '1','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL,'ccavenue_name' => 'Sambhal'],
+            ['id' => '63','code' => '44','name' => 'Kasganj','display_name' => NULL,'state_id' => '9','cluster_id' => '5','ga_id' => '23','status' => '1','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL,'ccavenue_name' => 'Kasganj'],
+            ['id' => '64','code' => '43','name' => 'Jhalawar','display_name' => NULL,'state_id' => '10','cluster_id' => '5','ga_id' => '24','status' => '1','created_at' => NULL,'updated_at' => NULL,'created_by' => NULL,'ccavenue_name' => 'Jhalawar']
         ]);
 
         // Industrial Areas

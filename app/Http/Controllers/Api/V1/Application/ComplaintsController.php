@@ -176,7 +176,7 @@ class ComplaintsController extends Controller
         $otp = OtpService::create($phone_no, OtpPurpose::COMPLAINT_CLOSE->value, OtpModule::USER->value);
         // Sms Integration
         $sms_response = SmsService::dispatch($complaint->consumer, new ComplaintCloseOtpSmsNotification(['otp' => $otp]));
-        return response()->json(['message' => 'OTP Sent Successfully to your mobile number'.$otp], 200);
+        return response()->json(['message' => 'OTP Sent Successfully to your mobile number'], 200);
     }
 
     /**
@@ -239,7 +239,7 @@ class ComplaintsController extends Controller
         // Sms Integration
         $sms_response = SmsService::dispatch($complaint->consumer, new ComplaintCloseOtpSmsNotification(['otp' => $otp]));
         return response()->json([
-            'message' => 'OTP Sent Successfully to your mobile number'.": ".$otp,
+            'message' => 'OTP Sent Successfully to your mobile number',
             'count' => $count,
         ], 200);
     }

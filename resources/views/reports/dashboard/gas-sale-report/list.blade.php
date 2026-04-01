@@ -35,6 +35,10 @@
                     <div class="col-auto">
                         <a href="{{ url('reports/gasSaleReport') }}" class="btn btn-warning"><i class="bi bi-arrow-clockwise"></i></a>
                     </div>
+                    <div class="col-auto">
+                        <!-- Export -->
+                        <button type="button" id="exportBtn" class="btn btn-outline-info text-end"><i class="bi bi-file-earmark-excel"></i>&nbsp;Export</button>
+                    </div>
                 </div>
             </div>
         </form>

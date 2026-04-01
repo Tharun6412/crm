@@ -1,5 +1,5 @@
 <div class="table-responsive">
-    <table class="table table-bordered table-hover table-striped bg-white page-sort">
+    <table class="table table-bordered table-hover table-striped bg-white page-sort" id="gas-sale-report">
         <thead class="table-success">
             <tr>
                 <th rowspan="2" width="1%" nowrap="nowrap">S No.</th>
@@ -57,3 +57,10 @@
         </tfoot>
     </table>
 </div>
+@include('scripts.export-table', [
+    'table' => 'gas-sale-report',
+    'button' => 'exportBtn',
+    'tabBased' => false,
+    'filename' => 'gas_sale_report',
+    'sheet'    => 'Report',
+])

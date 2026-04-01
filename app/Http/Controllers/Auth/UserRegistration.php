@@ -59,7 +59,7 @@ class UserRegistration extends Controller
         $user = User::where('emp_id', $request->emp_id)->first();
         $otp = $this->generateOtp($user);
 
-        return view('auth.self_registration_otp', ['user' => $user, 'otp' => $otp]);
+        return view('auth.self_registration_otp', ['user' => $user]);
     }
 
     /**

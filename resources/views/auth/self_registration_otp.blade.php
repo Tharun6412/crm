@@ -30,7 +30,7 @@
             <a href="{{ url('resendEmail/' . $user->id) }}" class="btn btn-link" id="resend-link">Resend email</a>
             <div class="pt-2" id="mail-response">
                 <div class="alert alert-info">
-                    OTP has been set to your email. {{ $otp }}
+                    OTP has been set to your email.
                 </div>
             </div>
         </div>

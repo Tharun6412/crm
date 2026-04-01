@@ -63,6 +63,7 @@ return new class extends Migration
             $table->tinyInteger('status')->nullable();
             $table->timestamps();
             $table->foreignId('created_by')->nullable()->index()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();
+            $table->string('ccavenue_name', length:225)->nullable();
         });
 
         // CA
