@@ -6,37 +6,20 @@
 
 @section('page-title', 'Reports')
 
-@section('page-content')
+@section('page-content') 
     <div class="row g-2 align-items-center mt-2 mb-3">
-        <div class="col-3">
-            <div class="border border-success bg-success bg-gradient rounded p-4 fs-5 shadow-sm">
-                <a href="#" class="text-white"><i class="bi bi-ticket-perforated fs-4"></i>&nbsp;Consumer Onboarding</a>
-            </div>
+        @foreach ($modules as $module)
+        <div class="col-md-6 col-sm-6 col-lg-4 col-xl-3 col-xs-12">
+            <a href="{{ url($module->url) }}" class="text-dark">
+                <div class="d-flex align-middle border border-secondary-subtle report-card-bg rounded p-3 fs-18 shadow-sm">
+                    <div><i class="bi {{ $module->icon }} report-card-bg shadow-sm p-2 fs-3 rounded-3 border border-secondary-subtle"></i></div>
+                    <div class="mt-1">&nbsp;{{ $module->name ?? '' }}</div>                    
+                </div>
+            </a>
         </div>
-        <div class="col-3">
-            <div class="border border-primary bg-primary bg-gradient rounded p-4 fs-5 shadow-sm">
-                <a href="#" class="text-white"><i class="bi bi-receipt-cutoff fs-4"></i>&nbsp;Consumer Invoices</a>
-            </div>
-        </div>
-        <div class="col-3">
-            <div class="border border-secondary bg-secondary bg-gradient rounded p-4 fs-5 shadow-sm">
-                <a href="#" class="text-white"><i class="bi bi-graph-up fs-4"></i>&nbsp;Ageing Report</a>
-            </div>
-        </div>
-        <div class="col-3">
-            <div class="border border-warning bg-warning bg-gradient rounded p-4 fs-5 shadow-sm">
-                <a href="#" class="text-white"><i class="bi bi-piggy-bank fs-4"></i>&nbsp;Security Deposit Report</a>
-            </div>
-        </div>
-        <div class="col-3">
-            <div class="border border-info bg-info bg-gradient rounded p-4 fs-5 shadow-sm">
-                <a href="#" class="text-white"><i class="bi bi-file-earmark-spreadsheet fs-4"></i>&nbsp;Outstanding Report</a>
-            </div>
-        </div>
+        @endforeach
     </div>
 @endsection
 <style>
-.rotate-90 {
-  transform: rotate(90deg);
-}
+.report-card-bg { background: #c9aeee;background: linear-gradient(240deg, rgb(62 222 236 / 31%) 0%, rgb(211 233 141 / 30%) 100%);box-shadow: #dadada 3px 4px 10px 1px;text-transform: uppercase;} .fs-18 {font-size: 1.05rem;}
 </style>

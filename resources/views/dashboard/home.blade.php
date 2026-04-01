@@ -68,14 +68,15 @@
             <div class="row g-3">
                 <div class="col-sm-3 col-md-4 col-lg-4 col-xl-4">
                     <div class="card con-card-bg p-1 text-dark bg-opacity-10 border-3 border-light">
-                        <div class="d-flex p-3 align-items-center">
+                        <div class="d-flex p-2 align-items-center">
                             <div class="mr-4">
                                 <div class="con-card-bg p-2 bg-opacity-25 rounded-4 py-2 px-3">
                                     <i class="bi bi-wifi fs-1"></i>
                                 </div>
                             </div>
                             <div class="py-3 px-3">
-                                <h4>Prepaid Consumers DOM</h4>                            
+                                <span class="text-body-tertiary">Domestic</span>                            
+                                <h4>Prepaid Consumers</h4>
                                 <h3>{{ numberFormat($consumer_segment[App\Enums\SegmentType::DOMESTIC->value]['prepaid'] ?? 0) }}</h3>
                             </div>
                         </div>
@@ -83,14 +84,15 @@
                 </div>
                 <div class="col-sm-3 col-md-4 col-lg-4 col-xl-4">
                     <div class="card inv-card-bg p-1 text-dark bg-opacity-10 border-3 border-light">
-                        <div class="d-flex p-3 align-items-center">
+                        <div class="d-flex p-2 align-items-center">
                             <div class="mr-4">
                                 <div class="inv-card-bg p-2 bg-opacity-25 rounded-4 py-2 px-3">
                                     <i class="bi bi-wifi fs-1"></i>
                                 </div>
                             </div>
                             <div class="py-3 px-3">
-                                <h4>Prepaid Consumers COM</h4>                            
+                                <span class="text-body-tertiary">Commercial</span>                            
+                                <h4>Prepaid Consumers</h4>
                                 <h3>{{ numberFormat($consumer_segment[App\Enums\SegmentType::COMMERCIAL->value]['prepaid'] ?? 0) }}</h3>
                             </div>                          
                         </div>
@@ -98,13 +100,14 @@
                 </div>
                 <div class="col-sm-3 col-md-4 col-lg-4 col-xl-4">
                     <div class="card cls-card-bg p-1 text-dark bg-opacity-10 border-3 border-light align-items-center">
-                        <div class="d-flex p-3 align-items-center">
+                        <div class="d-flex p-2 align-items-center">
                             <div class="mr-4">
                                 <div class="inv-card-bg p-2 bg-opacity-25 rounded-4 py-2 px-3">
                                     <i class="bi bi-speedometer2 fs-1"></i>
                                 </div>
                             </div>
                             <div class="py-3 px-3">
+                                <span class="text-body-tertiary">Total</span>                            
                                 <h4>Postpaid Consumers</h4>                            
                                 <h3>{{ numberFormat($total_postpaid) }}</h3>
                             </div>                          
@@ -213,7 +216,7 @@
             <div class="row mt-3">
                 <div class="col-sm-4 col-md-4 col-lg-2 col-xl-2 col-xs-6">
                     <div class="card link-card-bg p-1 text-dark bg-opacity-10 border-3 border-light">
-                        <div class="d-flex justify-content-between p-2 align-items-center">
+                        <div class="d-flex p-2 align-items-center">
                             <div>
                                 <div class="link-card-bg p-1 bg-opacity-25 rounded-4 py-1 px-2 mt-2">
                                     <i class="bi bi-link-45deg fs-3"></i>
@@ -228,7 +231,7 @@
                 <div class="col-sm-4 col-md-4 col-lg-2 col-xl-2 col-xs-6">
                     <a href="{{ url('consumers/register/domestic') }}">
                         <div class="card link-card-bg p-1 text-dark bg-opacity-10 border-3 border-light">
-                            <div class="d-flex justify-content-between p-2 align-items-center">
+                            <div class="d-flex p-2 align-items-center">
                                 <div>
                                     <div class="link-card-bg p-1 bg-opacity-25 rounded-4 py-1 px-2 mt-2">
                                         <i class="bi bi-link-45deg fs-3"></i>
@@ -244,7 +247,7 @@
                 <div class="col-sm-4 col-md-4 col-lg-2 col-xl-2 col-xs-6">
                     <a href="{{ url('consumers/tr') }}">
                         <div class="card link-card-bg p-1 text-dark bg-opacity-10 border-3 border-light">
-                            <div class="d-flex justify-content-between p-2 align-items-center">
+                            <div class="d-flex p-2 align-items-center">
                                 <div>
                                     <div class="link-card-bg p-1 bg-opacity-25 rounded-4 py-1 px-2 mt-2">
                                         <i class="bi bi-link-45deg fs-3"></i>
@@ -260,7 +263,7 @@
                 <div class="col-sm-4 col-md-4 col-lg-2 col-xl-2 col-xs-6">
                     <a href="{{ url('consumers/registered') }}">
                         <div class="card link-card-bg p-1 text-dark bg-opacity-10 border-3 border-light">
-                            <div class="d-flex justify-content-between p-2 align-items-center">
+                            <div class="d-flex p-2 align-items-center">
                                 <div>
                                     <div class="link-card-bg p-1 bg-opacity-25 rounded-4 py-1 px-2 mt-2">
                                         <i class="bi bi-link-45deg fs-3"></i>
@@ -276,7 +279,7 @@
                 <div class="col-sm-4 col-md-4 col-lg-2 col-xl-2 col-xs-6">
                     <a href="{{ url('consumers/meterChange') }}">
                         <div class="card link-card-bg p-1 text-dark bg-opacity-10 border-3 border-light">
-                            <div class="d-flex justify-content-between p-2 align-items-center">
+                            <div class="d-flex p-2 align-items-center">
                                 <div>
                                     <div class="link-card-bg p-1 bg-opacity-25 rounded-4 py-1 px-2 mt-2">
                                         <i class="bi bi-link-45deg fs-3"></i>
@@ -292,7 +295,7 @@
                 <div class="col-sm-4 col-md-4 col-lg-2 col-xl-2 col-xs-6">
                     <a href="{{ url('bill/consumer/search') }}" target="_blank">
                         <div class="card link-card-bg p-1 text-dark bg-opacity-10 border-3 border-light">
-                            <div class="d-flex justify-content-between p-2 align-items-center">
+                            <div class="d-flex p-2 align-items-center">
                                 <div>
                                     <div class="link-card-bg p-1 bg-opacity-25 rounded-4 py-1 px-2 mt-2">
                                         <i class="bi bi-link-45deg fs-3"></i>
@@ -310,7 +313,7 @@
                 <div class="col-sm-4 col-md-4 col-lg-2 col-xl-2 col-xs-6">
                     <a href="{{ url('consumers/rejected') }}">
                         <div class="card link-card-bg p-1 text-dark bg-opacity-10 border-3 border-light">
-                            <div class="d-flex justify-content-between p-2 align-items-center">
+                            <div class="d-flex p-2 align-items-center">
                                 <div>
                                     <div class="link-card-bg p-1 bg-opacity-25 rounded-4 py-1 px-2 mt-2">
                                         <i class="bi bi-link-45deg fs-3"></i>
@@ -326,7 +329,7 @@
                 <div class="col-sm-4 col-md-4 col-lg-2 col-xl-2 col-xs-6">
                     <a href="{{ url('consumers/meterChange') }}">
                         <div class="card link-card-bg p-1 text-dark bg-opacity-10 border-3 border-light">
-                            <div class="d-flex justify-content-between p-2 align-items-center">
+                            <div class="d-flex p-2 align-items-center">
                                 <div>
                                     <div class="link-card-bg p-1 bg-opacity-25 rounded-4 py-1 px-2 mt-2">
                                         <i class="bi bi-link-45deg fs-3"></i>
@@ -342,7 +345,7 @@
                 <div class="col-sm-4 col-md-4 col-lg-2 col-xl-2 col-xs-6">
                     <a href="{{ url('bill/consumer/search') }}" target="_blank">
                         <div class="card link-card-bg p-1 text-dark bg-opacity-10 border-3 border-light">
-                            <div class="d-flex justify-content-between p-2 align-items-center">
+                            <div class="d-flex p-2 align-items-center">
                                 <div>
                                     <div class="link-card-bg p-1 bg-opacity-25 rounded-4 py-1 px-2 mt-2">
                                         <i class="bi bi-link-45deg fs-3"></i>
@@ -358,7 +361,7 @@
                 <div class="col-sm-4 col-md-4 col-lg-2 col-xl-2 col-xs-6">
                     <a href="{{ url('bill/invoice/search') }}" target="_blank">
                         <div class="card link-card-bg p-1 text-dark bg-opacity-10 border-3 border-light">
-                            <div class="d-flex justify-content-between p-2 align-items-center">
+                            <div class="d-flex p-2 align-items-center">
                                 <div>
                                     <div class="link-card-bg p-1 bg-opacity-25 rounded-4 py-1 px-2 mt-2">
                                         <i class="bi bi-link-45deg fs-3"></i>
@@ -374,7 +377,7 @@
                 <div class="col-sm-4 col-md-4 col-lg-2 col-xl-2 col-xs-6">
                     <a href="{{ url('reports/consumer/sdReport') }}">
                         <div class="card link-card-bg p-1 text-dark bg-opacity-10 border-3 border-light">
-                            <div class="d-flex justify-content-between p-2 align-items-center">
+                            <div class="d-flex p-2 align-items-center">
                                 <div>
                                     <div class="link-card-bg p-1 bg-opacity-25 rounded-4 py-1 px-2 mt-2">
                                         <i class="bi bi-link-45deg fs-3"></i>
@@ -390,7 +393,7 @@
                 <div class="col-sm-4 col-md-4 col-lg-2 col-xl-2 col-xs-6">
                     <a href="{{ url('spot/dashboard') }}">
                         <div class="card link-card-bg p-1 text-dark bg-opacity-10 border-3 border-light">
-                            <div class="d-flex justify-content-between p-2 align-items-center">
+                            <div class="d-flex p-2 align-items-center">
                                 <div>
                                     <div class="link-card-bg p-1 bg-opacity-25 rounded-4 py-1 px-2 mt-2">
                                         <i class="bi bi-link-45deg fs-3"></i>
@@ -653,58 +656,13 @@
 </script>
 @endpush
 <style>
-    .boxshadow {
-        box-shadow: #dadada 3px 4px 10px 1px;
-    }
-    .con-card-bg {
-        background: #c9aeee;
-        background: linear-gradient(180deg, rgb(62 162 236 / 31%) 0%, rgb(233 141 178 / 30%) 100%);
-        box-shadow: #dadada 3px 4px 10px 1px;
-        text-transform: uppercase;
-    }
-    .inv-card-bg {
-        background: #f1e9ad;
-        background: linear-gradient(180deg, rgb(232 235 187 / 51%) 0%, #5dc3d25c 100%);
-        box-shadow: #dadada 3px 4px 10px 1px;
-        text-transform: uppercase;
-    }
-    .py-card-bg {
-        background: #c7542a;
-        background: linear-gradient(181deg, rgba(199, 84, 42, 0.14) 32%, rgba(126, 229, 247, 0.45) 100%);
-        box-shadow: #dadada 3px 4px 10px 1px;
-        text-transform: uppercase;
-    }
-    .cls-card-bg {
-        background: #EEAECA;
-        background: linear-gradient(180deg, rgb(238 174 223 / 43%) 0%, rgb(246 244 73 / 25%) 100%);
-        box-shadow: #dadada 3px 4px 10px 1px;
-        text-transform: uppercase;
-    }
-    .activated-card-bg {
-        background: #dcffab;
-        background: linear-gradient(180deg, rgba(220, 255, 171, 0.3) 0%, rgba(149, 194, 240, 0.59) 100%);
-        box-shadow: #dadada 3px 4px 10px 1px;
-        text-transform: uppercase;
-    }
-    .total-card-bg {
-        background: #abf9ff;
-        background: linear-gradient(180deg, rgba(171, 249, 255, 0.24) 0%, rgba(197, 157, 237, 0.59) 100%);
-        box-shadow: #dadada 3px 4px 10px 1px;
-        text-transform: uppercase;
-    }
-    .disconnect-card-bg {
-    background: #eb6d57;
-        background: linear-gradient(180deg, rgba(235, 109, 87, 0.24) 0%, rgba(255, 255, 255, 0.59) 100%);
-        box-shadow: #dadada 3px 4px 10px 1px;
-        text-transform: uppercase;
-    }
-    .link-card-bg {
-        background: #4253eb;
-        background: linear-gradient(180deg, rgba(66, 83, 235, 0.2) 0%, rgba(160, 190, 250, 0.3) 100%);
-        box-shadow: #cccccc 3px 4px 10px 1px;
-        text-transform: uppercase;
-    }
-    #searchResults .list-group-item:hover {
-        background-color: hsl(210, 10%, 88%)!important;
-    }
+.boxshadow {box-shadow: #dadada 3px 4px 10px 1px;} .con-card-bg {background: #c9aeee;background: linear-gradient(180deg, rgb(62 162 236 / 31%) 0%, rgb(233 141 178 / 30%) 100%);
+box-shadow: #dadada 3px 4px 10px 1px;text-transform: uppercase;} .inv-card-bg {background: #f1e9ad;background: linear-gradient(180deg, rgb(232 235 187 / 51%) 0%, #5dc3d25c 100%);
+box-shadow: #dadada 3px 4px 10px 1px;text-transform: uppercase;} .py-card-bg {background: #c7542a;background: linear-gradient(181deg, rgba(199, 84, 42, 0.14) 32%, rgba(126, 229, 247, 0.45) 100%);
+box-shadow: #dadada 3px 4px 10px 1px;text-transform: uppercase;} .cls-card-bg {background: #EEAECA;background: linear-gradient(180deg, rgb(238 174 223 / 43%) 0%, rgb(246 244 73 / 25%) 100%);
+box-shadow: #dadada 3px 4px 10px 1px;text-transform: uppercase; } .activated-card-bg {background: #dcffab;background: linear-gradient(180deg, rgba(220, 255, 171, 0.3) 0%, rgba(149, 194, 240, 0.59) 100%);
+box-shadow: #dadada 3px 4px 10px 1px;text-transform: uppercase;} .total-card-bg {background: #abf9ff; background: linear-gradient(180deg, rgba(171, 249, 255, 0.24) 0%, rgba(197, 157, 237, 0.59) 100%);
+box-shadow: #dadada 3px 4px 10px 1px;text-transform: uppercase;} .disconnect-card-bg {background: #eb6d57;background: linear-gradient(180deg, rgba(235, 109, 87, 0.24) 0%, rgba(255, 255, 255, 0.59) 100%);
+box-shadow: #dadada 3px 4px 10px 1px;text-transform: uppercase;} .link-card-bg {background: #4253eb;background: linear-gradient(180deg, rgba(66, 83, 235, 0.2) 0%, rgba(160, 190, 250, 0.3) 100%);
+box-shadow: #cccccc 3px 1px 4px 0px;text-transform: uppercase;} #searchResults .list-group-item:hover {background-color: hsl(210, 10%, 88%)!important;}
 </style>
