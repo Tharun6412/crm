@@ -26,8 +26,8 @@ class GasBillController extends Controller
         $emi = $invoice->childInvoices()->where('type_id',InvoiceType::SD_EMI->value)->first()?->balance_amount ?? 0;
         $rental = $invoice->childInvoices()->where('type_id',InvoiceType::RENTAL_CHARGES->value)->first();
 
-        $billFrom = Carbon::parse($invoice->consumption->bill_from);
-        $billTo   = Carbon::parse($invoice->consumption->bill_to);
+        $billFrom = Carbon::parse($invoice->consumption->date_from);
+        $billTo   = Carbon::parse($invoice->consumption->date_to);
         $runningDate = $billFrom->copy();
         $breakups = [];
         $details = $invoice->consumption->consumptionDetails;

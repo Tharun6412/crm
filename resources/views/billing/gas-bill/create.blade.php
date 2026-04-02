@@ -76,7 +76,7 @@
         @if (!empty($consumer->activeMeter->meter_no) AND $startReading >= 0)
             @if ($start_date == date('Y-m-d'))
                 <div class="alert alert-danger  m-2 text-center">Invoice already generated or consumer activated today.</div>
-            @elseif ($bill_days < 10)
+            @elseif ($bill_days < 1)
                 <div class="alert alert-danger  m-2 text-center">Billing Frequency should be greater than equal to 10 days.</div>
             @elseif ($prices->isEmpty() OR $prices->last()->basic_price <= 0 OR $prices->last()->tax_value <= 0)
                 <div class="alert alert-danger  m-2 text-center">No price record found. Please update the price.</div>

@@ -27,6 +27,7 @@ use App\Notifications\Consumer\GasbillSmsNotification;
 use App\Services\DependentInvoiceService;
 use App\Services\PaymentService;
 use App\Services\SmsService;
+use Illuminate\Validation\ValidationException;
 
 class GasInvoiceController extends Controller
 {
@@ -98,6 +99,11 @@ class GasInvoiceController extends Controller
             'id' => 'required',
             'end_reading' => 'required',
         ]);
+        if($request->end_reading < $request->start_reading)
+            {
+                throw ValidationException::withMessages(['end_read_err' => 'End reading must be greater than start reading.']);
+                return;
+            }
         // 2. Prepare consumption data
         $total_consumption = ($request->end_reading - $request->start_reading);
         $old_consumption = (float)$request->old_consumption;

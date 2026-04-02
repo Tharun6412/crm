@@ -212,7 +212,7 @@
                                                     </thead>
                                                     <tbody>
                                                         @php
-                                                            $sd = ($invoice->consumer->scheme->scheme->emi_amount > 0) ? $invoice->consumer->scheme->scheme->emi_amount : 0;
+                                                            $sd = ($invoice->consumer->scheme->scheme->emi_amount > 0) ? $emi : 0;
                                                             $consumption_deposit = 0;
                                                             $total_emis = ($sd > 0) ? round($invoice->consumer->scheme->security_deposit / $sd) : 0;
                                                             $partc = $sd;
@@ -440,7 +440,7 @@
                                                         </tr>
                                                         @foreach ($billHistory as $bill)
                                                             <tr>
-                                                                <td style="border-right: 1px solid #000000;text-align: center;">{{ dateFormat($bill->consumption->bill_from) }} To {{ dateFormat($bill->consumption->bill_to) }}</td>
+                                                                <td style="border-right: 1px solid #000000;text-align: center;">{{ dateFormat($bill->consumption->date_from) }} To {{ dateFormat($bill->consumption->date_to) }}</td>
                                                                 <td style="border-right: 1px solid #000000;text-align: center;">{{ numberFormat($bill->net_consumption, 3) }}</td>
                                                                 <td style="text-align: center;">{{ numberFormat($bill->net_consumption / max($bill->consumption->days, 1),3) }}</td>
                                                             </tr>

@@ -161,7 +161,7 @@ class BillingController extends Controller
             return response()->json(['message' => 'No price configuration found for the given date range'], 422);
         }
         // 9. Billing frequency should be minimun 10 days.
-        if($total_no_days < 10) {
+        if($total_no_days < 1) {
             return response()->json(['message' => 'Billing Frequency should be greater than equal to 10 days.'], 422);
         }
         // Checking for end reading  must be greater than start reading.
