@@ -57,7 +57,7 @@
                             <label for="quickSearch" class="input-group-text bg-white cursor-pointer"><i id="qs-clr" class="bi bi-x-circle d-none"></i></label>
                         </div>
                         {{-- Result --}}
-                        <div id="searchResults" class="list-group position-absolute w-100 bg-body" style="z-index: 1000; display:none;">
+                        <div id="searchResults" class="list-group position-absolute w-100" style="z-index: 1000; display:none;">
                         </div>
                     </div>
                     </div>
@@ -665,4 +665,8 @@ box-shadow: #dadada 3px 4px 10px 1px;text-transform: uppercase;} .total-card-bg 
 box-shadow: #dadada 3px 4px 10px 1px;text-transform: uppercase;} .disconnect-card-bg {background: #eb6d57;background: linear-gradient(180deg, rgba(235, 109, 87, 0.24) 0%, rgba(255, 255, 255, 0.59) 100%);
 box-shadow: #dadada 3px 4px 10px 1px;text-transform: uppercase;} .link-card-bg {background: #4253eb;background: linear-gradient(180deg, rgba(66, 83, 235, 0.2) 0%, rgba(160, 190, 250, 0.3) 100%);
 box-shadow: #cccccc 3px 1px 4px 0px;text-transform: uppercase;} #searchResults .list-group-item:hover {background-color: hsl(210, 10%, 88%)!important;}
+/* .con-card-bg:hover {
+    border: 1px solid rgb(104, 69, 156);
+    box-shadow: rgba(20, 20, 20, 0.16) 0px 8px 12px;
+} */
 </style>

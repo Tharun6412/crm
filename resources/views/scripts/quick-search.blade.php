@@ -34,9 +34,8 @@
                             console.log(data);
                             
                             data.forEach(item => {
-                                html += `
-                                    <div class="row bg-body border-bottom m-0 mb-1 g-0"><div class="col-7"><div class="p-2"><i class="bi bi-${item.connection_type_id == 1 ? 'speedometer2' : 'wifi'}"></i>&nbsp;${item.crn},${item.name},${item.ga.name}</div></div><div class="col-2"><div class="p-2 text-center">${item.status.name}</div></div><div class="col-1 bg-primary-subtle text-center"><a href="consumers/${item.id}" title="Details" class="p-2 fs-4" target="_blank"><i class="bi bi-person-lines-fill"></i></a></div><div class="col-1 bg-success-subtle text-center"><a href="bill/gasInvoice/create/${item.id}" title="Generate Gas Bill" class="p-2 fs-4" target="_blank"><i class="bi bi-receipt"></i></a></div><div class="col-1 bg-danger-subtle text-center"><a href="bill/invoice/create/${item.id}" title="Create Invoice" class="p-2 fs-4" target="_blank"><i class="bi bi-file-ruled"></i></a></div></div>
-                                    `;
+                                html += `<div class="row bg-body border border-bottom m-0 g-0 p-1 rounded-3">
+                                        <div class="col-9 block-height"><a href="consumers/${item.id}" title="Details" class="mt-2" target="_blank"><div class="p-2 mt-2"><i class="bi bi-${item.connection_type_id == 1 ? 'speedometer2' : 'wifi'}"></i>&nbsp;${item.crn}, ${item.name}, ${item.ga.name}, ${item.status.name}</div></a></div><div class="col-1 bg-primary-subtle text-center"><a href="consumers/${item.id}" title="Details" class="p-2 fs-4 block-height" target="_blank"><i class="bi bi-person-lines-fill"></i></a></div><div class="col-1 bg-success-subtle text-center"><a href="bill/gasInvoice/create/${item.id}" title="Generate Gas Bill" class="p-2 fs-4 block-height" target="_blank"><i class="bi bi-receipt"></i></a></div><div class="col-1 bg-danger-subtle text-center"><a href="bill/invoice/create/${item.id}" title="Create Invoice" class="p-2 fs-4 block-height" target="_blank"><i class="bi bi-file-ruled"></i></a></div></div>`;
                             });
                         }
                         $('#searchResults').html(html).show();
@@ -56,3 +55,4 @@
         });
     });
 </script>
+<style> .block-height {height: 55px; display: inline-block;} .block-height:hover {background-color:rgb(241 241 241)} a.block-height:hover {background:none;} </style>
