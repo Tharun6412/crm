@@ -46,7 +46,7 @@
         {{-- Quick search --}}
         <div class="rounded p-4 mb-3">
             <div class="row justify-content-sm-center">
-                <div class="col-sm-6">
+                <div class="col-sm-7">
                     <div class="bg-light-subtle p-3 rounded-3 border border-secondary-subtle shadow-sm">
                     <h3 class="text-start">Consumer Search</h3>
                     <div class="position-relative">
