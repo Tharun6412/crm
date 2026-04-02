@@ -57,7 +57,7 @@
                             <label for="quickSearch" class="input-group-text bg-white cursor-pointer"><i id="qs-clr" class="bi bi-x-circle d-none"></i></label>
                         </div>
                         {{-- Result --}}
-                        <div id="searchResults" class="list-group position-absolute w-100" style="z-index: 1000; display:none;">
+                        <div id="searchResults" class="list-group position-absolute w-100 bg-body" style="z-index: 1000; display:none;">
                         </div>
                     </div>
                     </div>

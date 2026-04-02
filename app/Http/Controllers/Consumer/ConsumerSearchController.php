@@ -16,7 +16,8 @@ class ConsumerSearchController extends Controller
         // Get input search key
 
         // Get consumers
-        $consumers = Consumer::with('ga:id,name', 'status:id,name')->select('id','connection_type_id', 'crn', 'fname', 'lname', 'ga_id', 'status_id')
+        $consumers = Consumer::with('ga:id,name', 'status:id,name')
+            ->select('id','connection_type_id', 'crn', 'fname', 'lname', 'ga_id', 'status_id')
             ->when($request->has('q'), function($q) use($request) {
                 $q->whereAny(['crn', 'fname', 'lname', 'email', 'phone'], 'like', '%' . $request->q . '%');
             })

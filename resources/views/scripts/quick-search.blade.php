@@ -35,13 +35,8 @@
                             
                             data.forEach(item => {
                                 html += `
-                                    <div class="list-group-item bg-light p-2">
-                                        <div class="p-2"><span class="text-warning-emphasis fw-semibold"><i class="bi bi-${item.connection_type_id == 1 ? 'speedometer2' : 'wifi'}"></i> ${item.crn}</span>, <span class="text-success-emphasis fw-semibold">${item.name}</span>, <span class="text-dark fw-semibold"><i class="bi bi-geo-alt"></i> ${item.ga.name}</span>, <span class="badge text-bg-secondary"><i class="bi bi-gear">&nbsp;</i>${item.status.name}</span> <span class="text-body-tertiary">|</span>
-                                        <a href="consumers/${item.id}" title="Details" class="link-primary me-2 fs-5" target="_blank"><i class="bi bi-person-lines-fill">&nbsp;</i></a><span class="text-body-tertiary">|</span>
-                                        <a href="bill/gasInvoice/create/${item.id}" title="Gas Bill" class="link-primary me-2 fs-5" target="_blank"><i class="bi bi-receipt">&nbsp;</i></a><span class="text-body-tertiary">|</span>
-                                        <a href="bill/invoice/create/${item.id}" title="Add Invoice" class="link-primary me-2 fs-5" target="_blank"><i class="bi bi-file-ruled">&nbsp;</i></a>
-                                        </div>
-                                    </div>`;
+                                    <div class="row bg-body border-bottom m-0 mb-1 g-0"><div class="col-7"><div class="p-2"><i class="bi bi-${item.connection_type_id == 1 ? 'speedometer2' : 'wifi'}"></i>&nbsp;${item.crn},${item.name},${item.ga.name}</div></div><div class="col-2"><div class="p-2 text-center">${item.status.name}</div></div><div class="col-1 bg-primary-subtle text-center"><a href="consumers/${item.id}" title="Details" class="p-2 fs-4" target="_blank"><i class="bi bi-person-lines-fill"></i></a></div><div class="col-1 bg-success-subtle text-center"><a href="bill/gasInvoice/create/${item.id}" title="Generate Gas Bill" class="p-2 fs-4" target="_blank"><i class="bi bi-receipt"></i></a></div><div class="col-1 bg-danger-subtle text-center"><a href="bill/invoice/create/${item.id}" title="Create Invoice" class="p-2 fs-4" target="_blank"><i class="bi bi-file-ruled"></i></a></div></div>
+                                    `;
                             });
                         }
                         $('#searchResults').html(html).show();
