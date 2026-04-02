@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Consumer;
 
 use App\Enums\ConsumerStatus as EnumsConsumerStatus;
+use App\Enums\InvoiceItem;
 use App\Enums\InvoiceStatus;
 use App\Enums\InvoiceType;
 use App\Enums\PaymentStatus;
@@ -123,7 +124,7 @@ class TRPaymentController extends Controller
             $tax_amt = round($amt - $base_amt, 3);
             if($amt > 0) {
                 $invoice_items[] = [
-                    'item_id' => 1,
+                    'item_id' => InvoiceItem::DOMESTIC_REGISTRATION->value,
                     'quantity' => 1,
                     'unit_price' => $base_amt,
                     'total_price' => $base_amt,

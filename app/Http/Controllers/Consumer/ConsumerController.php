@@ -25,7 +25,7 @@ class ConsumerController extends Controller
         $records = ($request->get('records')) ? $request->get('records') : 50;
         // Query
         $consumers = Consumer::with(['segment', 'status', 'ga', 'district', 'scheme'])
-            ->when((!isAdmin() AND !isSuperAdmin()), function ($q) {
+            ->when((!isAdmin() AND !isSuperAdmin() AND isFullAccess()), function ($q) {
                 $q->whereIn('ga_id', session('user')['gas']);
             })
             ->when($request->filled('key'), function ($q) use ($request) {

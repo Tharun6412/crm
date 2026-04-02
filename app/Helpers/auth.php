@@ -28,10 +28,23 @@ if(!function_exists('isSuperAdmin')) {
  */
 if(!function_exists('isAdmin')) {
     function isAdmin() {
-        if(in_array(2, session()->get('user')['roles'])) {
+        if(in_array(Role::ADMIN->value, session()->get('user')['roles'])) {
             return true;
         }
         else {
+            return false;
+        }
+    }
+}
+
+/**
+ * Full Access
+ */
+if(!function_exists('isFullAccess')) {
+    function isFullAccess() {
+        if(in_array(Role::FULL_ACCESS->value, session()->get('user')['roles'])) {
+            return true;
+        }else {
             return false;
         }
     }

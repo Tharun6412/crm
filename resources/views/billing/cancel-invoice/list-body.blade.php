@@ -14,7 +14,7 @@
                 </thead>
                 <tbody>
                     @php
-                        $i = (($invoices->currentPage() - 1) * $invoices->perPage())+1;
+                        $i = 1;
                     @endphp
                     @foreach ($invoices as $invoice)
                         <tr>
@@ -37,9 +37,6 @@
                     @endforeach
                 </tbody>
             </table>
-        </div>
-        <div>
-            {{ $invoices->links('utils.paginator', ['modDiv' => 'invoice-cancel-list']) }}
         </div>
     @else
         <div class="alert alert-info">

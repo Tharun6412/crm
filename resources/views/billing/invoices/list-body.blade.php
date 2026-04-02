@@ -18,7 +18,7 @@
                 </thead>
                 <tbody>
                     @php
-                        $i = (($invoices->currentPage() - 1) * $invoices->perPage())+1;
+                        $i = 1;
                     @endphp
                     @foreach ($invoices as $invoice)
                         <tr>
@@ -54,8 +54,7 @@
             </table>
         </div>
         <div class="d-flex justify-content-between mb-2">
-            <div><span class="fw-bold">({{ $invoices->total() }})</span> Invoices found</div>
-            <div>{{ $invoices->links('utils.paginator', ['modDiv' => 'invoice-list']) }}</div>
+            <div><span class="fw-bold">({{ $invoices->count() }})</span> Invoices found</div>
         </div>
     @else
         <div class="alert alert-info text-center mb-1">

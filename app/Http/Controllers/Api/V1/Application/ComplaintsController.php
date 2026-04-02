@@ -51,6 +51,9 @@ class ComplaintsController extends Controller
             'status:id,name' 
         ])
         ->select('id', 'code', 'category_id', 'segment_id', 'priority_id', 'media_id', 'type_id', 'estimated_closed_at', 'closed_at', 'status_id', 'created_at')
+        ->when((!$request->user()->isAdmin() AND !$request->user()->isSuperAdmin() AND !$request->user()->isFullAccess()), function ($q) use($request) {
+            $q->whereIn('ga_id', $request->user()->ga()->pluck('ga_id')->toArray());
+        })
         ->when($request->has('key'), function ($q) use($request) {
             $q->whereAny(['code'], 'like', '%' . $request->key . '%');
         })

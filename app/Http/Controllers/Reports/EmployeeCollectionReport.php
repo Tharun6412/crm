@@ -34,9 +34,6 @@ class EmployeeCollectionReport extends Controller
         ->join('cns_consumers', 'cns_consumers.id', '=', 'bil_invoices.consumer_id')
         ->join('mst_gas', 'mst_gas.id', '=', 'cns_consumers.ga_id')
         ->where('pay_invoice_payments.status_id', PaymentStatus::COMPLETED->value)
-        ->when(!isAdmin() AND !isSuperAdmin(), function ($q) {
-            $q->whereIn('cns_consumers.ga_id', session('user')['gas']);
-        })
         ->when(request('ga_id'), function ($q) {
             $q->where('cns_consumers.ga_id', request('ga_id'));
         })

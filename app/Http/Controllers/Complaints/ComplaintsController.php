@@ -43,7 +43,7 @@ class ComplaintsController extends Controller
         $sortOr = ($request->get('sortOr')) ? $request->get('sortOr') : 'desc';
         $records = ($request->get('records')) ? $request->get('records') : 50;
         // fetch complaints based on GA
-        $complaints = Complaint::when((!isAdmin() AND !isSuperAdmin()), function ($q) {
+        $complaints = Complaint::when((!isAdmin() AND !isSuperAdmin() AND isFullAccess()), function ($q) {
             $q->whereIn('ga_id', session('user')['gas']);
         })
         ->when($request->filled('key'), function ($q) use($request) {
@@ -432,6 +432,7 @@ class ComplaintsController extends Controller
             return response()->json(['message' => 'OTP not Sent']);
         }
         $otp = OtpService::create($phone_no, OtpPurpose::COMPLAINT_CLOSE->value, OtpModule::USER->value);
+        $sms_response = SmsService::dispatch($complaint->consumer, new ComplaintCloseOtpSmsNotification(['otp' => $otp]));
         return response()->json([
             'message' => 'OTP Sent Successfully to your mobile number.',
             'count' => $count,

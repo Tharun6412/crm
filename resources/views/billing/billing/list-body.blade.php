@@ -14,7 +14,7 @@
                 </thead>
                 <tbody>
                     @php
-                        $i = (($consumers->currentPage() - 1) * $consumers->perPage())+1;
+                        $i = 1;
                     @endphp
                     @foreach ($consumers as $consumer)
                         <tr>
@@ -39,9 +39,6 @@
                     @endforeach
                 </tbody>
             </table>
-        </div>
-        <div>
-            {{ $consumers->links('utils.paginator', ['modDiv' => 'consumer-search-list']) }}
         </div>
     @else
         <div class="alert alert-info">

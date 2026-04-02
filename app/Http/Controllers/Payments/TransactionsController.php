@@ -4,14 +4,17 @@ namespace App\Http\Controllers\Payments;
 
 use App\Contracts\Prepaid\Recharge;
 use App\Enums\Constants;
+use App\Enums\InvoiceItem as EnumsInvoiceItem;
 use App\Enums\InvoiceStatus;
 use App\Enums\InvoiceType;
 use App\Enums\PaymentStatus;
 use App\Enums\PaymentType;
+use App\Enums\SegmentType;
 use App\Enums\TaxType;
 use App\Enums\TransactionStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Invoice\BillInvoice;
+use App\Models\Invoice\InvoiceItem;
 use App\Models\Invoice\InvoicePayment;
 use App\Models\Invoice\PaymentReversal;
 use App\Models\Master\PaymentTransactionStatus;
@@ -251,11 +254,19 @@ class TransactionsController extends Controller
         ]);
         // Generate Latepayment charges if LPC > 0
         if($lpc > 0) {
+            // Invoice Item
+            if($invoice->consumer->segment_id == SegmentType::DOMESTIC->value) {
+                $inv_item = EnumsInvoiceItem::DLPC->value;
+            }else if($invoice->consumer->segment_id == SegmentType::COMMERCIAL->value) {
+                $inv_item = EnumsInvoiceItem::CLPC->value;
+            }else {
+                $inv_item = EnumsInvoiceItem::ILPC->value;
+            }
             $gst_calculated_amt = 1.18; //(1+18%)
             $base_amt = round($lpc / $gst_calculated_amt, 3);
             $tax_amt = round($lpc - $base_amt, 3);
             $invoice_items[] = [
-                'item_id' => 1,
+                'item_id' => $inv_item,
                 'quantity' => 1,
                 'unit_price' => $base_amt,
                 'total_price' => $base_amt,

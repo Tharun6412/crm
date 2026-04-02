@@ -11,4 +11,5 @@ enum Role: int
     case SALES_OFFICER = 5;
     case HO_SALES = 6;
     case VIEWER = 7;
+    case FULL_ACCESS = 8;
 }

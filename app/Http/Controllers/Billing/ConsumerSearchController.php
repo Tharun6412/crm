@@ -20,15 +20,15 @@ class ConsumerSearchController extends Controller
                 return response()->json(['message' => 'Please enter consumer number'], 422);
             }
             // Query List based on GA
-            $consumers = Consumer::when((!isAdmin() AND !isSuperAdmin()), function ($q) {
+            $consumers = Consumer::when((!isAdmin() AND !isSuperAdmin() AND !isFullAccess()), function ($q) {
                 $q->whereIn('ga_id', session('user')['gas']);
             })
             ->select('id', 'crn', 'fname', 'lname', 'ga_id', 'status_id', 'created_by')
             ->when($request->filled('search'), function($q) use($request) {
-                $q->where('crn', 'like', '%'.$request->search.'%');
+                $q->whereAny(['crn', 'fname', 'lname'], 'like', '%'.$request->search.'%');
             })
             ->where('status_id', ConsumerStatus::ACTIVATE->value)
-            ->paginate(20)->withQueryString();
+            ->latest()->limit(20)->get();
             // Ajax Response
             return view('billing.billing.list-body', ['consumers' => $consumers]);
         }

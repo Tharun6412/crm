@@ -25,19 +25,28 @@ class InvoiceSearchController extends Controller
                 return response()->json(['message' => 'Please enter Invoice/CRN number'], 422);
             }
             // Get Invoices
-            $invoices = BillInvoice::when((!isAdmin() && !isSuperAdmin()), function ($q) {
-                $q->whereHas('consumer', function ($q) {
-                    $q->whereIn('ga_id', session('user')['gas']);
-                });
-            })
+            $invoices = BillInvoice::with([
+                'consumer:id,crn,ga_id', 
+                'status:id,name',
+                'invoiceType:id,name'
+            ])
+            ->where('status_id', InvoiceStatus::NOT_PAID->value)
             ->where(function ($q) use ($request) {
-                $q->whereHas('consumer', function ($q) use ($request) {
-                    $q->where('crn', 'like', '%' . $request->search . '%');
+                $q->whereHas('consumer', function ($q1) use ($request) {
+                    // GA restriction
+                    if (!isAdmin() && !isSuperAdmin() && !isFullAccess()) {
+                        $q1->whereIn('ga_id', session('user')['gas']);
+                    }
+                    // CRN search
+                    if ($request->search) {
+                        $q1->where('crn', 'like', '%'.$request->search.'%');
+                    }
                 })
-                ->orWhere('invoice_number', 'like', '%' . $request->search . '%');
+                ->orWhere('invoice_number', 'like','%'.$request->search.'%');
             })
-            ->paginate(20)
-            ->withQueryString();
+            ->latest()
+            ->limit(20)
+            ->get();
             // Ajax Response
             return view('billing.invoices.list-body', ['invoices' => $invoices]);
         }
@@ -55,9 +64,16 @@ class InvoiceSearchController extends Controller
                 return response()->json(['message' => 'Please enter Invoice number'], 422);
             }
             // Get Invoices
-            $invoices = BillInvoice::where('invoice_number', 'like', '%'.$request->search.'%')
-                ->where('status_id', InvoiceStatus::NOT_PAID->value)
-                ->paginate(20)->withQueryString();
+            $invoices = BillInvoice::with(['consumer:id,crn,ga_id', 'status'])->where('status_id', InvoiceStatus::NOT_PAID->value)
+                ->whereHas('consumer', function ($q) use ($request) {
+                    if (!isAdmin() && !isSuperAdmin() && !isFullAccess()) {
+                        $q->whereIn('ga_id', session('user')['gas']);
+                    }
+                })
+                ->Where('invoice_number', 'like','%'. $request->search . '%')
+                ->latest()
+                ->limit(20)
+                ->get();
             // Ajax Response
             return view('billing.cancel-invoice.list-body', ['invoices' => $invoices]);
         }

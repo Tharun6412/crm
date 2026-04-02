@@ -1,8 +1,10 @@
 <?php
  namespace App\Http\Controllers\Payments;
 
+use App\Enums\InvoiceItem;
 use App\Enums\InvoiceStatus;
 use App\Enums\InvoiceType;
+use App\Enums\SegmentType;
 use App\Enums\TaxType;
 use App\Http\Controllers\Controller;
  use App\Models\Consumer\Consumer;
@@ -64,13 +66,21 @@ class GasPaymentsController extends Controller
         // 2. check if LPC is applicable.
         if ($request->lpc_applicable) {
             // Late fee calculation.
+            // Invoice Item
+            if($invoice->consumer->segment_id == SegmentType::DOMESTIC->value) {
+                $inv_item = InvoiceItem::DLPC->value;
+            }else if($invoice->consumer->segment_id == SegmentType::COMMERCIAL->value) {
+                $inv_item = InvoiceItem::CLPC->value;
+            }else {
+                $inv_item = InvoiceItem::ILPC->value;
+            }
             $late_fee = $request->late_fee;
             $tax_value = 18;
             $basic_amount = round(($late_fee * (100 / (100 + $tax_value))),2);
             $tax_amount = round(($late_fee - $basic_amount),2);
             // Invoice items array preperation.
             $invoice_items[] = [
-                'item_id' => 4,
+                'item_id' => $inv_item,
                 'quantity' => 1,
                 'unit_price' => $basic_amount,
                 'total_price' => $basic_amount,

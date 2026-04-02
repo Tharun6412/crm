@@ -23,6 +23,7 @@ class AdminDataSeeder extends Seeder
             ['id' => 5, 'name' => 'Sales Officer', 'position' => 5, 'status' => 1],
             ['id' => 6, 'name' => 'HO Sales', 'position' => 6, 'status' => 1],
             ['id' => 7, 'name' => 'Viewer', 'position' => 7, 'status' => 1],
+            ['id' => 8, 'name' => 'Full Access', 'position' => 8, 'status' => 1],
         ]);
 
         // User Status

@@ -4,6 +4,7 @@
  */
 namespace App\Http\Controllers\Consumer;
 
+use App\Enums\InvoiceItem;
 use App\Enums\InvoiceStatus;
 use App\Enums\InvoiceType;
 use App\Enums\PaymentStatus;
@@ -165,7 +166,7 @@ class RefundController extends Controller
             $base_amt = round($amt/$gst_calculated_amt, 3);
             $tax_amt = round($amt - $base_amt, 3);
             $invoice_items[] = [
-                'item_id' => 1,
+                'item_id' => InvoiceItem::PDISCONNECT->value,
                 'quantity' => 1,
                 'unit_price' => $base_amt,
                 'total_price' => $base_amt,

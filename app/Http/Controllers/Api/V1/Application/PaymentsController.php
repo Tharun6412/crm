@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Api\V1\Application;
 
+use App\Enums\InvoiceItem;
 use App\Enums\InvoiceStatus;
 use App\Enums\InvoiceType;
 use App\Enums\PaymentStatus;
+use App\Enums\SegmentType;
 use App\Enums\TaxType;
 use App\Http\Controllers\Controller;
 use App\Models\Invoice\BillInvoice;
@@ -56,7 +58,7 @@ class PaymentsController extends Controller
                                     $q2->where('name', 'like', '%' . $request->key . '%');
                             });
                         });
-                        if(!empty($ga_ids) AND (!$request->user()->isAdmin() AND !$request->user()->isSuperAdmin())) {
+                        if(!empty($ga_ids) AND (!$request->user()->isAdmin() AND !$request->user()->isSuperAdmin() AND !$request->user()->isFullAccess())) {
                             $q->whereIn('ga_id', $ga_ids);
                         }
                     });
@@ -83,6 +85,14 @@ class PaymentsController extends Controller
         $invoice = BillInvoice::find($request->invoice_id);
         // 2. check if LPC is applicable.
         if ($request->late_fee > 0) {
+            // Invoice Item
+            if($invoice->consumer->segment_id == SegmentType::DOMESTIC->value) {
+                $inv_item = InvoiceItem::DLPC->value;
+            }else if($invoice->consumer->segment_id == SegmentType::COMMERCIAL->value) {
+                $inv_item = InvoiceItem::CLPC->value;
+            }else {
+                $inv_item = InvoiceItem::ILPC->value;
+            }
             // Late fee calculation.
             $late_fee = $request->late_fee;
             $tax_value = 18;
@@ -90,7 +100,7 @@ class PaymentsController extends Controller
             $tax_amount = round(($late_fee - $basic_amount),2);
             // Invoice items array preperation.
             $invoice_items[] = [
-                'item_id' => 4,
+                'item_id' => $inv_item,
                 'quantity' => 1,
                 'unit_price' => $basic_amount,
                 'total_price' => $basic_amount,
