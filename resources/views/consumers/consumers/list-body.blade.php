@@ -43,7 +43,7 @@
         <thead class="table-success">
             <tr>
                 <th width="1%" nowrap>S No</th>
-                <th>
+                <th nowrap>
                     <a href="{{ $consumers->appends(['sortBy' => 'crn','sortOr' => $sort_order_inverse])->url($consumers->currentPage()) }}">
                         CRN
                         @if ($sort_by == 'crn')
@@ -68,7 +68,7 @@
                     @endif
                 </th>
                 <th>Scheme<x-master.scheme-filter class="float-end"/></th>
-                <th>
+                <th nowrap width="11%">
                     <a href="{{ $consumers->appends(['sortBy' => 'created_at','sortOr' => $sort_order_inverse])->url($consumers->currentPage()) }}">
                         Added Date
                         @if ($sort_by == 'created_at')
@@ -98,7 +98,11 @@
                         </td>
                         <td>{{ $consumer->ga->name }}</td>
                         <td>{{ $consumer->district->name }}</td>
-                        <td>{{ $consumer->scheme?->scheme?->name }}</td>
+                        <td>
+                            @if ($consumer->scheme?->scheme?->id != null)
+                            <button type="button" class="btn btn-outline-secondary" data-bs-toggle="popover"  data-bs-trigger="hover focus" data-bs-placement="top"  data-bs-content="{{ $consumer->scheme?->scheme?->name }}">{{ $consumer->scheme?->scheme?->code }}</button>
+                            @endif
+                        </td>
                         <td>{{ dateFormat($consumer->created_at) }}</td>
                         <td>
                             @include('consumers.consumers.list-actions')
@@ -123,3 +127,4 @@
     {{ $consumers->links('utils.paginator', ['modDiv' => 'consumers-list']) }}
 </div>
 @include('scripts.link-modal')
+@include('scripts.bs-popover')

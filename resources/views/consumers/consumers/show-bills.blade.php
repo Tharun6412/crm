@@ -6,7 +6,7 @@
     </div>
     <div class="p-2">
         @if ($invoices->count() > 0)
-            <div class="responsive">
+            <div class="table-responsive">
                 <table class="table table-bordered table-hover table-primary">
                     <thead class="table-primary">
                         <tr>

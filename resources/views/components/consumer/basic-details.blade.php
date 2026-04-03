@@ -46,7 +46,7 @@
     </div> --}}
     {{-- Scheme details --}}
     @if ($type == 1 AND $consumer->segment_id != 3)
-        <div class="p-2 bg-warning-subtle">
+        <div class="p-2 bg-warning-subtle mt-2 mb-1">
             <table class="table table-borderless table-info table-sm">
                 <tr>
                     <td><span class="fw-semibold">TR No :</span>&nbsp;{{ $consumer->t_crn }}</td>
@@ -62,7 +62,7 @@
             </table>
         </div> 
     @elseif ($type == 1 AND $consumer->segment_id == 3) 
-        <div class="p-2 bg-warning-subtle mt-2 rounded">
+        <div class="p-2 bg-warning-subtle mt-2 mb-1 rounded">
             <table class="table table-borderless table-info table-sm">
                 <tr>
                     <td><span class="fw-semibold">TR No :</span>&nbsp;{{ $consumer->t_crn }}</td>
@@ -77,7 +77,7 @@
     @endif
     {{-- SD details --}}
     @if ($type == 2)
-        <div class="p-2 bg-warning-subtle mt-2 rounded">
+        <div class="p-2 bg-warning-subtle mt-2 mb-2 rounded">
             <table class="table table-borderless table-info table-sm">
                 <tr>
                     <td><span class="fw-semibold">Scheme :</span>&nbsp;{{ $consumer->scheme->scheme->name ?? "Industrial" }}</td>
@@ -93,7 +93,7 @@
 
     {{-- Bill details --}}
     @if ($type == 3)
-        <div class="p-2 bg-warning-subtle mt-2 rounded">
+        <div class="p-2 bg-warning-subtle mt-2 mb-2 rounded">
             <table class="table table-borderless table-info table-sm">
                 <tr>
                     <td><span class="fw-semibold">Meter No :</span>&nbsp;{{ $consumer->activeMeter->meter_no }}</td>

@@ -98,7 +98,13 @@
                         </td>
                         <td>{{ $consumer->ga->name }}</td>
                         <td>{{ $consumer->district->name }}</td>
-                        <td>{{ $consumer->scheme?->scheme?->name }}</td>
+                        <td> 
+                            @if ($consumer->scheme?->scheme?->id != null)
+                                <button type="button" class="btn btn-outline-secondary" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-trigger="hover focus" data-bs-content="{{ $consumer->scheme?->scheme?->name }}">
+                                    {{ $consumer->scheme?->scheme?->code }}
+                                </button>
+                            @endif
+                        </td>
                         <td>{{ dateFormat($consumer->created_at) }}</td>
                         {{-- <td>
                             @include('consumers.consumers.list-actions')
@@ -123,3 +129,4 @@
     {{ $consumers->links('utils.paginator', ['modDiv' => 'consumers-list']) }}
 </div>
 @include('scripts.link-modal')
+@include('scripts.bs-popover')

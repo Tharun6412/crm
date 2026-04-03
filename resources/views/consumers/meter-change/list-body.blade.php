@@ -25,9 +25,9 @@
             <tr>
                 <th width="1%" nowrap>S.No</th>
                 <th>Consumer Number</th>
-                <th>Old Meter Number</th>
-                <th>Old Meter Consumption</th>
-                <th>New Meter Number</th>
+                <th class="text-end">Old Meter Number</th>
+                <th class="text-end">Old Meter Consumption</th>
+                <th class="text-end">New Meter Number</th>
                 <th>Request Date</th>
                 <th>Release Date</th>
                 <th>Status</th>
@@ -44,9 +44,9 @@
                     <tr>
                         <td>{{ $i++ }}</td>
                         <td><a href="{{ url('consumers/'.$change->consumer_id) }}" target="_blank">{{ $change->consumer->crn }}</a></td>
-                        <td>{{ $change->meter->meter_no }}</td>
-                        <td>{{ $change->consumption }}</td>
-                        <td>{{ $change->newMeter->meter_no }}</td>
+                        <td class="text-end">{{ $change->meter->meter_no }}</td>
+                        <td class="text-end">{{ $change->consumption }}</td>
+                        <td class="text-end">{{ $change->newMeter->meter_no }}</td>
                         <td>{{ $change?->request_date?->format('d-m-Y') }}</td>
                         <td>{{ $change?->replace_date?->format('d-m-Y') }}</td>
                         <td>{{ $change->status_id == 1 ? "Pending" : "Completed" }}</td>

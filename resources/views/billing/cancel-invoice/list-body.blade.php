@@ -2,7 +2,7 @@
     @if ($invoices->count() > 0)
         <div class="table-responsive" style="min-height: 500px;">
             <table class="table table-bordered table-hover">
-                <thead class="table-info">
+                <thead class="table-success">
                     <tr>
                         <th width="1%" nowrap>S.No</th>
                         <th>CRN</th>
@@ -21,11 +21,11 @@
                             <td>{{ $i++ }}</td>
                             <td><x-auth.link href="{{ url('consumers/'.$invoice->consumer_id) }}" target="_blank">{{ $invoice->consumer->crn }}</x-auth.link></td>
                             <td>{{ $invoice->invoice_number }}</td>
-                            <td>{{ $invoice->status->name }}</td>
+                            <td><x-invoice.status :status="$invoice->status"/></td>
                             <td>{{ $invoice->createdBy->name }}</td>
                             <td>
                                 <div class="dropdown">
-                                    <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <button class="btn btn-sm btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                         Actions
                                     </button>
                                     <ul class="dropdown-menu">

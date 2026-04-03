@@ -73,7 +73,7 @@
         <button type="submit" class="btn btn-success"><i class="bi bi-file-earmark-plus"></i>&nbsp;Create Invoice</button>
     </div>
 @else
-    <div class="alert alert-warning">No items!</div>
+    <div class="alert alert-warning m-3 text-center">No items Found!</div>
 @endif
 {{-- Scripts --}}
 @include('scripts.ajax-link-delete', ['callback' => 'invoiceBody()'])

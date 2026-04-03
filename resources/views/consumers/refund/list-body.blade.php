@@ -62,7 +62,7 @@
                         $tot_amt += ($list->refund_amount ?? 0);
                     @endphp
                     <tr>
-                        <td>{{ $i++ }}</td>
+                        <td class="text-center">{{ $i++ }}</td>
                         <td><a href="{{ url('consumers/'.$list->consumer_id) }}" target="_blank">{{ $list->consumer->crn }}</a></td>
                         <td>{{ $list->consumer->ga->name }}</td>
                         <td><a href="{{ url('consumers/refunds/'.$list->id) }}" class="link-modal">{{ $list->request_no }}</a></td>
@@ -71,7 +71,7 @@
                             @php
                                 $ref_amt += $list->refund_amount;
                             @endphp
-                            <td>{{ numberFormat($list->refund_amount, 2) }}</td>
+                            <td class="text-end">{{ numberFormat($list->refund_amount, 2) }}</td>
                         @else 
                             <td class="text-end">0</td>
                         @endif

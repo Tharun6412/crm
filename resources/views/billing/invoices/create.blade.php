@@ -22,7 +22,7 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="col-auto">
+                            <div class="col-auto col-sm-4">
                                 <select name="item_id" id="item_id" class="form-select">
                                     <option value="">Select Item</option>
                                     @foreach ($invoice_items as $item)

@@ -18,7 +18,7 @@
                     <div class="alert alert-warning"> 
                         <x-consumer.basic-details :consumer="$transaction->consumer"/>
                     </div>
-                    <div class="row g-2 mb-2 alert alert-info">
+                    <div class="row g-2 mb-2 alert alert-primary m-1">
                         <div class="col-sm-3 text-end fw-semibold">Payment Module : </div>
                         <div class="col-sm-3">{{ $transaction->module->name }}</div>
                         <div class="col-sm-3 text-end fw-semibold">Transaction Date : </div>
@@ -78,8 +78,8 @@
                     @endif
                     <div class="m-1" id="update-transaction-error"></div>
                     <div class="row">
-                        <div class="offset-sm-3 col-sm-8">
-                            <button type="submit" class="btn btn-success">
+                        <div class="offset-sm-3 col-sm-8 text-end">
+                            <button type="submit" class="btn btn-success text-end">
                                 <i class="bi bi-upload" aria-hidden="true">&nbsp;</i>
 Update
                             </button>

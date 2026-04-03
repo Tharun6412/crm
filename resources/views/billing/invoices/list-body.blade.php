@@ -9,8 +9,8 @@
                         <th>Name</th>
                         <th>Invoice Number</th>
                         <th>Invoice Date</th>
-                        <th>Amount</th>
-                        <th>Balance</th>
+                        <th class="text-end">Amount</th>
+                        <th class="text-end">Balance</th>
                         <th>Status</th>
                         <th>Type</th>
                         <th>Actions</th>
@@ -29,7 +29,7 @@
                             <td>{{ $invoice->invoice_date?->format('d-m-Y') }}</td>
                             <td class="text-end">{{ numberFormat($invoice->total_amount, 2) }}</td>
                             <td class="text-end">{{ numberFormat($invoice->balance_amount, 2) }}</td>
-                            <td>{{ $invoice->status->name }}</td>
+                            <td><x-invoice.status :status="$invoice->status"/></td>
                             <td>{{ $invoice->invoiceType->name }}</td>
                             <td>
                                 <div class="dropdown">

@@ -61,7 +61,7 @@
                         </div>
                     </form>
                 @else
-                    <div class="alert alert-warning">This consumer is already Paid.</div>
+                    <div class="alert alert-warning mt-2">This consumer is already Paid.</div>
                 @endif 
             </div> 
         </div>

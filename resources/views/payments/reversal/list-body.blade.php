@@ -2,7 +2,7 @@
     @if ($payments->count() > 0)
         <div class="table-responsive" style="min-height: 500px;">
             <table class="table table-bordered table-hover">
-                <thead class="table-info">
+                <thead class="table-success">
                     <tr>
                         <th width="1%" nowrap>S.No</th>
                         <th>CRN</th>
@@ -10,7 +10,7 @@
                         <th>Transaction Number</th>
                         <th>Invoice Type</th>
                         <th>Payment Date</th>
-                        <th>Paid Amount</th>
+                        <th class="text-end">Paid Amount</th>
                         <th>Payment Type</th>
                         <th>Payment Status</th>
                         <th>Added By</th>
@@ -29,13 +29,13 @@
                             <td>{{ $payment->transaction_id ?? '' }}</td>
                             <td>{{ $payment->invoice->invoiceType->name ?? '' }}</td>
                             <td>{{ $payment->payment_date->format('d-m-Y') }}</td>
-                            <td>{{ numberFormat($payment->amount, 2) }}</td>
+                            <td class="text-end">{{ numberFormat($payment->amount, 2) }}</td>
                             <td>{{ $payment->paymentType->name ?? '' }}</td>
-                            <td>{{ $payment->status->name }}</td>
+                            <td><x-payments.status :status="$payment->status"/></td>
                             <td>{{ $payment->createdBy->name }}</td>
                             <td>
                                 <div class="dropdown">
-                                    <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <button class="btn btn-sm btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                         Actions
                                     </button>
                                     <ul class="dropdown-menu">
