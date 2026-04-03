@@ -347,7 +347,7 @@ class GasInvoiceController extends Controller
             ];
             $start_date_1 = $end_date_1; 
         }
-        $avg_price = $p_price / count($prices);
+        $avg_price = $inv_base_amt / $net_consumption;
         $tax_value = $prices->last()->tax_value; // tax percentage.
         $inv_tax_amt =  round((($inv_base_amt * $tax_value) / 100), 2);
         $inv_total =  $inv_base_amt + $inv_tax_amt;

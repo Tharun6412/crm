@@ -268,12 +268,35 @@
                                                     </tr>
                                                     <tr>
                                                         <td style="border-right: 1px solid #000000;border-bottom: 1px solid #000000;">Amount Payable<br/>{{ __('bill.payable_amount') }}</td>
-                                                        <td style="border-bottom: 1px solid #000000;font-size: 12px;"><strong>&#8377;&nbsp;{{ numberFormat($invoice->payable_amount,2) }}</strong>
+                                                        <td style="border-bottom: 1px solid #000000;font-size: 12px;"><strong>&#8377;&nbsp;{{ numberFormat($parta+$partb+$partc,2) }}</strong>
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <td style="border-right: 1px solid #000000;border-bottom: 1px solid #000000;">After Due Date&nbsp;<span style="font-size: 8px;">(LPC Applicable)</span><br/>{{ __('bill.after_due_date') }}</td>
-                                                        <td style="border-bottom: 1px solid #000000;font-size: 12px;"><strong>&#8377;&nbsp;{{ numberFormat($invoice->payable_amount+20,2) }}</strong>
+                                                        <td style="border-bottom: 1px solid #000000;font-size: 12px;"><strong>&#8377;&nbsp;
+                                                            @php 
+                                                                switch ($invoice->consumer->segment_id) {
+                                                                    case \App\Enums\SegmentType::DOMESTIC->value:
+                                                                        $lpc = \App\Enums\Constants::DPNG_LPC->value;
+                                                                        $after_due = $parta+$partb+$partc+$lpc;
+                                                                        break;
+                                                                    case \App\Enums\SegmentType::COMMERCIAL->value:
+                                                                        $lpc = \App\Enums\Constants::CPNG_LPC->value;
+                                                                        $after_due = $parta+$partb+$partc+$lpc;
+                                                                        break;
+                                                                    case \App\Enums\SegmentType::INDUSTRIAL->value:
+                                                                        $lpc = \App\Enums\Constants::IPNG_LPC->value;
+                                                                        $after_due = $parta+$partb+$partc+$lpc;
+                                                                        break;
+                                                                    default:
+                                                                        $lpc = \App\Enums\Constants::DPNG_LPC->value;
+                                                                        $after_due = $parta+$partb+$partc+$lpc;
+                                                                        break;
+                                                                }
+                                                            @endphp
+                                                            {{  
+                                                                numberFormat($after_due,2) 
+                                                            }}</strong>
                                                         </td>
                                                     </tr>
                                                     <tr>
@@ -325,8 +348,8 @@
                                                             <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 8px;text-align: center;">{{ $invoice->consumer->activeMeter->meter_no }}</td>
                                                             <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 8px;text-align: center;">{{ dateFormat($invoice->consumption->date_from) }}</td>
                                                             <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 8px;text-align: center;">{{ dateFormat($invoice->consumption->date_to) }}</td>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 8px;text-align: center;">{{ numberFormat($invoice->consumption->prev_reading,2) }}</td>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 8px;text-align: center;">{{ numberFormat($invoice->consumption->curr_reading,2) }}</td>
+                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 8px;text-align: center;">{{ numberFormat($invoice->consumption->prev_reading,3) }}</td>
+                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 8px;text-align: center;">{{ numberFormat($invoice->consumption->curr_reading,3) }}</td>
                                                             <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 8px;text-align: center;">{{ $invoice->consumption->days }}</td>
                                                             <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 8px;text-align: center;">{{ numberFormat($invoice->consumption->net_consumption,3) }}</td>
                                                             <!-- <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 8px;text-align: center;"></td> -->
@@ -348,7 +371,7 @@
                                                             <td colspan="2" style="text-align: center;border-bottom: 1px solid #000000;">{{ $avg_scm ?? 0 }}/{{ $avg_scm_per_day ?? 0 }} scm/day {{ __('bill.scm/day') }}</td>
                                                         </tr>
                                                         <tr>
-                                                            <td colspan="3" style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;text-align: left;">Price/SCM in INR (w.e.f 03.12.2024) {{ __('bill.price/scm_in_inr') }}</td>
+                                                            <td colspan="3" style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;text-align: left;">Price/SCM in INR (w.e.f {{ dateFormat($price->effective_from) }}) {{ __('bill.price/scm_in_inr') }}</td>
                                                             <td colspan="2" style="text-align: center;border-bottom: 1px solid #000000;">
                                                                 {{ numberFormat($price->rsp,2) }} (incl. VAT) {{ __('bill.incl_vat') }}                                                         </td>
                                                         </tr>
@@ -376,11 +399,16 @@
                                                             <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 8px;text-align: center;">Total<br/>{{ __('bill.total') }}</td>
                                                         </tr>
                                                         @foreach ($invoice->consumption->breakupPeriods as $row)
+                                                            @php
+                                                                $consmp = round($row['consumption'] ?? 0,3);
+                                                                $unt_price = round($row['unit_price'] ?? 0,2);
+                                                                $total_price = round(($consmp * $unt_price),2);
+                                                            @endphp
                                                             <tr>                                                        
                                                                 <td colspan="2" style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 8px;text-align: center;">{{ dateFormat($row['start_date']) }} - {{ dateFormat($row['end_date']) }}</td>
-                                                                <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 8px;text-align: center;">{{ numberFormat($row['consumption'], 3) }}</td>
-                                                                <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 8px;text-align: center;">{{ numberFormat($row['unit_price'], 2) }}</td>
-                                                                <td style="text-align: right;border-bottom: 1px solid #000000;font-size: 8px;text-align: center;">{{ numberFormat($row['total_price'], 2) }}</td>
+                                                                <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 8px;text-align: center;">{{ numberFormat($consmp, 3) }}</td>
+                                                                <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 8px;text-align: center;">{{ numberFormat($unt_price, 2) }}</td>
+                                                                <td style="text-align: right;border-bottom: 1px solid #000000;font-size: 8px;text-align: center;">{{ numberFormat($total_price, 2) }}</td>
                                                             </tr>
                                                         @endforeach
                                                         <tr>
@@ -441,8 +469,8 @@
                                                         @foreach ($billHistory as $bill)
                                                             <tr>
                                                                 <td style="border-right: 1px solid #000000;text-align: center;">{{ dateFormat($bill->consumption->date_from) }} To {{ dateFormat($bill->consumption->date_to) }}</td>
-                                                                <td style="border-right: 1px solid #000000;text-align: center;">{{ numberFormat($bill->net_consumption, 3) }}</td>
-                                                                <td style="text-align: center;">{{ numberFormat($bill->net_consumption / max($bill->consumption->days, 1),3) }}</td>
+                                                                <td style="border-right: 1px solid #000000;text-align: center;">{{ numberFormat($bill->consumption?->net_consumption, 3) }}</td>
+                                                                <td style="text-align: center;">{{ numberFormat($bill->consumption?->net_consumption / max($bill->consumption->days, 1),3) }}</td>
                                                             </tr>
                                                         @endforeach
                                                     </tbody>
