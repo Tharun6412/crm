@@ -51,6 +51,47 @@ if(!function_exists('isFullAccess')) {
 }
 
 /**
+ * Admin chekcing
+ */
+if(!function_exists('isApiAdmin')) {
+    function isApiAdmin() {
+        if(in_array(Role::ADMIN->value, request()->user()->roles()->pluck('adm_roles.id')->toArray())) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+}
+
+/**
+ * Super Admin chekcing
+ */
+if(!function_exists('isApiSuperAdmin')) {
+    function isApiSuperAdmin() {
+        if(in_array(Role::SUPER_ADMIN->value, request()->user()->roles()->pluck('adm_roles.id')->toArray())) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+}
+
+/**
+ * FULL Acces chekcing
+ */
+if(!function_exists('isApiFullAccess')) {
+    function isApiFullAccess() {
+        if(in_array(Role::FULL_ACCESS->value, request()->user()->roles()->pluck('adm_roles.id')->toArray())) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+}
+/**
  * Head Office Sales
  */
 if(!function_exists('isHOSales')) {

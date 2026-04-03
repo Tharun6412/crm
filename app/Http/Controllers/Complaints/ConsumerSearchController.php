@@ -26,7 +26,7 @@ class ConsumerSearchController extends Controller
                 ->when($request->has('search'), function($q) use($request) {
                     $q->where('crn', 'like', '%'.$request->search.'%');
                 })
-                ->paginate(20)->withQueryString();
+                ->latest()->limit(20)->get();
             // Ajax Response
             return view('complaints.calls.list-body', ['consumers' => $consumers]);
         }

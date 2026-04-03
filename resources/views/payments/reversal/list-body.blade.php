@@ -7,6 +7,7 @@
                         <th width="1%" nowrap>S.No</th>
                         <th>CRN</th>
                         <th>Invoice Number</th>
+                        <th>Transaction Number</th>
                         <th>Invoice Type</th>
                         <th>Payment Date</th>
                         <th>Paid Amount</th>
@@ -18,13 +19,14 @@
                 </thead>
                 <tbody>
                     @php
-                        $i = (($payments->currentPage() - 1) * $payments->perPage())+1;
+                        $i = 1;
                     @endphp
                     @foreach ($payments as $payment)
                         <tr>
                             <td>{{ $i++ }}</td>
                             <td>{{ $payment->invoice->consumer->crn }}</td>
                             <td>{{ $payment->invoice->invoice_number }}</td>
+                            <td>{{ $payment->transaction_id ?? '' }}</td>
                             <td>{{ $payment->invoice->invoiceType->name ?? '' }}</td>
                             <td>{{ $payment->payment_date->format('d-m-Y') }}</td>
                             <td>{{ numberFormat($payment->amount, 2) }}</td>
@@ -48,9 +50,6 @@
                     @endforeach
                 </tbody>
             </table>
-        </div>
-        <div>
-            {{ $payments->links('utils.paginator', ['modDiv' => 'payment-reversal-list']) }}
         </div>
     @else
         <div class="alert alert-info">

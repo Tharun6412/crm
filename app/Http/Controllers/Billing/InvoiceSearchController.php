@@ -71,9 +71,7 @@ class InvoiceSearchController extends Controller
                     }
                 })
                 ->Where('invoice_number', 'like','%'. $request->search . '%')
-                ->latest()
-                ->limit(20)
-                ->get();
+                ->latest()->limit(20)->get();
             // Ajax Response
             return view('billing.cancel-invoice.list-body', ['invoices' => $invoices]);
         }

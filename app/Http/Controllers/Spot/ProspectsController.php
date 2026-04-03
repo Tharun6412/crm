@@ -73,7 +73,7 @@ class ProspectsController extends Controller
         })->when((!empty($request->date_from) and !empty($request->date_to)), function($q) use($request) {
             $q->whereBetween('expected_date', [Carbon::createFromFormat('d-m-Y', $request->date_from)->startOfDay()->toDateTimeString(), Carbon::createFromFormat('d-m-Y', $request->date_to)->endOfDay()->toDateTimeString()]);
         });
-        if(! (isAdmin() OR isGaHead() OR isClusterHead())) {
+        if(! (isAdmin() OR isGaHead() OR isClusterHead() OR isFullAccess() OR isSuperAdmin())) {
             $query->whereIn('ga_id', session()->get('user')['gas']);
         }
         $prospects = $query->orderBy($sortBy, $sortOr)->paginate($records)->withQueryString();

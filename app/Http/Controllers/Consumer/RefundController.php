@@ -41,7 +41,12 @@ class RefundController extends Controller
         $sortBy = ($request->get('sortBy')) ? $request->get('sortBy') : 'created_at';
         $sortOr = ($request->get('sortOr')) ? $request->get('sortOr') : 'desc';
         $records = ($request->get('records')) ? $request->get('records') : 50;
-        $refunds_list = ConsumerRefund::with(['consumer'])->when($request->has('key'), function ($q) use($request) {
+        $refunds_list = ConsumerRefund::with(['consumer'])->when(!(isAdmin() || isSuperAdmin() || isFullAccess()), function ($q) {
+                $q->whereHas('consumer', function ($query) {
+                    $query->whereIn('ga_id', session('user')['gas'] ?? []);
+                });
+            })
+            ->when($request->has('key'), function ($q) use($request) {
                 $q->whereAny(['request_no'], 'like', '%' . $request->key . '%');
             })
             ->when($request->filled('geo_area'), function($q) use($request) {

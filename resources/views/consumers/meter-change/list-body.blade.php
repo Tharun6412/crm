@@ -5,7 +5,7 @@
     <div class="col-auto">
         <div class="input-group">
             <span class="input-group-text" id="search-key">Search</span>
-            <input type="text" name="key" id="search-key" class="form-control" value="{{ request()->key }}">
+            <input type="text" name="key" id="search-key" class="form-control" value="{{ request()->key }}" placeholder="Enter CRN/Meter No.">
         </div>
     </div>
     <div class="col-auto">

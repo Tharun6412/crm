@@ -23,7 +23,7 @@ class DashboardController extends Controller
     {
         // Get Consumers Data
         $consumer_status = Consumer::select('status_id', DB::raw('COUNT(id) as status_count'))
-            ->when((!$request->user()->isAdmin() AND !$request->user()->isSuperAdmin()), function ($q) use($request) {
+            ->when((!$request->user()->isApiAdmin() AND !$request->user()->isApiSuperAdmin() AND !$request->user()->isApiFullAccess()), function ($q) use($request) {
                 $q->whereIn('ga_id', $request->user()->ga()->pluck('ga_id')->toArray());
             })->groupBy('status_id')->get();
         // Response

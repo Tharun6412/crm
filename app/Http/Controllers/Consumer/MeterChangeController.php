@@ -27,11 +27,25 @@ class MeterChangeController extends Controller
      */
     public function index(Request $request)
     {
-        $meterChange = ConsumerMeterChanges::when($request->has('key'), function ($q) use($request) {
-                $q->whereHas('meter', function($q1) use($request) {
-                    $q1->whereAny(['meter_no'], 'like', '%' . $request->key . '%');
+        $meterChange = ConsumerMeterChanges::when(!(isAdmin() || isSuperAdmin() || isFullAccess()), function ($q) {
+            $q->whereHas('consumer', function ($q1) {
+                $q1->whereIn('ga_id', session('user')['gas'] ?? []);
+            });
+        })
+        ->when($request->filled('key'), function ($q) use ($request) {
+            $search = $request->key;
+
+            $q->where(function ($q1) use ($search) {
+                $q1->whereHas('consumer', function ($q2) use ($search) {
+                    $q2->where('crn', 'like', "%$search%");
+                })
+                ->orWhereHas('meter', function ($q3) use ($search) {
+                    $q3->where('meter_no', 'like', "%$search%");
                 });
-            })->orderBy('created_at', 'desc')->paginate(20)->withQueryString();
+            });
+        })
+        ->orderBy('created_at', 'desc')->paginate(20)->withQueryString();
+        // Response
         if($request->ajax()) {
             return view('consumers.meter-change.list-body', [
                 'meterChange' => $meterChange,

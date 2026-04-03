@@ -58,7 +58,7 @@ class PaymentsController extends Controller
                                     $q2->where('name', 'like', '%' . $request->key . '%');
                             });
                         });
-                        if(!empty($ga_ids) AND (!$request->user()->isAdmin() AND !$request->user()->isSuperAdmin() AND !$request->user()->isFullAccess())) {
+                        if(!empty($ga_ids) AND (!$request->user()->isApiAdmin() AND !$request->user()->isApiSuperAdmin() AND !$request->user()->isApiFullAccess())) {
                             $q->whereIn('ga_id', $ga_ids);
                         }
                     });

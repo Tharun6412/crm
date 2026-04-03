@@ -46,11 +46,21 @@ class PaymentsSearchController extends Controller
                 return response()->json(['message' => 'Please enter transaction number'], 422);
             }
             // Get Invoices
-            $payments = InvoicePayment::whereHas('invoice', function($q) use($request) {
-                $q->where('invoice_number', 'like', '%'.$request->search.'%');
+            $search = $request->search;
+            $payments = InvoicePayment::where(function($q) use($search) {
+                // GA restriction for non-privileged users
+                if (!(isAdmin() || isSuperAdmin() || isFullAccess())) {
+                    $q->whereHas('invoice.consumer', function($q1) {
+                        $q1->whereIn('ga_id', session('user')['gas'] ?? []);
+                    });
+                }
+                // Search conditions (transaction_id or invoice_number)
+                $q->whereHas('invoice', function($q2) use($search) {
+                    $q2->where('invoice_number', 'like', "%$search%");
+                })
+                ->orWhere('transaction_id', 'like', "%$search%");
             })
-            ->orWhere('transaction_id', 'like' , '%'.$request->search.'%')
-            ->where('status_id', PaymentStatus::COMPLETED->value)->paginate(20)->withQueryString();
+            ->where('status_id', PaymentStatus::COMPLETED->value)->latest()->limit(20)->get();
             // Ajax Response
             return view('payments.reversal.list-body', ['payments' => $payments]);
         }
