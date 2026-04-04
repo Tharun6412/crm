@@ -2,7 +2,10 @@
 
 namespace App\Services;
 
+use App\Enums\InvoiceItem;
 use App\Enums\InvoiceStatus;
+use App\Enums\InvoiceType;
+use App\Enums\TaxType;
 use App\Models\Consumer\ConsumerSdPayment;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -16,15 +19,15 @@ class DependentInvoiceService
         $emiAmount  = (float) $scheme->emi_amount;
         $lastEmi = $consumer->sdPayment()->latest()->first();
         $emisPaid = $lastEmi ? (int) $lastEmi->emi_no : 0;
-        $invoiceType = 5; // EMI
+        $invoiceType = InvoiceType::SD_EMI->value; // EMI
         $invoice_total  = $emiAmount;
         $emiNo = $emisPaid + 1;
-        $tax_id = 2;
+        $tax_id = TaxType::GST->value;
         $tax_value = 0;
         $tax_amount = 0;
 
         $invoice_items[] = [
-            'item_id' => 2, // SD EMI
+            'item_id' => InvoiceItem::SDEMI->value, // SD EMI
             'quantity' => 1,
             'unit_price' => $invoice_total,
             'total_price' => $invoice_total,
@@ -77,8 +80,8 @@ class DependentInvoiceService
         $end_date = $invoice->consumption->date_to->format('Y-m-d');
         $scheme = $consumer->scheme;
         $totalDays = Carbon::parse($start_date)->diffInDays($end_date) + 1;
-        $invoiceType = 4; // Rental
-        $tax_id = 2;
+        $invoiceType = InvoiceType::RENTAL_CHARGES->value; // Rental
+        $tax_id = TaxType::GST->value;
         if ($totalDays > 0) {
             $invoice_total  = round($scheme->rental_amount * $totalDays, 2);
             $rsp = $scheme->rental_amount;
@@ -89,7 +92,7 @@ class DependentInvoiceService
             $tax_amount = round(($tax_price * $totalDays),2);
         }
         $invoice_items[] = [
-            'item_id' => 3, // Rental item
+            'item_id' => InvoiceItem::RENTAL_CHARGES->value, // Rental item
             'quantity' => $totalDays,
             'unit_price' => $basic_price,
             'total_price' => $base_amount,
