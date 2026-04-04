@@ -28,9 +28,9 @@
                         <td>{{ $emp->emp_id }}</td>
                         <td>{{ $emp->emp_name }}</td>
                         <td>{{ $emp->ga_name }}</td>
-                        <td class="text-end">{{ $emp->invoice_amount }}</td>
-                        <td class="text-end">{{ $emp->sd_amount }}</td>
-                        <td class="text-end">{{ $emp->total_amount }}</td>
+                        <td class="text-end">{{ numberFormat($emp->invoice_amount, 2) }}</td>
+                        <td class="text-end">{{ numberFormat($emp->sd_amount, 2) }}</td>
+                        <td class="text-end">{{ numberFormat($emp->total_amount, 2) }}</td>
                     </tr>
                 @endforeach
                 <tr class="bg-info-subtle fw-semibold">

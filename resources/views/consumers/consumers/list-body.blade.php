@@ -84,14 +84,14 @@
                 @foreach ($consumers as $consumer)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
-                        <td>
+                        <td nowrap>
                             <i class="bi bi-{{ ($consumer->connection_type_id == 1) ? 'speedometer2' : 'wifi'}}"></i>
                             <x-auth.link href="{{ url('consumers/' . $consumer->id) }}">
                                 {{ $consumer->crn ?? $consumer->t_crn }}
                             </x-auth.link>
                         </td>
                         {{-- <td>{{ $consumer->connectType->name }}</td> --}}
-                        <td>{{ $consumer->name }}</td>
+                        <td width="20%">{{ $consumer->name }}</td>
                         <td>{{ $consumer->segment->name }}</td>
                         <td>
                             <x-consumer.status :status="$consumer->status" mode='full' />

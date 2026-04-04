@@ -31,9 +31,9 @@
                     @foreach ($prospect->statusHistory as $history)
                         <tr>
                             <td class="text-center">{{ $i++ }}</td>
-                            <td class="align-middle">{{ $history->stage->parent->name ?? $history->stage->name }}</td>
-                            <td class="align-middle">{{ $history->stage->name }}</td>
-                            <td class="align-middle">{{ $history->status->name ?? '' }}</td>
+                            <td nowrap><x-spot.stages :stage="$history->stage" type="1" /></td>
+                            <td nowrap><x-spot.stages :stage="$history->stage" type="2" /></td>
+                            <td nowrap><x-spot.status :status="$history->status" /></td>
                             <td>{{ $history->notes }}</td>
                             <td>{{ $history->createdBy->first_name }}</td>
                             <td>{{ $history->created_at->format('d-m-Y') }}</td>

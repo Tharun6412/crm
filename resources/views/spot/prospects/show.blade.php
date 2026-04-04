@@ -167,17 +167,21 @@
                                     <tr>
                                         <td class="text-end">Stage</td>
                                         <td>:</td>
-                                        <td>{{ $prospect->stage->parent->name }}</td>
+                                        <td>
+                                            <x-spot.stages :stage="$prospect->stage" type="1" />
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td class="text-end">Sub-stage</td>
                                         <td>:</td>
-                                        <td>{{ $prospect->stage->name }}</td>
+                                        <td>
+                                            <x-spot.stages :stage="$prospect->stage" type="2" />
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td width="210" class="text-end">Status</td>
                                         <td width="1%">:</td>
-                                        <td>{{ $prospect->statusType->name }}</td>
+                                        <td><x-spot.status :status="$prospect->statusType" /></td>
                                     </tr>
                                     <tr>
                                         <td class="text-end">Last Status Updated Date</td>

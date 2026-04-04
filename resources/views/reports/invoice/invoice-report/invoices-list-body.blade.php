@@ -71,6 +71,7 @@
     <table class="table table-bordered table-hover table-striped bg-white page-sort text-middle">
         <thead class="table-success align-middle">
             <tr class="bg-success-subtle">
+                <th width="1%" nowrap>S No</th>
                 <th nowrap>
                     <a href="{{ $sortUrl('invoice_number') }}">
                         Invoice No @if($sort_by == 'invoice_number') <i class="bi {{ $sort_icon }}"></i> @endif
@@ -83,13 +84,13 @@
                 </th>
                 <th nowrap>CRN</th>
                 <th nowrap>Name</th>
-                <th nowrap>GA <x-master.ga-filter /></th>
+                <th nowrap>GA <x-master.ga-filter class="float-end" /></th>
                 <th nowrap>
                     <div class="d-flex">
                         <a href="{{ $sortUrl('type_id') }}">
                             Invoice Type @if($sort_by == 'type_id') <i class="bi {{ $sort_icon }}"></i> @endif
                         </a>
-                        <x-master.invoice-type-filter />
+                        <x-master.invoice-type-filter class="float-end" />
                     </div>
                 </th>
                 <th nowrap>
@@ -113,7 +114,7 @@
                             Payment Status @if($sort_by == 'status_id') <i class="bi {{ $sort_icon }}"></i> @endif
                         </a>&nbsp;
                         @php $inv_status = [1 => 'Paid', 2 => 'Not-Paid', 3 => 'Partial-Paid']; @endphp
-                        <x-admin.status-filter name="status_id" :data="$inv_status" />
+                        <x-admin.status-filter name="status_id" :data="$inv_status" class="float-end" />
                     </div>
                 </th>
             </tr>
@@ -122,6 +123,7 @@
             @forelse($invoices as $inv)
                 <tr class="align-middle">
                     {{-- ✅ S.No removed — cursor pagination has no absolute position --}}
+                    <td class="text-center">{{ $loop->iteration }}</td>
                     <td><a href="{{ url('bill/invoice/' . $inv->id) }}" target="_blank">{{ $inv->invoice_number }}</a></td>
                     <td>{{ dateFormat($inv->invoice_date) }}</td>
                     <td>{{ $inv->consumer->crn ?? '' }}</td>
@@ -135,13 +137,13 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="7" class="text-center">No Records Found</td>
+                    <td colspan="8" class="text-center">No Records Found</td>
                 </tr>
             @endforelse
         </tbody>
         <tfoot>
             <tr class="table-info">
-                <th class="text-end" colspan="7">Page Total</th>
+                <th class="text-end" colspan="8">Page Total</th>
                 {{-- ✅ sum() on the current page collection (not DB total) --}}
                 <th class="text-end">{{ numberFormat($invoices->getCollection()->sum('payable_amount'), 2) }}</th>
                 <th class="text-end">{{ numberFormat($invoices->getCollection()->sum('balance_amount'), 2) }}</th>

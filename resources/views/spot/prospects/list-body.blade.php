@@ -45,18 +45,18 @@
     @endphp
     <!-- Display prospects list -->
     <div class="table-responsive">
-        <table class="table table-bordered table-hover bg-white page-sort align-middle">
+        <table class="table table-bordered table-hover bg-white page-sort align-middle table-striped">
             <thead class="table-success align-middle">
                 <tr>
                     <th nowrap>S No.</th>
                     <th nowrap>
-                        <div class="d-flex">
-                            <span>GA</span> 
-                            <x-master.ga-filter class="float-end"/>
+                        <div class="d-flex flex-row gap-2">
+                            <div>GA</div> 
+                           <div><x-master.ga-filter class="float-end"/></div>
                         </div>
                     </th>
                     <th nowrap>
-                        <div class="d-flex">
+                        <div class="d-flex gap-2">
                             <span>Segment</span> 
                             <x-master.segment-filter class="float-end"/>
                         </div>
@@ -70,13 +70,16 @@
                         </a>
                     </th>
                     <th nowrap>
-                        <div class="d-flex">
+                        <div class="d-flex gap-2">
                             <span>Industrial Area</span> 
                             <x-master.industrial-area-filter class="float-end"/>
                         </div>                         
                     </th>
-                    <th nowrap>Current Fuel
-                        <x-master.current-fuel-filter class="float-end"/>
+                    <th nowrap>
+                        <div class="d-flex gap-2">
+                            <span>Current Fuel</span> 
+                            <x-master.current-fuel-filter class="float-end"/>
+                        </div>
                     </th>
                     <th class="text-end">
                         <a href="{{ $prospects->appends(['sortBy' => 'potential','sortOr' => $sort_order_inverse])->url($prospects->currentPage()) }}">
@@ -87,7 +90,7 @@
                         </a>
                     </th>
                     <th nowrap>                    
-                        <div class="d-flex">
+                        <div class="d-flex gap-2">
                             <a href="{{ $prospects->appends(['sortBy' => 'expected_date','sortOr' => $sort_order_inverse])->url($prospects->currentPage()) }}">
                             Gas service<br/>expected date
                             @if ($sort_by == 'expected_date')
@@ -98,19 +101,19 @@
                         </div>                    
                     </th>
                     <th nowrap class="text-center">
-                        <div class="d-flex">
+                        <div class="d-flex gap-2">
                             <span>Stage</span> 
                             <x-spot.stage-filter :stages="$stages" class="float-end"/>
                         </div>    
                     </th>
                     <th nowrap class="text-center">
-                        <div class="d-flex">
+                        <div class="d-flex gap-2">
                         <span>Sub Stage</span>
                         <x-spot.sub-stage-filter :stages="$stages" class="float-end"/>
                         </div>
                     </th>
                     <th npwrap>
-                        <div class="d-flex">
+                        <div class="d-flex gap-2">
                             <span>Status</span>
                             <x-spot.status-filter :status="$status_list" class="float-end"/>
                         </div>
@@ -131,18 +134,24 @@
                     @foreach ($prospects as $prospect)
                         <tr>
                             <td class="text-center">{{ $i++ }}</td>
-                            <td>{{ $prospect->ga->name }}</td>
+                            <td nowrap>{{ $prospect->ga->name }}</td>
                             <td nowrap>{{ $prospect->segment->name }}</td>
-                            <td>
+                            <td nowrap>
                                 <a href="{{ url('spot/prospects/'.$prospect->id) }}" class="link-modal">{{ $prospect->name }}</a>
                             </td>
-                            <td>{{ $prospect->industrialArea->name }}</td>
+                            <td nowrap>{{ $prospect->industrialArea->name }}</td>
                             <td>{{ $prospect->fuelType->name }}</td>
                             <td class="text-end">{{ $prospect->potential }}</td>
                             <td>{{ $prospect->expected_date?->format('d-m-Y') }}</td>
-                            <td>{{ $prospect->stage->parent->name ?? '' }}</td>
-                            <td>{{ $prospect->stage->name }}</td>
-                            <td nowrap>{{ $prospect->statusType->name }}</td>
+                            <td nowrap>
+                                <x-spot.stages :stage="$prospect->stage" type="1" mode="full"/>
+                            </td>
+                            <td nowrap>
+                                <x-spot.stages :stage="$prospect->stage" type="2" mode="full"/>
+                            </td>
+                            <td nowrap>
+                                <x-spot.status :status="$prospect->statusType" mode="full"/>
+                            </td>
                             <td>{{ $prospect->status_date->format('d-m-Y') }}</td>
                             <td>
                                 {{-- Prospects Actions Dropdown --}}
