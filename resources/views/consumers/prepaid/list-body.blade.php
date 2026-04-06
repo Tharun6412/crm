@@ -94,7 +94,7 @@
                         </td>
                         <td>{{ dateFormat($consumer->prepaidData?->hes_date) }}</td>
                         <td>
-                            @include('consumers.consumers.prepaid-actions')
+                            @include('consumers.prepaid.prepaid-actions')
                         </td>
                     </tr>
                 @endforeach

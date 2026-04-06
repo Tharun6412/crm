@@ -44,7 +44,7 @@
         @if ($consumer->status_id == ConsumerStatus::PD->value)
             <li><x-auth.link class="dropdown-item link-modal" href="{{ url('consumers/refunds/refundRequest/'.$consumer->id) }}" action="refin"><i class="bi bi-chevron-right"></i>&nbsp;Initiate Refund</x-auth.link></li>
         @endif
-        @if (in_array($consumer->status_id, [ConsumerStatus::HSC->value, ConsumerStatus::ACTIVATE->value], true) and $consumer->connection_type_id == 2 and $consumer->prepaidData->hes_status != 1) 
+        @if (in_array($consumer->status_id, [ConsumerStatus::HSC->value, ConsumerStatus::ACTIVATE->value], true) and $consumer->connection_type_id == 2 and $consumer->prepaidData?->hes_status != 1) 
             <li><x-auth.link class="dropdown-item link-modal" href="{{ url('consumers/prepaid/sendToHes/'.$consumer->id) }}" action="shes"><i class="bi bi-chevron-right"></i>&nbsp;Send To HES</x-auth.link></li>            
         @endif
     </ul>
