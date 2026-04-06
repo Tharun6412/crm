@@ -26,14 +26,24 @@ class PrepaidConsumerController extends Controller
     public function index(Request $request, MasterConsumerStatus $status)
     {
         // Get consumers
-        $consumers = Consumer::when((!isAdmin() AND !isSuperAdmin()), function ($q) {
+        $consumers = Consumer::with([
+                'segment:id,name',
+                'status',
+                'ga',
+                'district',
+                'scheme',
+                'meter',
+                'activeMeter',
+                'prepaidData',
+                'priceGroup:id,code',
+            ])
+            ->select(['id', 'crn', 'fname', 'lname', 'segment_id', 'connection_type_id', 'status_id', 'ga_id', 'district_id', 'price_group_id', 'created_at'])
+            ->when((!isAdmin() AND !isSuperAdmin()), function ($q) {
                 $q->whereIn('ga_id', session('user')['gas']);
             })
-            ->when($request->has('key'), function ($q) use($request) {
+            ->when($request->filled('key'), function ($q) use($request) {
                 $q->whereAny(['crn', 'fname', 'lname', 'email', 'phone'], 'like', '%' . $request->key . '%')
-                ->orWhereHas('activeMeter', function ($mq) use($request) {
-                    $mq->where('meter_no', 'like', $request->key);
-                });
+                ->orWhereHas('activeMeter', fn ($q) => $q->where('meter_no', 'like', '%' . $request->key . '%'));
             })
             ->when($request->has('segments'), function ($q) use($request) {
                 $q->whereIn('segment_id', $request->segments);

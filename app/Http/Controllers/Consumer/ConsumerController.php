@@ -24,7 +24,13 @@ class ConsumerController extends Controller
         $sortOr = ($request->get('sortOr')) ? $request->get('sortOr') : 'desc';
         $records = ($request->get('records')) ? $request->get('records') : 50;
         // Query
-        $consumers = Consumer::with(['segment', 'status', 'ga', 'district', 'scheme'])
+        $consumers = Consumer::with([
+                'segment',
+                'status',
+                'ga',
+                'district',
+                'scheme.scheme'
+            ])
             ->when((!isAdmin() AND !isSuperAdmin() AND !isFullAccess()), function ($q) {
                 $q->whereIn('ga_id', session('user')['gas']);
             })
@@ -36,12 +42,8 @@ class ConsumerController extends Controller
                     });
                 });
             })
-            ->when($request->has('segments'), function ($q) use($request) {
-                $q->whereIn('segment_id', $request->segments);
-            })
-            ->when($request->filled('connection_type_id'), function ($q) use($request) {
-                $q->where('connection_type_id', $request->connection_type_id);
-            })
+            ->when($request->has('segments'), fn ($q) => $q->whereIn('segment_id', $request->segments))
+            ->when($request->filled('connection_type_id'), fn ($q) => $q->where('connection_type_id', $request->connection_type_id))
             ->when($request->has('geo_area'), function ($q) use($request) {
                 $q->whereIn('ga_id', $request->geo_area);
             })

@@ -21,11 +21,11 @@
         <a href="{{ url('reports/paymentsReport') }}" class="btn btn-warning"><i class="bi bi-arrow-clockwise"></i></a>
         <!-- Record Count -->
         <span class="small text-muted">
-          <span class="fw-semibold">({{ $payments->total() }})</span> Records found
+          {{-- <span class="fw-semibold">({{ $payments->total() }})</span> Records found --}}
         </span>
     </div>
     <div>
-        <x-auth.link :href="url('reports/paymentsReport/paymentsReportExport') . '?' . request()->getQueryString()" class="btn btn-outline-info"><i class="bi bi-file-earmark-excel"></i>&nbsp;Export</x-auth.link>
+        {{-- <x-auth.link :href="url('reports/paymentsReport/paymentsReportExport') . '?' . request()->getQueryString()" class="btn btn-outline-info"><i class="bi bi-file-earmark-excel"></i>&nbsp;Export</x-auth.link> --}}
     </div>
 </div>
 @php
@@ -33,15 +33,15 @@
     $sort_order = (request()->has('sortOr')) ? request()->get('sortOr') : 'desc';
     $sort_order_inverse = ($sort_order == 'asc') ? 'desc' : 'asc';
     $sort_icon = ($sort_order == 'asc') ? 'bi-caret-down-fill' : 'bi-caret-up-fill';
-    $i = (($payments->currentPage() - 1) * $payments->perPage())+1;
+    $i = 1; //(($payments->currentPage() - 1) * $payments->perPage())+1;
 @endphp
-<div class="table-responsive" style="min-height: 500px;">
+<div class="table-responsive" style="min-height: 300px;">
     <table class="table table-bordered bg-white table-striped page-sort">
         <thead class="table-success align-middle">
             <tr>
                 <th width="1%" nowrap>S No</th>
                 <th nowrap>
-                    <a href="{{ $payments->appends(['sortBy' => 'pay_invoice_payments.code','sortOr' => $sort_order_inverse])->url($payments->currentPage()) }}">
+                    <a href="#">
                         Payment Code
                         @if ($sort_by == 'pay_invoice_payments.code')
                             <i class="bi {{ $sort_icon }}"></i>
@@ -49,7 +49,7 @@
                     </a>
                 </th>
                 <th nowrap class="text-center">
-                    <a href="{{ $payments->appends(['sortBy' => 'pay_invoice_payments.payment_date','sortOr' => $sort_order_inverse])->url($payments->currentPage()) }}">
+                    <a href="#">
                         Payment Date
                         @if ($sort_by == 'pay_invoice_payments.payment_date')
                             <i class="bi {{ $sort_icon }}"></i>
@@ -57,7 +57,7 @@
                     </a>
                 </th>
                 <th nowrap>
-                    <a href="{{ $payments->appends(['sortBy' => 'pay_invoice_payments.amount','sortOr' => $sort_order_inverse])->url($payments->currentPage()) }}">
+                    <a href="#">
                         Amount
                         @if ($sort_by == 'pay_invoice_payments.amount')
                             <i class="bi {{ $sort_icon }}"></i>
@@ -65,7 +65,7 @@
                     </a>
                 </th>
                 <th nowrap>
-                    <a href="{{ $payments->appends(['sortBy' => 'pay_invoice_payments.payment_type_id','sortOr' => $sort_order_inverse])->url($payments->currentPage()) }}">
+                    <a href="#">
                         Payment Type
                         @if ($sort_by == 'pay_invoice_payments.payment_type_id')
                             <i class="bi {{ $sort_icon }}"></i>
@@ -73,7 +73,7 @@
                     </a>
                 </th>
                 <th nowrap>
-                    <a href="{{ $payments->appends(['sortBy' => 'bil_invoices.invoice_number','sortOr' => $sort_order_inverse])->url($payments->currentPage()) }}">
+                    <a href="#">
                         Invoice No
                         @if ($sort_by == 'bil_invoices.invoice_number')
                             <i class="bi {{ $sort_icon }}"></i>
@@ -81,7 +81,7 @@
                     </a>
                 </th>
                 <th nowrap class="text-center">
-                    <a href="{{ $payments->appends(['sortBy' => 'bil_invoices.invoice_date','sortOr' => $sort_order_inverse])->url($payments->currentPage()) }}">
+                    <a href="#">
                     Invoice Date
                         @if ($sort_by == 'bil_invoices.invoice_date')
                         <i class="bi {{ $sort_icon }}"></i>
@@ -90,7 +90,7 @@
                 </th>
                 <th nowrap>
                     <div class="d-flex">
-                        <div><a href="{{ $payments->appends(['sortBy' => 'bil_invoices.type_id','sortOr' => $sort_order_inverse])->url($payments->currentPage()) }}">
+                        <div><a href="#">
                         Invoice Type
                         @if ($sort_by == 'bil_invoices.type_id')
                             <i class="bi {{ $sort_icon }}"></i>
@@ -100,7 +100,7 @@
                     </div>
                 </th>
                 <th nowrap>
-                    <a href="{{ $payments->appends(['sortBy' => 'cns_consumers.crn','sortOr' => $sort_order_inverse])->url($payments->currentPage()) }}">
+                    <a href="#">
                     CRN
                     @if ($sort_by == 'cns_consumers.crn')
                         <i class="bi {{ $sort_icon }}"></i>
@@ -108,7 +108,7 @@
                     </a>
                 </th>
                 <th nowrap>
-                    <a href="{{ $payments->appends(['sortBy' => 'cns_consumers.fname','sortOr' => $sort_order_inverse])->url($payments->currentPage()) }}">
+                    <a href="#">
                     Consumer Name
                     @if ($sort_by == 'cns_consumers.fname')
                         <i class="bi {{ $sort_icon }}"></i>
@@ -118,13 +118,13 @@
                 <th nowrap>
                     <div class="d-flex">
                     <div>Segment</div>
-                    <x-master.segment-filter class="float-end"  />
+                    {{-- <x-master.segment-filter class="float-end"  /> --}}
                     </div>
                 </th>
                 <th nowrap>
                     <div class="d-flex">
                         <div>Connection Type</div>
-                        <x-master.connection-type-filter class="float-end"  />
+                        {{-- <x-master.connection-type-filter class="float-end"  /> --}}
                     </div>
                 </th>
                 <th nowrap><div class="d-flex"><div>GA</div><x-master.ga-filter class="float-end"  /></div></th>
@@ -165,12 +165,11 @@
 </div>
 {{--  Reset pagination parameters for paginator --}}
 @php
-    $payments->appends(['sortBy' => $sort_by, 'sortOr' => $sort_order]);
+    // $payments->appends(['sortBy' => $sort_by, 'sortOr' => $sort_order]);
 @endphp
 <div>
-    {{ $payments->links('utils.paginator', ['modDiv' => 'payments-report-list']) }}
+    {{-- {{ $payments->links('utils.paginator', ['modDiv' => 'payments-report-list']) }} --}}
+    {{ $payments->links('utils.cursor', ['modDiv' => 'payments-report-list']) }}
 </div>
 {{-- Scripts --}}
-@push('scripts')
-    @include('scripts.datepicker', ['list' => ['date_from', 'date_to']])
-@endpush
+@include('scripts.datepicker', ['list' => ['date_from', 'date_to']])

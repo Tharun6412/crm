@@ -100,7 +100,7 @@
                 @endforeach
             @else
                 <tr>
-                    <td colspan="13">
+                    <td colspan="14">
                         <x-layouts.callout-info>No records found!</x->
                     </td>
                 </tr>
