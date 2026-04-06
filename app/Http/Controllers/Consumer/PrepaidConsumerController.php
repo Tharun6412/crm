@@ -31,7 +31,7 @@ class PrepaidConsumerController extends Controller
                 'status',
                 'ga',
                 'district',
-                'scheme',
+                'scheme.scheme',
                 'meter',
                 'activeMeter',
                 'prepaidData',

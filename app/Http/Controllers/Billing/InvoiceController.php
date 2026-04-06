@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Billing;
 
 use App\Enums\InvoiceStatus;
+use App\Enums\InvoiceType;
 use App\Http\Controllers\Controller;
 use App\Models\Consumer\Consumer;
 use App\Models\Invoice\BillInvoice;
@@ -40,7 +41,7 @@ class InvoiceController extends Controller
         }
 
         // Get required data for invoice creation
-        $invoice_types = BillInvoiceType::all();
+        $invoice_types = BillInvoiceType::whereNot('id', InvoiceType::GAS_BILL->value)->get();
         $item_types = BillInvoiceItemType::all();
 
         // Render output
@@ -65,6 +66,11 @@ class InvoiceController extends Controller
             $inv_items = $request->session()->get('inv_items');
             // Get Items list from database
             $items = BillInvoiceItem::whereIn('id', array_keys($inv_items))->get();
+        }
+
+        // Check custom invoices
+        if($request->session()->has('inv_items_cust')) {
+            $inv_items_cust = $request->session()->get('inv_items_cust');
         }
 
         // Get additional data

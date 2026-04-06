@@ -19,7 +19,7 @@
 
         // Clusters Totals Based on Status
         foreach($clusters as $cluster) {
-            $clusters_name[] = $cluster->name;
+            $clusters_name[] = $cluster->code;
             if(!isset($consumer_total_data[$cluster->id])) {
                 $consumer_total_data[$cluster->id] = [
                     'registration' => 0,

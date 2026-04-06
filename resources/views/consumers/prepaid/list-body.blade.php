@@ -90,7 +90,7 @@
                         <td>{{ dateFormat($consumer->created_at) }}</td>
                         <td>{{ $consumer?->activeMeter?->meter_serial_no }}</td>
                         <td>
-                            <x-consumer.hes-status :status="$consumer->prepaidDate?->hes_status"/>
+                            <x-consumer.hes-status :status="$consumer->prepaidData?->hes_status"/>
                         </td>
                         <td>{{ dateFormat($consumer->prepaidData?->hes_date) }}</td>
                         <td>
