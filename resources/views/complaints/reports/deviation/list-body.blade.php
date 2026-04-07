@@ -1,18 +1,18 @@
 <div class="bg-white p-2 border border-top-0">
-    <form class="report-filter-form" action="{{ url('calls/reports/categoryReport') }}" data-target="#nav-ga">
+    <form class="report-filter-form" action="{{ url('calls/reports/deviationReport') }}" data-target="#nav-deviation">
         <div class="d-flex justify-content-between mt-2">
             <div class="d-flex gap-2">
                 <div>
                     <div class="input-group mb-3">
                         <span class="input-group-text">From Date</span>
-                        <input type="text" class="form-control" aria-label="From Date" name="date_from" id="date_from" value="{{ $date_from->format('d-m-Y') }}">
+                        <input type="text" class="form-control" aria-label="From Date" name="deviation_date_from" id="deviation_date_from" value="{{ $date_from->format('d-m-Y') }}">
                         <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
                     </div>
                 </div>
                 <div>
                     <div class="input-group mb-3">
                         <span class="input-group-text">To Date</span>
-                        <input type="text" class="form-control" aria-label="To Date" name="date_to" id="date_to" value="{{ $date_to->format('d-m-Y') }}">
+                        <input type="text" class="form-control" aria-label="To Date" name="deviation_date_to" id="deviation_date_to" value="{{ $date_to->format('d-m-Y') }}">
                         <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
                     </div>
                 </div>
@@ -77,7 +77,7 @@
         </tbody>
     </table>
 </div>
-@include('scripts.datepicker', ['list' => ['date_from', 'date_to']])
+@include('scripts.datepicker', ['list' => ['deviation_date_from', 'deviation_date_to']])
 @include('scripts.export-table', [
     'table' => 'deviation-report',
     'button' => 'exportDBtn',

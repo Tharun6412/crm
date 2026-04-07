@@ -26,7 +26,7 @@ class AuthenticationController extends Controller
         return response()->json([
             'token' => $token,
             'user' => $user->makeHidden(['roles']),
-            'user_gas' => $user->ga()->select('mst_gas.name', 'mst_gas.ga_id')->get()->makeHidden('pivot'),
+            'user_gas' => $user->ga()->select('mst_gas.name', 'mst_gas.id')->get()->makeHidden('pivot'),
             'roles' => $user->roles()->select('adm_roles.id', 'adm_roles.name')->get()->makeHidden('pivot'),
             'modules' => $app_modules,
         ]);

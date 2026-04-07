@@ -8,6 +8,7 @@ use App\Enums\SegmentType;
 use App\Enums\TaxType;
 use App\Http\Controllers\Controller;
  use App\Models\Consumer\Consumer;
+use App\Models\Consumer\ConsumerSdPayment;
 use App\Models\Invoice\BillInvoice;
 use App\Models\Invoice\InvoicePayment;
 use App\Models\Invoice\Ledger;
@@ -62,14 +63,14 @@ class GasPaymentsController extends Controller
             'transaction_no' => 'required',
             'amount' => ['required', 'numeric', 'gt:0', 'min:' . $request->invoice_balance, 'max:' . $request->invoice_balance]
             ]);
-        $invoice = BillInvoice::find($request->invoice_id);
+        $gas_invoice = BillInvoice::find($request->invoice_id);
         // 2. check if LPC is applicable.
         if ($request->lpc_applicable) {
             // Late fee calculation.
             // Invoice Item
-            if($invoice->consumer->segment_id == SegmentType::DOMESTIC->value) {
+            if($gas_invoice->consumer->segment_id == SegmentType::DOMESTIC->value) {
                 $inv_item = InvoiceItem::DLPC->value;
-            }else if($invoice->consumer->segment_id == SegmentType::COMMERCIAL->value) {
+            }else if($gas_invoice->consumer->segment_id == SegmentType::COMMERCIAL->value) {
                 $inv_item = InvoiceItem::CLPC->value;
             }else {
                 $inv_item = InvoiceItem::ILPC->value;
@@ -88,12 +89,12 @@ class GasPaymentsController extends Controller
             // Invoice array preperation for invoice service.
             $invoice_data = [
                 'config' => [
-                    'state_id' => $invoice->consumer->ga->state_id,
-                    'tax_id' => 2,
+                    'state_id' => $gas_invoice->consumer->ga->state_id,
+                    'tax_id' => TaxType::GST->value,
                 ],
                 'headers' => [
                     'type_id' => InvoiceType::LATE_PAYMENT_CHARGES->value,
-                    'consumer_id' => $invoice->consumer_id,
+                    'consumer_id' => $gas_invoice->consumer_id,
                     'invoice_date' => date('Y-m-d'),
                     'base_amount' => $basic_amount,
                     'taxable_amount' => $basic_amount,
@@ -105,7 +106,7 @@ class GasPaymentsController extends Controller
                     'balance_amount' => $late_fee,
                     'due_date' => date('Y-m-d'),
                     'status_id' => InvoiceStatus::NOT_PAID->value, //2 =  Unpaid
-                    'parent_invoice_id' => $invoice->id,
+                    'parent_invoice_id' => $gas_invoice->id,
                     'created_by' => Auth::id(),
                 ],
                 'items' => $invoice_items,
@@ -154,6 +155,12 @@ class GasPaymentsController extends Controller
                 'balance_amount' => $newBalance,
                 'status_id'      => ($newBalance == 0) ? 1 : 3, // Paid / Partial
             ]);
+
+            // If invoice is sd emi invoice payment, update the status as paid.
+            if($invoice->type_id == InvoiceType::SD_EMI->value && $newBalance == 0)
+            {
+                ConsumerSdPayment::where('invoice_id', $invoice->id)->update(['status_id' => 1]);
+            }
             $remainingAmount -= $payAmount;
         }
         return response()->json(['success' => 'Invoice payment inserted successfully']);

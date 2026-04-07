@@ -22,8 +22,8 @@ class GasBillController extends Controller
     {
         // Get Gas bill only
         $invoice = BillInvoice::where(['id' => $id, 'type_id' => InvoiceType::GAS_BILL->value])->first();
-        $lpc = $invoice->childInvoices()->where('type_id',InvoiceType::LATE_PAYMENT_CHARGES->value)->first()?->balance_amount ?? 0;
-        $emi = $invoice->childInvoices()->where('type_id',InvoiceType::SD_EMI->value)->first()?->balance_amount ?? 0;
+        $lpc = $invoice->childInvoices()->where('type_id',InvoiceType::LATE_PAYMENT_CHARGES->value)->first()?->payable_amount ?? 0;
+        $emi = $invoice->childInvoices()->where('type_id',InvoiceType::SD_EMI->value)->first()?->payable_amount ?? 0;
         $rental = $invoice->childInvoices()->where('type_id',InvoiceType::RENTAL_CHARGES->value)->first();
 
         $billFrom = Carbon::parse($invoice->consumption->date_from);

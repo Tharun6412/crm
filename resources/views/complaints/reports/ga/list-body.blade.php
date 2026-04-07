@@ -5,14 +5,14 @@
                 <div>
                     <div class="input-group mb-3">
                         <span class="input-group-text">From Date</span>
-                        <input type="text" class="form-control" aria-label="From Date" name="date_from" id="date_from" value="{{ $date_from->format('d-m-Y') }}">
+                        <input type="text" class="form-control" aria-label="From Date" name="ga_date_from" id="ga_date_from" value="{{ $date_from->format('d-m-Y') }}">
                         <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
                     </div>
                 </div>
                 <div>
                     <div class="input-group mb-3">
                         <span class="input-group-text">To Date</span>
-                        <input type="text" class="form-control" aria-label="To Date" name="date_to" id="date_to" value="{{ $date_to->format('d-m-Y') }}">
+                        <input type="text" class="form-control" aria-label="To Date" name="ga_date_to" id="ga_date_to" value="{{ $date_to->format('d-m-Y') }}">
                         <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
                     </div>
                 </div>
@@ -80,7 +80,7 @@
         </tbody>
     </table>
 </div>
-@include('scripts.datepicker', ['list' => ['date_from', 'date_to']])
+@include('scripts.datepicker', ['list' => ['ga_date_from', 'ga_date_to']])
 @include('scripts.export-table', [
     'table' => 'ga-report',
     'button' => 'exportGBtn',

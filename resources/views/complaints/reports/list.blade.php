@@ -31,15 +31,27 @@
 {{-- Scripts --}}
 @push('scripts')
     <script>
+        const activeTab = "{{ $activeTab ?? 'ga' }}"; // 'ga', 'category', or 'deviation'
+        const tabMap = {
+            'ga':        '#nav-ga-tab',
+            'category':  '#nav-category-tab',
+            'deviation': '#nav-deviation-tab',
+        };
+
         $(document).ready(function () {
-            let firstTab = $('.nav-link[data-url]').first();
-            if (firstTab.length) {
-                firstTab.addClass('active');
-                let target = firstTab.data('bs-target');
-                $(target).addClass('show active');
-                // trigger AJAX load
-                loadTabData(firstTab.data('url'), target);
-            }
+            // Pick the tab from query param or fall back to 'ga'
+            let tabSelector = tabMap[activeTab] || tabMap['ga'];
+            let activeLink = $(tabSelector);
+            let target = activeLink.data('bs-target');
+            
+            $('a[data-bs-toggle="tab"]').removeClass('active');
+            $('.tab-pane').removeClass('show active');
+            // Manually activate tab link and pane (no Bootstrap API needed)
+            activeLink.addClass('active');
+            $(target).addClass('show active');
+
+            // Load AJAX data
+            loadTabData(activeLink.data('url'), target);
         });
         $('a[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {                
             let target = $(e.target).data('bs-target');

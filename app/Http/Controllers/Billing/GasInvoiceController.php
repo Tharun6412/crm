@@ -218,21 +218,6 @@ class GasInvoiceController extends Controller
         ];
         // 4. Calling of insertion method from the same controller. 
         $inv_resp = $this->invoiceInsert($consumer, $invoice);
-        if($inv_resp)
-        {
-            // Create payment record for THIS invoice
-            PaymentService::create([
-                'invoice_id'      => $inv_resp['invoice_id'],
-                'payment_date'    => date('Y-m-d'),
-                'payment_type_id' => PaymentType::CASH_PAYMENT->value,
-                'transaction_id'  => "CASH",
-                'amount'          => 0,
-                'balance'         => 0,
-                'status_id'       => PaymentStatus::COMPLETED->value,
-                'notes'           => NULL,
-                'created_by'      => Auth::id(),
-            ]);   
-        }
         return $inv_resp;
     }
 

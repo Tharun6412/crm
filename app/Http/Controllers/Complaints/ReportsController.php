@@ -16,7 +16,8 @@ class ReportsController extends Controller
      */
     public function complaints(Request $request)
     {
-        return view('complaints.reports.list');
+        $activeTab = $request->get('tab', 'ga'); // default: ga
+        return view('complaints.reports.list', compact('activeTab'));
     }
     /**
      *  GA based report for complaints as per the status.
@@ -25,8 +26,8 @@ class ReportsController extends Controller
     public function gaReport(Request $request)
     {
         // between dates initialisation.
-        $from = $request->date_from ? Carbon::parse($request->date_from)->startOfDay() : now()->startOfMonth();
-        $to = $request->date_to ? Carbon::parse($request->date_to)->endOfDay() : now()->endOfDay();
+        $from = $request->ga_date_from ? Carbon::parse($request->ga_date_from)->startOfDay() : now()->startOfMonth();
+        $to = $request->ga_date_to ? Carbon::parse($request->ga_date_to)->endOfDay() : now()->endOfDay();
         // getting all complaint statuses
         $statuses = MasterComplaintStatus::all();
         // preparing the select statement dynamically from statuses.
@@ -70,8 +71,8 @@ class ReportsController extends Controller
     public function categoryReport(Request $request)
     {
         // between dates initialisation.
-        $from = $request->date_from ? Carbon::parse($request->date_from)->startOfDay() : now()->startOfMonth();
-        $to = $request->date_to ? Carbon::parse($request->date_to)->endOfDay() : now()->endOfDay();
+        $from = $request->category_date_from ? Carbon::parse($request->category_date_from)->startOfDay() : now()->startOfMonth();
+        $to = $request->category_date_to ? Carbon::parse($request->category_date_to)->endOfDay() : now()->endOfDay();
 
         // fetching all GAs for GA filter.
         $gas = Ga::all();
@@ -122,8 +123,8 @@ class ReportsController extends Controller
      */
     public function deviationReport(Request $request)
     {
-        $from = $request->date_from ? Carbon::parse($request->date_from)->startOfDay() : now()->startOfMonth();
-        $to = $request->date_to ? Carbon::parse($request->date_to)->endOfDay() : now()->endOfDay();
+        $from = $request->deviation_date_from ? Carbon::parse($request->deviation_date_from)->startOfDay() : now()->startOfMonth();
+        $to = $request->deviation_date_to ? Carbon::parse($request->deviation_date_to)->endOfDay() : now()->endOfDay();
 
         $deviationReports = Ga::leftJoin('cmp_complaints', function ($join) use ($from, $to) {
                 $join->on('cmp_complaints.ga_id', '=', 'mst_gas.id')

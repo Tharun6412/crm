@@ -211,7 +211,7 @@
         {{-- Calls Dynamic Count --}}
         <div class="row g-2 mb-2 mt-2">
             <div class="col-sm-2">
-                <a href="#" target="_blank" class="text-body-secondary">
+                <a href="{{ url('calls/reports/complaints') }}?tab=ga" target="_blank" class="text-body-secondary">
                     <div class="p-3 reports-bg border border-3 border-light shadow-sm rounded-3">
                         <div class="d-flex align-items-center gap-2">
                             <div class="p-1 reports-bg rounded-4 py-2 px-3 shadow-sm"><i class="bi bi-geo-alt fs-4"></i></div>
@@ -221,7 +221,7 @@
                 </a>
             </div>
             <div class="col-sm-2">
-                <a href="#" target="_blank" class="text-body-secondary">
+                <a href="{{ url('calls/reports/complaints') }}?tab=category" target="_blank" class="text-body-secondary">
                     <div class="p-3 reports-bg border border-3 border-light shadow-sm rounded-3">
                         <div class="d-flex align-items-center gap-2">
                             <div class="p-1 reports-bg rounded-4 py-2 px-3 shadow-sm"><i class="bi bi-list-check fs-4"></i></div>
@@ -231,7 +231,7 @@
                 </a>
             </div>
             <div class="col-sm-2">
-                <a href="#" target="_blank" class="text-body-secondary">
+                <a href="{{ url('calls/reports/complaints') }}?tab=deviation" target="_blank" class="text-body-secondary">
                     <div class="p-3 reports-bg border border-3 border-light shadow-sm rounded-3">
                         <div class="d-flex align-items-center gap-2">
                             <div class="p-1 reports-bg rounded-4 py-2 px-3 shadow-sm"><i class="bi bi-signpost-split fs-4"></i></div>
