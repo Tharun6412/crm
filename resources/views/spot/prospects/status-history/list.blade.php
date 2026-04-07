@@ -11,16 +11,16 @@
     </div>
     <a class="visually-hidden" href="{{ url('spot/prospects/'.$prospect->id.'?reload=true&type=1') }}" data-custom-attr="value" id="reload-status">Hidden Link</a>
     <div class="table-responsive spot-table">
-        <table class="table table-bordered table-hover table-sm table-striped mb-0">
-            <thead class="table-success">
+        <table class="table table-bordered table-hover table-sm table-striped mb-0 align-middle">
+            <thead class="table-success align-middle">
                 <tr class="spot-table-bg">
                     <th width="1%" class="text-center">S.No.</th>
                     <th class="text-center">Stage</th>
                     <th class="text-center">Sub Stage</th>
                     <th class="text-center">Status</th>
                     <th>Notes</th>
-                    <th>Updated By</th>
-                    <th>Updated Date</th>
+                    <th nowrap>Updated By</th>
+                    <th nowrap>Updated Date</th>
                 </tr>
             </thead>
             <tbody>
@@ -31,9 +31,19 @@
                     @foreach ($prospect->statusHistory as $history)
                         <tr>
                             <td class="text-center">{{ $i++ }}</td>
-                            <td nowrap><x-spot.stages :stage="$history->stage" type="1" /></td>
-                            <td nowrap><x-spot.stages :stage="$history->stage" type="2" /></td>
-                            <td nowrap><x-spot.status :status="$history->status" /></td>
+                            <td class="text-center" nowrap>
+                                <x-spot.stages :stage="$history->stage" type="1" />
+                                {{-- {{ $history->stage->parent->name ?? $history->stage->name }} --}}
+                            </td>
+                            <td class="text-center" nowrap>
+                                {{-- {{ $history->stage->name }} --}}
+                                <x-spot.stages :stage="$history->stage" type="2" />                                
+                            </td>
+                            <td class="text-center" nowrap>
+                                {{-- {{ $history->status->name ?? '' }} --}}
+                                <x-spot.status :status="$history->status" />
+
+                            </td>
                             <td>{{ $history->notes }}</td>
                             <td>{{ $history->createdBy->first_name }}</td>
                             <td>{{ $history->created_at->format('d-m-Y') }}</td>

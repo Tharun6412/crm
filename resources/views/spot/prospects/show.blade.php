@@ -1,5 +1,5 @@
 {{-- View Prospect Details --}}
-<div class="modal-dialog modal-fullscreen modal-dialog-scrollable">
+<div class="modal-dialog modal-xl modal-dialog-scrollable">
     <div class="modal-content">
         <div class="modal-header">
             <h1 class="modal-title fs-5" id="exampleModalLabel">View Prospect Details</h1>
@@ -32,11 +32,135 @@
                 @endif
             </div>
             <div class="bd-callout bd-callout-primary bg-transparent card mt-0 border-primary mb-3">
-                <h4>Prospect Data&nbsp;-&nbsp;{{ $prospect->code }}</h4>
+                <h4 class="p-3 bg-warning-subtle rounded-2">Prospect Data&nbsp;-&nbsp;{{ $prospect->code }}</h4>
                 <div class="row">
-                    <div class="col-md-7 col-sm-12 col-xs-12">
+                    <div class="col-md-4 col-sm-12 col-xs-12 border-bottom">
+                        <label for="prospectcode" class="form-label fw-semibold">Prospect Code:</label>
+                        <p>{{ $prospect->code }}</p>
+                    </div>
+                    <div class="col-md-4 col-sm-12 col-xs-12 border-bottom">
+                        <label for="prospectname" class="form-label fw-semibold">Prospect Name:</label>
+                        <p>{{ $prospect->name }}</p>
+                    </div>
+                    <div class="col-md-4 col-sm-12 col-xs-12 border-bottom">
+                        <label for="prospecttype" class="form-label fw-semibold">Prospect Type:</label>
+                        <p>{{ $prospect->segment->name }}</p>
+                    </div>
+                    <div class="col-md-4 col-sm-12 col-xs-12 border-bottom pt-2">
+                        <label for="industrialarea" class="form-label fw-semibold">Industrial Area:</label>
+                        <p>{{ $prospect->industrialArea->name }}</p>
+                    </div>
+                    <div class="col-md-4 col-sm-12 col-xs-12 border-bottom pt-2">
+                        <label for="zone" class="form-label fw-semibold">Zone (GA):</label>
+                        <p>{{ $prospect->zone }}</p>
+                    </div>
+                    <div class="col-md-4 col-sm-12 col-xs-12 border-bottom pt-2">
+                        <label for="segment" class="form-label fw-semibold">Segment:</label>
+                        <p>{{ $prospect->firm->name }}</p>
+                    </div>
+                    <div class="col-md-4 col-sm-12 col-xs-12 border-bottom pt-2">
+                        <label for="fuelmajor" class="form-label fw-semibold">Current Fuel Major:</label>
+                        <p>{{ $prospect->fuelType->name }}</p>
+                    </div>
+                    <div class="col-md-4 col-sm-12 col-xs-12 border-bottom pt-2">
+                        <label for="fuelconsumption" class="form-label fw-semibold">Current fuel Consumption per day:</label>
+                        <p>
+                            {{ $prospect->fuel_consumption }}
+                            @switch($prospect->unit_id)
+                                @case(1)
+                                    {{ "Liters" }}
+                                    @break
+                                @case(2)
+                                    {{ "KGs" }}
+                                    @break
+                                @case(3)
+                                    {{ "Tons" }}
+                                    @break
+                                @default
+                            @endswitch
+                        </p>
+                    </div>
+                    <div class="col-md-4 col-sm-12 col-xs-12 border-bottom pt-2">
+                        <label for="scmd" class="form-label fw-semibold">Natural Gas Potential (SCMD):</label>
+                        <p>{{ $prospect->potential }}</p>
+                    </div>
+                    <div class="col-md-4 col-sm-12 col-xs-12 border-bottom pt-2">
+                        <label for="expected_date" class="form-label fw-semibold">Gas Service Expected Date:</label>
+                        <p>{{ $prospect->expected_date?->format('d-m-Y') }}</p>
+                    </div>
+                    <div class="col-md-4 col-sm-12 col-xs-12 border-bottom pt-2">
+                        <label for="industrial_gate" class="form-label fw-semibold">NG Pipeline available at the Industrial gate?</label>
+                        <p>
+                            @if (!empty($prospect->pipeline_availability))
+                                {{ $prospect->pipeline_availability=="2" ? "No" : "Yes" }}
+                            @endif
+                        </p>
+                    </div>
+                    <div class="col-md-4 col-sm-12 col-xs-12 border-bottom pt-2">
+                        <label for="Latitude" class="form-label fw-semibold">Latitude:</label>
+                        <p>{{ $prospect->latitude }}</p>
+                    </div>
+                    <div class="col-md-4 col-sm-12 col-xs-12 border-bottom pt-2">
+                        <label for="Longitude" class="form-label fw-semibold">Longitude:</label>
+                        <p>{{ $prospect->longitude }}</p>
+                    </div>
+                    <div class="col-md-4 col-sm-12 col-xs-12 border-bottom pt-2">
+                        <label for="geoarea" class="form-label fw-semibold">Geo Area:</label>
+                        <p>{{ $prospect->ga->name }}</p>
+                    </div>
+                    <div class="col-md-4 col-sm-12 col-xs-12 border-bottom pt-2">
+                        <label for="cluster" class="form-label fw-semibold">Cluster:</label>
+                        <p>{{ $prospect->cluster->name }}</p>
+                    </div>
+                    <div class="col-md-4 col-sm-12 col-xs-12 border-bottom pt-2">
+                        <label for="statename" class="form-label fw-semibold">State:</label>
+                        <p>{{ $prospect->state->name }}</p>
+                    </div>
+                    <div class="col-md-4 col-sm-12 col-xs-12 border-bottom pt-2">
+                        <label for="clusterhead" class="form-label fw-semibold">Cluster Head:</label>
+                        <p>{{ $prospect->clusterHead->first_name }}&nbsp;
+                            {{ $prospect->clusterHead->last_name }}</p>
+                    </div>
+                    <div class="col-md-4 col-sm-12 col-xs-12 border-bottom pt-2">
+                        <label for="gahead" class="form-label fw-semibold">GA Head:</label>
+                        <p>{{ $prospect->gaHead->first_name }}&nbsp;{{ $prospect->gaHead->last_name }}</p>
+                    </div>
+                    <div class="col-md-4 col-sm-12 col-xs-12 border-bottom pt-2">
+                        <label for="salesofficer" class="form-label fw-semibold">Sales Officer:</label>
+                        <p>{{ $prospect->salesOfficer->first_name }}&nbsp;
+                            {{ $prospect->salesOfficer->last_name }}</p>
+                    </div>                    
+                    <div class="col-md-4 col-sm-12 col-xs-12 border-bottom pt-2">
+                        <label for="stagestatus" class="form-label fw-semibold">Stage:</label>
+                        <p><x-spot.stages :stage="$prospect->stage" type="1" /></p>
+                    </div>                    
+                    <div class="col-md-4 col-sm-12 col-xs-12 border-bottom pt-2">
+                        <label for="substagestatus" class="form-label fw-semibold">Sub-stage:</label>
+                        <p><x-spot.stages :stage="$prospect->stage" type="2" /></p>
+                    </div>                    
+                    <div class="col-md-4 col-sm-12 col-xs-12 pt-2">
+                        <label for="stage_status" class="form-label fw-semibold">Status:</label>
+                        <p><x-spot.status :status="$prospect->statusType" /></p>
+                    </div>
+                    <div class="col-md-4 col-sm-12 col-xs-12 pt-2">
+                        <label for="lupdateddate" class="form-label fw-semibold">Last Status Updated Date:</label>
+                        <p>
+                            @php
+                                if (isset($prospect['status_date'])) {
+                                    $status_date = strtotime($prospect['status_date']);
+                                    $formatted_date = date('d-m-Y', $status_date);
+                                    $days_diff = floor((time() - $status_date) / (60 * 60 * 24));
+                                    echo $formatted_date . " (" . $days_diff . " days ago)";
+                                } else {
+                                    echo '--';
+                                }
+                            @endphp
+                        </p>
+                    </div>
+
+                    {{-- <div class="col-md-6 col-sm-12 col-xs-12 d-none">
                         <div class="table-responsive">
-                            <table class="table table-borderless mb-3">
+                            <table class="table table-borderless mb-3 d-none">
                                 <tbody>
                                     <tr>
                                         <td width="270" class="text-end">Prospect Code</td>
@@ -74,7 +198,7 @@
                                         <td>{{ $prospect->fuelType->name }}</td>
                                     </tr>
                                     <tr>
-                                        <td class="text-end">Current fuel Comsumption per day</td>
+                                        <td class="text-end">Current fuel Consumption per day</td>
                                         <td>:</td>
                                         <td>{{ $prospect->fuel_consumption }}
                                             @switch($prospect->unit_id)
@@ -160,7 +284,7 @@
                             </table>
                         </div>
                     </div>
-                    <div class="col-md-5 col-sm-12 col-xs-12">
+                    <div class="col-md-6 col-sm-12 col-xs-12 d-none">
                         <div class="table-responsive">
                             <table class="table table-borderless mb-3">
                                 <tbody>
@@ -223,7 +347,7 @@
                                 </tbody>
                             </table>
                         </div>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
             <div id="prospect-documents">
@@ -247,4 +371,3 @@
         </div>
     </div>
 </div>
-

@@ -143,23 +143,16 @@
                             <td>{{ $prospect->fuelType->name }}</td>
                             <td class="text-end">{{ $prospect->potential }}</td>
                             <td>{{ $prospect->expected_date?->format('d-m-Y') }}</td>
-<<<<<<< Updated upstream
-                            <td nowrap>
-                                <x-spot.stages :stage="$prospect->stage" type="1" mode="full"/>
+                            <td nowrap class="text-center">
+                                <x-spot.stages :stage="$prospect->stage" type="1"/>
                             </td>
-                            <td nowrap>
-                                <x-spot.stages :stage="$prospect->stage" type="2" mode="full"/>
+                            <td nowrap class="text-center">
+                                <x-spot.stages :stage="$prospect->stage" type="2"/>
                             </td>
-                            <td nowrap>
-                                <x-spot.status :status="$prospect->statusType" mode="full"/>
+                            <td nowrap class="text-center">
+                                <x-spot.status :status="$prospect->statusType"/>
                             </td>
                             <td>{{ $prospect->status_date->format('d-m-Y') }}</td>
-=======
-                            <td>{{ $prospect->stage->parent->name ?? '' }}</td>
-                            <td>{{ $prospect->stage->name }}</td>
-                            <td nowrap>{{ $prospect->statusType->name }}</td>
-                            <td>{{ $prospect->status_date?->format('d-m-Y') }}</td>
->>>>>>> Stashed changes
                             <td>
                                 {{-- Prospects Actions Dropdown --}}
                                 <div class="dropdown">
@@ -300,7 +293,7 @@
     function reloadProspects() {
         $.get("{{ url('spot/prospects') }}", function(data) {
             $('#prospects-list').html(data);
-        });
+        }); 
     }
 </script>
 @include('scripts.link-modal')
