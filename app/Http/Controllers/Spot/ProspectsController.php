@@ -47,7 +47,7 @@ class ProspectsController extends Controller
         $sortBy = ($request->get('sortBy')) ? $request->get('sortBy') : 'created_at';
         $sortOr = ($request->get('sortOr')) ? $request->get('sortOr') : 'desc';
         $records = ($request->get('records')) ? $request->get('records') : 10;
-        $query = Prospects::with(['stage'])->when($request->has('search_key'), function($q) use($request) {
+        $query = Prospects::with(['ga','segment','industrialArea','fuelType','stage', 'statusType'])->when($request->has('search_key'), function($q) use($request) {
             $q->where(function($q) use($request) {
                 $q->where('name', 'like', '%'.$request->get('search_key').'%');
                 $q->orWhere('code', 'like', '%'.$request->get('search_key').'%');

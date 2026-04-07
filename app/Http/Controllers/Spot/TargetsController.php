@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers\Spot;
 
+use App\Enums\SegmentType;
 use App\Http\Controllers\Controller;
 use App\Models\Master\Ga;
 use App\Models\Master\Segment;
@@ -21,8 +22,8 @@ class TargetsController extends Controller
             $data['y_start'] = Carbon::create($data['target_year'], 4, 1);
             $data['y_end'] = $data['y_start']->copy()->addYear()->subMonth()->endOfMonth();
             $data['geo_areas'] = Ga::all();
-            $data['segments'] = Segment::whereIn('id', [2,3])->get(); 
-            $data['targets'] = Target::whereBetween('target_date', [$data['y_start'], $data['y_end']])->get();
+            $data['segments'] = Segment::whereIn('id', [SegmentType::COMMERCIAL->value,SegmentType::INDUSTRIAL->value])->get(); 
+            $data['targets'] = Target::with(['ga'])->whereBetween('target_date', [$data['y_start'], $data['y_end']])->get();
             return view('spot.targets.list-body', $data);
         }
         // dd($data['targets']);

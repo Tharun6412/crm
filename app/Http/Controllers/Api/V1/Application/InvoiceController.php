@@ -34,6 +34,7 @@ class InvoiceController extends Controller
         ->select('id', 'type_id', 'invoice_number', 'invoice_date', 'total_amount', 'payable_amount', 'paid_amount', 'balance_amount', 'status_id', 'due_date', 'created_at')
         ->where('consumer_id', $consumer_id)
         ->whereNotIn('type_id', [InvoiceType::GAS_BILL->value])
+        ->orderBy('created_at', 'desc')
         ->paginate(10);
 
         $invoices = $this->apiPagination($invoices_q);
@@ -62,7 +63,7 @@ class InvoiceController extends Controller
             'tax:id,name',
             'items:id,invoice_id,item_id,description,quantity,unit_price,total_price',
             'items.item:id,name',
-            'consumption:id,invoice_id,meter_id,date_from,date_to,prev_reading,curr_reading,old_consumption,net_consumption,unit_price,total_price,cf',
+            'consumption:id,invoice_id,meter_id,date_from,date_to,prev_reading,curr_reading,consumption,old_consumption,net_consumption,unit_price,total_price,cf',
             'consumption.consumptionDetails',
             'creditNotes',
             'childInvoices:id,invoice_number,invoice_date,payable_amount,paid_amount,balance_amount,status_id,parent_invoice_id',

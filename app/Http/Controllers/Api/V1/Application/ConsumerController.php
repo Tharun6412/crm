@@ -23,7 +23,7 @@ class ConsumerController extends Controller
     {
         if(!empty($request->key) OR !empty($request->cns_status) OR !empty($request->connection_type_id) OR !empty($request->geo_area) OR !empty($request->segments)) {            
             $consumers_q = Consumer::with(['ga:id,code,name', 'status:id,name'])->select('id', 'crn', 'fname', 'lname', 'ga_id', 'status_id', 'segment_id', 'connection_type_id')
-                ->when((!$request->user()->isAdmin() AND !$request->user()->isSuperAdmin()), function ($q) use($request) {
+                ->when((!isApiAdmin() AND !isApiSuperAdmin() AND !isApiFullAccess()), function ($q) use($request) {
                     $q->whereIn('ga_id', $request->user()->ga()->pluck('ga_id')->toArray());
                 })
                 ->when($request->has('key'), function ($q) use($request) {
@@ -70,7 +70,7 @@ class ConsumerController extends Controller
             'activeMeter:id,consumer_id,meter_no,meter_serial_no,initial_reading,status',
             'activeMeter.meterStatus:id,name',
             'consumerData:id,consumer_id,lat,lng'
-        ])->when((!$request->user()->isApiAdmin() AND !$request->user()->isApiSuperAdmin() AND !$request->user()->isApiFullAccess()), function ($q) use($request) {
+        ])->when((!isApiAdmin() AND !isApiSuperAdmin() AND !isApiFullAccess()), function ($q) use($request) {
             $q->whereIn('ga_id', $request->user()->ga()->pluck('ga_id')->toArray());
         })->find($id);
         $consumer->mobile = maskNumber($consumer->phone);

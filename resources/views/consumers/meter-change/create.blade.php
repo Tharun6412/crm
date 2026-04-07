@@ -29,9 +29,9 @@
                         <div class="col-sm-2 text-end fw-semibold">Meter Status : </div>
                         <div class="col-sm-4">{{ $consumer_meter->meterStatus->name }}</div>
                         <div class="col-sm-3 text-end fw-semibold">Install Date : </div>
-                        <div class="col-sm-3">{{ $consumer_meter->install_date->format('d-m-Y') }}</div>
+                        <div class="col-sm-3">{{ $consumer_meter?->install_date?->format('d-m-Y') }}</div>
                         <div class="col-sm-2 text-end fw-semibold">Installed By : </div>
-                        <div class="col-sm-4">{{ $consumer_meter->installBy->name }}</div>
+                        <div class="col-sm-4">{{ $consumer_meter?->installBy?->name }}</div>
                         <div class="col-sm-3 text-end fw-semibold">Previous Reading<span class="text-danger">*</span>&nbsp;:</div>
                         <div class="col-sm-3">
                             <div class="input-group">

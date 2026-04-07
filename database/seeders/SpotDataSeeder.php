@@ -34,8 +34,6 @@ class SpotDataSeeder extends Seeder
             ['id' => 17, 'name' => 'Lose', 'type' => 1, 'parent_id' => 5, 'position' => 2, 'icon' => null, 'color' => null],
             ['id' => 18, 'name' => 'Execution', 'type' => 1, 'parent_id' => 6, 'position' => 1, 'icon' => null, 'color' => null],
             ['id' => 19, 'name' => 'Commission', 'type' => 1, 'parent_id' => 6, 'position' => 2, 'icon' => null, 'color' => null],
-            ['id' => 20, 'name' => 'Closed Lost', 'type' => 2, 'parent_id' => null, 'position' => 7, 'icon' => null, 'color' => null],
-            ['id' => 21, 'name' => 'Rejected', 'type' => 2, 'parent_id' => null, 'position' => 8, 'icon' => null, 'color' => null],
         ]);
         // Roles
         DB::table('spt_status')->insert([
@@ -45,6 +43,8 @@ class SpotDataSeeder extends Seeder
             ['id' => 4, 'name' => 'Closed Won'],
             ['id' => 5, 'name' => 'Hold'],
             ['id' => 6, 'name' => 'Cancel'],
+            ['id' => 7, 'name' => 'Closed Lost'],
+            ['id' => 8, 'name' => 'Rejected'],
         ]);
     }
 }

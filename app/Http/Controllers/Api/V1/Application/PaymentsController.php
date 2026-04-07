@@ -58,11 +58,12 @@ class PaymentsController extends Controller
                                     $q2->where('name', 'like', '%' . $request->key . '%');
                             });
                         });
-                        if(!empty($ga_ids) AND (!$request->user()->isApiAdmin() AND !$request->user()->isApiSuperAdmin() AND !$request->user()->isApiFullAccess())) {
+                        if(!empty($ga_ids) AND ((!isApiAdmin() AND !isApiSuperAdmin() AND !isApiFullAccess()))) {
                             $q->whereIn('ga_id', $ga_ids);
                         }
                     });
             })
+            ->orderBy('created_at', 'desc')
             ->paginate(20);
         $invoices = $this->apiPagination($invoices_q);
         // Response

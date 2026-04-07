@@ -101,7 +101,7 @@ class ComplaintsController extends Controller
     {
         $sortBy = ($request->get('sortBy')) ? $request->get('sortBy') : 'created_at';
         $sortOr = ($request->get('sortOr')) ? $request->get('sortOr') : 'desc';
-        $records = ($request->get('records')) ? $request->get('records') : 2;
+        $records = ($request->get('records')) ? $request->get('records') : 10;
         $complaints = Complaint::where('consumer_id', $id)->paginate($records)->withQueryString();
         return view('consumers.consumers.show-calls', ['complaints' => $complaints]);
     }
@@ -399,12 +399,17 @@ class ComplaintsController extends Controller
         // Fetch Complaint Details
         $complaint = Complaint::find($request->id);
         $phone_no = $complaint->consumer->phone ?? $complaint->phone;
+        if($complaint->consumer) {
+            $consumer_info = $complaint->consumer;
+        }else {
+            $consumer_info = $complaint;
+        }
         if(empty($phone_no)){
             return response()->json('OTP not Sent');
         }
         $otp = OtpService::create($phone_no, OtpPurpose::COMPLAINT_CLOSE->value, OtpModule::USER->value);
         // Sms Integration
-        $sms_response = SmsService::dispatch($complaint->consumer, new ComplaintCloseOtpSmsNotification(['otp' => $otp]));
+        $sms_response = SmsService::dispatch($consumer_info, new ComplaintCloseOtpSmsNotification(['otp' => $otp]));
         return response()->json('OTP Sent Successfully to your mobile number.');
     }
 
@@ -427,12 +432,18 @@ class ComplaintsController extends Controller
         session()->put("complaints.$request->id", $count);
         // Fetch Complaint Details
         $complaint = Complaint::find($request->id);
+        if($complaint->consumer) {
+            $consumer_info = $complaint->consumer;
+        }else {
+            $consumer_info = $complaint;
+        }
         $phone_no = $complaint->consumer->phone ?? $complaint->phone;
         if(empty($phone_no)){
             return response()->json(['message' => 'OTP not Sent']);
         }
+
         $otp = OtpService::create($phone_no, OtpPurpose::COMPLAINT_CLOSE->value, OtpModule::USER->value);
-        $sms_response = SmsService::dispatch($complaint->consumer, new ComplaintCloseOtpSmsNotification(['otp' => $otp]));
+        $sms_response = SmsService::dispatch($consumer_info, new ComplaintCloseOtpSmsNotification(['otp' => $otp]));
         return response()->json([
             'message' => 'OTP Sent Successfully to your mobile number.',
             'count' => $count,
