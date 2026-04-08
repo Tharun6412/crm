@@ -6,7 +6,7 @@
             <button class="button-toggle-menu">
                 <i class="bi bi-list"></i>
             </button>
-            <span style="width: 210px;">
+            <span style="width: 182px;">
                 <a href="{{ url('/') }}" title="Home">
                     <img src="{{ asset('img/meghagas_pulse.png') }}" alt="logo" class="img-fluid">
                 </a>

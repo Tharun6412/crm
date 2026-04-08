@@ -62,7 +62,7 @@
                 @endphp
                 @foreach ($transactions as $transaction)
                     <tr>
-                        <td class="text-center"{ $sno + $loop->iteration }}</td>
+                        <td class="text-center">{{ $sno + $loop->iteration }}</td>
                         <td><x-auth.link href="{{ url('consumers/' . $transaction->consumer->id) }}" target="_blank">{{ $transaction->consumer->crn }}</x-auth.link></td>
                         <td>{{ $transaction->consumer->name }}</td>
                         <td nowrap>{{ $transaction->consumer->ga->name }}</td>
