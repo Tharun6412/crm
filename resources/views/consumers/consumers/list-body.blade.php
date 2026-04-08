@@ -86,9 +86,9 @@
                         <td>{{ $loop->iteration }}</td>
                         <td nowrap>
                             <i class="bi bi-{{ ($consumer->connection_type_id == 1) ? 'speedometer2' : 'wifi'}}"></i>
-                            <x-auth.link href="{{ url('consumers/' . $consumer->id) }}">
+                            <a href="{{ url('consumers/' . $consumer->id) }}">
                                 {{ $consumer->crn ?? $consumer->t_crn }}
-                            </x-auth.link>
+                            </a>
                         </td>
                         {{-- <td>{{ $consumer->connectType->name }}</td> --}}
                         <td width="20%">{{ $consumer->name }}</td>

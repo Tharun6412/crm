@@ -37,8 +37,15 @@ class TransactionsController extends Controller
     public function index(Request $request)
     {
         // Get all transactions
-        $transactions = PaymentTransaction::
-            when($request->has('payment_modules'), function ($q) use($request) {
+        $transactions = PaymentTransaction::with([
+                'consumer',
+                'consumer.ga',
+                'module',
+                'gateway',
+                'status',
+            ])
+            ->select('id', 'consumer_id', 'payment_module_id', 'gateway_id', 'transaction_date', 'transaction_id', 'amount', 'transaction_status_id')
+            ->when($request->has('payment_modules'), function ($q) use($request) {
                 $q->whereIn('payment_module_id', $request->payment_modules);
             })
             ->when($request->has('payment_gateways'), function ($q) use($request) {
