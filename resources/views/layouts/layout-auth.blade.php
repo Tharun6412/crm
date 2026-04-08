@@ -62,7 +62,7 @@
                 <div class="col-lg-6 mb-5 mb-lg-0" style="z-index: 10">
                     <h1 class="my-5 display-5 fw-bold ls-tight" style="color: hsl(218, 81%, 95%)">
                         MeghaGas<sup>&reg;</sup><br>
-                        <span class="text-primary">Welcome to Portal!</span>
+                        <span class="text-primary">Welcome to Pulse.!</span>
                     </h1>
                     <div class="fs-sm text-secondary">&copy;{{ date('Y') }}&nbsp;Megha City Gas Distribution Private Limited.</div>
                 </div>
@@ -72,8 +72,8 @@
                     {{-- Card --}}
                     <div class="card bg-glass">
                         <div class="card-body px-4 py-5 px-md-5">
-                                <div class="img-responsive w-75 mb-3">
-                                    <img src="{{ asset('img/logo.png') }}" alt="Logo" class="img-fluid">
+                                <div class="img-responsive w-50 mb-3">
+                                    <img src="{{ asset('img/meghagas_pulse.png') }}" alt="Logo" class="img-fluid">
                                 </div>
                             @yield('page-content')
                         </div>
