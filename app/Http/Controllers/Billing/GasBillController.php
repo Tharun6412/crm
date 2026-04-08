@@ -87,6 +87,6 @@ class GasBillController extends Controller
             'emi' => $emi,
             'rental' => $rental,
             'billHistory' => $billHistory
-            ]);
+        ]);
     }
 }

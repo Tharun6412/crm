@@ -16,10 +16,11 @@
             <div class="row g-2">
                 <div class="col-md-12">
                     <div class="border rounded-top p-2 bg-white">
-                        <img src="{{ asset('img/consumer-iimage.png') }}" alt="MeghaGas" class="img-fluid img-thumb">
+                        <img src="{{ asset('img/consumer-iimage.png') }}" alt="MeghaGas" class="img-fluid img-thumb opacity-25">
                         <div class="mt-3 text-center">
-                            <h4 class="m-0">{{ $consumer->crn }}</h4>
-                            <h5 class="m-0 text-secondary">{{ $consumer->name }}</h5>
+                            <h4 class="m-1 text-primary">{{ $consumer->crn }}</h4>
+                            <h5 class="m-1 text-success">{{ $consumer->name }}</h5>
+                            <h5 class="m-0 text-secondary"><i class="bi bi-geo-alt"></i>&nbsp;{{ $consumer->ga->name ?? '' }}</h5>
                         </div>
                     </div>
                 </div>
@@ -33,8 +34,13 @@
                                 <i class="bi bi-cash-stack"></i>&nbsp;SD Details
                             </a>
                             <a href="#" class="list-group-item list-group-item-action list-group-item-light" id="nav-mdata-tab" data-bs-toggle="tab" data-bs-target="#nav-mdata" role="tab" aria-controls="nav-mdata" aria-selected="false">
-                                <i class="bi bi-box"></i>&nbsp;Meter Data
+                                <i class="bi bi-speedometer2"></i>&nbsp;Meter Data
                             </a>
+                            @if ($consumer->connection_type_id == 2)
+                                <a href="#" class="list-group-item list-group-item-action" id="nav-recharge-tab" data-bs-toggle="tab" data-bs-target="#nav-recharge" data-url="{{ url('consumers/prepaid/consumerRechargeList/' . $consumer->id) }}" role="tab" aria-controls="nav-recharge" aria-selected="true">
+                                    <i class="bi bi-wallet2"></i>&nbsp;Recharge History
+                                </a>
+                            @endif
                             <a href="#" class="list-group-item list-group-item-action list-group-item-light" id="nav-bills-tab" data-bs-toggle="tab" data-bs-target="#nav-bills" data-url="{{ url('consumers/invoices/' . $consumer->id . '/1') }}" role="tab" aria-controls="nav-bills" aria-selected="true">
                                 <i class="bi bi-files"></i>&nbsp;Bills
                             </a>
@@ -56,11 +62,6 @@
                             <a href="#" class="list-group-item list-group-item-action" id="nav-doc-tab" data-bs-toggle="tab" data-bs-target="#nav-doc" data-url="{{ url('consumers/consumerDocs/' . $consumer->id) }}" role="tab" aria-controls="nav-doc" aria-selected="false">
                                 <i class="bi bi-files"></i>&nbsp;Documents
                             </a>
-                            @if ($consumer->connection_type_id == 2)
-                                <a href="#" class="list-group-item list-group-item-action" id="nav-recharge-tab" data-bs-toggle="tab" data-bs-target="#nav-recharge" data-url="{{ url('consumers/prepaid/consumerRechargeList/' . $consumer->id) }}" role="tab" aria-controls="nav-recharge" aria-selected="true">
-                                    <i class="bi bi-wifi"></i>&nbsp;Recharge History
-                                </a>
-                            @endif
                         </div>
                     </div>
                 </div>
