@@ -3,7 +3,7 @@
     use \App\Enums\SpotStatus;
 @endphp
 <a class="visually-hidden" href="{{ url('spot/prospects/'.$prospect->id.'?reload=true&type=5') }}" data-custom-attr="value" id="reload-comments">Hidden Link</a>
-<div class="bd-callout bd-callout-primary bg-transparent card mt-0 border-primary mb-3">
+<div class="bd-callout bd-callout-primary bg-transparent card mt-0 border-warning mb-3">
     <h4>Comments</h4>
     @if ($prospect->commentsHistory->count() > 0)
         <ul class="list-group border-top-0">

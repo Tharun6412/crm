@@ -19,16 +19,36 @@
 </div>
 {{-- transactions list --}}
 <div class="table-responsive" style="min-height: 500px;">
-    <table class="table table-bordered table-hover">
-        <thead class="table-success">
+    <table class="table table-bordered table-hover table-striped align-middle">
+        <thead class="table-success align-middle">
             <tr>
                 <th width="1%" nowrap>S No</th>
                 <th>CRN</th>
                 <th>Name</th>
-                <th>GA<x-master.gaFilter class="float-end" /></th>
-                <th>Module<x-payments.paymentModuleFilter class="float-end" /></th>
-                <th>Gateway<x-payments.paymentGatewayFilter class="float-end" /></th>
-                <th>Date<x-master.date-filter /></th>
+                <th>
+                    <div class="d-flex flex-row gap-2">
+                        <div>GA</div> 
+                        <div><x-master.gaFilter class="float-end"/></div>
+                    </div>
+                </th>
+                <th>
+                    <div class="d-flex flex-row gap-2">
+                        <div>Module</div> 
+                        <div><x-payments.paymentModuleFilter class="float-end"/></div>
+                    </div>
+                </th>
+                <th>
+                    <div class="d-flex flex-row gap-2">
+                        <div>Gateway</div> 
+                        <div><x-payments.paymentGatewayFilter class="float-end"/></div>
+                    </div>
+                </th>
+                <th>
+                    <div class="d-flex flex-row gap-2">
+                        <div>Date</div> 
+                        <div><x-master.date-filter class="float-end"/></div>
+                    </div>
+                </th>
                 <th>TXN ID</th>
                 <th class="text-end">Amount</th>
                 <th>Status</th>
@@ -42,15 +62,15 @@
                 @endphp
                 @foreach ($transactions as $transaction)
                     <tr>
-                        <td>{{ $sno + $loop->iteration }}</td>
+                        <td class="text-center"{ $sno + $loop->iteration }}</td>
                         <td><x-auth.link href="{{ url('consumers/' . $transaction->consumer->id) }}" target="_blank">{{ $transaction->consumer->crn }}</x-auth.link></td>
                         <td>{{ $transaction->consumer->name }}</td>
-                        <td>{{ $transaction->consumer->ga->name }}</td>
-                        <td>{{ $transaction->module->name ?? '' }}</td>
-                        <td>{{ $transaction->gateway->gateway ?? '' }}</td>
-                        <td>{{ $transaction->transaction_date?->format('d-m-Y') }}</td>
-                        <td><a href="{{ url('payments/transactions/' . $transaction->id) }}" class="dropdown-item link-canvas">{{ $transaction->transaction_id ?? '' }}</a></td>
-                        <td class="text-end"><i class="bi bi-currency-rupee"></i>{{ numberFormat($transaction->amount ?? 0, 2) }}</td>
+                        <td nowrap>{{ $transaction->consumer->ga->name }}</td>
+                        <td nowrap>{{ $transaction->module->name ?? '' }}</td>
+                        <td nowrap>{{ $transaction->gateway->gateway ?? '' }}</td>
+                        <td nowrap>{{ $transaction->transaction_date?->format('d-m-Y') }}</td>
+                        <td nowrap><a href="{{ url('payments/transactions/' . $transaction->id) }}" class="dropdown-item link-canvas text-primary">{{ $transaction->transaction_id ?? '' }}</a></td>
+                        <td class="text-end" nowrap><i class="bi bi-currency-rupee"></i>{{ numberFormat($transaction->amount ?? 0, 2) }}</td>
                         <td>
                             <x-payments.transaction-status :status="$transaction->status"/>
                         </td>
