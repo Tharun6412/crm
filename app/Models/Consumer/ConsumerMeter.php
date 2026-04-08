@@ -59,14 +59,14 @@ class ConsumerMeter extends Model
      */
     public function installBy():BelongsTo
     {
-        return $this->belongsTo(User::class, 'install_by')->withDefault();
+        return $this->belongsTo(User::class, 'install_by');
     }
     /**
      * Realtion with CreatedBy
      */
     public function createdBy():BelongsTo
     {
-        return $this->belongsTo(User::class, 'created_by')->withDefault();
+        return $this->belongsTo(User::class, 'created_by');
     }
 
     /**
@@ -74,7 +74,7 @@ class ConsumerMeter extends Model
      */
     public function updatedBy():BelongsTo
     {
-        return $this->belongsTo(User::class, 'updated_by')->withDefault();
+        return $this->belongsTo(User::class, 'updated_by');
     }
 
     /**
@@ -82,7 +82,7 @@ class ConsumerMeter extends Model
      */
     public function file():BelongsTo
     {
-        return $this->belongsTo(Documents::class, 'file_id')->withDefault();
+        return $this->belongsTo(Documents::class, 'file_id');
     }
 
     /**
@@ -90,7 +90,7 @@ class ConsumerMeter extends Model
      */
     public function meterStatus():BelongsTo
     {
-        return $this->belongsTo(ConsumerMeterStatus::class, 'status')->withDefault();
+        return $this->belongsTo(ConsumerMeterStatus::class, 'status');
     }
 
     /**

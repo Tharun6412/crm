@@ -44,7 +44,7 @@ class ConsumerDocument extends Model
      */
     public function file():BelongsTo
     {
-        return $this->belongsTo(Documents::class, 'file_id')->withDefault();
+        return $this->belongsTo(Documents::class, 'file_id');
     }
 
     /**
@@ -52,7 +52,7 @@ class ConsumerDocument extends Model
      */
     public function docType():BelongsTo
     {
-        return $this->belongsTo(DocumentTypes::class, 'doc_type_id')->withDefault();
+        return $this->belongsTo(DocumentTypes::class, 'doc_type_id');
     }
 
     /**
@@ -60,6 +60,6 @@ class ConsumerDocument extends Model
      */
     public function status() :BelongsTo
     {
-        return $this->belongsTo(MasterConsumerStatus::class, 'status_id')->withDefault();
+        return $this->belongsTo(MasterConsumerStatus::class, 'status_id');
     }
 }

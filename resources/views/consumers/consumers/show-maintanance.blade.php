@@ -26,7 +26,7 @@
                                 <td>{{ $meter->meter_serial_no }}</td>
                                 <td class="text-end">{{ numberFormat($meter->initial_reading ?? 0, 3) }}</td>
                                 <td>{{ $meter->install_date?->format('d-m-Y') }}</td>
-                                <td>{{ $meter->installBy->name }}</td>
+                                <td>{{ $meter->installBy?->name }}</td>
                                 <td>
                                     @if ($meter->meterStatus->name == 'Active')
                                         <span class="badge rounded-pill text-bg-primary">Active</span>

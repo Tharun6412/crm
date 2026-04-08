@@ -80,7 +80,7 @@ class Complaint extends Model
      */
     public function segment() :BelongsTo
     {
-        return $this->belongsTo(ComplaintSegment::class, 'segment_id')->withDefault();
+        return $this->belongsTo(ComplaintSegment::class, 'segment_id');
     }
 
     /**
@@ -88,7 +88,7 @@ class Complaint extends Model
      */
     public function consumer():BelongsTo
     {
-        return $this->belongsTo(Consumer::class, 'consumer_id')->withDefault();
+        return $this->belongsTo(Consumer::class, 'consumer_id');
     }
 
     /**
@@ -96,21 +96,21 @@ class Complaint extends Model
      */
     public function category():BelongsTo
     {
-        return $this->belongsTo(ComplaintCategory::class, 'category_id')->withDefault();
+        return $this->belongsTo(ComplaintCategory::class, 'category_id');
     }
     /**
      * Relation with Media
      */
     public function media():BelongsTo
     {
-        return $this->belongsTo(ComplaintMedia::class, 'media_id')->withDefault();
+        return $this->belongsTo(ComplaintMedia::class, 'media_id');
     }
     /**
      * Relation with Priority
      */
     public function priority():BelongsTo
     {
-        return $this->belongsTo(ComplaintPriority::class, 'priority_id')->withDefault();
+        return $this->belongsTo(ComplaintPriority::class, 'priority_id');
     }
 
     /**
@@ -118,7 +118,7 @@ class Complaint extends Model
      */
     public function status(): BelongsTo
     {
-        return $this->belongsTo(MasterComplaintStatus::class, 'status_id')->withDefault();
+        return $this->belongsTo(MasterComplaintStatus::class, 'status_id');
     }
 
     /**
@@ -133,7 +133,7 @@ class Complaint extends Model
      */
     public function type(): BelongsTo
     {
-        return $this->belongsTo(ComplaintType::class, 'type_id')->withDefault();
+        return $this->belongsTo(ComplaintType::class, 'type_id');
     }
 
     /**
@@ -141,14 +141,14 @@ class Complaint extends Model
      */
     public function createdBy():BelongsTo
     {
-        return $this->belongsTo(User::class, 'created_by')->withDefault();
+        return $this->belongsTo(User::class, 'created_by');
     }
     /**
      * Realtion with UpdatedBy
      */
     public function updatedBy():BelongsTo
     {
-        return $this->belongsTo(User::class, 'updated_by')->withDefault();
+        return $this->belongsTo(User::class, 'updated_by');
     }
 
     /**
@@ -172,7 +172,7 @@ class Complaint extends Model
      */
     public function state():BelongsTo
     {
-        return $this->belongsTo(State::class, 'state_id')->withDefault();
+        return $this->belongsTo(State::class, 'state_id');
     }
 
     /**
@@ -180,7 +180,7 @@ class Complaint extends Model
      */
     public function ga():BelongsTo
     {
-        return $this->belongsTo(Ga::class, 'ga_id')->withDefault();
+        return $this->belongsTo(Ga::class, 'ga_id');
     }
 
     /**
@@ -188,7 +188,7 @@ class Complaint extends Model
      */
     public function district():BelongsTo
     {
-        return $this->belongsTo(District::class, 'district_id')->withDefault();
+        return $this->belongsTo(District::class, 'district_id');
     }
 
     /**

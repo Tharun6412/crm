@@ -59,7 +59,7 @@ class PaymentTransaction extends Model
      */
     public function module(): BelongsTo
     {
-        return $this->belongsTo(PaymentModule::class, 'payment_module_id')->withDefault();
+        return $this->belongsTo(PaymentModule::class, 'payment_module_id');
     }
 
     /**
@@ -75,7 +75,7 @@ class PaymentTransaction extends Model
      */
     public function gateway(): BelongsTo
     {
-        return $this->belongsTo(PaymentGateway::class, 'gateway_id')->withDefault();
+        return $this->belongsTo(PaymentGateway::class, 'gateway_id');
     }
 
     /**
@@ -99,7 +99,7 @@ class PaymentTransaction extends Model
      */
     public function status(): BelongsTo
     {
-        return $this->belongsTo(PaymentTransactionStatus::class, 'transaction_status_id')->withDefault();
+        return $this->belongsTo(PaymentTransactionStatus::class, 'transaction_status_id');
     }
 
     /**
@@ -107,7 +107,7 @@ class PaymentTransaction extends Model
      */
     public function updatedBy(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'updated_by')->withDefault();
+        return $this->belongsTo(User::class, 'updated_by');
     }
 
     /**

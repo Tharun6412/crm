@@ -143,8 +143,8 @@
                             <td>{{ $prospect->fuelType->name }}</td>
                             <td class="text-end">{{ $prospect->potential }}</td>
                             <td>{{ $prospect->expected_date?->format('d-m-Y') }}</td>
-                            <td nowrap class="text-center">
-                                <x-spot.stages :stage="$prospect->stage" type="1"/>
+                            <td nowrap>
+                                <x-spot.stages :stage="$prospect->stage" type="1" mode="full"/>
                             </td>
                             <td nowrap class="text-center">
                                 <x-spot.stages :stage="$prospect->stage" type="2"/>
@@ -152,7 +152,7 @@
                             <td nowrap class="text-center">
                                 <x-spot.status :status="$prospect->statusType"/>
                             </td>
-                            <td>{{ $prospect->status_date->format('d-m-Y') }}</td>
+                            <td>{{ $prospect->status_date?->format('d-m-Y') }}</td>
                             <td>
                                 {{-- Prospects Actions Dropdown --}}
                                 <div class="dropdown">

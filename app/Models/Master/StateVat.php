@@ -29,6 +29,6 @@ class StateVat extends Model
      */
     public function state() : BelongsTo
     {
-        return $this->belongsTo(State::class, 'state_id')->withDefault();
+        return $this->belongsTo(State::class, 'state_id');
     }
 }

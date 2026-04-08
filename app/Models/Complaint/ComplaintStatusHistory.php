@@ -41,7 +41,7 @@ class ComplaintStatusHistory extends Model
      */
     public function status() :BelongsTo
     {
-        return $this->belongsTo(MasterComplaintStatus::class, 'status_id')->withDefault();
+        return $this->belongsTo(MasterComplaintStatus::class, 'status_id');
     }
 
     /**
@@ -49,6 +49,6 @@ class ComplaintStatusHistory extends Model
      */
     public function createdBy():BelongsTo
     {
-        return $this->belongsTo(User::class, 'created_by')->withDefault();
+        return $this->belongsTo(User::class, 'created_by');
     }
 }

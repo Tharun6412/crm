@@ -68,7 +68,7 @@ class ConsumerRefund extends Model
      */
     public function paymentType():BelongsTo
     {
-        return $this->belongsTo(PaymentType::class, 'payment_type_id')->withDefault();
+        return $this->belongsTo(PaymentType::class, 'payment_type_id');
     }
 
     /**
@@ -76,7 +76,7 @@ class ConsumerRefund extends Model
      */
     public function status():BelongsTo
     {
-        return $this->belongsTo(RefundStatus::class, 'status_id')->withDefault();
+        return $this->belongsTo(RefundStatus::class, 'status_id');
     }
 
     /**
@@ -84,7 +84,7 @@ class ConsumerRefund extends Model
      */
     public function createdBy():BelongsTo
     {
-        return $this->belongsTo(User::class, 'created_by')->withDefault();
+        return $this->belongsTo(User::class, 'created_by');
     }
     /**
      * Relation with Refund history Status

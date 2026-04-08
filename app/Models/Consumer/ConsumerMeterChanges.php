@@ -63,7 +63,7 @@ class ConsumerMeterChanges extends Model
      */
     public function meter():BelongsTo
     {
-        return $this->belongsTo(ConsumerMeter::class, 'meter_id')->withDefault();
+        return $this->belongsTo(ConsumerMeter::class, 'meter_id');
     }
 
     /**
@@ -71,7 +71,7 @@ class ConsumerMeterChanges extends Model
      */
     public function newMeter():BelongsTo
     {
-        return $this->belongsTo(ConsumerMeter::class, 'new_meter_id')->withDefault();
+        return $this->belongsTo(ConsumerMeter::class, 'new_meter_id');
     }
 
     /**
@@ -79,7 +79,7 @@ class ConsumerMeterChanges extends Model
      */
     public function technician():BelongsTo
     {
-        return $this->belongsTo(User::class, 'technician_id')->withDefault();
+        return $this->belongsTo(User::class, 'technician_id');
     }
 
     /**
@@ -87,7 +87,7 @@ class ConsumerMeterChanges extends Model
      */
     public function createdBy():BelongsTo
     {
-        return $this->belongsTo(User::class, 'created_by')->withDefault();
+        return $this->belongsTo(User::class, 'created_by');
     }
 
     /**
@@ -95,7 +95,7 @@ class ConsumerMeterChanges extends Model
      */
     public function file():BelongsTo
     {
-        return $this->belongsTo(Documents::class, 'file_id')->withDefault();
+        return $this->belongsTo(Documents::class, 'file_id');
     }
 
 }

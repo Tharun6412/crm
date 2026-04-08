@@ -23,7 +23,7 @@
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $ledger->created_at->format('d-m-Y H:i') }}</td>
-                                <td>{{ $ledger->description }}&nbsp;{{ $ledger->legible->inv_number }}&nbsp;</td>
+                                <td>{{ $ledger->description }}&nbsp;{{ $ledger->legible?->inv_number }}&nbsp;</td>
                                 <td class="text-end text-danger">{{ ($ledger->credit > 0) ? '-' . numberFormat($ledger->credit, 2) : '' }}</td>
                                 <td class="text-end text-success">{{ ($ledger->debit > 0) ? '+' . numberFormat($ledger->debit, 2) : '' }}</td>
                                 <td class="text-end">{{ $ledger->balance }}</td>

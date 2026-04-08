@@ -40,7 +40,7 @@ class ComplaintAssign extends Model
      */
     public function assigned():BelongsTo
     {
-        return $this->belongsTo(User::class, 'assigned_to')->withDefault();
+        return $this->belongsTo(User::class, 'assigned_to');
     }
 
     /**
@@ -48,6 +48,6 @@ class ComplaintAssign extends Model
      */
     public function createdBy():BelongsTo
     {
-        return $this->belongsTo(User::class, 'created_by')->withDefault();
+        return $this->belongsTo(User::class, 'created_by');
     }
 }

@@ -31,7 +31,7 @@ class ComplaintDocument extends Model
      */
     public function complaint() :BelongsTo
     {
-        return $this->belongsTo(Complaint::class, 'complaint_id')->withDefault();
+        return $this->belongsTo(Complaint::class, 'complaint_id');
     }
 
     /**
@@ -39,6 +39,6 @@ class ComplaintDocument extends Model
      */
     public function file():BelongsTo
     {
-        return $this->belongsTo(Documents::class, 'file_id')->withDefault();
+        return $this->belongsTo(Documents::class, 'file_id');
     }
 }

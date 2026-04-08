@@ -45,7 +45,7 @@ class MasterConsumerScheme extends Model
      */
     public function segment():BelongsTo
     {
-        return $this->belongsTo(Segment::class, 'segment_id')->withDefault();
+        return $this->belongsTo(Segment::class, 'segment_id');
     }
 
     /**
@@ -53,7 +53,7 @@ class MasterConsumerScheme extends Model
      */
     public function connectionType(): BelongsTo
     {
-        return $this->belongsTo(ConnectionType::class)->withDefault();
+        return $this->belongsTo(ConnectionType::class);
     }
 
     /**
@@ -61,7 +61,7 @@ class MasterConsumerScheme extends Model
      */
     public function schemePayment():BelongsTo
     {
-        return $this->belongsTo(ConsumerSchemePayment::class, 'scheme_payment_id')->withDefault();
+        return $this->belongsTo(ConsumerSchemePayment::class, 'scheme_payment_id');
     }
 
     /**
