@@ -17,7 +17,7 @@
                 <td><span class="fw-semibold">GA :</span>&nbsp;{{ $complaint->ga->name }} ({{ $complaint->ga->code }})</td>
             </tr>
             <tr>
-                <td><span class="fw-semibold">Phone :</span>&nbsp;{{ maskNumber($complaint->phone) }}</td>
+                <td><span class="fw-semibold">Phone :</span>&nbsp;{{ maskNumber($complaint?->phone) }}</td>
             </tr>  
         </table>
     </div>

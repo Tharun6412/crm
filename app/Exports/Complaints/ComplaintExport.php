@@ -77,17 +77,17 @@ class ComplaintExport implements FromQuery, WithHeadings, WithMapping
     {
         $this->i++; //Increment serial Number
         $now = Carbon::now();
-        if ($complaint->category->resolution_type == 1) {
+        if ($complaint->category?->resolution_type == 1) {
             $difference = ceil(abs($now->diffInDays(\Carbon\Carbon::parse($complaint->estimated_closed_at))))."D";
         }else {
-            $difference = numberFormat(abs($now->diffInHours(\Carbon\Carbon::parse($complaint->estimated_closed_at))), 2)."H";
+            $difference = numberFormat(abs($now->diffInHours(\Carbon\Carbon::parse($complaint?->estimated_closed_at))), 2)."H";
         }
         return [
             $this->i,
             $complaint->ga->name ?? '',
             $complaint->code,
-            $complaint->category->parent->name,
-            $complaint->category->name,
+            $complaint->category?->parent->name,
+            $complaint->category?->name,
             $complaint->consumer->crn,
             ($complaint->consumer_id > 0) ? $complaint->consumer->name : $complaint->name,
             $complaint->segment->name,
@@ -95,8 +95,8 @@ class ComplaintExport implements FromQuery, WithHeadings, WithMapping
             $complaint->estimated_closed_at?->format('d-m-y H:i'),
             dateFormat($complaint->closed_at) ?? '',
             $difference,
-            $complaint->priority->name,
-            $complaint->status->name,
+            $complaint->priority?->name,
+            $complaint->status?->name,
         ];
     }
 }

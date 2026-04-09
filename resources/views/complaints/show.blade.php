@@ -25,7 +25,7 @@
                 <div class="col-sm-4">{{ $complaint->category?->name }}</div>
                 <div class="col-sm-2 text-end fw-semibold">Resolution : </div>
                 <div class="col-sm-4">
-                    {{ $complaint->category->resolution }}&nbsp;{{ ($complaint->category->resolution_type == 1) ? "Days" : "Hours" }}
+                    {{ $complaint->category?->resolution }}&nbsp;{{ ($complaint->category?->resolution_type == 1) ? "Days" : "Hours" }}
                 </div>
                 {{-- <div class="col-sm-6"></div> --}}
                 <div class="col-sm-2 text-end fw-semibold">Rating : </div>
@@ -50,9 +50,9 @@
             @if ($complaint->assign)
                 <div class="row g-2 mt-1">
                     <div class="col-sm-2 text-end fw-semibold">Assigned To : </div>
-                    <div class="col-sm-4">{{ $complaint->assign->assigned->first_name }}&nbsp;{{ $complaint?->assign->assigned->last_name }}&nbsp;({{ $complaint->assign->assigned->emp_id }})</div>
+                    <div class="col-sm-4">{{ $complaint->assign->assigned?->first_name }}&nbsp;{{ $complaint?->assign->assigned?->last_name }}&nbsp;({{ $complaint->assign->assigned?->emp_id }})</div>
                     <div class="col-sm-2 text-end fw-semibold">Date : </div>
-                    <div class="col-sm-4">{{ $complaint->assign->created_at->format('d-m-Y') }}</div>
+                    <div class="col-sm-4">{{ $complaint?->assign->created_at?->format('d-m-Y') }}</div>
                 </div>
             @endif
 
@@ -76,7 +76,7 @@
                                 <td><x-complaint.status :status="$status_val->status"/></td>
                                 <td>{{ $status_val->notes }}</td>
                                 <td>{{ $status_val->createdBy?->first_name }}&nbsp;{{ $status_val->createdBy?->last_name }}</td>
-                                <td>{{ $status_val->created_at->format('d-m-Y') }}</td>
+                                <td>{{ $status_val->created_at?->format('d-m-Y') }}</td>
                             </tr>
                         @endforeach
                     </tbody>

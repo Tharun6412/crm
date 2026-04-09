@@ -2,7 +2,8 @@
 @props(['status' => null, 'mode' => null])
 
 @php
-    switch ($status->id) {
+    $statusId = $status->id ?? null;
+    switch ($statusId) {
         case 1:
             $class = 'secondary';
             $icon = 'check2-square';
