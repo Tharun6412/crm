@@ -20,10 +20,10 @@ class RechargeService
             'recharge_request' => [
                 'ca_num' => $transaction_data['ca_num'],
                 'amount' => $transaction_data['amount'],
-                'ref_num' => $transaction_data['ref_num'],
+                'ref_num' => $transaction_data['utr_num'],
                 'utr_num' => $transaction_data['utr_num'],
                 'trans_date' => Carbon::now()->toDateString(),
-                'mobile_num' => $transaction_data['mobile_num'],
+                'mobile_num' => '+91' . $transaction_data['mobile_num'],
             ]
         ];
         //-- Send data to Polaris HES
