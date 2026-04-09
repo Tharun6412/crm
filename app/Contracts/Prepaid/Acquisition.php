@@ -62,6 +62,7 @@ class Acquisition
                 ]]
             ]
         );
+        // return $consumer_details;
         // Call API
         $response = Polaris::postData(PrepaidApi::acquisition()->value, $consumer_details);
         return $response;

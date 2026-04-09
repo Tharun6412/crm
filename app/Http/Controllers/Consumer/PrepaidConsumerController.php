@@ -109,15 +109,36 @@ class PrepaidConsumerController extends Controller
         // 3. Load the contract and call the API.
         $acquisition = new Acquisition;
         $response = $acquisition->push($consumer);
+
+        // dd($response);
+
         // 4. Success case
         if ($response->successful()) {
-            // 5. update the HES status as sent.
-            $consumer->prepaidData->update([
-                'hes_status' => 1,
-                'hes_date'   => now()->toDateString(),
-            ]);
-            // 6. return the success response
-            return response()->json(['success' => 'Consumer details sent to HES successfully!']);
+            // // 5. update the HES status as sent.
+            // $consumer->prepaidData->update([
+            //     'hes_status' => 1,
+            //     'hes_date'   => now()->toDateString(),
+            // ]);
+            // // 6. return the success response
+            // return response()->json(['success' => 'Consumer details sent to HES successfully!']);
+            $responseData = $response->json();
+
+            // Check the actual status from response body
+            $hesStatus = $responseData['Integ_Response'][0]['status'] ?? null;
+
+            if ($hesStatus === 'success') {
+                $consumer->prepaidData->update([
+                    'hes_status' => 1,
+                    'hes_date'   => now()->toDateString(),
+                ]);
+                return response()->json(['success' => 'Consumer details sent to HES successfully!']);
+            } else {
+                return response()->json([
+                    'error'   => 'Consumer details not send to HES.',
+                    'message' => $responseData['Integ_Response'][0]['message'] ?? 'Unknown error',
+                    'error_code' => $responseData['Integ_Response'][0]['error_code'] ?? null,
+                ], 422);
+            }
         }
         else {
             // 7. Failure response.
