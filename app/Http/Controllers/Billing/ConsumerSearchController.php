@@ -23,9 +23,20 @@ class ConsumerSearchController extends Controller
             $consumers = Consumer::when((!isAdmin() AND !isSuperAdmin() AND !isFullAccess()), function ($q) {
                 $q->whereIn('ga_id', session('user')['gas']);
             })
-            ->select('id', 'crn', 'fname', 'lname', 'ga_id', 'status_id', 'created_by')
+            ->select('id', 'crn', 'fname', 'lname', 'ga_id', 'status_id', 'created_by', 'phone')
             ->when($request->filled('search'), function($q) use($request) {
-                $q->whereAny(['crn', 'fname', 'lname'], 'like', '%'.$request->search.'%');
+                $search = $request->search;
+                $q->where(function ($query) use ($search) {
+                // Search CRN
+                $query->where('crn', 'like', "%{$search}%")
+                    ->orWhere('phone', 'like', "%{$search}%")
+                    // OR search in meter relation
+                    ->orWhereHas('activeMeter', function ($q1) use ($search) {
+                        $q1->where(function ($sub) use ($search) {
+                            $sub->where('meter_no', 'like', "%{$search}%");
+                        });
+                    });
+                });
             })
             ->where('status_id', ConsumerStatus::ACTIVATE->value)
             ->latest()->limit(20)->get();

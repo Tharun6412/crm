@@ -10,93 +10,114 @@ use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 
-class ComplaintExport implements FromQuery, WithHeadings, WithMapping 
+
+class ComplaintExport implements FromQuery, WithHeadings, WithMapping
 {
     use Exportable;
-    /**
-     * Construct Method
-     */
+
     protected $request;
     protected $i = 0;
+
     public function __construct($request)
     {
         $this->request = $request;
     }
-    /**
-    * @return query
-    */
+
     public function query()
     {
-        $sortBy = ($this->request->get('sortBy')) ? $this->request->get('sortBy') : 'created_at';
-        $sortOr = ($this->request->get('sortOr')) ? $this->request->get('sortOr') : 'desc';
-        $complaints = Complaint::when((!isAdmin() AND !isSuperAdmin()), function ($q) {
-                $q->whereIn('ga_id', session('user')['gas']);
-            })
+        $sortBy = $this->request->get('sortBy', 'created_at');
+        $sortOr = $this->request->get('sortOr', 'desc');
+
+        return Complaint::query()
+            ->from('cmp_complaints')
+            // JOINS (ONLY ONCE)
+            ->leftJoin('cns_consumers', 'cns_consumers.id', '=', 'cmp_complaints.consumer_id')
+            ->leftJoin('mst_segments', 'mst_segments.id', '=', 'cmp_complaints.segment_id')
+            ->leftJoin('mst_cmp_status', 'mst_cmp_status.id', '=', 'cmp_complaints.status_id')
+            ->leftJoin('mst_cmp_priorities', 'mst_cmp_priorities.id', '=', 'cmp_complaints.priority_id')
+            ->leftJoin('mst_cmp_categories as sub_cat', 'sub_cat.id', '=', 'cmp_complaints.category_id')
+            ->leftJoin('mst_cmp_categories as parent_cat', 'parent_cat.id', '=', 'sub_cat.parent_id')
+            ->leftJoin('mst_gas', 'mst_gas.id', '=', 'cmp_complaints.ga_id')
+            // SELECT ONLY REQUIRED FIELDS
+            ->select([
+                'cmp_complaints.code',
+                'cmp_complaints.created_at',
+                'cmp_complaints.closed_at',
+                'cmp_complaints.estimated_closed_at',
+                'mst_gas.name as ga_name',
+                'mst_segments.name as segment_name',
+                'mst_cmp_status.name as status_name',
+                'mst_cmp_status.name as priority_name',
+                'parent_cat.name as category_name',
+                'sub_cat.name as subcategory_name',
+                'sub_cat.resolution_type',
+                'cns_consumers.crn',
+                'cns_consumers.fname as consumer_name',
+                'cmp_complaints.name as manual_name',
+                'cmp_complaints.consumer_id'
+            ])
+
             ->when($this->request->filled('key'), function ($q) {
-                $q->whereAny(['code'], 'like', '%' . $this->request->key . '%');
-                $q->orWhereHas('consumer', function ($subQuery) {
-                    $subQuery->where('crn', 'like', '%' . $this->request->key . '%')
-                            ->orWhere('name', 'like', '%' . $this->request->key . '%');
+                $key = $this->request->key;
+
+                $q->where(function ($query) use ($key) {
+                    $query->where('cmp_complaints.code', 'like', "%{$key}%")
+                        ->orWhere('cns_consumers.crn', 'like', "%{$key}%")
+                        ->orWhere('cns_consumers.name', 'like', "%{$key}%");
                 });
             })
-            ->when($this->request->has('segment_id'), function($q) {
-                $q->whereIn('segment_id', $this->request->segment_id);
-            })
-            ->when($this->request->has('cmp_status'), function($q) {
-                $q->whereIn('status_id', $this->request->cmp_status);
-            })
-            ->when($this->request->filled('subcategory'), function($q) {
-                $q->whereIn('category_id', $this->request->subcategory);
-            })
-            ->when($this->request->filled('category') && !$this->request->filled('subcategory'), function($q) {
+            ->when(!empty($this->request->segment_id), fn($q) =>
+                $q->whereIn('cmp_complaints.segment_id', $this->request->segment_id))
+            ->when(!empty($this->request->cmp_status), fn($q) =>
+                $q->whereIn('cmp_complaints.status_id', $this->request->cmp_status))
+            ->when(!empty($this->request->subcategory), fn($q) =>
+                $q->whereIn('cmp_complaints.category_id', $this->request->subcategory))
+            ->when(!empty($this->request->category) && empty($this->request->subcategory), function ($q) {
                 $subIds = ComplaintCategory::whereIn('parent_id', $this->request->category)->pluck('id');
-                $q->whereIn('category_id', $subIds);
+                $q->whereIn('cmp_complaints.category_id', $subIds);
             })
-            ->when($this->request->has('geo_area'), function($q) {
-                $q->whereIn('ga_id', $this->request->geo_area);
+            ->when(!empty($this->request->geo_area), fn($q) =>
+                $q->whereIn('cmp_complaints.ga_id', $this->request->geo_area))
+            ->when(!empty($this->request->date_from) && !empty($this->request->date_to), function ($q) {
+                $q->whereBetween('cmp_complaints.created_at', [
+                    Carbon::createFromFormat('d-m-Y', $this->request->date_from)->startOfDay(),
+                    Carbon::createFromFormat('d-m-Y', $this->request->date_to)->endOfDay()
+                ]);
             })
-            ->when((!empty($request->date_from) and !empty($request->date_to)), function($q) {
-                $q->whereBetween('created_at', [Carbon::createFromFormat('d-m-Y', $this->request->date_from)->startOfDay()->toDateTimeString(), Carbon::createFromFormat('d-m-Y', $this->request->date_to)->endOfDay()->toDateTimeString()]);
-            })
-            ->orderBy($sortBy, $sortOr);
-        return $complaints;
+            ->orderBy("cmp_complaints.$sortBy", $sortOr);
     }
 
-    /**
-     * Headings 
-     */
-    public function headings():array
+    public function headings(): array
     {
-        return ['S.No', 'GA', 'Complaint Number', 'Category', 'Sub Category', 'CRN', 'Name', 'Segment', 'Raised Date' , 'Estimated Close Date', 'Closed Date', 'Deviation', 'Priority', 'Status'];
+        return ['S.No', 'GA', 'Complaint Number', 'Category', 'Sub Category', 'CRN', 'Name', 'Segment', 'Raised Date', 'Estimated Close Date', 'Closed Date', 'Deviation', 'Priority', 'Status'];
     }
 
-    /**
-     * Mapping [Loop the data from the query]
-     */
-    public function map($complaint): array
+    public function map($row): array
     {
-        $this->i++; //Increment serial Number
+        $this->i++;
         $now = Carbon::now();
-        if ($complaint->category?->resolution_type == 1) {
-            $difference = ceil(abs($now->diffInDays(\Carbon\Carbon::parse($complaint->estimated_closed_at))))."D";
-        }else {
-            $difference = numberFormat(abs($now->diffInHours(\Carbon\Carbon::parse($complaint?->estimated_closed_at))), 2)."H";
+
+        if ($row->resolution_type == 1) {
+            $difference = ceil(abs($now->diffInDays(Carbon::parse($row?->estimated_closed_at)))) . "D";
+        } else {
+            $difference = number_format(abs($now->diffInHours(Carbon::parse($row?->estimated_closed_at))), 2) . "H";
         }
+
         return [
             $this->i,
-            $complaint->ga->name ?? '',
-            $complaint->code,
-            $complaint->category?->parent->name,
-            $complaint->category?->name,
-            $complaint->consumer->crn,
-            ($complaint->consumer_id > 0) ? $complaint->consumer->name : $complaint->name,
-            $complaint->segment->name,
-            dateFormat($complaint->created_at),
-            $complaint->estimated_closed_at?->format('d-m-y H:i'),
-            dateFormat($complaint->closed_at) ?? '',
+            $row->ga_name,
+            $row->code,
+            $row->category_name,
+            $row->subcategory_name,
+            $row->crn,
+            ($row->consumer_id > 0) ? $row->consumer_name : $row->manual_name,
+            $row->segment_name,
+            dateFormat($row->created_at),
+            optional($row->estimated_closed_at)->format('d-m-y H:i'),
+            dateFormat($row->closed_at),
             $difference,
-            $complaint->priority?->name,
-            $complaint->status?->name,
+            $row->priority_name,
+            $row->status_name,
         ];
     }
 }

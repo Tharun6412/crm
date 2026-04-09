@@ -121,6 +121,6 @@ class ConsumerController extends Controller
      */
     public function consumerExport(Request $request)
     {
-        return (new ConsumerExport($request))->download('consumers.xlsx');
+        return (new ConsumerExport($request))->download('consumers.csv');
     }
 }

@@ -542,7 +542,7 @@ class ComplaintsController extends Controller
      */
     public function complaintExport(Request $request)
     {
-        return (new ComplaintExport($request))->download('complaints.xlsx');
+        return (new ComplaintExport($request))->download('complaints.csv');
     }
 
     /**

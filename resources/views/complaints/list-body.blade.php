@@ -93,12 +93,12 @@
                         <td class="text-center">{{ $i++ }}</td>
                         <td nowrap>{{ $complaint->ga->name ?? '' }}</td>
                         <td nowrap>
-                            <x-auth.link href="{{ url('calls/'.$complaint?->id) }}" class="link-modal">{{ $complaint?->code }}</x-auth.link>
+                            <a href="{{ url('calls/'.$complaint?->id) }}" class="link-modal">{{ $complaint?->code }}</a>
                         </td>
                         <td nowrap>{{ $complaint->category?->parent->name }}</td>
                         <td nowrap>{{ $complaint->category?->name }}</td>
                         <td nowrap>
-                            <x-auth.link href="{{ url('consumers/' . $complaint?->consumer_id) }}" target="_blank">{{ $complaint->consumer?->crn }}</x-auth.link>
+                            <a href="{{ url('consumers/' . $complaint?->consumer_id) }}" target="_blank">{{ $complaint->consumer?->crn }}</a>
                         </td>
                         <td nowrap>{{ ($complaint->consumer_id > 0) ? $complaint->consumer?->name : $complaint?->name }}</td>
                         <td nowrap>{{ $complaint->segment?->name }}</td>

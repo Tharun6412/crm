@@ -28,6 +28,15 @@
                         <h4 class="mb-0">Consumer Acitivity</h4>
                         <div class="row g-1">
                             <div class="col-auto">
+                                <div class="row">
+                                    <label class="form-label">Status Date</label>
+                                    <div class="input-group">
+                                        <input type="text" name="status_date" id="status_date" class="form-control" placeholder="DD-MM-YYYY" value="{{ request()->status_date }}">
+                                        <label for="status_date" class="input-group-text"><i class="bi bi-calendar3"></i></label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-auto">
                                 <select name="connection_type_id" id="connection_type_id" class="form-select">
                                     <option value="">All Connections</option>
                                     @foreach ($connection_types as $item)
@@ -73,5 +82,5 @@
 {{-- Scripts --}}
 @push('scripts')
     @include('scripts.ajax-form-search', ['form' => 'report-cns-activity'])
-    @include('scripts.datepicker', ['list' => ['date_from', 'date_to']])
+    @include('scripts.datepicker', ['list' => ['date_from', 'date_to', 'status_date']])
 @endpush

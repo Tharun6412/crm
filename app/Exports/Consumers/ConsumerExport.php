@@ -29,7 +29,15 @@ class ConsumerExport implements FromQuery, WithHeadings, WithMapping
     {
         $sortBy = ($this->request->get('sortBy')) ? $this->request->get('sortBy') : 'created_at';
         $sortOr = ($this->request->get('sortOr')) ? $this->request->get('sortOr') : 'desc';
-        $consumers = Consumer::when((!isAdmin() AND !isSuperAdmin()), function ($q) {
+        $consumers = Consumer::with([
+            'segment:id,name',
+            'connectType:id,name',
+            'ga:id,name',
+            'district:id,name',
+            'ca:id,name',
+            'area:id,name',
+            'status:id,name',
+        ])->when((!isAdmin() AND !isSuperAdmin() AND !isFullAccess()), function ($q) {
                 $q->whereIn('ga_id', session('user')['gas']);
             })
             ->when($this->request->filled('key'), function ($q) {
@@ -68,9 +76,10 @@ class ConsumerExport implements FromQuery, WithHeadings, WithMapping
             ->when($this->request->has('cns_status'), function ($q) {
                 $q->whereIn('status_id', $this->request->cns_status);
             })
-            ->when($this->request->has('status_id'), function($q) {
-                $q->where('status_id', $this->request->status_id);
-            })->orderBy($sortBy, $sortOr);
+            ->when((!empty($request->date_from) and !empty($request->date_to)), function($q) {
+                $q->whereBetween('created_at', [Carbon::createFromFormat('d-m-Y', $this->request->date_from)->startOfDay()->toDateTimeString(), Carbon::createFromFormat('d-m-Y', $this->request->date_to)->endOfDay()->toDateTimeString()]);
+            })
+            ->orderBy($sortBy, $sortOr);
         return $consumers;
     }
 
@@ -79,7 +88,7 @@ class ConsumerExport implements FromQuery, WithHeadings, WithMapping
      */
     public function headings():array
     {
-        return ['S.No', 'CRN', 'Connection Type', 'Name', 'Segment', 'Status', 'GA', 'Scheme', 'Added Date'];
+        return ['S.No', 'CRN', 'Connection Type', 'Name', 'Segment', 'Status', 'GA', 'Scheme', 'Status Date'];
     }
 
     /**
@@ -90,14 +99,14 @@ class ConsumerExport implements FromQuery, WithHeadings, WithMapping
         $this->i++; //Increment serial Number
         return [
             $this->i,
-            $consumer->crn ?? '',
-            $consumer->connectType->name,
-            $consumer->name,
-            $consumer->segment->name,
-            $consumer->status->name,
-            $consumer->ga->name,
-            $consumer->scheme->scheme->name,
-            dateFormat($consumer->created_at),
+            $consumer?->crn ?? '',
+            $consumer->connectType?->name,
+            $consumer?->name,
+            $consumer->segment?->name,
+            $consumer->status?->name,
+            $consumer->ga?->name,
+            $consumer->scheme?->scheme?->name,
+            $consumer->created_at ? dateFormat($consumer->created_at) : '',
         ];
     }
 }

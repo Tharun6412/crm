@@ -7,6 +7,8 @@
                         <th width="1%" nowrap>S.No</th>
                         <th>CRN</th>
                         <th>Name</th>
+                        <th>Phone</th>
+                        <th>Meter Number</th>
                         <th>Status</th>
                         <th>Added By</th>
                         <th>Actions</th>
@@ -21,6 +23,8 @@
                             <td>{{ $i++ }}</td>
                             <td><x-auth.link href="{{ url('consumers/'.$consumer->id) }}">{{ $consumer->crn }}</x-auth.link></td>
                             <td>{{ $consumer->name }}</td>
+                            <td>{{ maskNumber($consumer->phone) }}</td>
+                            <td>{{ $consumer->activeMeter?->meter_no }}</td>
                             <td><x-consumer.status :status="$consumer->status" /></td>
                             <td>{{ $consumer->createdBy->name }}</td>
                             <td>

@@ -19,12 +19,21 @@ class ConsumerSearchController extends Controller
             if(empty($request->search)) {
                 return response()->json(['message' => 'Please enter consumer number'], 422);
             }
-            $consumers = Consumer::select('id', 'crn', 'fname', 'lname', 'ga_id', 'status_id', 'created_by')
+            $consumers = Consumer::select('id', 'crn', 'fname', 'lname', 'ga_id', 'status_id', 'created_by', 'phone')
                 ->when(!(isAdmin() OR isSuperAdmin() OR isFullAccess()), function ($q) {
                     $q->whereIn('ga_id', session('user')['gas']);
                 })
-                ->when($request->has('search'), function($q) use($request) {
-                    $q->where('crn', 'like', '%'.$request->search.'%');
+                ->when($request->filled('search'), function($q) use($request) {
+                    $search = $request->search;
+                    $q->where(function ($query) use ($search) {
+                    // Search CRN
+                    $query->where('crn', 'like', "%{$search}%")
+                        ->orWhere('phone', 'like', "%{$search}%")
+                        // OR search in meter relation
+                        ->orWhereHas('activeMeter', function ($q1) use ($search) {
+                            $q1->where('meter_no', 'like', "%{$search}%");
+                        });
+                    });
                 })
                 ->latest()->limit(20)->get();
             // Ajax Response

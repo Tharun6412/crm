@@ -32,6 +32,7 @@ return new class extends Migration
             $table->date('due_date')->nullable();
             $table->foreignId('status_id')->index()->nullable()->constrained(table:'mst_bil_status')->noActionOnDelete()->noActionOnUpdate();
             $table->foreignId('parent_invoice_id')->index()->nullable()->constrained(table:'bil_invoices')->nullOnDelete();
+            $table->tinyInteger('prepaid')->default(1);
             $table->foreignId('created_by')->nullable()->index()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();
             $table->foreignId('updated_by')->nullable()->index()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();
             $table->timestamps();

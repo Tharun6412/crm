@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Reports;
 
+use App\Enums\ConsumerStatus as EnumsConsumerStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Consumer\Consumer;
 use App\Models\Consumer\ConsumerStatus;
@@ -60,10 +61,17 @@ class ConsumerOnboardingReportController extends Controller
         // Prepare params
         $from = Carbon::parse($request->date_from)->startOfDay();
         $to   = Carbon::parse($request->date_to)->endOfDay();
+        $status_date = NULL;
+        if($request->filled('status_date')) {
+            $status_date = Carbon::parse($request->status_date)->startOfDay();
+        }
         // Get data
         $consumer_status_result = ConsumerStatus::join('cns_consumers', 'cns_consumers.id', '=', 'cns_consumer_status.consumer_id')
             ->select('cns_consumers.ga_id', 'cns_consumer_status.status_id', DB::raw('COUNT(cns_consumer_status.status_id) as count'))
             ->whereBetween('cns_consumer_status.created_at', [$from, $to])
+            ->when(!empty($status_date), function($q) use($status_date) {
+                $q->where('cns_consumer_status.created_at','>=', $status_date);
+            })
             ->when(($request->has('connection_type_id') AND !empty($request->connection_type_id)), function($q) use($request) {
                 $q->where('cns_consumers.connection_type_id', $request->connection_type_id);
             })
@@ -71,7 +79,6 @@ class ConsumerOnboardingReportController extends Controller
                 $q->where('cns_consumers.segment_id', $request->segment_id);
             })
             ->groupBy('cns_consumers.ga_id', 'cns_consumer_status.status_id')->get();
-
         $geo_areas = Ga::where('status', 1)->orderBy('position')->get();
 
         // Prepare data

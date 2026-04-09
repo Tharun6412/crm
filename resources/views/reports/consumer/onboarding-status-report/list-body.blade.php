@@ -10,7 +10,7 @@
                         <th>Connection Type</th>
                         <th>Name</th>
                         <th>Status</th>
-                        <th>Added Date</th>
+                        <th>Status Date</th>
                         <th>Added By</th>
                     </tr>
                 </thead>
