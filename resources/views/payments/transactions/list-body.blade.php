@@ -51,7 +51,7 @@
                 </th>
                 <th>TXN ID</th>
                 <th class="text-end">Amount</th>
-                <th>Status</th>
+                <th>Status<x-payments.transactionStatusFilter class="float-end"/></th>
                 <th width="2%" nowrap>Actions</th>
             </tr>
         </thead>
@@ -68,7 +68,7 @@
                         <td nowrap>{{ $transaction->consumer->ga->name }}</td>
                         <td nowrap>{{ $transaction->module->name ?? '' }}</td>
                         <td nowrap>{{ $transaction->gateway->gateway ?? '' }}</td>
-                        <td nowrap>{{ $transaction->transaction_date?->format('d-m-Y') }}</td>
+                        <td nowrap>{{ $transaction->created_at?->format('d-m-Y H:i') }}</td>
                         <td nowrap><a href="{{ url('payments/transactions/' . $transaction->id) }}" class="dropdown-item link-canvas text-primary">{{ $transaction->transaction_id ?? '' }}</a></td>
                         <td class="text-end" nowrap><i class="bi bi-currency-rupee"></i>{{ numberFormat($transaction->amount ?? 0, 2) }}</td>
                         <td>
@@ -81,8 +81,12 @@
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="actionDropdown">
                                     <li>
-                                        <a href="{{ url('payments/transactions/' . $transaction->id) }}" class="dropdown-item link-canvas">View</a>
-                                        <x-auth.link href="{{ url('payments/transactions/' . $transaction->id.'/edit') }}" class="dropdown-item link-modal" action="edit">Edit</x-auth.link>
+                                        <a href="{{ url('payments/transactions/' . $transaction->id) }}" class="dropdown-item link-canvas">
+                                            <i class="bi bi-chevron-right"></i>&nbsp;View
+                                        </a>
+                                        <x-auth.link href="{{ url('payments/transactions/' . $transaction->id.'/edit') }}" class="dropdown-item link-modal" action="edit">
+                                            <i class="bi bi-chevron-right"></i>&nbsp;Edit
+                                        </x-auth.link>
                                     </li>
                                 </ul>
                             </div>

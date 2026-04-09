@@ -44,13 +44,14 @@ class TransactionsController extends Controller
                 'gateway',
                 'status',
             ])
-            ->select('id', 'consumer_id', 'payment_module_id', 'gateway_id', 'transaction_date', 'transaction_id', 'amount', 'transaction_status_id')
+            ->select(['id', 'consumer_id', 'payment_module_id', 'gateway_id', 'transaction_date', 'created_at', 'transaction_id', 'amount', 'transaction_status_id'])
             ->when($request->has('payment_modules'), function ($q) use($request) {
                 $q->whereIn('payment_module_id', $request->payment_modules);
             })
             ->when($request->has('payment_gateways'), function ($q) use($request) {
                 $q->whereIn('gateway_id', $request->payment_gateways);
             })
+            ->when($request->has('transaction_status'), fn($q) => $q->whereIn('transaction_status_id', $request->transaction_status))
             ->when((!empty($request->date_from) and !empty($request->date_to)), function ($q) use($request) {
                 $q->whereBetween('transaction_date', [Carbon::createFromFormat('d-m-Y', $request->date_from)->toDateTimeString(), Carbon::createFromFormat('d-m-Y', $request->date_to)->toDateTimeString()]);
             })
