@@ -13,7 +13,7 @@
     ]);
 @endphp
 
-<div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-3">
+<div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-1">
     <div class="d-flex flex-wrap align-items-center gap-1">
         <div class="input-group w-auto">
             <span class="input-group-text">Search</span>
@@ -43,7 +43,10 @@
             <i class="bi bi-calendar3"></i>
         </button>
         <a href="{{ url('reports/invoices/list') }}" class="btn btn-warning"><i class="bi bi-arrow-clockwise"></i></a>
-        {{-- No total() available with cursor pagination --}}
+        <span class="fw-semibold">({{ numberFormat($tRecords ?? 0) }})</span> Records found
+    </div>
+    <div>
+        {{ $invoices->links('utils.cursor', ['modDiv' => 'invoices-report-list']) }}
     </div>
 </div>
 
@@ -68,7 +71,7 @@
 </div>
 
 <div class="table-responsive" style="min-height: 500px;">
-    <table class="table table-bordered table-hover table-striped bg-white page-sort text-middle">
+    <table class="table table-bordered table-hover table-striped bg-white page-sort text-middle mb-0">
         <thead class="table-success align-middle">
             <tr class="bg-success-subtle">
                 <th width="1%" nowrap>S No</th>

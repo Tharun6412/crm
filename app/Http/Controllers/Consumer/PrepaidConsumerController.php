@@ -57,6 +57,9 @@ class PrepaidConsumerController extends Controller
             ->when(($status->id != null), function($q) use($status) {
                 $q->where('status_id', $status->id);
             })
+            ->when($request->has('hes_status'), function($q) use($request) {
+                $q->whereHas('prepaidData', fn ($q) => $q->whereIn('hes_status', $request->hes_status));
+            })
             ->where('connection_type_id', 2)
             ->paginate(50)->withQueryString();
         

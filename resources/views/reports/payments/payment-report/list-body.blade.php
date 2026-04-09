@@ -1,18 +1,20 @@
-<div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-3">
+<div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-1">
     <!-- LEFT SIDE FILTERS -->
     <div class="d-flex flex-wrap align-items-center gap-1">
         <!-- Search -->
         <div class="input-group w-auto">
             <span class="input-group-text">Search</span>
-            <input type="text" name="key" id="key" class="form-control" value="{{ request()->key }}">
+            <input type="text" name="key" id="key" class="form-control" value="{{ request()->key }}" placeholder="search key">
         </div>
         <div class="d-flex align-items-center flex-wrap gap-3">
             <div class="input-group w-auto">
-                <span class="input-group-text">Payment Date</span>
+                <span class="input-group-text">Date</span>
                 <!-- From Date -->
-                <input type="text" class="form-control" name="date_from" id="date_from" value="{{ request()->date_from }}"><span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                <input type="text" class="form-control" name="date_from" id="date_from" value="{{ request()->date_from }}" placeholder="DD-MM-YYYY">
+                <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
                 <!-- To Date -->
-                <input type="text" class="form-control" name="date_to" id="date_to" value="{{ request()->date_to }}"><span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                <input type="text" class="form-control" name="date_to" id="date_to" value="{{ request()->date_to }}" placeholder="DD-MM-YYYY">
+                <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
             </div>
         </div>
         <!-- Submit -->
@@ -21,11 +23,12 @@
         <a href="{{ url('reports/paymentsReport') }}" class="btn btn-warning"><i class="bi bi-arrow-clockwise"></i></a>
         <!-- Record Count -->
         <span class="small text-muted">
-          {{-- <span class="fw-semibold">({{ $payments->total() }})</span> Records found --}}
+          <span class="fw-semibold">({{ numberFormat($tRecords ?? 0) }})</span> Records found
         </span>
     </div>
     <div>
         {{-- <x-auth.link :href="url('reports/paymentsReport/paymentsReportExport') . '?' . request()->getQueryString()" class="btn btn-outline-info"><i class="bi bi-file-earmark-excel"></i>&nbsp;Export</x-auth.link> --}}
+        {{ $payments->links('utils.cursor', ['modDiv' => 'payments-report-list']) }}
     </div>
 </div>
 @php
@@ -136,13 +139,13 @@
                     <td class="text-center">{{ $i++ }}</td>
                     <td>{{ $pay->code }}</td>
                     <td class="text-center">{{ dateFormat($pay->payment_date) }}</td>
-                    <td>{{ numberFormat($pay->amount,2) }}</td>
+                    <td class="text-end">{{ numberFormat($pay->amount,2) }}</td>
                     <td>{{ $pay->paymentType->name }}</td>
                     <td>
                         <a href="{{ url('bill/invoice/' . $pay->invoice->id) }}" target="_blank">{{ $pay->inv_number }} </a></td>
                     <td class="text-center">{{ dateFormat($pay->invoice->invoice_date) }}</td>
                     <td>{{ $pay->invoice->invoiceType->name }}</td>
-                    <td>{{ $pay->invoice->consumer->crn }}</td>
+                    <td><a href="{{ url('consumers/' . $pay->invoice->consumer->id) }}" target="_blank">{{ $pay->invoice->consumer->crn }}</a></td>
                     <td>{{ $pay->invoice->consumer->name }}</td>
                     <td>{{ $pay->invoice->consumer->segment->name }}</td>
                     <td>{{ $pay->invoice->consumer->connectType->name }}</td>

@@ -15,9 +15,9 @@ class PaymentsReportController extends Controller
     {
         $sortBy = ($request->get('sortBy')) ? $request->get('sortBy') : 'pay_invoice_payments.created_at';
         $sortOr = ($request->get('sortOr')) ? $request->get('sortOr') : 'desc';
-        $records = ($request->get('records')) ? $request->get('records') : 2;
+        $records = ($request->get('records')) ? $request->get('records') : 50;
         // Get all receipts
-        $payments = InvoicePayment::with([
+        $payments_qry = InvoicePayment::with([
                 'invoice:id,invoice_number,invoice_date,type_id,consumer_id',
                 'invoice.invoiceType:id,name',
                 'invoice.consumer:id,crn,fname,lname,segment_id,connection_type_id,ga_id',
@@ -26,8 +26,6 @@ class PaymentsReportController extends Controller
                 'invoice.consumer.ga:id,name',
                 'paymentType:id,name'
             ])
-            // ->leftJoin('bil_invoices', 'bil_invoices.id', '=', 'pay_invoice_payments.invoice_id')
-            // ->leftJoin('cns_consumers', 'cns_consumers.id', '=', 'bil_invoices.consumer_id')
             ->select(['id', 'code', 'payment_date', 'amount', 'payment_type_id', 'invoice_id'])
             ->whereNot('status_id', PaymentStatus::REVERSAL->value)
             ->when($request->filled('key'), function($q) use($request){
@@ -51,7 +49,7 @@ class PaymentsReportController extends Controller
             })
             ->when($request->has('geo_area'), function ($q) use($request) {
                 $q->whereHas('invoice.consumer', fn ($q) => $q->whereIn('ga_id', $request->geo_area));
-            })
+            });
             // ->when($request->has('segments'), function($q) use($request){
             //     $q->whereIn('cns_consumers.segment_id', $request->segments);
             // })
@@ -59,13 +57,13 @@ class PaymentsReportController extends Controller
             //     $q->whereIn('cns_consumers.connection_type_id', $request->connection_type_id);
             // })
             // ->orderBy($sortBy)
-            ->orderBy('id')
-            ->cursorPaginate($records)->withQueryString();
+        $tRecords = (clone $payments_qry)->count();
+        $payments = $payments_qry->orderBy('id')->cursorPaginate($records)->withQueryString();
         // Render output
         if ($request->ajax()) {
-            return view('reports.payments.payment-report.list-body', ['payments' => $payments]);
+            return view('reports.payments.payment-report.list-body', ['payments' => $payments, 'tRecords' => $tRecords]);
         }
-        return view('reports.payments.payment-report.list', ['payments' => $payments]);
+        return view('reports.payments.payment-report.list', ['payments' => $payments, 'tRecords' => $tRecords]);
     }
 
     /**

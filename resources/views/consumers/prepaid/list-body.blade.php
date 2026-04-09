@@ -34,6 +34,7 @@
             <tr>
                 <th width="1%" nowrap>S No</th>
                 <th>CRN</th>
+                <th nowrap>Meter Serial No</th>
                 <th>Name</th>
                 <th nowrap>
                     <div class="d-flex flex-row gap-2">
@@ -52,8 +53,17 @@
                         <div><x-master.date-filter class="float-end" /></div>
                     </div>
                 </th>
-                <th nowrap>Meter Serial No</th>
-                <th nowrap>HES Status</th>
+                <th nowrap>
+                    <div class="d-flex flex-row gap-2">
+                        <div>HES Status</div>
+                        <div>
+                            @php
+                                $hes_filters = [1 => 'Sent', 0 => 'Not Sent'];
+                            @endphp
+                            <x-admin.status-filter name="hes_status" :data="$hes_filters" class="float-end"/>
+                        </div>
+                    </div>
+                </th>
                 <th nowrap>
                     <div class="d-flex flex-row gap-2">
                         <div>HES Date</div>
@@ -74,6 +84,7 @@
                                 {{ $consumer->crn ?? $consumer->t_crn }}
                             </a>
                         </td>
+                        <td>{{ $consumer?->activeMeter?->meter_serial_no }}</td>
                         <td nowrap>{{ $consumer->name }}</td>
                         <td nowrap>{{ $consumer->segment->name }}</td>
                         <td nowrap>
@@ -83,12 +94,11 @@
                         <td nowrap>{{ $consumer->district->name }}</td>
                         <td>
                             @if ($consumer->scheme?->scheme?->id != null)
-                            <button type="button" class="btn btn-outline-secondary" data-bs-toggle="popover"  data-bs-trigger="hover focus" data-bs-placement="top"  data-bs-content="{{ $consumer->scheme?->scheme?->name }}">{{ $consumer->scheme?->scheme?->code }}</button>
+                            <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="popover"  data-bs-trigger="hover focus" data-bs-placement="top"  data-bs-content="{{ $consumer->scheme?->scheme?->name }}">{{ $consumer->scheme?->scheme?->code }}</button>
                             @endif
                         </td>
                         <td>{{ $consumer->priceGroup?->code }}</td>
                         <td>{{ dateFormat($consumer->created_at) }}</td>
-                        <td>{{ $consumer?->activeMeter?->meter_serial_no }}</td>
                         <td>
                             <x-consumer.hes-status :status="$consumer->prepaidData?->hes_status"/>
                         </td>
