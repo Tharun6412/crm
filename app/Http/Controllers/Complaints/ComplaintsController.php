@@ -43,10 +43,7 @@ class ComplaintsController extends Controller
         $sortOr = ($request->get('sortOr')) ? $request->get('sortOr') : 'desc';
         $records = ($request->get('records')) ? $request->get('records') : 50;
         // fetch complaints based on GA
-        $complaints = Complaint::when((!isAdmin() AND !isSuperAdmin() AND !isFullAccess()), function ($q) {
-            $q->whereIn('ga_id', session('user')['gas']);
-        })
-        ->when($request->filled('key'), function ($q) use($request) {
+        $complaints = Complaint::when($request->filled('key'), function ($q) use($request) {
             $q->whereAny(['code'], 'like', '%' . $request->key . '%');
             $q->orWhereHas('consumer', function ($subQuery) use ($request) {
                 $subQuery->where('crn', 'like', '%' . $request->key . '%')

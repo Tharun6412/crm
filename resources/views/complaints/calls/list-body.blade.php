@@ -29,7 +29,7 @@
                                         Actions
                                     </button>
                                     <ul class="dropdown-menu">
-                                        <li><x-auth.link class="dropdown-item link-modal" href="{{ url('calls/create/' . $consumer->id) }}"><i class="bi bi-chevron-right"></i>&nbsp;Raise Complaint</x-auth.link></li>
+                                        <li><x-auth.link class="dropdown-item link-modal" href="{{ url('calls/create/' . $consumer->id) }}" action="add"><i class="bi bi-chevron-right"></i>&nbsp;Raise Complaint</x-auth.link></li>
                                     </ul>
                                 </div>
                             </td>
