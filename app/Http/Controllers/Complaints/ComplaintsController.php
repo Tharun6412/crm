@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Complaints;
 
 use App\Enums\AwsPath;
 use App\Enums\ComplaintStatus;
+use App\Enums\ComplaintType as EnumsComplaintType;
 use App\Enums\OtpModule;
 use App\Enums\OtpPurpose;
 use App\Exports\Complaints\ComplaintExport;
@@ -31,6 +32,7 @@ use App\Services\SmsService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 class ComplaintsController extends Controller
 {
@@ -43,11 +45,19 @@ class ComplaintsController extends Controller
         $sortOr = ($request->get('sortOr')) ? $request->get('sortOr') : 'desc';
         $records = ($request->get('records')) ? $request->get('records') : 50;
         // fetch complaints based on GA
-        $complaints = Complaint::when($request->filled('key'), function ($q) use($request) {
-            $q->whereAny(['code'], 'like', '%' . $request->key . '%');
-            $q->orWhereHas('consumer', function ($subQuery) use ($request) {
-                $subQuery->where('crn', 'like', '%' . $request->key . '%')
-                        ->orWhere('name', 'like', '%' . $request->key . '%');
+        $complaints = Complaint::with([
+            'ga:id,name',
+            'category:id,name,parent_id',
+            'consumer:id,crn,fname,lname',
+            'segment:id,name',
+            'status:id,name',
+            'priority:id,name'
+        ])->when($request->filled('key'), function ($q) use($request) {
+            $q->where(function ($query) use ($request) {
+                $query->where('code', 'like', '%' . $request->key . '%')
+                    ->orWhereHas('consumer', function ($subQuery) use ($request) {
+                        $subQuery->where('crn', 'like', '%' . $request->key . '%');
+                    });
             });
         })
         ->when($request->has('segment_id'), function($q) use($request) {
@@ -68,6 +78,9 @@ class ComplaintsController extends Controller
         })
         ->when((!empty($request->date_from) and !empty($request->date_to)), function($q) use($request) {
             $q->whereBetween('created_at', [Carbon::createFromFormat('d-m-Y', $request->date_from)->startOfDay()->toDateTimeString(), Carbon::createFromFormat('d-m-Y', $request->date_to)->endOfDay()->toDateTimeString()]);
+        })
+        ->when($request->has('pending_feedback'), function ($q) {
+            $q->where('status_id', ComplaintStatus::CLOSE->value)->whereDoesntHave('feedback');
         })
         ->orderBy($sortBy, $sortOr)->paginate($records)->withQueryString();
         
@@ -91,7 +104,7 @@ class ComplaintsController extends Controller
         return view('complaints.show', ['complaint' => $complaint]);
     }
 
-    /**
+    /**close
      * Relation with Consumer Complaints
      */
     public function consumerComplaints(Request $request, $id)
@@ -395,11 +408,9 @@ class ComplaintsController extends Controller
     {
         // Fetch Complaint Details
         $complaint = Complaint::find($request->id);
-        $phone_no = $complaint->consumer->phone ?? $complaint->phone;
+        $phone_no = $complaint->consumer->phone ?? '';
         if($complaint->consumer) {
             $consumer_info = $complaint->consumer;
-        }else {
-            $consumer_info = $complaint;
         }
         if(empty($phone_no)){
             return response()->json('OTP not Sent');
@@ -431,10 +442,8 @@ class ComplaintsController extends Controller
         $complaint = Complaint::find($request->id);
         if($complaint->consumer) {
             $consumer_info = $complaint->consumer;
-        }else {
-            $consumer_info = $complaint;
         }
-        $phone_no = $complaint->consumer->phone ?? $complaint->phone;
+        $phone_no = $complaint->consumer->phone ?? '';
         if(empty($phone_no)){
             return response()->json(['message' => 'OTP not Sent']);
         }
@@ -452,19 +461,19 @@ class ComplaintsController extends Controller
      */
     public function closeComplaint(Request $request, $id, $status_id)
     {
-        $verify_otp = '';
+        $complaint = Complaint::find($id);
+        $phone_no = $complaint->consumer->phone ?? '';
         $request->validate([
             'notes' => 'required',
-            'otp' => 'required',
+            // 'otp' => [Rule::requiredIf(!empty($phone_no))],
         ]);
-        $complaint = Complaint::find($id);
-        $phone_no = $complaint->consumer->phone ?? $complaint->phone;
-        if($phone_no) {
+        if($phone_no and $complaint->type_id != EnumsComplaintType::ENQUIRY->value) {
+            $verify_otp = '';
             $verify_otp = OtpService::verify($phone_no, OtpPurpose::COMPLAINT_CLOSE->value, $request->otp, OtpModule::USER->value);
-        }
-        // Stop if OTP is invalid
-        if (!$verify_otp) {
-            abort(422, 'Invalid otp or OTP expired');
+            // Stop if OTP is invalid
+            if (!$verify_otp) {
+                abort(422, 'Invalid otp or OTP expired');
+            }
         }
         // Complaint Status Update
         $complaint->update([

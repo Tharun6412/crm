@@ -203,6 +203,21 @@
                     </div>
                 </a>
             </div>
+            <div class="col-sm-3">
+                <a href="{{ url('calls') }}?{{ http_build_query(['pending_feedback' => 1]) }}" target="_blank" class="text-body-secondary">
+                    <div class="py-2 px-2 totals-bg border border-3 border-light shadow-sm rounded-3">
+                        <div class="d-flex justify-content-between align-items-center p-2">
+                            <div class="text-center">
+                                <div class="fs-3 fw-semibold">{{ $count }}</div>
+                                <div class="fw-semibold text-secondary">Waitng for feedback</div>
+                            </div>
+                            <div class="p-1 totals-bg bg-opacity-25 rounded-4 py-2 px-3 shadow-sm">
+                                <i class="fs-3 bi bi-files"></i>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
         </div>
          {{-- Reports --}}
         <div>

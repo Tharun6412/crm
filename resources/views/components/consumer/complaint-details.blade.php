@@ -17,7 +17,7 @@
                 <td><span class="fw-semibold">GA :</span>&nbsp;{{ $complaint->ga->name }} ({{ $complaint->ga->code }})</td>
             </tr>
             <tr>
-                <td><span class="fw-semibold">Phone :</span>&nbsp;{{ maskNumber($complaint?->phone) }}</td>
+                <td><span class="fw-semibold">Phone :</span>&nbsp;{{ $complaint?->phone }}</td>
             </tr>  
         </table>
     </div>
@@ -38,7 +38,7 @@
                 <td><span class="fw-semibold">Closed Date :</span>&nbsp;{{ $complaint->closed_at?->format('d-m-Y H:i') }}</td>
             </tr> 
              <tr>
-                <td><span class="fw-semibold">&nbsp;</td>
+                <td><span class="fw-semibold">Mobile Number :&nbsp;{{ $complaint->consumer->phone ?? '' }}</td>
                 <td><span class="fw-semibold">Deviation :</span>&nbsp;<x-complaint.day-hour-display :complaint="$complaint"/></td>
             </tr>  
         </table>

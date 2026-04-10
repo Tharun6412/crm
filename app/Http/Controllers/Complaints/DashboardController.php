@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Complaints;
 
+use App\Enums\ComplaintStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Complaint\Complaint;
+use App\Models\Complaint\ComplaintFeedback;
 use App\Models\Consumer\Consumer;
 use App\Models\Master\MasterComplaintStatus;
 use Illuminate\Support\Facades\DB;
@@ -17,8 +19,10 @@ class DashboardController extends Controller
     {
         // Render output
         $complaints = Complaint::select('status_id', 'segment_id', DB::raw('COUNT(id) as segment_count'), DB::raw('COUNT(id) as status_count'))->groupBy('status_id', 'segment_id')->get();
+        $count = Complaint::where('status_id', ComplaintStatus::CLOSE->value)->whereDoesntHave('feedback')->count();
         return view('complaints.dashboard.dashboard', [
             'complaints' => $complaints,
+            'count' => $count,
         ]);
     }
 }

@@ -19,14 +19,15 @@
                             <textarea name="notes" id="notes" class="form-control"></textarea>
                         </div>
                     </div>
-                    <div class="row mb-2" id="send_otp">
-                        <div class="offset-sm-3 col-sm-7">
-                            <button type="button" class="btn btn-success" onclick="closeOTP({{ $complaint->id }})">
-                                <i class="bi bi-check2-all" aria-hidden="true">&nbsp;</i>Send OTP
-                            </button>
+                    @if ($complaint->consumer && $complaint->type_id != \App\Enums\ComplaintType::ENQUIRY->value) 
+                        <div class="row mb-2" id="send_otp">
+                            <div class="offset-sm-3 col-sm-7">
+                                <button type="button" class="btn btn-success" onclick="closeOTP({{ $complaint->id }})">
+                                    <i class="bi bi-check2-all" aria-hidden="true">&nbsp;</i>Send OTP
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                    <div class="d-none" id="close_cmp">
+                        <div class="d-none" id="close_cmp">
                         <div class="row">
                             <label class="col-form-label col-sm-3 text-end">OTP&nbsp;:<span class="text-danger">*</span></label>
                             <div class="col-sm-7">
@@ -47,6 +48,14 @@
                             </button>
                         </div>
                     </div>
+                    @else
+                        <div class="offset-sm-3 col-sm-7" id="close-error"></div>
+                        <div class="offset-sm-3 col-sm-7">
+                            <button type="submit" class="btn btn-success">
+                                <i class="bi bi-check2-all" aria-hidden="true">&nbsp;</i>Close complaint
+                            </button>
+                        </div>
+                    @endif
                 </form>
             </div>
         </div>

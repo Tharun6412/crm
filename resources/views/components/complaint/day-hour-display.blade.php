@@ -11,7 +11,6 @@
         $difference = ceil($days) . ' days';
     } else {
         $hours = abs($now->diffInHours($estimated)); // numeric only
-
         if ($hours > 24) {
             $difference = ceil($hours / 24) . ' days';
         } else {

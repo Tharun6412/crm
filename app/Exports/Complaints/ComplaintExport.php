@@ -95,14 +95,28 @@ class ComplaintExport implements FromQuery, WithHeadings, WithMapping
     public function map($row): array
     {
         $this->i++;
-        $now = Carbon::now();
 
-        if ($row->resolution_type == 1) {
-            $difference = ceil(abs($now->diffInDays(Carbon::parse($row?->estimated_closed_at)))) . "D";
+        // Time Calculation
+        $now = ($row->closed_at) ? $row->closed_at : \Carbon\Carbon::now();
+        $estimated = \Carbon\Carbon::parse($row->estimated_closed_at);
+
+        if ($row?->category?->resolution_type == 1) {
+            $days = abs($now->diffInDays($estimated));
+            $difference = ceil($days) . ' days';
         } else {
-            $difference = number_format(abs($now->diffInHours(Carbon::parse($row?->estimated_closed_at))), 2) . "H";
+            $hours = abs($now->diffInHours($estimated)); // numeric only
+            if ($hours > 24) {
+                $difference = ceil($hours / 24) . ' days';
+            } else {
+                $difference = numberFormat($hours, 2) . ' hrs';
+            }
         }
-
+        //for close no deviation required
+        if($now > $row?->estimated_closed_at) {
+            $deviation_diff = $difference;
+        }else {
+            $deviation_diff = 0;
+        }
         return [
             $this->i,
             $row->ga_name,
@@ -115,7 +129,7 @@ class ComplaintExport implements FromQuery, WithHeadings, WithMapping
             dateFormat($row->created_at),
             optional($row->estimated_closed_at)->format('d-m-y H:i'),
             dateFormat($row->closed_at),
-            $difference,
+            $deviation_diff,
             $row->priority_name,
             $row->status_name,
         ];

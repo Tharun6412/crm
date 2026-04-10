@@ -8,7 +8,7 @@
         <div class="col-auto">
             <div class="input-group">
                 <span class="input-group-text" id="search-key">Search</span>
-                <input type="text" name="key" id="search-key" class="form-control" value="{{ request()->key }}" placeholder="search complaint no.">
+                <input type="text" name="key" id="search-key" class="form-control" value="{{ request()->key }}" placeholder="Search CRN,Complaint No.">
             </div>
         </div>
         <div class="col-auto">
@@ -27,12 +27,27 @@
 </div>
 {{-- Complaints / Calls list --}}
 <div class="table-responsive mt-2" style="min-height: 500px;">
+    @php
+        $now = \Carbon\Carbon::now();
+        $sort_by = (request()->has('sortBy')) ? request()->get('sortBy') : 'created_at';
+        $sort_order = (request()->has('sortOr')) ? request()->get('sortOr') : 'desc';
+        $sort_order_inverse = ($sort_order == 'asc') ? 'desc' : 'asc';
+        $sort_icon = ($sort_order == 'asc') ? 'bi-caret-down-fill' : 'bi-caret-up-fill';
+        $i = (($complaints->currentPage() - 1) * $complaints->perPage())+1;
+    @endphp
     <table class="table table-bordered table-hover table-striped bg-white align-middle">
         <thead class="table-success">
             <tr>
                 <th width="1%" nowrap>S No</th>
                 <th>GA <x-master.ga-filter class="float-end"/></th>
-                <th>#Complaint</th>
+                <th>
+                    <a href="{{ $complaints->appends(['sortBy' => 'code','sortOr' => $sort_order_inverse])->url($complaints->currentPage()) }}">
+                        Complaint
+                        @if ($sort_by == 'code')
+                            <i class="bi {{ $sort_icon }}"></i>
+                        @endif
+                    </a>
+                </th>
                 <th nowrap>
                     <div class="d-flex">
                         <div>Category &nbsp;</div>
@@ -67,35 +82,20 @@
                         <x-complaint.statusFilter class="float-end" />
                     </div> 
                 </th>
+                <th nowrap>Feedback Status</th>
                 <th width="2%" nowrap>Actions</th>
             </tr>
         </thead>
         <tbody>
             @if ($complaints->count() > 0)
-                @php
-                    $now = \Carbon\Carbon::now();
-                    $sort_by = (request()->has('sortBy')) ? request()->get('sortBy') : 'created_at';
-                    $sort_order = (request()->has('sortOr')) ? request()->get('sortOr') : 'desc';
-                    $sort_order_inverse = ($sort_order == 'asc') ? 'desc' : 'asc';
-                    $sort_icon = ($sort_order == 'asc') ? 'bi-caret-down-fill' : 'bi-caret-up-fill';
-                    $i = (($complaints->currentPage() - 1) * $complaints->perPage())+1;
-                @endphp
                 @foreach ($complaints as $complaint)
-                    @php
-                        if ($complaint->category?->resolution_type == 1) {
-                            $difference = ceil(abs($now->diffInDays(\Carbon\Carbon::parse($complaint?->estimated_closed_at))))."D";
-                        }
-                        else {
-                            $difference = numberFormat(abs($now->diffInHours(\Carbon\Carbon::parse($complaint?->estimated_closed_at))), 2)."H";
-                        }
-                    @endphp
                     <tr>
                         <td class="text-center">{{ $i++ }}</td>
                         <td nowrap>{{ $complaint->ga->name ?? '' }}</td>
                         <td nowrap>
                             <a href="{{ url('calls/'.$complaint?->id) }}" class="link-modal">{{ $complaint?->code }}</a>
                         </td>
-                        <td nowrap>{{ $complaint->category?->parent->name }}</td>
+                        <td nowrap>{{ $complaint->category?->parent?->name }}</td>
                         <td nowrap>{{ $complaint->category?->name }}</td>
                         <td nowrap>
                             <a href="{{ url('consumers/' . $complaint?->consumer_id) }}" target="_blank">{{ $complaint->consumer?->crn }}</a>
@@ -110,6 +110,13 @@
                         <td class="text-center"><x-complaint.day-hour-display :complaint="$complaint"/></td>
                         <td nowrap>{{ $complaint->priority?->name }}</td>
                         <td nowrap><x-complaint.status :status="$complaint?->status"/></td>
+                        <td>
+                            @if ($complaint->feedback)
+                                <x-complaint.rating :rating="$complaint?->feedback->rating"/>
+                            @else
+                                NA 
+                            @endif
+                        </td>
                         <td>
                             {{-- list actions --}}
                             <div class="dropdown">
@@ -142,7 +149,7 @@
                 @endforeach
             @else
                 <tr>
-                    <td colspan="15">
+                    <td colspan="16">
                         <x-layouts.callout-info>No records found!</x->
                     </td>
                 </tr>
@@ -150,6 +157,10 @@
         </tbody>
     </table>
 </div>
+{{--  Reset pagination parameters for paginator --}}
+@php
+    $complaints->appends(['sortBy' => $sort_by, 'sortOr' => $sort_order]);
+@endphp
 <div>
     {{ $complaints->links('utils.paginator', ['modDiv' => 'complaints-list']) }}
 </div>
