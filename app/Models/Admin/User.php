@@ -6,6 +6,8 @@ namespace App\Models\Admin;
 
 use App\Models\Complaint\ComplaintComment;
 use App\Models\Complaint\ComplaintFeedback;
+use App\Models\Consumer\ConsumerSdPayment;
+use App\Models\Invoice\InvoicePayment;
 use App\Models\Master\Department;
 use App\Models\Master\Ga;
 use App\Models\Spot\SpotRoles;
@@ -133,6 +135,7 @@ class User extends Authenticatable
     {
         return $this->morphMany(ComplaintComment::class, 'commentable');
     }
+
     /**
      * PolyMorph Relation with complaint Feedback
      */
@@ -140,4 +143,25 @@ class User extends Authenticatable
     {
         return $this->morphMany(ComplaintFeedback::class, 'collectable');
     }
+
+    /**
+     * 
+     * Payment colection relations
+     * 
+     */
+    /**
+     * Invoice payments
+     */
+    public function invoicePayments(): HasMany
+    {
+        return $this->hasMany(InvoicePayment::class, 'created_by');
+    }
+
+    /**
+     * SD Payments
+     */
+    public function sdPayments(): HasMany
+    {
+        return $this->hasMany(ConsumerSdPayment::class, 'created_by');
+    } 
 }

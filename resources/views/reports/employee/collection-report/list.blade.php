@@ -16,13 +16,13 @@
             <div class="d-flex justify-content-between gap-2 mb-2">
                 <div class="d-flex gap-1">
                     <div>
-                        <input type="radio" class="btn-check" name="filter_name" id="success-outlined" value="show" autocomplete="off" checked>
-                        <label class="btn btn-outline-secondary" for="success-outlined">
-                            <i class="bi bi-calendar-range"></i>&nbsp;Between Days
-                        </label>
                         <input type="radio" class="btn-check" name="filter_name" id="danger-outlined" value="hide" autocomplete="off">
                         <label class="btn btn-outline-secondary" for="danger-outlined">
                             <i class="bi bi-calendar-check"></i>&nbsp;All Data
+                        </label>
+                        <input type="radio" class="btn-check" name="filter_name" id="success-outlined" value="show" autocomplete="off" checked>
+                        <label class="btn btn-outline-secondary" for="success-outlined">
+                            <i class="bi bi-calendar-range"></i>&nbsp;Between Days
                         </label>
                     </div>
                     <div>
