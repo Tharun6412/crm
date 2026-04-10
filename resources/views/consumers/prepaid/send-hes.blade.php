@@ -14,13 +14,14 @@
                     <div>
                         <table class="table table-bordered">
                             <tbody>
+                                <input type="hidden" name="meter_id" id="meter_id" value="{{ $consumer->activeMeter->id }}">
                                 <tr>
                                     <td class="bg-light">Meter Serial No</td>
-                                    <td>{{ $consumer->activeMeter->meter_serial_no }}</td>
+                                    <td><input type="text" class="form-control" name="meter_sr_no" id="meter_sr_no" value="{{ $consumer->activeMeter->meter_serial_no }}" placeholder="PG**********" ></td>
                                 </tr>
                                 <tr>
                                     <td class="bg-light">Meter No</td>
-                                    <td>{{ $consumer->activeMeter->meter_no }}</td>
+                                    <td><input type="text" class="form-control" name="meter_no" id="meter_no" value="{{ $consumer->activeMeter->meter_no }}" placeholder="PN**********"></td>
                                 </tr>
                                 <tr>
                                     <td class="bg-light">Price Group</td>
@@ -32,6 +33,10 @@
                                             @endforeach
                                         </select>
                                     </td>
+                                </tr>
+                                <tr>
+                                    <td class="bg-light">VCF</td>
+                                    <td><input type="text" class="form-control" name="vcf" id="vcf" value={{ numberFormat($consumer->activeMeter?->vcf,3) }} placeholder="Please enter the VCF."></td>
                                 </tr>
                             </tbody>
                         </table>

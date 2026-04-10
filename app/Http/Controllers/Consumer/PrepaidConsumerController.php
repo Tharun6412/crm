@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Consumer;
 use App\Contracts\Prepaid\Acquisition;
 use App\Enums\InvoiceStatus;
 use App\Enums\InvoiceType;
+use App\Enums\MeterStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Consumer\Consumer;
+use App\Models\Consumer\ConsumerMeter;
 use App\Models\Payments\PayRecharge;
 use App\Models\Master\MasterConsumerStatus;
 use App\Models\Master\PriceGroups;
@@ -94,18 +96,34 @@ class PrepaidConsumerController extends Controller
     {
         // Validation
         $request->validate([
+            'meter_sr_no' => 'required|min:12',
+            'meter_no' => 'required',
             'price_group_id' => 'required',
+            'vcf' => 'required|Numeric|gte:1|lt:2',
         ]);
         // 1.Fetch consumer
         $consumer = Consumer::where('connection_type_id', 2)->where('id', $id)->firstOrFail();
+        // 2. Ensure prepaid data exists
+        if (!$consumer->prepaidData) {
+            return response()->json(['message' => 'Prepaid data not found for this consumer'], 422);
+        }
         // Update price_group_id in consumers
         $consumer->update([
             'price_group_id' => $request->price_group_id,
         ]);
-        // 2. Ensure prepaid data exists
-        if (!$consumer->prepaidData) {
-            return response()->json(['error' => 'Prepaid data not found for this consumer'], 422);
-        }
+        // 3. update or create the consumer meter details.
+        ConsumerMeter::updateOrCreate(
+            [
+                'consumer_id' => $consumer->id,
+                'status'   => MeterStatus::ACTIVE->value,   // match only the active record
+            ],
+            [
+                'meter_no'    => $request->meter_no,
+                'meter_serial_no' => $request->meter_sr_no,
+                'vcf'         => $request->vcf,
+                'status'   => MeterStatus::ACTIVE->value,
+            ]
+        );
         // 3. Load the contract and call the API.
         $acquisition = new Acquisition;
         $response = $acquisition->push($consumer);
@@ -122,7 +140,6 @@ class PrepaidConsumerController extends Controller
             // // 6. return the success response
             // return response()->json(['success' => 'Consumer details sent to HES successfully!']);
             $responseData = $response->json();
-
             // Check the actual status from response body
             $hesStatus = $responseData['Integ_Response'][0]['status'] ?? null;
 

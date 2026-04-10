@@ -90,7 +90,7 @@ class ConversionController extends Controller
             'rental_amount' => $new_scheme->rental_amount,
             'paid_deposit' => $consumer->scheme->paid_deposit,
             'balance' => $new_balance,
-            'status' => ($new_balance > 0) ? 1 : 0,
+            'status' => ($new_balance > 0) ? 0 : 1,
         ]);
 
         // Create history record

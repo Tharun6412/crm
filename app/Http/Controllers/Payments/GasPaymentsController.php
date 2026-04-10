@@ -61,7 +61,7 @@ class GasPaymentsController extends Controller
             'invoice_id' => 'required',
             'payment_type' => 'required',
             'transaction_no' => 'required',
-            'amount' => ['required', 'numeric', 'gt:0', 'min:' . $request->invoice_balance, 'max:' . $request->invoice_balance]
+            'amount' => ['required', 'numeric', 'gt:0', 'min:' . floor($request->invoice_balance), 'max:' . ceil($request->invoice_balance)]
             ]);
         $gas_invoice = BillInvoice::find($request->invoice_id);
         // 2. check if LPC is applicable.
@@ -124,6 +124,7 @@ class GasPaymentsController extends Controller
         // 5. Merge connected invoices + parent (parent last)
         $invoices->push($parentInvoice);
         $remainingAmount = $request->amount;
+        $lastInvoice = null;
 
         foreach ($invoices as $invoice) {
             if ($remainingAmount <= 0) {
@@ -162,7 +163,29 @@ class GasPaymentsController extends Controller
                 ConsumerSdPayment::where('invoice_id', $invoice->id)->update(['status_id' => 1]);
             }
             $remainingAmount -= $payAmount;
+            $lastInvoice = $invoice;
         }
+
+        $paisaTolerance = 1.00;
+        if ($lastInvoice) {
+            $leftover = $lastInvoice->balance_amount > 0
+                ? round($lastInvoice->balance_amount, 2)   // +ve underpaid
+                : round(-$remainingAmount, 2);              // -ve overpaid
+
+            // Only apply PAID status if within tolerance
+            if ($leftover != 0 && abs($leftover) <= $paisaTolerance) {
+                InvoicePayment::where('invoice_id', $lastInvoice->id)
+                    ->latest()
+                    ->first()
+                    ->update(['balance' => $leftover]);
+
+                $parentInvoice->update([
+                    'balance_amount' => $leftover,
+                    'status_id'      => 1, // PAID only within tolerance
+                ]);
+            }
+        }
+
         return response()->json(['success' => 'Invoice payment inserted successfully']);
     }
 }

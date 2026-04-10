@@ -34,6 +34,7 @@ class ConsumerMeter extends Model
         'install_date',
         'install_by',
         'status',
+        'vcf',
         'created_by',
         'updated_by'
     ];
