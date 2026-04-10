@@ -30,9 +30,9 @@
                         @foreach ($complaints as $cmp)
                             <tr>
                                 <td>{{ $i++ }}</td>
-                                <td><x-auth.link href="{{ url('calls/'.$cmp->id) }}" class="link-modal">{{ $cmp->code }}</x-auth.link></td>
-                                <td>{{ $cmp->category->name ?? '' }}</td>
-                                <td>{{ $cmp->created_at->format('d-m-Y') }}</td>
+                                <td><a href="{{ url('calls/'.$cmp->id) }}" class="link-modal">{{ $cmp->code }}</a></td>
+                                <td>{{ $cmp->category?->name }}</td>
+                                <td>{{ $cmp->created_at?->format('d-m-Y') }}</td>
                                 <td>{{ $cmp->closed_at?->format('d-m-Y') }}</td>
                                 <td nowrap><x-complaint.status :status="$cmp->status"/></td>
                                 <td>

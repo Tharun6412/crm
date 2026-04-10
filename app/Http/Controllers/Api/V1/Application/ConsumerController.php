@@ -26,8 +26,15 @@ class ConsumerController extends Controller
                 ->when((!isApiAdmin() AND !isApiSuperAdmin() AND !isApiFullAccess()), function ($q) use($request) {
                     $q->whereIn('ga_id', $request->user()->ga()->pluck('ga_id')->toArray());
                 })
-                ->when($request->has('key'), function ($q) use($request) {
-                    $q->whereAny(['crn', 'fname', 'lname', 'email', 'phone'], 'like', '%' . $request->key . '%');
+                ->when($request->filled('key'), function ($q) use ($request) {
+                    $q->where(function ($query) use ($request) {
+                        $query->where('crn', 'like', '%' . $request->key . '%')
+                            ->orWhere('phone', 'like', '%' . $request->key . '%')
+                            ->orWhereHas('activeMeter', function ($q1) use ($request) {
+                                $q1->where('meter_no', 'like', '%' . $request->key . '%')
+                                    ->orWhere('meter_serial_no', 'like', '%' . $request->key . '%');
+                            });
+                    });
                 })
                 ->when($request->has('segments') and !empty($request->segments), function ($q) use($request) {
                     $q->whereIn('segment_id', (array) $request->segments);
