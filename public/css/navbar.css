@@ -39,6 +39,12 @@
     white-space: nowrap;
     display: block
 }
+.side-nav .collapse {
+    display: none;
+}
+.side-nav .collapse.show {
+    display: block;
+}
 .side-nav {
     padding-left: 0;
     list-style-type: none
@@ -470,6 +476,22 @@
 }
 .leftside-menu {
     margin-top: 60px;
+}
+/* Only items that contain third level */
+.side-nav .side-nav-second-level .side-nav-link i{
+    font-size: 15px!important;
+}
+.side-nav-second-level li > a[data-bs-toggle="collapse"]::after {
+    content: "\F285";
+    font-family: "bootstrap-icons";
+    position: absolute;
+    right: 15px;
+    font-size: 11px;
+    color: #ffffff;
+}
+/* Rotate when open */
+.side-nav-second-level li > a[aria-expanded="true"]::after {
+    transform: rotate(90deg);
 }
 .footer {
     align-items: center;

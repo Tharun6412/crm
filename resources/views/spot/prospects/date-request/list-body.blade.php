@@ -10,8 +10,9 @@
 @section('page-content')
     <div class="bd-callout bd-callout-info mt-0 mb-3">Displaying latest 50 date change requests</div>
     @if ($date_requests->count() > 0)
-        <table class="table table-bordered table-hover table-primary">
-            <thead class="bg-primary-subtle">
+    <div class="table-responsive">
+        <table class="table table-bordered align-middle table-striped">
+            <thead class="table-primary align-middle">
                 <tr>
                     <th width="1%" nowrap>S No</th>
                     <th nowrap>Prospect</th>
@@ -28,15 +29,15 @@
             <tbody>
                 @foreach ($date_requests as $request)
                     <tr>
-                        <td>{{ $loop->iteration }}</td>
-                        <td>
+                        <td class="text-center">{{ $loop->iteration }}</td>
+                        <td class="text-break">
                             <a class="link-modal" href="{{ url('spot/prospects/'.$request->prospect_id) }}">
                                 {{ $request->prospects->name }}
                             </a>
                         </td>
-                        <td>{{ $request->current_date?->format('d-m-Y') }}</td>
-                        <td>{{ $request->new_date?->format('d-m-Y') }}</td>
-                        <td>{{ $request->note }}</td>
+                        <td nowrap>{{ $request->current_date?->format('d-m-Y') }}</td>
+                        <td nowrap>{{ $request->new_date?->format('d-m-Y') }}</td>
+                        <td class="text-break">{{ $request->note }}</td>
                         <td>
                             @switch($request->status)
                                 @case(1)
@@ -49,14 +50,15 @@
                                     <span class='badge text-warning border border-warning'><i class='bi bi-pause-circle'></i>&nbsp;Pending</span>
                             @endswitch
                         </td>
-                        <td>{{ $request->createdBy->first_name }}&nbsp;{{ $request->createdBy->last_name }}</td>
-                        <td>{{ $request->created_at?->format('d-m-Y H:i:s') }}</td>
-                        <td>{{ $request->approvedBy->first_name }}&nbsp;{{ $request->createdBy->last_name }}</td>
-                        <td>{{ $request->approved_at?->format('d-m-Y H:i:s') }}</td>
+                        <td nowrap>{{ $request->createdBy->first_name }}&nbsp;{{ $request->createdBy->last_name }}</td>
+                        <td nowrap>{{ $request->created_at?->format('d-m-Y H:i:s') }}</td>
+                        <td nowrap>{{ $request->approvedBy->first_name }}&nbsp;{{ $request->createdBy->last_name }}</td>
+                        <td nowrap>{{ $request->approved_at?->format('d-m-Y H:i:s') }}</td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
+    </div>    
     @else
         <div class="bd-callout bd-callout-info mt-0 mb-3">No date request found</div>
     @endif

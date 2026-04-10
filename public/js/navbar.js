@@ -93,9 +93,7 @@ function _arrayLikeToArray(e,t){
         // document.getElementById("app-style").href.includes("menu.css")&&(document.getElementsByTagName("html")[0].dir="menu")
     }
         function t(){var c,e;o(".side-nav").length&&(c=function(e,t,n,a){return(e/=a/2)<1?n/2*e*e+t:-n/2*(--e*(e-2)-1)+t},e=o(".side-nav li .collapse"),
-            o(".side-nav li [data-bs-toggle='collapse']").on("click",function(e){return!1}),
-            e.on({"show.bs.collapse":function(e){var t=o(e.target).parents(".collapse.show");
-                o(".side-nav .collapse.show").not(e.target).not(t).collapse("hide")}}),
+            e.on("show.bs.collapse", function(e){ var parent = o(e.target).parent(); parent.siblings().find(".collapse.show").collapse("hide");}),
             o(".side-nav a").each(function(){var e=window.location.href.split(/[?#]/)[0];this.href==e&&(o(this).addClass("active"),
                 o(this).parent().addClass("menuitem-active"),
                 o(this).parent().parent().parent().addClass("show"),

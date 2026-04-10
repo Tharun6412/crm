@@ -9,13 +9,13 @@
         <ul class="list-group border-top-0">
             @foreach ($prospect->commentsHistory as $comment)
                 <li class="list-group-item">
-                    <div>
-                        <a type="button" class="btn btn-link text-danger m-0 p-0" onclick="deleteComment('{{ $comment->id }}')">
-                            <i class="bi bi-trash"></i>
-                        </a>
+                    <div>                        
                         <strong>{{  $comment->createdBy->first_name }}&nbsp;{{ $comment->createdBy->last_name }}:</strong> {{ $comment->comments }}
                     </div>
-                    <small class="float-end">{{ $comment->created_at?->format('d-m-Y H:i:s') }}</small>
+                    <div class="text-end p-2">
+                        <a type="button" title="Delete Comment" class="btn btn-link text-danger m-0 p-0 text-end" onclick="deleteComment('{{ $comment->id }}')"><i class="bi bi-trash"></i></a>
+                        &nbsp;|&nbsp;<i class="bi bi-calendar3 text-end"></i>&nbsp;<small class="float-end">{{ $comment->created_at?->format('d-m-Y H:i:s') }}</small>
+                    </div>
                 </li>
             @endforeach
         </ul>

@@ -39,8 +39,8 @@
 @endphp
 {{-- Consumers list --}}
 <div class="table-responsive" style="min-height: 500px;">
-    <table class="table table-bordered table-hover page-sort table-striped">
-        <thead class="table-success">
+    <table class="table table-bordered table-hover page-sort table-striped align-middle">
+        <thead class="table-success align-middle">
             <tr>
                 <th width="1%" nowrap>S No</th>
                 <th nowrap>
@@ -83,10 +83,10 @@
             @if ($consumers->count() > 0)
                 @foreach ($consumers as $consumer)
                     <tr>
-                        <td>{{ $loop->iteration }}</td>
+                        <td class="text-center">{{ $loop->iteration }}</td>
                         <td nowrap>
                             <i class="bi bi-{{ ($consumer->connection_type_id == 1) ? 'speedometer2' : 'wifi'}}"></i>
-                            <a href="{{ url('consumers/' . $consumer->id) }}">
+                            <a href="{{ url('consumers/' . $consumer->id) }}" target="_blank">
                                 {{ $consumer->crn ?? $consumer->t_crn }}
                             </a>
                         </td>
