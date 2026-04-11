@@ -2,6 +2,7 @@
 
 namespace App\Exports\Complaints;
 
+use App\Enums\ComplaintStatus;
 use App\Models\Complaint\Complaint;
 use App\Models\Master\ComplaintCategory;
 use Carbon\Carbon;
@@ -76,6 +77,16 @@ class ComplaintExport implements FromQuery, WithHeadings, WithMapping
             ->when(!empty($this->request->category) && empty($this->request->subcategory), function ($q) {
                 $subIds = ComplaintCategory::whereIn('parent_id', $this->request->category)->pluck('id');
                 $q->whereIn('cmp_complaints.category_id', $subIds);
+            })
+            ->when($this->request->has('pf'), function ($q) {
+                $pf = $this->request->pf;
+                $q->where('cmp_complaints.status_id', ComplaintStatus::CLOSE->value)
+                ->when(in_array(1, $pf) && !in_array(0, $pf),
+                    fn($q) => $q->whereHas('feedback')
+                )
+                ->when(in_array(0, $pf) && !in_array(1, $pf),
+                    fn($q) => $q->whereDoesntHave('feedback')
+                );
             })
             ->when(!empty($this->request->geo_area), fn($q) =>
                 $q->whereIn('cmp_complaints.ga_id', $this->request->geo_area))

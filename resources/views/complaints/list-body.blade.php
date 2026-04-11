@@ -18,7 +18,7 @@
             <a href="{{ url('calls') }}" class="btn btn-warning"><i class="bi bi-arrow-clockwise"></i></a>
         </div>
         <div class="col-auto mt-1">
-           <span class="fw-semibold">({{ $complaints->total() }})</span> Records found
+           <span class="fw-semibold">({{ numberFormat($complaints->total()) }})</span> Records found
         </div>
     </div>
     <div>
@@ -84,7 +84,17 @@
                         <x-complaint.statusFilter class="float-end" />
                     </div> 
                 </th>
-                <th nowrap>Feedback Status</th>
+                <th nowrap>
+                    <div class="d-flex flex-row gap-2">
+                        <div>Feedback</div>
+                        <div>
+                            @php
+                                $feedback_filters = [1 => 'Given', 0 => 'Pending'];
+                            @endphp
+                            <x-admin.status-filter name="pf" :data="$feedback_filters" class="float-end"/>
+                        </div>
+                    </div>
+                </th>
                 <th width="2%" nowrap>Actions</th>
             </tr>
         </thead>
@@ -113,7 +123,7 @@
                         <td class="text-center"><x-complaint.day-hour-display :complaint="$complaint"/></td>
                         <td nowrap>{{ $complaint->priority?->name }}</td>
                         <td nowrap><x-complaint.status :status="$complaint?->status"/></td>
-                        <td>
+                        <td nowrap>
                             @if ($complaint->feedback)
                                 <x-complaint.rating :rating="$complaint?->feedback->rating"/>
                             @else

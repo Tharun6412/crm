@@ -41,6 +41,7 @@ class ComplaintsController extends Controller
      */
     public function index(Request $request)
     {
+        // print "<pre>";print_r($request->all());
         $sortBy = ($request->get('sortBy')) ? $request->get('sortBy') : 'created_at';
         $sortOr = ($request->get('sortOr')) ? $request->get('sortOr') : 'desc';
         $records = ($request->get('records')) ? $request->get('records') : 50;
@@ -80,8 +81,15 @@ class ComplaintsController extends Controller
         ->when((!empty($request->date_from) and !empty($request->date_to)), function($q) use($request) {
             $q->whereBetween('created_at', [Carbon::createFromFormat('d-m-Y', $request->date_from)->startOfDay()->toDateTimeString(), Carbon::createFromFormat('d-m-Y', $request->date_to)->endOfDay()->toDateTimeString()]);
         })
-        ->when($request->has('pending_feedback'), function ($q) {
-            $q->where('status_id', ComplaintStatus::CLOSE->value)->whereDoesntHave('feedback');
+        ->when($request->has('pf'), function ($q) use($request) {
+            $pf = $request->pf;
+            $q->where('status_id', ComplaintStatus::CLOSE->value)
+            ->when(in_array(1, $pf) && !in_array(0, $pf),
+                fn($q) => $q->whereHas('feedback')
+            )
+            ->when(in_array(0, $pf) && !in_array(1, $pf),
+                fn($q) => $q->whereDoesntHave('feedback')
+            );
         })
         ->orderBy($sortBy, $sortOr)->paginate($records)->withQueryString();
         

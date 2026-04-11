@@ -42,7 +42,7 @@
                     <div class="p-3 dpng-bg border border-3 border-light shadow-sm rounded-3">
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="p-1 dpng-bg rounded-4 py-2 px-3 shadow-sm"><i class="bi bi-building fs-3"></i></div>
-                            <div class="fs-4 fw-semibold text-center">{{ $complaint_segment[ComplaintSegmentType::PNGDOM->value] ?? 0 }}<br/><span class="fs-5">DPNG</span></div>
+                            <div class="fs-4 fw-semibold text-center">{{ numberFormat($complaint_segment[ComplaintSegmentType::PNGDOM->value] ?? 0) }}<br/><span class="fs-5">DPNG</span></div>
                         </div>
                     </div>
                 </a>
@@ -52,7 +52,7 @@
                     <div class="p-3 cpng-bg border border-3 border-light shadow-sm rounded-3">
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="p-1 cpng-bg rounded-4 py-2 px-3 shadow-sm"><i class="bi bi-house fs-3"></i></div>
-                            <div class="fs-4 fw-semibold text-center">{{ $complaint_segment[ComplaintSegmentType::PNGCOM->value] ?? 0 }}<br/><span class="fs-5">CPNG</span></div>
+                            <div class="fs-4 fw-semibold text-center">{{ numberFormat($complaint_segment[ComplaintSegmentType::PNGCOM->value] ?? 0) }}<br/><span class="fs-5">CPNG</span></div>
                         </div>
                     </div>
                 </a>
@@ -62,7 +62,7 @@
                     <div class="p-3 ipng-bg border border-3 border-light shadow-sm rounded-3">
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="p-1 ipng-bg rounded-4 py-2 px-3 shadow-sm"><i class="bi bi-buildings fs-3"></i></div>
-                            <div class="fs-4 fw-semibold text-center">{{ $complaint_segment[ComplaintSegmentType::PNGIND->value] ?? 0 }}
+                            <div class="fs-4 fw-semibold text-center">{{ numberFormat($complaint_segment[ComplaintSegmentType::PNGIND->value] ?? 0) }}
                                 <br/><span class="fs-5">IPNG</span>
                             </div>
                         </div>
@@ -74,7 +74,7 @@
                     <div class="p-3 cng-bg border border-3 border-light shadow-sm rounded-3">
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="p-1 cng-bg rounded-4 py-2 px-3 shadow-sm"><i class="bi bi-fuel-pump fs-3"></i></div>
-                            <span class="fs-4 fw-semibold text-center">{{ $complaint_segment[ComplaintSegmentType::CNG->value] ?? 0 }}
+                            <span class="fs-4 fw-semibold text-center">{{ numberFormat($complaint_segment[ComplaintSegmentType::CNG->value] ?? 0) }}
                                 <br/><span class="fs-5">CNG</span>
                             </span>
                         </div>
@@ -86,7 +86,7 @@
                     <div class="p-3 general-bg border border-3 border-light shadow-sm rounded-3">
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="p-1 general-bg bg-opacity-25 rounded-4 py-2 px-3 shadow-sm"><i class="bi bi-headset fs-3"></i></div>
-                            <div class="fs-4 fw-semibold text-center">{{ $complaint_segment[ComplaintSegmentType::GENERAL->value] ?? 0 }}
+                            <div class="fs-4 fw-semibold text-center">{{ numberFormat($complaint_segment[ComplaintSegmentType::GENERAL->value] ?? 0) }}
                                 <br/><span class="fs-5">General</span>
                             </div>
                         </div>
@@ -103,7 +103,7 @@
                     <div class="py-2 px-2 registered-bg border border-3 border-light shadow-sm rounded-3">
                         <div class="d-flex justify-content-between align-items-center p-2">
                             <div class="text-center">
-                                <div class="fs-3 fw-semibold">{{ $register }}</div>
+                                <div class="fs-3 fw-semibold">{{ numberFormat($register) }}</div>
                                 <div class="fw-semibold text-secondary">Registered</div>
                             </div>
                             <div class="p-1 registered-bg bg-opacity-25 rounded-4 py-2 px-3 shadow-sm">
@@ -118,7 +118,7 @@
                     <div class="py-2 px-2 assign-bg border border-3 border-light shadow-sm rounded-3">
                         <div class="d-flex justify-content-between align-items-center p-2">
                             <div class="text-center">
-                                <div class="fs-3 fw-semibold">{{ $assign }}</div>
+                                <div class="fs-3 fw-semibold">{{ numberFormat($assign) }}</div>
                                 <div class="fw-semibold text-secondary">Assigned</div>
                             </div>
                             <div class="p-1 assign-bg bg-opacity-25 rounded-4 py-2 px-3 shadow-sm">
@@ -133,7 +133,7 @@
                     <div class="py-2 px-2 in-progress-bg border border-3 border-light shadow-sm rounded-3">
                         <div class="d-flex justify-content-between align-items-center p-2">
                             <div class="text-center">
-                                <div class="fs-3 fw-semibold">{{ $inprogress }}</div>
+                                <div class="fs-3 fw-semibold">{{ numberFormat($inprogress) }}</div>
                                 <div class="fw-semibold text-secondary">In-Progress</div>
                             </div>
                             <div class="p-1 in-progress-bg bg-opacity-25 rounded-4 py-2 px-3 shadow-sm">
@@ -148,7 +148,7 @@
                     <div class="py-2 px-2 investigation-bg border border-3 border-light shadow-sm rounded-3">
                         <div class="d-flex justify-content-between align-items-center p-2">
                             <div class="text-center">
-                                <div class="fs-3 fw-semibold">{{ $investigation }}</div>
+                                <div class="fs-3 fw-semibold">{{ numberFormat($investigation) }}</div>
                                 <div class="fw-semibold text-secondary">Investigation</div>
                             </div>
                             <div class="p-1 investigation-bg bg-opacity-25 rounded-4 py-2 px-3 shadow-sm">
@@ -163,7 +163,7 @@
                     <div class="py-2 px-2 close-bg border border-3 border-light shadow-sm rounded-3">
                         <div class="d-flex justify-content-between align-items-center p-2">
                             <div class="text-center">
-                                <div class="fs-3 fw-semibold">{{ $close }}</div>
+                                <div class="fs-3 fw-semibold">{{ numberFormat($close) }}</div>
                                 <div class="fw-semibold text-secondary">Closed</div>
                             </div>
                             <div class="p-1 close-bg bg-opacity-25 rounded-4 py-2 px-3 shadow-sm">
@@ -178,7 +178,7 @@
                     <div class="py-2 px-2 cancel-bg border border-3 border-light shadow-sm rounded-3">
                         <div class="d-flex justify-content-between align-items-center p-2">
                             <div class="text-center">
-                                <div class="fs-3 fw-semibold">{{ $cancel }}</div>
+                                <div class="fs-3 fw-semibold">{{ numberFormat($cancel) }}</div>
                                 <div class="fw-semibold text-secondary">Cancelled</div>
                             </div>
                             <div class="p-1 cancel-bg bg-opacity-25 rounded-4 py-2 px-3 shadow-sm">
@@ -193,7 +193,7 @@
                     <div class="py-2 px-2 totals-bg border border-3 border-light shadow-sm rounded-3">
                         <div class="d-flex justify-content-between align-items-center p-2">
                             <div class="text-center">
-                                <div class="fs-3 fw-semibold">{{ $total }}</div>
+                                <div class="fs-3 fw-semibold">{{ numberFormat($total) }}</div>
                                 <div class="fw-semibold text-secondary">Total</div>
                             </div>
                             <div class="p-1 totals-bg bg-opacity-25 rounded-4 py-2 px-3 shadow-sm">
@@ -204,14 +204,14 @@
                 </a>
             </div>
             <div class="col-sm-3">
-                <a href="{{ url('calls') }}?{{ http_build_query(['pending_feedback' => 1]) }}" target="_blank" class="text-body-secondary">
-                    <div class="py-2 px-2 totals-bg border border-3 border-light shadow-sm rounded-3">
+                <a href="{{ url('calls') }}?{{ http_build_query(['pf' => [0]]) }}" target="_blank" class="text-body-secondary">
+                    <div class="py-2 px-2 general-bg border border-3 border-light shadow-sm rounded-3">
                         <div class="d-flex justify-content-between align-items-center p-2">
                             <div class="text-center">
-                                <div class="fs-3 fw-semibold">{{ $count }}</div>
+                                <div class="fs-3 fw-semibold">{{ numberFormat($count) }}</div>
                                 <div class="fw-semibold text-secondary">Waitng for feedback</div>
                             </div>
-                            <div class="p-1 totals-bg bg-opacity-25 rounded-4 py-2 px-3 shadow-sm">
+                            <div class="p-1 general-bg bg-opacity-25 rounded-4 py-2 px-3 shadow-sm">
                                 <i class="fs-3 bi bi-files"></i>
                             </div>
                         </div>
