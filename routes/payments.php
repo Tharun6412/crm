@@ -22,7 +22,7 @@ Route::middleware(['auth', ModuleAccess::class])->group(function() {
     Route::prefix('invoicePayments')->group(function () {
         Route::get('create/{consumer}', [App\Http\Controllers\Payments\InvoicePaymentsController::class, 'create']);
         Route::get('show/{consumer}', [App\Http\Controllers\Payments\InvoicePaymentsController::class, 'show']);
-        Route::get('receipt/{id}', [App\Http\Controllers\Payments\InvoicePaymentsController::class, 'receipt']);
+        Route::get('{id}/print', [App\Http\Controllers\Payments\InvoicePaymentsController::class, 'print']);
         Route::resource('/', App\Http\Controllers\Payments\InvoicePaymentsController::class);
     });
     

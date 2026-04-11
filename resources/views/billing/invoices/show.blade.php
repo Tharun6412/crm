@@ -208,6 +208,7 @@
                                 <th>Type</th>
                                 <th class="text-end">Amount</th>
                                 <th>Status</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -219,6 +220,11 @@
                                     <td>{{ $pay->paymentType->name ?? '' }}</td>
                                     <td class="text-end">{{ numberFormat($pay->amount, 2) }}</td>
                                     <td><span>{{ $pay->status->name }}</span></td>
+                                    <td>
+                                        <a href="{{ url('payments/invoicePayments/' . $pay->id . '/print') }}" class="btn btn-sm btn-outline-primary">
+                                            <i class="bi bi-printer"></i>&nbsp;Print
+                                        </a>
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>

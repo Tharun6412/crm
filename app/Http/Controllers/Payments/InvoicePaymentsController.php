@@ -136,13 +136,23 @@ class InvoicePaymentsController extends Controller
         $payments = InvoicePayment::whereHas('invoice', function($q) use($id) {
             $q->where(['consumer_id' => $id, 'type_id' => InvoiceType::GAS_BILL->value]);
         })->orderBy('created_at', 'desc')->paginate(10)->withQueryString();
+
+        // Render output
         return view('consumers.consumers.show-payments', [
             'payments' => $payments,
         ]);
     }
-    // Payment receipt
-    public function receipt(Request $request, $id)
+
+    /**
+     * Print invoice payment
+     * @param int payment_id
+     */
+    public function print(Request $request, $id)
     {
-        return view('payments.invoices.receipt');    
+        // Get Payment details
+        $payment_data = InvoicePayment::find($id);
+
+        // Render output
+        return view('payments.invoices.receipt', ['payment_data' => $payment_data]);
     }
 }

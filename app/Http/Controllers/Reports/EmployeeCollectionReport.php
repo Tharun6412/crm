@@ -24,13 +24,11 @@ class EmployeeCollectionReport extends Controller
 
         if($request->ajax()) {
             // Validation
-            if(($request->filter_name == "show") AND empty($request->date_from) AND empty($request->date_to)) {
-                $request->validate([
-                    'date_from' => 'required|date_format:d-m-Y',
-                    'date_to' => 'required|date_format:d-m-Y',
-                ]);
-            }
-            $request->validate(['ga_id' => 'required']);
+            $request->validate([
+                'ga_id' => 'required',
+                'date_from' => 'required|date_format:d-m-Y',
+                'date_to' => 'required|date_format:d-m-Y',
+            ]);
 
             // Employee collection
             $employee_collection = User::select('id', 'emp_id', 'first_name', 'last_name')

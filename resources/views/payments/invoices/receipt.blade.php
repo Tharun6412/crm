@@ -1,7 +1,7 @@
 {{-- Payments landing page --}}
 @extends('layouts.layout')
 @section('title', 'Payment Receipt')
-@section('page-title', 'Payment Receipt#')
+@section('page-title', 'Payment Receipt#' . $payment_data->code ?? '')
 
 @section('page-content')
     <div class="d-flex align-content-md-start">
@@ -19,76 +19,66 @@
                 <div class="row">
                     <div class="col-sm-7">
                         <address>
-                            <span class="fw-semibold">Megha Gas Distribution Privated Limited. </span><br>
-                                S-2, Technocrat Industrial Estate,<br>
-                                Balanagar,Hyderabad,<br>
-                                Telangana - 500 037<br>
+                            <span class="fw-semibold">Megha Gas Distribution Privated Limited. </span><br/>                        
                              {{-- Address component --}}
-                            {{-- <x-master.gaAddress :ga-id="$sd_payment->consumer->ga_id"/> --}}
+                            <x-master.gaAddress :ga-id="$payment_data->invoice->consumer->ga_id"/>
                         </address>
                         <address>
-                            <strong>MEGHA ENGINEERING and INFRASTRUCTURE LTD (STAFF ACCOMMODATION AGP MAIN)</strong><br>
-                            2-69/1/34, GROUND FLOOR, AGIRIPALLI,<br>
-                            Landmark : OPP: GOVT JUNIOR COLLEGE,<br>
-                            Agiripalli,<br>
-                            Krishna,<br>
-                            Andhra Pradesh - 521211<br>
+                            <strong>{{ $payment_data->invoice->consumer->name}}</strong><br>
+                            {{ $payment_data->invoice->consumer->cofDisplay?->name }} {{ $payment_data->invoice->consumer->cof_name }}<br>
+                            {{ $payment_data->invoice->consumer->hno }}, {{ $payment_data->invoice->consumer->street }},<br>
+                            {{ $payment_data->invoice->consumer->colony }}, {{ $payment_data->invoice->consumer->city }},<br>
+                            {{ $payment_data->invoice->consumer->district->name ?? '' }}, {{ $payment_data->invoice->consumer->ga->state->name ?? '' }} - {{ $payment_data->invoice->consumer->pincode }}.
                         </address>
                     </div>
                     <div class="col-sm-5">
                         <div class="row gy-1 gx-2">
                             <div class="col-sm-6 text-end">Invoice Number:</div>
-                            <div class="col-sm-6">260211031376</div>
+                            <div class="col-sm-6 ps-2">{{ $payment_data->invoice->invoice_number ?? '' }}</div>
                             <div class="col-sm-6 text-end">Invoice Date:</div>
-                            <div class="col-sm-6">11-04-2026</div>
+                            <div class="col-sm-6 ps-2">{{ $payment_data->invoice->invoice_date?->format('d-m-Y') }}</div>
                             <div class="col-sm-6 text-end">Invoice due date:</div>
-                            <div class="col-sm-6">26-04-2026</div>
+                            <div class="col-sm-6 ps-2">{{ $payment_data->invoice->due_date?->format('d-m-Y') }}</div>
                             <div class="col-sm-6 text-end">Amount Payable:</div>
-                            <div class="col-sm-6">10,420.35</div>
-                            <div class="col-sm-6 text-end">After Due Date:</div>
-                            <div class="col-sm-6">10,440.35</div>
+                            <div class="col-sm-6 ps-2">{{ numberFormat($payment_data->invoice->payable_amount, 2) }}</div>
                         </div>
                     </div>
                 </div> 
-                <div class="text-center p-2 border border-success text-success fw-semibold mt-1">Receipt Amount Paid successfully.</div>                
+                <div class="text-center p-2 border border-success text-success fw-semibold mt-1">Payment Received successfully.</div>                
                 <div class="fw-semibold fs-5 mt-1">Payment Details</div>
                 <table class="table table-bordered table-success fs-6 table-sm align-middle">                    
                     <tbody>
                         <tr>
                             <td class="bg-light" width="40%">Consumber Number</td>
-                            <td>112500038</td>
-                        </tr>
-                        <tr>
-                            <td class="bg-light">Invoice No</td>
-                            <td>260211031376</td>
-                        </tr>
-                        <tr>
-                            <td class="bg-light" width="40%">Invoice Date</td>
-                            <td>11-04-2026</td>
+                            <td>{{ $payment_data->invoice->consumer->crn ?? '' }}</td>
                         </tr>
                         <tr>
                             <td class="bg-light" width="40%">Payment Date</td>
-                            <td>12-04-2026</td>
+                            <td>{{ $payment_data->payment_date?->format('d-m-Y') }}</td>
                         </tr>
                         <tr>
                             <td class="bg-light" width="40%">Payment type</td>
-                            <td>Cash Payment</td>
+                            <td>{{ $payment_data->paymentType->name ?? '' }}</td>
                         </tr>
                         <tr>
                             <td class="bg-light" width="40%">Cheque No / Transaction no</td>
-                            <td class="fw-semibold">ref12345678</td>
+                            <td class="fw-semibold">{{ $payment_data->payTransaction->transaction_id ?? $payment_data->transaction_id }}</td>
                         </tr>
                         <tr>
                             <td class="bg-light" width="40%">Paid amount (Rs)</td>
-                            <td class="fw-semibold">101.00</td>
-                        </tr>
-                        <tr>
-                            <td class="bg-light" width="40%">Service Charge (Rs)</td>
-                            <td class="fw-semibold">0.00</td>
+                            <td class="fw-semibold">{{ numberFormat($payment_data->amount, 2) }}</td>
                         </tr>
                         <tr>
                             <td class="bg-light" width="40%">Due amount (Rs)</td>
-                            <td class="fw-semibold">10,319.35</td>
+                            <td class="fw-semibold">{{ numberFormat($payment_data->balance, 2) }}</td>
+                        </tr>
+                        <tr>
+                            <td class="bg-light" width="40%">Payment Created By</td>
+                            <td class="fw-semibold">{{ $payment_data->createdBy->emp_id ?? 'Self' }}</td>
+                        </tr>
+                        <tr>
+                            <td class="bg-light" width="40%">Payment Created At</td>
+                            <td>{{ $payment_data->created_at?->format('d-m-Y H:i') }}</td>
                         </tr>
                         <tr>
                             <td colspan="2">
@@ -110,7 +100,7 @@ PlayStore and Appstore.</li>
                         </tr>    
                         <tr class="border-0">
                             <td class="border-0 text-start text-dark">Thank You.!</td>
-                            <td class="border-0 text-end text-muted" style="font-size:12px;">This is computer generated receipt.</td>
+                            <td class="border-0 text-end text-muted" style="font-size:11px;">**This is computer generated receipt.</td>
                         </tr>    
                     </tbody>
                 </table>
@@ -118,18 +108,19 @@ PlayStore and Appstore.</li>
         </div>
         <div class="p-3">
             <button class="btn btn-primary" onclick="printDiv('printableArea')"><i class="bi bi-printer"></i>&nbsp;Print Receipt</button>
+            <a href="{{ url('bill/invoice/' . $payment_data->invoice_id) }}" class="btn btn-info"><i class="bi bi-chevron-left"></i>&nbsp;Back to Invoice</a>
         </div>
     </div>
 @endsection
 {{-- Styles --}}
 @push('styles')
 <style>
+    body {
+        background-color: #F7F7F7;
+    }
     .a4-page {
         width: 210mm;
         min-height: 180mm;
-    }
-    body {
-        background-color: #F7F7F7;
     }
 </style>
 @endpush

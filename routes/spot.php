@@ -1,10 +1,11 @@
 <?php
 
+use App\Http\Middleware\ModuleAccess;
 use App\Http\Middleware\RouteAccess;
 use Illuminate\Support\Facades\Route;
 
 // Prospects 
-Route::middleware(['auth', RouteAccess::class])->group(function() {
+Route::middleware(['auth', ModuleAccess::class])->group(function() {
     // Dashboard
     // Route::get('/', [App\Http\Controllers\Spot\DashboardController::class, 'index']);
  
