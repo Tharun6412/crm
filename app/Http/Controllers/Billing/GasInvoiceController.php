@@ -51,7 +51,7 @@ class GasInvoiceController extends Controller
             ->where('status_id', ConsumerStatus::ACTIVATE->value)
             ->where('connection_type_id', ConnectionType::POSTPAID->value)
             ->with(['statusHistory' => function ($q) {
-                $q->where('status_id', ConsumerStatus::ACTIVATE->value)->latest()->limit(1);
+                $q->whereIn('status_id', [ConsumerStatus::ACTIVATE->value, ConsumerStatus::RECONNECT->value])->latest()->limit(1);
             }])->first();
         if($consumer) {
             // 2. Get latest gas invoice if exists

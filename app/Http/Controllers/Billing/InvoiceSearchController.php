@@ -26,11 +26,11 @@ class InvoiceSearchController extends Controller
             }
             // Get Invoices
             $invoices = BillInvoice::with([
-                'consumer:id,crn,ga_id', 
+                'consumer:id,crn,fname,lname,ga_id', 
                 'status:id,name',
                 'invoiceType:id,name'
             ])
-            ->where('status_id', InvoiceStatus::NOT_PAID->value)
+            // ->where('status_id', InvoiceStatus::NOT_PAID->value)
             ->where(function ($q) use ($request) {
                 $q->whereHas('consumer', function ($q1) use ($request) {
                     // GA restriction

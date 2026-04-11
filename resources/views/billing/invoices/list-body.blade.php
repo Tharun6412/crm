@@ -24,7 +24,7 @@
                         <tr>
                             <td class="text-center">{{ $i++ }}</td>
                             <td><x-auth.link href="{{ url('consumers/'.$invoice->consumer_id) }}" target="_blank">{{ $invoice->consumer->crn }}</x-auth.link></td>
-                            <td>{{ $invoice->consumer->name }}</td>
+                            <td>{{ $invoice->consumer->fname." ". $invoice->consumer?->lname }}</td>
                             <td><a href="{{ url('bill/invoice/' . $invoice->id) }}" target="_blank">{{ $invoice->invoice_number }}</a></td>
                             <td>{{ $invoice->invoice_date?->format('d-m-Y') }}</td>
                             <td class="text-end">{{ numberFormat($invoice->total_amount, 2) }}</td>

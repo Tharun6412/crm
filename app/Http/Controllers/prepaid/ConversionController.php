@@ -110,14 +110,15 @@ class ConversionController extends Controller
         // Update consumer connection type to prepaid
         $consumer->connection_type_id = ConnectionType::PREPAID->value;
         $consumer->save();
-
+        // Inactive the previous active meters.
+        $meter_update = ConsumerMeter::where('consumer_id', $consumer->id)->where('status', MeterStatus::ACTIVE->value)->update(['status' => MeterStatus::INACTIVE->value]);
         // Add new meter
         $new_meter = ConsumerMeter::create([
             'consumer_id' => $id,
             'meter_no' => $request->meter_no,
             'meter_serial_no' => $request->meter_sno,
             'initial_reading' => $request->meter_reading,
-            'status' => MeterStatus::INACTIVE->value,
+            'status' => MeterStatus::ACTIVE->value,
             'created_by' => Auth::id(),
         ]);
 
