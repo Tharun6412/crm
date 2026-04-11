@@ -51,7 +51,8 @@ class ComplaintsController extends Controller
             'consumer:id,crn,fname,lname',
             'segment:id,name',
             'status:id,name',
-            'priority:id,name'
+            'priority:id,name',
+            'feedback',
         ])->when($request->filled('key'), function ($q) use($request) {
             $q->where(function ($query) use ($request) {
                 $query->where('code', 'like', '%' . $request->key . '%')

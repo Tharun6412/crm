@@ -22,7 +22,8 @@
         </div>
     </div>
     <div>
-        <x-auth.link href="{{ url('calls/complaintExport') }}?{{ http_build_query(request()->all()) }}" class="btn btn-outline-primary" action="exprt"><i class="bi bi-file-earmark-excel"></i>&nbsp;Export</x-auth.link>
+        <a href="{{ url('calls/complaintExport') .'?'. http_build_query(request()->all()) }}" class="btn btn-outline-primary"><i class="bi bi-file-earmark-excel"></i>&nbsp;Export</a>
+        {{-- <x-auth.link href="{{ url('calls/complaintExport', request()->all()) }}" class="btn btn-outline-primary" action="exprt"><i class="bi bi-file-earmark-excel"></i>&nbsp;Export</x-auth.link> --}}
     </div>
 </div>
 {{-- Complaints / Calls list --}}
@@ -72,6 +73,7 @@
                         <x-master.date-filter  class="float-end" />
                     </div> 
                 </th>
+                <th>Raised By</th>
                 <th nowrap>Est. Close Date</th>
                 <th nowrap>Closed Date</th>
                 <th nowrap>Deviation</th>
@@ -103,6 +105,7 @@
                         <td nowrap>{{ ($complaint->consumer_id > 0) ? $complaint->consumer?->name : $complaint?->name }}</td>
                         <td nowrap>{{ $complaint->segment?->name }}</td>
                         <td nowrap>{{ dateFormat($complaint->created_at) }}</td>
+                        <td nowrap>{{ $complaint->createdBy?->name ?? ''}}</td>
                         <td nowrap>
                             {{ $complaint->estimated_closed_at?->format('d-m-y H:i') }}
                         </td>

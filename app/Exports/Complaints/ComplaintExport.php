@@ -5,6 +5,7 @@ namespace App\Exports\Complaints;
 use App\Models\Complaint\Complaint;
 use App\Models\Master\ComplaintCategory;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\WithHeadings;
@@ -27,9 +28,7 @@ class ComplaintExport implements FromQuery, WithHeadings, WithMapping
     {
         $sortBy = $this->request->get('sortBy', 'created_at');
         $sortOr = $this->request->get('sortOr', 'desc');
-
         return Complaint::query()
-            ->from('cmp_complaints')
             // JOINS (ONLY ONCE)
             ->leftJoin('cns_consumers', 'cns_consumers.id', '=', 'cmp_complaints.consumer_id')
             ->leftJoin('mst_segments', 'mst_segments.id', '=', 'cmp_complaints.segment_id')
@@ -38,6 +37,7 @@ class ComplaintExport implements FromQuery, WithHeadings, WithMapping
             ->leftJoin('mst_cmp_categories as sub_cat', 'sub_cat.id', '=', 'cmp_complaints.category_id')
             ->leftJoin('mst_cmp_categories as parent_cat', 'parent_cat.id', '=', 'sub_cat.parent_id')
             ->leftJoin('mst_gas', 'mst_gas.id', '=', 'cmp_complaints.ga_id')
+            ->leftJoin('users', 'users.id', '=', 'cmp_complaints.created_by')
             // SELECT ONLY REQUIRED FIELDS
             ->select([
                 'cmp_complaints.code',
@@ -47,14 +47,15 @@ class ComplaintExport implements FromQuery, WithHeadings, WithMapping
                 'mst_gas.name as ga_name',
                 'mst_segments.name as segment_name',
                 'mst_cmp_status.name as status_name',
-                'mst_cmp_status.name as priority_name',
+                'mst_cmp_priorities.name as priority_name',
                 'parent_cat.name as category_name',
                 'sub_cat.name as subcategory_name',
                 'sub_cat.resolution_type',
                 'cns_consumers.crn',
                 'cns_consumers.fname as consumer_name',
                 'cmp_complaints.name as manual_name',
-                'cmp_complaints.consumer_id'
+                'cmp_complaints.consumer_id',
+                DB::raw('CONCAT_WS(" ",users.first_name,users.last_name) as raised_name')
             ])
 
             ->when($this->request->filled('key'), function ($q) {
@@ -63,7 +64,7 @@ class ComplaintExport implements FromQuery, WithHeadings, WithMapping
                 $q->where(function ($query) use ($key) {
                     $query->where('cmp_complaints.code', 'like', "%{$key}%")
                         ->orWhere('cns_consumers.crn', 'like', "%{$key}%")
-                        ->orWhere('cns_consumers.name', 'like', "%{$key}%");
+                        ->orWhere('cns_consumers.fname', 'like', "%{$key}%");
                 });
             })
             ->when(!empty($this->request->segment_id), fn($q) =>
@@ -78,18 +79,15 @@ class ComplaintExport implements FromQuery, WithHeadings, WithMapping
             })
             ->when(!empty($this->request->geo_area), fn($q) =>
                 $q->whereIn('cmp_complaints.ga_id', $this->request->geo_area))
-            ->when(!empty($this->request->date_from) && !empty($this->request->date_to), function ($q) {
-                $q->whereBetween('cmp_complaints.created_at', [
-                    Carbon::createFromFormat('d-m-Y', $this->request->date_from)->startOfDay(),
-                    Carbon::createFromFormat('d-m-Y', $this->request->date_to)->endOfDay()
-                ]);
+            ->when((!empty($this->request->date_from) and !empty($this->request->date_to)), function($q) {
+                $q->whereBetween('cmp_complaints.created_at', [Carbon::createFromFormat('d-m-Y', $this->request->date_from)->startOfDay()->toDateTimeString(), Carbon::createFromFormat('d-m-Y', $this->request->date_to)->endOfDay()->toDateTimeString()]);
             })
-            ->orderBy("cmp_complaints.$sortBy", $sortOr);
+            ->orderBy('cmp_complaints.created_at', 'desc');
     }
 
     public function headings(): array
     {
-        return ['S.No', 'GA', 'Complaint Number', 'Category', 'Sub Category', 'CRN', 'Name', 'Segment', 'Raised Date', 'Estimated Close Date', 'Closed Date', 'Deviation', 'Priority', 'Status'];
+        return ['S.No', 'GA', 'Complaint Number', 'Category', 'Sub Category', 'CRN', 'Name', 'Segment', 'Raised Date', 'Raised By', 'Estimated Close Date', 'Closed Date', 'Deviation', 'Priority', 'Status'];
     }
 
     public function map($row): array
@@ -100,7 +98,7 @@ class ComplaintExport implements FromQuery, WithHeadings, WithMapping
         $now = ($row->closed_at) ? $row->closed_at : \Carbon\Carbon::now();
         $estimated = \Carbon\Carbon::parse($row->estimated_closed_at);
 
-        if ($row?->category?->resolution_type == 1) {
+        if ($row->resolution_type == 1) {
             $days = abs($now->diffInDays($estimated));
             $difference = ceil($days) . ' days';
         } else {
@@ -112,7 +110,7 @@ class ComplaintExport implements FromQuery, WithHeadings, WithMapping
             }
         }
         //for close no deviation required
-        if($now > $row?->estimated_closed_at) {
+        if($now > $row->estimated_closed_at) {
             $deviation_diff = $difference;
         }else {
             $deviation_diff = 0;
@@ -127,6 +125,7 @@ class ComplaintExport implements FromQuery, WithHeadings, WithMapping
             ($row->consumer_id > 0) ? $row->consumer_name : $row->manual_name,
             $row->segment_name,
             dateFormat($row->created_at),
+            $row?->raised_name,
             optional($row->estimated_closed_at)->format('d-m-y H:i'),
             dateFormat($row->closed_at),
             $deviation_diff,
