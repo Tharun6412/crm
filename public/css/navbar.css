@@ -39,6 +39,53 @@
     white-space: nowrap;
     display: block
 }
+#leftside-menu-container {
+    max-height: 100vh;
+}
+.simplebar-content-wrapper {
+    max-height: 100vh;
+    overflow-y: auto !important;
+}
+.simplebar-content {
+    padding-bottom: 50px;
+}
+.simplebar-mask {
+    overflow: visible !important;
+}
+/* ===== Track (container) ===== */
+.simplebar-track.simplebar-vertical {
+    width: 3px;
+    right: 2px;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+}
+
+/* Show on hover (works in all modes) */
+.simplebar-content-wrapper:hover ~ .simplebar-track.simplebar-vertical,
+.simplebar-track.simplebar-vertical:hover {
+    opacity: 1 !important;
+}
+/* ===== Scrollbar Thumb ===== */
+.simplebar-scrollbar::before {
+    background: rgba(120, 120, 120, 0.35) !important;
+    border-radius: 10px !important;
+    transition: all 0.25s ease;
+}
+/* Hover effect */
+.simplebar-scrollbar:hover::before {
+    background: rgba(120, 120, 120, 0.65) !important;
+}
+/* Active (while dragging) */
+.simplebar-scrollbar.simplebar-visible::before {
+    opacity: 1;
+}
+.simplebar-track.simplebar-vertical {
+    visibility: visible !important;
+}
+.simplebar-content-wrapper {
+    scroll-behavior: smooth;
+}
+
 .side-nav .collapse {
     display: none;
 }
@@ -253,7 +300,6 @@
 .side-nav-forth-level {
     padding-left: calc(var(--bs-menu-item-padding-x) * 2)
 }
-
 .navbar-custom {
     background: var(--bs-topbar-bg);
     -webkit-box-shadow: var(--bs-box-shadow);
@@ -478,6 +524,9 @@
     margin-top: 60px;
 }
 /* Only items that contain third level */
+.side-nav .side-nav-second-level .side-nav-link {
+    padding: 5px 0px!important;
+}
 .side-nav .side-nav-second-level .side-nav-link i{
     font-size: 15px!important;
 }

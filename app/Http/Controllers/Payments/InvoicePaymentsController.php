@@ -140,4 +140,9 @@ class InvoicePaymentsController extends Controller
             'payments' => $payments,
         ]);
     }
+    // Payment receipt
+    public function receipt(Request $request, $id)
+    {
+        return view('payments.invoices.receipt');    
+    }
 }
