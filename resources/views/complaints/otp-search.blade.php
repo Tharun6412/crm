@@ -2,14 +2,14 @@
 
 @extends('layouts.layout')
 
-@section('title', 'Calls OTP')
+@section('title', 'Complaint Close OTPs')
 
-@section('page-title', 'Calls OTP')
+@section('page-title', 'Complaint Close OTPs')
 
 @section('page-content')
     {{-- Quick search --}}
     <div>
-        <form action="{{ url('calls/displayOtp') }}" id="consumer-otp-search-form" method="GET">
+        <form action="{{ url('calls/closeOtps') }}" id="consumer-otp-search-form" method="GET">
             <div class="rounded bg-info-subtle p-3 mb-3">
                 <div class="row justify-content-sm-center">
                     <div class="col-sm-6">

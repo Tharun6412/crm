@@ -249,18 +249,18 @@
                 <a href="{{ url('calls/reports/complaints') }}?tab=deviation" target="_blank" class="text-body-secondary">
                     <div class="p-3 reports-bg border border-3 border-light shadow-sm rounded-3">
                         <div class="d-flex align-items-center gap-2">
-                            <div class="p-1 reports-bg rounded-4 py-2 px-3 shadow-sm"><i class="bi bi-signpost-split fs-4"></i></div>
+                            <div class="p-1 reports-bg rounded-4 py-2 px-3 shadow-sm"><i class="bi bi-box-arrow-up-right fs-4"></i></div>
                             <div class="fs-6 fw-semibold text-center"><span>Deviaton Report</span></div>
                         </div>
                     </div>
                 </a>
             </div>
             <div class="col-sm-2">
-                <a href="{{ url('calls/closeOtp') }}" target="_blank" class="text-body-secondary">
+                <a href="{{ url('calls/closeOtps') }}" target="_blank" class="text-body-secondary">
                     <div class="p-3 reports-bg border border-3 border-light shadow-sm rounded-3">
                         <div class="d-flex align-items-center gap-2">
-                            <div class="p-1 reports-bg rounded-4 py-2 px-3 shadow-sm"><i class="bi bi-signpost-split fs-4"></i></div>
-                            <div class="fs-6 fw-semibold text-center"><span>Close OTP</span></div>
+                            <div class="p-1 reports-bg rounded-4 py-2 px-3 shadow-sm"><i class="bi bi-phone-vibrate fs-4"></i></div>
+                            <div class="fs-6 fw-semibold text-center"><span>Closing OTPs</span></div>
                         </div>
                     </div>
                 </a>

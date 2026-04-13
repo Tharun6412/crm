@@ -7,8 +7,8 @@
                         <th width="1%" nowrap>S.No</th>
                         <th>Mobile</th>
                         <th>OTP</th>
-                        <th>Generated Date</th>
-                        <th>Expired Date</th>
+                        <th>Generated AT</th>
+                        <th>Expires AT</th>
                         <th>Status</th>
                     </tr>
                 </thead>
@@ -24,7 +24,7 @@
                         <td>{{ $otp_details->expires_at->format('d-m-Y H:i') }}</td>
                         <td>
                             @if ($otp_details->is_used == 0)
-                                <span>Otp not used</span>
+                                <span>Waiting</span>
                             @else
                                 <span>Otp used</span>
                             @endif
@@ -34,7 +34,7 @@
             </table>
         </div>
     @else
-        <div class="alert alert-info">
+        <div class="alert alert-warning">
             No record found
         </div>
     @endif
