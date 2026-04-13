@@ -88,6 +88,9 @@ class ComplaintExport implements FromQuery, WithHeadings, WithMapping
                     fn($q) => $q->whereDoesntHave('feedback')
                 );
             })
+            ->when(!(isAdmin() OR isSuperAdmin() OR isFullAccess()), function ($q) {
+                $q->whereIn('cmp_complaints.ga_id', session('user')['gas']);
+            })
             ->when(!empty($this->request->geo_area), fn($q) =>
                 $q->whereIn('cmp_complaints.ga_id', $this->request->geo_area))
             ->when((!empty($this->request->date_from) and !empty($this->request->date_to)), function($q) {

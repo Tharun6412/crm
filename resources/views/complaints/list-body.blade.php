@@ -145,7 +145,7 @@
                                         <li><x-auth.link class="dropdown-item link-modal" href="{{ url('calls/close/'.$complaint->id) }}" action="close"><i class="bi bi-chevron-right"></i>&nbsp;Close</x-auth.link></li>
                                         <li><x-auth.link class="dropdown-item link-modal" href="{{ url('calls/cancel/'.$complaint->id) }}" action="cncl"><i class="bi bi-chevron-right"></i>&nbsp;Cancel</x-auth.link></li>
                                     @endif
-                                    @if ($complaint->status_id == ComplaintStatus::ASSIGN->value and (isAdmin() || auth()->id() == $complaint->assign->assigned_to))
+                                    @if ($complaint->status_id == ComplaintStatus::ASSIGN->value)
                                         <li><x-auth.link class="dropdown-item link-modal" href="{{ url('calls/inProgress/'.$complaint->id) }}" action="inprgs"><i class="bi bi-chevron-right"></i>&nbsp;In Progres</x-auth.link></li>
                                         <li><x-auth.link class="dropdown-item link-modal" href="{{ url('calls/investigate/'.$complaint->id) }}" action="invstgn"><i class="bi bi-chevron-right"></i>&nbsp;Investigate</x-auth.link></li>
                                     @endif
@@ -162,7 +162,7 @@
                 @endforeach
             @else
                 <tr>
-                    <td colspan="16">
+                    <td colspan="17">
                         <x-layouts.callout-info>No records found!</x->
                     </td>
                 </tr>

@@ -88,7 +88,7 @@
                 <div class="mx-3 p-3 border">
                     <h4 class="text-info text-decoration-underline">Feedback Details:</h4>
                     <div>
-                        <span class="fw-semibold"><i class="bi bi-person-heart"></i>&nbsp;{{ $complaint->feedback->collectable->name }}</span>&nbsp;
+                        <span class="fw-semibold"><i class="bi bi-person-heart"></i>&nbsp;{{ $complaint->feedback->collectable?->name }}</span>&nbsp;
                         <x-complaint.rating :rating="$complaint->feedback->rating"/>
                     </div>
                     <figure class="ms-3">

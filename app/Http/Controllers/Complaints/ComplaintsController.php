@@ -62,6 +62,9 @@ class ComplaintsController extends Controller
                     });
             });
         })
+        ->when(!(isAdmin() OR isSuperAdmin() OR isFullAccess()), function ($q) {
+            $q->whereIn('ga_id', session('user')['gas']);
+        })
         ->when($request->has('segment_id'), function($q) use($request) {
             $q->whereIn('segment_id', $request->segment_id);
         })

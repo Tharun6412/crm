@@ -255,6 +255,16 @@
                     </div>
                 </a>
             </div>
+            <div class="col-sm-2">
+                <a href="{{ url('calls/closeOtp') }}" target="_blank" class="text-body-secondary">
+                    <div class="p-3 reports-bg border border-3 border-light shadow-sm rounded-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <div class="p-1 reports-bg rounded-4 py-2 px-3 shadow-sm"><i class="bi bi-signpost-split fs-4"></i></div>
+                            <div class="fs-6 fw-semibold text-center"><span>Close OTP</span></div>
+                        </div>
+                    </div>
+                </a>
+            </div>
         </div>    
     </div>
 @endsection
