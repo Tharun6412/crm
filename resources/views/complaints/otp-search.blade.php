@@ -6,6 +6,10 @@
 
 @section('page-title', 'Complaint Close OTPs')
 
+@section('breadcrumb')
+    <li class="breadcrumb-item"><a href="{{ url('calls/dashboard') }}">Calls</a></li>
+@endsection
+
 @section('page-content')
     {{-- Quick search --}}
     <div>

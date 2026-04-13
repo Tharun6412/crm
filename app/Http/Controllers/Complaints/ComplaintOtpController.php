@@ -9,7 +9,7 @@ use App\Models\Consumer\Consumer;
 use App\Models\Service\Otp;
 use Illuminate\Http\Request;
 
-class complaintOtpController extends Controller
+class ComplaintOtpController extends Controller
 {
     /**
      * Quick Search 
