@@ -52,5 +52,5 @@ Route::middleware(['auth', ModuleAccess::class])->group(function() {
     Route::get('reports/categoryReport',[App\Http\Controllers\Complaints\ReportsController::class, 'categoryReport']);
     Route::get('reports/deviationReport',[App\Http\Controllers\Complaints\ReportsController::class, 'deviationReport']);
     // Calls OTP display
-    Route::resource('closeOtps',App\Http\Controllers\Complaints\complaintOtpController::class);
+    Route::resource('closeOtps',App\Http\Controllers\Complaints\ComplaintOtpController::class);
 });
