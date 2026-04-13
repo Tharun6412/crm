@@ -15,7 +15,7 @@
                             <th>Installed Date</th>
                             <th>Installed By</th>
                             <th>Status</th>
-                            <th>Actions</th>
+                            {{-- <th>Actions</th> --}}
                         </tr>
                     </thead>
                     <tbody>
@@ -34,9 +34,9 @@
                                          <span class="badge rounded-pill text-bg-success">Replaced</span>
                                     @endif
                                 </td>
-                                <td>
+                                {{-- <td>
                                     <a href="{{ url('meterDetails') }}" class="btn btn-outline-primary btn-sm">View</a>
-                                </td>
+                                </td> --}}
                             </tr>
                         @endforeach
                     </tbody>

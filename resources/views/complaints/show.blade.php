@@ -51,8 +51,8 @@
                 <div class="row g-2 mt-1">
                     <div class="col-sm-2 text-end fw-semibold">Assigned To : </div>
                     <div class="col-sm-4">{{ $complaint->assign->assigned?->first_name }}&nbsp;{{ $complaint?->assign->assigned?->last_name }}&nbsp;({{ $complaint->assign->assigned?->emp_id }})</div>
-                    <div class="col-sm-2 text-end fw-semibold">Date : </div>
-                    <div class="col-sm-4">{{ $complaint?->assign->created_at?->format('d-m-Y') }}</div>
+                    <div class="col-sm-2 text-end fw-semibold">Assigned Date : </div>
+                    <div class="col-sm-4">{{ $complaint?->assign->created_at?->format('d-m-Y H:i') }}</div>
                 </div>
             @endif
 
