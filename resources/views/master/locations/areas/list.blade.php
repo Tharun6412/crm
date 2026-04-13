@@ -11,7 +11,7 @@
 @endsection
 
 @section('page-content')
-    <form action="{{ url('master/areas') }}" id="area-search-form" method="GET">
+    <form action="{{ url('master/location/areas') }}" id="area-search-form" method="GET">
         <div id="area-list">
             @include('master.locations.areas.list-body')
         </div>

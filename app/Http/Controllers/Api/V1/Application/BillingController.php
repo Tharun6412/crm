@@ -108,7 +108,7 @@ class BillingController extends Controller
         if (!$consumer) {
             return response()->json([
                 'message' => 'Invalid or inactive consumer for billing'
-            ], 403);
+            ], 422);
         }
         // 4. Data preperation.
         $invoice = $consumer->invoices()->where('type_id', InvoiceType::GAS_BILL->value)->whereNot('status_id', InvoiceStatus::CANCEL->value)->latest()->first();
@@ -191,7 +191,9 @@ class BillingController extends Controller
         if($invoice_resp) {   
             // Response Message
             return response()->json([
-                'success' => 'Gas Invoice Created Successfully with invoice number ' . $invoice_resp['invoice_number']
+                'success' => 'Gas Invoice Created Successfully with invoice number ' . $invoice_resp['invoice_number'],
+                'invoice_id' => $invoice_resp['invoice_id'],
+                'invoice_number' => $invoice_resp['invoice_number'],
             ]);
         }
     }
