@@ -6,7 +6,7 @@
     </div>
     <div class="p-2">
         @if ($invoices->count() > 0)
-            <div class="table-responsive">
+            <div class="table-responsive" style="min-height: 300px;">
                 <table class="table table-bordered table-hover table-primary">
                     <thead class="table-primary">
                         <tr>
@@ -41,7 +41,9 @@
                                             @if (in_array($invoice->status_id, [2,3]))
                                                 <li><x-auth.link class="dropdown-item link-modal" href="{{ url('payments/gasPayments/create/'.$invoice->id) }}" action="payinv"><i class="bi bi-cash"></i>&nbsp;Pay Invoice</x-auth.link></li>
                                             @endif
-                                            <li><a href="{{ url('dc/documents/' . $invoice->consumption?->file_id) }}" title="{{ $invoice->consumption->file?->file_name }}" target="_blank"><i class="bi bi-file-earmark-pdf fs-3"></i></a></li>     
+                                            @empty(!$invoice->consumption->file_id)
+                                                <li><a class="dropdown-item" href="{{ url('master/dc/documents/' . $invoice->consumption?->file_id) }}" title="{{ $invoice->consumption->file?->file_name }}" target="_blank"><i class="bi bi-image"></i>&nbsp;Meter Image</a></li>
+                                            @endempty
                                             <li><a class="dropdown-item" href="#"><i class="bi bi-printer"></i>&nbsp;Print</a></li>
                                         </ul>
                                     </div>

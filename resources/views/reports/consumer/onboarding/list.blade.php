@@ -28,15 +28,14 @@
                         <h4 class="mb-0">Consumer Acitivity</h4>
                         <div class="row g-1">
                             <div class="col-auto">
-                                <div class="row">
-                                    <label class="form-label">Status Date</label>
-                                    <div class="input-group">
-                                        <input type="text" name="status_date" id="status_date" class="form-control" placeholder="DD-MM-YYYY" value="{{ request()->status_date }}">
-                                        <label for="status_date" class="input-group-text"><i class="bi bi-calendar3"></i></label>
-                                    </div>
+                                <label for="status_date" class="text-danger text-bg-yellow px-2">Registrations From</label>
+                                <div class="input-group">
+                                    <input type="text" name="status_date" id="status_date" class="form-control" placeholder="DD-MM-YYYY" value="{{ request()->status_date }}">
+                                    <label for="status_date" class="input-group-text"><i class="bi bi-calendar3"></i></label>
                                 </div>
                             </div>
                             <div class="col-auto">
+                                <label for="status_date">Connection Type</label>
                                 <select name="connection_type_id" id="connection_type_id" class="form-select">
                                     <option value="">All Connections</option>
                                     @foreach ($connection_types as $item)
@@ -45,6 +44,7 @@
                                 </select>
                             </div>
                             <div class="col-auto">
+                                <label for="status_date">Segments</label>
                                 <select name="segment_id" id="segment_id" class="form-select">
                                     <option value="">All Segments</option>
                                     @foreach ($segments as $item)
@@ -53,19 +53,24 @@
                                 </select>
                             </div>
                             <div class="col-auto">
+                                <label for="status_date">From Date</label>
                                 <div class="input-group">
                                     <input type="text" name="date_from" id="date_from" class="form-control" placeholder="DD-MM-YYYY" value="{{ request()->from_dt }}">
                                     <label for="date_from" class="input-group-text"><i class="bi bi-calendar3"></i></label>
                                 </div>
                             </div>
                             <div class="col-auto">
+                                <label for="status_date">To Date</label>
                                 <div class="input-group">
                                     <input type="text" name="date_to" id="date_to" class="form-control" placeholder="DD-MM-YYYY" value="{{ request()->to_dt }}">
                                     <label for="date_to" class="input-group-text"><i class="bi bi-calendar3"></i></label>
                                 </div>
                             </div>
                             <div class="col-auto">
-                                <button type="submit" class="btn btn-success"><i class="bi bi-search"></i></button>
+                                <label for="status_date">&nbsp;</label>
+                                <div>
+                                    <button type="submit" class="btn btn-success"><i class="bi bi-search"></i></button>
+                                </div>
                             </div>
                         </div>
                     </div>

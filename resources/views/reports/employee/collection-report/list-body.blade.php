@@ -28,7 +28,11 @@
                         <td>{{ $emp->name }}</td>
                         <td class="text-end">{{ numberFormat($emp->invoice_collection, 2) }}</td>
                         <td class="text-end">{{ numberFormat($emp->sd_collection, 2) }}</td>
-                        <td class="text-end">{{ numberFormat(($emp->invoice_collection + $emp->sd_collection), 2) }}</td>
+                        <td class="text-end">
+                            <a class="link-modal" href="{{ url('reports/employee/collection/details?emp_id=' . $emp->id . '&ga_id=' . $ga_id . '&date_from=' . $date_from . '&date_to=' . $date_to) }}">
+                                {{ numberFormat(($emp->invoice_collection + $emp->sd_collection), 2) }}
+                            </a>
+                        </td>
                     </tr>
                 @endforeach
                 <tr class="bg-info-subtle fw-semibold">
@@ -52,3 +56,4 @@
     'filename' => 'employee_report',
     'sheet'    => 'Report',
 ])
+@include('scripts.link-modal')

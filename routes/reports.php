@@ -28,6 +28,7 @@ Route::middleware(['auth', ModuleAccess::class])->group(function() {
     Route::get('consumer/refundReport', [App\Http\Controllers\Reports\RefundReportController::class, 'index']);
     // Employee Collection Report
     Route::get('employee/collection', [App\Http\Controllers\Reports\EmployeeCollectionReport::class, 'index']);
+    Route::get('employee/collection/details', [App\Http\Controllers\Reports\EmployeeCollectionReport::class, 'show']);
     // Refund Reports
     Route::get('consumer/refundReportExport', [App\Http\Controllers\Reports\RefundReportController::class, 'refundReportExport']);
     Route::get('consumer/refundReport', [App\Http\Controllers\Reports\RefundReportController::class, 'index']);

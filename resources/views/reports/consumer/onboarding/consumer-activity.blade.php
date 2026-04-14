@@ -25,7 +25,7 @@
             <div class="bg-success bg-gradient rounded text-white text-center py-1 px-2 fs-5">Activated</div>
         </div>
         <div class="col">
-            <div class="bg-success bg-gradient rounded text-white text-center py-1 px-2 fs-5">ReConnect</div>
+            <div class="bg-success bg-gradient rounded text-white text-center py-1 px-2 fs-5" title="Re-Connected">ReCon</div>
         </div>
         <div class="col">
             <div class="bg-warning bg-gradient rounded text-white text-center py-1 px-2 fs-5">TD</div>
