@@ -35,6 +35,8 @@ class RegistrationValidationRequest extends FormRequest
             'tenant_phone' => 'nullable|numeric|digits:10',
             'document_type.0' => 'required',
             'document_type.1' => 'required',
+            'document_type.2' => 'nullable',
+            'document_type.3' => 'nullable',
         ];
     }
 }

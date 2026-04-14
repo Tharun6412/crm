@@ -34,7 +34,14 @@ class CommercialValidationRequest extends FormRequest
             'pincode' => 'required|numeric|digits:6',
             'business_type_id' => 'required',
             'owner_phone' => 'nullable|numeric|digits:10',
-            'document_type.*' => 'required',
+            'document_type.0' => 'required',
+            'document_type.1' => 'required',
+            'document_type.2' => 'nullable',
+            'document_type.3' => 'nullable',
+            'dc_file_list.0' => 'required|file|max:51200',
+            'dc_file_list.1' => 'required|file|max:51200',
+            'dc_file_list.2' => 'nullable|file|max:51200',
+            'dc_file_list.3' => 'nullable|file|max:51200',
         ];
     }
 }

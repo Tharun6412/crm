@@ -337,6 +337,44 @@
                         </div>
                     </div>
                 </div>
+                <div class="row mb-2 pt-2">
+                    <div class="col-md-3 col-sm-6 col-xs-6">
+                        <label class="form-label">Document Type&nbsp;:</label>
+                        <select name="document_type[]" id="document_type_2" class="form-select">
+                            <option value="">Select</option>
+                            @foreach ($documents as $doc_val)
+                                <option value="{{ $doc_val->id }}">{{ $doc_val->name }}</option>
+                            @endforeach
+                        </select>
+                        <span class="text-danger validate-err-msg" id="document_type_2-error"></span>
+                    </div>
+                    <div class="col-md-4 col-sm-6 col-xs-6">
+                        <label class="form-label">Documents&nbsp;:</label>
+                        <div class="input-group">
+                            <input type="file" name="dc_file_list[]" id="dc_file_list_2" class="form-control">
+                            <span class="text-danger validate-err-msg" id="dc_file_list_2-error"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-2 pt-2">
+                    <div class="col-md-3 col-sm-6 col-xs-6">
+                        <label class="form-label">Document Type&nbsp;:</label>
+                        <select name="document_type[]" id="document_type_3" class="form-select">
+                            <option value="">Select</option>
+                            @foreach ($documents as $doc_val)
+                                <option value="{{ $doc_val->id }}">{{ $doc_val->name }}</option>
+                            @endforeach
+                        </select>
+                        <span class="text-danger validate-err-msg" id="document_type_3-error"></span>
+                    </div>
+                    <div class="col-md-4 col-sm-6 col-xs-6">
+                        <label class="form-label">Documents&nbsp;:</label>
+                        <div class="input-group">
+                            <input type="file" name="dc_file_list[]" id="dc_file_list_3" class="form-control">
+                            <span class="text-danger validate-err-msg" id="dc_file_list_3-error"></span>
+                        </div>
+                    </div>
+                </div>
                 <div class="mt-3">
                     <i class="bi bi-check-square"></i>&nbsp;I shared all details with consumer as per MeghaGas policy.<br/>
                     <i class="bi bi-check-square"></i>&nbsp;Consumer agreed with MeghaGas Policies.

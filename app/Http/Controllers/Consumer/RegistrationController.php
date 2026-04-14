@@ -129,12 +129,15 @@ class RegistrationController extends Controller
             
             // Insert documents
             foreach($request->document_type as $key => $doc_type) {
-                $add_consumer_document = ConsumerDocument::create([
-                    'consumer_id' => $add_consumer->id,
-                    'status_id' => EnumsConsumerStatus::PRE_REGISTER->value,
-                    'doc_type_id' => $doc_type,
-                    'file_id' => $documents_bulk['file_list'][$key]['file_id'],
-                ]);
+                $file_id = $documents_bulk['file_list'][$key]['file_id'] ?? null;
+                if (!empty($file_id)) {
+                    $add_consumer_document = ConsumerDocument::create([
+                        'consumer_id' => $add_consumer->id,
+                        'status_id' => EnumsConsumerStatus::PRE_REGISTER->value,
+                        'doc_type_id' => $doc_type,
+                        'file_id' => $file_id,
+                    ]);
+                }
             }
         }
         

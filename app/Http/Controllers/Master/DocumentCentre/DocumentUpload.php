@@ -62,6 +62,8 @@ class DocumentUpload extends Controller
             // 'dc_file_list' => 'required|array',
             'dc_file_list.0' => 'required|file|max:51200',
             'dc_file_list.1' => 'required|file|max:51200',
+            'dc_file_list.2' => 'nullable|file|max:51200',
+            'dc_file_list.3' => 'nullable|file|max:51200',
             'tag' => 'max:30',
             'description' => 'max:90',
         ]);
