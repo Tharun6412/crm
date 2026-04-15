@@ -83,7 +83,7 @@ class BillingController extends Controller
             return response()->json([
                 'status'  => 'error',
                 'message' => 'Invalid consumer for billing'
-            ], 403);
+            ], 422);
         }
     }
 
