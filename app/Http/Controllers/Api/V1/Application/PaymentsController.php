@@ -77,7 +77,9 @@ class PaymentsController extends Controller
     public function update(Request $request)
     {
         $invoice = BillInvoice::find($request->invoice_id);
-        $total_payable = round($invoice->balance_amount + $invoice->childInvoices->sum('payable_amount') + $request->late_fee, 2);
+        $connected_inv = $invoice->childInvoices->whereIn('type_id', [InvoiceType::SD_EMI->value, InvoiceType::RENTAL_CHARGES->value])->where('status_id', InvoiceStatus::NOT_PAID->value);
+        $emi_rental_amt = $connected_inv->sum('payable_amount');
+        $total_payable = round($invoice->balance_amount + $emi_rental_amt + $request->late_fee, 2);
         // 1. data validation
         $request->validate([
             'invoice_id' => 'required',

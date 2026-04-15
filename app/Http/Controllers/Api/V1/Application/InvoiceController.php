@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1\Application;
 
 use App\Enums\Constants;
+use App\Enums\InvoiceStatus;
 use App\Enums\InvoiceType;
 use App\Http\Controllers\Controller;
 use App\Models\Consumer\Consumer;
@@ -110,8 +111,11 @@ class InvoiceController extends Controller
                 }
             }
         }
+        $connected_inv = $invoice->childInvoices->whereIn('type_id', [InvoiceType::SD_EMI->value, InvoiceType::RENTAL_CHARGES->value])->where('status_id', InvoiceStatus::NOT_PAID->value);
+        $emi_rental_amt = $connected_inv->sum('payable_amount');
         // Total Payable amount
-        $invoice->payable_amount = round($invoice->balance_amount + $invoice->childInvoices->sum('payable_amount')+$late_fee, 2);
+        $invoice->payable_amount = round($invoice->balance_amount + $emi_rental_amt + $late_fee, 2);
+
         // Payment Types
         $payment_types = PaymentType::select('id', 'name', 'status')->get();
         // Get Invoice details
