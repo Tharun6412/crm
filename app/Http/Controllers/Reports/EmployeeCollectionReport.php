@@ -34,10 +34,10 @@ class EmployeeCollectionReport extends Controller
             $employee_collection = User::select('id', 'emp_id', 'first_name', 'last_name')
                 ->whereHas('ga', fn($q) => $q->where('ga_id', $request->ga_id))
                 ->withSum(['invoicePayments as invoice_collection' => function ($q) use($request) {
-                    $q->whereBetween('created_at', [Carbon::createFromFormat('d-m-Y', $request->date_from)->startOfDay(), Carbon::createFromFormat('d-m-Y', $request->date_to)->endOfDay()]);
+                    $q->where('status_id', PaymentStatus::COMPLETED->value)->whereBetween('created_at', [Carbon::createFromFormat('d-m-Y', $request->date_from)->startOfDay(), Carbon::createFromFormat('d-m-Y', $request->date_to)->endOfDay()]);
                 }], 'amount')
                 ->withSum(['sdPayments as sd_collection' => function($q) use($request) {
-                    $q->whereBetween('created_at', [Carbon::createFromFormat('d-m-Y', $request->date_from)->startOfDay(), Carbon::createFromFormat('d-m-Y', $request->date_to)->endOfDay()]);
+                    $q->where('status_id', SDPaymentStatus::PAID->value)->whereBetween('created_at', [Carbon::createFromFormat('d-m-Y', $request->date_from)->startOfDay(), Carbon::createFromFormat('d-m-Y', $request->date_to)->endOfDay()]);
                 }], 'amount')
                 ->having('invoice_collection', '>', 0)
                 ->orHaving('sd_collection', '>', 0)
@@ -80,12 +80,14 @@ class EmployeeCollectionReport extends Controller
         $invoice_payments = InvoicePayment::with(['invoice:id,invoice_number,type_id,consumer_id', 'invoice.invoiceType:id,name', 'invoice.consumer:id,crn', 'paymentType:id,name'])
             ->select('invoice_id', 'payment_type_id', 'transaction_id', 'amount', 'created_at')
             ->where('created_by', $request->emp_id)
+            ->where('status_id', PaymentStatus::COMPLETED->value)
             ->whereBetween('created_at', [Carbon::createFromFormat('d-m-Y', $request->date_from)->startOfDay(), Carbon::createFromFormat('d-m-Y', $request->date_to)->endOfDay()])
             ->get();
         // Get SD payments 
         $sd_payments = ConsumerSdPayment::with(['paymentType:id,name', 'consumer:id,crn'])
             ->select('created_at', 'amount', 'payment_type_id', 'transaction_number', 'consumer_id')
             ->where('created_by', $request->emp_id)
+            ->where('status_id', SDPaymentStatus::PAID->value)
             ->whereBetween('created_at', [Carbon::createFromFormat('d-m-Y', $request->date_from)->startOfDay(), Carbon::createFromFormat('d-m-Y', $request->date_to)->endOfDay()])
             ->get();
         

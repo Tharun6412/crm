@@ -68,9 +68,10 @@ class InvoiceController extends Controller
             'creditNotes',
             'childInvoices:id,type_id,invoice_number,invoice_date,payable_amount,paid_amount,balance_amount,status_id,parent_invoice_id',
             'parentInvoice:id,type_id,invoice_number',
-            'payments:id,invoice_id,payment_date,payment_type_id,transaction_id,amount,balance,status_id',
+            'payments:id,invoice_id,payment_date,payment_type_id,transaction_id,amount,balance,status_id,created_by',
             'payments.paymentType:id,name',
             'payments.status:id,name',
+            'payments.createdBy:id,first_name,last_name,emp_id',
         ])->find($id);
         $invoice->consumer->mobile = maskNumber($invoice->consumer->phone);
         $invoice->employee_id = $invoice->createdBy->emp_id;
@@ -109,6 +110,8 @@ class InvoiceController extends Controller
                 }
             }
         }
+        // Total Payable amount
+        $invoice->payable_amount = round($invoice->balance_amount + $invoice->childInvoices->sum('payable_amount')+$late_fee, 2);
         // Payment Types
         $payment_types = PaymentType::select('id', 'name', 'status')->get();
         // Get Invoice details

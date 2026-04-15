@@ -57,7 +57,10 @@ Route::middleware(['auth', ModuleAccess::class])->group(function() {
 
     // Conversion
     Route::resource('conversion', App\Http\Controllers\prepaid\ConversionController::class);
-    
+
+    // Documents
+    Route::resource('consumerDocument', App\Http\Controllers\Consumer\ConsumerDocumentController::class);
+
     // Prepaid consumer send to HES
     Route::get('prepaid/sendToHes/{id}', [App\Http\Controllers\Consumer\PrepaidConsumerController::class, 'sendToHes']);
     Route::put('prepaid/hesSubmit/{id}', [App\Http\Controllers\Consumer\PrepaidConsumerController::class, 'hesSubmit']);

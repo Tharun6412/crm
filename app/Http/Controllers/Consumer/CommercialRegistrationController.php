@@ -116,13 +116,13 @@ class CommercialRegistrationController extends Controller
             $add_consumer_scheme = ConsumerScheme::create([
                 'consumer_id' => $add_consumer->id,
                 'scheme_id' => $scheme_details->id,
-                'security_deposit' => $scheme_details->security,
-                'consumption_deposit' => $scheme_details->consumption,
-                'total_deposit' => $scheme_details->total_deposit,
+                'security_deposit' => $request->sd_amount,
+                'consumption_deposit' => $request->consumption,
+                'total_deposit' => $request->sd_amount + $request->consumption,
                 'emi_amount' => $scheme_details->emi_amount,
                 'rental_amount' => $scheme_details->rental_amount,
                 'paid_deposit' => 0,
-                'balance' => $scheme_details->security + $scheme_details->consumption,
+                'balance' => $scheme_details->sd_amount + $scheme_details->consumption,
                 'status' => 0,
             ]);
         }

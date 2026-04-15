@@ -56,6 +56,7 @@ class ComplaintExport implements FromQuery, WithHeadings, WithMapping
                 'cns_consumers.fname as consumer_name',
                 'cmp_complaints.name as manual_name',
                 'cmp_complaints.consumer_id',
+                'cmp_complaints.created_by',
                 DB::raw('CONCAT_WS(" ",users.first_name,users.last_name) as raised_name')
             ])
 
@@ -91,6 +92,8 @@ class ComplaintExport implements FromQuery, WithHeadings, WithMapping
             ->when(!(isAdmin() OR isSuperAdmin() OR isFullAccess()), function ($q) {
                 $q->whereIn('cmp_complaints.ga_id', session('user')['gas']);
             })
+            ->when(!empty($this->request->user_id), fn($q) => 
+                $q->whereIn('cmp_complaints.created_by', $this->request->user_id))
             ->when(!empty($this->request->geo_area), fn($q) =>
                 $q->whereIn('cmp_complaints.ga_id', $this->request->geo_area))
             ->when((!empty($this->request->date_from) and !empty($this->request->date_to)), function($q) {

@@ -76,14 +76,15 @@ class PaymentsController extends Controller
      */
     public function update(Request $request)
     {
+        $invoice = BillInvoice::find($request->invoice_id);
+        $total_payable = round($invoice->balance_amount + $invoice->childInvoices->sum('payable_amount') + $request->late_fee, 2);
         // 1. data validation
         $request->validate([
             'invoice_id' => 'required',
             'payment_type' => 'required',
             'transaction_no' => 'required',
-            'amount' => ['required', 'numeric', 'gt:0', 'min:' . $request->invoice_balance, 'max:' . $request->invoice_balance]
+            'amount' => ['required', 'numeric', 'gt:0', 'min:' . $total_payable, 'max:' . $total_payable]
             ]);
-        $invoice = BillInvoice::find($request->invoice_id);
         // 2. check if LPC is applicable.
         if ($request->late_fee > 0) {
             // Invoice Item

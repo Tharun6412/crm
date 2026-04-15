@@ -10,6 +10,7 @@
     </button>
     <ul class="dropdown-menu">
         <li><a class="dropdown-item" href="{{ url('consumers/' . $consumer->id) }}"><i class="bi bi-chevron-right"></i>&nbsp;View</a></li>
+        <li><a class="dropdown-item link-modal" href="{{ url('consumers/consumerDocument/' . $consumer->id.'/edit') }}"><i class="bi bi-chevron-right"></i>&nbsp;Add Document</a></li>
         {{-- Registration Status Dropdown--}}
         @if ($consumer->status_id == ConsumerStatus::PRE_REGISTER->value)
             <x-auth.link class="dropdown-item link-modal" href="{{ url('consumers/trPayment/' . $consumer->id . '/edit') }}" action="pdpst">

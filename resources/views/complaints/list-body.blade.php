@@ -73,7 +73,7 @@
                         <x-master.date-filter  class="float-end" />
                     </div> 
                 </th>
-                <th>Raised By</th>
+                <th nowrap>Raised By<x-complaint.user-filter/></th>
                 <th nowrap>Est. Close Date</th>
                 <th nowrap>Closed Date</th>
                 <th nowrap>Deviation</th>

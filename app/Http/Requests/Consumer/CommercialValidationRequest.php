@@ -24,6 +24,8 @@ class CommercialValidationRequest extends FormRequest
             'email' => 'nullable|email',
             'connection_type' => 'required',
             'scheme_id' => 'required',
+            'sd_amount' => 'required',
+            'consumption' => 'required',
             'name' => 'required|regex:/^[A-Za-z ]+$/',
             'phone' => 'required|numeric|digits:10',
             'phone_alt' => 'nullable|numeric|digits:10',

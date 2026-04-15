@@ -139,6 +139,31 @@
                         </div>
                         <span class="text-danger validate-err-msg" id="scheme_id-error"></span>
                     </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3 col-sm-6 col-xs-12">
+                        <label class="form-label" for="sd_amount">SD Amount&nbsp;:<span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <input name="sd_amount" id="sd_amount" class="form-control text-end" placeholder="SD Amount" type="text" />
+                            <span class="input-group-text">&#8377;</span>
+                        </div>
+                        <span class="text-danger validate-err-msg" id="sd_amount-error"></span>
+                    </div>
+                    <div class="col-md-3 col-sm-6 col-xs-12">
+                        <label class="form-label" for="consumption">Consumption Amount&nbsp;:<span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <input name="consumption" id="consumption" class="form-control text-end" placeholder="Consumption Amount" type="text"/>
+                            <span class="input-group-text">&#8377;</span>
+                        </div>
+                        <span class="text-danger validate-err-msg" id="consumption-error"></span>
+                    </div>
+                    <div class="col-md-3 col-sm-6 col-xs-12 d-none" id="deposit_details">
+                        <label class="form-label" for="total_deposit">Total Deposit</label>
+                        <div class="input-group">
+                            <input name="tot_deposit" id="tot_deposit" class="form-control text-end" placeholder="Total Amount" type="text" disabled/>
+                            <span class="input-group-text">&#8377;</span>
+                        </div>
+                    </div>
                 </div>    
                 <div class="row">    
                     <div class="col-md-8 col-sm-6 col-xs-12 d-none pt-3" id="scheme_data">
@@ -434,7 +459,24 @@
                 $('#district').html(options);
             });
         }
+        // Document Ready
+        $(document).ready(function () {
+            $('#sd_amount, #consumption').on('input', function () {
+                let sdAmount = parseFloat($('#sd_amount').val()) || 0;
+                let consumption = parseFloat($('#consumption').val()) || 0;
 
+                // Check if all fields have values
+                if (sdAmount && consumption) {
+                    let total = sdAmount + consumption;
+                    $('#tot_deposit').val(total.toFixed(2));
+                    $('#deposit_details').removeClass('d-none');
+                } else {
+                    // If any field empty, hide total
+                    $('#tot_deposit').val(0);
+                    $('#deposit_details').addClass('d-none');
+                }
+            });
+        });
         // Get Schemes By Connection Type
         function getSchemesByType(type_id)
         {

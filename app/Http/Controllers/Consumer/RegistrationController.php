@@ -133,7 +133,7 @@ class RegistrationController extends Controller
                 if (!empty($file_id)) {
                     $add_consumer_document = ConsumerDocument::create([
                         'consumer_id' => $add_consumer->id,
-                        'status_id' => EnumsConsumerStatus::PRE_REGISTER->value,
+                        'status_id' => NULL,
                         'doc_type_id' => $doc_type,
                         'file_id' => $file_id,
                     ]);

@@ -36,7 +36,7 @@ class ConsumerController extends Controller
             })
             ->when($request->filled('key'), function ($q) use ($request) {
                 $q->where(function ($query) use ($request) {
-                    $query->whereAny(['crn', 'fname', 'lname', 'email', 'phone'], 'like', '%' . $request->key . '%')
+                    $query->whereAny(['t_crn', 'crn', 'fname', 'lname', 'email', 'phone'], 'like', '%' . $request->key . '%')
                     ->orWhereHas('meter', function ($q1) use ($request) {
                         $q1->whereAny(['meter_no', 'meter_serial_no'], 'like', '%' . $request->key . '%');
                     });
@@ -113,7 +113,7 @@ class ConsumerController extends Controller
      */
     public function consumerDocs(Request $request, $id)
     {
-        $documents_list = ConsumerDocument::where('consumer_id', $id)->get();
+        $documents_list = ConsumerDocument::where('consumer_id', $id)->get()->groupBy('status_id');
         return view('consumers.consumers.show-documents', ['documents_list' => $documents_list]);
     }
     /**

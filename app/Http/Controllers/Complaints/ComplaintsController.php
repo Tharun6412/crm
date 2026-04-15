@@ -81,6 +81,9 @@ class ComplaintsController extends Controller
         ->when($request->has('geo_area'), function($q) use($request) {
             $q->whereIn('ga_id', $request->geo_area);
         })
+        ->when($request->has('user_id'), function($q) use($request) {
+            $q->whereIn('created_by', $request->user_id);
+        })
         ->when((!empty($request->date_from) and !empty($request->date_to)), function($q) use($request) {
             $q->whereBetween('created_at', [Carbon::createFromFormat('d-m-Y', $request->date_from)->startOfDay()->toDateTimeString(), Carbon::createFromFormat('d-m-Y', $request->date_to)->endOfDay()->toDateTimeString()]);
         })

@@ -11,7 +11,9 @@ class SmsService
      */
     public static function send($recipient, Notification $notification)
     {
-        $recipient->notifyNow($notification);
+        if(config('app.env') == "production") {
+            $recipient->notifyNow($notification);
+        }
     }
 
     /**
@@ -19,6 +21,8 @@ class SmsService
      */
     public static function dispatch($recipient, Notification $notification)
     {
-        $recipient->notify($notification);
+        if(config('app.env') == "production") {
+            $recipient->notify($notification);
+        }
     }
 }
