@@ -7,46 +7,28 @@
 ])
 
 <div>
-    {{-- Consumer details  {{ $attributes->merge(['class' => 'rounded mb-2']) }} --}}
-    <div class="bg-info-subtle p-2 mb-2 rounded">
-        <table class="table table-borderless table-info table-sm">
-            <tr>
-                <td><span class="fw-semibold">CRN :</span>&nbsp;<x-auth.link href="{{ url('consumers/'.$consumer->id) }}" target="_blank">{{ $consumer->crn }}</x-auth.link></td>
-                <td><span class="fw-semibold">Status :</span>&nbsp;<x-consumer.status :status="$consumer->status" /></td>
-            </tr>
-            <tr>
-                <td><span class="fw-semibold">Name :</span>&nbsp;{{ $consumer->name }}</td>
-                <td><span class="fw-semibold">Segment :</span>&nbsp;{{ $consumer->segment->name ?? '' }}</td>
-            </tr>
-            <tr>
-                <td><span class="fw-semibold">District :</span>&nbsp;{{ $consumer->district->name }}</td>
-                <td><span class="fw-semibold">GA :</span>&nbsp;{{ $consumer->ga->name }} ({{ $consumer->ga->code }})</td>
-            </tr>
-            <tr>
-                <td><span class="fw-semibold">Activation Date :</span>&nbsp;{{ $consumer->statusHistory()->where('status_id', \App\Enums\ConsumerStatus::ACTIVATE->value)->first()?->created_at->format('d-m-Y H:i:s') }}</td>
-                <td>&nbsp;</td>
-            </tr>    
-        </table>
+    {{-- Consumer details --}}
+    <div {{ $attributes->merge(['class' => 'rounded mb-2 p-2']) }}>
+        <div class="row g-2 pb-2 mb-2 p-2">
+            <div class="col-sm-2 text-end fw-semibold">CRN : </div>
+            <div class="col-sm-4"><x-auth.link href="{{ url('consumers/'.$consumer->id) }}" target="_blank">{{ $consumer->crn }}</x-auth.link></div>
+            <div class="col-sm-2 text-end fw-semibold">Status : </div>
+            <div class="col-sm-4"><x-consumer.status :status="$consumer->status" /></div>
+            <div class="col-sm-2 text-end fw-semibold">Name : </div>
+            <div class="col-sm-4">{{ $consumer->name }}</div>
+            <div class="col-sm-2 text-end fw-semibold">Segment : </div>
+            <div class="col-sm-4">{{ $consumer->segment->name ?? '' }}</div>
+            <div class="col-sm-2 text-end fw-semibold">District : </div>
+            <div class="col-sm-4">{{ $consumer->district->name }}</div>
+            <div class="col-sm-2 text-end fw-semibold">GA : </div>
+            <div class="col-sm-4">{{ $consumer->ga->name }} ({{ $consumer->ga->code }})</div>
+            <div class="col-sm-2 text-end fw-semibold">Activated At : </div>
+            <div class="col-sm-4">{{ $consumer->statusHistory()->where('status_id', \App\Enums\ConsumerStatus::ACTIVATE->value)->first()?->created_at->format('d-m-Y H:i:s') }}</div>
+        </div>
     </div>     
-    {{-- <div class="row g-2 pb-2 mb-2 p-2">
-        <div class="col-sm-2 text-end fw-semibold">CRN : </div>
-        <div class="col-sm-4"><x-auth.link href="{{ url('consumers/'.$consumer->id) }}" target="_blank">{{ $consumer->crn }}</x-auth.link></div>
-        <div class="col-sm-2 text-end fw-semibold">Status : </div>
-        <div class="col-sm-4"><x-consumer.status :status="$consumer->status" /></div>
-        <div class="col-sm-2 text-end fw-semibold">Name : </div>
-        <div class="col-sm-4">{{ $consumer->name }}</div>
-        <div class="col-sm-2 text-end fw-semibold">Segment : </div>
-        <div class="col-sm-4">{{ $consumer->segment->name ?? '' }}</div>
-        <div class="col-sm-2 text-end fw-semibold">District : </div>
-        <div class="col-sm-4">{{ $consumer->district->name }}</div>
-        <div class="col-sm-2 text-end fw-semibold">GA : </div>
-        <div class="col-sm-4">{{ $consumer->ga->name }} ({{ $consumer->ga->code }})</div>
-        <div class="col-sm-2 text-end fw-semibold">Activation Date : </div>
-        <div class="col-sm-4">{{ $consumer->statusHistory()->where('status_id', \App\Enums\ConsumerStatus::ACTIVATE->value)->first()?->created_at->format('d-m-Y H:i:s') }}</div>
-    </div> --}}
     {{-- Scheme details --}}
     @if ($type == 1 AND $consumer->segment_id != 3)
-        <div class="p-2 bg-warning-subtle mt-2 mb-1">
+        <div class="p-2 bg-warning-subtle mt-2 mb-1 rounded">
             <table class="table table-borderless table-info table-sm">
                 <tr>
                     <td><span class="fw-semibold">TR No :</span>&nbsp;{{ $consumer->t_crn }}</td>

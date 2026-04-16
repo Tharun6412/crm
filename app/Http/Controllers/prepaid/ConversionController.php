@@ -32,8 +32,11 @@ class ConversionController extends Controller
         $os_balance = BillInvoice::selectRaw('SUM(balance_amount) as balance')->where('consumer_id', $consumer_id)->first();
         // Get all prepaid schemes in the GA
         $ga_schemes = MasterConsumerScheme::whereHas('gas', function ($q) use($consumer) {
-            $q->where('ga_id', $consumer->ga_id);
-        })->where('connection_type_id', ConnectionType::PREPAID->value)->get();
+                $q->where('ga_id', $consumer->ga_id);
+            })
+            ->where('connection_type_id', ConnectionType::PREPAID->value)
+            ->where('total_deposit', '>=', ($consumer->scheme->paid_deposit ?? 0))
+            ->get();
 
         // Render output
         return view('consumers.conversion.conversion', [

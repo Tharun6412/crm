@@ -6,16 +6,20 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-            @if ($os_balance['balance'] < 0)
+            {{-- Check outstanding balance --}}
+            @if ($os_balance['balance'] > 0)
                 <div class="alert alert-danger">
-                    Please clear the outstanding balances to convert!
+                    Consumer cannot be converted at this time. Outstanding dues must be cleared before proceeding.
                 </div>
             @else
                 <div id="conversion-success">
                     <form id="conversion-form" action="{{ url('consumers/conversion/' . $consumer->id) }}">
                         @csrf
                         @method('PUT')
-                        <x-consumer.basic-details :consumer="$consumer" :type="1" class="bg-info-subtle" />
+                        <x-consumer.basic-details :consumer="$consumer" :type="2" class="bg-info-subtle" />
+                        <div class="alert alert-success mb-0">
+                            <i class="bi bi-check-square-fill fs-5"></i>&nbsp;Outstanding balances are cleared!
+                        </div>
                         <div class="row mb-2">
                             <div class="col-sm-4 text-end fs-5 fw-bold">Closing bill details</div>
                             <div class="col-sm-8"></div>
