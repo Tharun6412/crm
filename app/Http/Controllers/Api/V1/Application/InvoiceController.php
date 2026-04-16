@@ -111,10 +111,10 @@ class InvoiceController extends Controller
                 }
             }
         }
-        $connected_inv = $invoice->childInvoices->whereIn('type_id', [InvoiceType::SD_EMI->value, InvoiceType::RENTAL_CHARGES->value])->where('status_id', InvoiceStatus::NOT_PAID->value);
-        $emi_rental_amt = $connected_inv->sum('payable_amount');
+        // Connected Invoices
+        $connected_inv_amt = $invoice->childInvoices->where('status_id', InvoiceStatus::NOT_PAID->value)->sum('payable_amount');
         // Total Payable amount
-        $invoice->payable_amount = round($invoice->balance_amount + $emi_rental_amt + $late_fee, 2);
+        $total_payable_amount = round($invoice->balance_amount + $connected_inv_amt + $late_fee, 2);
 
         // Payment Types
         $payment_types = PaymentType::select('id', 'name', 'status')->get();
@@ -122,6 +122,7 @@ class InvoiceController extends Controller
         return response()->json([
             'invoice' => $invoice,
             'late_fee' => $late_fee,
+            'total_payable_amount' => $total_payable_amount,
             'payment_types' => $payment_types,
         ], 200);
     }
