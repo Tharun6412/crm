@@ -95,7 +95,7 @@ class InvoiceController extends Controller
         if($invoice->type_id == InvoiceType::GAS_BILL->value) {
             if(Carbon::now()->toDateString() > $invoice->due_date) {
                 // Check Late Fee invoice
-                if($invoice->childInvoices->contains('type_id', 3)) {
+                if($invoice->childInvoices->contains('type_id', 3) OR $invoice->status_id == InvoiceStatus::PAID->value) {
                     $late_fee = '0';
                 }else {
                     switch($invoice->consumer->segment_id) {

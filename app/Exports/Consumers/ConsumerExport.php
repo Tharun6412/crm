@@ -48,36 +48,39 @@ class ConsumerExport implements FromQuery, WithHeadings, WithMapping
                     });
                 });
             })
-            ->when($this->request->has('segments'), function ($q) {
+            ->when(!empty($this->request->segments), function ($q) {
                 $q->whereIn('segment_id', $this->request->segments);
             })
-            ->when($this->request->has('connection_type_id'), function ($q) {
+            ->when(!empty($this->request->connection_type_id), function ($q) {
                 $q->where('connection_type_id', $this->request->connection_type_id);
             })
-            ->when($this->request->has('geo_area'), function ($q) {
+            ->when(!empty($this->request->geo_area), function ($q) {
                 $q->whereIn('ga_id', $this->request->geo_area);
             })
-            ->when($this->request->has('district'), function ($q) {
+            ->when(!empty($this->request->district), function ($q) {
                 $q->whereIn('district_id', $this->request->district);
             })
-            ->when($this->request->has('charge_area'), function ($q) {
+            ->when(!empty($this->request->charge_area), function ($q) {
                 $q->whereIn('ca_id', $this->request->charge_area);
             })
-            ->when($this->request->has('area'), function ($q) {
+            ->when(!empty($this->request->area), function ($q) {
                 $q->whereIn('area_id', $this->request->area);
             })
-            ->when($this->request->has('scheme'), function ($q) {
+            ->when(!empty($this->request->scheme), function ($q) {
                 $q->where(function($query) {
                     $query->whereHas('scheme', function($q1) {
                         $q1->whereIn('scheme_id', $this->request->scheme);
                     });
                 });
             })
-            ->when($this->request->has('cns_status'), function ($q) {
+            ->when(!empty($this->request->cns_status), function ($q) {
                 $q->whereIn('status_id', $this->request->cns_status);
             })
-            ->when((!empty($request->date_from) and !empty($request->date_to)), function($q) {
+            ->when((!empty($this->request->date_from) and !empty($this->request->date_to)), function($q) {
                 $q->whereBetween('created_at', [Carbon::createFromFormat('d-m-Y', $this->request->date_from)->startOfDay()->toDateTimeString(), Carbon::createFromFormat('d-m-Y', $this->request->date_to)->endOfDay()->toDateTimeString()]);
+            })
+            ->when(!empty($this->request->status_id), function($q) {
+                $q->where('status_id', $this->request->status_id);
             })
             ->orderBy($sortBy, $sortOr);
         return $consumers;

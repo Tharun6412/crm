@@ -50,7 +50,7 @@ Route::middleware(['auth', ModuleAccess::class])->group(function() {
     Route::get('filters/areaByCA', [App\Http\Controllers\Consumer\ConsumerFilterController::class, 'areaByCA']);
     Route::resource('filters', App\Http\Controllers\Consumer\ConsumerFilterController::class);
     // Consumers list
-    Route::get('consumerExport', [App\Http\Controllers\Consumer\ConsumerController::class, 'consumerExport']);
+    Route::get('consumerExport/{status:slug?}', [App\Http\Controllers\Consumer\ConsumerController::class, 'consumerExport']);
     Route::get('consumerDocs/{id}', [App\Http\Controllers\Consumer\ConsumerController::class, 'consumerDocs'])->whereNumber('id');
     Route::get('/{id}', [App\Http\Controllers\Consumer\ConsumerController::class, 'show'])->whereNumber('id');
     Route::get('/{status:slug?}', [App\Http\Controllers\Consumer\ConsumerController::class, 'index']);

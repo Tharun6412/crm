@@ -18,7 +18,7 @@ class ModuleAccess
     public function handle(Request $request, Closure $next): Response
     {
         // Check logged in user admin or super admin
-        if(isSuperAdmin($request) OR isAdmin($request)) {
+        if(isSuperAdmin($request) OR isAdmin($request) OR isFullAccess()) {
             // Access granted
         }
         else {

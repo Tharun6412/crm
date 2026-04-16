@@ -12,5 +12,5 @@ enum Role: int
     case HO_SALES = 6;
     case VIEWER = 7;
     case FULL_ACCESS = 8;
-    case CALL_CENTER = 9;
+    case CALL_CENTER = 10;
 }

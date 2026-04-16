@@ -76,11 +76,10 @@ class ConsumerController extends Controller
         
         // Render output
         if($request->ajax()) {
-            // dd($request->all());
-            return view('consumers.consumers.list-body', ['consumers' => $consumers]);
+            return view('consumers.consumers.list-body', ['consumers' => $consumers, 'status' => $status]);
         }
         else {
-            return view('consumers.consumers.list', ['consumers' => $consumers]);
+            return view('consumers.consumers.list', ['consumers' => $consumers, 'status' => $status]);
         }
     }
 
