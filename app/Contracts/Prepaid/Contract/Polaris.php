@@ -15,7 +15,7 @@ class Polaris
                     'X-API-KEY' => 'YfRPGJH1S98n2l7tbC7k7gD9RmQdJ2j8TxLr9JKL4A3gF1pL5m'
                         ])->acceptJson()->post($api, $payload);
                 if ($response->failed()) {
-                    Log::error('HES API FAILED', [
+                    Log::error('Polaris API FAILED', [
                         'status'  => $response->status(),
                         'body'    => $response->body(),
                         'payload' => $payload,
@@ -25,14 +25,14 @@ class Polaris
             }
             catch(\Throwable $e)
             {
-                Log::error('HES API FAILED', [
+                Log::error('Polaris API FAILED', [
                     'status'  => 0,
                     'body'    => $e->getMessage(),
                 ]);
             }
         }
         else {
-            Log::error('HES API FAILED', [
+            Log::error('Polaris API FAILED', [
                 'status'  => 0,
                 'body'    => "No payload data available.",
             ]);
@@ -49,7 +49,7 @@ class Polaris
                     'X-API-KEY' => 'YfRPGJH1S98n2l7tbC7k7gD9RmQdJ2j8TxLr9JKL4A3gF1pL5m'
                         ])->acceptJson()->get($api, $payload);
                 if ($response->failed()) {
-                    Log::error('HES API FAILED', [
+                    Log::error('Polaris API FAILED', [
                         'status'  => $response->status(),
                         'body'    => $response->body(),
                         'payload' => $payload,
@@ -59,14 +59,14 @@ class Polaris
             }
             catch(\Throwable $e)
             {
-                Log::error('HES API FAILED', [
+                Log::error('Polaris API FAILED', [
                     'status'  => 0,
                     'body'    => $e->getMessage(),
                 ]);
             }
         }
         else {
-            Log::error('HES API FAILED', [
+            Log::error('Polaris API FAILED', [
                 'status'  => 0,
                 'body'    => "No payload data available.",
             ]);

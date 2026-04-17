@@ -27,8 +27,11 @@ class BillMroData extends Model
         'invoice_id',
         'status_id',
         'mro_batch_id',
+        'start_meter_balance',
+        'end_meter_balance',
         'created_at',
-        'updated_at'
+        'updated_at',
+
     ];
     /**
      * Casts Dates

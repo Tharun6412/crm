@@ -38,12 +38,12 @@ class MroPreocessCommand extends Command
                 // Send the API response to the update function.
                 MroProcessAction::updateMroRequest($responses);
             }
-            if($data['ack_fail_payload']) {
-                // Call Mro Acknowledgment API for failure data.
-                $responses = Mro::request($data['ack_fail_payload'], PrepaidApi::mroAcknowledgment()->value);
-                // Send the API response to the update function.
-                MroProcessAction::updateMroRequest($responses);
-            }
+            // if($data['ack_fail_payload']) {
+            //     // Call Mro Acknowledgment API for failure data.
+            //     $responses = Mro::request($data['ack_fail_payload'], PrepaidApi::mroAcknowledgment()->value);
+            //     // Send the API response to the update function.
+            //     MroProcessAction::updateMroRequest($responses);
+            // }
         }
         else {
             Log::error("No Mro Request Data.");

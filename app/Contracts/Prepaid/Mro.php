@@ -20,7 +20,7 @@ class Mro
         $responses =  array();
         foreach ($chunks as $key => $chunk) { 
             $cns_ar = [];
-            $cns_ar['MT_MRO_Request']['MRO_Request'] = $chunk; 
+            $cns_ar['response'] = $chunk; 
             
             // Call API
             $response = Polaris::postData($api_id, $cns_ar);

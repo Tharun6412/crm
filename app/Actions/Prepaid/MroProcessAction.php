@@ -14,6 +14,7 @@ use App\Models\Invoice\BillInvoiceConsumption;
 use App\Models\Invoice\BillInvoiceConsumptionDetails;
 use App\Models\Invoice\BillMroData;
 use App\Models\Invoice\BillMroDataHistory;
+use App\Models\Master\PriceGroupHistory;
 use App\Models\Master\PriceHistory;
 use App\Services\InvoiceService;
 use App\Services\LedgerService;
@@ -35,6 +36,9 @@ class MroProcessAction
             try {
                 // 2. JSON Decode of stored raw data.
                 $data = json_decode($record->mro_data, true);
+                if (empty($data['current_readings']) || !is_array($data['current_readings'])) {
+                    throw new \InvalidArgumentException('current_readings is empty or not an array.');
+                }
                 // 3. Checking the given crn and meter_sr_no is valid or not.
                 $consumer = Consumer::where('crn',$data['crn'])
                     ->whereHas('activeMeter',function($q) use($data){
@@ -46,13 +50,16 @@ class MroProcessAction
                     $avgPrice = 0;
                     $net_basic_price = 0;
                     $net_consumption = 0;
-                    $cf = 1;
+                    $cf = (float) ($consumer->activeMeter->vcf ?? 1);
+                    $cf = ($cf > 0) ? $cf : 1;
                     // 4. calculation of overall readings and overall dates for billing cycle.
                     $readings_cnt = count($data['current_readings']);
-                    $start_reading = $data['current_readings'][0]['start_reading'];
-                    $end_reading = $data['current_readings'][$readings_cnt-1]['end_reading'];
-                    $start_date = $data['current_readings'][0]['start_reading_date_time'];
-                    $end_date = $data['current_readings'][$readings_cnt-1]['end_reading_date_time'];
+                    $start_reading = $data['current_readings'][0]['start_reading_1'];
+                    $end_reading = $data['current_readings'][$readings_cnt-1]['end_reading_'.$readings_cnt];
+                    $start_date = $data['current_readings'][0]['start_reading_date_time_1'];
+                    $end_date = $data['current_readings'][$readings_cnt-1]['end_reading_date_time_'.$readings_cnt];
+                    $start_meter_balance = $data['current_readings'][0]['start_meter_balance_1'];
+                    $end_meter_balance = $data['current_readings'][$readings_cnt-1]['end_meter_balance_'.$readings_cnt];
                     $total_no_days = Carbon::parse($start_date)->diffInDays($end_date);
                     // $total_consumption = ($end_reading - $start_reading);
 
@@ -67,46 +74,53 @@ class MroProcessAction
                     }
                     else {
                         // 6. Looping of meter readings array.
-                        foreach ($data['current_readings'] as $reading) {
+                        $total_consumption = 0;
+                        $total_basic_amount = 0;
+                        foreach ($data['current_readings'] as $key => $reading) {
                             $consmp_breakup = 0;
-                            $start = (float)$reading['start_reading'];
-                            $end   = (float)$reading['end_reading'];
+                            $start = (float)$reading['start_reading_'.($key+1)];
+                            $end   = (float)$reading['end_reading_'.($key+1)];
 
-                            $s_date = Carbon::parse($reading['start_reading_date_time']);
-                            $e_date = Carbon::parse($reading['end_reading_date_time']);
+                            $s_date = Carbon::parse($reading['start_reading_date_time_'.($key+1)])->toDateString();
+                            $e_date = Carbon::parse($reading['end_reading_date_time_'.($key+1)])->toDateString();
                             $no_days = Carbon::parse($s_date)->diffInDays($e_date);
                             
-                            // 7. Fetching of price history id, vat for given selected period.
-                            $price = PriceHistory::where('effective_from','<=', $e_date)->where('segment_id', $consumer->segment_id)->where('district_id', $consumer->district_id)->first();
-
+                            // 7. Fetching of price group history id, vat for given selected period.
+                            // $price = PriceGroupHistory::where('effective_from','<=', $e_date)->where('segment_id', $consumer->segment_id)->where('ga_id', $consumer->ga_id)->orderBy('effective_from', 'desc')->first();
+                            $price = PriceHistory::where('effective_from','<=', $e_date)->where('segment_id', $consumer->segment_id)->where('district_id', $consumer->district_id)->orderBy('effective_from', 'desc')->first();
+                            if (!$price) {
+                                throw new \RuntimeException("No price history found");
+                            }
                             // 8. calculation of meter readings and given gas price. (for consumption details).
+                            $tax_value = (float) $price->tax_value;
+                            $net_price = $reading['gas_price_'.($key+1)]; 
+                            $basic_price = round(($net_price*(100/(100+$tax_value))),2);
                             $consmp_breakup = ($end - $start);
-                            $net_price = $reading['gas_price']; 
-                            $basic_price = round(($reading['gas_price']*(100/(100+$price->vat))),2);
                             $netReading = ($consmp_breakup * $cf);
                             $baseAmt = $netReading * $basic_price;
 
                             $net_basic_price += $basic_price;
                             $total_consumption += $consmp_breakup;
                             $net_consumption += $netReading;
+                            $total_basic_amount += $baseAmt;
                             $avgPrice += $net_price;
-                            $tax_value = $price['vat'];
-                            // 9. Invoice Consumption Details Array.
-                            $invoice['consumption_details'][] = [
-                                'price_history_id' => $price?->id,
-                                'days' => $no_days,
-                                'consumption' => $consmp_breakup,
-                                'cf' => $cf,
-                                'unit_price' => $reading['gas_price'],
-                                'total_price' => $baseAmt,
-                            ];
+                            // 9. Invoice Consumption Details Array. ()
+                            // $invoice['consumption_details'][] = [
+                            //     'price_history_id' => $price?->id,
+                            //     'days' => $no_days,
+                            //     'consumption' => $consmp_breakup,
+                            //     'cf' => $cf,
+                            //     'unit_price' => $basic_price,
+                            //     'total_price' => $baseAmt,
+                            // ];
                         }
 
                         // 10. Amount Calculation part.
-                        $avgPrice = $avgPrice / count($data['current_readings']);
-                        $basicAmount = $net_consumption * $avgPrice;
-                        $vatAmount = ($basicAmount * $tax_value) / 100;
-                        $totalAmount = $basicAmount + $vatAmount;   
+                        // $avgPrice = $avgPrice / $readings_cnt;
+                        $avgPrice = ($net_consumption > 0) ? round(($total_basic_amount / $net_consumption),4) : 0 ;
+                        $basicAmount = round(($net_consumption * $avgPrice),2);
+                        $vatAmount = round((($basicAmount * $tax_value) / 100),2);
+                        $totalAmount = round(($basicAmount + $vatAmount),2);   
 
                         // 11. bill invoice array
                         $invoice['invoice'] = [
@@ -120,8 +134,8 @@ class MroProcessAction
                             'tax_amount' => $vatAmount,
                             'total_amount' => $totalAmount,
                             'payable_amount' => $totalAmount,
-                            'paid_amount' => NULL,
-                            'balance_amount' => $totalAmount,
+                            'paid_amount' => $totalAmount,
+                            'balance_amount' => 0,
                             'due_date' => Carbon::now()->addDays((int)Constants::DPNG_DUEDAYS->value)->format('Y-m-d'),
                             'status_id' => InvoiceStatus::PAID->value, // paid
                         ];
@@ -151,7 +165,7 @@ class MroProcessAction
                                 'payment_date'    => date('Y-m-d'),
                                 'payment_type_id' => PaymentType::CASH_PAYMENT->value,
                                 'transaction_id'  => "CASH",
-                                'amount'          => 0,
+                                'amount'          => $totalAmount,
                                 'balance'         => 0,
                                 'status_id'       => PaymentStatus::COMPLETED->value,
                                 'notes'           => NULL,
@@ -161,23 +175,30 @@ class MroProcessAction
                         $record->update([
                             'status_id' => MroStatus::BILL_SENT->value,
                             'invoice_id' => $inv_resp['invoice_id'],
+                            'start_meter_balance' => $start_meter_balance,
+                            'end_meter_balance' => $end_meter_balance,
                         ]);
                         // 15. Insertion of Status history records.
-                        BillMroDataHistory::create([
+                        BillMroDataHistory::insert([
                             'mro_data_id' => $record->id,
                             'status_id' => MroStatus::BILL_SENT->value,
+                            'created_at' => now()
                         ]);
                         
                         // 16. MRO Acknowledgment payload array.
+                        $encoded_id = md5($inv_resp['invoice_number']);
+                        // $url = "https://consumer.meghagas.com/Invoice/invoice_pdf/".$encoded_id; // regular gas bill
+                        $url = "https://consumer.meghagas.com/Invoice/prepaid_invoice_pdf/".$encoded_id;
                         $ackPayload[] = [
                             'crn' => $data['crn'],
                             'mro_order_id' => $record->mro_number,
                             'meter_serial_no' => $data['meter_serial_no'],
                             'invoice_no' => $inv_resp['invoice_number'],
                             'invoice_date' => now()->format('Y-m-d'),
-                            'month_consumption' => $netReading,
-                            'month_amount' => $totalAmount,
-                            'remarks' => "Successfully generated."
+                            'month_consumption' => round($netReading, 3),
+                            'month_amount' => round($totalAmount,2),
+                            'remarks' => "Successfully generated.",
+                            'bill_url' => $url,
                         ];
                     }
                 }
@@ -191,8 +212,19 @@ class MroProcessAction
                 }
             } catch (\Throwable $e) {
                 $record->update([
+                    'status_id' => MroStatus::PROCESS_FAIL->value
+                ]);
+                BillMroDataHistory::insert([
+                    'mro_data_id' => $record->id,
                     'status_id' => MroStatus::PROCESS_FAIL->value,
-                    'message' => $e->getMessage()
+                    'notes' => $e->getMessage(),
+                    'created_at' => now()
+                ]);
+                Log::error('MRO processing failed', [
+                    'mro_id'     => $record->id,
+                    'mro_number' => $record->mro_number,
+                    'error'      => $e->getMessage(),
+                    'trace'      => $e->getTraceAsString(),
                 ]);
             }
         }
@@ -233,6 +265,7 @@ class MroProcessAction
                 }
             }
             // 5. update the logger file with updated count.
+            print "Total MRO Bills Generated : ".count($responses);
             Log::info('MRO API response received', [
                 'response_count' => count($responses)
             ]);
