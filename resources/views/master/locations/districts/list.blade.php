@@ -11,41 +11,12 @@
 @endsection
 
 @section('page-content')
-    <div>
-        <div class="mb-2">
-            <span class="fw-semibold">({{ $districts->count() }})</span> Records found
+    <form action="{{ url('master/location/districts') }}" id="dist-search-form" method="GET">
+        <div id="dist-list" class="current-page-reload">
+            @include('master.locations.districts.list-body')
         </div>
-        @if ($districts->count() > 0)
-            <div class="table-responsive">
-                <table class="table table-bordered table-hover bg-white table-striped">
-                    <thead class="table-success">
-                        <tr>
-                            <th width="1%" nowrap>S No</th>
-                            <th>Code</th>
-                            <th>Name</th>
-                            <th>GA</th>
-                            <th>State</th>
-                            <th>Cluster</th>
-                            <th>CAs</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($districts as $item)
-                            <tr>
-                                <td>{{ $loop->iteration }}</td>
-                                <td>{{ $item->code }}</td>
-                                <td>{{ $item->name }}</td>
-                                <td>{{ $item->ga->name ?? '' }}</td>
-                                <td>{{ $item->cluster->name ?? '' }}</td>
-                                <td>{{ $item->state->name ?? '' }}</td>
-                                <td>{{ $item->cas->count() ?? 0 }}</td>
-                                <td><x-common.status :status="$item->status"/></td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-        @endif
-    </div>
+    </form>
 @endsection
+@push('scripts')
+    @include('scripts.ajax-form-search', ['form' => 'dist'])
+@endpush

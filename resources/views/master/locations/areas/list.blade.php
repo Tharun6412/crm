@@ -12,7 +12,7 @@
 
 @section('page-content')
     <form action="{{ url('master/location/areas') }}" id="area-search-form" method="GET">
-        <div id="area-list">
+        <div id="area-list" class="current-page-reload">
             @include('master.locations.areas.list-body')
         </div>
     </form>

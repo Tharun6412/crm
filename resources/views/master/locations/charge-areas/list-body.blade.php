@@ -12,7 +12,7 @@
             <a href="{{ url('master/location/charge-areas') }}" class="btn btn-warning"><i class="bi bi-arrow-clockwise"></i></a>
         </div>
         <div class="col-auto">
-            {{-- <span class="fw-semibold">({{ $charge_areas->total() }})</span> Records found --}}
+            <span class="fw-semibold">({{ $charge_areas->total() }})</span> Records found
         </div>
     </div>
     <div>
@@ -27,23 +27,32 @@
             <thead class="table-success">
                 <tr>
                     <th width="1%" nowrap>S No</th>
-                    <th>Code</th>
-                    <th>Name</th>
-                    <th>District</th>
                     <th>GA<x-master.ga-filter class="float-end" /></th>
+                    <th>District
+                        @if (request()->has('geo_area'))
+                          <x-master.district-filter class="float-end" />  
+                        @endif
+                    </th>
+                    <th>CA Code</th>
+                    <th>CA Name</th>
                     <th>Areas</th>
-                    <th>Status</th>
+                    <th>Status
+                        @php
+                            $status_array=[1 => 'Enable', 0 => 'Disable'];
+                        @endphp
+                        <x-admin.status-filter name="status" :data="$status_array"/>
+                    </th>
                     <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach ($charge_areas as $item)
                     <tr>
-                        <td>{{ $loop->iteration }}</td>
+                        <td>{{ ($charge_areas->currentPage()-1)* $charge_areas->perpage()+$loop->iteration }}</td>
+                        <td>{{ $item->ga->name ?? '' }}</td>
+                        <td>{{ $item->district->name ?? '' }}</td>
                         <td>{{ $item->code }}</td>
                         <td>{{ $item->name }}</td>
-                        <td>{{ $item->district->name ?? '' }}</td>
-                        <td>{{ $item->ga->name ?? '' }}</td>
                         <td class="text-end">{{ $item->areas->count() ?? 0 }}</td>
                         <td><x-common.status :status="$item->status"/></td>
                         <td>
@@ -55,8 +64,8 @@
         </table>
     </div>
     <div>
-        {{-- {{ $charge_areas->links('utils.paginator', ['modDiv' => 'ca-list']) }} --}}
-        {{ $charge_areas->links('utils.cursor', ['modDiv' => 'ca-list']) }}
+        {{ $charge_areas->links('utils.paginator', ['modDiv' => 'ca-list']) }}
+       {{-- {{ $charge_areas->links('utils.cursor', ['modDiv' => 'ca-list']) }} --}} 
     </div>
 @else
     <div class="alert alert-info">No records found!</div>

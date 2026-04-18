@@ -19,12 +19,22 @@ class AreaController extends Controller
                 $q->where('name', 'like', '%' . $request->key . '%');
             })
             ->when($request->has('geo_area'), function ($q) use($request) {
+                //$q->whereIn('ga_id',$request->geo_area);
                 $q->whereHas('ca', function($q) use($request) {
                     $q->whereIn('ga_id', $request->geo_area);
                 });
             })
-            ->orderBy('name')
-        ->paginate(50);
+            ->when($request->has('district'), function($q) use ($request) {
+                $q->whereHas('ca',function($q) use ($request){
+                    $q->whereIn('district_id',$request->district);
+
+                });
+            })
+            ->when($request->has('charge_area'), function ($q) use ($request) {
+                $q->whereIn('ca_id',$request->charge_area);
+            })
+            ->orderByDesc('created_at')
+        ->paginate(50)->withQueryString();
 
         // Render view
         if($request->ajax())

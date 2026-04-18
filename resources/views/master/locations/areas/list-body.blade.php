@@ -12,7 +12,7 @@
             <a href="{{ url('master/location/areas') }}" class="btn btn-warning"><i class="bi bi-arrow-clockwise"></i></a>
         </div>
         <div class="col-auto mt-1">
-            <span class="fw-semibold">({{ $areas->count() }})</span> Records found
+            <span class="fw-semibold">({{ numberFormat($areas->total()) }})</span> Records found
         </div>
     </div>
     <div>
@@ -28,10 +28,18 @@
             <thead class="table-success">
                 <tr>
                     <th width="1%" nowrap>S No</th>
-                    <th>Name</th>
-                    <th>CA</th>
-                    <th>District</th>
                     <th>GA<x-master.ga-filter class="float-end" /></th>
+                    <th>District
+                        @if (request()->has('geo_area'))
+                           <x-master.district-filter class="float-end"/> 
+                        @endif
+                    </th>
+                    <th>CA
+                        @if (request()->has('district'))
+                           <x-master.charge-area-filter class="float-end"/> 
+                        @endif
+                    </th>
+                    <th>Area Name</th>
                     <th>Status</th>
                     <th>Actions</th>
                 </tr>
@@ -39,11 +47,11 @@
             <tbody>
                 @foreach ($areas as $item)
                     <tr>
-                        <td>{{ $loop->iteration }}</td>
-                        <td>{{ $item->name }}</td>
-                        <td>{{ $item->ca->name ?? '' }}</td>
-                        <td>{{ $item->ca->district->name ?? '' }}</td>
+                        <td>{{ ($areas->currentPage() - 1) * $areas->perPage() + $loop->iteration }}</td>
                         <td>{{ $item->ca->ga->name ?? '' }}</td>
+                        <td>{{ $item->ca->district->name ?? '' }}</td>
+                        <td>{{ $item->ca->name ?? '' }}</td>
+                        <td>{{ $item->name }}</td>  
                         <td><x-common.status :status="$item->status"/></td>
                         <td>
                             <a href="{{ url('master/location/areas/' . $item->id . '/edit') }}" class="btn btn-outline-primary btn-sm link-modal"><i class="bi bi-pencil-square"></i>&nbsp;Edit</a>
