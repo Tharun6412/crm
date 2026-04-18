@@ -20,7 +20,39 @@
         </nav>
         <div class="tab-content bg-white p-2 border border-top-0" id="nav-tabContent">
             <div class="tab-pane fade show active" id="nav-consumers" role="tabpanel" aria-labelledby="nav-consumers-tab" tabindex="0">
-                @include('reports.consumer.onboarding.consumer-status')
+                <form action="{{ url('reports/consumer/onboarding') }}" id="report-cns-onboard-search-form" method="GET">
+                    <div class="d-flex justify-content-between align-items-center border my-2 bg-light p-2 bg-secondary-subtle rounded">
+                        <h4 class="mb-0">Consumer Onboard</h4>
+                        <div class="row g-1">
+                            <div class="col-auto">
+                                <label for="status_date">Connection Type</label>
+                                <select name="connect_type_id" id="connect_type_id" class="form-select">
+                                    <option value="">All Connections</option>
+                                    @foreach ($connection_types as $item)
+                                        <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-auto">
+                                <label for="status_date">Segments</label>
+                                <select name="onboard_segment_id" id="onboard_segment_id" class="form-select">
+                                    <option value="">All Segments</option>
+                                    @foreach ($segments as $item)
+                                        <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-auto">
+                                <div>
+                                    <button type="submit" class="btn btn-success"><i class="bi bi-search"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>    
+                </form>
+                <div id="report-cns-onboard-list"> 
+                    @include('reports.consumer.onboarding.consumer-status')
+                </div>
             </div>
             <div class="tab-pane fade" id="nav-cns-activity" role="tabpanel" aria-labelledby="nav-cns-activity-tab" tabindex="0">
                 <form action="{{ url('reports/consumer/onboarding/activity') }}" id="report-cns-activity-search-form" method="GET">
@@ -86,6 +118,7 @@
 @endsection
 {{-- Scripts --}}
 @push('scripts')
+    @include('scripts.ajax-form-search', ['form' => 'report-cns-onboard'])
     @include('scripts.ajax-form-search', ['form' => 'report-cns-activity'])
     @include('scripts.datepicker', ['list' => ['date_from', 'date_to', 'status_date']])
 @endpush

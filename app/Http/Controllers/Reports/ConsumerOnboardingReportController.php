@@ -18,7 +18,7 @@ class ConsumerOnboardingReportController extends Controller
     /**
      * Index
      */
-    public function index()
+    public function index(Request $request)
     {
         // Get data
         $geo_areas = Ga::where('status', 1)->orderBy('position')->get();
@@ -27,6 +27,12 @@ class ConsumerOnboardingReportController extends Controller
 
         // Get all consumer status counts
         $consumer_status_result = Consumer::selectRaw('ga_id, status_id, count(status_id) as count')
+            ->when(($request->has('connect_type_id') AND !empty($request->connect_type_id)), function($q) use($request) {
+                $q->where('connection_type_id', $request->connect_type_id);
+            })
+            ->when(($request->has('onboard_segment_id') AND !empty($request->onboard_segment_id)), function($q) use($request) {
+                $q->where('segment_id', $request->onboard_segment_id);
+            })
             ->groupBy('ga_id', 'status_id')->get();
         
         // Prepare data
@@ -37,6 +43,16 @@ class ConsumerOnboardingReportController extends Controller
             $consumer_status_sum[$row->status_id] = isset($consumer_status_sum[$row->status_id]) ? $consumer_status_sum[$row->status_id] + $row->count : $row->count;
         }
 
+        if($request->ajax()){
+            // Render output
+            return view('reports.consumer.onboarding.consumer-status', [
+                'geo_areas' => $geo_areas,
+                'segments' => $segments,
+                'connection_types' => $connection_types,
+                'consumer_status_counts' => $consumer_status_counts,
+                'consumer_status_sum' => $consumer_status_sum,
+            ]);    
+        }
         // Render output
         return view('reports.consumer.onboarding.list', [
             'geo_areas' => $geo_areas,

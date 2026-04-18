@@ -65,6 +65,8 @@ class ConsumerOnboardingController extends Controller
             // Status History
             ConsumerStatus::create([
                 'consumer_id' => $id,
+                'lat' => $request->lat,
+                'lng' => $request->lng,
                 'status_id' => $con_status,
                 'notes' => $request->notes,
                 'created_by' => Auth::id(),
@@ -135,6 +137,8 @@ class ConsumerOnboardingController extends Controller
         // Status History
         ConsumerStatus::create([
             'consumer_id' => $id,
+            'lat' => $request->lat,
+            'lng' => $request->lng,
             'status_id' => EnumsConsumerStatus::EXECUTE->value,
             'notes' => $request->notes,
             'created_by' => Auth::id(),
@@ -170,6 +174,8 @@ class ConsumerOnboardingController extends Controller
         // Consumer Status History
         ConsumerStatus::create([
             'consumer_id' => $id,
+            'lat' => $request->lat,
+            'lng' => $request->lng,
             'status_id' => EnumsConsumerStatus::HSC->value,
             'notes' => $request->notes,
             'created_by' => Auth::id(),
@@ -208,6 +214,8 @@ class ConsumerOnboardingController extends Controller
         // Status History
         ConsumerStatus::create([
             'consumer_id' => $id,
+            'lat' => $request->lat,
+            'lng' => $request->lng,
             'status_id' => EnumsConsumerStatus::ACTIVATE->value,
             'notes' => $request->notes,
             'created_by' => Auth::id(),

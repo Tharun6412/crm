@@ -34,6 +34,8 @@ class ConsumerOperationsController extends Controller
         // Consumer Status History
         ConsumerStatus::create([
             'consumer_id' => $id,
+            'lat' => $request->lat,
+            'lng' => $request->lng,
             'status_id' => EnumsConsumerStatus::TD->value,
             'notes' => $request->notes,
             'created_by' => Auth::id(),
@@ -63,6 +65,8 @@ class ConsumerOperationsController extends Controller
         // Consumer Status History
         ConsumerStatus::create([
             'consumer_id' => $id,
+            'lat' => $request->lat,
+            'lng' => $request->lng,
             'status_id' => EnumsConsumerStatus::PD->value,
             'notes' => $request->notes,
             'created_by' => Auth::id(),

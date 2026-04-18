@@ -20,7 +20,8 @@ Route::middleware(['auth', ModuleAccess::class])->group(function() {
     
     // Search
     Route::get('search', [App\Http\Controllers\Consumer\ConsumerSearchController::class, 'search']);
-    
+    // Update KYC Controller
+    Route::resource('kyc', App\Http\Controllers\Consumer\ConsumerKycController::class);
     // Deposit
     Route::resource('payDeposit', App\Http\Controllers\Consumer\PayDepositController::class);
     Route::get('payDeposit/showReceipt/{id}', [App\Http\Controllers\Consumer\PayDepositController::class, 'showReceipt']);
@@ -54,6 +55,8 @@ Route::middleware(['auth', ModuleAccess::class])->group(function() {
     Route::get('consumerDocs/{id}', [App\Http\Controllers\Consumer\ConsumerController::class, 'consumerDocs'])->whereNumber('id');
     Route::get('/{id}', [App\Http\Controllers\Consumer\ConsumerController::class, 'show'])->whereNumber('id');
     Route::get('/{status:slug?}', [App\Http\Controllers\Consumer\ConsumerController::class, 'index']);
+    Route::get('/{id}/edit', [App\Http\Controllers\Consumer\ConsumerController::class, 'edit']);
+    Route::put('update/{id}', [App\Http\Controllers\Consumer\ConsumerController::class, 'update']);
 
     // Conversion
     Route::resource('conversion', App\Http\Controllers\prepaid\ConversionController::class);

@@ -98,6 +98,7 @@ class ConsumerRegistrationController extends Controller
             'consumer_id' => $add_consumer->id,
             'lat' => $request->lat,
             'lng' => $request->lng,
+            'kyc_status' => 0,
         ]);
         // Documents Data Preparation
         if($request->has('document_type')) {
@@ -117,6 +118,8 @@ class ConsumerRegistrationController extends Controller
         // Consumer Status History
         ConsumerStatus::create([
             'consumer_id' => $add_consumer->id,
+            'lat' => $request->lat,
+            'lng' => $request->lng,
             'status_id' => EnumsConsumerStatus::PRE_REGISTER->value,
             'created_by' => Auth::id(),
         ]);

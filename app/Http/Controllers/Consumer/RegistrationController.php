@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\Master\DocumentCentre\DocumentUpload;
 use App\Http\Requests\Consumer\RegistrationValidationRequest;
 use App\Models\Consumer\Consumer;
+use App\Models\Consumer\ConsumerData;
 use App\Models\Consumer\ConsumerDocument;
 use App\Models\Consumer\ConsumerScheme;
 use App\Models\Consumer\ConsumerStatus;
@@ -98,7 +99,11 @@ class RegistrationController extends Controller
         // Generate Temporary CRN and update
         $crn_code = 'TR' . $request->geo_area . $request->charge_area . str_pad($add_consumer->id, 5, '0', STR_PAD_LEFT);
         Consumer::where('id', $add_consumer->id)->update(['t_crn' => $crn_code, 'state_id' => $add_consumer->ga->state_id]);
-        
+        // Consumers Data with GeoCoordinates
+        ConsumerData::create([
+            'consumer_id' => $add_consumer->id,
+            'kyc_status' => 0,
+        ]);
         // Consumer Status History
         ConsumerStatus::create([
             'consumer_id' => $add_consumer->id,
@@ -133,7 +138,7 @@ class RegistrationController extends Controller
                 if (!empty($file_id)) {
                     $add_consumer_document = ConsumerDocument::create([
                         'consumer_id' => $add_consumer->id,
-                        'status_id' => NULL,
+                        'status_id' => EnumsConsumerStatus::PRE_REGISTER->value,
                         'doc_type_id' => $doc_type,
                         'file_id' => $file_id,
                     ]);

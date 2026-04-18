@@ -216,6 +216,14 @@ class Consumer extends Model
     }
 
     /**
+     * Relation with Invoice
+     */
+    public function kyc():BelongsTo
+    {
+        return $this->belongsTo(Area::class, 'area_id')->withDefault();
+    }
+
+    /**
      * Realtion with CreatedBy
      */
     public function createdBy():BelongsTo
@@ -360,5 +368,12 @@ class Consumer extends Model
     public function priceGroup(): BelongsTo
     {
         return $this->belongsTo(PriceGroups::class, 'price_group_id');
+    }
+    /**
+     * Relation with Consumer
+     */
+    public function cofDisplay():BelongsTo
+    {
+        return $this->belongsTo(Title::class, 'cof');
     }
 }

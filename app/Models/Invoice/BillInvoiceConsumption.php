@@ -41,6 +41,8 @@ class BillInvoiceConsumption extends Model
         'unit_price',
         'total_price',
         'file_id',
+        'lat',
+        'lng',
     ];
 
     /**

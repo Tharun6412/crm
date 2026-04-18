@@ -23,6 +23,7 @@ class ConsumerData extends Model
         'consumer_id',
         'lat',
         'lng',
+        'kyc_status',
     ];
 
     /**

@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers\Consumer;
 
+use App\Enums\AwsPath;
+use App\Enums\ConsumerStatus;
 use App\Exports\Consumers\ConsumerExport;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Master\DocumentCentre\DocumentUpload;
 use App\Models\Consumer\Consumer;
 use App\Models\Consumer\ConsumerDocument;
 use App\Models\Master\MasterConsumerStatus;
+use App\Models\Master\Title;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -122,4 +126,13 @@ class ConsumerController extends Controller
     {
         return (new ConsumerExport($request))->download('consumers.csv');
     }
+    // public function consumerExport(Request $request)
+    // {
+    //     // return (new ConsumerQExport())->store('consumers_q.csv');
+    //     (new ConsumerQExport())->queue('consumers_q.csv', 'public');
+
+    //     return response()->json([
+    //         'message' => 'Export started. You will be notified once completed.'
+    //     ]);
+    // }
 }

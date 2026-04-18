@@ -32,7 +32,7 @@ class ConsumerExport implements FromQuery, WithHeadings, WithMapping
     {
         $sortBy = ($this->request->get('sortBy')) ? $this->request->get('sortBy') : 'created_at';
         $sortOr = ($this->request->get('sortOr')) ? $this->request->get('sortOr') : 'desc';
-        $consumers = Consumer::when((!isAdmin() AND !isSuperAdmin()), function ($q) {
+        $consumers = Consumer::when((!isAdmin() AND !isSuperAdmin() AND !isFullAccess()), function ($q) {
                 $q->whereIn('ga_id', session('user')['gas']);
             })
             ->when($this->request->filled('key'), function ($q) {

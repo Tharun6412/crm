@@ -247,6 +247,8 @@ class BillingController extends Controller
             'unit_price' => $prices->avg('basic_price'), // average price.
             'meter_change_id' => $meterChangeId,
             'total_price' => 0,
+            'lat' => $request->lat,
+            'lng' => $request->lng,
         ];
         // 4. Calling of insertion method from the same controller. 
         $inv_resp = $this->invoiceInsert($consumer, $invoice, $request);
@@ -323,6 +325,8 @@ class BillingController extends Controller
             'unit_price' => $price->basic_price, // single price.
             'meter_change_id' => $meterChangeId,
             'total_price' => $inv_base_amt,
+            'lat' => $request->lat,
+            'lng' => $request->lng,
         ];
         // 5. Calling of insertion method from the same controller.
         $inv_resp = $this->invoiceInsert($consumer, $invoice, $request);
@@ -409,6 +413,8 @@ class BillingController extends Controller
             'unit_price' => $avg_price, // average price.
             'total_price' => $inv_base_amt,
             'meter_change_id' => $meterChangeId,
+            'lat' => $request->lat,
+            'lng' => $request->lng,
         ];
 
         // 5. Calling of insertion method from the same controller.
