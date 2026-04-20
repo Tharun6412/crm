@@ -91,7 +91,7 @@ class InvoiceController extends Controller
             return response()->json(['error' => 'Invoice not found'], 422);
         }
         // Generate LPC for GAS Bill Type
-        $late_fee = '0';
+        $late_fee = $lpc_inv = '0';
         if($invoice->type_id == InvoiceType::GAS_BILL->value) {
             if(Carbon::now()->toDateString() > $invoice->due_date) {
                 // Check Late Fee invoice
@@ -100,13 +100,13 @@ class InvoiceController extends Controller
                 }else {
                     switch($invoice->consumer->segment_id) {
                         case 1:
-                            $late_fee = Constants::DPNG_LPC->value;break;
+                            $late_fee = $lpc_inv = Constants::DPNG_LPC->value;break;
                         case 2:
-                            $late_fee = Constants::CPNG_LPC->value;break;
+                            $late_fee = $lpc_inv = Constants::CPNG_LPC->value;break;
                         case 3:
-                            $late_fee = Constants::IPNG_LPC->value;break;
+                            $late_fee = $lpc_inv = Constants::IPNG_LPC->value;break;
                         default:
-                            $late_fee = '0';
+                            $late_fee = $lpc_inv = '0';
                     }
                 }
             }
@@ -116,6 +116,8 @@ class InvoiceController extends Controller
         // Total Payable amount
         $total_payable_amount = round($invoice->balance_amount + $connected_inv_amt + $late_fee, 2);
 
+        $inv_amt_list = $invoice->childInvoices->pluck('payable_amount', 'type_id');
+
         // Payment Types
         $payment_types = PaymentType::select('id', 'name', 'status')->get();
         // Get Invoice details
@@ -124,6 +126,11 @@ class InvoiceController extends Controller
             'late_fee' => $late_fee,
             'total_payable_amount' => $total_payable_amount,
             'payment_types' => $payment_types,
+            'service_invoice' => $inv_amt_list[InvoiceType::SERVICE_INVOICE->value] ?? 0,
+            'late_payment_charges' => $inv_amt_list[InvoiceType::LATE_PAYMENT_CHARGES->value] ?? (int)$lpc_inv,
+            'rental_charges' => $inv_amt_list[InvoiceType::RENTAL_CHARGES->value] ?? 0,
+            'sd_emi' => $inv_amt_list[InvoiceType::SD_EMI->value] ?? 0,
+            'custom_invoice' => $inv_amt_list[InvoiceType::CUSTOM_INVOICE->value] ?? 0,
         ], 200);
     }
 
