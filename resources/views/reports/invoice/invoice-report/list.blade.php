@@ -10,7 +10,7 @@
 @endsection
 
 @section('page-content')
-    <form id="invoices-search-form" name="invoices-search-form" action="{{ url('reports/invoiceReport') }}">
+    <form id="invoices-search-form" name="invoices-search-form" action="{{ url('reports/invoices/report') }}">
         <div id="invoices-list" class="current-page-reload">
             @include('reports.invoice.invoice-report.list-body')
         </div>

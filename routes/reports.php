@@ -17,7 +17,7 @@ Route::middleware(['auth', ModuleAccess::class])->group(function() {
     Route::get('ageingReport', [App\Http\Controllers\Reports\AgeingReportController::class, 'index']);
     // Route::get('ageingReport/invoicesList', [App\Http\Controllers\Reports\AgeingReportController::class, 'invoicesList']);
     Route::get('gasSaleReport', [App\Http\Controllers\Reports\GasSaleReportController::class, 'index']);
-    // Route::get('invoiceReport', [App\Http\Controllers\Reports\InvoicesReportController::class, 'index']);
+    Route::get('invoices/report', [App\Http\Controllers\Reports\InvoicesReportController::class, 'index']);
     Route::get('invoiceReport/invoicesReportExport', [App\Http\Controllers\Reports\InvoicesReportController::class, 'invoicesReportExport']);
     Route::get('consumer/consumerAgeingReport', [App\Http\Controllers\Reports\Consumer\ConsumerAgeingReport::class, 'index']);
     Route::get('consumer/consumerAgeingReport/consumersList', [App\Http\Controllers\Reports\Consumer\ConsumerAgeingReport::class, 'consumersList']);

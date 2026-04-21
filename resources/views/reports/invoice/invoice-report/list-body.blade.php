@@ -1,3 +1,17 @@
+@php
+    $sort_by = (request()->has('sortBy')) ? request()->get('sortBy') : 'bil_invoices.created_at';
+    $sort_order = (request()->has('sortOr')) ? request()->get('sortOr') : 'desc';
+    $sort_order_inverse = ($sort_order == 'asc') ? 'desc' : 'asc';
+    $sort_icon = ($sort_order == 'asc') ? 'bi-caret-down-fill' : 'bi-caret-up-fill';
+    // $i = (($invoices->currentPage() - 1) * $invoices->perPage())+1;
+
+    // Helper to build sort URL (cursor pagination doesn't use page numbers)
+    $sortUrl = fn($column) => request()->fullUrlWithQuery([
+        'sortBy' => $column,
+        'sortOr' => ($sort_by === $column) ? $sort_order_inverse : 'asc',
+        'cursor'  => null, // reset cursor on sort change
+    ]);
+@endphp
 <div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-3">
     <!-- LEFT SIDE FILTERS -->
     <div class="d-flex flex-wrap align-items-center gap-2">
@@ -6,38 +20,22 @@
             <span class="input-group-text">Search</span>
             <input type="text" name="key" id="key" class="form-control" value="{{ request()->key }}">
         </div>
-        <!-- Range Dropdown -->
-        @if (request()->has('range'))
-            <select name="range" id="range" class="form-select w-auto">
-                <option value="">All Days Range</option>
-                @foreach([
-                    '0',
-                    '1-15',
-                    '16-30',
-                    '31-60',
-                    '61-90',
-                    '90+'
-                ] as $range)
-                    <option value="{{ $range }}"
-                        @selected($range == request()->range)>
-                        {{ $range }} Days
-                    </option>
-                @endforeach
-            </select>
-        @endif
         <!-- Calendar Toggle Button -->
         <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#invoiceDateFilter" aria-expanded="false"><i class="bi bi-calendar3"></i></button>
         <!-- Submit -->
         <button type="submit" class="btn btn-success"><i class="bi bi-search"></i></button>
         <!-- Reset -->
-        <a href="{{ url('reports/invoiceReport') }}" class="btn btn-warning"><i class="bi bi-arrow-clockwise"></i></a>
+        <a href="{{ url('reports/invoices/report') }}" class="btn btn-warning"><i class="bi bi-arrow-clockwise"></i></a>
         <!-- Record Count -->
         <span class="small text-muted">
-            <strong>({{ $invoices->total() }})</strong> Records found
+            <strong>({{ numberFormat($tRecords ?? 0) }})</strong> Records found
         </span>
     </div>
-    <div>
+    {{-- <div>
         <x-auth.link :href="url('reports/invoiceReport/invoicesReportExport') . '?' . request()->getQueryString()" class="btn btn-outline-info"><i class="bi bi-file-earmark-excel"></i>&nbsp;Export</x-auth.link>
+    </div> --}}
+    <div>
+        {{ $invoices->links('utils.cursor', ['modDiv' => 'invoices-list']) }}
     </div>
 </div>
 <!-- COLLAPSIBLE DATE FILTER -->
@@ -62,20 +60,13 @@
         </div>
     </div>
 </div>
-@php
-    $sort_by = (request()->has('sortBy')) ? request()->get('sortBy') : 'bil_invoices.created_at';
-    $sort_order = (request()->has('sortOr')) ? request()->get('sortOr') : 'desc';
-    $sort_order_inverse = ($sort_order == 'asc') ? 'desc' : 'asc';
-    $sort_icon = ($sort_order == 'asc') ? 'bi-caret-down-fill' : 'bi-caret-up-fill';
-    $i = (($invoices->currentPage() - 1) * $invoices->perPage())+1;
-@endphp
 <div class="table-responsive" style="min-height: 500px;">
     <table class="table table-bordered table-hover table-striped bg-white page-sort text-middle">
         <thead class="table-success align-middle">
             <tr class="bg-success-subtle">
                 <th width="1%" nowrap>S No</th>
                 <th nowrap>
-                    <a href="{{ $invoices->appends(['sortBy' => 'bil_invoices.invoice_number','sortOr' => $sort_order_inverse])->url($invoices->currentPage()) }}">
+                     <a href="{{ $sortUrl('bil_invoices.invoice_number') }}">
                         Invoice No
                         @if ($sort_by == 'bil_invoices.invoice_number')
                             <i class="bi {{ $sort_icon }}"></i>
@@ -83,7 +74,7 @@
                     </a>
                     </th>
                 <th nowrap>
-                    <a href="{{ $invoices->appends(['sortBy' => 'bil_invoices.invoice_date','sortOr' => $sort_order_inverse])->url($invoices->currentPage()) }}">
+                     <a href="{{ $sortUrl('bil_invoices.invoice_date') }}">
                     Invoice Date
                         @if ($sort_by == 'bil_invoices.invoice_date')
                         <i class="bi {{ $sort_icon }}"></i>
@@ -92,7 +83,8 @@
                 </th>
                 <th nowrap>
                     <div class="d-flex">
-                        <a href="{{ $invoices->appends(['sortBy' => 'bil_invoices.type_id','sortOr' => $sort_order_inverse])->url($invoices->currentPage()) }}">Invoice Type
+                         <a href="{{ $sortUrl('bil_invoices.type_id') }}">
+                            Invoice Type
                             @if ($sort_by == 'bil_invoices.type_id')
                                 <i class="bi {{ $sort_icon }}"></i>
                             @endif
@@ -101,15 +93,15 @@
                     </div>
                 </th>
                 <th nowrap>
-                    <a href="{{ $invoices->appends(['sortBy' => 'cns_consumers.crn','sortOr' => $sort_order_inverse])->url($invoices->currentPage()) }}">
+                    <a href="{{ $sortUrl('consumer.crn') }}">
                     CRN
-                    @if ($sort_by == 'crn')
+                    @if ($sort_by == 'consumer.crn')
                         <i class="bi {{ $sort_icon }}"></i>
                     @endif
                     </a>
                 </th>
                 <th nowrap>
-                    <a href="{{ $invoices->appends(['sortBy' => 'cns_consumers.fname','sortOr' => $sort_order_inverse])->url($invoices->currentPage()) }}">
+                    <a href="{{ $sortUrl('fname') }}">
                     Consumer Name
                     @if ($sort_by == 'fname')
                         <i class="bi {{ $sort_icon }}"></i>
@@ -140,7 +132,7 @@
                     @endif
                 </th>
                 <th nowrap class="text-end">
-                    <a href="{{ $invoices->appends(['sortBy' => 'net_consumption','sortOr' => $sort_order_inverse])->url($invoices->currentPage()) }}">
+                    <a href="{{ $sortUrl('net_consumption') }}">
                         Consumption
                         @if ($sort_by == 'net_consumption')
                             <i class="bi {{ $sort_icon }}"></i>
@@ -148,7 +140,7 @@
                     </a>
                 </th>
                 <th nowrap>
-                    <a href="{{ $invoices->appends(['sortBy' => 'due_date','sortOr' => $sort_order_inverse])->url($invoices->currentPage()) }}">
+                     <a href="{{ $sortUrl('due_date') }}">
                         Due Date
                         @if ($sort_by == 'due_date')
                             <i class="bi {{ $sort_icon }}"></i>
@@ -156,15 +148,39 @@
                     </a>
                 </th>
                 <th class="text-end" nowrap>
-                    <a href="{{ $invoices->appends(['sortBy' => 'payable_amount','sortOr' => $sort_order_inverse])->url($invoices->currentPage()) }}">
+                    <a href="{{ $sortUrl('taxable_amount') }}">
+                        Base Amount
+                        @if ($sort_by == 'taxable_amount')
+                            <i class="bi {{ $sort_icon }}"></i>
+                        @endif
+                    </a>
+                </th>
+                <th class="text-end" nowrap>
+                    <a href="{{ $sortUrl('tax_amount') }}">
+                        Tax Amount
+                        @if ($sort_by == 'tax_amount')
+                            <i class="bi {{ $sort_icon }}"></i>
+                        @endif
+                    </a>
+                </th>
+                <th class="text-end" nowrap>
+                    <a href="{{ $sortUrl('total_amount') }}">
                         Invoice Amount
+                        @if ($sort_by == 'total_amount')
+                            <i class="bi {{ $sort_icon }}"></i>
+                        @endif
+                    </a>
+                </th>
+                <th class="text-end" nowrap>
+                    <a href="{{ $sortUrl('payable_amount') }}">
+                        Payable Amount
                         @if ($sort_by == 'payable_amount')
                             <i class="bi {{ $sort_icon }}"></i>
                         @endif
                     </a>
                 </th>
                 <th class="text-end" nowrap>
-                    <a href="{{ $invoices->appends(['sortBy' => 'balance_amount','sortOr' => $sort_order_inverse])->url($invoices->currentPage()) }}">
+                    <a href="{{ $sortUrl('balance_amount') }}">
                         Balance Amount
                         @if ($sort_by == 'balance_amount')
                             <i class="bi {{ $sort_icon }}"></i>
@@ -173,7 +189,7 @@
                 </th>
                 <th nowrap>
                     <div class="d-flex">
-                        <a href="{{ $invoices->appends(['sortBy' => 'bil_invoices.status_id','sortOr' => $sort_order_inverse])->url($invoices->currentPage()) }}">
+                        <a href="{{ $sortUrl('bil_invoices.status_id') }}">
                             Payment Status
                             @if ($sort_by == 'bil_invoices.status_id')
                                 <i class="bi {{ $sort_icon }}"></i>
@@ -190,7 +206,7 @@
         <tbody>
             @forelse($invoices as $inv)
                 <tr class="align-middle">
-                    <td class="text-center">{{ $i++ }}</td>
+                    <td class="text-center">{{ $loop->iteration }}</td>
                     <td><a href="{{ url('bill/invoice/' . $inv->id) }}" target="_blank">&nbsp;{{ $inv->invoice_number }}</a></td>
                     <td>{{ dateFormat($inv->invoice_date) }}</td>
                     <td nowrap>{{ $inv->invoiceType->name }}</td>
@@ -200,8 +216,11 @@
                     <td>{{ $inv->consumer->connectType->name }}</td>
                     <td nowrap>{{ $inv->consumer->ga->name }}</td>
                     <td>{{ $inv->consumer->district->name }}</td>
-                    <td class="text-end">{{ $inv->net_consumption ?? 0 }}</td>
+                    <td class="text-end">{{ $inv->consumption->net_consumption ?? 0 }}</td>
                     <td>{{ dateFormat($inv->due_date) }}</td>
+                    <td class="text-end">{{ numberFormat($inv->taxable_amount, 2) }}</td>
+                    <td class="text-end">{{ numberFormat($inv->tax_amount, 2) }}</td>
+                    <td class="text-end">{{ numberFormat($inv->total_amount, 2) }}</td>
                     <td class="text-end">{{ numberFormat($inv->payable_amount, 2) }}</td>
                     <td class="text-end">{{ numberFormat($inv->balance_amount, 2) }}</td>
                     <td><x-invoice.status :status="$inv->status"/></td>
@@ -215,21 +234,58 @@
         <tfoot>
             <tr class="table-info">
                 <th class="text-end" colspan="10">Total</th>
-                <th class="text-end">{{ numberFormat($invoices->sum('net_consumption'),2) }}</th>
+                <th class="text-end">{{ numberFormat($pageTotals['net_consumption'],2) }}</th>
                 <th></th>
-                <th class="text-end">{{ numberFormat($invoices->sum('payable_amount'),2) }}</th>
-                <th class="text-end">{{ numberFormat($invoices->sum('balance_amount'),2) }}</th>
+                <th class="text-end">{{ numberFormat($pageTotals['taxable_amount'],2) }}</th>
+                <th class="text-end">{{ numberFormat($pageTotals['tax_amount'],2) }}</th>
+                <th class="text-end">{{ numberFormat($pageTotals['total_amount'],2) }}</th>
+                <th class="text-end">{{ numberFormat($pageTotals['payable_amount'],2) }}</th>
+                <th class="text-end">{{ numberFormat($pageTotals['balance_amount'],2) }}</th>
                 <th></th>
             </tr>
         </tfoot>
     </table>
 </div>
-{{--  Reset pagination parameters for paginator --}}
-@php
-    $invoices->appends(['sortBy' => $sort_by, 'sortOr' => $sort_order]);
-@endphp
+<div class="row justify-content-end">
+    <div class="card text-bg-primary mb-3" style="max-width: 15rem;">
+      <div class="card-body">
+        <h4 class="card-title">Total Consumption</h4>
+        <p class="card-text">0.00</p>
+      </div>
+    </div>
+    <div class="card text-bg-secondary mb-3" style="max-width: 15rem;">
+      <div class="card-body">
+        <h4 class="card-title">Total Base Amount</h4>
+        <p class="card-text">{{ numberFormat($totals['total_taxable'],2) }}</p>
+      </div>
+    </div>
+    <div class="card text-bg-success mb-3" style="max-width: 15rem;">
+      <div class="card-body">
+        <h4 class="card-title">Total Tax Amount</h4>
+        <p class="card-text">{{ numberFormat($totals['total_tax'],2) }}</p>
+      </div>
+    </div>
+    <div class="card text-bg-danger mb-3" style="max-width: 15rem;">
+      <div class="card-body">
+        <h4 class="card-title">Total Invoice Amount</h4>
+        <p class="card-text">{{ numberFormat($totals['total_amount'],2) }}</p>
+      </div>
+    </div>
+    <div class="card text-bg-warning mb-3" style="max-width: 15rem;">
+      <div class="card-body">
+        <h4 class="card-title">Total Payable Amount</h4>
+        <p class="card-text">{{ numberFormat($totals['total_payable'],2) }}</p>
+      </div>
+    </div>
+    <div class="card text-bg-info mb-3" style="max-width: 15rem;">
+      <div class="card-body">
+        <h4 class="card-title">Total Balance</h4>
+        <p class="card-text">{{ numberFormat($totals['total_balance'],2) }}</p>
+      </div>
+    </div>
+</div>
 <div class="p-1 mb-2">
-    {{ $invoices->links('utils.paginator', ['modDiv' => 'invoices-list']) }}
+    {{ $invoices->links('utils.cursor', ['modDiv' => 'invoices-list']) }}
 </div>
 {{-- Scripts --}}
 @push('scripts')
