@@ -67,13 +67,8 @@ class InvoiceController extends Controller
             'consumption:id,invoice_id,meter_id,date_from,date_to,prev_reading,curr_reading,consumption,old_consumption,net_consumption,unit_price,total_price,cf',
             'consumption.consumptionDetails',
             'creditNotes',
-<<<<<<< Updated upstream
             'childInvoices:id,type_id,invoice_number,invoice_date,payable_amount,paid_amount,balance_amount,status_id,parent_invoice_id',
             'parentInvoice:id,type_id,invoice_number',
-=======
-            'childInvoices:id,invoice_number,invoice_date,payable_amount,paid_amount,balance_amount,status_id,parent_invoice_id',
-            'parentInvoice:id,invoice_number',
->>>>>>> Stashed changes
             'payments:id,invoice_id,payment_date,payment_type_id,transaction_id,amount,balance,status_id,created_by',
             'payments.paymentType:id,name',
             'payments.status:id,name',
@@ -116,7 +111,6 @@ class InvoiceController extends Controller
                 }
             }
         }
-<<<<<<< Updated upstream
         // Connected Invoices
         $connected_inv_amt = $invoice->childInvoices->where('status_id', InvoiceStatus::NOT_PAID->value)->sum('payable_amount');
         // Total Payable amount
@@ -124,10 +118,6 @@ class InvoiceController extends Controller
 
         $inv_amt_list = $invoice->childInvoices->pluck('payable_amount', 'type_id');
 
-=======
-        // Total Payable amount
-        $invoice->payable_amount = round($invoice->balance_amount + $invoice->childInvoices->sum('payable_amount')+$late_fee, 2);
->>>>>>> Stashed changes
         // Payment Types
         $payment_types = PaymentType::select('id', 'name', 'status')->get();
         switch($invoice->consumer->segment_id) {

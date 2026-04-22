@@ -14,11 +14,7 @@
                                 <div class="card border-info shadow-sm" style="width: 13rem;">
                                     
                                     <div class="card-header bg-info-subtle text-dark">
-<<<<<<< Updated upstream
                                         {{ $doc->docType->name ?? 'Not Specified' }}
-=======
-                                        {{ $doc->docType->name }}
->>>>>>> Stashed changes
                                     </div>
 
                                     <div class="card-body text-center position-relative">
@@ -42,40 +38,9 @@
                                     </div>
                                 </div>
                             @endforeach
-<<<<<<< Updated upstream
-=======
                         </div>
                     </div>
                 @endforeach
-                {{-- @foreach ($documents_list as $index => $doc)
-                    <div class="card border-info shadow-sm" style="width: 13rem;">
-                        <div class="card-header bg-info-subtle text-dark">
-                            {{ $doc->docType->name }}
-                        </div>
-                        <div class="card-body text-center">
-                           @php
-                            $ext = strtolower(pathinfo($doc->file->file_name, PATHINFO_EXTENSION));
-                            $icons = [
-                                'pdf' => '<i class="bi bi-file-earmark-pdf"></i>',
-                                'doc' => '<i class="bi bi-file-earmark-word"></i>',
-                                'docx' => '<i class="bi bi-file-earmark-word"></i>',
-                                'xls' => '<i class="bi bi-file-spreadsheet"></i>',
-                                'xlsx' => '<i class="bi bi-file-spreadsheet"></i>',
-                                'jpg' => '<i class="bi bi-file-image"></i>',
-                                'jpeg' => '<i class="bi bi-file-image"></i>',
-                                'png' => '<i class="bi bi-file-image"></i>',
-                            ];
-                            @endphp                            
-                            {{-- <img src="/icons/{{ $icons[$ext] ?? 'file.png' }}" width="20">
-                            {{ $doc->file->file_name }} --}}
-                            {{-- <a href="{{ url('master/dc/documents/' . $doc->file->id) }}" title="{{ $doc->file->file_name }} | added date: {{ $doc->created_at?->format('d-m-Y H:i:s') }}" target="_blank" class="fs-1">{!! $icons[$ext] ?? '<i class="bi bi-file-image"></i>' !!}</a>
-                            <div class="position-absolute bottom-0 end-0">
-                                <span class="text-secondary p-1" style="font-size: 9px;"><i class="bi bi-calendar3"></i> {{ $doc->created_at?->format('d-m-Y H:i:s') }}</span>
-                            </div>                          
->>>>>>> Stashed changes
-                        </div>
-                    </div>
-                @endforeach --}}
             </div>
         </div>    
         @else
