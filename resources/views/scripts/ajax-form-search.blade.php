@@ -14,6 +14,8 @@
             e.preventDefault();
             $.get($(this).attr('action'), $(this).serializeArray(), function(response) {
                 $("#{{ $form }}-list").html(response);
+                // Callback if applicable
+                {{ $callback ?? '' }}
             }).fail(function(response){
                 $('#{{ $form }}-list').html('<div class="alert alert-danger">' + response.responseJSON.message + '</div>');                
             });

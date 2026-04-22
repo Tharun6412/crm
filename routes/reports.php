@@ -19,8 +19,12 @@ Route::middleware(['auth', ModuleAccess::class])->group(function() {
     Route::get('ageingReport', [App\Http\Controllers\Reports\AgeingReportController::class, 'index']);
     // Route::get('ageingReport/invoicesList', [App\Http\Controllers\Reports\AgeingReportController::class, 'invoicesList']);
     Route::get('gasSaleReport', [App\Http\Controllers\Reports\GasSaleReportController::class, 'index']);
-    Route::get('invoices/report', [App\Http\Controllers\Reports\InvoicesReportController::class, 'index']);
+    // Invoice report
+    Route::get('invoices/all', [App\Http\Controllers\Reports\InvoicesReportController::class, 'index']);
+    Route::get('invoices/all-counts', [App\Http\Controllers\Reports\InvoicesReportController::class, 'reportCounts']);
     Route::get('invoiceReport/invoicesReportExport', [App\Http\Controllers\Reports\InvoicesReportController::class, 'invoicesReportExport']);
+    Route::get('invoices/list', [App\Http\Controllers\Reports\InvoicesReportController::class, 'list']);
+
     Route::get('consumer/consumerAgeingReport', [App\Http\Controllers\Reports\Consumer\ConsumerAgeingReport::class, 'index']);
     Route::get('consumer/consumerAgeingReport/consumersList', [App\Http\Controllers\Reports\Consumer\ConsumerAgeingReport::class, 'consumersList']);
     Route::get('consumer/consumerAgeingReport/consumerExport', [App\Http\Controllers\Reports\Consumer\ConsumerAgeingReport::class, 'consumerExport']);
@@ -40,8 +44,6 @@ Route::middleware(['auth', ModuleAccess::class])->group(function() {
     Route::get('paymentsReport', [App\Http\Controllers\Reports\PaymentsReportController::class, 'index']);
     Route::get('paymentsReport/paymentsReportExport', [App\Http\Controllers\Reports\PaymentsReportController::class, 'paymentsReportExport']);
     // GA Wise Recharge Report
-    Route::get('consumer/recharge' , [App\Http\Controllers\Reports\Consumer\RechargeReportController::class,'index']);
-    Route::get('consumer/recharge/List' , [App\Http\Controllers\Reports\Consumer\RechargeReportController::class,'rechargesList']);
-    
-    Route::get('invoices/list', [App\Http\Controllers\Reports\InvoicesReportController::class, 'list']);
+    Route::get('consumer/recharge' , [App\Http\Controllers\Reports\Consumer\RechargeReportController::class, 'index']);
+    Route::get('consumer/recharge/List' , [App\Http\Controllers\Reports\Consumer\RechargeReportController::class, 'rechargesList']);
 });

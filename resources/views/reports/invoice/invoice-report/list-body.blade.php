@@ -12,56 +12,13 @@
         'cursor'  => null, // reset cursor on sort change
     ]);
 @endphp
-<div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-3">
-    <!-- LEFT SIDE FILTERS -->
-    <div class="d-flex flex-wrap align-items-center gap-2">
-        <!-- Search -->
-        <div class="input-group w-auto">
-            <span class="input-group-text">Search</span>
-            <input type="text" name="key" id="key" class="form-control" value="{{ request()->key }}">
-        </div>
-        <!-- Calendar Toggle Button -->
-        <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#invoiceDateFilter" aria-expanded="false"><i class="bi bi-calendar3"></i></button>
-        <!-- Submit -->
-        <button type="submit" class="btn btn-success"><i class="bi bi-search"></i></button>
-        <!-- Reset -->
-        <a href="{{ url('reports/invoices/report') }}" class="btn btn-warning"><i class="bi bi-arrow-clockwise"></i></a>
-        <!-- Record Count -->
-        <span class="small text-muted">
-            <strong>({{ numberFormat($tRecords ?? 0) }})</strong> Records found
-        </span>
-    </div>
-    {{-- <div>
-        <x-auth.link :href="url('reports/invoiceReport/invoicesReportExport') . '?' . request()->getQueryString()" class="btn btn-outline-info"><i class="bi bi-file-earmark-excel"></i>&nbsp;Export</x-auth.link>
-    </div> --}}
-    <div>
-        {{ $invoices->links('utils.cursor', ['modDiv' => 'invoices-list']) }}
-    </div>
+<div class="d-flex justify-content-between mb-1">
+    <!-- Record Count -->
+    <div class="fs-5 fw-semibold">({{ numberFormat($tRecords ?? 0) }})&nbsp;Records found</div>
+    <div>{{ $invoices->links('utils.cursor', ['modDiv' => 'invoices-list']) }}</div>
 </div>
-<!-- COLLAPSIBLE DATE FILTER -->
-<div class="collapse {{ request()->filled('date_from') || request()->filled('date_to') ? 'show' : '' }} mt-2 mb-3" id="invoiceDateFilter">
-    <div class="card border-info bg-info-subtle">
-        <div class="card-body py-2 px-3">
-            <div class="d-flex align-items-center flex-wrap gap-3">
-                <span class="fw-semibold">
-                    Invoice Date :
-                </span>
-                <!-- From Date -->
-                <div class="input-group w-auto">
-                    <span class="input-group-text">From</span>
-                    <input type="text" class="form-control" name="date_from" id="date_from" value="{{ request()->date_from }}"><span class="input-group-text"><i class="bi bi-calendar3"></i></span>
-                </div>
-                <!-- To Date -->
-                <div class="input-group w-auto">
-                    <span class="input-group-text">To</span>
-                    <input type="text" class="form-control" name="date_to" id="date_to" value="{{ request()->date_to }}"><span class="input-group-text"><i class="bi bi-calendar3"></i></span>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="table-responsive" style="min-height: 500px;">
-    <table class="table table-bordered table-hover table-striped bg-white page-sort text-middle">
+<div class="table-responsive">
+    <table class="table table-bordered table-hover table-striped bg-white page-sort text-middle mb-0">
         <thead class="table-success align-middle">
             <tr class="bg-success-subtle">
                 <th width="1%" nowrap>S No</th>
@@ -246,48 +203,3 @@
         </tfoot>
     </table>
 </div>
-<div class="row justify-content-end">
-    <div class="card text-bg-primary mb-3" style="max-width: 15rem;">
-      <div class="card-body">
-        <h4 class="card-title">Total Consumption</h4>
-        <p class="card-text">0.00</p>
-      </div>
-    </div>
-    <div class="card text-bg-secondary mb-3" style="max-width: 15rem;">
-      <div class="card-body">
-        <h4 class="card-title">Total Base Amount</h4>
-        <p class="card-text">{{ numberFormat($totals['total_taxable'],2) }}</p>
-      </div>
-    </div>
-    <div class="card text-bg-success mb-3" style="max-width: 15rem;">
-      <div class="card-body">
-        <h4 class="card-title">Total Tax Amount</h4>
-        <p class="card-text">{{ numberFormat($totals['total_tax'],2) }}</p>
-      </div>
-    </div>
-    <div class="card text-bg-danger mb-3" style="max-width: 15rem;">
-      <div class="card-body">
-        <h4 class="card-title">Total Invoice Amount</h4>
-        <p class="card-text">{{ numberFormat($totals['total_amount'],2) }}</p>
-      </div>
-    </div>
-    <div class="card text-bg-warning mb-3" style="max-width: 15rem;">
-      <div class="card-body">
-        <h4 class="card-title">Total Payable Amount</h4>
-        <p class="card-text">{{ numberFormat($totals['total_payable'],2) }}</p>
-      </div>
-    </div>
-    <div class="card text-bg-info mb-3" style="max-width: 15rem;">
-      <div class="card-body">
-        <h4 class="card-title">Total Balance</h4>
-        <p class="card-text">{{ numberFormat($totals['total_balance'],2) }}</p>
-      </div>
-    </div>
-</div>
-<div class="p-1 mb-2">
-    {{ $invoices->links('utils.cursor', ['modDiv' => 'invoices-list']) }}
-</div>
-{{-- Scripts --}}
-@push('scripts')
-    @include('scripts.datepicker', ['list' => ['date_from', 'date_to']])
-@endpush

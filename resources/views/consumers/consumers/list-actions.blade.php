@@ -11,7 +11,7 @@
     <ul class="dropdown-menu">
         <li><a class="dropdown-item" href="{{ url('consumers/' . $consumer->id) }}"><i class="bi bi-chevron-right"></i>&nbsp;View</a></li>
         @if ($consumer->consumerData AND $consumer->consumerData->kyc_status == 0) 
-            <li><a class="dropdown-item link-modal" href="{{ url('consumers/kyc/' . $consumer->id.'/edit') }}"><i class="bi bi-chevron-right"></i>&nbsp;Edit</a></li>
+            <li><a class="dropdown-item link-modal" href="{{ url('consumers/kyc/' . $consumer->id.'/edit') }}"><i class="bi bi-chevron-right"></i>&nbsp;Update KYC</a></li>
         @endif
         <li><a class="dropdown-item link-modal" href="{{ url('consumers/consumerDocument/' . $consumer->id.'/edit') }}"><i class="bi bi-chevron-right"></i>&nbsp;Add Document</a></li>
         {{-- Registration Status Dropdown--}}

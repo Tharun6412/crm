@@ -1,6 +1,7 @@
 @extends('layouts.layout', ['dashboard' => 1])
 
-@section('page-title', 'Welcome')
+@section('title', 'Dashboard')
+@section('page-title', 'Dashboard')
 
 @section('page-content')
     @php
