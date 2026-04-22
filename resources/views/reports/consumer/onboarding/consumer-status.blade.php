@@ -36,7 +36,9 @@
     @foreach($geo_areas as $ga)
         <div class="row row-cols-10 g-2 mb-2">
             <div class="col-2">
-                <div class="bg-success-subtle rounded py-1 px-2 fs-5 text-truncate">{{ $ga->name }}</div>
+                <div class="bg-success-subtle rounded py-1 px-2 fs-5 text-truncate">
+                    <a href="{{ url('reports/consumer/onboarding/getCountByDistricts') }}?ga_id={{ $ga->id }}&ga_name={{ $ga->name }}&{{ http_build_query(request()->all()) }}" class="link-modal">{{ $ga->name }}</a>
+                </div>
             </div>
             <div class="col">
                 <div class="border rounded text-end py-1 px-2 fs-5">
@@ -137,3 +139,4 @@
         </div>
     </div>
 </div>
+@include('scripts.link-modal')

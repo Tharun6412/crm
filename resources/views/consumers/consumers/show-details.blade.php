@@ -128,27 +128,84 @@
             </div>
         </div>
         <h4 class="text-primary fw-semibold">Status History</h4>
-        <table class="table table-bordered table-primary table-hover">
-            <thead class="table-primary">
-                <tr>
-                    <th width="1%">S.No</th>
-                    <th>Status</th>
-                    <th>Notes</th>
-                    <th>Created Date</th>
-                    <th>Created By</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($consumer->statusHistory as $history)
-                    <tr>
-                        <td>{{ $loop->iteration }}</td>
-                        <td><x-consumer.status :status="$history->status" /></td>
-                        <td>{{ $history->notes }}</td>
-                        <td>{{ $history->created_at?->format('d-m-Y H:i:s') }}</td>
-                        <td>{{ $history->createdBy?->first_name }}&nbsp;{{ $history->createdBy?->last_name }}</td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
+        <div class="container my-4">
+            @foreach ($consumer->statusHistory as $history)
+                @php
+                    $documents = $documents_list->where('status_id', $history->status_id);
+                @endphp
+                <div class="d-flex position-relative mb-4">
+                    <!-- Vertical line -->
+                    <div class="me-3">
+                        <div class="border-start border-3 border-primary h-100 position-relative">             
+                            <!-- Dot -->
+                            <span class="position-absolute top-0 start-0 translate-middle 
+                                        badge rounded-pill bg-primary">
+                                &nbsp;
+                            </span>
+                        </div>
+                    </div>
+                    <!-- Content -->
+                    <div class="d-flex gap-3">
+                        <div class="card shadow-sm">
+                            <div class="card-body">
+                                <h6 class="mb-1">
+                                    <x-consumer.status :status="$history->status" />
+                                </h6>
+                                <p class="mb-1 text-muted">
+                                    {{ $history->notes }}
+                                </p>
+                                <small class="text-muted">
+                                    {{ $history->created_at?->format('d-m-Y H:i:s') }}
+                                    | {{ $history->createdBy?->first_name }}
+                                    {{ $history->createdBy?->last_name }}
+                                </small>
+                            </div>
+                        </div>
+                        <!-- Documents -->
+                        @if ($documents->isNotEmpty())
+                            <div class="d-flex flex-wrap gap-3 mb-3">
+                                @foreach ($documents as $doc)
+                                    <div class="card border-info shadow-sm" style="width: 12rem;">
+                                        <div class="card-header bg-info-subtle">
+                                            {{ $doc->docType->name ?? 'Not Specified' }}
+                                        </div>
+
+                                        <div class="card-body text-center position-relative">
+                                            @php
+                                                $ext = strtolower(pathinfo($doc->file->file_name, PATHINFO_EXTENSION));
+                                                $icons = [
+                                                    'pdf' => 'bi-file-earmark-pdf',
+                                                    'doc' => 'bi-file-earmark-word',
+                                                    'docx' => 'bi-file-earmark-word',
+                                                    'xls' => 'bi-file-spreadsheet',
+                                                    'xlsx' => 'bi-file-spreadsheet',
+                                                    'jpg' => 'bi-file-image',
+                                                    'jpeg' => 'bi-file-image',
+                                                    'png' => 'bi-file-image',
+                                                ];
+                                            @endphp
+
+                                            <a href="{{ url('master/dc/documents/' . $doc->file->id) }}"
+                                            target="_blank"
+                                            class="fs-1 text-decoration-none">
+                                                <i class="bi {{ $icons[$ext] ?? 'bi-file' }}"></i>
+                                            </a>
+
+                                            <div class="position-absolute bottom-0 end-0">
+                                                <span class="text-secondary small">
+                                                    <i class="bi bi-calendar3"></i>
+                                                    {{ $doc->created_at?->format('d-m-Y H:i:s') }}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @endif
+
+                    </div>
+                </div>
+            @endforeach
+        </div>
     </div>
 </div>
