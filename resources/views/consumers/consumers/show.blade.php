@@ -239,8 +239,10 @@
 {{-- Styles --}}
 @push('styles')
     <style>
-        dt {
-            font-weight: 600;
-        }
+        .dt { font-weight: 600; } 
+        .bg-yellow { background-color: yellow; } 
+        .border-yellow { border-color: yellow!important; } 
+        .bg-purple { background-color: purple; }  
+        .border-purple { border-color: purple!important; }   
     </style>
 @endpush
