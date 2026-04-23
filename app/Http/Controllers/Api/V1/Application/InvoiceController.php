@@ -119,7 +119,10 @@ class InvoiceController extends Controller
         $pending_inv_amt = BillInvoice::where('balance_amount', '>', 0)
             ->where('consumer_id', $invoice->consumer_id)
             ->whereNotIn('id', [$id])
-            ->whereNull('parent_invoice_id')
+            ->where(function ($query) use($id) {
+                $query->where('parent_invoice_id', '!=', $id)
+                    ->orWhereNull('parent_invoice_id');
+            })
             ->sum('balance_amount');
         $inv_amt_list = $invoice->childInvoices->pluck('payable_amount', 'type_id');
 
