@@ -95,7 +95,7 @@ class ConsumerController extends Controller
     public function show($id)
     {
         // Find Consumer
-        $consumer = Consumer::when((!isAdmin() AND !isSuperAdmin()), function ($q) {
+        $consumer = Consumer::when((!isAdmin() AND !isSuperAdmin() AND !isFullAccess()), function ($q) {
                 $q->whereIn('ga_id', session('user')['gas']);
             })->find($id);
         // Documents

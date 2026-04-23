@@ -115,7 +115,12 @@ class InvoiceController extends Controller
         $connected_inv_amt = $invoice->childInvoices->where('status_id', InvoiceStatus::NOT_PAID->value)->sum('payable_amount');
         // Total Payable amount
         $total_payable_amount = round($invoice->balance_amount + $connected_inv_amt + $late_fee, 2);
-
+        // Pending Invoices
+        $pending_inv_amt = BillInvoice::where('balance_amount', '>', 0)
+            ->where('consumer_id', $invoice->consumer_id)
+            ->whereNotIn('id', [$id])
+            ->whereNull('parent_invoice_id')
+            ->sum('balance_amount');
         $inv_amt_list = $invoice->childInvoices->pluck('payable_amount', 'type_id');
 
         // Payment Types
@@ -141,6 +146,7 @@ class InvoiceController extends Controller
             'rental_charges' => $inv_amt_list[InvoiceType::RENTAL_CHARGES->value] ?? 0,
             'sd_emi' => $inv_amt_list[InvoiceType::SD_EMI->value] ?? 0,
             'custom_invoice' => $inv_amt_list[InvoiceType::CUSTOM_INVOICE->value] ?? 0,
+            'previous_balance' => $pending_inv_amt,
         ], 200);
     }
 

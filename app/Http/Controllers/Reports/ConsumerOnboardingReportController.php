@@ -118,20 +118,28 @@ class ConsumerOnboardingReportController extends Controller
      */
     public function getCountByDistricts(Request $request)
     {
-        $district_count = Consumer::where('ga_id', $request->ga_id)->selectRaw('district_id, COUNT(*) as total')
+        $district_count = Consumer::where('ga_id', $request->ga_id)->selectRaw('district_id, status_id, count(status_id) as count')
             ->when(($request->has('connect_type_id') AND !empty($request->connect_type_id)), function($q) use($request) {
                 $q->where('connection_type_id', $request->connect_type_id);
             })
             ->when(($request->has('onboard_segment_id') AND !empty($request->onboard_segment_id)), function($q) use($request) {
                 $q->where('segment_id', $request->onboard_segment_id);
             })
-            ->groupBy('district_id')
-            ->get()->pluck('total', 'district_id');
+            ->groupBy('district_id', 'status_id')
+            ->get();
+        // Prepare data
+        $consumer_status_counts = [];
+        $consumer_status_sum = [];
+        foreach($district_count as $row) {
+            $consumer_status_counts[$row->district_id][$row->status_id] = $row->count;
+            $consumer_status_sum[$row->status_id] = isset($consumer_status_sum[$row->status_id]) ? $consumer_status_sum[$row->status_id] + $row->count : $row->count;
+        }
         $districts = District::where('ga_id', $request->ga_id)->get();
         return view('reports.consumer.onboarding.ga-district-count', [
-            'district_count' => $district_count, 
             'districts' => $districts,
             'ga_name' => $request->ga_name,
+            'consumer_status_counts' => $consumer_status_counts,
+            'consumer_status_sum' => $consumer_status_sum,
         ]);
     }
 
@@ -148,7 +156,7 @@ class ConsumerOnboardingReportController extends Controller
             $status_date = Carbon::parse($request->status_date)->startOfDay();
         }
         $district_count = ConsumerStatus::join('cns_consumers', 'cns_consumers.id', '=', 'cns_consumer_status.consumer_id')
-            ->select('cns_consumers.district_id', DB::raw('COUNT(cns_consumer_status.status_id) as total'))
+            ->select('cns_consumers.district_id', 'cns_consumer_status.status_id', DB::raw('COUNT(cns_consumer_status.status_id) as count'))
             ->where('cns_consumers.ga_id', $request->ga_id)
             ->whereBetween('cns_consumer_status.created_at', [$from, $to])
             ->when(!empty($status_date), function($q) use($status_date) {
@@ -160,12 +168,20 @@ class ConsumerOnboardingReportController extends Controller
             ->when(($request->has('segment_id') AND !empty($request->segment_id)), function($q) use($request) {
                 $q->where('cns_consumers.segment_id', $request->segment_id);
             })
-            ->groupBy('cns_consumers.district_id')->get()->pluck('total', 'district_id');
+            ->groupBy('cns_consumers.district_id', 'cns_consumer_status.status_id')->get();
         $districts = District::where('ga_id', $request->ga_id)->get();
+        // Prepare data
+        $consumer_status_counts = [];
+        $consumer_status_sum = [];
+        foreach($district_count as $row) {
+            $consumer_status_counts[$row->district_id][$row->status_id] = $row->count;
+            $consumer_status_sum[$row->status_id] = isset($consumer_status_sum[$row->status_id]) ? $consumer_status_sum[$row->status_id] + $row->count : $row->count;
+        }
         return view('reports.consumer.onboarding.ga-district-activate-count', [
-            'district_count' => $district_count, 
             'districts' => $districts,
             'ga_name' => $request->ga_name,
+            'consumer_status_counts' => $consumer_status_counts,
+            'consumer_status_sum' => $consumer_status_sum,
         ]);
     }
 }
