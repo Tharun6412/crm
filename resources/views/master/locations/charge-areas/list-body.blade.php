@@ -35,7 +35,8 @@
                     </th>
                     <th>CA Code</th>
                     <th>CA Name</th>
-                    <th>Areas</th>
+                    <th class="text-end">Areas</th>
+                    <th class="text-end">CNS Counter</th>
                     <th>Status
                         @php
                             $status_array=[1 => 'Enable', 0 => 'Disable'];
@@ -54,7 +55,8 @@
                         <td>{{ $item->code }}</td>
                         <td>{{ $item->name }}</td>
                         <td class="text-end">{{ $item->areas->count() ?? 0 }}</td>
-                        <td><x-common.status :status="$item->status"/></td>
+                        <td class="text-end">{{ $item->consumerCounter->count ?? 0 }}</td>
+                        <td class="text-center"><x-common.status :status="$item->status"/></td>
                         <td>
                             <a href="{{ url('master/location/charge-areas/' . $item->id . '/edit') }}" class="btn btn-outline-primary btn-sm link-modal"><i class="bi bi-pencil-square"></i>&nbsp;Edit</a>
                         </td>
@@ -65,7 +67,6 @@
     </div>
     <div>
         {{ $charge_areas->links('utils.paginator', ['modDiv' => 'ca-list']) }}
-       {{-- {{ $charge_areas->links('utils.cursor', ['modDiv' => 'ca-list']) }} --}} 
     </div>
 @else
     <div class="alert alert-info">No records found!</div>

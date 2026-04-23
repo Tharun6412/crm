@@ -2,9 +2,11 @@
 
 namespace App\Models\Master;
 
+use App\Models\Consumer\CaCounter;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Ca extends Model
 {
@@ -50,5 +52,13 @@ class Ca extends Model
     public function areas(): HasMany
     {
         return $this->hasMany(Area::class);
+    }
+
+    /**
+     * Relation with cns ca counter
+     */
+    public function consumerCounter(): HasOne
+    {
+        return $this->hasOne(CaCounter::class, 'ca_id');
     }
 }

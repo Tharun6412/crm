@@ -14,8 +14,7 @@ class ChargeAreaController extends Controller
      */
     public function index(Request $request)
     {
-        // echo "<pre>",print_r($request->all());
-        $charge_areas = Ca::with(['district', 'ga','areas'])
+        $charge_areas = Ca::with(['district', 'ga', 'consumerCounter', 'areas'])
             ->when($request->filled('key'), function($q) use ($request) {
                 $q->whereAny(['code', 'name'], 'like', '%' . $request->key . '%');
             })
@@ -31,7 +30,6 @@ class ChargeAreaController extends Controller
             ->orderByDesc('created_at')
             ->paginate(50)
             ->withQueryString();
-        //dd($charge_areas->toRawSql());
 
         // Render view
         if($request->ajax())
