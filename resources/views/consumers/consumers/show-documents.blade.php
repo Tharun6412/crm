@@ -9,11 +9,11 @@
                 @foreach ($documents_list as $status_id => $documents)
                     <div class="mt-3">
                         <h5 class="mb-3">{{ $documents->first()->status->name ?? "Additional Documents" }}</h5>
-                        <div class="d-flex flex-wrap gap-3 mb-4">
+                        <div class="d-flex gap-3 mb-4">
                             @foreach ($documents as $doc)
                                 <div class="card border-info shadow-sm w-100">                                    
                                     <div class="card-header bg-info-subtle text-dark">
-                                        {{ $doc->docType->name ?? 'Not Specified' }}
+                                        <span class="d-inline-block text-truncate" style="max-width: 220px;" title="{{ $doc->docType->name ?? 'Not Specified' }}">{{ $doc->docType->name ?? 'Not Specified' }}</span>
                                     </div>
                                     <div class="card-body">
                                         @php

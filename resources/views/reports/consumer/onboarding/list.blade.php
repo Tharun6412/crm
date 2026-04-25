@@ -43,6 +43,7 @@
                                 </select>
                             </div>
                             <div class="col-auto">
+                                <label for="status_date">&nbsp;</label>
                                 <div>
                                     <button type="submit" class="btn btn-success"><i class="bi bi-search"></i></button>
                                 </div>

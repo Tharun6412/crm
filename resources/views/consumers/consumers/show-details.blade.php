@@ -139,14 +139,16 @@
                         <!-- Vertical line -->
                         <div class="me-3">
                             <x-consumer.timeline-status :status="$history->status" :created_at="$history->created_at?->format('d-m-Y H:i')" />
-                        </div>
-                        <!-- Content -->
-                        <div class="d-flex gap-3 my-4">
-                            <div class="card border border-warning shadow-sm">
-                                <div class="card-body lh-lg">
-                                    <x-consumer.status :status="$history->status" />&nbsp;&nbsp;&nbsp;
+                            </div>
+                            <!-- Content -->
+                            <div class="d-flex gap-3 my-4">
+                            <div class="card border border-warning-subtle shadow-sm" style="width: 350px;">
+                                <div class="card-body lh-lg p-3">
+                                    <div class="row">
+                                        <div class="col-4"><x-consumer.status :status="$history->status" /></div>
+                                        <div class="col-8 lh-sm"><i class="bi bi-person"></i>&nbsp;{{ $history->createdBy?->first_name }} {{ $history->createdBy?->last_name }}</div>
+                                    </div>
                                     <span>
-                                        <i class="bi bi-person"></i>&nbsp;{{ $history->createdBy?->first_name }} {{ $history->createdBy?->last_name }}<br/>
                                         <i class="bi bi-chat-square-text fs-5" title="Notes"></i>&nbsp;{{ $history->notes ?? '' }}<br/>
                                     </span>
                                     @if ($documents->isNotEmpty())
