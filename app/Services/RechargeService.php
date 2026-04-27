@@ -13,7 +13,7 @@ class RechargeService
     /**
      * Create Recharge
      */
-    public static function create(array $transaction_data, array $recharge_data)
+    public static function create(array $transaction_data, array $pay_recharge_data)
     {
         // Recharge Data Preparation
         $recharge_data = [
@@ -35,8 +35,10 @@ class RechargeService
                 'status' => (int) false,
                 'message' => $response_data['recharge_response']['message'],
             ];
-        }else {
-            PayRecharge::create($recharge_data);
+        }
+        else {
+            $pay_recharge_data = array_merge($pay_recharge_data,['hes_status' => 2, 'hes_date' => now()->toDateString(), 'note' => $response]);
+            PayRecharge::create($pay_recharge_data);
             return [
                 'status' => (int) true,
                 'message' => 'Recharge payment added successfully',

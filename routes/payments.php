@@ -27,5 +27,6 @@ Route::middleware(['auth', ModuleAccess::class])->group(function() {
     });
     
     // Online transactions
+    Route::post('transactions/initiateRecharge/{id}', [App\Http\Controllers\Payments\TransactionsController::class,'initiateRecharge']);
     Route::resource('transactions', App\Http\Controllers\Payments\TransactionsController::class);
 });

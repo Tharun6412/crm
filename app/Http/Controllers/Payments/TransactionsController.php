@@ -436,7 +436,6 @@ class TransactionsController extends Controller
             'balance' => 0,
             'payment_type_id' => PaymentType::ONLINE->value,
             'transaction_id' => $id,
-            'status_id' => PaymentStatus::COMPLETED->value,
             'created_by' => Auth::id(),
         ]);
         // response
@@ -499,5 +498,44 @@ class TransactionsController extends Controller
             'status' => (int) true,
             'message' => 'SD payment module under progress',
         ];
+    }
+
+    /**
+     * Initiate Recharge
+     */
+    public function initiateRecharge(Request $request, int $id)
+    {
+        $transaction = PaymentTransaction::find($id);
+        $recharge_data = [
+            'recharge_request' => [
+                'ca_num' => $transaction->consumer_id,
+                'amount' => $transaction->amount,
+                'ref_num' => $transaction->pg_ref_id,
+                'utr_num' => $transaction->bank_ref,
+                'trans_date' => $transaction->transaction_date,
+                'mobile_num' => '+91' . $transaction->consumer->phone,
+            ]
+        ];
+        // Check
+        if($transaction->recharge->hes_status != 2) {
+            //-- Send data to Polaris HES
+            $response = Recharge::push($recharge_data);
+            $response_data = $response->json();
+            // response
+            if($response_data['recharge_response']['error_code'] == 1) {
+                $transaction->recharge->update(['hes_date' => now()->toDateString(),'hes_status' => 1, 'note' => $response]);
+                return response()->json([
+                    'status' => (int) false,
+                    'success' => $response_data['recharge_response']['message'],
+                ]);
+            }
+            else {
+                $transaction->recharge->update(['hes_date' => now()->toDateString(),'hes_status' => 2, 'note' => $response]);
+                return response()->json([
+                    'status' => (int) true,
+                    'success' => 'Recharge payment added successfully',
+                ]);
+            }
+        }
     }
 }

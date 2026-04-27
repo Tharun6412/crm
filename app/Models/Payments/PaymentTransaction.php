@@ -117,4 +117,12 @@ class PaymentTransaction extends Model
     {
         return $this->hasOne(InvoicePayment::class, 'pay_transaction_id', 'id');
     }
+
+    /**
+     * Relation with Recharges
+     */
+    public function recharge(): HasOne
+    {
+        return $this->hasOne(PayRecharge::class, 'transaction_id', 'id');
+    }
 }

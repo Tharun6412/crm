@@ -72,6 +72,30 @@
                 <td class="bg-light">Created At</td>
                 <td>{{ $transaction->created_at?->format('d-m-Y H:i:s') }}</td>
             </tr>
+            @if (!empty($transaction->recharge) and ($transaction->transaction_status_id == \App\Enums\TransactionStatus::SUCCESS->value))
+                <tr>
+                    <td class="bg-light">HES Status</td>
+                    <td><x-payments.recharge-status :status="$transaction->recharge?->hes_status"/>
+                        @if($transaction->recharge?->hes_status != 2)
+                        <form method="POST" id="update-recharge-form" action={{ url('payments/transactions/initiateRecharge/'.$transaction->id) }}>
+                            @csrf
+                            <button type="submit" class="btn btn-sm btn-success">Initiate Recharge</button>
+                        </form>
+                        @endif
+                    </td>
+                </tr>
+                <tr>
+                    <td class="bg-light">HES Date</td>
+                    <td>{{ $transaction->recharge?->hes_date }}</td>
+                </tr>
+                <tr>
+                    <td class="bg-light">Note</td>
+                    <td>{{ $transaction->recharge?->note }}</td>
+                </tr>
+            @endif
         </tbody>
     </table>
+    <div id="update-recharge-success"></div>
+    <div id="update-recharge-error"></div>
 </div>
+@include('scripts.ajax-form-submit', ['form' => 'update-recharge'])
