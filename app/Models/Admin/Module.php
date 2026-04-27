@@ -28,6 +28,7 @@ class Module extends Model
         'parent_id',
         'icon',
         'position',
+        'quick_link',
         'status',
         'created_by',
     ];

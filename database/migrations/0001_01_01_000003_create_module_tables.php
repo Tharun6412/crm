@@ -30,6 +30,7 @@ return new class extends Migration
             $table->string('icon', length:30)->nullable();
             $table->tinyInteger('status')->nullable(); 
             $table->integer('position')->nullable();
+            $table->boolean('quick_link')->default(0);
             $table->foreignId('created_by')->nullable()->index()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();
             $table->timestamps();
         });

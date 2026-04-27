@@ -11,6 +11,8 @@ use App\Enums\PaymentStatus;
 use App\Enums\SegmentType;
 use App\Http\Controllers\Controller;
 use App\Mail\User\RegisterOtpMail;
+use App\Models\Admin\Module;
+use App\Models\Admin\ModuleAction;
 use App\Models\Consumer\Consumer;
 use App\Models\Admin\User;
 use App\Models\Complaint\Complaint;
@@ -94,6 +96,17 @@ class HomeController extends Controller
             $data['consumer_data'][$count->cluster_id]['pd_count'] += $count->pd_count;
         }
         // dd($consumer_count);
+        // Get quicklinks
+        if(isSuperAdmin() OR isAdmin()){
+            $quick_link = Module::where('quick_link',1)->where('status', 1)->orderBy('position')->get();
+        }else{
+            $module_ids = ModuleAction::selectRaw('DISTINCT(module_id)')->whereIn('id', session('user')['module_actions'])->pluck('module_id')->toArray();
+            $quick_link = Module::whereIn('id',$module_ids)
+                            ->where('quick_link', 1)
+                            ->where('status', 1)
+                            ->orderBy('position')
+                            ->get();
+        }
         // Render output
         return view('dashboard.home', [
             'total_count' => $data['total_count'],
@@ -102,6 +115,7 @@ class HomeController extends Controller
             'consumer_data' => $data['consumer_data'] ?? [],
             'consumer_segment' => $data['consumer_segment'] ?? [],
             'clusters' => Cluster::all(),
+            'quick_link' => $quick_link,
         ]);
     }
 }

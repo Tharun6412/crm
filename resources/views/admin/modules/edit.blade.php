@@ -70,6 +70,13 @@
                         <span class="form-text">{{ $module->parent->name ?? '' }}</span>
                     </div>
                 </div>
+                <div class="row mb-2">
+                    <label for="quick_link" class="col-sm-2 col-form-label text-end">Quick Link</label>
+                    <div class="col-sm-9 pt-2">
+                        <input type="hidden" name="quick_link" value="0">
+                        <input class="form-check-input" type="checkbox" name="quick_link" id="quick_link" value="1" @checked($module->quick_link == 1)>
+                    </div>
+                </div>
                 <div class="bg-light py-2 mb-2">
                     <div class="row mb-2">
                         <label for="moduleActions" class="col-sm-2 col-form-label text-end">Module Actions</label>

@@ -113,6 +113,7 @@ class ModuleController extends Controller
             'status' => $request->status,
             'position' => $request->position,
             'parent_id' => $request->parent,
+            'quick_link' => $request->quick_link,
         ]);
 
         // Delete module URLS

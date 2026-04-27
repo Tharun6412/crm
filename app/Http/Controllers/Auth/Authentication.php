@@ -45,7 +45,6 @@ class Authentication extends Controller
         $roles = $auth_user->roles->pluck('id')->toArray();
         // Get Module actions from roles
         $module_actions = RoleAction::whereIn('role_id', $roles)->get()->pluck('module_action_id')->toArray();
-
         // Create additional user session 
         $user = [
             'gas' => $gas,
