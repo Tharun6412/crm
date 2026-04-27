@@ -46,6 +46,7 @@ class TRPaymentController extends Controller
     {
         $payment_types = PaymentType::all();
         $consumer_scheme = ConsumerScheme::with(['scheme'])->where('consumer_id', $id)->first();
+        // print "<pre>"; print_r($consumer_scheme);
         return view('consumers.deposit-details.pay', [
             'consumer_scheme' => $consumer_scheme,
             'payment_types' => $payment_types,

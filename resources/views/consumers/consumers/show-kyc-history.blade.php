@@ -25,14 +25,14 @@
                         @foreach ($kyc_details as $kyc)
                             <tr>
                                 <td class="text-center">{{ $loop->iteration }}</td>
-                                <td>{{ $kyc->name }}</td>
-                                <td><small>{{ $kyc->cofDisplay->name }}</small>&nbsp;{{ $kyc->cof_name }}</td>
+                                <td>{{ $kyc?->name }}</td>
+                                <td><small>{{ $kyc->cofDisplay?->name }}</small>&nbsp;{{ $kyc->cof_name }}</td>
                                 <td>{{ $kyc->email }}</td>
                                 <td>{{ maskNumber($kyc->aadhar) }}</td>
                                 <td>{{ maskNumber($kyc->phone) }}</td>
                                 <td>{{ maskNumber($kyc->phone_alt) }}</td>
                                 <td>{{ $kyc->nominee }}</td>
-                                <td>{{ $kyc->nomineeRelation->name }}</td>
+                                <td>{{ $kyc->nomineeRelation?->name }}</td>
                                 <td>{{ $kyc->createdBy?->name }}</td>
                                 <td>{{ $kyc->created_at?->format('d-m-Y H:i') }}</td>
                             </tr>

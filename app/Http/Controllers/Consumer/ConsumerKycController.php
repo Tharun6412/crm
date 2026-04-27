@@ -56,52 +56,56 @@ class ConsumerKycController extends Controller
         ]);
         // Document Upload function
         $doc_upload = DocumentUpload::uploadIfPresent($request, AwsPath::REGISTRATION->value);
-        // Insert into Kyc Table
-        ConsumerKyc::create([
-            'consumer_id' => $id,
-            'title' => $request->title,
-            'fname' => $request->fname,
-            'lname' => $request->lname,
-            'cof' => $request->cof,
-            'cof_name' => $request->cof_name,
-            'aadhar' => $request->aadhar,
-            'phone' => $request->phone,
-            'phone_alt' => $request->phone_alt,
-            'email' => $request->email,
-            'nominee' => $request->nominee,
-            'nominee_relation_id' => $request->nominee_relation_id,
-            'created_by' => Auth::id(),
-        ]);
-        // Consumer Update
-        $edit_details = Consumer::where('id', $id)->update([
-            'title' => $request->title,
-            'fname' => $request->fname,
-            'lname' => $request->lname,
-            'cof' => $request->cof,
-            'cof_name' => $request->cof_name,
-            'aadhar' => $request->aadhar,
-            'phone' => $request->phone,
-            'phone_alt' => $request->phone_alt,
-            'email' => $request->email,
-            'nominee' => $request->nominee,
-            'nominee_relation_id' => $request->nominee_relation_id,
-        ]);
-        // Update Consumer Data KYC Status
-        ConsumerData::where('consumer_id', $id)->update([
-            'kyc_status' => 1,
-        ]);
-        //File Upload
-        if(!empty($request->dc_file_list)) {
-            $add_document = DocumentUpload::uploadIfPresent($request, AwsPath::COMPLAINTS->value);
-            foreach($request->dc_file_list as $key => $file) {
-                ConsumerDocument::create([
-                    'consumer_id' => $id,
-                    'doc_type_id' => $request->document_type[$key] ?? NULL,
-                    'file_id' => $add_document['file_list'][$key]['file_id'],
-                ]);
+        $consumer = Consumer::find($id);
+        if($consumer) {
+            // Insert into Kyc Table
+            ConsumerKyc::create([
+                'consumer_id' => $id,
+                'title' => $consumer->title,
+                'fname' => $consumer->fname,
+                'lname' => $consumer->lname,
+                'cof' => $consumer->cof,
+                'cof_name' => $consumer->cof_name,
+                'aadhar' => $consumer->aadhar,
+                'phone' => $consumer->phone,
+                'phone_alt' => $consumer->phone_alt,
+                'email' => $consumer->email,
+                'nominee' => $consumer->nominee,
+                'nominee_relation_id' => $consumer->nominee_relation_id,
+                'created_by' => Auth::id(),
+            ]);
+            // Consumer Update
+            $edit_details = $consumer->update([
+                'title' => $request->title,
+                'fname' => $request->fname,
+                'lname' => $request->lname,
+                'cof' => $request->cof,
+                'cof_name' => $request->cof_name,
+                'aadhar' => $request->aadhar,
+                'phone' => $request->phone,
+                'phone_alt' => $request->phone_alt,
+                'email' => $request->email,
+                'nominee' => $request->nominee,
+                'nominee_relation_id' => $request->nominee_relation_id,
+                'updated_by' => Auth::id(),
+            ]);
+            // Update Consumer Data KYC Status
+            ConsumerData::where('consumer_id', $id)->update([
+                'kyc_status' => 1,
+            ]);
+            //File Upload
+            if(!empty($request->dc_file_list)) {
+                $add_document = DocumentUpload::uploadIfPresent($request, AwsPath::COMPLAINTS->value);
+                foreach($request->dc_file_list as $key => $file) {
+                    ConsumerDocument::create([
+                        'consumer_id' => $id,
+                        'doc_type_id' => $request->document_type[$key] ?? NULL,
+                        'file_id' => $add_document['file_list'][$key]['file_id'],
+                    ]);
+                }
             }
+            return response()->json(['success' => 'Consumer details updated successfully']);
         }
-        return response()->json(['success' => 'Consumer details updated successfully']);
     }
 
     /**

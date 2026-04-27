@@ -122,7 +122,7 @@ class CommercialRegistrationController extends Controller
                 'emi_amount' => $scheme_details->emi_amount,
                 'rental_amount' => $scheme_details->rental_amount,
                 'paid_deposit' => 0,
-                'balance' => $scheme_details->sd_amount + $scheme_details->consumption,
+                'balance' => $request->sd_amount + $request->consumption,
                 'status' => 0,
             ]);
         }

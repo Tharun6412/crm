@@ -16,6 +16,7 @@ use App\Models\Master\MasterConsumerScheme;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 class ConversionController extends Controller
 {
@@ -58,8 +59,16 @@ class ConversionController extends Controller
             'bill_amount' => 'required|numeric',
             'bill_status' => 'required',
             'new_scheme' => 'required',
-            'meter_no' => 'required',
-            'meter_sno' => 'required',
+            'meter_no' => ['required',
+                Rule::unique('cns_consumer_meters', 'meter_no')->where(function($q) {
+                    $q->where('status', MeterStatus::ACTIVE->value);
+                }),
+            ],
+            'meter_sno' => ['required',
+                Rule::unique('cns_consumer_meters', 'meter_serial_no')->where(function($q) {
+                    $q->where('status', MeterStatus::ACTIVE->value);
+                }),
+            ],
             'meter_reading' => 'required',
         ]);
 

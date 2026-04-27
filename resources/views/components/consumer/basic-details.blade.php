@@ -35,8 +35,8 @@
                     <td><span class="fw-semibold">Scheme :</span>&nbsp;{{ $consumer->scheme->scheme->name }}</td>
                 </tr>
                 <tr>
-                    <td><span class="fw-semibold">Connection :</span>&nbsp;{{ numberFormat($consumer->scheme->scheme->security) }}</td>
-                    <td><span class="fw-semibold">Consumption :</span>&nbsp;{{ numberFormat($consumer->scheme->scheme->consumption) }}</td>
+                    <td><span class="fw-semibold">Connection :</span>&nbsp;{{ numberFormat($consumer->scheme->security_deposit) }}</td>
+                    <td><span class="fw-semibold">Consumption :</span>&nbsp;{{ numberFormat($consumer->scheme->consumption_deposit) }}</td>
                 </tr>
                 <tr>
                     <td><span class="fw-semibold">Registration :</span>&nbsp;{{ numberFormat($consumer->scheme->scheme->registration) }}</td>

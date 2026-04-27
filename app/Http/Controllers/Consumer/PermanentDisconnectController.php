@@ -2,8 +2,10 @@
 namespace App\Http\Controllers\Consumer;
 
 use App\Enums\ConsumerStatus as EnumsConsumerStatus;
+use App\Enums\MeterStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Consumer\Consumer;
+use App\Models\Consumer\ConsumerMeter;
 use App\Models\Consumer\ConsumerStatus;
 use App\Notifications\Consumer\PdSmsNotification;
 use App\Services\SmsService;
@@ -48,6 +50,13 @@ class PermanentDisconnectController extends Controller
             'notes' => $request->notes,
             'created_by' => Auth::id(),
         ]);
+        // Consumer Meter Status update
+        $consumer_meter = ConsumerMeter::where('consumer_id', $id)->where('status', MeterStatus::ACTIVE->value)->first();
+        if($consumer_meter) {
+            $consumer_meter->update([
+                'status' => MeterStatus::INACTIVE->value,
+            ]);
+        }
         // Sms Notification
         $sms_response = SmsService::dispatch($consumer, new PdSmsNotification(['crn' => $consumer->crn]));
         // Response

@@ -91,12 +91,14 @@ class MeterChangeController extends Controller
         $request->validate([
             'meter_no' => ['required',
                 Rule::unique('cns_consumer_meters', 'meter_no')->where(function($q) {
-                    $q->where('status', 1);
+                    $q->where('status', MeterStatus::ACTIVE->value);
                 }),
             ],
-            'meter_serial_no' => ['nullable', 
+            'meter_serial_no' => [
+                Rule::requiredIf($old_meter->consumer->connection_type_id == 2),
+                'nullable', 
                 Rule::unique('cns_consumer_meters', 'meter_serial_no')->where(function($q) {
-                    $q->where('status', 1);
+                    $q->where('status', MeterStatus::ACTIVE->value);
                 }),
             ],
             'prev_reading' => 'required|numeric|in:'.$prev_reading,

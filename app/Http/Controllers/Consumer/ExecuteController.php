@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Consumer;
 use App\Enums\AwsPath;
 use App\Enums\ConsumerStatus as EnumsConsumerStatus;
 use App\Enums\DocumentType;
+use App\Enums\MeterStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Master\DocumentCentre\DocumentUpload;
 use App\Models\Consumer\Consumer;
@@ -46,14 +47,14 @@ class ExecuteController extends Controller
         $request->validate([
             'meter_no' => ['required',
                 Rule::unique('cns_consumer_meters', 'meter_no')->where(function($q) {
-                    $q->where('status', 1);
+                    $q->where('status', MeterStatus::ACTIVE->value);
                 }),
             ],
             'meter_serial_no' => [
                 Rule::requiredIf($consumer->connection_type_id == 2), 
                 'nullable',
                 Rule::unique('cns_consumer_meters', 'meter_serial_no')->where(function($q) {
-                    $q->where('status', 1);
+                    $q->where('status', MeterStatus::ACTIVE->value);
                 }),
             ],
             'meter_reading' => 'required|numeric',
