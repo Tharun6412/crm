@@ -98,13 +98,13 @@ class HomeController extends Controller
         // dd($consumer_count);
         // Get quicklinks
         if(isSuperAdmin() OR isAdmin()){
-            $quick_link = Module::where('quick_link',1)->where('status', 1)->orderBy('position')->get();
+            $quick_link = Module::where('quick_link',1)->where('status', 1)->orderBy('name')->get();
         }else{
             $module_ids = ModuleAction::selectRaw('DISTINCT(module_id)')->whereIn('id', session('user')['module_actions'])->pluck('module_id')->toArray();
             $quick_link = Module::whereIn('id',$module_ids)
                             ->where('quick_link', 1)
                             ->where('status', 1)
-                            ->orderBy('position')
+                            ->orderBy('name')
                             ->get();
         }
         // Render output

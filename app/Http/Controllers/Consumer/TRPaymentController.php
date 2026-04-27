@@ -64,7 +64,8 @@ class TRPaymentController extends Controller
         $consumer_scheme = ConsumerScheme::where('consumer_id', $id)->first();
         if($consumer_scheme->scheme_id != NULL) {
             $min_payment = $consumer_scheme->scheme->min_payment ?? 0;
-            $max_payment = ($consumer_scheme->scheme->registration + $consumer_scheme->scheme->security + $consumer_scheme->scheme->consumption) ?? 0;
+            $max_payment = ($consumer_scheme->scheme->registration + $consumer_scheme->security_deposit + $consumer_scheme->consumption_deposit) ?? 0;
+            // $max_payment = ($consumer_scheme->scheme->registration + $consumer_scheme->scheme->security + $consumer_scheme->scheme->consumption) ?? 0;
         }else {
             $min_payment = 0;
             $max_payment = $consumer_scheme->total_deposit ?? 0;
@@ -123,7 +124,7 @@ class TRPaymentController extends Controller
             $gst_calculated_amt = 1.18; //(1+18%)
             $base_amt = round($amt / $gst_calculated_amt, 3);
             $tax_amt = round($amt - $base_amt, 3);
-            if($amt > 0) {
+            if($amt > 10) {
                 $invoice_items[] = [
                     'item_id' => InvoiceItem::DOMESTIC_REGISTRATION->value,
                     'quantity' => 1,

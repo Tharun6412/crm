@@ -214,29 +214,31 @@
                 </div>
             </div>
             {{-- Quick links --}}
-            <div class="mt-3">
-                <h3 class="text-decoration-underline text-primary-emphasis">Quick Links</h3>
-            </div>
-            <div class="row g-3 mt-3">
-                @foreach ($quick_link as $link)
-                    <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 col-xs-6">
-                        <a href="{{ $link->url }}" target="_blank">  
-                        <div class="card link-card-bg p-1 text-dark bg-opacity-10 border-3 border-light">
-                        <div class="d-flex p-2 align-items-center">
-                            <div>
-                                <div class="link-card-bg p-1 bg-opacity-25 rounded-4 py-1 px-2 mt-2">
-                                    <i class="bi {{ $link->icon }}"></i>
+            @if ($quick_link->count() > 0)
+                <div class="mt-3">
+                    <h3 class="text-decoration-underline text-primary-emphasis">Quick Links</h3>
+                </div>
+                <div class="row g-3 mt-3">
+                    @foreach ($quick_link as $link)
+                        <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 col-xs-6">
+                            <a href="{{ $link->url }}" target="_blank">  
+                            <div class="card link-card-bg p-1 text-dark bg-opacity-10 border-3 border-light">
+                            <div class="d-flex p-2 align-items-center">
+                                <div>
+                                    <div class="link-card-bg p-1 bg-opacity-25 rounded-4 py-1 px-2 mt-2">
+                                        <i class="bi {{ $link->icon }}"></i>
+                                    </div>
+                                </div>
+                                <div class="py-1 px-1 text-start ms-1 mt-1">
+                                    <small class="fs-sm text-body">{{ $link->name }}</small>
                                 </div>
                             </div>
-                            <div class="py-1 px-1 text-start ms-1 mt-1">
-                                <small class="fs-sm text-body">{{ $link->name }}</small>
-                            </div>
                         </div>
-                    </div>
-                    </a>
-                    </div>  
-                @endforeach      
-            </div>
+                        </a>
+                        </div>  
+                    @endforeach      
+                </div>
+            @endif
         </div>
     </div>
 @endsection
