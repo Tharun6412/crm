@@ -185,7 +185,7 @@ class ConsumerOnboardingReportController extends Controller
             ->where('cns_consumers.ga_id', $request->ga_id)
             ->whereBetween('cns_consumer_status.created_at', [$from, $to])
             ->when(!empty($status_date), function($q) use($status_date) {
-                $q->where('cns_consumer_status.created_at','>=', $status_date);
+                $q->where('cns_consumer_status.created_at','>=', $status_date)->where('cns_consumers.created_at','>=', $status_date);
             })
             ->when(($request->has('connection_type_id') AND !empty($request->connection_type_id)), function($q) use($request) {
                 $q->where('cns_consumers.connection_type_id', $request->connection_type_id);
