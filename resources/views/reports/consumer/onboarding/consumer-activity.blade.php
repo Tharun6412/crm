@@ -49,6 +49,7 @@
                     <a href="{{ url('reports/consumer/onboardingStatusReport') }}?{{ http_build_query([
                         'status_id' => \App\Enums\ConsumerStatus::PRE_REGISTER->value, 
                         'ga_id' => $ga->id,
+                        'ga_name' => $ga->name,
                         'date_from' => request()->date_from,
                         'date_to' => request()->date_to,
                         'connection_type_id' => request()->connection_type_id,
@@ -61,6 +62,7 @@
                     <a href="{{ url('reports/consumer/onboardingStatusReport') }}?{{ http_build_query([
                         'status_id' => \App\Enums\ConsumerStatus::REGISTER->value, 
                         'ga_id' => $ga->id,
+                        'ga_name' => $ga->name,
                         'date_from' => request()->date_from,
                         'date_to' => request()->date_to,
                         'connection_type_id' => request()->connection_type_id,
@@ -73,6 +75,7 @@
                     <a href="{{ url('reports/consumer/onboardingStatusReport') }}?{{ http_build_query([
                         'status_id' => \App\Enums\ConsumerStatus::ACCEPT->value, 
                         'ga_id' => $ga->id,
+                        'ga_name' => $ga->name,
                         'date_from' => request()->date_from,
                         'date_to' => request()->date_to,
                         'connection_type_id' => request()->connection_type_id,
@@ -85,6 +88,7 @@
                     <a href="{{ url('reports/consumer/onboardingStatusReport') }}?{{ http_build_query([
                         'status_id' => \App\Enums\ConsumerStatus::EXECUTE->value, 
                         'ga_id' => $ga->id,
+                        'ga_name' => $ga->name,
                         'date_from' => request()->date_from,
                         'date_to' => request()->date_to,
                         'connection_type_id' => request()->connection_type_id,
@@ -97,6 +101,7 @@
                     <a href="{{ url('reports/consumer/onboardingStatusReport') }}?{{ http_build_query([
                         'status_id' => \App\Enums\ConsumerStatus::HSC->value, 
                         'ga_id' => $ga->id,
+                        'ga_name' => $ga->name,
                         'date_from' => request()->date_from,
                         'date_to' => request()->date_to,
                         'connection_type_id' => request()->connection_type_id,
@@ -109,6 +114,7 @@
                     <a href="{{ url('reports/consumer/onboardingStatusReport') }}?{{ http_build_query([
                         'status_id' => \App\Enums\ConsumerStatus::ACTIVATE->value, 
                         'ga_id' => $ga->id,
+                        'ga_name' => $ga->name,
                         'date_from' => request()->date_from,
                         'date_to' => request()->date_to,
                         'connection_type_id' => request()->connection_type_id,
@@ -121,6 +127,7 @@
                     <a href="{{ url('reports/consumer/onboardingStatusReport') }}?{{ http_build_query([
                         'status_id' => \App\Enums\ConsumerStatus::RECONNECT->value, 
                         'ga_id' => $ga->id,
+                        'ga_name' => $ga->name,
                         'date_from' => request()->date_from,
                         'date_to' => request()->date_to,
                         'connection_type_id' => request()->connection_type_id,
@@ -133,6 +140,7 @@
                     <a href="{{ url('reports/consumer/onboardingStatusReport') }}?{{ http_build_query([
                         'status_id' => \App\Enums\ConsumerStatus::TD->value, 
                         'ga_id' => $ga->id,
+                        'ga_name' => $ga->name,
                         'date_from' => request()->date_from,
                         'date_to' => request()->date_to,
                         'connection_type_id' => request()->connection_type_id,
@@ -145,6 +153,7 @@
                     <a href="{{ url('reports/consumer/onboardingStatusReport') }}?{{ http_build_query([
                         'status_id' => \App\Enums\ConsumerStatus::PD->value, 
                         'ga_id' => $ga->id,
+                        'ga_name' => $ga->name,
                         'date_from' => request()->date_from,
                         'date_to' => request()->date_to,
                         'connection_type_id' => request()->connection_type_id,
@@ -157,6 +166,7 @@
                     <a href="{{ url('reports/consumer/onboardingStatusReport') }}?{{ http_build_query([
                         'status_id' => \App\Enums\ConsumerStatus::REJECT->value, 
                         'ga_id' => $ga->id,
+                        'ga_name' => $ga->name,
                         'date_from' => request()->date_from,
                         'date_to' => request()->date_to,
                         'connection_type_id' => request()->connection_type_id,

@@ -11,7 +11,8 @@
                         <th>Name</th>
                         <th>Status</th>
                         <th>Status Date</th>
-                        <th>Added By</th>
+                        <th>Updated By</th>
+                        <th>Created Date</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -22,12 +23,13 @@
                         <tr>
                             <td class="text-center">{{ $i++ }}</td>
                             <td nowrap>{{ $report->consumer->ga->name }}</td>
-                            <td>{{ $report->consumer->crn }}</td>
+                            <td>{{ $report->consumer->crn ?? $report->consumer->t_crn }}</td>
                             <td>{{ $report->consumer->connection_type_id == "1" ? "Postpaid" : "Prepaid" }}</td>
                             <td>{{ $report->consumer->fname }}&nbsp;{{ $report->consumer->lname }}</td>
                             <td>{{ $report->status->name }}</td>
                             <td>{{ dateFormat($report->created_at) }}</td>
                             <td>{{ $report->createdBy?->name }}</td>
+                            <td>{{ $report->consumer->created_at?->format('d-m-Y') }}</td>
                         </tr>
                     @endforeach
                 </tbody>

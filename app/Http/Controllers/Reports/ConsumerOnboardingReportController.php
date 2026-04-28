@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Reports;
 
+use App\Enums\ConnectionType as EnumsConnectionType;
 use App\Enums\ConsumerStatus as EnumsConsumerStatus;
+use App\Enums\SegmentType;
 use App\Http\Controllers\Controller;
 use App\Models\Consumer\Consumer;
 use App\Models\Consumer\ConsumerStatus;
@@ -87,7 +89,7 @@ class ConsumerOnboardingReportController extends Controller
             ->select('cns_consumers.ga_id', 'cns_consumer_status.status_id', DB::raw('COUNT(cns_consumer_status.status_id) as count'))
             ->whereBetween('cns_consumer_status.created_at', [$from, $to])
             ->when(!empty($status_date), function($q) use($status_date) {
-                $q->where('cns_consumer_status.created_at','>=', $status_date);
+                $q->where('cns_consumer_status.created_at','>=', $status_date)->where('cns_consumers.created_at', '>=', $status_date);
             })
             ->when(($request->has('connection_type_id') AND !empty($request->connection_type_id)), function($q) use($request) {
                 $q->where('cns_consumers.connection_type_id', $request->connection_type_id);
@@ -134,12 +136,34 @@ class ConsumerOnboardingReportController extends Controller
             $consumer_status_counts[$row->district_id][$row->status_id] = $row->count;
             $consumer_status_sum[$row->status_id] = isset($consumer_status_sum[$row->status_id]) ? $consumer_status_sum[$row->status_id] + $row->count : $row->count;
         }
+        // Check Connection Type Filter
+        switch($request->connect_type_id) {
+            case 1:
+                $connect_type = EnumsConnectionType::POSTPAID->name; break;
+            case 2:
+                $connect_type = EnumsConnectionType::PREPAID->name; break;
+            default:
+                $connect_type = '';
+        }
+        // Check Segment Filter
+        switch($request->onboard_segment_id) {
+            case 1:
+                $segment = SegmentType::DOMESTIC->name;break;
+            case 2:
+                $segment = SegmentType::COMMERCIAL->name;break;
+            case 3:
+                $segment = SegmentType::INDUSTRIAL->name;break;
+            default:
+                $segment = '';
+        }
         $districts = District::where('ga_id', $request->ga_id)->get();
         return view('reports.consumer.onboarding.ga-district-count', [
             'districts' => $districts,
-            'ga_name' => $request->ga_name,
             'consumer_status_counts' => $consumer_status_counts,
             'consumer_status_sum' => $consumer_status_sum,
+            'connect_type' => $connect_type,
+            'segment' => $segment,
+            'request_data' => $request->all(),
         ]);
     }
 
@@ -148,6 +172,7 @@ class ConsumerOnboardingReportController extends Controller
      */
     public function getActivatedCountByDistricts(Request $request)
     {
+        // dd($request->all());
         // Prepare params
         $from = Carbon::parse($request->date_from)->startOfDay();
         $to   = Carbon::parse($request->date_to)->endOfDay();
@@ -170,6 +195,26 @@ class ConsumerOnboardingReportController extends Controller
             })
             ->groupBy('cns_consumers.district_id', 'cns_consumer_status.status_id')->get();
         $districts = District::where('ga_id', $request->ga_id)->get();
+        // Check Connection Type Filter
+        switch($request->connection_type_id) {
+            case 1:
+                $connect_type = EnumsConnectionType::POSTPAID->name; break;
+            case 2:
+                $connect_type = EnumsConnectionType::PREPAID->name; break;
+            default:
+                $connect_type = '';
+        }
+        // Check Segment Filter
+        switch($request->segment_id) {
+            case 1:
+                $segment = SegmentType::DOMESTIC->name;break;
+            case 2:
+                $segment = SegmentType::COMMERCIAL->name;break;
+            case 3:
+                $segment = SegmentType::INDUSTRIAL->name;break;
+            default:
+                $segment = '';
+        }
         // Prepare data
         $consumer_status_counts = [];
         $consumer_status_sum = [];
@@ -179,9 +224,11 @@ class ConsumerOnboardingReportController extends Controller
         }
         return view('reports.consumer.onboarding.ga-district-activate-count', [
             'districts' => $districts,
-            'ga_name' => $request->ga_name,
             'consumer_status_counts' => $consumer_status_counts,
             'consumer_status_sum' => $consumer_status_sum,
+            'connect_type' => $connect_type,
+            'segment' => $segment,
+            'request_data' => $request->all(),
         ]);
     }
 }

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Reports;
 
+use App\Enums\ConnectionType as EnumsConnectionType;
+use App\Enums\SegmentType;
 use App\Http\Controllers\Controller;
 use App\Models\Consumer\Consumer;
 use App\Models\Consumer\ConsumerStatus;
@@ -19,7 +21,6 @@ class OnboardingStatusReportController extends Controller
      */
     public function index(Request $request)
     {
-        // dd($request->all());
         // Prepare params
         $from = Carbon::parse($request->date_from)->startOfDay();
         $to   = Carbon::parse($request->date_to)->endOfDay();
@@ -36,11 +37,41 @@ class OnboardingStatusReportController extends Controller
             }
         })
         ->whereBetween('created_at', [$from, $to])
-        ->where('status_id', $request->status_id)->orderBy('created_at', 'desc')->paginate(20)->withQueryString();
+        ->where('status_id', $request->status_id)->orderBy('created_at', 'desc')->paginate(50)->withQueryString();
+        // Check Connection Type Filter
+        switch($request->connection_type_id) {
+            case 1:
+                $connect_type = EnumsConnectionType::POSTPAID->name; break;
+            case 2:
+                $connect_type = EnumsConnectionType::PREPAID->name; break;
+            default:
+                $connect_type = '';
+        }
+        // Check Segment Filter
+        switch($request->segment_id) {
+            case 1:
+                $segment = SegmentType::DOMESTIC->name;break;
+            case 2:
+                $segment = SegmentType::COMMERCIAL->name;break;
+            case 3:
+                $segment = SegmentType::INDUSTRIAL->name;break;
+            default:
+                $segment = '';
+        }
         // Render output
         if($request->ajax() and $request->page >= 1) {
-            return view('reports.consumer.onboarding-status-report.list-body', ['reports' => $reports]);
+            return view('reports.consumer.onboarding-status-report.list-body', [
+                'reports' => $reports,
+                'request_data' => $request->all(),
+                'segment' => $segment,
+                'connect_type' => $connect_type,
+            ]);
         }
-        return view('reports.consumer.onboarding-status-report.list', ['reports' => $reports]);
+        return view('reports.consumer.onboarding-status-report.list', [
+            'reports' => $reports,
+            'request_data' => $request->all(),
+            'segment' => $segment,
+            'connect_type' => $connect_type,
+        ]);
     }
 }

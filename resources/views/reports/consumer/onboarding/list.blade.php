@@ -61,7 +61,7 @@
                         <h4 class="mb-0">Consumer Acitivity</h4>
                         <div class="row g-1">
                             <div class="col-auto">
-                                <label for="status_date" class="text-danger text-bg-yellow px-2">Registrations From</label>
+                                <label for="status_date" class="text-danger text-bg-yellow px-2">Cut-Off Date</label>
                                 <div class="input-group">
                                     <input type="text" name="status_date" id="status_date" class="form-control" placeholder="DD-MM-YYYY" value="{{ request()->status_date }}">
                                     <label for="status_date" class="input-group-text"><i class="bi bi-calendar3"></i></label>
