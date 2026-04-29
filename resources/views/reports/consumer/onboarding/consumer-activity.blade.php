@@ -54,6 +54,7 @@
                         'date_to' => request()->date_to,
                         'connection_type_id' => request()->connection_type_id,
                         'segment_id' => request()->segment_id,
+                        'status_date' => request()->status_date,
                     ]) }}" class="link-modal">{{ $consumer_status_data[$ga->id][\App\Enums\ConsumerStatus::PRE_REGISTER->value] ?? 0 }}</a>
                 </div>
             </div>
@@ -67,6 +68,7 @@
                         'date_to' => request()->date_to,
                         'connection_type_id' => request()->connection_type_id,
                         'segment_id' => request()->segment_id,
+                        'status_date' => request()->status_date,
                     ]) }}" class="link-modal">{{ $consumer_status_data[$ga->id][\App\Enums\ConsumerStatus::REGISTER->value] ?? 0 }}</a>
                 </div>
             </div>
@@ -80,6 +82,7 @@
                         'date_to' => request()->date_to,
                         'connection_type_id' => request()->connection_type_id,
                         'segment_id' => request()->segment_id,
+                        'status_date' => request()->status_date,
                     ]) }}" class="link-modal">{{ $consumer_status_data[$ga->id][\App\Enums\ConsumerStatus::ACCEPT->value] ?? 0 }}</a>
                 </div>
             </div>
@@ -93,6 +96,7 @@
                         'date_to' => request()->date_to,
                         'connection_type_id' => request()->connection_type_id,
                         'segment_id' => request()->segment_id,
+                        'status_date' => request()->status_date,
                     ]) }}" class="link-modal">{{ $consumer_status_data[$ga->id][\App\Enums\ConsumerStatus::EXECUTE->value] ?? 0 }}</a>
                 </div>
             </div>
@@ -106,6 +110,7 @@
                         'date_to' => request()->date_to,
                         'connection_type_id' => request()->connection_type_id,
                         'segment_id' => request()->segment_id,
+                        'status_date' => request()->status_date,
                     ]) }}" class="link-modal">{{ $consumer_status_data[$ga->id][\App\Enums\ConsumerStatus::HSC->value] ?? 0 }}</a>
                 </div>
             </div>
@@ -119,6 +124,7 @@
                         'date_to' => request()->date_to,
                         'connection_type_id' => request()->connection_type_id,
                         'segment_id' => request()->segment_id,
+                        'status_date' => request()->status_date,
                     ]) }}" class="link-modal">{{ $consumer_status_data[$ga->id][\App\Enums\ConsumerStatus::ACTIVATE->value] ?? 0 }}</a>
                 </div>
             </div>
@@ -132,6 +138,7 @@
                         'date_to' => request()->date_to,
                         'connection_type_id' => request()->connection_type_id,
                         'segment_id' => request()->segment_id,
+                        'status_date' => request()->status_date,
                     ]) }}" class="link-modal">{{ $consumer_status_data[$ga->id][\App\Enums\ConsumerStatus::RECONNECT->value] ?? 0 }}</a>
                 </div>
             </div>
@@ -145,6 +152,7 @@
                         'date_to' => request()->date_to,
                         'connection_type_id' => request()->connection_type_id,
                         'segment_id' => request()->segment_id,
+                        'status_date' => request()->status_date,
                     ]) }}" class="link-modal">{{ $consumer_status_data[$ga->id][\App\Enums\ConsumerStatus::TD->value] ?? 0 }}</a>
                 </div>
             </div>
@@ -158,6 +166,7 @@
                         'date_to' => request()->date_to,
                         'connection_type_id' => request()->connection_type_id,
                         'segment_id' => request()->segment_id,
+                        'status_date' => request()->status_date,
                     ]) }}" class="link-modal">{{ $consumer_status_data[$ga->id][\App\Enums\ConsumerStatus::PD->value] ?? 0 }}</a>
                 </div>
             </div>
@@ -171,6 +180,7 @@
                         'date_to' => request()->date_to,
                         'connection_type_id' => request()->connection_type_id,
                         'segment_id' => request()->segment_id,
+                        'status_date' => request()->status_date,
                     ]) }}" class="link-modal">{{ $consumer_status_data[$ga->id][\App\Enums\ConsumerStatus::REJECT->value] ?? 0 }}</a>
                 </div>
             </div>

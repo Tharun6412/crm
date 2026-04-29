@@ -172,7 +172,6 @@ class ConsumerOnboardingReportController extends Controller
      */
     public function getActivatedCountByDistricts(Request $request)
     {
-        // dd($request->all());
         // Prepare params
         $from = Carbon::parse($request->date_from)->startOfDay();
         $to   = Carbon::parse($request->date_to)->endOfDay();

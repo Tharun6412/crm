@@ -1,5 +1,20 @@
 <div>
     @if (count($reports) > 0)
+        <div class="row align-items-center mb-2">
+            <div class="col-auto">
+                <strong>{{ $reports->total() }}&nbsp;Records</strong>
+            </div>
+
+            <div class="col text-end">
+                @php
+                    $params = request()->query();
+                @endphp
+                <a href="{!! url('reports/consumer/onboardingStatusReport/consumerOnboardExport'). '?' . http_build_query($params) !!}" 
+                class="btn btn-outline-primary">
+                    <i class="bi bi-file-earmark-excel"></i>&nbsp;<small>Export</small>
+                </a>
+            </div>
+        </div>
         <div class="table-responsive">
             <table class="table table-bordered table-striped table-hover">
                 <thead class="table-info">

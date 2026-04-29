@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Reports;
 
 use App\Enums\ConnectionType as EnumsConnectionType;
 use App\Enums\SegmentType;
+use App\Exports\Consumers\ConsumerOnboardExport;
 use App\Http\Controllers\Controller;
 use App\Models\Consumer\Consumer;
 use App\Models\Consumer\ConsumerStatus;
@@ -24,8 +25,12 @@ class OnboardingStatusReportController extends Controller
         // Prepare params
         $from = Carbon::parse($request->date_from)->startOfDay();
         $to   = Carbon::parse($request->date_to)->endOfDay();
+        $status_date = NULL;
+        if($request->filled('status_date')) {
+            $status_date = Carbon::parse($request->status_date)->startOfDay();
+        }
         // Get data
-        $reports = ConsumerStatus::whereHas('consumer', function($q) use($request) {
+        $reports = ConsumerStatus::whereHas('consumer', function($q) use($request, $status_date) {
             if($request->filled('connection_type_id')) {
                 $q->where('connection_type_id', $request->connection_type_id);
             }
@@ -34,6 +39,9 @@ class OnboardingStatusReportController extends Controller
             }
             if($request->filled('ga_id')) {
                 $q->where('ga_id', $request->ga_id);
+            }
+            if(!empty($status_date)) {
+                $q->where('created_at','>=', $status_date);
             }
         })
         ->whereBetween('created_at', [$from, $to])
@@ -73,5 +81,13 @@ class OnboardingStatusReportController extends Controller
             'segment' => $segment,
             'connect_type' => $connect_type,
         ]);
+    }
+
+    /**
+     * Consumers Onboarding Export
+     */
+    public function consumerOnboardExport(Request $request)
+    {
+        return (new ConsumerOnboardExport($request))->download('consumers-onboard-report.csv');
     }
 }

@@ -11,6 +11,7 @@ Route::middleware(['auth', ModuleAccess::class])->group(function() {
     Route::get('consumer/onboarding/getActivatedCountByDistricts', [App\Http\Controllers\Reports\ConsumerOnboardingReportController::class, 'getActivatedCountByDistricts']);
     Route::get('consumer/onboarding/activity', [App\Http\Controllers\Reports\ConsumerOnboardingReportController::class, 'activity']);
     Route::get('consumer/onboardingStatusReport', [App\Http\Controllers\Reports\OnboardingStatusReportController::class, 'index']);
+    Route::get('consumer/onboardingStatusReport/consumerOnboardExport', [App\Http\Controllers\Reports\OnboardingStatusReportController::class, 'consumerOnboardExport']);
 
     // SD Reports
     Route::get('consumer/sdReport', [App\Http\Controllers\Reports\SDReportController::class, 'index']);
