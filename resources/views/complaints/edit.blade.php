@@ -39,7 +39,7 @@
                             <span class="text-danger validate-err-msg" id="type_id-error"></span>
                         </div>
                     </div>
-                    {{-- Priority --}}
+                    {{-- Priority
                     <div class="row mb-2">
                         <label class="col-form-label col-sm-3 text-end">Priority&nbsp;:<span class="text-danger">*</span></label>
                         <div class="col-sm-7">
@@ -51,7 +51,7 @@
                             </select>
                             <span class="text-danger validate-err-msg" id="priority_id-error"></span>
                         </div>
-                    </div>
+                    </div> --}}
                     {{-- Media --}}
                     <div class="row mb-2">
                         <label class="col-form-label col-sm-3 text-end">Media&nbsp;:<span class="text-danger">*</span></label>
@@ -85,7 +85,7 @@
                             <select class="form-select form-select-sm" name="sub_category_id" id="sub_category_id" onchange="getSubCategoryDetails(this.value)">
                                 <option value="">select</option>
                                 @foreach ($sub_categories as $s_category)
-                                    <option value="{{ $s_category->id }}" @selected($complaint->category_id == $s_category->id)>{{ $s_category->name }}</option>
+                                    <option value="{{ $s_category->id }}" @selected($complaint->category_id == $s_category->id)>{{$s_category->priority->name}} - {{ $s_category->type->name }} - {{ $s_category->name }}</option>
                                 @endforeach
                             </select>
                             <span class="text-danger validate-err-msg" id="sub_category_id-error"></span>
@@ -95,14 +95,17 @@
                         <div class="offset-sm-3 col-sm-7">
                             <div class="border border-info rounded d-none" id="cmp_details">
                                 <div class="row g-2 pb-2 mb-2">
+                                    <div class="col-sm-6 text-end fw-semibold">PNGRB Priority : </div>
+                                    <div class="col-sm-6" id="cmp_priority"></div>
+                                    <div class="col-sm-6 text-end fw-semibold">PNGRB Type : </div>
+                                    <div class="col-sm-6" id="cmp_by"></div>
                                     <div class="col-sm-6 text-end fw-semibold">Resolution : </div>
                                     <div class="col-sm-6" id="cmp_resolution"></div>
-                                    <div class="col-sm-6 text-end fw-semibold">Type : </div>
-                                    <div class="col-sm-6" id="cmp_by"></div>
-                                    <div class="col-sm-6 text-end fw-semibold">Department : </div>
-                                    <div class="col-sm-6" id="cmp_dept"></div>
                                     <div class="col-sm-6 text-end fw-semibold">Est. Close At : </div>
                                     <div class="col-sm-6" id="est_close"></div>
+                                    <div class="col-sm-6 text-end fw-semibold">Department : </div>
+                                    <div class="col-sm-6" id="cmp_dept"></div>
+                                    
                                 </div>
                             </div>
                         </div>
@@ -166,7 +169,9 @@
         $.get("{{ url('calls/getSubCategories') }}", {'category_id' : category_id}, function(data) {
             if(data.sub_categories && data.sub_categories.length > 0) {
                 data.sub_categories.forEach(function(category) {
-                    options += `<option value="${category.id}">${category.name}</option>`;
+                    let priority = category.priority ? ` ${category.priority.name}` : ''; 
+                    let type = category.type ? ` ${category.type.name}` : '';
+                    options += `<option value="${category.id}">${priority} - ${type} - ${category.name}</option>`;
                 });
             }
             $('#sub_category_id').html(options);
@@ -179,6 +184,7 @@
             $('#cmp_name').html(data.category_details.name);
             $('#cmp_resolution').html(data.category_details.resolution + " " + (data.category_details.resolution_type == 1 ? "Days" : "Hours"));
             $('#cmp_dept').html(data.category_details.department.name);
+            $('#cmp_priority').html(data.category_details.priority.name);
             $('#cmp_by').html(data.category_details.type.name);
             $('#est_close').html(data.estimation_time);
         });

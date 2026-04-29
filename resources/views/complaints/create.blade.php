@@ -54,7 +54,7 @@
                         </div>
                     </div>
                     {{-- Priority --}}
-                    <div class="row mb-2">
+                    {{-- <div class="row mb-2">
                         <label class="col-form-label col-sm-3 text-end">Priority&nbsp;:<span class="text-danger">*</span></label>
                         <div class="col-sm-8">
                             <select class="form-select form-select-sm" name="priority_id" id="priority_id">
@@ -65,7 +65,7 @@
                             </select>
                             <span class="text-danger validate-err-msg" id="priority_id-error"></span>
                         </div>
-                    </div>
+                    </div> --}}
                     {{-- Category --}}
                     <div class="row mb-2">
                         <label class="col-form-label col-sm-3 text-end">Category&nbsp;:<span class="text-danger">*</span></label>
@@ -91,15 +91,18 @@
                             </select>
                             <span class="text-danger validate-err-msg" id="sub_category_id-error"></span>
                             <div class="mt-2 border border-warning bg-warning-subtle rounded d-none" id="cmp_details">
-                                <div class="row g-2">
+                                <div class="row g-2">   
+                                    <div class="col-sm-4 text-end fw-semibold">PNGRB Priority : </div>
+                                    <div class="col-sm-6" id="cmp_priority"></div>
+                                    <div class="col-sm-4 text-end fw-semibold">PNGRB Type : </div>
+                                    <div class="col-sm-6" id="cmp_by"></div>
                                     <div class="col-sm-4 text-end fw-semibold">Resolution : </div>
                                     <div class="col-sm-6" id="cmp_resolution"></div>
-                                    <div class="col-sm-4 text-end fw-semibold">Type : </div>
-                                    <div class="col-sm-6" id="cmp_by"></div>
-                                    <div class="col-sm-4 text-end fw-semibold">Department : </div>
-                                    <div class="col-sm-6" id="cmp_dept"></div>
                                     <div class="col-sm-4 text-end fw-semibold">Est. Close At : </div>
                                     <div class="col-sm-6" id="est_close"></div>
+                                    <div class="col-sm-4 text-end fw-semibold">Department : </div>
+                                    <div class="col-sm-6" id="cmp_dept"></div>
+                                    
                                 </div>
                             </div>
                         </div>
@@ -153,7 +156,9 @@
         $.get("{{ url('calls/getSubCategories') }}", {'category_id' : category_id}, function(data) {
             if(data.sub_categories && data.sub_categories.length > 0) {
                 data.sub_categories.forEach(function(category) {
-                    options += `<option value="${category.id}">${category.name}</option>`;
+                    let priority = category.priority ? ` ${category.priority.name}` : ''; 
+                    let type = category.type ? ` ${category.type.name}` : '';
+                    options += `<option value="${category.id}">${priority} - ${type} - ${category.name}</option>`;
                 });
             }
             $('#sub_category_id').html(options);
@@ -165,6 +170,7 @@
         $.get("{{ url('calls/getSubCategoryDetails') }}", {'sub_category_id' : category_id}, function(data) {
             $('#cmp_name').html(data.category_details.name);
             $('#cmp_resolution').html(data.category_details.resolution + " " + (data.category_details.resolution_type == 1 ? "Days" : "Hours"));
+            $('#cmp_priority').html(data.category_details.priority.name);
             $('#cmp_dept').html(data.category_details.department.name);
             $('#cmp_by').html(data.category_details.type.name);
             $('#est_close').html(data.estimation_time);

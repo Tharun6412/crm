@@ -26,6 +26,7 @@ class ComplaintCategory extends Model
         'resolution',
         'resolution_type',
         'type_id',
+        'priority_id',
         'department_id',
         'parent_id',
         'tag_id',
@@ -54,9 +55,21 @@ class ComplaintCategory extends Model
     /**
      * Relation with type
      */
-    public function type(): BelongsTo
+    /**public function type(): BelongsTo
     {
         return $this->belongsTo(ComplaintType::class);
+    } **/
+    public function type(): BelongsTo
+    {
+        return $this->belongsTo(ComplaintCategoryType::class);
+    }
+    /**
+     * Relation with Priority
+     */
+
+    public function priority(): BelongsTo
+    {
+        return $this->belongsTo(ComplaintPriority::class,'priority_id');
     }
 
     /**

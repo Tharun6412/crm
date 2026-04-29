@@ -43,6 +43,57 @@
             </tr>  
         </table>
     </div>
+    <div class="p-2 mb-2 bg-secondary-subtle rounded">
+        <div class="fs-5 px-3 fw-bold">Complaint Details:</div>
+            <div class="row g-2">
+                <div class="col-sm-2 text-end fw-semibold">Type : </div>
+                <div class="col-sm-4">{{ $complaint->type?->name }}</div>
+                <div class="col-sm-2 text-end fw-semibold">Media : </div>
+                <div class="col-sm-4">{{ $complaint->media?->name }}</div>
+                <div class="col-sm-2 text-end fw-semibold">Category : </div>
+                <div class="col-sm-4">{{ $complaint->category?->parent->name }}</div>
+                <div class="col-sm-2 text-end fw-semibold">Department : </div>
+                <div class="col-sm-4">{{ $complaint->category?->department->name }}</div>
+                <div class="col-sm-2 text-end fw-semibold">PNGRB Priority : </div>
+                <div class="col-sm-4">{{ $complaint->category->priority?->name }}</div>
+                <div class="col-sm-2 text-end fw-semibold">PNGRB Type : </div>
+                <div class="col-sm-4">{{ $complaint->category->type?->name }}</div>
+                <div class="col-sm-2 text-end fw-semibold">Sub Category : </div>
+                <div class="col-sm-4">{{ $complaint->category?->name }}</div>
+                <div class="col-sm-2 text-end fw-semibold">Resolution : </div>
+                <div class="col-sm-4">
+                    {{ $complaint->category?->resolution }}&nbsp;{{ ($complaint->category?->resolution_type == 1) ? "Days" : "Hours" }}
+                </div>
+                <div class="col-sm-2 text-end fw-semibold"><i class="bi bi-paperclip"></i>Documents : </div>
+                <div class="col-sm-4">
+                    @if ($complaint->complaintDocuments->count() > 0)
+                        @foreach ($complaint->complaintDocuments as $document)
+                            <a href="{{ url('dc/documents/' . $document->file_id) }}" title="{{ $document->file->file_name }}" target="_blank"><i class="bi bi-file-earmark-pdf fs-3"></i></a>        
+                        @endforeach
+                    @endif
+                </div>
+                {{-- <div class="col-sm-6"></div> --}}
+                <div class="col-sm-2 text-end fw-semibold">Rating : </div>
+                <div class="col-sm-4">
+                    @if ($complaint->feedback)
+                        <x-complaint.rating :rating="$complaint?->feedback->rating"/>
+                    @endif
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-2 text-end fw-semibold">Description : </div>
+                <div class="col-sm-10">{{ $complaint->description }}</div>
+            </div>
+            {{-- Assigned details --}}
+            @if ($complaint->assign)
+                <div class="row g-2 mt-1">
+                    <div class="col-sm-2 text-end fw-semibold">Assigned To : </div>
+                    <div class="col-sm-4">{{ $complaint->assign->assigned?->first_name }}&nbsp;{{ $complaint?->assign->assigned?->last_name }}&nbsp;({{ $complaint->assign->assigned?->emp_id }})</div>
+                    <div class="col-sm-2 text-end fw-semibold">Assigned Date : </div>
+                    <div class="col-sm-4">{{ $complaint?->assign->created_at?->format('d-m-Y H:i') }}</div>
+                </div>
+            @endif
+    </div>
 {{-- <div class="row g-2 pb-2 my-2 bg-warning-subtle rounded p-2">
     <div class="col-sm-2 text-end fw-semibold text-nowrap">Complaint No :</div>
     <div class="col-sm-4">{{ $complaint->code }}</div>

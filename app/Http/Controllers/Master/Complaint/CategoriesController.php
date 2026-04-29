@@ -4,7 +4,8 @@ namespace App\Http\Controllers\Master\Complaint;
 
 use App\Http\Controllers\Controller;
 use App\Models\Master\ComplaintCategory;
-use App\Models\Master\ComplaintType;
+use App\Models\Master\ComplaintCategoryType;
+use App\Models\Master\ComplaintPriority;
 use App\Models\Master\Department;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -29,14 +30,16 @@ class CategoriesController extends Controller
     public function create(Request $request)
     {
         $parent_id = $request->parent_id;
-        $types = ComplaintType::all();
+        $types = ComplaintCategoryType::all();
         $departments = Department::all();
+        $priorities = ComplaintPriority::all();
         
         // Render output
         return view('master.complaint.categories.create', [
             'parent_id' => $parent_id,
             'types' => $types,
             'departments' => $departments,
+            'priorities' => $priorities,
         ]);
     }
 
@@ -48,6 +51,7 @@ class CategoriesController extends Controller
         // Validation
         $request->validate([
             'type_id' => 'required',
+           // 'priority_id' => 'required',
             'department_id' => 'required',
             'name' => 'required',
             'resolution' => 'required|numeric',
@@ -62,6 +66,7 @@ class CategoriesController extends Controller
             'resolution' => $request->resolution,
             'resolution_type' => $request->resolution_type,
             'type_id' => $request->type_id,
+            'priority_id' => $request->priority_id,
             'department_id' => $request->department_id,
             'parent_id' => ($request->parent_id == 0) ? null : $request->parent_id,
             'position' => $request->position,
@@ -91,14 +96,16 @@ class CategoriesController extends Controller
     {
         // Get details
         $category = ComplaintCategory::findOrFail($id);
-        $types = ComplaintType::all();
+        $types = ComplaintCategoryType::all();
         $departments = Department::all();
+        $priorities = ComplaintPriority::all();
 
         // Render output
         return view('master.complaint.categories.edit', [
             'category' => $category,
             'types' => $types,
             'departments' => $departments,
+            'priorities' => $priorities,
         ]);
     }
 
@@ -110,6 +117,7 @@ class CategoriesController extends Controller
         // Validation
         $request->validate([
             'type_id' => 'required',
+           // 'priority_id' => 'required',
             'department_id' => 'required',
             'name' => 'required',
             'resolution' => 'required|numeric',
@@ -123,6 +131,7 @@ class CategoriesController extends Controller
             'resolution' => $request->resolution,
             'resolution_type' => $request->resolution_type,
             'type_id' => $request->type_id,
+            'priority_id' => $request->priority_id,
             'department_id' => $request->department_id,
             'parent_id' => $request->parent_id,
             'position' => $request->position,

@@ -7,6 +7,7 @@
 <div class="offcanvas-body">
     <x-common.status :status="$category->status"/>
     <div>Name: {{ $category->name }}</div>
+    <div>Priority: {{ $category->priority->name ?? '' }}</div>
     <div>Type: {{ $category->type->name ?? '' }}</div>
     <div>Department: {{ $category->department->name ?? '' }}</div>
     <div>Resolution: {{ $category->resolution }} {{ ($category->resolution_type == 1) ? 'Days' : 'Hours' }}</div>

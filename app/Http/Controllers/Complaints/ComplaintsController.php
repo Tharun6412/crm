@@ -48,7 +48,7 @@ class ComplaintsController extends Controller
         // fetch complaints based on GA
         $complaints = Complaint::with([
             'ga:id,name',
-            'category:id,name,parent_id',
+            'category:id,name,priority_id,parent_id',
             'consumer:id,crn,fname,lname',
             'segment:id,name',
             'status:id,name',
@@ -157,7 +157,7 @@ class ComplaintsController extends Controller
      */
     public function getSubCategories(Request $request)
     {
-        $sub_categories = ComplaintCategory::where('parent_id', $request->category_id)->get();
+        $sub_categories = ComplaintCategory::with(['priority','type'])->where('parent_id', $request->category_id)->get();
         return response()->json(['sub_categories' => $sub_categories]);
     }
 
@@ -170,7 +170,7 @@ class ComplaintsController extends Controller
         $request->validate(['sub_category_id' => 'required']);
         
         $now = Carbon::now();
-        $category_details = ComplaintCategory::with(['department', 'type'])->where('id', $request->sub_category_id)->first();
+        $category_details = ComplaintCategory::with(['department', 'type', 'priority'])->where('id', $request->sub_category_id)->first();
         $resolution_val = (int)$category_details->resolution;
         if($category_details->resolution_type == 1) {
             $est_close_at = $now->addDays($resolution_val);
@@ -195,7 +195,7 @@ class ComplaintsController extends Controller
             'type_id' => 'required',
             'media_id' => 'required',
             'category_id' => 'required',
-            'priority_id' => 'required',
+            //'priority_id' => 'required',
             'sub_category_id' => 'required',
             'notes' => 'required|max:225', 
         ]);
@@ -220,7 +220,7 @@ class ComplaintsController extends Controller
             'segment_id' => $request->segment_id,
             'type_id' => $request->type_id,
             'media_id' => $request->media_id,
-            'priority_id' => $request->priority_id,
+           // 'priority_id' => $request->priority_id,
             'estimated_closed_at' => $est_close_at->toDateTimeString(),
             'status_id' => ComplaintStatus::REGISTER->value,
             'created_by' => Auth::id(),
@@ -257,7 +257,7 @@ class ComplaintsController extends Controller
         $types = ComplaintType::all();
         $media = ComplaintMedia::all();
         $segments = ComplaintSegment::all();
-        $priorities = ComplaintPriority::all();
+       // $priorities = ComplaintPriority::all();
         $categories = ComplaintCategory::whereNull('parent_id')->get();
         $complaint = Complaint::find($id);
         $sub_categories = ComplaintCategory::where('parent_id', $complaint->category->parent_id)->get();
@@ -268,7 +268,6 @@ class ComplaintsController extends Controller
             'media' => $media,
             'segments' => $segments,
             'categories' => $categories,
-            'priorities' => $priorities,
             'sub_categories' => $sub_categories,
         ]);
     }
@@ -285,7 +284,7 @@ class ComplaintsController extends Controller
             'type_id' => 'required',
             'media_id' => 'required',
             'category_id' => 'required',
-            'priority_id' => 'required',
+            //'priority_id' => 'required',
             'sub_category_id' => 'required',
             'notes' => 'required|max:225',
         ]);
@@ -312,7 +311,7 @@ class ComplaintsController extends Controller
             'segment_id' => $request->segment_id,
             'type_id' => $request->type_id,
             'media_id' => $request->media_id,
-            'priority_id' => $request->priority_id,
+            //'priority_id' => $request->priority_id,
             'estimated_closed_at' => $est_close_at->toDateTimeString(),
             'updated_by' => Auth::id(),
         ]);

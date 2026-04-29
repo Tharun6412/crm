@@ -12,6 +12,17 @@
                     @csrf
                     <input type="hidden" name="parent_id" value="{{ $parent_id }}">
                     <div class="row mb-2">
+                        <label for="priority_id" class="col-sm-2 col-form-label text-end">Priority</label>
+                        <div class="col-sm-9">
+                            <select name="priority_id" id="priority_id" class="form-select">
+                                <option value="">Select Priority</option>
+                                @foreach ($priorities as $priority)
+                                    <option value="{{ $priority->id }}">{{ $priority->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
                         <label for="type_id" class="col-sm-2 col-form-label text-end">Type</label>
                         <div class="col-sm-9">
                             <select name="type_id" id="type_id" class="form-select">
