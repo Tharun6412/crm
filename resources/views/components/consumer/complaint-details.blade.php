@@ -54,7 +54,7 @@
                 <div class="col-sm-4">{{ $complaint->category?->parent->name }}</div>
                 <div class="col-sm-2 text-end fw-semibold">Department : </div>
                 <div class="col-sm-4">{{ $complaint->category?->department->name }}</div>
-                <div class="col-sm-2 text-end fw-semibold">PNGRB Priority : </div>
+                <div class="col-sm-2 text-end fw-semibold">PNGRB Category : </div>
                 <div class="col-sm-4">{{ $complaint->category->priority?->name }}</div>
                 <div class="col-sm-2 text-end fw-semibold">PNGRB Type : </div>
                 <div class="col-sm-4">{{ $complaint->category->type?->name }}</div>

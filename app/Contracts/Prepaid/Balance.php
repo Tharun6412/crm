@@ -14,7 +14,7 @@ class Balance
     public function balance($balanceData)
     {
         // Call API
-        $response = Polaris::postData(PrepaidApi::onDemandRead()->value, $balanceData);
+        $response = Polaris::getData(PrepaidApi::onDemandRead()->value, $balanceData);
         return $response;
     }
 }
