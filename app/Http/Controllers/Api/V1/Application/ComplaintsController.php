@@ -107,7 +107,6 @@ class ComplaintsController extends Controller
             'segment_id' => $request->segment_id,
             'type_id' => $request->type_id,
             'media_id' => $request->media_id,
-            'priority_id' => $request->priority_id,
             'estimated_closed_at' => $est_close_at->toDateTimeString(),
             'status_id' => ComplaintStatus::REGISTER->value,
             'created_by' => Auth::id(),
@@ -142,11 +141,11 @@ class ComplaintsController extends Controller
     {
         $complaint = Complaint::with([
             'ga:id,name',
-            'category:id,name,parent_id',
+            'category:id,name,parent_id,priority_id',
             'category.parent:id,name',
+            'category.priority:id,name',
             'type:id,name',
             'media:id,name',
-            'priority:id,name',
             'createdBy:id,first_name,last_name',
             'status:id,name',
             'statusHistory',

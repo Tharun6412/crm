@@ -77,7 +77,7 @@
                 <th nowrap>Est. Close Date</th>
                 <th nowrap>Closed Date</th>
                 <th nowrap>Deviation</th>
-                <th nowrap>Priority</th>
+                <th nowrap>PNGRB Category</th>
                 <th nowrap>
                     <div class="d-flex">
                         <div>Status &nbsp;</div>

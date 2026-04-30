@@ -98,8 +98,9 @@ class CommonController extends Controller
     {
         $sub_categories = ComplaintCategory::with([
             'type:id,name',
+            'priority:id,name',
             'department:id,name',
-        ])->select('id', 'name', 'resolution', 'resolution_type', 'type_id', 'department_id')->where('parent_id', $request->category_id)->get();
+        ])->select('id', 'name', 'resolution', 'resolution_type', 'type_id', 'department_id', 'priority_id')->where('parent_id', $request->category_id)->get();
         return response()->json(['sub_categories' => $sub_categories]); 
     }
 }

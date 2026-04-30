@@ -39,14 +39,23 @@ class GasSaleReportController extends Controller
                 c.ga_id,
                 c.segment_id,
                 c.connection_type_id,
-                SUM(bic.net_consumption) as total_sale
+                SUM(bic.net_consumption) as total_sale,
+                SUM(bil_invoices.base_amount) as base_amount,
+                SUM(bil_invoices.tax_amount) as tax_amount,
+                SUM(bil_invoices.total_amount) as total_amount
             ')
             ->get();
         // Array Preparation
         $gas_sale_array = [];
         foreach ($gas_sale as $row) {
-            $gas_sale_array[$row->ga_id][$row->segment_id][$row->connection_type_id] = $row->total_sale;
+            $gas_sale_array[$row->ga_id][$row->segment_id][$row->connection_type_id] =[
+                'total_sale' => $row->total_sale,
+                'base_amount' => $row->base_amount,
+                'tax_amount' => $row->tax_amount,
+                'total_amount' => $row->total_amount,
+            ];
         }
+        // dd($gas_sale_array);
         // Render output
         if($request->ajax()) {
             return view('reports.dashboard.gas-sale-report.list-body', ['geo_areas' => $geo_areas, 'gas_sale_array' => $gas_sale_array, 'date_from' => $fromDate,'date_to' => $toDate]);

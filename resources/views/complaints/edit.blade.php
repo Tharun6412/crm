@@ -95,7 +95,7 @@
                         <div class="offset-sm-3 col-sm-7">
                             <div class="border border-info rounded d-none" id="cmp_details">
                                 <div class="row g-2 pb-2 mb-2">
-                                    <div class="col-sm-6 text-end fw-semibold">PNGRB Priority : </div>
+                                    <div class="col-sm-6 text-end fw-semibold">PNGRB Category : </div>
                                     <div class="col-sm-6" id="cmp_priority"></div>
                                     <div class="col-sm-6 text-end fw-semibold">PNGRB Type : </div>
                                     <div class="col-sm-6" id="cmp_by"></div>

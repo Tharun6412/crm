@@ -21,7 +21,6 @@ class ComplaintValidationRequest extends FormRequest
             'type_id' => 'required',
             'media_id' => 'required',
             'category_id' => 'required',
-            'priority_id' => 'required',
             'sub_category_id' => 'required',
             'notes' => 'required|max:225', 
         ];

@@ -15,6 +15,7 @@
                             <th>Payment Type</th>
                             <th>Transaction Number</th>
                             <th class="text-end">Amount</th>
+                            <th class="text-end">Balance</th>
                             <th>Status</th>
                             <th>Created By</th>
                             <th>Actions</th>
@@ -32,6 +33,7 @@
                                 <td>{{ $payment->paymentType->name }}</td>
                                 <td>{{ $payment->transaction_id }}</td>
                                 <td class="text-end">{{ numberFormat($payment->amount, 2) }}</td>
+                                <td class="text-end">{{ numberFormat($payment->balance, 2) }}</td>
                                 <td>{{ $payment->status->name }}</td>
                                 <td>{{ $payment->createdBy->name }}</td>
                                 <td>

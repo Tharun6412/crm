@@ -92,7 +92,7 @@
                             <span class="text-danger validate-err-msg" id="sub_category_id-error"></span>
                             <div class="mt-2 border border-warning bg-warning-subtle rounded d-none" id="cmp_details">
                                 <div class="row g-2">   
-                                    <div class="col-sm-4 text-end fw-semibold">PNGRB Priority : </div>
+                                    <div class="col-sm-4 text-end fw-semibold">PNGRB Category : </div>
                                     <div class="col-sm-6" id="cmp_priority"></div>
                                     <div class="col-sm-4 text-end fw-semibold">PNGRB Type : </div>
                                     <div class="col-sm-6" id="cmp_by"></div>
