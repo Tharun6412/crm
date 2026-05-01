@@ -9,6 +9,12 @@
                 </div>
             </div>
             <div>
+                <div class="form-control">
+                    <span class="fw-semibold">Segment</span>
+                    <div class="w-auto float-end"><x-master.segment-filter /></div>
+                </div>
+            </div>
+            <div>
                 <button type="submit" class="btn btn-success"><i class="bi bi-search"></i></button>
                 <!-- Reset -->
             </div>

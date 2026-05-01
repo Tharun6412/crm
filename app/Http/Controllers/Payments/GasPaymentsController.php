@@ -61,7 +61,7 @@ class GasPaymentsController extends Controller
             'invoice_id' => 'required',
             'payment_type' => 'required',
             'transaction_no' => 'required',
-            'amount' => ['required', 'numeric', 'gt:0', 'min:' . floor($request->invoice_balance), 'max:' . ceil($request->invoice_balance)]
+            'amount' => ['required', 'numeric', 'gt:0','max:' . round(($request->invoice_balance + 10),2)]
             ]);
         $gas_invoice = BillInvoice::find($request->invoice_id);
         // 2. check if LPC is applicable.
@@ -133,9 +133,9 @@ class GasPaymentsController extends Controller
             if ($invoice->balance_amount <= 0) {
                 continue;
             }
-            $payAmount = min($invoice->balance_amount, $remainingAmount);
-            $newBalance = $invoice->balance_amount - $payAmount;
-            $newPaid    = $invoice->paid_amount + $payAmount;
+            $payAmount  = ($invoice->id === $parentInvoice->id) ? $remainingAmount : min(round($invoice->balance_amount, 2), $remainingAmount);
+            $newBalance = round($invoice->balance_amount - $payAmount, 2);
+            $newPaid    = round($invoice->paid_amount + $payAmount, 2);
 
             // Create payment record for THIS invoice
             PaymentService::create([
@@ -150,11 +150,19 @@ class GasPaymentsController extends Controller
                 'created_by'      => Auth::id(),
             ]);
 
+            // Determine invoice status
+            if ($newBalance <= 0) {
+                $statusId = InvoiceStatus::PAID->value;
+            } elseif ($newPaid > 0) {
+                $statusId = InvoiceStatus::PARTIALLY_PAID->value;
+            } else {
+                $statusId = InvoiceStatus::NOT_PAID->value;
+            }
             // Update invoice
             $invoice->update([
                 'paid_amount'    => $newPaid,
                 'balance_amount' => $newBalance,
-                'status_id'      => ($newBalance == 0) ? 1 : 3, // Paid / Partial
+                'status_id'      => $statusId, // Paid / Partial
             ]);
 
             // If invoice is sd emi invoice payment, update the status as paid.
@@ -162,29 +170,29 @@ class GasPaymentsController extends Controller
             {
                 ConsumerSdPayment::where('invoice_id', $invoice->id)->update(['status_id' => 1]);
             }
-            $remainingAmount -= $payAmount;
+            $remainingAmount = round($remainingAmount - $payAmount, 2);
             $lastInvoice = $invoice;
         }
 
-        $paisaTolerance = 1.00;
-        if ($lastInvoice) {
-            $leftover = $lastInvoice->balance_amount > 0
-                ? round($lastInvoice->balance_amount, 2)   // +ve underpaid
-                : round(-$remainingAmount, 2);              // -ve overpaid
+        // $paisaTolerance = 1.00;
+        // if ($lastInvoice) {
+        //     $leftover = $lastInvoice->balance_amount > 0
+        //         ? round($lastInvoice->balance_amount, 2)   // +ve underpaid
+        //         : round(-$remainingAmount, 2);              // -ve overpaid
 
-            // Only apply PAID status if within tolerance
-            if ($leftover != 0 && abs($leftover) <= $paisaTolerance) {
-                InvoicePayment::where('invoice_id', $lastInvoice->id)
-                    ->latest()
-                    ->first()
-                    ->update(['balance' => $leftover]);
+        //     // Only apply PAID status if within tolerance
+        //     if ($leftover != 0 && abs($leftover) <= $paisaTolerance) {
+        //         InvoicePayment::where('invoice_id', $lastInvoice->id)
+        //             ->latest()
+        //             ->first()
+        //             ->update(['balance' => $leftover]);
 
-                $parentInvoice->update([
-                    'balance_amount' => $leftover,
-                    'status_id'      => 1, // PAID only within tolerance
-                ]);
-            }
-        }
+        //         $parentInvoice->update([
+        //             'balance_amount' => $leftover,
+        //             'status_id'      => 1, // PAID only within tolerance
+        //         ]);
+        //     }
+        // }
 
         return response()->json(['success' => 'Invoice payment inserted successfully']);
     }

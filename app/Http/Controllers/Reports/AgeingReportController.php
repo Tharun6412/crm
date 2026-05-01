@@ -37,6 +37,7 @@ class AgeingReportController extends Controller
             )
         ->whereIn('bil_invoices.status_id', [InvoiceStatus::NOT_PAID->value, InvoiceStatus::PARTIALLY_PAID->value])
         ->when($request->filled('invoice_type'), fn($q) => $q->whereIn('bil_invoices.type_id', $request->invoice_type))
+        ->when($request->filled('segments'), fn($q) => $q->whereIn('cns_consumers.segment_id', $request->segments))
         ->groupBy('cns_consumers.ga_id')
         ->orderBy('cns_consumers.ga_id')->get()->keyBy('ga_id');
         // Render output
