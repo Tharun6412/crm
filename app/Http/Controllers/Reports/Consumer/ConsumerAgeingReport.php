@@ -46,34 +46,47 @@ class ConsumerAgeingReport extends Controller
                 /* Inactive */
                 SUM(CASE 
                     WHEN cns_consumers.status_id NOT IN (". ConsumerStatus::ACTIVATE->value .",". ConsumerStatus::REJECT->value .",". ConsumerStatus::TD->value ."," . ConsumerStatus::PD->value . ")
-                    AND DATEDIFF(NOW(), reg.register_date) < 90
-                    THEN 1 ELSE 0 END) as inactive_upto_90,
-                
+                    AND DATEDIFF(NOW(), reg.register_date) <= 30
+                    THEN 1 ELSE 0 END) as inactive_upto_30,
                 SUM(CASE 
                     WHEN cns_consumers.status_id NOT IN (". ConsumerStatus::ACTIVATE->value .",". ConsumerStatus::REJECT->value .",". ConsumerStatus::TD->value ."," . ConsumerStatus::PD->value . ")
-                    AND DATEDIFF(NOW(), reg.register_date) BETWEEN 91 AND 120
-                    THEN 1 ELSE 0 END) as inactive_90_120,
+                    AND DATEDIFF(NOW(), reg.register_date) BETWEEN 31 AND 60
+                    THEN 1 ELSE 0 END) as inactive_31_60,
+                SUM(CASE 
+                    WHEN cns_consumers.status_id NOT IN (". ConsumerStatus::ACTIVATE->value .",". ConsumerStatus::REJECT->value .",". ConsumerStatus::TD->value ."," . ConsumerStatus::PD->value . ")
+                    AND DATEDIFF(NOW(), reg.register_date) BETWEEN 61 AND 90
+                    THEN 1 ELSE 0 END) as inactive_61_90,
+                SUM(CASE 
+                    WHEN cns_consumers.status_id NOT IN (". ConsumerStatus::ACTIVATE->value .",". ConsumerStatus::REJECT->value .",". ConsumerStatus::TD->value ."," . ConsumerStatus::PD->value . ")
+                    AND DATEDIFF(NOW(), reg.register_date) BETWEEN 91 AND 180
+                    THEN 1 ELSE 0 END) as inactive_91_180,
 
                 SUM(CASE 
                     WHEN cns_consumers.status_id NOT IN (". ConsumerStatus::ACTIVATE->value .",". ConsumerStatus::REJECT->value .",". ConsumerStatus::TD->value ."," . ConsumerStatus::PD->value . ")
-                    AND DATEDIFF(NOW(), reg.register_date) > 120
-                    THEN 1 ELSE 0 END) as inactive_gt_120,
+                    AND DATEDIFF(NOW(), reg.register_date) > 180
+                    THEN 1 ELSE 0 END) as inactive_gt_180,
 
                 /* Active */
                 SUM(CASE 
                     WHEN cns_consumers.status_id = ". ConsumerStatus::ACTIVATE->value ."
-                    AND DATEDIFF(act.activation_date, reg.register_date) <= 90
-                    THEN 1 ELSE 0 END) as active_upto_90,
-
+                    AND DATEDIFF(act.activation_date, reg.register_date) <= 30
+                    THEN 1 ELSE 0 END) as active_upto_30,
                 SUM(CASE 
                     WHEN cns_consumers.status_id = ". ConsumerStatus::ACTIVATE->value ."
-                    AND DATEDIFF(act.activation_date, reg.register_date) BETWEEN 91 AND 120
-                    THEN 1 ELSE 0 END) as active_90_120,
-
+                    AND DATEDIFF(act.activation_date, reg.register_date) BETWEEN 31 AND 60
+                    THEN 1 ELSE 0 END) as active_31_60,
                 SUM(CASE 
                     WHEN cns_consumers.status_id = ". ConsumerStatus::ACTIVATE->value ."
-                    AND DATEDIFF(act.activation_date, reg.register_date) > 120
-                    THEN 1 ELSE 0 END) as active_gt_120
+                    AND DATEDIFF(act.activation_date, reg.register_date) BETWEEN 61 AND 90
+                    THEN 1 ELSE 0 END) as active_61_90,
+                SUM(CASE 
+                    WHEN cns_consumers.status_id = ". ConsumerStatus::ACTIVATE->value ."
+                    AND DATEDIFF(act.activation_date, reg.register_date) BETWEEN 91 AND 180
+                    THEN 1 ELSE 0 END) as active_91_180,
+                SUM(CASE 
+                    WHEN cns_consumers.status_id = ". ConsumerStatus::ACTIVATE->value ."
+                    AND DATEDIFF(act.activation_date, reg.register_date) > 180
+                    THEN 1 ELSE 0 END) as active_gt_180
             ")
             ->groupBy('mst_gas.id', 'mst_gas.name')
             ->orderBy('mst_gas.id')
@@ -82,9 +95,11 @@ class ConsumerAgeingReport extends Controller
             return (object)[
                 'ga_id'   => $row->ga_id,
                 'ga_name' => $row->ga_name,
-                'inactive_upto_90' => $row->inactive_upto_90,
-                'inactive_90_120' => $row->inactive_90_120,
-                'inactive_gt_120'  => $row->inactive_gt_120,
+                'inactive_upto_30' => $row->inactive_upto_30,
+                'inactive_31_60' => $row->inactive_31_60,
+                'inactive_61_90' => $row->inactive_61_90,
+                'inactive_91_180' => $row->inactive_91_180,
+                'inactive_gt_180'  => $row->inactive_gt_180,
             ];
         });
 
@@ -92,9 +107,11 @@ class ConsumerAgeingReport extends Controller
             return (object)[
                 'ga_id'   => $row->ga_id,
                 'ga_name' => $row->ga_name,
-                'active_upto_90' => $row->active_upto_90,
-                'active_90_120' => $row->active_90_120,
-                'active_gt_120'  => $row->active_gt_120,
+                'active_upto_30' => $row->active_upto_30,
+                'active_31_60' => $row->active_31_60,
+                'active_61_90' => $row->active_61_90,
+                'active_91_180' => $row->active_91_180,
+                'active_gt_180'  => $row->active_gt_180,
             ];
         });
         // Render output
@@ -190,7 +207,14 @@ class ConsumerAgeingReport extends Controller
         $sortBy = ($request->get('sortBy')) ? $request->get('sortBy') : 'created_at';
         $sortOr = ($request->get('sortOr')) ? $request->get('sortOr') : 'desc';
         $records = ($request->get('records')) ? $request->get('records') : 50;
-        $consumers = Consumer::when((!isAdmin() AND !isSuperAdmin()), function ($q) {
+        $consumers = Consumer::with([
+            'segment:id,name',
+            'ga:id,name',
+            'district:id,name',
+            'status:id,name',
+            'scheme:id,scheme_id',
+            'scheme.scheme:id,name',
+        ])->when((!isAdmin() AND !isSuperAdmin()), function ($q) {
                 $q->whereIn('ga_id', session('user')['gas']);
             })
             ->when($request->filled('key'), function ($q) use ($request) {
@@ -241,14 +265,20 @@ class ConsumerAgeingReport extends Controller
                 });
                 if ($request->type == 1) {
                     switch ($request->range) {
-                        case '90-':
-                            $q->whereRaw('DATEDIFF(NOW(), reg.register_date) <= 90');
+                        case '30-':
+                            $q->whereRaw('DATEDIFF(NOW(), reg.register_date) <= 30');
                             break;
-                        case '90-120':
-                            $q->whereRaw('DATEDIFF(NOW(), reg.register_date) BETWEEN 91 AND 120');
+                        case '31-60':
+                            $q->whereRaw('DATEDIFF(NOW(), reg.register_date) BETWEEN 31 AND 60');
                             break;
-                        case '120+':
-                            $q->whereRaw('DATEDIFF(NOW(), reg.register_date) > 120');
+                        case '61-90':
+                            $q->whereRaw('DATEDIFF(NOW(), reg.register_date) BETWEEN 61 AND 90');
+                            break;
+                        case '91-180':
+                            $q->whereRaw('DATEDIFF(NOW(), reg.register_date) BETWEEN 91 AND 180');
+                            break;
+                        case '180+':
+                            $q->whereRaw('DATEDIFF(NOW(), reg.register_date) > 180');
                             break;
                     }
                 }
@@ -260,20 +290,26 @@ class ConsumerAgeingReport extends Controller
                         $join->on('cns_consumers.id', '=', 'act.consumer_id');
                     });
                     switch ($request->range) {
-                        case '90-':
-                            $q->whereRaw('DATEDIFF(act.activation_date, reg.register_date) <= 90');
+                        case '30-':
+                            $q->whereRaw('DATEDIFF(act.activation_date, reg.register_date) <= 30');
                             break;
-                        case '90-120':
-                            $q->whereRaw('DATEDIFF(act.activation_date, reg.register_date) BETWEEN 91 AND 120');
+                        case '31-60':
+                            $q->whereRaw('DATEDIFF(act.activation_date, reg.register_date) BETWEEN 31 AND 60');
                             break;
-                        case '120+':
-                            $q->whereRaw('DATEDIFF(act.activation_date, reg.register_date) > 120');
+                        case '61-90':
+                            $q->whereRaw('DATEDIFF(act.activation_date, reg.register_date) BETWEEN 61 AND 90');
+                            break;
+                        case '91-180':
+                            $q->whereRaw('DATEDIFF(act.activation_date, reg.register_date) BETWEEN 91 AND 180');
+                            break;
+                        case '180+':
+                            $q->whereRaw('DATEDIFF(act.activation_date, reg.register_date) > 180');
                             break;
                     }
                 }
             })
             ->orderBy($sortBy, $sortOr)->paginate($records)->withQueryString();
-        
+        // dd($consumers);
         // Render output
         if($request->ajax()) {
             // dd($request->all());

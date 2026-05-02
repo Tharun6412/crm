@@ -76,12 +76,22 @@
                         @endif
                     </a><x-master.date-filter />
                 </th>
-                {{-- <th width="2%" nowrap>Actions</th> --}}
+                <th width="2%" nowrap>Days</th>
             </tr>
         </thead>
         <tbody>
             @if ($consumers->count() > 0)
                 @foreach ($consumers as $consumer)
+                    @php
+                        $registerDate   = $consumer->register_date   ? \Carbon\Carbon::parse($consumer->register_date)   : null;
+                        $activationDate = $consumer->activation_date ? \Carbon\Carbon::parse($consumer->activation_date) : null;
+
+                         $days = $registerDate
+                                ? ($activationDate
+                                    ? ceil($registerDate->diffInDays($activationDate))        // register → activate
+                                    : ceil($registerDate->diffInDays(now()->startOfDay())))   // register → today
+                                : '-';
+                    @endphp
                     <tr>
                         <td>{{ $loop->iteration }}</td>
                         <td>
@@ -106,9 +116,7 @@
                             @endif
                         </td>
                         <td>{{ dateFormat($consumer->created_at) }}</td>
-                        {{-- <td>
-                            @include('consumers.consumers.list-actions')
-                        </td> --}}
+                        <td><x-consumer.ageing-days :days="$days"/></td>
                     </tr>
                 @endforeach
             @else

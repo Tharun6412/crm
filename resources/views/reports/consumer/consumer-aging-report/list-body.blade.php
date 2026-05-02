@@ -39,9 +39,11 @@
                     <tr>
                         <th nowrap="nowrap">S No.</th>
                         <th>GA Name</th>
-                        <th class="text-end">< 90 Days</th>
-                        <th class="text-end">90–120 Days</th>
-                        <th class="text-end">> 120 Days</th>
+                        <th class="text-end"><= 30 Days</th>
+                        <th class="text-end">31–60 Days</th>
+                        <th class="text-end">61–90 Days</th>
+                        <th class="text-end">91–180 Days</th>
+                        <th class="text-end">> 180 Days</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -53,9 +55,11 @@
                             <td width="1%" nowrap class="text-center">{{ $i++ }}</td>
                             <td>{{ $ga->ga_name }}</td>
                             @foreach([
-                                'inactive_upto_90' => '90-',
-                                'inactive_90_120' => '90-120',
-                                'inactive_gt_120'  => '120+'
+                                'inactive_upto_30' => '30-',
+                                'inactive_31_60' => '31-60',
+                                'inactive_61_90' => '61-90',
+                                'inactive_91_180' => '91-180',
+                                'inactive_gt_180'  => '180+'
                             ] as $field => $range)
 
                                 <td class="text-end">
@@ -81,9 +85,11 @@
                 <tfoot>
                     <tr class="table-info">
                         <th colspan="2" class="text-end">Total</th>
-                        <th class="text-end">{{ numberFormat($not_active->sum('inactive_upto_90')) }}</th>
-                        <th class="text-end">{{ numberFormat($not_active->sum('inactive_90_120')) }}</th>
-                        <th class="text-end">{{ numberFormat($not_active->sum('inactive_gt_120')) }}</th>
+                        <th class="text-end">{{ numberFormat($not_active->sum('inactive_upto_30')) }}</th>
+                        <th class="text-end">{{ numberFormat($not_active->sum('inactive_31_60')) }}</th>
+                        <th class="text-end">{{ numberFormat($not_active->sum('inactive_61_90')) }}</th>
+                        <th class="text-end">{{ numberFormat($not_active->sum('inactive_91_180')) }}</th>
+                        <th class="text-end">{{ numberFormat($not_active->sum('inactive_gt_180')) }}</th>
                     </tr>
                 </tfoot>
             </table>
@@ -96,9 +102,11 @@
                     <tr>
                         <th nowrap="nowrap">S No.</th>
                         <th>GA Name</th>
-                        <th class="text-end">< 90 Days</th>
-                        <th class="text-end">90–120 Days</th>
-                        <th class="text-end">> 120 Days</th>
+                        <th class="text-end"><= 30 Days</th>
+                        <th class="text-end">31–60 Days</th>
+                        <th class="text-end">61–90 Days</th>
+                        <th class="text-end">91–180 Days</th>
+                        <th class="text-end">> 180 Days</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -110,9 +118,11 @@
                             <td width="1%" nowrap class="text-center">{{ $i++ }}</td>
                             <td>{{ $ga->ga_name }}</td>
                             @foreach([
-                                'active_upto_90' => '90-',
-                                'active_90_120' => '90-120',
-                                'active_gt_120'  => '120+'
+                                'active_upto_30' => '30-',
+                                'active_31_60' => '31-60',
+                                'active_61_90' => '61-90',
+                                'active_91_180' => '91-180',
+                                'active_gt_180'  => '180+'
                             ] as $field => $range)
     
                                 <td class="text-end">
@@ -138,9 +148,11 @@
                 <tfoot>
                     <tr class="table-info">
                         <th colspan="2" class="text-end">Total</th>
-                        <th class="text-end">{{ numberFormat($active->sum('active_upto_90')) }}</th>
-                        <th class="text-end">{{ numberFormat($active->sum('active_90_120')) }}</th>
-                        <th class="text-end">{{ numberFormat($active->sum('active_gt_120')) }}</th>
+                        <th class="text-end">{{ numberFormat($active->sum('active_upto_30')) }}</th>
+                        <th class="text-end">{{ numberFormat($active->sum('active_31_60')) }}</th>
+                        <th class="text-end">{{ numberFormat($active->sum('active_61_90')) }}</th>
+                        <th class="text-end">{{ numberFormat($active->sum('active_91_180')) }}</th>
+                        <th class="text-end">{{ numberFormat($active->sum('active_gt_180')) }}</th>
                     </tr>
                 </tfoot>
             </table>
