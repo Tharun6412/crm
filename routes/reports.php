@@ -12,6 +12,10 @@ Route::middleware(['auth', ModuleAccess::class])->group(function() {
     Route::get('consumer/onboarding/activity', [App\Http\Controllers\Reports\ConsumerOnboardingReportController::class, 'activity']);
     Route::get('consumer/onboardingStatusReport', [App\Http\Controllers\Reports\OnboardingStatusReportController::class, 'index']);
     Route::get('consumer/onboardingStatusReport/consumerOnboardExport', [App\Http\Controllers\Reports\OnboardingStatusReportController::class, 'consumerOnboardExport']);
+    Route::get('consumer/conversions', [App\Http\Controllers\Reports\ConsumerConversionController::class, 'index']);
+    Route::get('consumer/conversions/prepaidConsumers', [App\Http\Controllers\Reports\ConsumerConversionController::class, 'prepaidConsumers']);
+    Route::get('consumer/conversions/getPrepaidCountByDistricts', [App\Http\Controllers\Reports\ConsumerConversionController::class, 'getPrepaidCountByDistricts']);
+    Route::get('consumer/conversions/consumerPrepaidExport', [App\Http\Controllers\Reports\ConsumerConversionController::class, 'consumerPrepaidExport']);
 
     // SD Reports
     Route::get('consumer/sdReport', [App\Http\Controllers\Reports\SDReportController::class, 'index']);

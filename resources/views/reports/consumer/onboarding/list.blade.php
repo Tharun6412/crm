@@ -16,6 +16,7 @@
             <div class="nav nav-tabs" id="nav-tab" role="tablist">
                 <button class="nav-link active fs-5 border border-bottom-0 me-2" id="nav-consumers-tab" data-bs-toggle="tab" data-bs-target="#nav-consumers" type="button" role="tab" aria-controls="nav-consumers" aria-selected="true"><i class="bi bi-app-indicator"></i>&nbsp;All Consumers <span class="badge text-bg-success">{{ array_sum($consumer_status_sum) }}</span></button>
                 <button class="nav-link fs-5 border border-bottom-0" id="nav-cns-activity-tab" data-bs-toggle="tab" data-bs-target="#nav-cns-activity" type="button" role="tab" aria-controls="nav-cns-activity" aria-selected="false"><i class="bi bi-app-indicator"></i>&nbsp;Consumer Onboard Activity</button>
+                <button class="nav-link fs-5 border border-bottom-0" id="nav-conversions-tab" data-bs-toggle="tab" data-bs-target="#nav-conversions" type="button" role="tab" aria-controls="nav-conversions" aria-selected="false"><i class="bi bi-app-indicator"></i>&nbsp;Consumer Conversions</button>
             </div>
         </nav>
         <div class="tab-content bg-white p-2 border border-top-0" id="nav-tabContent">
@@ -114,6 +115,50 @@
                     </div>
                 </div>
             </div>
+            {{-- Consumer Conversions --}}
+            <div class="tab-pane fade" id="nav-conversions" role="tabpanel" aria-labelledby="nav-conversions-tab" tabindex="0">
+                <form action="{{ url('reports/consumer/conversions') }}" id="report-conversions-search-form" method="GET">
+                    <div class="d-flex justify-content-between align-items-center border my-2 bg-light p-2 bg-secondary-subtle rounded">
+                        <h4 class="mb-0">Consumer Conversions</h4>
+                        <div class="row g-1">
+                            <div class="col-auto">
+                                <label for="status_date">Segments</label>
+                                <select name="conv_segment_id" id="conv_segment_id" class="form-select">
+                                    <option value="">All Segments</option>
+                                    @foreach ($segments as $item)
+                                        <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-auto">
+                                <label for="conv_date_from">From Date</label>
+                                <div class="input-group">
+                                    <input type="text" name="conv_date_from" id="conv_date_from" class="form-control" placeholder="DD-MM-YYYY">
+                                    <label for="date_from" class="input-group-text"><i class="bi bi-calendar3"></i></label>
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <label for="conv_date_to">To Date</label>
+                                <div class="input-group">
+                                    <input type="text" name="conv_date_to" id="conv_date_to" class="form-control" placeholder="DD-MM-YYYY">
+                                    <label for="date_to" class="input-group-text"><i class="bi bi-calendar3"></i></label>
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <label for="status_date">&nbsp;</label>
+                                <div>
+                                    <button type="submit" class="btn btn-success"><i class="bi bi-search"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>    
+                </form>
+                <div id="report-conversions-list"> 
+                    <div class="alert alert-info mb-0">
+                        Please choose dates!
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 @endsection
@@ -121,5 +166,6 @@
 @push('scripts')
     @include('scripts.ajax-form-search', ['form' => 'report-cns-onboard'])
     @include('scripts.ajax-form-search', ['form' => 'report-cns-activity'])
-    @include('scripts.datepicker', ['list' => ['date_from', 'date_to', 'status_date']])
+    @include('scripts.ajax-form-search', ['form' => 'report-conversions'])
+    @include('scripts.datepicker', ['list' => ['date_from', 'date_to', 'status_date', 'conv_date_from', 'conv_date_to']])
 @endpush

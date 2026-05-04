@@ -34,7 +34,7 @@ class AppServiceProvider extends ServiceProvider
         });
         // RateLimit
         RateLimiter::for('balance-check', function(Request $request) {
-            return Limit::perMinute(5)->by($request->user()?->id ?? $request->ip());
+            return Limit::perHour(50)->by($request->user()?->id ?? $request->ip());
         });
         // Custom helpers
         require_once app_path('Helpers/auth.php');
