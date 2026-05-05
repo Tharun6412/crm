@@ -48,6 +48,9 @@
     <div>
         {{ $invoices->links('utils.cursor', ['modDiv' => 'invoices-report-list']) }}
     </div>
+    <div>
+        <a href="{{ url('reports/invoiceReport/invoicesReportExport') }}?{{ http_build_query(request()->all()) }}" class="ajax-link">Export</a>
+    </div>
 </div>
 
 <div class="collapse {{ request()->filled('date_from') || request()->filled('date_to') ? 'show' : '' }} mt-2 mb-3" id="invoiceDateFilter">
@@ -164,3 +167,13 @@
 @push('scripts')
     @include('scripts.datepicker', ['list' => ['date_from', 'date_to']])
 @endpush
+<script type="module">
+   $(function(){
+        $(".ajax-link").click(function(e){
+            e.preventDefault();
+            $.get($(this).attr('href'), function(data) {
+                alert("Export Started, Download takes time");
+            });
+        });
+    });
+</script>

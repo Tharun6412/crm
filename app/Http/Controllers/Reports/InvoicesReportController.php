@@ -3,13 +3,18 @@ namespace App\Http\Controllers\Reports;
 
 use App\Enums\InvoiceStatus;
 use App\Enums\InvoiceType;
+use App\Exports\Reports\Invoices\InvoiceExport;
 use App\Exports\Reports\InvoicesReportExport;
 use App\Http\Controllers\Controller;
+use App\Jobs\AfterExportJob;
+use App\Models\Admin\UserExport;
 use App\Models\Invoice\BillInvoice;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Maatwebsite\Excel\Facades\Excel;
 
 /**
  * All invoices report controller
@@ -161,9 +166,23 @@ class InvoicesReportController extends Controller
     /**
      * Export the invoices based on GA and range of due days.
      */
+    // public function invoicesReportExport(Request $request)
+    // {
+    //     return (new InvoicesReportExport($request))->download('InvoicesReport.xlsx');
+    // }
     public function invoicesReportExport(Request $request)
     {
-        return (new InvoicesReportExport($request))->download('InvoicesReport.xlsx');
+        // dd($request->all());
+        $filename = 'invoices_' . time() . '.csv';
+        // Add to Export Table
+        $export_id = UserExport::create([
+            'user_id' => Auth::id(),
+            'file_name' => $filename,
+            'status' => 0, //0=pending,1=completed
+        ]);
+        // Queue the export and attach AfterExportJob to run AFTER storage
+        Excel::queue(new InvoiceExport($request->all(), $export_id->id), $filename, 'public')
+            ->chain([new AfterExportJob($export_id->id)]);
     }
 
     /**

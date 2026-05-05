@@ -11,6 +11,9 @@
     </li>
     {{-- <li>Welcome! Guest</li> --}}
     @auth
+        <li>
+            <x-layouts.notifications/>
+        </li>
         <li class="dropdown">
             <a class="nav-link dropdown-toggle nav-user px-2" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
                 <span class="d-lg-flex align-items-center gap-1 d-none">

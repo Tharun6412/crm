@@ -12,6 +12,9 @@
         'cursor'  => null, // reset cursor on sort change
     ]);
 @endphp
+<div>
+    <a href="{{ url('reports/invoiceReport/invoicesReportExport') }}?{{ http_build_query(request()->all()) }}" class="ajax-link">Export</a>
+</div>
 <div class="d-flex justify-content-between mb-1">
     <!-- Record Count -->
     <div class="fs-5 fw-semibold">({{ numberFormat($tRecords ?? 0) }})&nbsp;Records found</div>
@@ -203,3 +206,13 @@
         </tfoot>
     </table>
 </div>
+<script type="module">
+   $(function(){
+        $(".ajax-link").click(function(e){
+            e.preventDefault();
+            $.get($(this).attr('href'), function(data) {
+                alert("Export Started, Download takes time");
+            });
+        });
+    });
+</script>

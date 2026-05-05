@@ -8,7 +8,6 @@ Route::middleware(['auth'])->group(function() {
     Route::get('help', function(){
         return view('utils.help');
     });
+    Route::resource('notifications', App\Http\Controllers\Admin\NotificationsController::class);
+    Route::resource('user/exports', App\Http\Controllers\Admin\UserExportController::class);
 });
-
-
-
