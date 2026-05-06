@@ -1,13 +1,14 @@
-{{-- Employee collection show details --}}
+{{-- Consumer counts district wise for selected GA --}}
 
 <div class="modal-dialog modal-xl">
     <div class="modal-content">
         <div class="modal-header">
-            <h1 class="modal-title fs-5" id="exampleModalLabel">Onboarding Status Report</h1>
+            <h1 class="modal-title fs-5" id="exampleModalLabel">
+                Consumers - {{ $request_data['ga_name'] }}&nbsp;{{ $connect_type ? "> ".$connect_type : '' }}&nbsp;{{ $segment ? "> ".$segment : '' }}
+            </h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-            <h1 class="modal-title fs-5" id="exampleModalLabel">{{ $request_data['ga_name'] }}&nbsp;{{ $connect_type ? "> ".$connect_type : '' }}&nbsp;{{ $segment ? "> ".$segment : '' }}</h1>
             {{-- Consumer sattus --}}
             <div class="mt-2">
                 <div class="row row-cols-8 g-2 mb-2">

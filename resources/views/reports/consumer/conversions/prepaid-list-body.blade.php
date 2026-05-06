@@ -2,7 +2,7 @@
     @if (count($reports) > 0)
         <div class="row align-items-center mb-2">
             <div class="col-auto">
-                <strong>{{ $reports->total() }}&nbsp;Records</strong>
+                <span class="fs-5">({{ $reports->total() }})&nbsp;Records</span>
             </div>
 
             <div class="col text-end">

@@ -1,13 +1,13 @@
-{{-- Consumer sattus --}}
+{{-- Consumer conversions with status --}}
 
 {{-- Dsiplay --}}
 <div class="mt-2">
     <div class="row row-cols-8 g-2 mb-2">
         <div class="col-2">
-            <div class="bg-success bg-gradient rounded text-white py-1 px-2 fs-5">GA</div>
+            <div class="bg-primary bg-gradient rounded text-white py-1 px-2 fs-5">GA</div>
         </div>
         <div class="col">
-            <div class="bg-primary bg-gradient rounded text-white text-center py-1 px-2 fs-5">Activated</div>
+            <div class="bg-success bg-gradient rounded text-white text-center py-1 px-2 fs-5">Activated</div>
         </div>
         <div class="col">
             <div class="bg-warning bg-gradient rounded text-white text-center py-1 px-2 fs-5">TD</div>
@@ -19,8 +19,13 @@
     @foreach($geo_areas as $ga)
         <div class="row row-cols-10 g-2 mb-2">
             <div class="col-2">
-                <div class="bg-success-subtle rounded py-1 px-2 fs-5 text-truncate">
-                    <a href="{{ url('reports/consumer/conversions/getPrepaidCountByDistricts') }}?ga_id={{ $ga->id }}&ga_name={{ $ga->name }}&{{ http_build_query(request()->all()) }}" class="link-modal">{{ $ga->name }}</a>
+                <div class="bg-primary-subtle rounded py-1 px-2 fs-5 text-truncate">
+                    <div class="d-flex justify-content-between">
+                        <span>{{ $ga->name }}</span>
+                        <a href="{{ url('reports/consumer/conversions/getPrepaidCountByDistricts') }}?ga_id={{ $ga->id }}&ga_name={{ $ga->name }}&{{ http_build_query(request()->all()) }}" class="link-modal" title="Districts Counts">
+                            <i class="bi bi-box-arrow-up-right"></i>
+                        </a>
+                    </div>
                 </div>
             </div>
             <div class="col">

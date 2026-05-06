@@ -19,6 +19,8 @@
 /storage/*.key
 /storage/pail
 /storage/debugbar
+/storage/framework/views
+/storage/framework/laravel-excel
 /vendor
 Homestead.json
 Homestead.yaml
