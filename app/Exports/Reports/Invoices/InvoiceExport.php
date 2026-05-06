@@ -58,7 +58,7 @@ class InvoiceExport implements FromQuery, ShouldQueue, WithChunkReading, WithHea
             ->when((!empty($this->request['date_from']) and !empty($this->request['date_to'])), function($q) {
                 $q->whereBetween('bil_invoices.invoice_date', [Carbon::createFromFormat('d-m-Y', $this->request['date_from'])->startOfDay()->toDateTimeString(), Carbon::createFromFormat('d-m-Y', $this->request['date_to'])->endOfDay()->toDateTimeString()]);
             })
-            ->select('bil_invoices.id','bil_invoices.invoice_number','bil_invoices.invoice_date','bil_invoices.type_id','bil_invoices.due_date','bil_invoices.total_amount', 'bil_invoices.payable_amount', 'bil_invoices.balance_amount', 'bil_invoices.status_id', 'bil_invoices.created_at')
+            ->select('bil_invoices.id','bil_invoices.consumer_id','bil_invoices.invoice_number','bil_invoices.invoice_date','bil_invoices.type_id','bil_invoices.due_date','bil_invoices.total_amount', 'bil_invoices.payable_amount', 'bil_invoices.balance_amount', 'bil_invoices.status_id', 'bil_invoices.created_at')
             ->orderBy('bil_invoices.created_at', 'desc');
         return $invoices;
     }

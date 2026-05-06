@@ -95,8 +95,8 @@
                                 </div>
                             </div>
                             @php
-                                $gasbill_outstand = $consumer->invoices()->where('type_id', 1)->sum('balance_amount');
-                                $invoice_outstand = $consumer->invoices()->where('type_id', '!=', 1)->sum('balance_amount');
+                                $gasbill_outstand = $consumer->invoices()->where('type_id', 1)->where('status_id', '!=', 4)->sum('balance_amount');
+                                $invoice_outstand = $consumer->invoices()->where('type_id', '!=', 1)->where('status_id', '!=', 4)->sum('balance_amount');
                                 $total_outstand = ($consumer->scheme->balance + $gasbill_outstand + $invoice_outstand);
                             @endphp
                             @if ($consumer->connection_type_id == 1)

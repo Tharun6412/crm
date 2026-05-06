@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1\Application;
 
 use App\Enums\ConnectionType;
+use App\Enums\InvoiceStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Consumer\Consumer;
 use App\Models\Invoice\BillInvoice;
@@ -90,8 +91,8 @@ class ConsumerController extends Controller
         }
         // Get Consumer Outstanding balance + security Deposit balance
         $invoices = $consumer->invoices()->select('type_id','balance_amount')->get();
-        $gasbill = $invoices->where('type_id', 1)->sum('balance_amount');
-        $invoice = $invoices->where('type_id', '!=', 1)->sum('balance_amount');
+        $gasbill = $invoices->where('type_id', 1)->where('status_id', '!=', InvoiceStatus::CANCEL->value)->sum('balance_amount');
+        $invoice = $invoices->where('type_id', '!=', 1)->where('status_id', '!=', InvoiceStatus::CANCEL->value)->sum('balance_amount');
         if($consumer->connection_type_id == ConnectionType::PREPAID->value) {
             $balance = [
                 'sd_amount' => numberFormat($consumer->scheme->balance ?? 0, 2),

@@ -172,7 +172,6 @@ class InvoicesReportController extends Controller
     // }
     public function invoicesReportExport(Request $request)
     {
-        // dd($request->all());
         $filename = 'invoices_' . time() . '.csv';
         // Add to Export Table
         $export_id = UserExport::create([
@@ -183,6 +182,8 @@ class InvoicesReportController extends Controller
         // Queue the export and attach AfterExportJob to run AFTER storage
         Excel::queue(new InvoiceExport($request->all(), $export_id->id), $filename, 'public')
             ->chain([new AfterExportJob($export_id->id)]);
+        // response in modal
+        return view('admin.exports.create');
     }
 
     /**

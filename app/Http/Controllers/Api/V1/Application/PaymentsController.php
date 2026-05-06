@@ -77,7 +77,7 @@ class PaymentsController extends Controller
     public function update(Request $request)
     {
         $invoice = BillInvoice::find($request->invoice_id);
-        $total_payable = round($invoice->balance_amount + $invoice->childInvoices->sum('payable_amount') + $request->late_fee, 2);
+        $total_payable = round($invoice->balance_amount + $invoice->childInvoices->sum('balance_amount') + $request->late_fee, 2);
         // 1. data validation
         $request->validate([
             'invoice_id' => 'required',

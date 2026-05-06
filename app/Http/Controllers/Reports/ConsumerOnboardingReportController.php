@@ -230,4 +230,99 @@ class ConsumerOnboardingReportController extends Controller
             'request_data' => $request->all(),
         ]);
     }
+
+    /**
+     * Get Cumulative Count for onboarding
+     */
+    public function getCumulativeConsumerStatusCount(Request $request)
+    {
+        // Get data
+        $geo_areas = Ga::where('status', 1)->orderBy('position')->get();
+        $segments = Segment::all();
+        $connection_types = ConnectionType::all();
+
+        // Get all consumer status counts
+        $consumer_status_result = Consumer::selectRaw('ga_id, status_id, count(status_id) as count')
+            ->when(($request->has('connect_type_id') AND !empty($request->connect_type_id)), function($q) use($request) {
+                $q->where('connection_type_id', $request->connect_type_id);
+            })
+            ->when(($request->has('onboard_segment_id') AND !empty($request->onboard_segment_id)), function($q) use($request) {
+                $q->where('segment_id', $request->onboard_segment_id);
+            })
+            ->groupBy('ga_id', 'status_id')->get();
+        
+        // Prepare data
+        $consumer_status_counts = [];
+        $consumer_status_sum = [];
+        foreach($consumer_status_result as $row) {
+            $consumer_status_counts[$row->ga_id][$row->status_id] = $row->count;
+        }
+        // Response
+        if($request->ajax()){
+            // Render output
+            return view('reports.consumer.onboarding.consumer-status-count', [
+                'geo_areas' => $geo_areas,
+                'segments' => $segments,
+                'connection_types' => $connection_types,
+                'consumer_status_counts' => $consumer_status_counts,
+            ]);
+        }
+        // Render output
+        return view('reports.consumer.onboarding.list', [
+            'geo_areas' => $geo_areas,
+            'segments' => $segments,
+            'connection_types' => $connection_types,
+            'consumer_status_counts' => $consumer_status_counts,
+        ]);
+    }
+
+    /**
+     * Get District Count Overview
+     */
+    public function getDistrictsOverviewCount(Request $request)
+    {
+        $district_count = Consumer::where('ga_id', $request->ga_id)->selectRaw('district_id, status_id, count(status_id) as count')
+            ->when(($request->has('connect_type_id') AND !empty($request->connect_type_id)), function($q) use($request) {
+                $q->where('connection_type_id', $request->connect_type_id);
+            })
+            ->when(($request->has('onboard_segment_id') AND !empty($request->onboard_segment_id)), function($q) use($request) {
+                $q->where('segment_id', $request->onboard_segment_id);
+            })
+            ->groupBy('district_id', 'status_id')
+            ->get();
+        // Prepare data
+        $consumer_status_counts = [];
+        $consumer_status_sum = [];
+        foreach($district_count as $row) {
+            $consumer_status_counts[$row->district_id][$row->status_id] = $row->count;
+        }
+        // Check Connection Type Filter
+        switch($request->connect_type_id) {
+            case 1:
+                $connect_type = EnumsConnectionType::POSTPAID->name; break;
+            case 2:
+                $connect_type = EnumsConnectionType::PREPAID->name; break;
+            default:
+                $connect_type = '';
+        }
+        // Check Segment Filter
+        switch($request->onboard_segment_id) {
+            case 1:
+                $segment = SegmentType::DOMESTIC->name;break;
+            case 2:
+                $segment = SegmentType::COMMERCIAL->name;break;
+            case 3:
+                $segment = SegmentType::INDUSTRIAL->name;break;
+            default:
+                $segment = '';
+        }
+        $districts = District::where('ga_id', $request->ga_id)->get();
+        return view('reports.consumer.onboarding.ga-district-overview', [
+            'districts' => $districts,
+            'consumer_status_counts' => $consumer_status_counts,
+            'connect_type' => $connect_type,
+            'segment' => $segment,
+            'request_data' => $request->all(),
+        ]);
+    }
 }

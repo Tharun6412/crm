@@ -112,7 +112,7 @@ class InvoiceController extends Controller
             }
         }
         // Connected Invoices
-        $connected_inv_amt = $invoice->childInvoices->where('status_id', InvoiceStatus::NOT_PAID->value)->sum('payable_amount');
+        $connected_inv_amt = $invoice->childInvoices->where('status_id', InvoiceStatus::NOT_PAID->value)->sum('balance_amount');
         // Total Payable amount
         $total_payable_amount = round($invoice->balance_amount + $connected_inv_amt + $late_fee, 2);
         // Pending Invoices
@@ -125,7 +125,7 @@ class InvoiceController extends Controller
             })
             ->where('status_id', '!=', InvoiceStatus::CANCEL->value)
             ->sum('balance_amount');
-        $inv_amt_list = $invoice->childInvoices->pluck('payable_amount', 'type_id');
+        $inv_amt_list = $invoice->childInvoices->pluck('balance_amount', 'type_id');
 
         // Payment Types
         $payment_types = PaymentType::select('id', 'name', 'status')->get();

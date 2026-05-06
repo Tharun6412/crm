@@ -29,7 +29,9 @@
                         <td>{{ $export->created_at->format('d-m-Y H:i') }}</td>
                         <td>{{ $export->status == 0 ? "Pending" : "Completed" }}</td>
                         <td>
-                            <a href="{{ asset('storage/'.$export->file_name) }}" title="Download Export" class="btn btn-sm btn-info"><i class="bi bi-download"></i>&nbsp;Download</a>
+                            @if ($export->status == 1)
+                                <a href="{{ asset('storage/'.$export->file_name) }}" title="Download Export" class="btn btn-sm btn-info"><i class="bi bi-download"></i>&nbsp;Download</a>
+                            @endif
                             <a href="{{ url('user/exports/'.$export->id) }}" title="Delete Export" class="btn btn-sm btn-danger ajax-link-delete"><i class="bi bi-trash"></i>&nbsp;Delete</a>
                         </td>
                     </tr>

@@ -121,7 +121,7 @@
                         </td>
                         <td nowrap>{{ $complaint->closed_at?->format('d-m-Y H:i') }}</td>
                         <td class="text-center"><x-complaint.day-hour-display :complaint="$complaint"/></td>
-                        <td nowrap>{{ $complaint->category->priority?->name }}</td>
+                        <td nowrap>{{ $complaint->category?->priority?->name }}</td>
                         <td nowrap><x-complaint.status :status="$complaint?->status"/></td>
                         <td nowrap>
                             @if ($complaint->feedback)
