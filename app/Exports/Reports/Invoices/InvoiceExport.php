@@ -21,6 +21,7 @@ class InvoiceExport implements FromQuery, ShouldQueue, WithChunkReading, WithHea
      */
     protected $exportId;
     protected $request;
+    protected $i = 0;
     public function __construct($request, $exportId)
     {
         $this->exportId = $exportId;
@@ -29,6 +30,13 @@ class InvoiceExport implements FromQuery, ShouldQueue, WithChunkReading, WithHea
     public function query()
     {
         $invoices = BillInvoice::query()
+            ->with([
+                'consumer',
+                'consumer.ga',
+                'invoiceType',
+                'tax',
+                'status'
+            ])
             ->leftJoin('cns_consumers', 'cns_consumers.id', '=', 'bil_invoices.consumer_id')
             ->whereNot('bil_invoices.status_id', InvoiceStatus::CANCEL->value)
             ->when(!empty($this->request['invoice_type']), function ($q) {
@@ -58,7 +66,7 @@ class InvoiceExport implements FromQuery, ShouldQueue, WithChunkReading, WithHea
             ->when((!empty($this->request['date_from']) and !empty($this->request['date_to'])), function($q) {
                 $q->whereBetween('bil_invoices.invoice_date', [Carbon::createFromFormat('d-m-Y', $this->request['date_from'])->startOfDay()->toDateTimeString(), Carbon::createFromFormat('d-m-Y', $this->request['date_to'])->endOfDay()->toDateTimeString()]);
             })
-            ->select('bil_invoices.id','bil_invoices.consumer_id','bil_invoices.invoice_number','bil_invoices.invoice_date','bil_invoices.type_id','bil_invoices.due_date','bil_invoices.total_amount', 'bil_invoices.payable_amount', 'bil_invoices.balance_amount', 'bil_invoices.status_id', 'bil_invoices.created_at')
+            ->select('bil_invoices.id','bil_invoices.consumer_id','bil_invoices.invoice_number','bil_invoices.invoice_date','bil_invoices.type_id','bil_invoices.due_date','bil_invoices.base_amount','bil_invoices.tax_id','bil_invoices.tax_value','bil_invoices.tax_amount','bil_invoices.total_amount','bil_invoices.credit_amount', 'bil_invoices.payable_amount','bil_invoices.paid_amount', 'bil_invoices.balance_amount', 'bil_invoices.status_id', 'bil_invoices.created_at')
             ->orderBy('bil_invoices.created_at', 'desc');
         return $invoices;
     }
@@ -66,7 +74,7 @@ class InvoiceExport implements FromQuery, ShouldQueue, WithChunkReading, WithHea
     public function headings(): array
     {
         return [
-            'Id',
+            'ID',
             'Invoice Number',
             'Invoice Date',
             'CRN',
@@ -74,7 +82,14 @@ class InvoiceExport implements FromQuery, ShouldQueue, WithChunkReading, WithHea
             'GA',
             'Type',
             'Due Date',
+            'Base Amount',
+            'Tax Type',
+            'Tax Percentage',
+            'Tax Amount',
             'Invoice Amount',
+            'Credit Amount',
+            'Payable Amount',
+            'Paid Amount',
             'Balance Amount',
             'Status',
             'Added Date',
@@ -88,8 +103,9 @@ class InvoiceExport implements FromQuery, ShouldQueue, WithChunkReading, WithHea
 
     public function map($invoice) : array
     {
+        $this->i++;
         return [
-            $invoice->id ?? '',
+            $this->i,
             $invoice->invoice_number ?? '',
             dateFormat($invoice->invoice_date),
             $invoice->consumer->crn ?? '',
@@ -97,9 +113,16 @@ class InvoiceExport implements FromQuery, ShouldQueue, WithChunkReading, WithHea
             $invoice->consumer->ga->name ?? '',
             $invoice->invoiceType->name ?? '',
             $invoice->due_date ? dateFormat($invoice->due_date) : '',
-            $invoice->total_amount ?? '',       
-            $invoice->balance_amount ?? '',       
-            $invoice->status?->name,  
+            numberFormat($invoice->base_amount ?? 0, 2),
+            $invoice?->tax?->name ?? '',
+            $invoice->tax_value ?? 0,
+            numberFormat($invoice->tax_amount ?? 0, 2),
+            numberFormat($invoice->total_amount ?? 0, 2),
+            numberFormat($invoice->credit_amount ?? 0, 2),
+            numberFormat($invoice->payable_amount ?? 0, 2),
+            numberFormat($invoice->paid_amount ?? 0, 2),
+            numberFormat($invoice->balance_amount ?? 0, 2),          
+            $invoice?->status?->name,  
             $invoice->created_at ? dateFormat($invoice->created_at) : '',
         ];
     }
