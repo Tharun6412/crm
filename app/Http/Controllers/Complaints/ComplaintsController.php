@@ -245,7 +245,7 @@ class ComplaintsController extends Controller
         ]);
         // Sms Integration
         $sms_response = SmsService::dispatch($consumer, new ComplaintRegisterSmsNotification(['complaint_no' => $complaint_number]));
-        return response()->json(['success' => 'Complaint raised successfully'], 200);
+        return response()->json(['success' => 'Complaint raised successfully.<br/>Complaint Number : <strong>'.$complaint_number.'</strong><br/><a href="'. url('calls').'" target="_blank">Click</a> to see Calls List.'], 200);
     }
 
     /**
@@ -333,7 +333,7 @@ class ComplaintsController extends Controller
     public function assign(Request $request, $id)
     {
         $complaint = Complaint::find($id);
-        $departments = Department::all();
+        $departments = Department::orderBy('name', 'asc')->get();
         // Render output
         return view('complaints.assign', [
             'complaint' => $complaint,
@@ -346,7 +346,7 @@ class ComplaintsController extends Controller
      * @request $department_id
      */
     public function usersListByDepartment(Request $request) {
-        $users = User::where('department_id', $request->department_id)->get();
+        $users = User::where('department_id', $request->department_id)->orderBy('first_name', 'asc')->get();
         return response()->json(['users' => $users]);
     }
     /**

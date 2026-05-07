@@ -91,7 +91,7 @@ class ConsumerExport implements FromQuery, WithHeadings, WithMapping
      */
     public function headings():array
     {
-        return ['S.No', 'CRN', 'Connection Type', 'Name', 'Segment', 'Status', 'GA', 'Scheme', 'Status Date', 'House No.', 'Street', 'Colony', 'City', 'Ward'];
+        return ['S.No', 'CRN', 'Connection Type', 'Name', 'Segment', 'Status', 'GA', 'District', 'Charge Area', 'Scheme', 'Status Date', 'House No.', 'Street', 'Colony', 'City', 'Ward'];
     }
 
     /**
@@ -108,6 +108,8 @@ class ConsumerExport implements FromQuery, WithHeadings, WithMapping
             $consumer->segment?->name,
             $consumer->status?->name,
             $consumer->ga?->name,
+            $consumer->district?->name,
+            $consumer->ca?->name,
             $consumer->scheme?->scheme?->name,
             $consumer->created_at ? dateFormat($consumer->created_at) : '',
             $consumer->hno,
