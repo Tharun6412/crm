@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Jobs\AfterExportJob;
 use App\Models\Admin\UserExport;
 use App\Models\Invoice\BillInvoice;
+use App\Services\UserExportService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -173,17 +174,17 @@ class InvoicesReportController extends Controller
     public function invoicesReportExport(Request $request)
     {
         $filename = 'invoices_' . time() . '.csv';
-        // Add to Export Table
-        $export_id = UserExport::create([
-            'user_id' => Auth::id(),
-            'file_name' => $filename,
-            'status' => 0, //0=pending,1=completed
-        ]);
-        // Queue the export and attach AfterExportJob to run AFTER storage
-        Excel::queue(new InvoiceExport($request->all(), $export_id->id), $filename, 'public')
-            ->chain([new AfterExportJob($export_id->id)]);
+
+        // Add export job with export service
+        $export_id = UserExportService::create($filename);
+        // Check export limit
+        if($export_id) {
+            // Queue the export and attach AfterExportJob to run AFTER storage
+            Excel::queue(new InvoiceExport($request->all(), $export_id->id), $filename, 'public')
+                ->chain([new AfterExportJob($export_id->id)]);
+        }
         // response in modal
-        return view('admin.exports.create');
+        return view('admin.exports.create', ['export_id' => $export_id]);
     }
 
     /**

@@ -12,13 +12,16 @@
         'cursor'  => null, // reset cursor on sort change
     ]);
 @endphp
-<div>
-    <a href="{{ url('reports/invoiceReport/invoicesReportExport') }}?{{ http_build_query(request()->all()) }}" class="ajax-link">Export</a>
-</div>
 <div class="d-flex justify-content-between mb-1">
-    <!-- Record Count -->
     <div class="fs-5 fw-semibold">({{ numberFormat($tRecords ?? 0) }})&nbsp;Records found</div>
-    <div>{{ $invoices->links('utils.cursor', ['modDiv' => 'invoices-list']) }}</div>
+    <div class="d-flex justify-content-end">
+        <a href="{{ url('reports/invoiceReport/invoicesReportExport') }}?{{ http_build_query(request()->all()) }}" class="btn btn-outline-primary ajax-link me-2">
+            <i class="bi bi-filetype-csv"></i>&nbsp;Export
+        </a>
+        <div>
+            {{ $invoices->links('utils.cursor', ['modDiv' => 'invoices-list']) }}
+        </div>
+    </div>
 </div>
 <div class="table-responsive">
     <table class="table table-bordered table-hover table-striped bg-white page-sort text-middle mb-0">

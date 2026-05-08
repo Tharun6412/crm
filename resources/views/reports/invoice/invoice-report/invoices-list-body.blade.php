@@ -12,14 +12,13 @@
         'cursor'  => null, // reset cursor on sort change
     ]);
 @endphp
-
 <div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-1">
     <div class="d-flex flex-wrap align-items-center gap-1">
         <div class="input-group w-auto">
             <span class="input-group-text">Search</span>
             <input type="text" name="key" id="key" class="form-control" value="{{ request()->key }}" placeholder="Invoice Number, CRN">
         </div>
-        <!-- Range Dropdown -->
+        {{-- Range Dropdown --}}
         @if (request()->has('range'))
             <select name="range" id="range" class="form-select w-auto">
                 <option value="">All Days Range</option>
@@ -46,10 +45,9 @@
         <span class="fw-semibold">({{ numberFormat($tRecords ?? 0) }})</span> Records found
     </div>
     <div>
-        {{ $invoices->links('utils.cursor', ['modDiv' => 'invoices-report-list']) }}
-    </div>
-    <div>
-        <a href="{{ url('reports/invoiceReport/invoicesReportExport') }}?{{ http_build_query(request()->all()) }}" class="link-modal">Export</a>
+        <a href="{{ url('reports/invoiceReport/invoicesReportExport') }}?{{ http_build_query(request()->all()) }}" class="btn btn-outline-primary link-modal">
+            <i class="bi bi-filetype-csv"></i>&nbsp;Export
+        </a>
     </div>
 </div>
 

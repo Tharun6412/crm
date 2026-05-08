@@ -8,12 +8,6 @@
         <div class="leftbar-user"></div>
         {{-- Side navigation First level --}}
         <ul class="side-nav">
-            {{-- <li class="side-nav-item menuitem-active">
-                <a href="{{ url('/') }}" class="side-nav-link">
-                    <i class="bi bi-house-door"></i>
-                    <span>Dashboard</span>
-                </a>
-            </li> --}}
             {{-- @dd($modules) --}}
             @isset($modules)
                 @foreach ($modules as $module)
@@ -39,7 +33,8 @@
                     </li>
                 @endforeach
             @endisset ($modules)
-            {{-- @if (isAdmin() OR isSuperAdmin())
+            {{-- 
+            @if (isAdmin() OR isSuperAdmin())
                 <li class="side-nav-item">
                     <a href="{{ url('admin/modules') }}" class="side-nav-link">
                         <i class="bi bi-gear"></i>
@@ -52,7 +47,8 @@
                     <i class="bi bi-question-circle"></i>
                     <span>Help</span>
                 </a>
-            </li> --}}
+            </li>
+             --}}
         </ul>
         {{-- End side navigation --}}
         <div class="clearfix"></div>

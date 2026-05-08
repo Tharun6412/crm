@@ -12,7 +12,7 @@
 @if ($exports->count() > 0)
     <div class="table-responsive" style="min-height: 500px;">
         <table class="table table-bordered table-striped bg-white page-sort">
-            <thead class="table-success">
+            <thead class="table-secondary">
                 <tr class="bg-light">
                     <th width="1%" nowrap>S No</th>
                     <th nowrap>File Name</th>
@@ -30,7 +30,7 @@
                         <td>{{ $export->status == 0 ? "Pending" : "Completed" }}</td>
                         <td>
                             @if ($export->status == 1)
-                                <a href="{{ asset('storage/'.$export->file_name) }}" title="Download Export" class="btn btn-sm btn-info"><i class="bi bi-download"></i>&nbsp;Download</a>
+                                <a href="{{ asset('storage/'.$export->file_name) }}" title="Download Export" class="btn btn-sm btn-primary"><i class="bi bi-download"></i>&nbsp;Download</a>
                             @endif
                             <a href="{{ url('user/exports/'.$export->id) }}" title="Delete Export" class="btn btn-sm btn-danger ajax-link-delete"><i class="bi bi-trash"></i>&nbsp;Delete</a>
                         </td>
