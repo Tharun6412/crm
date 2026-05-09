@@ -53,6 +53,7 @@ Route::middleware(['auth', ModuleAccess::class])->group(function() {
     // Consumers list
     Route::get('consumerExport/{status:slug?}', [App\Http\Controllers\Consumer\ConsumerController::class, 'consumerExport']);
     Route::get('consumerDocs/{id}', [App\Http\Controllers\Consumer\ConsumerController::class, 'consumerDocs'])->whereNumber('id');
+    Route::get('ledgerReport/{id}', [App\Http\Controllers\Consumer\ConsumerController::class, 'ledgerReport'])->whereNumber('id');
     Route::get('/{id}', [App\Http\Controllers\Consumer\ConsumerController::class, 'show'])->whereNumber('id');
     Route::get('/{status:slug?}', [App\Http\Controllers\Consumer\ConsumerController::class, 'index']);
     Route::get('/{id}/edit', [App\Http\Controllers\Consumer\ConsumerController::class, 'edit']);

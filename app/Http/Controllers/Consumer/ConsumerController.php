@@ -9,10 +9,13 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\Master\DocumentCentre\DocumentUpload;
 use App\Models\Consumer\Consumer;
 use App\Models\Consumer\ConsumerDocument;
+use App\Models\Invoice\BillInvoice;
+use App\Models\Invoice\InvoicePayment;
 use App\Models\Master\MasterConsumerStatus;
 use App\Models\Master\Title;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ConsumerController extends Controller
 {
@@ -137,4 +140,38 @@ class ConsumerController extends Controller
     //         'message' => 'Export started. You will be notified once completed.'
     //     ]);
     // }
+
+    /**
+     * Ledger Report from Invoices and Payments
+     * @param $consumer_id
+     */
+    public function ledgerReport(Request $request, $id)
+    {
+        // Get Invoices
+        $invoices = BillInvoice::selectRaw("
+            'Debit' as type,
+            id as inv_id,
+            invoice_date,
+            invoice_number,
+            payable_amount,
+            type_id,
+            created_at
+        ")
+        ->where('consumer_id', $id);
+        // Get Payments
+        $payments = InvoicePayment::selectRaw("
+                'Credit' as type,
+                bil_invoices.id as inv_id,
+                pay_invoice_payments.payment_date as invoice_date,
+                bil_invoices.invoice_number as invoice_number,
+                pay_invoice_payments.amount as payable_amount,
+                bil_invoices.type_id as type_id,
+                pay_invoice_payments.created_at
+            ")
+            ->leftJoin('bil_invoices', 'bil_invoices.id', '=', 'pay_invoice_payments.invoice_id')
+            ->where('bil_invoices.consumer_id', $id);
+        // Join Queries using Union All 
+        $ledger_report = $invoices->unionAll($payments)->orderBy('created_at', 'asc')->get();
+        return view('consumers.consumers.show-ledger-report', ['ledger_report' => $ledger_report]);
+    }
 }

@@ -62,8 +62,11 @@
                             <a href="#" class="list-group-item list-group-item-action" id="nav-doc-tab" data-bs-toggle="tab" data-bs-target="#nav-doc" data-url="{{ url('consumers/consumerDocs/' . $consumer->id) }}" role="tab" aria-controls="nav-doc" aria-selected="false">
                                 <i class="bi bi-files"></i>&nbsp;Documents
                             </a>
-                            <a href="#" class="list-group-item list-group-item-action" id="nav-history-tab" data-bs-toggle="tab" data-bs-target="#nav-history" data-url="{{ url('consumers/kyc/' . $consumer->id) }}" role="tab" aria-controls="nav-doc" aria-selected="false">
+                            <a href="#" class="list-group-item list-group-item-action" id="nav-history-tab" data-bs-toggle="tab" data-bs-target="#nav-history" data-url="{{ url('consumers/kyc/' . $consumer->id) }}" role="tab" aria-controls="nav-History" aria-selected="false">
                                 <i class="bi bi-files"></i>&nbsp;History
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action" id="nav-ledger-report-tab" data-bs-toggle="tab" data-bs-target="#nav-ledger-report" data-url="{{ url('consumers/ledgerReport/' . $consumer->id) }}" role="tab" aria-controls="nav-ledger-report" aria-selected="false">
+                                <i class="bi bi-files"></i>&nbsp;Ledger Report
                             </a>
                         </div>
                     </div>
@@ -189,6 +192,9 @@
                             {{-- @include('consumers.consumers.show-recharge') --}}
                         </div>
                         <div class="tab-pane fade" id="nav-history" role="tabpanel" aria-labelledby="nav-history-tab" tabindex="0">
+                            {{-- @include('consumers.consumers.show-recharge') --}}
+                        </div>
+                        <div class="tab-pane fade" id="nav-ledger-report" role="tabpanel" aria-labelledby="nav-ledger-report-tab" tabindex="0">
                             {{-- @include('consumers.consumers.show-recharge') --}}
                         </div>
                     </div>
