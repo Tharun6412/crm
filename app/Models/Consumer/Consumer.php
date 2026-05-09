@@ -2,6 +2,8 @@
 
 namespace App\Models\Consumer;
 
+use App\Enums\InvoiceStatus;
+use App\Enums\InvoiceType;
 use App\Models\Admin\User;
 use App\Models\Complaint\ComplaintComment;
 use App\Models\Complaint\ComplaintFeedback;
@@ -375,5 +377,13 @@ class Consumer extends Model
     public function cofDisplay():BelongsTo
     {
         return $this->belongsTo(Title::class, 'cof');
+    }
+
+    /**
+     * Relation with Invoice to fetch the latest invoice
+     */
+    public function latestInvoice(): HasMany
+    {
+        return $this->hasMany(BillInvoice::class, 'consumer_id')->where('type_id', InvoiceType::GAS_BILL->value)->whereNot('status_id', InvoiceStatus::CANCEL->value);
     }
 }

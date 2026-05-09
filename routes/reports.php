@@ -22,6 +22,7 @@ Route::middleware(['auth', ModuleAccess::class])->group(function() {
     // SD Reports
     Route::get('consumer/sdReport', [App\Http\Controllers\Reports\SDReportController::class, 'index']);
     Route::get('consumer/sdDetails', [App\Http\Controllers\Reports\SDReportController::class, 'sdDetails']);
+    Route::get('consumer/sdDetails-counts', [App\Http\Controllers\Reports\SDReportController::class, 'sdDetailsCount']);
     Route::get('consumer/sdReportExport', [App\Http\Controllers\Reports\SDReportController::class, 'sdReportExport']);
     Route::get('ageingReport', [App\Http\Controllers\Reports\AgeingReportController::class, 'index']);
     // Route::get('ageingReport/invoicesList', [App\Http\Controllers\Reports\AgeingReportController::class, 'invoicesList']);
@@ -53,4 +54,10 @@ Route::middleware(['auth', ModuleAccess::class])->group(function() {
     // GA Wise Recharge Report
     Route::get('consumer/recharge' , [App\Http\Controllers\Reports\Consumer\RechargeReportController::class, 'index']);
     Route::get('consumer/recharge/List' , [App\Http\Controllers\Reports\Consumer\RechargeReportController::class, 'rechargesList']);
+
+    // Invoice report
+    Route::get('unbilled', [App\Http\Controllers\Reports\UnbilledReport::class, 'index']);
+    // Route::get('invoices/all-counts', [App\Http\Controllers\Reports\InvoicesReportController::class, 'reportCounts']);
+    Route::get('unbilled/listExport', [App\Http\Controllers\Reports\UnbilledReport::class, 'listExport']);
+    Route::get('unbilled/list', [App\Http\Controllers\Reports\UnbilledReport::class, 'list']);
 });

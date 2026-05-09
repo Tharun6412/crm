@@ -25,7 +25,7 @@
     </div> --}}
 </div>
 @php
-    $sort_by = (request()->has('sortBy')) ? request()->get('sortBy') : 'created_at';
+    $sort_by = (request()->has('sortBy')) ? request()->get('sortBy') : 'pay_recharges.recharge_date';
     $sort_order = (request()->has('sortOr')) ? request()->get('sortOr') : 'desc';
     $sort_order_inverse = ($sort_order == 'asc') ? 'desc' : 'asc';
     $sort_icon = ($sort_order == 'asc') ? 'bi-caret-down-fill' : 'bi-caret-up-fill';
@@ -76,7 +76,7 @@
             @if ($consumers->count() > 0)
                 @foreach ($consumers as $consumer)
                     <tr>
-                        <td>{{ $loop->iteration }}</td>
+                        <td>{{ $i++ }}</td>
                         <td>
                             <i class="bi bi-{{ ($consumer->connection_type_id == 1) ? 'speedometer2' : 'wifi'}}"></i>
                             <x-auth.link href="{{ url('consumers/' . $consumer->id) }}">

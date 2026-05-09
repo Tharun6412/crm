@@ -96,13 +96,16 @@ class SDReportController extends Controller
             'consumer.segment:id,name',
             'consumer.scheme.scheme:id,name',
             'consumer.connectType:id,name',
-            'status:id,name'
+            'consumer.status:id,name'
         ])
         ->where('status_id', $status)
         ->when($request->filled('date_from') && $request->filled('date_to'), function ($q) use ($request) {
             $q->whereBetween('created_at', [Carbon::createFromFormat('d-m-Y', $request->date_from)->startOfDay(), Carbon::createFromFormat('d-m-Y', $request->date_to)->endOfDay()]);
         })
         ->whereHas('consumer', function ($q) use ($request) {
+            $q->whereHas('scheme', function ($q) use ($request) {
+                $q->whereNotNull('scheme_id');
+            });
             // GA restriction
             if (!isAdmin() && !isSuperAdmin()) {
                 $q->whereIn('ga_id', session('user')['gas']);
@@ -134,11 +137,65 @@ class SDReportController extends Controller
                 });
             }
         })->orderBy($sortBy, $sortOr)->paginate($records)->withQueryString();
+        $totals = [];
         // response
         if($request->ajax()) {
-            return view('reports.consumer.sd-details.list-body', ['sd_amounts' => $sd_amounts]);
+            return view('reports.consumer.sd-details.list-body', ['sd_amounts' => $sd_amounts, 'totals' => $totals]);
         }
-        return view('reports.consumer.sd-details.list', ['sd_amounts' => $sd_amounts]);
+        return view('reports.consumer.sd-details.list', ['sd_amounts' => $sd_amounts, 'totals' => $totals]);
+    }
+
+    public function sdDetailsCount(Request $request) 
+    {
+        $status = $request->filled('status') ? $request->status : 1;
+        $sd_amounts = ConsumerStatus::query()->with([
+            'consumer.scheme:id,consumer_id,scheme_id,total_deposit,paid_deposit,balance',
+        ])
+        ->where('status_id', $status)
+        ->when($request->filled('date_from') && $request->filled('date_to'), function ($q) use ($request) {
+            $q->whereBetween('created_at', [Carbon::createFromFormat('d-m-Y', $request->date_from)->startOfDay(), Carbon::createFromFormat('d-m-Y', $request->date_to)->endOfDay()]);
+        })
+        ->whereHas('consumer', function ($q) use ($request) {
+            $q->whereHas('scheme', function ($q) use ($request) {
+                $q->whereNotNull('scheme_id');
+            });
+            // GA restriction
+            if (!isAdmin() && !isSuperAdmin()) {
+                $q->whereIn('ga_id', session('user')['gas']);
+            }
+            if ($request->filled('geo_area')) {
+                $q->whereIn('ga_id', $request->geo_area);
+            }
+            if ($request->filled('connection_type_id')) {
+                $q->whereIn('connection_type_id', $request->connection_type_id);
+            }
+            if ($request->filled('segments')) {
+                $q->whereIn('segment_id', $request->segments);
+            }
+            // Scheme filter
+            if ($request->filled('scheme')) {
+                $q->whereHas('scheme', function ($query) use ($request) {
+                    $query->whereIn('scheme_id', $request->scheme);
+                });
+            }
+            // Amount filter (balance inside scheme)
+            if ($request->filled('amount_range')) {
+                $q->whereHas('scheme', function ($query) use ($request) {
+                    if ($request->amount_range == "5000+") {
+                        $query->where('balance', '>', 5000);
+                    } else {
+                        [$min, $max] = explode('-', $request->amount_range);
+                        $query->whereBetween('balance', [$min, $max]);
+                    }
+                });
+            }
+        })->get();
+        $totals = [
+            'total_deposit' => $sd_amounts->sum(fn($item) => optional($item->consumer?->scheme)->total_deposit ?? 0),
+            'paid_deposit'  => $sd_amounts->sum(fn($item) => optional($item->consumer?->scheme)->paid_deposit ?? 0),
+            'balance'       => $sd_amounts->sum(fn($item) => optional($item->consumer?->scheme)->balance ?? 0),
+        ];
+        return view('reports.consumer.sd-details.list-counts', compact('totals'));
     }
 
     /**

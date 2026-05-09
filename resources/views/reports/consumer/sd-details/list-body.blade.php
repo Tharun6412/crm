@@ -113,10 +113,10 @@
                         <td><x-consumer.status :status="$amount->consumer->status" /></td>
                         <td>{{ $amount->consumer->segment->name }}</td>
                         <td>{{ $amount->consumer->connectType->name }}</td>
-                        <td>{{ $amount->consumer->scheme->scheme->name }}</td>
-                        <td class="text-end">{{ $amount->consumer->scheme->total_deposit }}</td>
-                        <td class="text-end">{{ $amount->consumer->scheme->paid_deposit }}</td>
-                        <td class="text-end">{{ $amount->consumer->scheme->balance }}</td>
+                        <td>{{ $amount->consumer?->scheme?->scheme?->name ?? '-' }}</td>
+                        <td class="text-end">{{ $amount->consumer?->scheme?->total_deposit ?? 0 }}</td>
+                        <td class="text-end">{{ $amount->consumer?->scheme?->paid_deposit ?? 0 }}</td>
+                        <td class="text-end">{{ $amount->consumer?->scheme?->balance ?? 0 }}</td>
                         <td>{{ $amount?->created_at->format('d-m-Y') }}</td>
                     </tr>
                 @endforeach

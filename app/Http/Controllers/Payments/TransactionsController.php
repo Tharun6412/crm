@@ -508,7 +508,7 @@ class TransactionsController extends Controller
         $transaction = PaymentTransaction::find($id);
         $recharge_data = [
             'recharge_request' => [
-                'ca_num' => $transaction->consumer_id,
+                'ca_num' => $transaction->consumer->crn,
                 'amount' => $transaction->amount,
                 'ref_num' => $transaction->pg_ref_id,
                 'utr_num' => $transaction->bank_ref,
