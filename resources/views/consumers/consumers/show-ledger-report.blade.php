@@ -4,12 +4,8 @@
     <div class="bg-primary-subtle p-2 fs-5 fw-semibold">
         <i class="bi bi-file-ruled"></i>&nbsp;Ledger Report
     </div>
-    <div class="my-2 mx-3 d-flex justify-content-between align-items-center">
-        <div></div>
-        <div>
-            <!-- Export -->
-            <button type="button" id="exportBtn" class="btn btn-outline-info text-end"><i class="bi bi-file-earmark-excel"></i>&nbsp;Export</button>
-        </div>
+    <div class="text-end p-2 pb-0">
+        <button type="button" id="exportBtn" class="btn btn-outline-info brn-sm mb-0"><i class="bi bi-file-earmark-excel"></i>&nbsp;Export</button>
     </div>
     <div class="p-2">
         @if ($ledger_report->count() > 0)
@@ -20,8 +16,8 @@
                             <th width="1%" nowrap>S.No</th>
                             <th>Date</th>
                             <th>Description</th>
-                            <th class="text-end">Credit(Cr)</th>
                             <th class="text-end">Debit(Dr)</th>
+                            <th class="text-end">Credit(Cr)</th>
                             <th class="text-end">Balance(&#8377;)</th>
                         </tr>
                     </thead>
@@ -41,14 +37,14 @@
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $ledger->created_at?->format('d-m-Y H:i') }}</td>
                                 @if ($ledger->type == "Debit")
-                                    <td>{{ $ledger->invoiceType?->name }}&nbsp;:&nbsp;Invoice Generated with Invoice No.&nbsp;<a href="{{ url('bill/invoice/'.$ledger->inv_id) }}" target="_blank"><span class="text-danger">{{ $ledger->invoice_number }}</span></a></td>
+                                    <td>{{ $ledger->invoiceType?->name }}&nbsp;<a href="{{ url('bill/invoice/'.$ledger->inv_id) }}" target="_blank"><span class="text-danger">{{ $ledger->invoice_number }}</span></a></td>
+                                    <td class="text-end"><span class="text-danger">{{ $ledger->payable_amount }}</span></td>
                                     <td></td>
-                                    <td class="text-end"><span class="text-danger">+{{ $ledger->payable_amount }}</span></td>
                                     <td class="text-end">{{ numberFormat($balance, 2) }}</td>
                                 @else
-                                    <td>Bill Payment: Bill Paid Against With Invoice No.&nbsp;<a href="{{ url('bill/invoice/'.$ledger->inv_id) }}" target="_blank"><span class="text-success">{{ $ledger->invoice_number }}</span></a></td>
-                                    <td class="text-end"><span class="text-success">-{{ $ledger->payable_amount }}</span></td>
+                                    <td>Payment against invoice&nbsp;<a href="{{ url('bill/invoice/' . $ledger->inv_id) }}" target="_blank"><span class="text-success">{{ $ledger->invoice_number }}</span></a></td>
                                     <td></td>
+                                    <td class="text-end"><span class="text-success">-{{ $ledger->payable_amount }}</span></td>
                                     <td class="text-end">{{ numberFormat($balance, 2) }}</td>
                                 @endif
                             </tr>

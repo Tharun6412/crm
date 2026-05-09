@@ -53,6 +53,9 @@
                             <a href="#" class="list-group-item list-group-item-action" id="nav-crd-tab" data-bs-toggle="tab" data-bs-target="#nav-crd" data-url="{{ url('bill/creditNote/showCreditByConsumerId/'.$consumer->id) }}" role="tab" aria-controls="nav-crd" aria-selected="false">
                                 <i class="bi bi-file-diff"></i>&nbsp;Credit / Debit Notes
                             </a>
+                            <a href="#" class="list-group-item list-group-item-action" id="nav-ledger-report-tab" data-bs-toggle="tab" data-bs-target="#nav-ledger-report" data-url="{{ url('consumers/ledgerReport/' . $consumer->id) }}" role="tab" aria-controls="nav-ledger-report" aria-selected="false">
+                                <i class="bi bi-file-ruled"></i>&nbsp;Ledger&nbsp;<span class="badge rounded-pill text-bg-danger">new</span>
+                            </a>
                             <a href="#" class="list-group-item list-group-item-action" id="nav-ledger-tab" data-bs-toggle="tab" data-bs-target="#nav-ledger" data-url="{{ url('bill/ledger/'.$consumer->id) }}" role="tab" aria-controls="nav-ledger" aria-selected="true">
                                 <i class="bi bi-file-ruled"></i>&nbsp;Ledger
                             </a>
@@ -63,10 +66,7 @@
                                 <i class="bi bi-files"></i>&nbsp;Documents
                             </a>
                             <a href="#" class="list-group-item list-group-item-action" id="nav-history-tab" data-bs-toggle="tab" data-bs-target="#nav-history" data-url="{{ url('consumers/kyc/' . $consumer->id) }}" role="tab" aria-controls="nav-History" aria-selected="false">
-                                <i class="bi bi-files"></i>&nbsp;History
-                            </a>
-                            <a href="#" class="list-group-item list-group-item-action" id="nav-ledger-report-tab" data-bs-toggle="tab" data-bs-target="#nav-ledger-report" data-url="{{ url('consumers/ledgerReport/' . $consumer->id) }}" role="tab" aria-controls="nav-ledger-report" aria-selected="false">
-                                <i class="bi bi-files"></i>&nbsp;Ledger Report
+                                <i class="bi bi-clock-history"></i>&nbsp;History
                             </a>
                         </div>
                     </div>
@@ -188,15 +188,9 @@
                         <div class="tab-pane fade" id="nav-mdata" role="tabpanel" aria-labelledby="nav-mdata-tab" tabindex="0">
                             @include('consumers.consumers.show-maintanance')
                         </div>
-                        <div class="tab-pane fade" id="nav-recharge" role="tabpanel" aria-labelledby="nav-recharge-tab" tabindex="0">
-                            {{-- @include('consumers.consumers.show-recharge') --}}
-                        </div>
-                        <div class="tab-pane fade" id="nav-history" role="tabpanel" aria-labelledby="nav-history-tab" tabindex="0">
-                            {{-- @include('consumers.consumers.show-recharge') --}}
-                        </div>
-                        <div class="tab-pane fade" id="nav-ledger-report" role="tabpanel" aria-labelledby="nav-ledger-report-tab" tabindex="0">
-                            {{-- @include('consumers.consumers.show-recharge') --}}
-                        </div>
+                        <div class="tab-pane fade" id="nav-recharge" role="tabpanel" aria-labelledby="nav-recharge-tab" tabindex="0"></div>
+                        <div class="tab-pane fade" id="nav-history" role="tabpanel" aria-labelledby="nav-history-tab" tabindex="0"></div>
+                        <div class="tab-pane fade" id="nav-ledger-report" role="tabpanel" aria-labelledby="nav-ledger-report-tab" tabindex="0"></div>
                     </div>
                 </div>
             </div>

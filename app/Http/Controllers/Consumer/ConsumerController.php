@@ -91,9 +91,8 @@ class ConsumerController extends Controller
     }
 
     /**
-     * Show
-     * 
-     * Consumer details
+     * Show Consumer details
+     * @param int $id
      */
     public function show($id)
     {
@@ -105,7 +104,7 @@ class ConsumerController extends Controller
         $documents_list = ConsumerDocument::where('consumer_id', $id)->get();
         // Abort if consumer not found
         if (! $consumer) {
-            abort(404, 'Consumer not found');
+            abort(403, 'Consumer data not found');
         }
 
         // Render output
@@ -118,6 +117,7 @@ class ConsumerController extends Controller
 
     /**
      * Consumer Documents
+     * @param int $id
      */
     public function consumerDocs(Request $request, $id)
     {
