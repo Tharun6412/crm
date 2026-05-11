@@ -38,7 +38,7 @@
             </div>
         @else
             <div class="alert alert-warning">
-                No complaints found
+                No records found
             </div>
         @endif
     </div>
