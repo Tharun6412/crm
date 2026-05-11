@@ -1,7 +1,7 @@
 @props([
     'geyser' => [],
 ])
-<div class="row g-2 pb-2 my-2 p-2 bg-warning-subtle">
+<div class="row g-2 pb-2 my-2 p-2 bg-body-tertiary rounded">
     <div class="col-sm-2 text-end fw-semibold">Geyser Code : </div>
     <div class="col-sm-4">{{ $geyser->code ?? '' }}</div>
     <div class="col-sm-2 text-end fw-semibold">Geyser Status : </div>

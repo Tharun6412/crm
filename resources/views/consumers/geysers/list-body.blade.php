@@ -2,8 +2,8 @@
     use \App\Enums\GeyserStatus;
 @endphp
 {{-- Geysers List --}}
-<div class="d-flex justify-content-between">
-    <div class="row gx-1 mb-1">
+<div class="d-flex justify-content-between mb-1">
+    <div class="row gx-1">
         <div class="col-auto">
             <input type="text" name="key" class="form-control" placeholder="Search..." value="{{ request()->key }}"/>
         </div>

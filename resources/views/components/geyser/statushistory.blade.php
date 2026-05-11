@@ -3,10 +3,10 @@
     'geyser' => [],
 ])
 {{-- Status history --}}
-<div class="table-responsive p-3">
+<div class="table-responsive">
             <h4>Geyser Status History:</h4>
-            <table class="table table-bordered table-info mb-0">
-                <thead class="table-info">
+            <table class="table table-bordered table-primary mb-0">
+                <thead class="table-primary">
                     <tr>
                         <th width="1%" nowrap>S.No</th>
                         <th>Status</th>

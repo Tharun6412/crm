@@ -36,6 +36,9 @@
                             <a href="#" class="list-group-item list-group-item-action list-group-item-light" id="nav-mdata-tab" data-bs-toggle="tab" data-bs-target="#nav-mdata" role="tab" aria-controls="nav-mdata" aria-selected="false">
                                 <i class="bi bi-speedometer2"></i>&nbsp;Meter Data
                             </a>
+                            <a href="#" class="list-group-item list-group-item-action" id="nav-geysers-tab" data-bs-toggle="tab" data-bs-target="#nav-geysers" data-url="{{ url('consumers/consumergeysers/' . $consumer->id) }}" role="tab" aria-controls="nav-geysers" aria-selected="false">
+                                <i class="bi bi-moisture"></i>&nbsp;Geysers
+                            </a>
                             @if ($consumer->connection_type_id == 2)
                                 <a href="#" class="list-group-item list-group-item-action" id="nav-recharge-tab" data-bs-toggle="tab" data-bs-target="#nav-recharge" data-url="{{ url('consumers/prepaid/consumerRechargeList/' . $consumer->id) }}" role="tab" aria-controls="nav-recharge" aria-selected="true">
                                     <i class="bi bi-wallet2"></i>&nbsp;Recharge History
@@ -67,9 +70,6 @@
                             </a>
                             <a href="#" class="list-group-item list-group-item-action" id="nav-history-tab" data-bs-toggle="tab" data-bs-target="#nav-history" data-url="{{ url('consumers/kyc/' . $consumer->id) }}" role="tab" aria-controls="nav-History" aria-selected="false">
                                 <i class="bi bi-clock-history"></i>&nbsp;History
-                            </a>
-                            <a href="#" class="list-group-item list-group-item-action" id="nav-geysers-tab" data-bs-toggle="tab" data-bs-target="#nav-geysers" data-url="{{ url('consumers/consumergeysers/' . $consumer->id) }}" role="tab" aria-controls="nav-geysers" aria-selected="false">
-                                <i class="bi bi-moisture"></i>&nbsp;Geysers
                             </a>
                         </div>
                     </div>
