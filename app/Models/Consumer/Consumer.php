@@ -304,6 +304,14 @@ class Consumer extends Model
     {
         return $this->hasMany(ConsumerSdPayment::class, 'consumer_id', 'id')->orderBy('created_at', 'desc');
     }
+    /**
+     * Relation with geyser
+     */
+    public function geyser() : HasMany
+    {
+        return $this->hasMany(ConsumerGeyser::class,'consumer_id', 'id');
+    }
+
 
     /**
      * #PolyMorphic relation

@@ -68,6 +68,9 @@
                             <a href="#" class="list-group-item list-group-item-action" id="nav-history-tab" data-bs-toggle="tab" data-bs-target="#nav-history" data-url="{{ url('consumers/kyc/' . $consumer->id) }}" role="tab" aria-controls="nav-History" aria-selected="false">
                                 <i class="bi bi-clock-history"></i>&nbsp;History
                             </a>
+                            <a href="#" class="list-group-item list-group-item-action" id="nav-geysers-tab" data-bs-toggle="tab" data-bs-target="#nav-geysers" data-url="{{ url('consumers/consumergeysers/' . $consumer->id) }}" role="tab" aria-controls="nav-geysers" aria-selected="false">
+                                <i class="bi bi-moisture"></i>&nbsp;Geysers
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -191,6 +194,10 @@
                         <div class="tab-pane fade" id="nav-recharge" role="tabpanel" aria-labelledby="nav-recharge-tab" tabindex="0"></div>
                         <div class="tab-pane fade" id="nav-history" role="tabpanel" aria-labelledby="nav-history-tab" tabindex="0"></div>
                         <div class="tab-pane fade" id="nav-ledger-report" role="tabpanel" aria-labelledby="nav-ledger-report-tab" tabindex="0"></div>
+                        <div class="tab-pane fade" id="nav-geysers" role="tabpanel" aria-labelledby="nav-geysers-tab" tabindex="0">
+                            {{-- @include('consumers.consumers.show-geysers') --}}
+                        </div>
+                        
                     </div>
                 </div>
             </div>

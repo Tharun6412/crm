@@ -10,4 +10,5 @@ enum InvoiceType: int
     case RENTAL_CHARGES = 4;
     case SD_EMI = 5;
     case CUSTOM_INVOICE = 6;
+    case GEYSER_CONNECTION = 7;
 }

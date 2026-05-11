@@ -4,9 +4,10 @@ namespace App\Models\Consumer;
 
 use App\Models\Admin\User;
 use App\Models\Invoice\BillInvoice;
-use App\Models\Master\ConsumerGeyserStatus;
+use App\Models\Master\GeyserStatus;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class ConsumerGeyser extends Model
 {
@@ -27,8 +28,10 @@ class ConsumerGeyser extends Model
         'code',
         'amount',
         'invoice_id',
+        //'segment_id',
         'status_id',
         'created_by',
+        //'notes,
     ];
 
     /**
@@ -52,7 +55,7 @@ class ConsumerGeyser extends Model
      */
     public function status():BelongsTo
     {
-        return $this->belongsTo(ConsumerGeyserStatus::class, 'status_id')->withDefault();
+        return $this->belongsTo(GeyserStatus::class, 'status_id')->withDefault();
     }
 
     /**
@@ -61,6 +64,13 @@ class ConsumerGeyser extends Model
     public function createdBy():BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by')->withDefault();
+    }
+    /**
+     * relation with geysersStatus
+     */
+    public function statushistory():HasMany
+    {
+        return $this->hasMany(ConsumerGeyserStatus::class,'geyser_id');
     }
 
 }

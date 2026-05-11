@@ -17,6 +17,21 @@ Route::middleware(['auth', ModuleAccess::class])->group(function() {
     Route::resource('tdisconnect', App\Http\Controllers\Consumer\TemporaryDisconnectController::class);
     Route::resource('pdisconnect', App\Http\Controllers\Consumer\PermanentDisconnectController::class);
     Route::resource('prepaid', App\Http\Controllers\Consumer\PrepaidConsumerController::class);
+
+    //geysers
+    Route::get('geysers/createSearch', [App\Http\Controllers\Consumer\GeyserController::class, 'createSearch']);
+    Route::get('geysers/search',[App\Http\Controllers\Consumer\GeyserController::class,'search']);
+    Route::get('geysers', [App\Http\Controllers\Consumer\GeyserController::class, 'index']);
+    Route::get('geysers/create/{id}', [App\Http\Controllers\Consumer\GeyserController::class, 'create']);
+    Route::post('geysers/store/{id}', [App\Http\Controllers\Consumer\GeyserController::class, 'store']);
+    Route::get('geysers/{id}',[App\Http\Controllers\Consumer\GeyserController::class,'show']);
+    Route::get('geysers/register/{id}',[App\Http\Controllers\Consumer\GeyserController::class,'register']);
+    Route::get('geysers/execute/{id}',[App\Http\Controllers\Consumer\GeyserController::class,'execute']);
+    Route::get('geysers/active/{id}',[App\Http\Controllers\Consumer\GeyserController::class,'active']);
+    Route::get('geysers/disconnect/{id}',[App\Http\Controllers\Consumer\GeyserController::class,'disconnect']);
+    Route::post('geysers/statusChange/{id}/{status_id}',[App\Http\Controllers\Consumer\GeyserController::class, 'statusChange']);
+    Route::get('consumergeysers/{id}',[App\Http\Controllers\Consumer\GeyserController::class,'consumergeyser']);
+
     
     // Search
     Route::get('search', [App\Http\Controllers\Consumer\ConsumerSearchController::class, 'search']);

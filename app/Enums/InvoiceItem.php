@@ -14,4 +14,5 @@ enum InvoiceItem: int
     case DISCONNECTION_CHARGES = 33;
     case COMMERCIAL_REGISTRATION = 39;
     case PDISCONNECT = 19;
+    case GEYSER_CONNECTION_CHARGES = 37;
 }

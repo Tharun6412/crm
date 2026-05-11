@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Consumer;
 
 use App\Enums\AwsPath;
 use App\Enums\ConsumerStatus;
+use App\Enums\InvoiceStatus;
+use App\Enums\PaymentStatus;
 use App\Exports\Consumers\ConsumerExport;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Master\DocumentCentre\DocumentUpload;
@@ -157,6 +159,7 @@ class ConsumerController extends Controller
             type_id,
             created_at
         ")
+        ->where('status_id','!=',InvoiceStatus::CANCEL->value)
         ->where('consumer_id', $id);
         // Get Payments
         $payments = InvoicePayment::selectRaw("
@@ -169,6 +172,7 @@ class ConsumerController extends Controller
                 pay_invoice_payments.created_at
             ")
             ->leftJoin('bil_invoices', 'bil_invoices.id', '=', 'pay_invoice_payments.invoice_id')
+            ->where('pay_invoice_payments.status_id','!=',PaymentStatus::REVERSAL->value)
             ->where('bil_invoices.consumer_id', $id);
         // Join Queries using Union All 
         $ledger_report = $invoices->unionAll($payments)->orderBy('created_at', 'asc')->get();
