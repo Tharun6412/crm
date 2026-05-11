@@ -22,24 +22,30 @@ class ConsumerOperationsController extends Controller
      */
     public function tdisconnect(Request $request, $id)
     {
-        $request->validate([
-            'notes' => 'required|max:255',
-        ]);
-        // 7 = TD
         $consumer = Consumer::find($id);
-        $consumer->update([
-            'status_id' => EnumsConsumerStatus::TD->value,
-            'updated_by' => Auth::id(),
-        ]);
-        // Consumer Status History
-        ConsumerStatus::create([
-            'consumer_id' => $id,
-            'lat' => $request->lat,
-            'lng' => $request->lng,
-            'status_id' => EnumsConsumerStatus::TD->value,
-            'notes' => $request->notes,
-            'created_by' => Auth::id(),
-        ]);
+        // Check
+        if($consumer->id == $id AND $consumer->status_id == EnumsConsumerStatus::TD->value) {
+            // Already Exists
+        }else {
+            // Request Validation
+            $request->validate([
+                'notes' => 'required|max:255',
+            ]);
+            // 7 = TD
+            $consumer->update([
+                'status_id' => EnumsConsumerStatus::TD->value,
+                'updated_by' => Auth::id(),
+            ]);
+            // Consumer Status History
+            ConsumerStatus::create([
+                'consumer_id' => $id,
+                'lat' => $request->lat,
+                'lng' => $request->lng,
+                'status_id' => EnumsConsumerStatus::TD->value,
+                'notes' => $request->notes,
+                'created_by' => Auth::id(),
+            ]);
+        }
         // Sms Response
         $sms_response = SmsService::dispatch($consumer, new TdSmsNotification(['crn' => $consumer->crn]));
         // Response
@@ -53,24 +59,29 @@ class ConsumerOperationsController extends Controller
      */
     public function pdisconnect(Request $request, $id)
     {
-        $request->validate([
-            'notes' => 'required|max:255',
-        ]);
-        // 8 = PD
         $consumer = Consumer::find($id);
-        $consumer->update([
-            'status_id' => EnumsConsumerStatus::PD->value,
-            'updated_by' => Auth::id(),
-        ]);
-        // Consumer Status History
-        ConsumerStatus::create([
-            'consumer_id' => $id,
-            'lat' => $request->lat,
-            'lng' => $request->lng,
-            'status_id' => EnumsConsumerStatus::PD->value,
-            'notes' => $request->notes,
-            'created_by' => Auth::id(),
-        ]);
+        if($consumer->id == $id and $consumer->status_id == EnumsConsumerStatus::PD->value) {
+            // Already Exists
+        }else {
+            // Request Validation
+            $request->validate([
+                'notes' => 'required|max:255',
+            ]);
+            // 8 = PD
+            $consumer->update([
+                'status_id' => EnumsConsumerStatus::PD->value,
+                'updated_by' => Auth::id(),
+            ]);
+            // Consumer Status History
+            ConsumerStatus::create([
+                'consumer_id' => $id,
+                'lat' => $request->lat,
+                'lng' => $request->lng,
+                'status_id' => EnumsConsumerStatus::PD->value,
+                'notes' => $request->notes,
+                'created_by' => Auth::id(),
+            ]);
+        }
         // Sms Response
         $sms_response = SmsService::dispatch($consumer, new PdSmsNotification(['crn' => $consumer->crn]));
         // Response

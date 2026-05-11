@@ -37,6 +37,10 @@ class RegistrationValidationRequest extends FormRequest
             'document_type.1' => 'required',
             'document_type.2' => 'nullable',
             'document_type.3' => 'nullable',
+            'dc_file_list.0' => 'required|file|max:51200',
+            'dc_file_list.1' => 'required|file|max:51200',
+            'dc_file_list.2' => 'nullable|file|max:51200',
+            'dc_file_list.3' => 'nullable|file|max:51200',
         ];
     }
 }
