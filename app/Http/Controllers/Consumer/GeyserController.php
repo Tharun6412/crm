@@ -15,6 +15,8 @@ use App\Models\Consumer\ConsumerGeyserStatus;
 use App\Models\Master\BillInvoiceItem;
 use App\Services\InvoiceService;
 use Illuminate\Http\Request;
+use App\Exports\Geysers\GeyserExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class GeyserController extends Controller
 {
@@ -69,6 +71,12 @@ class GeyserController extends Controller
      */
     public function search(Request $request)
     {
+        if($request->ajax()){
+            if(empty($request->search)) {
+                return response()->json(['message' => 'Please enter consumer number'], 422);
+            }
+        }
+             
         $consumers = Consumer::select('id', 'crn', 'fname', 'lname', 'ga_id', 'status_id', 'created_by', 'phone')
         ->when(!(isAdmin() OR isSuperAdmin() OR isFullAccess()), function ($q) {
             $q->whereIn('ga_id', session('user')['gas']);
@@ -247,6 +255,12 @@ class GeyserController extends Controller
         return view('consumers.consumers.show-geysers',['geysers' => $geysers]);
     }
 
-   
+    /**
+     * Export
+     */
+    public function geyserExport(Request $request)
+    {
+        return (new GeyserExport($request))->download('geyser.csv');
+    }
 
 }

@@ -20,6 +20,8 @@
     <div>
         <a href="{{ url('consumers/geysers/createSearch') }}" class="btn btn-outline-success link-modal">
             <i class="bi bi-plus-lg"></i>&nbsp;Add Geyser</a>
+            <a href="{{ url('consumers/geysers/geyserExport'). '?' . http_build_query(request()->all()) }}" class="btn btn-outline-secondary">Export</a>
+
     </div>
 </div>
 
@@ -91,7 +93,7 @@
             @endforeach
         @else
             <tr>
-                <td colspan="12">No Records Found</td>
+                <td colspan="14">No Records Found</td>
             </tr>
         @endif
     </tbody>

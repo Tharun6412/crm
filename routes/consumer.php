@@ -19,6 +19,7 @@ Route::middleware(['auth', ModuleAccess::class])->group(function() {
     Route::resource('prepaid', App\Http\Controllers\Consumer\PrepaidConsumerController::class);
 
     //geysers
+    Route::get('geysers/geyserExport',[App\Http\Controllers\Consumer\GeyserController::class,'geyserExport']);
     Route::get('geysers/createSearch', [App\Http\Controllers\Consumer\GeyserController::class, 'createSearch']);
     Route::get('geysers/search',[App\Http\Controllers\Consumer\GeyserController::class,'search']);
     Route::get('geysers', [App\Http\Controllers\Consumer\GeyserController::class, 'index']);
