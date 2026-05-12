@@ -72,14 +72,11 @@
                 <div class="bg-body-secondary rounded py-1 px-2 fs-5 text-truncate">
                     <div class="d-flex justify-content-between">
                         <span>{{ $ga->name }}</span>
-                        <a href="{{ url('reports/consumer/onboarding/getActivatedCountByDistricts') }}?ga_id={{ $ga->id }}&ga_name={{ $ga->name }}&{{ http_build_query(request()->all()) }}" class="link-modal" title="Districts Counts">
+                        <a href="{{ url('reports/consumer/onboarding/getDistrictsOverviewCount') }}?ga_id={{ $ga->id }}&ga_name={{ $ga->name }}&{{ http_build_query(request()->all()) }}" class="link-modal" title="Districts Counts">
                             <i class="bi bi-box-arrow-up-right"></i>
                         </a>
                     </div>
                 </div>
-                {{-- <div class="bg-body-secondary rounded py-1 px-2 fs-5 text-truncate">
-                    <a href="{{ url('reports/consumer/onboarding/getDistrictsOverviewCount') }}?ga_id={{ $ga->id }}&ga_name={{ $ga->name }}&{{ http_build_query(request()->all()) }}" class="link-modal">{{ $ga->name }}</a>
-                </div> --}}
             </div>
             <div class="col">
                 <div class="border rounded text-end py-1 px-2 fs-5">

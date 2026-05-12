@@ -15,7 +15,7 @@
 <div class="d-flex justify-content-between mb-1">
     <div class="fs-5 fw-semibold">({{ numberFormat($tRecords ?? 0) }})&nbsp;Records found</div>
     <div class="d-flex justify-content-end">
-        <a href="{{ url('reports/invoiceReport/invoicesReportExport') }}?{{ http_build_query(request()->all()) }}" class="btn btn-outline-primary ajax-link me-2">
+        <a href="{{ url('reports/invoiceReport/getInvoicesExport') }}?{{ http_build_query(request()->all()) }}" class="btn btn-outline-primary link-modal me-2">
             <i class="bi bi-filetype-csv"></i>&nbsp;Export
         </a>
         <div>
@@ -209,13 +209,4 @@
         </tfoot>
     </table>
 </div>
-<script type="module">
-   $(function(){
-        $(".ajax-link").click(function(e){
-            e.preventDefault();
-            $.get($(this).attr('href'), function(data) {
-                alert("Export Started, Download takes time");
-            });
-        });
-    });
-</script>
+@include('scripts.link-modal')

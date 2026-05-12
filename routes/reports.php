@@ -30,6 +30,7 @@ Route::middleware(['auth', ModuleAccess::class])->group(function() {
     // Invoice report
     Route::get('invoices/all', [App\Http\Controllers\Reports\InvoicesReportController::class, 'index']);
     Route::get('invoices/all-counts', [App\Http\Controllers\Reports\InvoicesReportController::class, 'reportCounts']);
+    Route::get('invoiceReport/getInvoicesExport', [App\Http\Controllers\Reports\InvoicesReportController::class, 'getInvoicesExport']);
     Route::get('invoiceReport/invoicesReportExport', [App\Http\Controllers\Reports\InvoicesReportController::class, 'invoicesReportExport']);
     Route::get('invoices/list', [App\Http\Controllers\Reports\InvoicesReportController::class, 'list']);
 

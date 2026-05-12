@@ -8,6 +8,9 @@ use App\Enums\PaymentStatus;
 use App\Models\Invoice\BillInvoice;
 use App\Models\Invoice\InvoicePayment;
 use App\Models\Invoice\PaymentReversal;
+use App\Models\Payments\PayAdvance;
+use App\Models\Payments\PayAdvanceTransaction;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
@@ -40,9 +43,27 @@ class PaymentService
             'status_id' => $data['status_id'], //1 = Completed
         ]);
 
+        // Advance Payment
+        if($invoice->type_id == InvoiceType::GAS_BILL->value) {
+            if($balance <= 0) {
+                // Add or Update in Advance Table
+                $advance_pay = PayAdvance::firstOrNew(['consumer_id' => $invoice->consumer_id]);
+                $advance_pay->advance_amount = ($advance_pay->advance_amount ?? 0) + abs($balance ?? 0);
+                $advance_pay->updated_at = Carbon::now();
+                $advance_pay->save();
+                // Create ian Advance Transaction
+                PayAdvanceTransaction::create([
+                    'payment_id' => $new_payment->id,
+                    'amount' => $new_payment->amount,
+                    'balance' => $balance,
+                ]);
+            }
+        }
         // Update invoice paid and balances
-        $invoice->paid_amount = $invoice->paid_amount + $data['amount'];
-        $invoice->balance_amount = $balance;
+        // $invoice->paid_amount = $invoice->paid_amount + $data['amount'];
+        $paid_amt = $invoice->paid_amount + $data['amount'];
+        $invoice->paid_amount = min($paid_amt, $invoice->payable_amount);
+        $invoice->balance_amount = max(0, (float)$balance);
         $invoice->status_id = ($balance > 0) ? InvoiceStatus::NOT_PAID->value : InvoiceStatus::PAID->value; //2 = NotPaid, 1=PAID
         $invoice->save();
 

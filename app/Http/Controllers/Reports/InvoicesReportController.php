@@ -171,6 +171,9 @@ class InvoicesReportController extends Controller
     // {
     //     return (new InvoicesReportExport($request))->download('InvoicesReport.xlsx');
     // }
+    /**
+     * List of Invoices Export
+     */
     public function invoicesReportExport(Request $request)
     {
         $filename = 'invoices_' . time() . '.csv';
@@ -181,6 +184,26 @@ class InvoicesReportController extends Controller
         if($export_id) {
             // Queue the export and attach AfterExportJob to run AFTER storage
             Excel::queue(new InvoiceExport($request->all(), $export_id->id), $filename, 'public')
+                ->chain([new AfterExportJob($export_id->id)]);
+        }
+        // response in modal
+        return view('admin.exports.create', ['export_id' => $export_id]);
+    }
+
+    /**
+     * Invoices Report - Export
+     */
+    public function getInvoicesExport(Request $request)
+    {
+        $id = Auth::id();
+        $filename = 'invoices_report_'.$id.'_'. time() . '.csv';
+
+        // Add export job with export service
+        $export_id = UserExportService::create($filename);
+        // Check export limit
+        if($export_id) {
+            // Queue the export and attach AfterExportJob to run AFTER storage
+            Excel::queue(new InvoicesReportExport($request->all(), $export_id->id), $filename, 'public')
                 ->chain([new AfterExportJob($export_id->id)]);
         }
         // response in modal

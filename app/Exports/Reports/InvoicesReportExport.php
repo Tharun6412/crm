@@ -5,22 +5,26 @@ use App\Enums\InvoiceStatus;
 use App\Enums\InvoiceType;
 use App\Models\Invoice\BillInvoice;
 use Carbon\Carbon;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromQuery;
+use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 
-class InvoicesReportExport implements FromQuery, WithHeadings, WithMapping 
+class InvoicesReportExport implements FromQuery,ShouldQueue,WithChunkReading, WithHeadings, WithMapping 
 {
     use Exportable;
     /**
      * Construct Method
      */
     protected $request;
+    protected $exportId;
     protected $i = 0;
-    public function __construct($request)
+    public function __construct($request, $exportId)
     {
         $this->request = $request;
+        $this->exportId = $exportId;
     }
     /**
     * @return query
@@ -28,16 +32,22 @@ class InvoicesReportExport implements FromQuery, WithHeadings, WithMapping
     public function query()
     {
         $request = $this->request;
-        $sortBy = ($request->get('sortBy')) ? $request->get('sortBy') : 'bil_invoices.created_at';
-        $sortOr = ($request->get('sortOr')) ? $request->get('sortOr') : 'desc';
-        $records = ($request->get('records')) ? $request->get('records') : 20;
+        // $sortBy = ($request['sortBy']) ? $request['sortBy'] : 'bil_invoices.created_at';
+        // $sortOr = ($request['sortOr']) ? $request['sortOr'] : 'desc';
         $today = Carbon::today();
-        $invoices = BillInvoice::join('cns_consumers', 'cns_consumers.id', '=', 'bil_invoices.consumer_id')
-            ->leftJoin('bil_invoice_consumption', 'bil_invoice_consumption.invoice_id', '=', 'bil_invoices.id')
+        $invoices = BillInvoice::query()->with([
+            'invoiceType:id,name',
+            'consumer.segment:id,name',
+            'consumer.connectType:id,name',
+            'consumer.ga:id,name',
+            'consumer.district:id,name',
+            'status:id,name',
+            'consumption:id,invoice_id,net_consumption'
+        ])->join('cns_consumers', 'cns_consumers.id', '=', 'bil_invoices.consumer_id')
             ->whereNot('bil_invoices.status_id', InvoiceStatus::CANCEL->value)
-            ->when($request->has('range'), function ($q) use($request, $today) {
+            ->when(!empty($request['range']), function ($q) use($request, $today) {
                 // Aging Filter
-                switch ($request->range) 
+                switch ($request['range']) 
                 {
                     case '0':
                         $q->where('bil_invoices.due_date', '>=', $today);
@@ -72,39 +82,44 @@ class InvoicesReportExport implements FromQuery, WithHeadings, WithMapping
                     default;
                 }
             })
-            ->when($request->filled('ga_id'), function ($q) use($request) {
-                $q->where('cns_consumers.ga_id', $request->ga_id);
+            ->when(!empty($request['ga_id']), function ($q) use($request) {
+                $q->where('cns_consumers.ga_id', $request['ga_id']);
             })
-            ->when($request->filled('invoice_type'), function ($q) use($request) {
-                $q->whereIn('bil_invoices.type_id', $request->invoice_type);
+            ->when(!empty($request['invoice_type']), function ($q) use($request) {
+                $q->whereIn('bil_invoices.type_id', $request['invoice_type']);
             })
-            ->when(($request->filled('key')), function($q) use($request) {
+            ->when((!empty($request['key'])), function($q) use($request) {
                 $q->where(function($q) use($request){
-                    $q->where('bil_invoices.invoice_number', 'like', '%' . $request->key . '%');
-                    $q->orWhere('cns_consumers.crn', 'like', '%' . $request->key . '%');
+                    $q->where('bil_invoices.invoice_number', 'like', '%' . $request['key'] . '%');
+                    $q->orWhere('cns_consumers.crn', 'like', '%' . $request['key'] . '%');
                 });
             })
-            ->when($request->has('segments'), function ($q) use($request) {
-                $q->whereIn('segment_id', $request->segments);
+            ->when(!empty($request['segments']), function ($q) use($request) {
+                $q->whereIn('segment_id', $request['segments']);
             })
-             ->when($request->filled('status_id'), function ($q) use($request) {
-                $q->whereIn('bil_invoices.status_id', $request->status_id);
+            ->when(!empty($request['status_id']), function ($q) use($request) {
+                $q->whereIn('bil_invoices.status_id', $request['status_id']);
             })
-            ->when($request->filled('connection_type_id'), function ($q) use($request) {
-                $q->whereIn('connection_type_id', $request->connection_type_id);
+            ->when(!empty($request['connection_type_id']), function ($q) use($request) {
+                $q->whereIn('connection_type_id', $request['connection_type_id']);
             })
-            ->when($request->has('geo_area'), function ($q) use($request) {
-                $q->whereIn('ga_id', $request->geo_area);
+            ->when(!empty($request['geo_area']), function ($q) use($request) {
+                $q->whereIn('ga_id', $request['geo_area']);
             })
-            ->when($request->has('district'), function ($q) use($request) {
-                $q->whereIn('district_id', $request->district);
+            ->when(!empty($request['district']), function ($q) use($request) {
+                $q->whereIn('district_id', $request['district']);
             })
-            ->when((!empty($request->date_from) and !empty($request->date_to)), function($q) use($request) {
-                $q->whereBetween('bil_invoices.invoice_date', [Carbon::createFromFormat('d-m-Y', $request->date_from)->startOfDay()->toDateTimeString(), Carbon::createFromFormat('d-m-Y', $request->date_to)->endOfDay()->toDateTimeString()]);
+            ->when((!empty($request['date_from']) and !empty($request['date_to'])), function($q) use($request) {
+                $q->whereBetween('bil_invoices.invoice_date', [Carbon::createFromFormat('d-m-Y', $request['date_from'])->startOfDay()->toDateTimeString(), Carbon::createFromFormat('d-m-Y', $request['date_to'])->endOfDay()->toDateTimeString()]);
             })
-            ->select('bil_invoices.id','invoice_number','invoice_date','type_id','due_date','total_amount', 'payable_amount', 'balance_amount', 'consumer_id', 'bil_invoice_consumption.net_consumption', 'bil_invoices.status_id')
-            ->orderBy($sortBy, $sortOr);
+            ->select('bil_invoices.id','invoice_number','invoice_date','type_id','due_date','total_amount', 'payable_amount', 'balance_amount', 'consumer_id', 'bil_invoices.status_id')
+            ->orderBy('bil_invoices.created_at', 'desc');
         return $invoices;
+    }
+
+    public function chunkSize(): int
+    {
+        return 5000;
     }
 
     /**
@@ -124,19 +139,19 @@ class InvoicesReportExport implements FromQuery, WithHeadings, WithMapping
         return [
             $this->i,
             $invoice->invoice_number ?? '',
-            dateFormat($invoice->invoice_date) ?? '',
-            $invoice->invoiceType->name,
-            $invoice->consumer->crn,
-            $invoice->consumer->name,
-            $invoice->consumer->segment->name,
-            $invoice->consumer->connectType->name,
-            $invoice->consumer->ga->name,
-            $invoice->consumer->district->name,
-            numberFormat($invoice->net_consumption,2),
-            dateFormat($invoice->due_date),
+            $invoice->invoice_date ? dateFormat($invoice->invoice_date) : '',
+            $invoice?->invoiceType?->name,
+            $invoice->consumer?->crn,
+            $invoice->consumer?->name,
+            $invoice->consumer?->segment?->name,
+            $invoice->consumer?->connectType?->name,
+            $invoice->consumer?->ga?->name,
+            $invoice->consumer?->district?->name,
+            numberFormat($invoice->consumption->net_consumption,2),
+            $invoice->due_date ? dateFormat($invoice->due_date) : '',
             numberFormat($invoice->payable_amount),
             numberFormat($invoice->balance_amount),
-            $invoice->status->name,
+            $invoice?->status?->name,
         ];
     }
 }
