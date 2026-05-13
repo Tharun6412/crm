@@ -48,12 +48,11 @@ class PaymentService
             if($balance <= 0) {
                 // Add or Update in Advance Table
                 $advance_pay = PayAdvance::firstOrNew(['consumer_id' => $invoice->consumer_id]);
-                $advance_pay->advance_amount = ($advance_pay->advance_amount ?? 0) + abs($balance ?? 0);
+                $advance_pay->advance_amount = abs($balance ?? 0);
                 $advance_pay->updated_at = Carbon::now();
                 $advance_pay->save();
                 // Create ian Advance Transaction
-                PayAdvanceTransaction::create([
-                    'payment_id' => $new_payment->id,
+                $new_payment->advance()->create([
                     'amount' => $new_payment->amount,
                     'balance' => $balance,
                 ]);

@@ -87,6 +87,10 @@
                             <td colspan="4" class="text-end">Invoice Total</td>
                             <td class="text-end">{{ numberFormat($invoice->total_amount, 2) }}</td>
                         </tr>
+                        <tr class="fw-semibold">
+                            <td colspan="4" class="text-end">Advance Amount</td>
+                            <td class="text-end">{{ $invoice->advance_amount > 0 ? '-'.numberFormat($invoice->advance_amount, 2) : 0 }}</td>
+                        </tr>
                         <tr>
                             <td colspan="4" class="text-end">Credit / Debit Amount</td>
                             <td class="text-end">{{ numberFormat($invoice->credit_amount, 2) }}</td>

@@ -8,6 +8,7 @@ use App\Models\Invoice\InvoicePayment;
 use App\Models\Master\PaymentType;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class PayAdvanceTransaction extends Model
 {
@@ -24,7 +25,8 @@ class PayAdvanceTransaction extends Model
      * @var array <int string>
      */
     protected $fillable = [
-        'payment_id',
+        'advancable_type',
+        'advancable_id',
         'amount',
         'balance',        
     ];
@@ -43,5 +45,15 @@ class PayAdvanceTransaction extends Model
     public function payment() :BelongsTo
     {
         return $this->belongsTo(InvoicePayment::class, 'payment_id');
+    }
+
+    /**
+     * PolyMorph Relation
+     * Relation with Advancable
+     * @instance of Invoice|Payments model
+     */
+    public function advancable():MorphTo
+    {
+        return $this->morphTo(); //Invoice|Payment
     }
 }

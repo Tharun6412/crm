@@ -6,6 +6,7 @@ use App\Models\Admin\User;
 use App\Models\Master\PaymentStatus;
 use App\Models\Master\PaymentTransactionStatus;
 use App\Models\Master\PaymentType;
+use App\Models\Payments\PayAdvanceTransaction;
 use App\Models\Payments\PaymentTransaction;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
@@ -111,5 +112,15 @@ class InvoicePayment extends Model
     public function payTransaction(): BelongsTo
     {
         return $this->belongsTo(PaymentTransaction::class, 'pay_transaction_id');
+    }
+
+    /**
+     * #PolyMorphic relation
+     * Relation with Advance Transaction
+     * MorphMany
+     */
+    public function advance():MorphMany
+    {
+        return $this->morphMany(PayAdvanceTransaction::class, 'advancable');
     }
 }

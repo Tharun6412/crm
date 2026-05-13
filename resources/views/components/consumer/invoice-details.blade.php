@@ -20,6 +20,10 @@
             <td><span class="fw-semibold">Cr/Dr Amount :</span>&nbsp;{{ numberFormat($invoice->credit_amount, 2) }}</td>
         </tr>
         <tr>
+            <td></td>
+            <td><span class="fw-semibold">Advcance Amount :</span>&nbsp;{{ $invoice->advance_amount > 0 ? numberFormat($invoice->advance_amount, 2) : 0 }}</td>
+        </tr>
+        <tr>
             <td><span class="fw-semibold">Status :</span>&nbsp;<x-payments.status :status="$invoice->status" /></td>
             <td><span class="fw-semibold">Payable Amount :</span>&nbsp;{{ numberFormat($invoice->payable_amount, 2) }}</td>
         </tr>  

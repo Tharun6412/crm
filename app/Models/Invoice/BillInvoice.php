@@ -7,6 +7,7 @@ use App\Models\Consumer\Consumer;
 use App\Models\Master\BillInvoiceType;
 use App\Models\Master\BillStatus;
 use App\Models\Master\Tax;
+use App\Models\Payments\PayAdvanceTransaction;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -171,5 +172,15 @@ class BillInvoice extends Model
     public function ledger(): MorphMany
     {
         return $this->morphMany(Ledger::class, 'legible');
+    }
+
+    /**
+     * #PolyMorphic relation
+     * Relation with Advance Transaction
+     * MorphMany
+     */
+    public function advance():MorphMany
+    {
+        return $this->morphMany(PayAdvanceTransaction::class, 'advancable');
     }
 }

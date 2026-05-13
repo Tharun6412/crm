@@ -34,7 +34,9 @@
                                         Actions
                                     </button>
                                     <ul class="dropdown-menu">
-                                        <li><x-auth.link class="dropdown-item link-modal" href="{{ url('bill/gasInvoice/create/' . $consumer->id) }}" action="ggasb" target="_blank"><i class="bi bi-chevron-right"></i>&nbsp;Generate GasBill</x-auth.link></li>
+                                        @if ($consumer->status_id == \App\Enums\ConsumerStatus::ACTIVATE->value)
+                                            <li><x-auth.link class="dropdown-item link-modal" href="{{ url('bill/gasInvoice/create/' . $consumer->id) }}" action="ggasb" target="_blank"><i class="bi bi-chevron-right"></i>&nbsp;Generate GasBill</x-auth.link></li>
+                                        @endif
                                         <li><x-auth.link class="dropdown-item link-modal" href="{{ url('bill/invoice/create/' . $consumer->id) }}" action="ginv" target="_blank"><i class="bi bi-chevron-right"></i>&nbsp;Create Invoice</x-auth.link></li>
                                     </ul>
                                 </div>

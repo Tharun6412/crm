@@ -26,7 +26,7 @@ return new class extends Migration
          */
         Schema::create('pay_advance_transactions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('payment_id')->index()->nullable()->constrained(table:'pay_invoice_payments')->noActionOnDelete()->noActionOnUpdate();
+            $table->morphs('advancable');
             $table->double('amount')->nullable();
             $table->double('balance')->nullable();
             $table->timestamps();

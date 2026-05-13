@@ -38,7 +38,7 @@ class ConsumerSearchController extends Controller
                     });
                 });
             })
-            ->where('status_id', ConsumerStatus::ACTIVATE->value)
+            // ->where('status_id', ConsumerStatus::ACTIVATE->value)
             ->latest()->limit(20)->get();
             // Ajax Response
             return view('billing.billing.list-body', ['consumers' => $consumers]);

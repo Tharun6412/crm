@@ -171,11 +171,11 @@ class PaymentsController extends Controller
             ]);
 
             // Update invoice
-            $invoice->update([
-                'paid_amount'    => $newPaid,
-                'balance_amount' => $newBalance,
-                'status_id'      => ($newBalance == 0) ? InvoiceStatus::PAID->value : InvoiceStatus::PARTIALLY_PAID->value, // Paid / Partial
-            ]);
+            // $invoice->update([
+            //     'paid_amount'    => $newPaid,
+            //     'balance_amount' => $newBalance,
+            //     'status_id'      => ($newBalance == 0) ? InvoiceStatus::PAID->value : InvoiceStatus::PARTIALLY_PAID->value, // Paid / Partial
+            // ]);
             $remainingAmount -= $payAmount;
         }
         return response()->json(['success' => 'Invoice payment updated successfully']);

@@ -122,12 +122,15 @@
                                                         <tr>
                                                             <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">1.4</td>
                                                             <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">Credit Balance:- Advance/Excess paid<br/>{{ __('bill.credit_balance') }}</td>
-                                                            <td style="text-align: right;border-bottom: 1px solid #000000;">{{ numberFormat($invoice->credit_amount ?? 0,2) }}</td>
-                                                    </tr>
+                                                            @php
+                                                                $advance_amt = $invoice->advance_amount + $invoice->credit_amount;
+                                                            @endphp
+                                                            <td style="text-align: right;border-bottom: 1px solid #000000;">-{{ numberFormat($advance_amt ?? 0,2) }}</td>
+                                                        </tr>
                                                         <tr>
                                                             <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">1.5</td>
                                                             <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">Adjustment for Estimated Bills {{ __('bill.adjustment_for_estimated_bills') }}</td>
-                                                            <td style="text-align: right;border-bottom: 1px solid #000000;">{{ $invoice->total_amount }}</td>
+                                                            <td style="text-align: right;border-bottom: 1px solid #000000;">{{ $invoice->payable_amount }}</td>
                                                         </tr>
                                                         <tr>
                                                             <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">1.6</td>
