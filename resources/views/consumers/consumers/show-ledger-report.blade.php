@@ -28,8 +28,10 @@
                         @foreach ($ledger_report as $ledger)
                             @php
                                 if($ledger->type == "Debit") {
-                                    $balance += $ledger->payable_amount;
+                                    $tot_amt = $ledger->payable_amount + ($ledger->advance_amount ?? 0);
+                                    $balance += $tot_amt;
                                 }else {
+                                    $tot_amt = 0;
                                     $balance -= $ledger->payable_amount;
                                 }
                             @endphp
@@ -38,7 +40,7 @@
                                 <td>{{ $ledger->created_at?->format('d-m-Y H:i') }}</td>
                                 @if ($ledger->type == "Debit")
                                     <td>{{ $ledger->invoiceType?->name }}&nbsp;<a href="{{ url('bill/invoice/'.$ledger->inv_id) }}" target="_blank"><span class="text-danger">{{ $ledger->invoice_number }}</span></a></td>
-                                    <td class="text-end"><span class="text-danger">{{ $ledger->payable_amount }}</span></td>
+                                    <td class="text-end"><span class="text-danger">{{ $tot_amt }}</span></td>
                                     <td></td>
                                     <td class="text-end">{{ numberFormat($balance, 2) }}</td>
                                 @else

@@ -50,52 +50,52 @@
             </div>
             <div class="col">
                 <div class="border rounded text-end py-1 px-2 fs-5">
-                    {{ numberFormat($consumer_status_counts[$ga->id][\App\Enums\ConsumerStatus::PRE_REGISTER->value] ?? 0) }}
+                    <a href="{{ url('consumers') }}?{{ http_build_query(['geo_area'=> [$ga->id], 'cns_status' => [\App\Enums\ConsumerStatus::PRE_REGISTER->value], 'connection_type_id' => request()->connect_type_id, 'segments' => [request()->onboard_segment_id]]) }}" target="_blank">{{ numberFormat($consumer_status_counts[$ga->id][\App\Enums\ConsumerStatus::PRE_REGISTER->value] ?? 0) }}</a>
                 </div>
             </div>
             <div class="col">
                 <div class="border rounded text-end py-1 px-2 fs-5">
-                    {{ numberFormat($consumer_status_counts[$ga->id][\App\Enums\ConsumerStatus::REGISTER->value] ?? 0) }}
+                    <a href="{{ url('consumers') }}?{{ http_build_query(['geo_area'=> [$ga->id], 'cns_status' => [\App\Enums\ConsumerStatus::REGISTER->value], 'connection_type_id' => request()->connect_type_id, 'segments' => [request()->onboard_segment_id]]) }}" target="_blank">{{ numberFormat($consumer_status_counts[$ga->id][\App\Enums\ConsumerStatus::REGISTER->value] ?? 0) }}</a>
                 </div>
             </div>
             <div class="col">
                 <div class="border rounded text-end py-1 px-2 fs-5">
-                    {{ numberFormat($consumer_status_counts[$ga->id][\App\Enums\ConsumerStatus::ACCEPT->value] ?? 0) }}
+                    <a href="{{ url('consumers') }}?{{ http_build_query(['geo_area'=> [$ga->id], 'cns_status' => [\App\Enums\ConsumerStatus::ACCEPT->value], 'connection_type_id' => request()->connect_type_id, 'segments' => [request()->onboard_segment_id]]) }}" target="_blank">{{ numberFormat($consumer_status_counts[$ga->id][\App\Enums\ConsumerStatus::ACCEPT->value] ?? 0) }}</a>
                 </div>
             </div>
             <div class="col">
                 <div class="border rounded text-end py-1 px-2 fs-5">
-                    {{ numberFormat($consumer_status_counts[$ga->id][\App\Enums\ConsumerStatus::EXECUTE->value] ?? 0) }}
+                    <a href="{{ url('consumers') }}?{{ http_build_query(['geo_area'=> [$ga->id], 'cns_status' => [\App\Enums\ConsumerStatus::EXECUTE->value], 'connection_type_id' => request()->connect_type_id, 'segments' => [request()->onboard_segment_id]]) }}" target="_blank">{{ numberFormat($consumer_status_counts[$ga->id][\App\Enums\ConsumerStatus::EXECUTE->value] ?? 0) }}</a>
                 </div>
             </div>
             <div class="col">
                 <div class="border rounded text-end py-1 px-2 fs-5">
-                    {{ numberFormat($consumer_status_counts[$ga->id][\App\Enums\ConsumerStatus::HSC->value] ?? 0) }}
+                    <a href="{{ url('consumers') }}?{{ http_build_query(['geo_area'=> [$ga->id], 'cns_status' => [\App\Enums\ConsumerStatus::HSC->value], 'connection_type_id' => request()->connect_type_id, 'segments' => [request()->onboard_segment_id]]) }}" target="_blank">{{ numberFormat($consumer_status_counts[$ga->id][\App\Enums\ConsumerStatus::HSC->value] ?? 0) }}</a>
                 </div>
             </div>
             <div class="col">
                 <div class="border rounded text-end py-1 px-2 fs-5">
-                    {{ numberFormat($consumer_status_counts[$ga->id][\App\Enums\ConsumerStatus::ACTIVATE->value] ?? 0) }}
+                    <a href="{{ url('consumers') }}?{{ http_build_query(['geo_area'=> [$ga->id], 'cns_status' => [\App\Enums\ConsumerStatus::ACTIVATE->value], 'connection_type_id' => request()->connect_type_id, 'segments' => [request()->onboard_segment_id]]) }}" target="_blank">{{ numberFormat($consumer_status_counts[$ga->id][\App\Enums\ConsumerStatus::ACTIVATE->value] ?? 0) }}</a>
                 </div>
             </div>
             <div class="col">
                 <div class="border rounded text-end py-1 px-2 fs-5">
-                    {{ numberFormat($consumer_status_counts[$ga->id][\App\Enums\ConsumerStatus::TD->value] ?? 0) }}
+                    <a href="{{ url('consumers') }}?{{ http_build_query(['geo_area'=> [$ga->id], 'cns_status' => [\App\Enums\ConsumerStatus::TD->value], 'connection_type_id' => request()->connect_type_id, 'segments' => [request()->onboard_segment_id]]) }}" target="_blank">{{ numberFormat($consumer_status_counts[$ga->id][\App\Enums\ConsumerStatus::TD->value] ?? 0) }}</a>
                 </div>
             </div>
             <div class="col">
                 <div class="border rounded text-end py-1 px-2 fs-5">
-                    {{ numberFormat($consumer_status_counts[$ga->id][\App\Enums\ConsumerStatus::PD->value] ?? 0) }}
+                    <a href="{{ url('consumers') }}?{{ http_build_query(['geo_area'=> [$ga->id], 'cns_status' => [\App\Enums\ConsumerStatus::PD->value], 'connection_type_id' => request()->connect_type_id, 'segments' => [request()->onboard_segment_id]]) }}" target="_blank">{{ numberFormat($consumer_status_counts[$ga->id][\App\Enums\ConsumerStatus::PD->value] ?? 0) }}</a>
                 </div>
             </div>
             <div class="col">
                 <div class="border rounded text-end py-1 px-2 fs-5">
-                    {{ numberFormat($consumer_status_counts[$ga->id][\App\Enums\ConsumerStatus::REJECT->value] ?? 0) }}
+                    <a href="{{ url('consumers') }}?{{ http_build_query(['geo_area'=> [$ga->id], 'cns_status' => [\App\Enums\ConsumerStatus::REJECT->value], 'connection_type_id' => request()->connect_type_id, 'segments' => [request()->onboard_segment_id]]) }}" target="_blank">{{ numberFormat($consumer_status_counts[$ga->id][\App\Enums\ConsumerStatus::REJECT->value] ?? 0) }}</a>
                 </div>
             </div>
             <div class="col">
                 <div class="border rounded text-end py-1 px-2 fs-5">
-                    {{ numberFormat(array_sum($consumer_status_counts[$ga->id] ?? [])) }}
+                    <a href="{{ url('consumers') }}?{{ http_build_query(['geo_area'=> [$ga->id], 'connection_type_id' => request()->connect_type_id, 'segments' => [request()->onboard_segment_id]]) }}" target="_blank">{{ numberFormat(array_sum($consumer_status_counts[$ga->id] ?? [])) }}</a>
                 </div>
             </div>
         </div>

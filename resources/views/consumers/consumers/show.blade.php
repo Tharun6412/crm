@@ -71,6 +71,9 @@
                             <a href="#" class="list-group-item list-group-item-action" id="nav-history-tab" data-bs-toggle="tab" data-bs-target="#nav-history" data-url="{{ url('consumers/kyc/' . $consumer->id) }}" role="tab" aria-controls="nav-History" aria-selected="false">
                                 <i class="bi bi-clock-history"></i>&nbsp;History
                             </a>
+                            {{-- <a href="#" class="list-group-item list-group-item-action" id="nav-advance-tab" data-bs-toggle="tab" data-bs-target="#nav-advance" data-url="{{ url('payments/invoicePayments/show/' . $consumer->id) }}" role="tab" aria-controls="nav-advance" aria-selected="false">
+                                <i class="bi bi-clock-history"></i>&nbsp;Advance Transactions
+                            </a> --}}
                         </div>
                     </div>
                 </div>
@@ -197,7 +200,7 @@
                         <div class="tab-pane fade" id="nav-geysers" role="tabpanel" aria-labelledby="nav-geysers-tab" tabindex="0">
                             {{-- @include('consumers.consumers.show-geysers') --}}
                         </div>
-                        
+                        {{-- <div class="tab-pane fade" id="nav-advance-report" role="tabpanel" aria-labelledby="nav-advance-report-tab" tabindex="0"></div> --}}
                     </div>
                 </div>
             </div>

@@ -44,6 +44,13 @@
                     </div>
                 </div>
                 @foreach($districts as $district)
+                    {{-- @php
+                        $params = array(
+                            'geo_area' => [$district->ga_id],
+                            'connection_type_id' => $request_data['connect_type_id'],
+                            'segments' => $request_data['onboard_segment_id'],
+                        );
+                    @endphp --}}
                     <div class="row row-cols-10 g-2 mb-2">
                         <div class="col-2">
                             <div class="bg-success-subtle rounded py-1 px-2 fs-5 text-truncate">{{ $district->name }}</div>

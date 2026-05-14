@@ -125,7 +125,7 @@
                                                             @php
                                                                 $advance_amt = $invoice->advance_amount + $invoice->credit_amount;
                                                             @endphp
-                                                            <td style="text-align: right;border-bottom: 1px solid #000000;">-{{ numberFormat($advance_amt ?? 0,2) }}</td>
+                                                            <td style="text-align: right;border-bottom: 1px solid #000000;">{{ numberFormat($advance_amt ?? 0,2) }}</td>
                                                         </tr>
                                                         <tr>
                                                             <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">1.5</td>

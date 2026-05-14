@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Consumer;
 use App\Enums\AwsPath;
 use App\Enums\ConsumerStatus;
 use App\Enums\InvoiceStatus;
+use App\Enums\InvoiceType;
 use App\Enums\PaymentStatus;
 use App\Exports\Consumers\ConsumerExport;
 use App\Http\Controllers\Controller;
@@ -15,6 +16,7 @@ use App\Models\Invoice\BillInvoice;
 use App\Models\Invoice\InvoicePayment;
 use App\Models\Master\MasterConsumerStatus;
 use App\Models\Master\Title;
+use App\Models\Payments\PayAdvanceTransaction;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -133,15 +135,6 @@ class ConsumerController extends Controller
     {
         return (new ConsumerExport($request))->download('consumers.csv');
     }
-    // public function consumerExport(Request $request)
-    // {
-    //     // return (new ConsumerQExport())->store('consumers_q.csv');
-    //     (new ConsumerQExport())->queue('consumers_q.csv', 'public');
-
-    //     return response()->json([
-    //         'message' => 'Export started. You will be notified once completed.'
-    //     ]);
-    // }
 
     /**
      * Ledger Report from Invoices and Payments
@@ -155,6 +148,7 @@ class ConsumerController extends Controller
             id as inv_id,
             invoice_date,
             invoice_number,
+            advance_amount,
             payable_amount,
             type_id,
             created_at
@@ -167,6 +161,7 @@ class ConsumerController extends Controller
                 bil_invoices.id as inv_id,
                 pay_invoice_payments.payment_date as invoice_date,
                 bil_invoices.invoice_number as invoice_number,
+                0 as advance_amount,
                 pay_invoice_payments.amount as payable_amount,
                 bil_invoices.type_id as type_id,
                 pay_invoice_payments.created_at
@@ -178,4 +173,19 @@ class ConsumerController extends Controller
         $ledger_report = $invoices->unionAll($payments)->orderBy('created_at', 'asc')->get();
         return view('consumers.consumers.show-ledger-report', ['ledger_report' => $ledger_report]);
     }
+
+    /**
+     * Consumer Advance Payment
+     */
+    // public function consumerAdvanceTransaction(Request $request, $id)
+    // {
+    //     $transactions = InvoicePayment::whereHas('invoice', function($q) use($id) {
+    //         $q->where(['consumer_id' => $id, 'type_id' => InvoiceType::GAS_BILL->value]);
+    //     })->orderBy('created_at', 'desc')->paginate(10)->withQueryString();
+
+    //     // Render output
+    //     return view('consumers.consumers.show-advance-transactions', [
+    //         'transactions' => $transactions,
+    //     ]);
+    // }
 }
