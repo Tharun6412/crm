@@ -44,60 +44,66 @@
                     </div>
                 </div>
                 @foreach($districts as $district)
-                    {{-- @php
+                    @php
                         $params = array(
                             'geo_area' => [$district->ga_id],
-                            'connection_type_id' => $request_data['connect_type_id'],
-                            'segments' => $request_data['onboard_segment_id'],
+                            'district' => [$district->id],
+                            'connection_type_id' => $request_data['connect_type_id'] ?? null,
+                            'segments' => $request_data['onboard_segment_id'] ?? null,
                         );
-                    @endphp --}}
+                        // Remove null values
+                        $params = array_filter($params, fn($value) => !is_null($value));
+                        $queryParams = array_merge($params, [
+                            'cns_status' => [\App\Enums\ConsumerStatus::PRE_REGISTER->value],
+                        ]);
+                    @endphp
                     <div class="row row-cols-10 g-2 mb-2">
                         <div class="col-2">
                             <div class="bg-success-subtle rounded py-1 px-2 fs-5 text-truncate">{{ $district->name }}</div>
                         </div>
                         <div class="col">
                             <div class="border rounded text-end py-1 px-2 fs-5">
-                                {{ $consumer_status_counts[$district->id][\App\Enums\ConsumerStatus::PRE_REGISTER->value] ?? 0 }}
+                                <a href="{{ url('consumers') }}?{{ http_build_query(array_merge($params, ['cns_status' => [\App\Enums\ConsumerStatus::PRE_REGISTER->value]])) }}" target="_blank">{{ $consumer_status_counts[$district->id][\App\Enums\ConsumerStatus::PRE_REGISTER->value] ?? 0 }}</a>
                             </div>
                         </div>
                         <div class="col">
                             <div class="border rounded text-end py-1 px-2 fs-5">
-                                {{ $consumer_status_counts[$district->id][\App\Enums\ConsumerStatus::REGISTER->value] ?? 0 }}
+                                <a href="{{ url('consumers') }}?{{ http_build_query(array_merge($params, ['cns_status' => [\App\Enums\ConsumerStatus::REGISTER->value]])) }}" target="_blank">{{ $consumer_status_counts[$district->id][\App\Enums\ConsumerStatus::REGISTER->value] ?? 0 }}</a>
                             </div>
                         </div>
                         <div class="col">
                             <div class="border rounded text-end py-1 px-2 fs-5">
-                                {{ $consumer_status_counts[$district->id][\App\Enums\ConsumerStatus::ACCEPT->value] ?? 0 }}
+                                <a href="{{ url('consumers') }}?{{ http_build_query(array_merge($params, ['cns_status' => [\App\Enums\ConsumerStatus::ACCEPT->value]])) }}" target="_blank">{{ $consumer_status_counts[$district->id][\App\Enums\ConsumerStatus::ACCEPT->value] ?? 0 }}</a>
                             </div>
                         </div>
                         <div class="col">
                             <div class="border rounded text-end py-1 px-2 fs-5">
-                                {{ $consumer_status_counts[$district->id][\App\Enums\ConsumerStatus::EXECUTE->value] ?? 0 }}
+                                <a href="{{ url('consumers') }}?{{ http_build_query(array_merge($params, ['cns_status' => [\App\Enums\ConsumerStatus::EXECUTE->value]])) }}" target="_blank">{{ $consumer_status_counts[$district->id][\App\Enums\ConsumerStatus::EXECUTE->value] ?? 0 }}</a>
                             </div>
                         </div>
                         <div class="col">
                             <div class="border rounded text-end py-1 px-2 fs-5">
-                                {{ $consumer_status_counts[$district->id][\App\Enums\ConsumerStatus::HSC->value] ?? 0 }}
+                                <a href="{{ url('consumers') }}?{{ http_build_query(array_merge($params, ['cns_status' => [\App\Enums\ConsumerStatus::HSC->value]])) }}" target="_blank">{{ $consumer_status_counts[$district->id][\App\Enums\ConsumerStatus::HSC->value] ?? 0 }}</a>
                             </div>
                         </div>
                         <div class="col">
                             <div class="border rounded text-end py-1 px-2 fs-5">
-                                {{ $consumer_status_counts[$district->id][\App\Enums\ConsumerStatus::ACTIVATE->value] ?? 0 }}
+                                <a href="{{ url('consumers') }}?{{ http_build_query(array_merge($params, ['cns_status' => [\App\Enums\ConsumerStatus::ACTIVATE->value]])) }}" target="_blank">{{ $consumer_status_counts[$district->id][\App\Enums\ConsumerStatus::ACTIVATE->value] ?? 0 }}</a>
                             </div>
                         </div>
                         <div class="col">
                             <div class="border rounded text-end py-1 px-2 fs-5">
-                                {{ $consumer_status_counts[$district->id][\App\Enums\ConsumerStatus::TD->value] ?? 0 }}
+                                <a href="{{ url('consumers') }}?{{ http_build_query(array_merge($params, ['cns_status' => [\App\Enums\ConsumerStatus::TD->value]])) }}" target="_blank">{{ $consumer_status_counts[$district->id][\App\Enums\ConsumerStatus::TD->value] ?? 0 }}</a>
                             </div>
                         </div>
                         <div class="col">
                             <div class="border rounded text-end py-1 px-2 fs-5">
-                                {{ $consumer_status_counts[$district->id][\App\Enums\ConsumerStatus::PD->value] ?? 0 }}
+                                <a href="{{ url('consumers') }}?{{ http_build_query(array_merge($params, ['cns_status' => [\App\Enums\ConsumerStatus::PD->value]])) }}" target="_blank">{{ $consumer_status_counts[$district->id][\App\Enums\ConsumerStatus::PD->value] ?? 0 }}</a>
                             </div>
                         </div>
                         <div class="col">
                             <div class="border rounded text-end py-1 px-2 fs-5">
-                                {{ $consumer_status_counts[$district->id][\App\Enums\ConsumerStatus::REJECT->value] ?? 0 }}
+                                <a href="{{ url('consumers') }}?{{ http_build_query(array_merge($params, ['cns_status' => [\App\Enums\ConsumerStatus::REJECT->value]])) }}" target="_blank">{{ $consumer_status_counts[$district->id][\App\Enums\ConsumerStatus::REJECT->value] ?? 0 }}</a>
                             </div>
                         </div>
                     </div>

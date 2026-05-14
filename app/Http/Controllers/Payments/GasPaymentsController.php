@@ -141,7 +141,7 @@ class GasPaymentsController extends Controller
                 $payAmount = $invoice->balance_amount;
             }else {
                 // Parent Invoice can accept Partial Amount
-                $payAmount = min($remainingAmount, $invoice->balance_amount);
+                $payAmount = $remainingAmount;
             }
             
             // $payAmount  = ($invoice->id === $parentInvoice->id) ? $remainingAmount : min(round($invoice->balance_amount, 2), $remainingAmount);

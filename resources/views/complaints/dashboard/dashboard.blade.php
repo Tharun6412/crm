@@ -173,7 +173,7 @@
                     </div>
                 </a>
             </div>
-            <div class="col-sm-3">
+            {{-- <div class="col-sm-3">
                 <a href="{{ url('calls') }}?{{ http_build_query(['cmp_status'=> [ComplaintStatus::CANCEL->value]]) }}" target="_blank" class="text-body-secondary">
                     <div class="py-2 px-2 cancel-bg border border-3 border-light shadow-sm rounded-3">
                         <div class="d-flex justify-content-between align-items-center p-2">
@@ -187,7 +187,7 @@
                         </div>
                     </div>
                 </a>
-            </div>
+            </div> --}}
             <div class="col-sm-3">
                 <a href="{{ url('calls') }}" target="_blank" class="text-body-secondary">
                     <div class="py-2 px-2 totals-bg border border-3 border-light shadow-sm rounded-3">
