@@ -23,6 +23,7 @@ use App\Enums\MeterChange;
 use App\Enums\PaymentStatus;
 use App\Enums\PaymentType;
 use App\Enums\TaxType;
+use App\Models\Payments\PayAdvance;
 use App\Notifications\Consumer\GasbillSmsNotification;
 use App\Services\DependentInvoiceService;
 use App\Services\PaymentService;
@@ -60,6 +61,8 @@ class GasInvoiceController extends Controller
             $end_date = date('Y-m-d');
             $bill_days = Carbon::parse($start_date)->diffInDays($end_date);
 
+            // Advance Amounts
+            $advance = $consumer->advanceAmount?->advance_amount ?? 0;
             // 3. Get the gas price for the billing
             // Get the price details
             $prices = collect();
@@ -81,6 +84,7 @@ class GasInvoiceController extends Controller
                 'invoice' => $invoice, 
                 'prices' => $prices, 
                 'bill_days' => $bill_days,
+                'advance' => $advance,
             ]);
         }
         else {
@@ -413,18 +417,49 @@ class GasInvoiceController extends Controller
                 'amount' => ($invoice_data['invoice']['total_amount']),
             ], 'dr');
 
+            
+            //Advance Amount
+            $advance = $consumer->advanceAmount?->advance_amount ?? 0;
+            $rem_advance = $advance;
+
+            // Remaining advance amount settlement against gas bill.
+            if ($rem_advance > 0) {
+                $gas_settlement = min($rem_advance, (float) $inv_insert->total_amount);
+                $inv_insert->update([
+                    'advance_amount' => $gas_settlement,
+                    'payable_amount' => $inv_insert->total_amount - $gas_settlement,
+                    'balance_amount' => $inv_insert->total_amount - $gas_settlement,
+                    'status_id'      => ($inv_insert->total_amount - $gas_settlement <= 0)
+                                            ? InvoiceStatus::PAID->value
+                                            : InvoiceStatus::NOT_PAID->value,
+                ]);
+                $rem_advance -= $gas_settlement;
+                // Advance Transaction
+                $inv_insert->advance()->create([
+                    'amount' => $gas_settlement,
+                    'balance' => $rem_advance,
+                ]);
+            }
+
             // dependent invoice creation (SD EMI / Rental)
             $scheme = $consumer->scheme;
             if ($scheme) {
                 // EMI INVOICE
                 if ($scheme->emi_amount > 0 and $scheme->security_deposit > 0 and $scheme->status == 0) {
-                    DependentInvoiceService::sdEmiCreate($consumer, $inv_insert);
+                    $rem_advance = DependentInvoiceService::sdEmiCreate($consumer, $inv_insert, $rem_advance);
                 }
                 // RENTAL INVOICE (only if EMI not applicable)
                 elseif ($scheme->rental_amount > 0 and $scheme->status == 0) {
-                    DependentInvoiceService::rentalInvCreate($consumer, $inv_insert);
+                    $rem_advance = DependentInvoiceService::rentalInvCreate($consumer, $inv_insert, $rem_advance);
                 }
             }
+            
+            if($rem_advance >= 0)
+            {
+                // If any remaining advance balance, update back to consumer.
+                $consumer->advanceAmount->update(['advance_amount' => $rem_advance, 'updated_at' => now()]);
+            }
+
         }
         return [
             'invoice_id' => $inv_insert->id, 

@@ -49,9 +49,12 @@ class BillingController extends Controller
             // 1. Get latest gas invoice if exists
             // $invoice = BillInvoice::where('consumer_id', $id)->where('type_id', 1)->latest()->first();
             $invoice = $consumer->invoices()->where('type_id', InvoiceType::GAS_BILL->value)->whereNot('status_id', InvoiceStatus::CANCEL->value)->latest()->first();
-            $start_date = (!empty($invoice)) ? $invoice->consumption->date_to->format('Y-m-d') : ($consumer->statusHistory->where('status_id', ConsumerStatus::ACTIVATE->value)->sortByDesc('created_at')->first()?->created_at->format('Y-m-d'));
+            $start_date = (!empty($invoice)) ? $invoice->consumption->date_to->format('Y-m-d') : ($consumer->statusHistory->whereIn('status_id', [ConsumerStatus::ACTIVATE->value, ConsumerStatus::RECONNECT->value])->sortByDesc('created_at')->first()?->created_at->format('Y-m-d'));
             $end_date = date('Y-m-d');
             $bill_days = Carbon::parse($start_date)->diffInDays($end_date);
+
+            // Advance Amounts
+            $advance = $consumer->advanceAmount?->advance_amount ?? 0;
 
             // 2. Get the gas price for the billing
             // Get the price details
@@ -75,6 +78,7 @@ class BillingController extends Controller
                 'invoice' => $invoice, 
                 'prices' => $prices, 
                 'bill_days' => $bill_days,
+                'advance_amount' => $advance,
             ], 200);
         }
         else {
@@ -114,6 +118,7 @@ class BillingController extends Controller
         $invoice = $consumer->invoices()->where('type_id', InvoiceType::GAS_BILL->value)->whereNot('status_id', InvoiceStatus::CANCEL->value)->latest()->first();
         // 5. checking for meter replacement
         $meterChange = $consumer->meterChanges()->where('status_id', MeterChange::PENDING->value)->first();
+        
 
         // Preparing consumption data internally.
         $start_date = (!empty($invoice)) ? $invoice->consumption->date_to->format('Y-m-d') : ($consumer->statusHistory->where('status_id', ConsumerStatus::ACTIVATE->value)->sortByDesc('created_at')->first()?->created_at->format('Y-m-d'));
@@ -463,17 +468,46 @@ class BillingController extends Controller
                 'amount' => ($invoice_data['invoice']['total_amount']),
             ], 'dr');
 
+            //Advance Amount
+            $advance = $consumer->advanceAmount?->advance_amount ?? 0;
+            $rem_advance = $advance;
+
+            // Remaining advance amount settlement against gas bill.
+            if ($rem_advance > 0) {
+                $gas_settlement = min($rem_advance, (float) $inv_insert->total_amount);
+                $inv_insert->update([
+                    'advance_amount' => $gas_settlement,
+                    'payable_amount' => $inv_insert->total_amount - $gas_settlement,
+                    'balance_amount' => $inv_insert->total_amount - $gas_settlement,
+                    'status_id'      => ($inv_insert->total_amount - $gas_settlement <= 0)
+                                            ? InvoiceStatus::PAID->value
+                                            : InvoiceStatus::NOT_PAID->value,
+                ]);
+                $rem_advance -= $gas_settlement;
+                // Advance Transaction
+                $inv_insert->advance()->create([
+                    'amount' => $gas_settlement,
+                    'balance' => $rem_advance,
+                ]);
+            }
+
             // dependent invoice creation (SD EMI / Rental)
             $scheme = $consumer->scheme;
             if ($scheme) {
                 // EMI INVOICE
                 if ($scheme->emi_amount > 0 and $scheme->security_deposit > 0 and $scheme->status == 0) {
-                    DependentInvoiceService::sdEmiCreate($consumer, $inv_insert);
+                    $rem_advance = DependentInvoiceService::sdEmiCreate($consumer, $inv_insert,$rem_advance);
                 }
                 // RENTAL INVOICE (only if EMI not applicable)
                 elseif ($scheme->rental_amount > 0) {
-                    DependentInvoiceService::rentalInvCreate($consumer, $inv_insert);
+                    $rem_advance = DependentInvoiceService::rentalInvCreate($consumer, $inv_insert,$rem_advance);
                 }
+            }
+
+            if($rem_advance > 0)
+            {
+                // If any remaining advance balance, update back to consumer.
+                $consumer->advanceAmount->update(['advance_amount' => $rem_advance, 'updated_at' => now()]);
             }
         }
         return [

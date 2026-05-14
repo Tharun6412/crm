@@ -23,6 +23,7 @@ use App\Models\Master\PriceGroups;
 use App\Models\Master\Segment;
 use App\Models\Master\State;
 use App\Models\Master\Title;
+use App\Models\Payments\PayAdvance;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -393,5 +394,13 @@ class Consumer extends Model
     public function latestInvoice(): HasMany
     {
         return $this->hasMany(BillInvoice::class, 'consumer_id')->where('type_id', InvoiceType::GAS_BILL->value)->whereNot('status_id', InvoiceStatus::CANCEL->value);
+    }
+
+    /**
+     * Relation with the advance amount table.
+     */
+    public function advanceAmount(): HasOne
+    {
+        return $this->hasOne(PayAdvance::class, 'consumer_id');
     }
 }

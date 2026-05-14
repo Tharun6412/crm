@@ -9,13 +9,14 @@ use App\Enums\SDPaymentStatus;
 use App\Enums\TaxType;
 use App\Models\Consumer\ConsumerScheme;
 use App\Models\Consumer\ConsumerSdPayment;
+use App\Models\Invoice\BillInvoice;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 
 
 class DependentInvoiceService
 {
-    public static function sdEmiCreate($consumer, $invoice)
+    public static function sdEmiCreate($consumer, $invoice, $advance=null)
     {
         $scheme = $consumer->scheme;
         $emi_balance = $scheme->balance;
@@ -29,6 +30,16 @@ class DependentInvoiceService
             $tax_id = TaxType::GST->value;
             $tax_value = 0;
             $tax_amount = 0;
+
+            // Advance amount settlement
+            $advance       = (float) ($advance ?? 0);
+            $can_settle    = ($advance >= $invoice_total); // ← full cover check
+            $settlement    = $can_settle ? $invoice_total : 0; // ← all or nothing
+            $rem_advance   = $advance - $settlement;
+            $balance_after = $invoice_total - $settlement;
+            $status        = $can_settle
+                                ? InvoiceStatus::PAID->value
+                                : InvoiceStatus::NOT_PAID->value;
 
             $invoice_items[] = [
                 'item_id' => InvoiceItem::SDEMI->value, // SD EMI
@@ -52,11 +63,12 @@ class DependentInvoiceService
                     'tax_value' => $tax_value,
                     'tax_amount' => $tax_amount,
                     'total_amount' => $invoice_total,
-                    'payable_amount' => $invoice_total,
-                    'balance_amount' => $invoice_total,
+                    'advance_amount' => $settlement,
+                    'payable_amount' => $balance_after,
+                    'balance_amount' => $balance_after,
                     'due_date' => $invoice->due_date,
                     'parent_invoice_id' => $invoice->id,
-                    'status_id' => InvoiceStatus::NOT_PAID->value, // Unpaid
+                    'status_id' => $status, // Unpaid
                     'created_by' => Auth::id(),
                 ],
                 'items' => $invoice_items,
@@ -83,11 +95,24 @@ class DependentInvoiceService
                     'balance' => $new_sd_balance,
                     'status' => ($new_sd_balance <= 0) ? 1 : 0, // toggle the status after the final emi generated.
                 ]);
+
+                if($can_settle)
+                {
+                    $inv = BillInvoice::find($inv_number['invoice_id']);
+                    // Advance Transaction
+                    $inv->advance()->create([
+                        'amount' => $settlement,
+                        'balance' => $rem_advance,
+                    ]);
+                }
+
+                 return $rem_advance;
             }
         }
+        return $advance; // ← no EMI generated, return advance untouched
     }
 
-    public static function rentalInvCreate($consumer, $invoice)
+    public static function rentalInvCreate($consumer, $invoice, $advance = null)
     {
         $start_date = $invoice->consumption->date_from->format('Y-m-d');
         $end_date = $invoice->consumption->date_to->format('Y-m-d');
@@ -104,6 +129,17 @@ class DependentInvoiceService
             $base_amount = round(($basic_price * $totalDays),2);
             $tax_amount = round(($tax_price * $totalDays),2);
         }
+
+        // Pre-calculate settlement
+        $advance       = (float) ($advance ?? 0);
+        $can_settle    = ($advance >= $invoice_total); // ← full cover check
+        $settlement    = $can_settle ? $invoice_total : 0; // ← all or nothing
+        $rem_advance   = $advance - $settlement;
+        $balance_after = $invoice_total - $settlement;
+        $status        = $can_settle
+                            ? InvoiceStatus::PAID->value
+                            : InvoiceStatus::NOT_PAID->value;
+
         $invoice_items[] = [
             'item_id' => InvoiceItem::RENTAL_CHARGES->value, // Rental item
             'quantity' => $totalDays,
@@ -126,16 +162,32 @@ class DependentInvoiceService
                 'tax_value' => $tax,
                 'tax_amount' => $tax_amount,
                 'total_amount' => $invoice_total,
-                'payable_amount' => $invoice_total,
-                'balance_amount' => $invoice_total,
+                'advance_amount' => $settlement,
+                'payable_amount' => $balance_after,
+                'balance_amount' => $balance_after,
                 'due_date' => $invoice->due_date,
                 'parent_invoice_id' => $invoice->id,
-                'status_id' => InvoiceStatus::NOT_PAID->value, // Unpaid,
+                'status_id' => $status, // Unpaid,
                 'created_by' => Auth::id(),
             ],
             'items' => $invoice_items,
         ];
         // Generate Invoice with Invoice Service
         $inv_number = InvoiceService::create($invoice_data);
+        if ($inv_number) {
+            // no settlement update needed here anymore
+            return $rem_advance;
+        }
+        if($can_settle)
+        {
+            $inv = BillInvoice::find($inv_number['invoice_id']);
+            // Advance Transaction
+            $inv->advance()->create([
+                'amount' => $settlement,
+                'balance' => $rem_advance,
+            ]);
+        }
+
+        return $advance; // invoice failed, return untouched
     }
 }

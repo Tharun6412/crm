@@ -138,9 +138,18 @@
                                 <div class="col-sm-8">
                                     <label class="col-form-label" id="tax_amt"></label>
                                 </div>
-                                <label for="total_amount" class="col-sm-4 col-form-label text-end">Total Amount&nbsp;:&nbsp;</label>
+                                <label for="total_amount" class="col-sm-4 col-form-label text-end">Total Amount&nbsp;(A)&nbsp;:&nbsp;</label>
                                 <div class="col-sm-8">
                                     <label class="col-form-label" id="total_amt"></label>
+                                </div>
+                                <label for="adv_amount" class="col-sm-4 col-form-label text-end">Advance Amount&nbsp;(B)&nbsp;:&nbsp;</label>
+                                <div class="col-sm-8">
+                                    <label class="col-form-label" id="adv_amt">{{ numberFormat($advance,2) }}</label>
+                                    <input type="hidden" id="adv_amount" value="{{ $advance }}">
+                                </div>
+                                <label for="payable_amount" class="col-sm-4 col-form-label text-end">Payable Amount&nbsp;(A-B)&nbsp;:&nbsp;</label>
+                                <div class="col-sm-8">
+                                    <label class="col-form-label" id="payable_amt"></label>
                                 </div>
                             </div>
                         </div>
@@ -176,10 +185,12 @@
                     $('#base_amt').html("");
                     $('#tax_amt').html("");
                     $('#total_amt').html("");
+                    $('#payable_amt').html("");
                     return false;
                 }
                 else {
                     var old_consumption = $('#old_consumption').val();
+                    var adv_amt = $('#adv_amount').val();
                     var net_scm = Number(end_read - start_read).toFixed(3);
                     var total_scm = (parseFloat(net_scm) + parseFloat(old_consumption)).toFixed(3);
                     var price = $('#unit_price').val();
@@ -187,11 +198,14 @@
                     var base_amot = (total_scm * price).toFixed(2);
                     var tax_amot = (parseFloat(base_amot * vat)/100).toFixed(2);
                     var total_amot = Number(parseFloat(base_amot) + parseFloat(tax_amot)).toFixed(2);
+                    var payable_amot = Number(parseFloat(total_amot) - parseFloat(adv_amt)).toFixed(2);
+                    if(payable_amot <= 0) { payable_amot = 0}
 
                     $('#net_scm').html(total_scm);
                     $('#base_amt').html(base_amot);
                     $('#tax_amt').html(tax_amot);
                     $('#total_amt').html(total_amot);
+                    $('#payable_amt').html(payable_amot);
                     $('#end_read_err').html("");
                     return true;
                 }
@@ -202,6 +216,7 @@
                 $('#base_amt').html("");
                 $('#tax_amt').html("");
                 $('#total_amt').html("");
+                $('#payable_amt').html("");
                 return false;
             }
         }

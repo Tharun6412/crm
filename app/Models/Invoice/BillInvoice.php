@@ -40,6 +40,7 @@ class BillInvoice extends Model
         'tax_value',
         'tax_amount',
         'total_amount',
+        'advance_amount',
         'credit_amount',
         'payable_amount',
         'paid_amount',
