@@ -52,7 +52,7 @@ class ProspectsExport implements FromQuery, WithHeadings, WithMapping
             $q->whereIn('segment_id', $this->request->get('segments'));
         })
         ->when((!empty($this->request->date_from) and !empty($this->request->date_to)), function($q) {
-            $q->whereBetween('expected_date', [Carbon::createFromFormat('d-m-Y', $this->request->date_from)->startOfDay()->toDateTimeString(), Carbon::createFromFormat('d-m-Y', $this->request->date_to)->endOfDay()->toDateTimeString()]);
+            $q->whereBetween('created_at', [Carbon::createFromFormat('d-m-Y', $this->request->date_from)->startOfDay()->toDateTimeString(), Carbon::createFromFormat('d-m-Y', $this->request->date_to)->endOfDay()->toDateTimeString()]);
         });
         $prospects = $query->orderBy($sortBy, $sortOr);
         return $prospects;
@@ -63,7 +63,7 @@ class ProspectsExport implements FromQuery, WithHeadings, WithMapping
      */
     public function headings():array
     {
-        return ['S.No', 'GA', 'Segment', 'Name', 'Industrial Area', 'Current Fuel', 'Potential', 'Expected Date', 'Stage', 'Sub Stage', 'Status', 'Last Status Date'];
+        return ['S.No', 'GA', 'Segment', 'Name', 'Industrial Area', 'Current Fuel', 'Potential', 'Expected Date', 'Stage', 'Sub Stage', 'Status', 'Last Status Date', 'Added Date'];
     }
 
     /**
@@ -85,6 +85,7 @@ class ProspectsExport implements FromQuery, WithHeadings, WithMapping
             $prospect->stage->name,
             $prospect->statusType->name,
             !empty($prospect->status_date) ? Carbon::parse($prospect->status_date)->format('d-m-Y') : '',
+            !empty($prospect->created_at) ? Carbon::parse($prospect->created_at)->format('d-m-Y') : '',
         ];
     }
 }

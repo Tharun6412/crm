@@ -53,7 +53,6 @@
                         \App\Enums\ConsumerStatus::ACTIVATE->value,
                         \App\Enums\ConsumerStatus::TD->value,
                         \App\Enums\ConsumerStatus::PD->value,
-                        \App\Enums\ConsumerStatus::REJECT->value,
                     ];
                     $acceptStatus = [
                         \App\Enums\ConsumerStatus::ACCEPT->value,
@@ -105,7 +104,7 @@
                         $reject = $consumer_status_counts[$district->id][\App\Enums\ConsumerStatus::REJECT->value] ?? 0;
                         // Cumulative Status
                         $pre_reg_sum = array_sum($consumer_status_counts[$district->id] ?? []);
-                        $reg_sum = $register + $accept + $execute + $hsc + $activate + $td + $pd + $reject;
+                        $reg_sum = $register + $accept + $execute + $hsc + $activate + $td + $pd;
                         $ver_sum = $accept + $execute + $hsc + $activate + $td + $pd;
                         $exe_sum = $execute + $hsc + $activate + $td + $pd;
                         $hsc_sum = $hsc + $activate + $td + $pd;

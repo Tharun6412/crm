@@ -38,7 +38,7 @@
                         <tr>
                             <td class="text-center">{{ $i++ }}</td>
                             <td nowrap>{{ $report->consumer->ga->name }}</td>
-                            <td>{{ $report->consumer->crn ?? $report->consumer->t_crn }}</td>
+                            <td><a href="{{ url('consumers/'.$report->consumer->id) }}" target="_blank">{{ $report->consumer->crn ?? $report->consumer->t_crn }}</a></td>
                             <td>{{ $report->consumer->connection_type_id == "1" ? "Postpaid" : "Prepaid" }}</td>
                             <td>{{ $report->consumer->fname }}&nbsp;{{ $report->consumer->lname }}</td>
                             <td>{{ $report->status->name }}</td>

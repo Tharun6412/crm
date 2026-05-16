@@ -40,7 +40,7 @@ class ConsumerPrepaidExport implements FromQuery, WithHeadings, WithMapping
             ])
             ->whereBetween('conversion_date', [$from, $to])
             ->whereHas('consumers', function ($q) {
-                $q->where('ga_id', $this->request->ga_id)->where('status_id', $this->request->status_id);    
+                $q->where('ga_id', $this->request->ga_id);    
                 if ($this->request->filled('conv_segment_id')) {
                     $q->where('segment_id', $this->request->conv_segment_id);
                 }
@@ -65,12 +65,12 @@ class ConsumerPrepaidExport implements FromQuery, WithHeadings, WithMapping
         return [
             $this->i,
             $consumer->consumers->ga?->name,
-            $consumer->consumers?->crn ?? '',
+            $consumer->consumers?->crn ?? $consumer->consumers->t_crn,
             $consumer->consumers->connectType?->name,
             $consumer->consumers?->name,
             $consumer->consumers->status?->name,
             $consumer->conversion_date ? dateFormat($consumer->conversion_date) : '',
-            $consumer->createdBy?->name,
+            $consumer->consumers->createdBy?->name,
             $consumer->consumers->created_at ? dateFormat($consumer->consumers->created_at) : '',
         ];
     }

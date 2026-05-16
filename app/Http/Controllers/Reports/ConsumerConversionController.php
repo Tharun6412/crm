@@ -79,6 +79,7 @@ class ConsumerConversionController extends Controller
         ])
         ->whereBetween('conversion_date', [$from, $to])
         ->whereHas('consumers', function ($q) use ($request) {
+            $q->whereNotIn('status_id', [EnumsConsumerStatus::REJECT->value]);
             if($request->filled('ga_id')) {
                 $q->where('ga_id', $request->ga_id);
             }

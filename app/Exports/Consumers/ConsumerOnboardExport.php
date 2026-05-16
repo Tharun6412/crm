@@ -72,7 +72,7 @@ class ConsumerOnboardExport implements FromQuery, WithHeadings, WithMapping
         return [
             $this->i,
             $consumer->consumer->ga?->name,
-            $consumer->consumer?->crn ?? '',
+            $consumer->consumer?->crn ?? $consumer->consumer->t_crn,
             $consumer->consumer->connectType?->name,
             $consumer->consumer?->name,
             $consumer->status?->name,
