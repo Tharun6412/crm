@@ -28,7 +28,7 @@ class InvoiceController extends Controller
     /**
      * Create Invoice
      * 
-     * @param $id Consumer Id
+     * @param int $id Consumer Id
      */
     public function create($id)
     {
@@ -143,7 +143,7 @@ class InvoiceController extends Controller
 
     /**
      * Save invoice
-     * @param id consumer_id
+     * @param int $id consumer_id
      */
     public function store(Request $request, $id)
     {
@@ -209,7 +209,7 @@ class InvoiceController extends Controller
     /**
      * Show invoice
      * 
-     * @param Int Invoice Id
+     * @param Int $id - Invoice Id
      */
     public function show($id)
     {

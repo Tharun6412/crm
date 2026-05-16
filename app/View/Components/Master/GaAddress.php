@@ -11,15 +11,25 @@ class GaAddress extends Component
 {
     /**
      * Ga Id
+     * @var int $gaId
      */
     public $gaId;
 
     /**
-     * Create a new component instance.
+     * Display
+     * @var int $display
      */
-    public function __construct($gaId)
+    public $display;
+
+    /**
+     * Create a new component instance.
+     * @param int $gaId
+     * @param int $display
+     */
+    public function __construct($gaId, $display = 0)
     {
         $this->gaId = $gaId;
+        $this->display = $display;
     }
 
     /**
@@ -31,6 +41,6 @@ class GaAddress extends Component
         $address = BillAddress::where('ga_id', $this->gaId)->first();
 
         // Render output
-        return view('components.master.ga-address', ['address' => $address]);
+        return view('components.master.ga-address', ['address' => $address, 'display' => $this->display]);
     }
 }

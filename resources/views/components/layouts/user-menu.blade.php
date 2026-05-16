@@ -29,6 +29,10 @@
                     <i class="bi bi-fingerprint me-1"></i>
                     <span>My Account</span>
                 </a>
+                <a href="{{ url('user/exports') }}" class="dropdown-item">
+                    <i class="bi bi-database-down me-1"></i>
+                    <span>Exported Files</span>
+                </a>
                 <a href="{{ url('changePassword') }}" class="dropdown-item">
                     <i class="bi bi-person-lock me-1"></i>
                     <span>Change Password</span>

@@ -16,7 +16,7 @@ class GasBillController extends Controller
      * Show
      * 
      * Display gasbill
-     * @param Int InvoiceId
+     * @param Int $id InvoiceId
      */
     public function show($id)
     {
@@ -78,7 +78,7 @@ class GasBillController extends Controller
         // Set Locale for regional language
         App::setLocale($invoice->consumer->state->lang_code ?? 'tel');
         // Render output
-        return view('billing.gas-bill.show', [
+        return view(($invoice->prepaid == 2) ? 'billing.gas-bill.show-prepaid' : 'billing.gas-bill.show', [
             'invoice' => $invoice, 
             'avg_scm' => $avg_scm, 
             'avg_scm_per_day' => $avg_scm_per_day,

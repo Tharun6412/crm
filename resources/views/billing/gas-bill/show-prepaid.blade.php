@@ -4,7 +4,7 @@
 
 @section('title', 'View Gas Bill')
 
-@section('page-title', 'Gas Bill - ' . $invoice->invoice_number)
+@section('page-title', 'Prepaid Gas Invoice - ' . $invoice->invoice_number)
 
 @section('page-content')
     @php 

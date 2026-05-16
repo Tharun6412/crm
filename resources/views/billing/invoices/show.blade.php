@@ -45,12 +45,47 @@
                         <div class="col-sm-6">{{ $invoice->consumer?->crn }}</div>
                         <div class="col-sm-12 text-end">
                             <h4 class="fw-semibold text-primary mt-2 me-5">{{ $invoice->invoiceType->name ?? '' }}</h4>
+                            {{-- Switch invoice view --}}
+                            @if ($invoice->type_id == 1)
+                                <a href="{{ url('bill/gasInvoice/' . $invoice->id) }}" class="btn btn-sm btn-outline-primary me-5"><i class="bi bi-arrow-left-right"></i>&nbsp;Switch to Gas bill</a>
+                            @endif
                         </div>
                     </div>
                 </div>
             </div>
             <div class="bg-white px-4">
-                <div class="fw-semibold fs-5">Invoice items</div>                    
+                {{-- Consumption details --}}
+                @if ($invoice->type_id == 1)
+                    <div class="fw-semibold fs-5">Consumption Details</div>
+                    <table class="table table-bordered">
+                        <tbody>
+                            <tr>
+                                <td>Consumption Period ({{ $invoice->consumption->date_from?->format('d-m-Y') }} to {{ $invoice->consumption->date_to?->format('d-m-Y') }})</td>
+                                <td class="text-end">{{ $invoice->consumption->days ?? 0 }} Days</td>
+                            </tr>
+                            <tr>
+                                <td>Meter Number {{ $invoice->consumption->meter->meter_no ?? '' }} / {{ $invoice->consumption->meter->meter_serial_no ?? '' }}<br>Readings ({{ numberFormat($invoice->consumption->curr_reading, 3) }} - {{ numberFormat($invoice->consumption->prev_reading, 3) }})</td>
+                                <td class="text-end">{{ numberFormat($invoice->consumption->consumption ?? 0, 3) }} SCM</td>
+                            </tr>
+                            @if ($invoice->consumption->old_consumption > 0)
+                                <tr>
+                                    <td>Old Meter Consumption</td>
+                                    <td class="text-end">{{ numberFormat($invoice->consumption->old_consumption ?? 0, 3) }} SCM</td>
+                                </tr>
+                                <tr>
+                                    <td>Net Consumption</td>
+                                    <td class="text-end">{{ numberFormat($invoice->consumption->net_consumption ?? 0, 3) }} SCM</td>
+                                </tr>
+                            @endif
+                            <tr>
+                                <td>Unit Price</td>
+                                <td class="text-end">{{ numberFormat($invoice->consumption->unit_price ?? 0, 2) }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                @endif
+                {{-- Invoice Items --}}
+                <div class="fw-semibold fs-5">Invoice items</div>
                 <table class="table table-bordered">
                     <thead class="table-success">
                         <tr>
@@ -105,7 +140,7 @@
              <div class="p-3 text-end" id="printDiv">
                 <button class="btn btn-primary" onclick="printDiv('printableArea')"><i class="bi bi-printer"></i>&nbsp;Print Invoice</button>
             </div>
-        </div>        
+        </div>
         <div class="ms-2 p-2 bg-white">
             {{-- Child or Connected Invoices --}}
             @if ($invoice->childInvoices->count() > 0)
