@@ -35,6 +35,55 @@
     </div>
     @php
         $tot_pre_reg_sum = $tot_reg_sum = $tot_ver_sum = $tot_exe_sum = $tot_hsc_sum = $tot_act_sum = $tot_td_sum = $tot_pd_sum = $tot_reject_sum = 0;
+        // Register Status
+        $registerStatuses = [
+            \App\Enums\ConsumerStatus::REGISTER->value,
+            \App\Enums\ConsumerStatus::ACCEPT->value,
+            \App\Enums\ConsumerStatus::EXECUTE->value,
+            \App\Enums\ConsumerStatus::HSC->value,
+            \App\Enums\ConsumerStatus::ACTIVATE->value,
+            \App\Enums\ConsumerStatus::TD->value,
+            \App\Enums\ConsumerStatus::PD->value,
+        ];
+        // Verify Status
+        $acceptStatuses = [
+            \App\Enums\ConsumerStatus::ACCEPT->value,
+            \App\Enums\ConsumerStatus::EXECUTE->value,
+            \App\Enums\ConsumerStatus::HSC->value,
+            \App\Enums\ConsumerStatus::ACTIVATE->value,
+            \App\Enums\ConsumerStatus::TD->value,
+            \App\Enums\ConsumerStatus::PD->value,
+        ];
+        // Execute Status
+        $executeStatuses = [
+            \App\Enums\ConsumerStatus::EXECUTE->value,
+            \App\Enums\ConsumerStatus::HSC->value,
+            \App\Enums\ConsumerStatus::ACTIVATE->value,
+            \App\Enums\ConsumerStatus::TD->value,
+            \App\Enums\ConsumerStatus::PD->value,
+        ];
+        // HSC Status
+        $hscStatuses = [
+            \App\Enums\ConsumerStatus::HSC->value,
+            \App\Enums\ConsumerStatus::ACTIVATE->value,
+            \App\Enums\ConsumerStatus::TD->value,
+            \App\Enums\ConsumerStatus::PD->value,
+        ];
+        $activateStatuses = [
+            \App\Enums\ConsumerStatus::ACTIVATE->value,
+            \App\Enums\ConsumerStatus::TD->value,
+            \App\Enums\ConsumerStatus::PD->value,
+        ];
+        $tdStatuses = [
+            \App\Enums\ConsumerStatus::TD->value,
+            \App\Enums\ConsumerStatus::PD->value,
+        ];
+        $pdStatuses = [
+            \App\Enums\ConsumerStatus::PD->value,
+        ];
+        $rejectStatuses = [
+            \App\Enums\ConsumerStatus::REJECT->value,
+        ];
     @endphp
     @foreach($geo_areas as $ga)
         @php
@@ -72,7 +121,7 @@
                 <div class="bg-body-secondary rounded py-1 px-2 fs-5 text-truncate">
                     <div class="d-flex justify-content-between">
                         <span>{{ $ga->name }}</span>
-                        <a href="{{ url('reports/consumer/onboarding/getDistrictsOverviewCount') }}?ga_id={{ $ga->id }}&ga_name={{ $ga->name }}&{{ http_build_query(request()->all()) }}" class="link-modal" title="Districts Counts">
+                        <a href="{{ url('reports/consumer/onboarding/getDistrictsOverviewCount') }}?{{ http_build_query(['ga_id' => [$ga->id],'ga_name' => $ga->name, 'connection_type_id' => request()->connect_type, 'segments' => request()->cumulative_segment_id]) }}" class="link-modal" title="Districts Counts">
                             <i class="bi bi-box-arrow-up-right"></i>
                         </a>
                     </div>
@@ -80,47 +129,47 @@
             </div>
             <div class="col">
                 <div class="border rounded text-end py-1 px-2 fs-5">
-                    {{ numberFormat(array_sum($consumer_status_counts[$ga->id] ?? [])) }}
+                    <a href="{{ url('consumers') }}?{{ http_build_query(['geo_area' => [$ga->id], 'connection_type_id' => [request()->connect_type], 'segments' => [request()->cumulative_segment_id]]) }}" target="_blank">{{ numberFormat(array_sum($consumer_status_counts[$ga->id] ?? [])) }}</a>
                 </div>
             </div>
             <div class="col">
                 <div class="border rounded text-end py-1 px-2 fs-5">
-                    {{ numberFormat($reg_sum) }}
+                    <a href="{{ url('consumers') }}?{{ http_build_query(['geo_area' => [$ga->id], 'cns_status' => $registerStatuses, 'connection_type_id' => [request()->connect_type], 'segments' => [request()->cumulative_segment_id]]) }}" target="_blank">{{ numberFormat($reg_sum) }}</a>
                 </div>
             </div>
             <div class="col">
                 <div class="border rounded text-end py-1 px-2 fs-5">
-                    {{ numberFormat($ver_sum) }}
+                    <a href="{{ url('consumers') }}?{{ http_build_query(['geo_area' => [$ga->id], 'cns_status' => $acceptStatuses, 'connection_type_id' => [request()->connect_type], 'segments' => [request()->cumulative_segment_id]]) }}" target="_blank">{{ numberFormat($ver_sum) }}</a>
                 </div>
             </div>
             <div class="col">
                 <div class="border rounded text-end py-1 px-2 fs-5">
-                    {{ numberFormat($exe_sum) }}
+                    <a href="{{ url('consumers') }}?{{ http_build_query(['geo_area' => [$ga->id], 'cns_status' => $executeStatuses, 'connection_type_id' => [request()->connect_type], 'segments' => [request()->cumulative_segment_id]]) }}" target="_blank">{{ numberFormat($exe_sum) }}</a>
                 </div>
             </div>
             <div class="col">
                 <div class="border rounded text-end py-1 px-2 fs-5">
-                    {{ numberFormat($hsc_sum) }}
+                    <a href="{{ url('consumers') }}?{{ http_build_query(['geo_area' => [$ga->id], 'cns_status' => $hscStatuses, 'connection_type_id' => [request()->connect_type], 'segments' => [request()->cumulative_segment_id]]) }}" target="_blank">{{ numberFormat($hsc_sum) }}</a>
                 </div>
             </div>
             <div class="col">
                 <div class="border rounded text-end py-1 px-2 fs-5">
-                    {{ numberFormat($act_sum) }}
+                    <a href="{{ url('consumers') }}?{{ http_build_query(['geo_area' => [$ga->id], 'cns_status' => $activateStatuses, 'connection_type_id' => [request()->connect_type], 'segments' => [request()->cumulative_segment_id]]) }}" target="_blank">{{ numberFormat($act_sum) }}</a>
                 </div>
             </div>
             <div class="col">
                 <div class="border rounded text-end py-1 px-2 fs-5">
-                    {{ numberFormat($td_sum) }}
+                    <a href="{{ url('consumers') }}?{{ http_build_query(['geo_area' => [$ga->id], 'cns_status' => $tdStatuses, 'connection_type_id' => [request()->connect_type], 'segments' => [request()->cumulative_segment_id]]) }}" target="_blank">{{ numberFormat($td_sum) }}</a>
                 </div>
             </div>
             <div class="col">
                 <div class="border rounded text-end py-1 px-2 fs-5">
-                    {{ numberFormat($pd_sum) }}
+                    <a href="{{ url('consumers') }}?{{ http_build_query(['geo_area' => [$ga->id], 'cns_status' => $pdStatuses, 'connection_type_id' => [request()->connect_type], 'segments' => [request()->cumulative_segment_id]]) }}" target="_blank">{{ numberFormat($pd_sum) }}</a>
                 </div>
             </div>
             <div class="col">
                 <div class="border rounded text-end py-1 px-2 fs-5">
-                    {{ $reject }}
+                    <a href="{{ url('consumers') }}?{{ http_build_query(['geo_area' => [$ga->id], 'cns_status' => $rejectStatuses, 'connection_type_id' => [request()->connect_type], 'segments' => [request()->cumulative_segment_id]]) }}" target="_blank">{{ $reject }}</a>
                 </div>
             </div>
         </div>
@@ -132,47 +181,47 @@
         </div>
         <div class="col">
             <div class="bg-info-subtle border rounded text-end py-1 px-2 fs-5 fw-semibold">
-                {{ numberFormat($tot_pre_reg_sum) }}
+                <a href="{{ url('consumers') }}?{{ http_build_query(['connection_type_id' => [request()->connect_type], 'segments' => [request()->cumulative_segment_id]]) }}" target="_blank">{{ numberFormat($tot_pre_reg_sum) }}</a>
             </div>
         </div>
         <div class="col">
             <div class="bg-info-subtle border rounded text-end py-1 px-2 fs-5 fw-semibold">
-                {{ numberFormat($tot_reg_sum) }}
+                <a href="{{ url('consumers') }}?{{ http_build_query(['cns_status' => $registerStatuses,'connection_type_id' => [request()->connect_type], 'segments' => [request()->cumulative_segment_id]]) }}" target="_blank">{{ numberFormat($tot_reg_sum) }}</a>
             </div>
         </div>
         <div class="col">
             <div class="bg-info-subtle border rounded text-end py-1 px-2 fs-5 fw-semibold">
-                {{ numberFormat($tot_ver_sum) }}
+                <a href="{{ url('consumers') }}?{{ http_build_query(['cns_status' => $acceptStatuses,'connection_type_id' => [request()->connect_type], 'segments' => [request()->cumulative_segment_id]]) }}" target="_blank">{{ numberFormat($tot_ver_sum) }}</a>
             </div>
         </div>
         <div class="col">
             <div class="bg-info-subtle border rounded text-end py-1 px-2 fs-5 fw-semibold">
-                {{ numberFormat($tot_exe_sum) }}
+                <a href="{{ url('consumers') }}?{{ http_build_query(['cns_status' => $executeStatuses,'connection_type_id' => [request()->connect_type], 'segments' => [request()->cumulative_segment_id]]) }}" target="_blank">{{ numberFormat($tot_exe_sum) }}</a>
             </div>
         </div>
         <div class="col">
             <div class="bg-info-subtle border rounded text-end py-1 px-2 fs-5 fw-semibold">
-                {{ numberFormat($tot_hsc_sum) }}
+                <a href="{{ url('consumers') }}?{{ http_build_query(['cns_status' => $hscStatuses,'connection_type_id' => [request()->connect_type], 'segments' => [request()->cumulative_segment_id]]) }}" target="_blank">{{ numberFormat($tot_hsc_sum) }}</a>
             </div>
         </div>
         <div class="col">
             <div class="bg-info-subtle border rounded text-end py-1 px-2 fs-5 fw-semibold">
-                {{ numberFormat($tot_act_sum) }}
+                <a href="{{ url('consumers') }}?{{ http_build_query(['cns_status' => $activateStatuses,'connection_type_id' => [request()->connect_type], 'segments' => [request()->cumulative_segment_id]]) }}" target="_blank">{{ numberFormat($tot_act_sum) }}</a>
             </div>
         </div>
         <div class="col">
             <div class="bg-info-subtle border rounded text-end py-1 px-2 fs-5 fw-semibold">
-                {{ numberFormat($tot_td_sum) }}
+                <a href="{{ url('consumers') }}?{{ http_build_query(['cns_status' => $tdStatuses,'connection_type_id' => [request()->connect_type], 'segments' => [request()->cumulative_segment_id]]) }}" target="_blank">{{ numberFormat($tot_td_sum) }}</a>
             </div>
         </div>
         <div class="col">
             <div class="bg-info-subtle border rounded text-end py-1 px-2 fs-5 fw-semibold">
-                {{ numberFormat($tot_pd_sum) }}
+                <a href="{{ url('consumers') }}?{{ http_build_query(['cns_status' => $pdStatuses,'connection_type_id' => [request()->connect_type], 'segments' => [request()->cumulative_segment_id]]) }}" target="_blank">{{ numberFormat($tot_pd_sum) }}</a>
             </div>
         </div>
         <div class="col">
             <div class="bg-info-subtle border rounded text-end py-1 px-2 fs-5 fw-semibold">
-                {{ numberFormat($tot_reject_sum) }}
+                <a href="{{ url('consumers') }}?{{ http_build_query(['cns_status' => $rejectStatuses,'connection_type_id' => [request()->connect_type], 'segments' => [request()->cumulative_segment_id]]) }}" target="_blank">{{ numberFormat($tot_reject_sum) }}</a>
             </div>
         </div>
     </div>

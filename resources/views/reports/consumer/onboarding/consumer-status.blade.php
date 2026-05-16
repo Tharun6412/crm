@@ -107,52 +107,52 @@
         </div>
         <div class="col">
             <div class="bg-info-subtle border rounded text-end py-1 px-2 fs-5 fw-semibold">
-                {{ numberFormat($consumer_status_sum[\App\Enums\ConsumerStatus::PRE_REGISTER->value] ?? 0) }}
+                <a href="{{ url('consumers') }}?{{ http_build_query(['cns_status' => [\App\Enums\ConsumerStatus::PRE_REGISTER->value], 'connection_type_id' => request()->connect_type_id, 'segments' => [request()->onboard_segment_id]]) }}" target="_blank">{{ numberFormat($consumer_status_sum[\App\Enums\ConsumerStatus::PRE_REGISTER->value] ?? 0) }}</a>
             </div>
         </div>
         <div class="col">
             <div class="bg-info-subtle border rounded text-end py-1 px-2 fs-5 fw-semibold">
-                {{ numberFormat($consumer_status_sum[\App\Enums\ConsumerStatus::REGISTER->value] ?? 0) }}
+                <a href="{{ url('consumers') }}?{{ http_build_query(['cns_status' => [\App\Enums\ConsumerStatus::REGISTER->value], 'connection_type_id' => request()->connect_type_id, 'segments' => [request()->onboard_segment_id]]) }}" target="_blank">{{ numberFormat($consumer_status_sum[\App\Enums\ConsumerStatus::REGISTER->value] ?? 0) }}</a>
             </div>
         </div>
         <div class="col">
             <div class="bg-info-subtle border rounded text-end py-1 px-2 fs-5 fw-semibold">
-                {{ numberFormat($consumer_status_sum[\App\Enums\ConsumerStatus::ACCEPT->value] ?? 0) }}
+                <a href="{{ url('consumers') }}?{{ http_build_query(['cns_status' => [\App\Enums\ConsumerStatus::ACCEPT->value], 'connection_type_id' => request()->connect_type_id, 'segments' => [request()->onboard_segment_id]]) }}" target="_blank">{{ numberFormat($consumer_status_sum[\App\Enums\ConsumerStatus::ACCEPT->value] ?? 0) }}</a>
             </div>
         </div>
         <div class="col">
             <div class="bg-info-subtle border rounded text-end py-1 px-2 fs-5 fw-semibold">
-                {{ numberFormat($consumer_status_sum[\App\Enums\ConsumerStatus::EXECUTE->value] ?? 0) }}
+                <a href="{{ url('consumers') }}?{{ http_build_query(['cns_status' => [\App\Enums\ConsumerStatus::EXECUTE->value], 'connection_type_id' => request()->connect_type_id, 'segments' => [request()->onboard_segment_id]]) }}" target="_blank">{{ numberFormat($consumer_status_sum[\App\Enums\ConsumerStatus::EXECUTE->value] ?? 0) }}</a>
             </div>
         </div>
         <div class="col">
             <div class="bg-info-subtle border rounded text-end py-1 px-2 fs-5 fw-semibold">
-                {{ numberFormat($consumer_status_sum[\App\Enums\ConsumerStatus::HSC->value] ?? 0) }}
+                <a href="{{ url('consumers') }}?{{ http_build_query(['cns_status' => [\App\Enums\ConsumerStatus::HSC->value], 'connection_type_id' => request()->connect_type_id, 'segments' => [request()->onboard_segment_id]]) }}" target="_blank">{{ numberFormat($consumer_status_sum[\App\Enums\ConsumerStatus::HSC->value] ?? 0) }}</a>
             </div>
         </div>
         <div class="col">
             <div class="bg-info-subtle border rounded text-end py-1 px-2 fs-5 fw-semibold">
-                {{ numberFormat($consumer_status_sum[\App\Enums\ConsumerStatus::ACTIVATE->value] ?? 0) }}
+                <a href="{{ url('consumers') }}?{{ http_build_query(['cns_status' => [\App\Enums\ConsumerStatus::ACTIVATE->value], 'connection_type_id' => request()->connect_type_id, 'segments' => [request()->onboard_segment_id]]) }}" target="_blank">{{ numberFormat($consumer_status_sum[\App\Enums\ConsumerStatus::ACTIVATE->value] ?? 0) }}</a>
             </div>
         </div>
         <div class="col">
             <div class="bg-info-subtle border rounded text-end py-1 px-2 fs-5 fw-semibold">
-                {{ numberFormat($consumer_status_sum[\App\Enums\ConsumerStatus::TD->value] ?? 0) }}
+                <a href="{{ url('consumers') }}?{{ http_build_query(['cns_status' => [\App\Enums\ConsumerStatus::TD->value], 'connection_type_id' => request()->connect_type_id, 'segments' => [request()->onboard_segment_id]]) }}" target="_blank">{{ numberFormat($consumer_status_sum[\App\Enums\ConsumerStatus::TD->value] ?? 0) }}</a>
             </div>
         </div>
         <div class="col">
             <div class="bg-info-subtle border rounded text-end py-1 px-2 fs-5 fw-semibold">
-                {{ numberFormat($consumer_status_sum[\App\Enums\ConsumerStatus::PD->value] ?? 0) }}
+                <a href="{{ url('consumers') }}?{{ http_build_query(['cns_status' => [\App\Enums\ConsumerStatus::PD->value], 'connection_type_id' => request()->connect_type_id, 'segments' => [request()->onboard_segment_id]]) }}" target="_blank">{{ numberFormat($consumer_status_sum[\App\Enums\ConsumerStatus::PD->value] ?? 0) }}</a>
             </div>
         </div>
         <div class="col">
             <div class="bg-info-subtle border rounded text-end py-1 px-2 fs-5 fw-semibold">
-                {{ numberFormat($consumer_status_sum[\App\Enums\ConsumerStatus::REJECT->value] ?? 0) }}
+                <a href="{{ url('consumers') }}?{{ http_build_query(['cns_status' => [\App\Enums\ConsumerStatus::REJECT->value], 'connection_type_id' => request()->connect_type_id, 'segments' => [request()->onboard_segment_id]]) }}" target="_blank">{{ numberFormat($consumer_status_sum[\App\Enums\ConsumerStatus::REJECT->value] ?? 0) }}</a>
             </div>
         </div>
         <div class="col">
             <div class="bg-info-subtle border rounded text-end py-1 px-2 fs-5 fw-semibold">
-                {{ numberFormat(array_sum($consumer_status_sum ?? [])) }}
+                <a href="{{ url('consumers') }}?{{ http_build_query(['connection_type_id' => request()->connect_type_id, 'segments' => [request()->onboard_segment_id]]) }}" target="_blank">{{ numberFormat(array_sum($consumer_status_sum ?? [])) }}</a>
             </div>
         </div>
     </div>

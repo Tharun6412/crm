@@ -153,10 +153,19 @@ class PaymentsController extends Controller
             if ($invoice->balance_amount <= 0) {
                 continue;
             }
-            $payAmount = min($invoice->balance_amount, $remainingAmount);
+            // Child Invoice not accepted for partial Payments
+            if($invoice->id !== $parentInvoice->id) {
+                if($remainingAmount < $invoice->balance_amount){
+                    continue;
+                }
+                $payAmount = $invoice->balance_amount;
+            }else {
+                // Parent Invoice can accept Partial Amount
+                $payAmount = $remainingAmount;
+            }
+            // $payAmount = min($invoice->balance_amount, $remainingAmount);
             $newBalance = $invoice->balance_amount - $payAmount;
             $newPaid    = $invoice->paid_amount + $payAmount;
-
             // Create payment record for THIS invoice
             PaymentService::create([
                 'invoice_id'      => $invoice->id,

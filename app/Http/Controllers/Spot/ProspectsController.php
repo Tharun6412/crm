@@ -70,8 +70,12 @@ class ProspectsController extends Controller
             $q->whereIn('status_id', $request->get('status_id'));
         })->When($request->has('segments'), function($q) use($request) {
             $q->whereIn('segment_id', $request->get('segments'));
-        })->when((!empty($request->date_from) and !empty($request->date_to)), function($q) use($request) {
-            $q->whereBetween('expected_date', [Carbon::createFromFormat('d-m-Y', $request->date_from)->startOfDay()->toDateTimeString(), Carbon::createFromFormat('d-m-Y', $request->date_to)->endOfDay()->toDateTimeString()]);
+        })
+        // ->when((!empty($request->date_from) and !empty($request->date_to)), function($q) use($request) {
+        //     $q->whereBetween('expected_date', [Carbon::createFromFormat('d-m-Y', $request->date_from)->startOfDay()->toDateTimeString(), Carbon::createFromFormat('d-m-Y', $request->date_to)->endOfDay()->toDateTimeString()]);
+        // })
+        ->when((!empty($request->date_from) and !empty($request->date_to)), function($q) use($request) {
+            $q->whereBetween('created_at', [Carbon::createFromFormat('d-m-Y', $request->date_from)->startOfDay()->toDateTimeString(), Carbon::createFromFormat('d-m-Y', $request->date_to)->endOfDay()->toDateTimeString()]);
         });
         if(! (isAdmin() OR isGaHead() OR isClusterHead() OR isFullAccess() OR isSuperAdmin())) {
             $query->whereIn('ga_id', session()->get('user')['gas']);

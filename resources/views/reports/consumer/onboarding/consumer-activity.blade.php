@@ -24,9 +24,9 @@
         <div class="col">
             <div class="bg-success bg-gradient rounded text-white text-center py-1 px-2 fs-5">Activated</div>
         </div>
-        <div class="col">
+        {{-- <div class="col">
             <div class="bg-success bg-gradient rounded text-white text-center py-1 px-2 fs-5" title="Re-Connected">ReCon</div>
-        </div>
+        </div> --}}
         <div class="col">
             <div class="bg-warning bg-gradient rounded text-white text-center py-1 px-2 fs-5">TD</div>
         </div>
@@ -133,7 +133,7 @@
                     ]) }}" class="link-modal">{{ $consumer_status_data[$ga->id][\App\Enums\ConsumerStatus::ACTIVATE->value] ?? 0 }}</a>
                 </div>
             </div>
-            <div class="col">
+            {{-- <div class="col">
                 <div class="border rounded text-end py-1 px-2 fs-5">
                     <a href="{{ url('reports/consumer/onboardingStatusReport') }}?{{ http_build_query([
                         'status_id' => \App\Enums\ConsumerStatus::RECONNECT->value, 
@@ -146,7 +146,7 @@
                         'status_date' => request()->status_date,
                     ]) }}" class="link-modal">{{ $consumer_status_data[$ga->id][\App\Enums\ConsumerStatus::RECONNECT->value] ?? 0 }}</a>
                 </div>
-            </div>
+            </div> --}}
             <div class="col">
                 <div class="border rounded text-end py-1 px-2 fs-5">
                     <a href="{{ url('reports/consumer/onboardingStatusReport') }}?{{ http_build_query([
@@ -226,11 +226,11 @@
                 {{ $status_sum[\App\Enums\ConsumerStatus::ACTIVATE->value] ?? 0 }}
             </div>
         </div>
-        <div class="col">
+        {{-- <div class="col">
             <div class="bg-info-subtle border rounded text-end py-1 px-2 fs-5 fw-semibold">
                 {{ $status_sum[\App\Enums\ConsumerStatus::RECONNECT->value] ?? 0 }}
             </div>
-        </div>
+        </div> --}}
         <div class="col">
             <div class="bg-info-subtle border rounded text-end py-1 px-2 fs-5 fw-semibold">
                 {{ $status_sum[\App\Enums\ConsumerStatus::TD->value] ?? 0 }}

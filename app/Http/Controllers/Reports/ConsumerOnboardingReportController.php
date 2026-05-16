@@ -243,11 +243,11 @@ class ConsumerOnboardingReportController extends Controller
 
         // Get all consumer status counts
         $consumer_status_result = Consumer::selectRaw('ga_id, status_id, count(status_id) as count')
-            ->when(($request->has('connect_type_id') AND !empty($request->connect_type_id)), function($q) use($request) {
-                $q->where('connection_type_id', $request->connect_type_id);
+            ->when(($request->has('connect_type') AND !empty($request->connect_type)), function($q) use($request) {
+                $q->where('connection_type_id', $request->connect_type);
             })
-            ->when(($request->has('onboard_segment_id') AND !empty($request->onboard_segment_id)), function($q) use($request) {
-                $q->where('segment_id', $request->onboard_segment_id);
+            ->when(($request->has('cumulative_segment_id') AND !empty($request->cumulative_segment_id)), function($q) use($request) {
+                $q->where('segment_id', $request->cumulative_segment_id);
             })
             ->groupBy('ga_id', 'status_id')->get();
         
@@ -281,12 +281,13 @@ class ConsumerOnboardingReportController extends Controller
      */
     public function getDistrictsOverviewCount(Request $request)
     {
+        // dd($request->all());
         $district_count = Consumer::where('ga_id', $request->ga_id)->selectRaw('district_id, status_id, count(status_id) as count')
-            ->when(($request->has('connect_type_id') AND !empty($request->connect_type_id)), function($q) use($request) {
-                $q->where('connection_type_id', $request->connect_type_id);
+            ->when(($request->has('connection_type_id') AND !empty($request->connection_type_id)), function($q) use($request) {
+                $q->where('connection_type_id', $request->connection_type_id);
             })
-            ->when(($request->has('onboard_segment_id') AND !empty($request->onboard_segment_id)), function($q) use($request) {
-                $q->where('segment_id', $request->onboard_segment_id);
+            ->when(($request->has('segments') AND !empty($request->segments)), function($q) use($request) {
+                $q->where('segment_id', $request->segments);
             })
             ->groupBy('district_id', 'status_id')
             ->get();
@@ -297,7 +298,7 @@ class ConsumerOnboardingReportController extends Controller
             $consumer_status_counts[$row->district_id][$row->status_id] = $row->count;
         }
         // Check Connection Type Filter
-        switch($request->connect_type_id) {
+        switch($request->connection_type_id) {
             case 1:
                 $connect_type = EnumsConnectionType::POSTPAID->name; break;
             case 2:
@@ -306,7 +307,7 @@ class ConsumerOnboardingReportController extends Controller
                 $connect_type = '';
         }
         // Check Segment Filter
-        switch($request->onboard_segment_id) {
+        switch($request->segments) {
             case 1:
                 $segment = SegmentType::DOMESTIC->name;break;
             case 2:

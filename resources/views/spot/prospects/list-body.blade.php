@@ -92,12 +92,11 @@
                     <th nowrap>                    
                         <div class="d-flex gap-2">
                             <a href="{{ $prospects->appends(['sortBy' => 'expected_date','sortOr' => $sort_order_inverse])->url($prospects->currentPage()) }}">
-                            Gas service<br/>expected date
-                            @if ($sort_by == 'expected_date')
-                                <i class="bi {{ $sort_icon }}"></i>
-                            @endif
-                        </a>
-                        <x-master.date-filter class="float-end"/>
+                                Gas service<br/>expected date
+                                @if ($sort_by == 'expected_date')
+                                    <i class="bi {{ $sort_icon }}"></i>
+                                @endif
+                            </a>
                         </div>                    
                     </th>
                     <th nowrap class="text-center">
@@ -126,6 +125,15 @@
                             @endif
                         </a>
                     </th>
+                    <th nowrap class="text-center">
+                        <a href="{{ $prospects->appends(['sortBy' => 'created_at','sortOr' => $sort_order_inverse])->url($prospects->currentPage()) }}">
+                            Added Date
+                            @if ($sort_by == 'created_at')
+                                <i class="bi {{ $sort_icon }}"></i>
+                            @endif
+                        </a>
+                        <x-master.date-filter class="float-end"/>
+                    </th>
                     <th nowrap class="text-center">Actions</th>
                 </tr>
             </thead>
@@ -153,6 +161,7 @@
                                 <x-spot.status :status="$prospect->statusType"/>
                             </td>
                             <td>{{ $prospect->status_date?->format('d-m-Y') }}</td>
+                            <td>{{ $prospect->created_at?->format('d-m-Y') }}</td>
                             <td>
                                 {{-- Prospects Actions Dropdown --}}
                                 <div class="dropdown">
@@ -257,7 +266,7 @@
                     @endforeach
                 @else
                     <tr>
-                        <td colspan="13" class="text-center bg-info-subtle fw-semibold">No records found</td>
+                        <td colspan="15" class="text-center bg-info-subtle fw-semibold">No records found</td>
                     </tr>
                 @endif
             </tbody>

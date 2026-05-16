@@ -23,7 +23,6 @@
     </div>
     <div>
         <a href="{{ url('calls/complaintExport') .'?'. http_build_query(request()->all()) }}" class="btn btn-outline-primary"><i class="bi bi-file-earmark-excel"></i>&nbsp;Export</a>
-        {{-- <x-auth.link href="{{ url('calls/complaintExport', request()->all()) }}" class="btn btn-outline-primary" action="exprt"><i class="bi bi-file-earmark-excel"></i>&nbsp;Export</x-auth.link> --}}
     </div>
 </div>
 {{-- Complaints / Calls list --}}
@@ -74,7 +73,14 @@
                     </div> 
                 </th>
                 <th nowrap>Raised By<x-complaint.user-filter/></th>
-                <th nowrap>Est. Close Date</th>
+                <th nowrap>
+                    <a href="{{ $complaints->appends(['sortBy' => 'estimated_closed_at','sortOr' => $sort_order_inverse])->url($complaints->currentPage()) }}">
+                        Est. Close Date
+                        @if ($sort_by == 'estimated_closed_at')
+                            <i class="bi {{ $sort_icon }}"></i>
+                        @endif
+                    </a>
+                </th>
                 <th nowrap>Closed Date</th>
                 <th nowrap>Deviation</th>
                 <th nowrap>PNGRB Category</th>

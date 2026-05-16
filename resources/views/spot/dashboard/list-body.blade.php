@@ -92,7 +92,7 @@
 					<div class="row g-2">
 						@foreach ($status_list as $list)
 							<div class="col-6">
-								<a href="{{ url('spot/prospects') }}?{{ http_build_query(['segments' => [$segment->id],'stage_id'=> [$list->id]]) }}" target="_blank">
+								<a href="{{ url('spot/prospects') }}?{{ http_build_query(['segments' => [$segment->id],'stage_id'=> [$list->id], 'date_from' => $y_start->format('d-m-Y'), 'date_to' => $y_end->format('d-m-Y')]) }}" target="_blank">
 									<div class="d-flex align-items-center bg-{{ $list->color ?? 'success' }}-subtle rounded">
 										<div class="flex-fill w-50 fs-2 text-center">
 											<i class="bi bi-{{ $list->icon ?? 'flash' }} text-{{ $list->color ?? 'dark' }}"></i>

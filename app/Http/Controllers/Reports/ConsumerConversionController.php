@@ -40,17 +40,19 @@ class ConsumerConversionController extends Controller
             ->when($request->filled('conv_segment_id'), function ($q) use ($request) {
                 $q->where('cns_consumers.segment_id', $request->conv_segment_id);
             })
-            ->selectRaw('cns_consumers.ga_id, cns_consumers.status_id, COUNT(DISTINCT cns_consumers.id) as count')
+            ->selectRaw('cns_consumers.ga_id, COUNT(DISTINCT cns_consumers.id) as count')
             ->whereBetween('cns_prepaid.conversion_date', [$from, $to])
-            ->whereIn('cns_consumers.status_id', [EnumsConsumerStatus::ACTIVATE->value, EnumsConsumerStatus::TD->value, EnumsConsumerStatus::PD->value])
-            ->groupBy('cns_consumers.ga_id', 'cns_consumers.status_id')
+            ->whereNotIn('cns_consumers.status_id', [EnumsConsumerStatus::REJECT->value])
+            ->groupBy('cns_consumers.ga_id')
             ->get();
         // Prepare data
         $consumer_status_counts = [];
-        $consumer_status_sum = [];
+        $consumer_status_sum = 0;
         foreach($consumer_status_result as $row) {
-            $consumer_status_counts[$row->ga_id][$row->status_id] = $row->count;
-            $consumer_status_sum[$row->status_id] = isset($consumer_status_sum[$row->status_id]) ? $consumer_status_sum[$row->status_id] + $row->count : $row->count;
+            $consumer_status_counts[$row->ga_id] = $row->count;
+            // $consumer_status_counts[$row->ga_id][$row->status_id] = $row->count;
+            // $consumer_status_sum[$row->status_id] = isset($consumer_status_sum[$row->status_id]) ? $consumer_status_sum[$row->status_id] + $row->count : $row->count;
+            $consumer_status_sum += $row->count;
         }
         // Render output
         return view('reports.consumer.conversions.list', [
@@ -77,9 +79,9 @@ class ConsumerConversionController extends Controller
         ])
         ->whereBetween('conversion_date', [$from, $to])
         ->whereHas('consumers', function ($q) use ($request) {
-            $q->where('ga_id', $request->ga_id)
-                ->where('status_id', $request->status_id);    
-
+            if($request->filled('ga_id')) {
+                $q->where('ga_id', $request->ga_id);
+            }
             if ($request->filled('conv_segment_id')) {
                 $q->where('segment_id', $request->conv_segment_id);
             }
@@ -87,7 +89,7 @@ class ConsumerConversionController extends Controller
         ->paginate(50)
         ->withQueryString();
         // Check Segment Filter
-        switch($request->segment_id) {
+        switch($request->conv_segment_id) {
             case 1:
                 $segment = SegmentType::DOMESTIC->name;break;
             case 2:
@@ -124,13 +126,13 @@ class ConsumerConversionController extends Controller
         $to   = Carbon::parse($request->conv_date_to)->endOfDay();
         $district_count = Prepaid::query()
             ->join('cns_consumers', 'cns_consumers.id', '=', 'cns_prepaid.consumer_id')
-            ->select('cns_consumers.district_id', 'cns_consumers.status_id', DB::raw('COUNT(DISTINCT cns_consumers.id) as count'))
+            ->select('cns_consumers.district_id', DB::raw('COUNT(DISTINCT cns_consumers.id) as count'))
             ->where('cns_consumers.ga_id', $request->ga_id)
             ->whereBetween('cns_prepaid.conversion_date', [$from, $to])
             ->when(($request->has('conv_segment_id') AND !empty($request->conv_segment_id)), function($q) use($request) {
                 $q->where('cns_consumers.segment_id', $request->conv_segment_id);
             })
-            ->groupBy('cns_consumers.district_id', 'cns_consumers.status_id')->get();
+            ->groupBy('cns_consumers.district_id')->get();
         $districts = District::where('ga_id', $request->ga_id)->get();
         // Check Segment Filter
         switch($request->segment_id) {
@@ -145,10 +147,12 @@ class ConsumerConversionController extends Controller
         }
         // Prepare data
         $consumer_status_counts = [];
-        $consumer_status_sum = [];
+        $consumer_status_sum = 0;
         foreach($district_count as $row) {
-            $consumer_status_counts[$row->district_id][$row->status_id] = $row->count;
-            $consumer_status_sum[$row->status_id] = isset($consumer_status_sum[$row->status_id]) ? $consumer_status_sum[$row->status_id] + $row->count : $row->count;
+            $consumer_status_counts[$row->district_id] = $row->count;
+            $consumer_status_sum += $row->count;
+            // $consumer_status_counts[$row->district_id][$row->status_id] = $row->count;
+            // $consumer_status_sum[$row->status_id] = isset($consumer_status_sum[$row->status_id]) ? $consumer_status_sum[$row->status_id] + $row->count : $row->count;
         }
         return view('reports.consumer.conversions.ga-prepaid-count', [
             'districts' => $districts,
