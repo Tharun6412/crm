@@ -103,8 +103,8 @@
                                                             <th style="text-align: right;border-bottom: 1px solid #000000;width: 27%;">(&nbsp;&#8377;&nbsp;)</th>
                                                         </tr>
                                                     </thead>
-                                                    @php
-                                                        $parta = $invoice->payable_amount+$lpc;
+                                                     @php
+                                                        $parta = $invoice->payable_amount;
                                                     @endphp
                                                     <tbody>
                                                         <tr>
@@ -116,34 +116,6 @@
                                                             <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">1.2</td>
                                                             <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">VAT Value @ {{ numberFormat($invoice->tax_value,2) }}%&nbsp;{{ __('bill.vat_value') }}</td>
                                                             <td style="text-align: right;border-bottom: 1px solid #000000;">{{ $invoice->tax_amount }}</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">1.3</td>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">Arrears: Unpaid dues up to previous bill<br/>{{ __('bill.arrears') }}</td>
-                                                            <td style="text-align: right;border-bottom: 1px solid #000000;">0.00</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">1.4</td>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">Credit Balance:- Advance/Excess paid<br/>{{ __('bill.credit_balance') }}</td>
-                                                            @php
-                                                                $advance_amt = $invoice->advance_amount + $invoice->credit_amount;
-                                                            @endphp
-                                                            <td style="text-align: right;border-bottom: 1px solid #000000;">{{ numberFormat($advance_amt ?? 0,2) }}</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">1.5</td>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">Adjustment for Estimated Bills {{ __('bill.adjustment_for_estimated_bills') }}</td>
-                                                            <td style="text-align: right;border-bottom: 1px solid #000000;">{{ $invoice->payable_amount }}</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">1.6</td>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">Discount/Rebate {{ __('bill.discount') }}</td>
-                                                            <td style="text-align: right;border-bottom: 1px solid #000000;">0.00</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">1.7</td>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">Late Payment Charges {{ __('bill.late_payment_charges') }}</td>
-                                                            <td style="text-align: right;border-bottom: 1px solid #000000;">{{ numberFormat($lpc,2) }}</td>
                                                         </tr>
                                                         <tr>
                                                             <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">&nbsp;</td>
@@ -158,7 +130,7 @@
                                                     <thead>
                                                         <tr>
                                                             <th style="border-right: 1px solid #000000;border-bottom: 1px solid #000000;width: 10%;">&nbsp;</th>
-                                                            <th style="text-align: center;border-right: 1px solid #000000;border-bottom: 1px solid #000000;">Part - B (Charges) {{ __('bill.part_b') }}</th>
+                                                            <th style="text-align: center;border-right: 1px solid #000000;border-bottom: 1px solid #000000;">Part - B  {{ __('bill.part_b') }}</th>
                                                             <th style="text-align: right;border-bottom: 1px solid #000000;width: 27%;">(&nbsp;&#8377;&nbsp;)</th>
                                                         </tr>
                                                     </thead>
@@ -168,43 +140,8 @@
                                                     <tbody>
                                                         <tr>
                                                             <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">2.1</td>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">Fixed Daily Charges {{ __('bill.fixed_daily_charges') }}</td>
+                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">Amount carry forward in A-1 month {{ __('bill.fixed_daily_charges') }}</td>
                                                             <td style="text-align: right;border-bottom: 1px solid #000000;">{{ numberFormat($rental->base_amount ?? 0, 2); }}</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">2.2</td>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">Other Charges {{ __('bill.other_charges') }}</td>
-                                                            <td style="text-align: right;border-bottom: 1px solid #000000;">0.00</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">2.3</td>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">Minimum Consumption Charges {{ __('bill.minimum_consumption_charges') }}</td>
-                                                            <td style="text-align: right;border-bottom: 1px solid #000000;">0.00</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">2.4</td>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">Total Taxable Charges {{ __('bill.total_taxable_charges') }}</td>
-                                                            <td style="text-align: right;border-bottom: 1px solid #000000;">{{ numberFormat($rental?->tax_amount,2) }}</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">2.5</td>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">SGST @ 9% {{ __('bill.sgst') }}</td>
-                                                            <td style="text-align: right;border-bottom: 1px solid #000000;">{{ numberFormat($rental?->tax_amount/2,2) }}</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">2.6</td>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">CGST @ 9% {{ __('bill.cgst') }}</td>
-                                                            <td style="text-align: right;border-bottom: 1px solid #000000;">{{ numberFormat($rental?->tax_amount/2,2) }}</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">2.7</td>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">Estimation Charges {{ __('bill.estimation_charges') }}</td>
-                                                            <td style="text-align: right;border-bottom: 1px solid #000000;">0.00</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">&nbsp;</td>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;"><b>Total Charges (Part B) {{ __('bill.total_charges') }}</b></td>
-                                                            <td style="text-align: right;border-bottom: 1px solid #000000;">{{ $partb; }}</td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
@@ -212,7 +149,84 @@
                                                     <thead>
                                                         <tr>
                                                             <th style="border-right: 1px solid #000000;border-bottom: 1px solid #000000;width: 10%;">&nbsp;</th>
-                                                            <th style="text-align: center;border-right: 1px solid #000000;border-bottom: 1px solid #000000;">Part - C (Security Deposit) {{ __('bill.part_c') }} ({{ __('bill.security_deposit') }})</th>
+                                                            <th style="text-align: center;border-right: 1px solid #000000;border-bottom: 1px solid #000000;">Part - C {{ __('bill.part_b') }}</th>
+                                                            <th style="text-align: right;border-bottom: 1px solid #000000;width: 27%;">(&nbsp;&#8377;&nbsp;)</th>
+                                                        </tr>
+                                                    </thead>
+                                                    @php
+                                                        $partc = $recharge_amount ?? 0;
+                                                    @endphp
+                                                    <tbody>
+                                                        <tr>
+                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">3.1</td>
+                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">Part-C Recharge done in the A month {{ __('bill.fixed_daily_charges') }}</td>
+                                                            <td style="text-align: right;border-bottom: 1px solid #000000;">{{ numberFormat($partc, 2) }}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                                <table class="table" style="table-layout: fixed; width: 100%;border: 1px solid #000000;border-spacing: 0;border-collapse: collapse;margin-bottom: 1px;">
+                                                    <thead>
+                                                        <tr>
+                                                            <th style="border-right: 1px solid #000000;border-bottom: 1px solid #000000;width: 10%;">&nbsp;</th>
+                                                            <th style="text-align: center;border-right: 1px solid #000000;border-bottom: 1px solid #000000;">Part - D {{ __('bill.part_b') }}</th>
+                                                            <th style="text-align: right;border-bottom: 1px solid #000000;width: 27%;">(&nbsp;&#8377;&nbsp;)</th>
+                                                        </tr>
+                                                    </thead>
+                                                    @php
+                                                        $partd = $rental->balance_amount ?? 0;
+                                                    @endphp
+                                                    <tbody>
+                                                        <tr>
+                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">4.1</td>
+                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">Part-D EMI Tenure(3/5/7 Years) {{ __('bill.fixed_daily_charges') }}</td>
+                                                            <td style="text-align: right;border-bottom: 1px solid #000000;">{{ numberFormat($rental->base_amount ?? 0, 2); }}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                                <table class="table" style="table-layout: fixed; width: 100%;border: 1px solid #000000;border-spacing: 0;border-collapse: collapse;margin-bottom: 1px;">
+                                                    <thead>
+                                                        <tr>
+                                                            <th style="border-right: 1px solid #000000;border-bottom: 1px solid #000000;width: 10%;">&nbsp;</th>
+                                                            <th style="text-align: center;border-right: 1px solid #000000;border-bottom: 1px solid #000000;">Part - E {{ __('bill.part_b') }}</th>
+                                                            <th style="text-align: right;border-bottom: 1px solid #000000;width: 27%;">(&nbsp;&#8377;&nbsp;)</th>
+                                                        </tr>
+                                                    </thead>
+                                                    @php
+                                                        $parte = $rental->balance_amount ?? 0;
+                                                    @endphp
+                                                    <tbody>
+                                                        <tr>
+                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">5.1</td>
+                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">Part-E Rental for the A month {{ __('bill.fixed_daily_charges') }}</td>
+                                                            <td style="text-align: right;border-bottom: 1px solid #000000;">{{ numberFormat($rental->base_amount ?? 0, 2); }}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                                <table class="table" style="table-layout: fixed; width: 100%;border: 1px solid #000000;border-spacing: 0;border-collapse: collapse;margin-bottom: 1px;">
+                                                    <thead>
+                                                        <tr>
+                                                            <th style="border-right: 1px solid #000000;border-bottom: 1px solid #000000;width: 10%;">&nbsp;</th>
+                                                            <th style="text-align: center;border-right: 1px solid #000000;border-bottom: 1px solid #000000;">Part - F {{ __('bill.part_b') }}</th>
+                                                            <th style="text-align: right;border-bottom: 1px solid #000000;width: 27%;">(&nbsp;&#8377;&nbsp;)</th>
+                                                        </tr>
+                                                    </thead>
+                                                    @php
+                                                        $partc = $rental->balance_amount ?? 0;
+                                                    @endphp
+                                                    <tbody>
+                                                        <tr>
+                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">6.1</td>
+                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">Part-F Total Closing Balance {{ __('bill.fixed_daily_charges') }}</td>
+                                                            <td style="text-align: right;border-bottom: 1px solid #000000;">{{ numberFormat($rental->base_amount ?? 0, 2); }}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+
+                                                <table class="table" style="table-layout: fixed; width: 100%;border: 1px solid #000000;border-spacing: 0;border-collapse: collapse;margin-bottom: 1px;">
+                                                    <thead>
+                                                        <tr>
+                                                            <th style="border-right: 1px solid #000000;border-bottom: 1px solid #000000;width: 10%;">&nbsp;</th>
+                                                            <th style="text-align: center;border-right: 1px solid #000000;border-bottom: 1px solid #000000;">Part - G (Security Deposit) {{ __('bill.part_c') }} ({{ __('bill.security_deposit') }})</th>
                                                             <th style="text-align: right;border-bottom: 1px solid #000000;width: 27%;">(&nbsp;&#8377;&nbsp;)</th>
                                                         </tr>
                                                     </thead>
@@ -242,16 +256,6 @@
                                                         @endif
                                                         <tr>
                                                             <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">&nbsp;</td>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;"><b>Total Charges (Part C) {{ __('bill.total_charges') }}</b></td>
-                                                            <td style="text-align: right;border-bottom: 1px solid #000000;">{{ $partc }}</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">&nbsp;</td>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;"><b>Total Payable(A+B+C)<br/>{{ __('bill.total_payable') }} ({{ __('bill.a_b_c') }})</b></td>
-                                                            <td style="text-align: right;border-bottom: 1px solid #000000;"><b>{{ numberFormat($parta+$partb+$partc,2) }}</b></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">&nbsp;</td>
                                                             <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">Total Security Deposit Paid<br/>{{ __('bill.total_security_deposit_paid') }}</td>
                                                             <td style="text-align: right;border-bottom: 1px solid #000000;">{{ numberFormat($invoice->consumer->scheme->paid_deposit,2) }}</td>
                                                         </tr>
@@ -262,7 +266,7 @@
                                                 <tbody>
                                                     <tr>
                                                         <td style="border-right: 1px solid #000000;border-bottom: 1px solid #000000;">Invoice No.&nbsp;:&nbsp;{{ $invoice->invoice_number }}<br/>{{ __('bill.invoice_no') }}&nbsp;:</td>
-                                                        <td style="border-bottom: 1px solid #000000;">Bill Date&nbsp;:&nbsp;<strong>{{ dateFormat($invoice->invoice_date) }}</strong><br/>{{ __('bill.bill_date') }}&nbsp;:</td>
+                                                        <td style="border-bottom: 1px solid #000000;">Invoice Date&nbsp;:&nbsp;<strong>{{ dateFormat($invoice->invoice_date) }}</strong><br/>{{ __('bill.bill_date') }}&nbsp;:</td>
                                                     </tr>
                                                     <tr>
                                                         <td style="border-right: 1px solid #000000;border-bottom: 1px solid #000000;">Invoice Type&nbsp;:&nbsp;{{ $invoice->invoiceType->name }}<br/>{{ __('bill.invoice_type') }}&nbsp;:&nbsp;{{ __('bill.retail') }}</td>
@@ -272,7 +276,7 @@
                                                         <td style="border-right: 1px solid #000000;border-bottom: 1px solid #000000;">Credit Amount (If any)<br/>{{ __('bill.credit_amount') }}&nbsp;:</td>
                                                         <td style="border-bottom: 1px solid #000000;font-size: 12px;"><strong>&#8377;&nbsp;{{ numberFormat($invoice->credit_amount,2) }}</strong></td>
                                                     </tr>
-                                                    <tr>
+                                                     <tr>
                                                         <td style="border-right: 1px solid #000000;border-bottom: 1px solid #000000;">Amount Payable<br/>{{ __('bill.payable_amount') }}</td>
                                                         <td style="border-bottom: 1px solid #000000;font-size: 12px;"><strong>&#8377;&nbsp;{{ numberFormat($parta+$partb+$partc,2) }}</strong>
                                                         </td>
@@ -429,7 +433,7 @@
                                 </table>
                                 <table class="table mb-0" style="table-layout: fixed; width: auto;border: 1px solid #000000;border-spacing: 0;border-collapse: collapse;font-size: 8px !important;">
                                     <tbody>
-                                        <tr>
+                                        {{-- <tr>
                                             <td colspan="3">
                                                 &gt;&nbsp;{{ __('bill.please visit our consumer portal @www.meghagas.com for all billing and payments related information. please download our meghagas app available on playstore and appstore.') }}&nbsp;/&nbsp;Please visit our consumer portal @www.meghagas.com for all billing and payments related information. Please download our MeghaGas app available on PlayStore and Appstore.<br />
                                                 &gt;&nbsp;{{ __('bill.please note that any delay in payment post due date, shall attract late payment charges @2% per month.') }}&nbsp;/&nbsp;Please note that any delay in payment post due date, shall attract Late Payment Charges @2% per month.<br>
@@ -441,7 +445,7 @@
                                                 <br>
                                                 &gt;&nbsp;{{ __('bill.for tariff card of our services, please visit www.meghagas.com/domestic-png.') }}&nbsp;/&nbsp;For Tarrif card of our services, please visit www.meghagas.com/domestic-png
                                             </td>
-                                        </tr>
+                                        </tr> --}}
                                         <tr style="border-top: 1px solid #000000;">
                                             <td style="border-right: 1px solid #000000;padding: 0px !important;">
                                                 <table class="table table-borderless mb-0">
@@ -465,10 +469,10 @@
                                                 <table class="table mb-0">
                                                     <tbody>
                                                         <tr>
-                                                            <td colspan="3" style="color:red;border-bottom: 1px solid #000000;text-align: center;"><b>Bill History</b></td>
+                                                            <td colspan="3" style="color:red;border-bottom: 1px solid #000000;text-align: center;"><b>Invoice History</b></td>
                                                         </tr>                                                    
                                                         <tr>
-                                                            <td style="border-right: 1px solid #000000;border-bottom: 1px solid #000000;text-align: center;">Billing Period</td>
+                                                            <td style="border-right: 1px solid #000000;border-bottom: 1px solid #000000;text-align: center;">Invoice Period</td>
                                                             <td style="border-right: 1px solid #000000;border-bottom: 1px solid #000000;text-align: center;">Units (scm)</td>
                                                             <td style="border-bottom: 1px solid #000000;text-align: center;">Cons/day (scm)</td>
                                                         </tr>
