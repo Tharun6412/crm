@@ -27,8 +27,10 @@ class ComplaintExport implements FromQuery, WithHeadings, WithMapping
 
     public function query()
     {
-        $sortBy = $this->request->get('sortBy', 'created_at');
-        $sortOr = $this->request->get('sortOr', 'desc');
+        // $sortBy = $this->request->get('sortBy', 'cmp_complaints.created_at');
+        // $sortOr = $this->request->get('sortOr', 'desc');
+        $sortBy = ($this->request->get('sortBy')) ? $this->request->get('sortBy') : 'cmp_complaints.created_at';
+        $sortOr = ($this->request->get('sortOr')) ? $this->request->get('sortOr') : 'desc';
         return Complaint::query()
             // JOINS (ONLY ONCE)
             ->leftJoin('cns_consumers', 'cns_consumers.id', '=', 'cmp_complaints.consumer_id')
@@ -99,7 +101,7 @@ class ComplaintExport implements FromQuery, WithHeadings, WithMapping
             ->when((!empty($this->request->date_from) and !empty($this->request->date_to)), function($q) {
                 $q->whereBetween('cmp_complaints.created_at', [Carbon::createFromFormat('d-m-Y', $this->request->date_from)->startOfDay()->toDateTimeString(), Carbon::createFromFormat('d-m-Y', $this->request->date_to)->endOfDay()->toDateTimeString()]);
             })
-            ->orderBy('cmp_complaints.created_at', 'desc');
+            ->orderBy($sortBy, $sortOr);
     }
 
     public function headings(): array

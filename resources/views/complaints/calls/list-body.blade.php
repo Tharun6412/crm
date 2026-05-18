@@ -6,6 +6,7 @@
                     <tr>
                         <th width="1%" nowrap>S.No</th>
                         <th>CRN</th>
+                        <th>Connection Type</th>
                         <th>Name</th>
                         <th>Phone</th>
                         <th>Meter Number</th>
@@ -21,7 +22,10 @@
                     @foreach ($consumers as $consumer)
                         <tr>
                             <td>{{ $i++ }}</td>
-                            <td><x-auth.link href="{{ url('consumers/'.$consumer->id) }}">{{ $consumer->crn }}</x-auth.link></td>
+                            <td><a href="{{ url('consumers/'.$consumer->id) }}" target="_blank">{{ $consumer->crn }}</a></td>
+                            <td>
+                                {{ $consumer->connection_type_id == "1" ? 'POSTPAID' : 'PREPAID' }}
+                            </td>
                             <td>{{ $consumer->name }}</td>
                             <td>{{ maskNumber($consumer->phone) }}</td>
                             <td>{{ $consumer->activeMeter?->meter_no }}</td>

@@ -40,7 +40,7 @@
             <tr>
                 <th width="1%" nowrap>S No</th>
                 <th>GA <x-master.ga-filter class="float-end"/></th>
-                <th>
+                <th nowrap>
                     <a href="{{ $complaints->appends(['sortBy' => 'code','sortOr' => $sort_order_inverse])->url($complaints->currentPage()) }}">
                         Complaint
                         @if ($sort_by == 'code')
@@ -68,11 +68,14 @@
                 </th>
                 <th nowrap>
                     <div class="d-flex">
-                        <div>Raised Date&nbsp;</div>
+                        <a href="{{ $complaints->appends(['sortBy' => 'created_at','sortOr' => $sort_order_inverse])->url($complaints->currentPage()) }}">Raised Date</a>&nbsp;
+                            @if ($sort_by == 'created_at')
+                                <i class="bi {{ $sort_icon }}"></i>
+                            @endif
                         <x-master.date-filter  class="float-end" />
                     </div> 
                 </th>
-                <th nowrap>Raised By<x-complaint.user-filter/></th>
+                <th nowrap>Raised By<x-complaint.user-filter class="float-end"/></th>
                 <th nowrap>
                     <a href="{{ $complaints->appends(['sortBy' => 'estimated_closed_at','sortOr' => $sort_order_inverse])->url($complaints->currentPage()) }}">
                         Est. Close Date
@@ -81,7 +84,14 @@
                         @endif
                     </a>
                 </th>
-                <th nowrap>Closed Date</th>
+                <th nowrap>
+                    <a href="{{ $complaints->appends(['sortBy' => 'closed_at','sortOr' => $sort_order_inverse])->url($complaints->currentPage()) }}">
+                        Closed Date
+                        @if ($sort_by == 'closed_at')
+                            <i class="bi {{ $sort_icon }}"></i>
+                        @endif
+                    </a>
+                </th>
                 <th nowrap>Deviation</th>
                 <th nowrap>PNGRB Category</th>
                 <th nowrap>

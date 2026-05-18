@@ -19,7 +19,7 @@ class ConsumerSearchController extends Controller
             if(empty($request->search)) {
                 return response()->json(['message' => 'Please enter consumer number'], 422);
             }
-            $consumers = Consumer::select('id', 'crn', 'fname', 'lname', 'ga_id', 'status_id', 'created_by', 'phone')
+            $consumers = Consumer::select('id', 'crn', 'fname', 'lname', 'ga_id', 'status_id', 'created_by', 'phone', 'connection_type_id')
                 ->when(!(isAdmin() OR isSuperAdmin() OR isFullAccess()), function ($q) {
                     $q->whereIn('ga_id', session('user')['gas']);
                 })
