@@ -1,6 +1,8 @@
 <?php
 namespace App\Contracts\Prepaid\Contract;
 
+use App\Helpers\ApiLogger;
+use App\Helpers\PolarisLogger;
 use Exception;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -15,7 +17,7 @@ class Polaris
                     'X-API-KEY' => 'YfRPGJH1S98n2l7tbC7k7gD9RmQdJ2j8TxLr9JKL4A3gF1pL5m'
                         ])->acceptJson()->post($api, $payload);
                 if ($response->failed()) {
-                    Log::error('Polaris API FAILED', [
+                    ApiLogger::error('polaris_api','polaris_api','Polaris API FAILED', [
                         'status'  => $response->status(),
                         'body'    => $response->body(),
                         'payload' => $payload,
@@ -25,14 +27,14 @@ class Polaris
             }
             catch(\Throwable $e)
             {
-                Log::error('Polaris API FAILED', [
+                ApiLogger::error('polaris_api','polaris_api','Polaris API FAILED', [
                     'status'  => 0,
                     'body'    => $e->getMessage(),
                 ]);
             }
         }
         else {
-            Log::error('Polaris API FAILED', [
+             ApiLogger::error('polaris_api','polaris_api','Polaris API FAILED', [
                 'status'  => 0,
                 'body'    => "No payload data available.",
             ]);
@@ -49,7 +51,7 @@ class Polaris
                     'X-API-KEY' => 'YfRPGJH1S98n2l7tbC7k7gD9RmQdJ2j8TxLr9JKL4A3gF1pL5m'
                         ])->acceptJson()->get($api, $payload);
                 if ($response->failed()) {
-                    Log::error('Polaris API FAILED', [
+                     ApiLogger::error('polaris_api','polaris_api','Polaris API FAILED', [
                         'status'  => $response->status(),
                         'body'    => $response->body(),
                         'payload' => $payload,
@@ -59,14 +61,14 @@ class Polaris
             }
             catch(\Throwable $e)
             {
-                Log::error('Polaris API FAILED', [
+                 ApiLogger::error('polaris_api','polaris_api','Polaris API FAILED', [
                     'status'  => 0,
                     'body'    => $e->getMessage(),
                 ]);
             }
         }
         else {
-            Log::error('Polaris API FAILED', [
+             ApiLogger::error('polaris_api','polaris_api','Polaris API FAILED', [
                 'status'  => 0,
                 'body'    => "No payload data available.",
             ]);

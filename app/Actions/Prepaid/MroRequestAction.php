@@ -6,12 +6,12 @@ use App\Contracts\Prepaid\Mro;
 use App\Enums\ConnectionType;
 use App\Enums\ConsumerStatus;
 use App\Enums\MroStatus;
+use App\Helpers\ApiLogger;
 use App\Models\Consumer\Consumer;
 use App\Models\Invoice\BillMroBatch;
 use App\Models\Invoice\BillMroData;
 use App\Models\Invoice\BillMroDataHistory;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class MroRequestAction
@@ -82,7 +82,7 @@ class MroRequestAction
                             'mro_order_id' => $row->mro_number,
                             'mech_meter_serial_number' => $meter?->meter_no,
                             'prepaid_mod_number' => $meter?->meter_serial_no,
-                            'scheduled_mr_date' => $row->schedule_date,
+                            'scheduled_mr_date' => $row->schedule_date?->format('Y-m-d'),
                             'crn' => $row->consumer->crn
                         ];
                         // Array for the MRO Data history.
@@ -94,7 +94,8 @@ class MroRequestAction
                     }
                     // Insert into MRO data history
                     BillMroDataHistory::insert($history_bulk);
-                    Log::info('MRO batch created', [
+                    // Helper file which accepts (api name, message, data/context)
+                    ApiLogger::info('mro_api','mro_request_api','MRO batch created', [
                         'batch_id' => $batch_id,
                         'consumer_count' => $consumers->count(),
                     ]);
@@ -103,13 +104,13 @@ class MroRequestAction
                 }
             } 
             catch (\Throwable $e) {
-                Log::error('MRO batch failed', [
+                ApiLogger::error('mro_api','mro_request_api','MRO batch failed', [
                     'message' => $e->getMessage()
                 ]);
             }
         }
         else{
-            Log::info('No consumers found for MRO');
+            ApiLogger::info('mro_api','mro_request_api','No consumers found for MRO');
             return;
         }
     }
@@ -126,7 +127,7 @@ class MroRequestAction
                     ->first();
 
                 if ($mroData) {
-                    $status = $resp['status'] === 'success' ? MroStatus::REQUEST_ACK_FAIL->value : MroStatus::RECEIVED->value;
+                    $status = $resp['status'] === 'success' ? MroStatus::REQUESTED->value : MroStatus::REQUEST_ACK_FAIL->value;
                     $mroData->update([
                         'status_id' => $status,
                         'error_code'=> $resp['error_code'] ?? null,
@@ -137,15 +138,26 @@ class MroRequestAction
                         'status_id'   => $status,
                         'created_at' => now()
                     ]);
+                    ApiLogger::info('mro_api','mro_request_api', 'MRO record status updated', [
+                        'mro_number' => $mroData->mro_number,
+                        'status'     => $status,
+                    ]);
+                }
+                else {
+                    ApiLogger::warning('mro_api','mro_request_api', 'MRO record not found for response', [
+                        'mro_order_id' => $resp['mro_order_id'],
+                        'batch_id'     => $batch_id,
+                    ]);
                 }
             }
-            Log::info('MRO API response received', [
+            print "Total MRO Requests generated : ".count($responses);
+            ApiLogger::info('mro_api','mro_request_api','MRO API response received', [
                 'batch_id' => $batch_id,
                 'response_count' => count($responses)
             ]);
         }
         else {
-            Log::info('No MRO data to send');
+            ApiLogger::info('mro_api','mro_request_api','No MRO data to send');
             return;
         }
     }

@@ -121,7 +121,7 @@ class BillingController extends Controller
         
 
         // Preparing consumption data internally.
-        $start_date = (!empty($invoice)) ? $invoice->consumption->date_to->format('Y-m-d') : ($consumer->statusHistory->where('status_id', ConsumerStatus::ACTIVATE->value)->sortByDesc('created_at')->first()?->created_at->format('Y-m-d'));
+        $start_date = (!empty($invoice)) ? $invoice->consumption->date_to->format('Y-m-d') : ($consumer->statusHistory->whereIn('status_id', [ConsumerStatus::ACTIVATE->value,ConsumerStatus::RECONNECT->value] )->sortByDesc('created_at')->first()?->created_at->format('Y-m-d'));
         $end_date = date('Y-m-d');
         $invEndReading = (!empty($invoice) and $invoice->consumption()->exists()) ? $invoice->consumption->curr_reading : 0;
         if ($consumer->meterChanges()->where('status_id', MeterChange::PENDING->value)->exists()) {
