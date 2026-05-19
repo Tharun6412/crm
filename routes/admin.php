@@ -19,4 +19,17 @@ Route::middleware([ModuleAccess::class, 'auth'])->group(function() {
 
     // API KEY
     Route::resource('api-keys', App\Http\Controllers\Admin\ApiKeyController::class);
+
+    //teams
+    Route::get('teams/',[App\Http\Controllers\Admin\TeamController::class,'index']);
+    Route::get('teams/create',[App\Http\Controllers\Admin\TeamController::class,'create']);
+    Route::post('teams/store',[App\Http\Controllers\Admin\TeamController::class,'store']);
+    Route::get('teams/gaCas',[App\Http\Controllers\Admin\TeamController::class,'gaCas']);
+    Route::get('teams/show',[App\Http\Controllers\Admin\TeamController::class,'show']);
+    Route::get('teams/edit/{id}',[App\Http\Controllers\Admin\TeamController::class,'edit']);
+    Route::put('teams/update/{id}',[App\Http\Controllers\Admin\TeamController::class,'update']);
+    //user routes
+    Route::get('teams/user/create/{id}',[App\Http\Controllers\Admin\TeamUserController::class,'create']);
+    Route::post('teams/user/store/{id}',[App\Http\Controllers\Admin\TeamUserController::class,'store']);
+
 });
