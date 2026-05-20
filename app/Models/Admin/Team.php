@@ -43,6 +43,5 @@ class Team extends Model
     {
         return $this->belongsToMany(User::class,'adm_team_users','team_id','user_id');
     }
-    
 }
 

@@ -12,5 +12,9 @@ enum Role: int
     case HO_SALES = 6;
     case VIEWER = 7;
     case FULL_ACCESS = 8;
+    case EMPLOYEE = 9;
     case CALL_CENTER = 10;
+    case GI_ENGINEER = 11;
+    case HSE = 12;
+    case ACTIVATION = 13;
 }

@@ -6,8 +6,10 @@ namespace App\Models\Admin;
 
 use App\Models\Complaint\ComplaintComment;
 use App\Models\Complaint\ComplaintFeedback;
+use App\Models\Consumer\Consumer;
 use App\Models\Consumer\ConsumerSdPayment;
 use App\Models\Invoice\InvoicePayment;
+use App\Models\Master\Ca;
 use App\Models\Master\Department;
 use App\Models\Master\Ga;
 use App\Models\Spot\SpotRoles;
@@ -145,6 +147,14 @@ class User extends Authenticatable
     }
 
     /**
+     * Relation with geo areas table via pivote user_ga
+     */
+    public function ca(): BelongsToMany
+    {
+        return $this->belongsToMany(Ca::class, 'adm_user_ca', 'user_id', 'ca_id');
+    }
+
+    /**
      * 
      * Payment colection relations
      * 
@@ -164,4 +174,26 @@ class User extends Authenticatable
     {
         return $this->hasMany(ConsumerSdPayment::class, 'created_by');
     } 
+
+    /**
+     * Pivot Relation 
+     */
+    public function consumers() : BelongsToMany
+    {
+        return $this->belongsToMany(
+            Consumer::class,
+            'adm_user_ca',
+            'user_id',
+            'ca_id',
+            'id',
+            'ca_id'
+        );
+    }
+    /***
+     * Pivot Relation
+     */
+    public function teams():BelongsToMany
+    {
+        return $this->belongsToMany(Team::class, 'adm_team_users', 'user_id', 'team_id');
+    }
 }

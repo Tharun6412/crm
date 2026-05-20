@@ -140,18 +140,18 @@ class InvoicesReportExport implements FromQuery,ShouldQueue,WithChunkReading, Wi
             $this->i,
             $invoice->invoice_number ?? '',
             $invoice->invoice_date ? dateFormat($invoice->invoice_date) : '',
-            $invoice?->invoiceType?->name,
+            $invoice->invoiceType?->name,
             $invoice->consumer?->crn,
             $invoice->consumer?->name,
             $invoice->consumer?->segment?->name,
             $invoice->consumer?->connectType?->name,
             $invoice->consumer?->ga?->name,
             $invoice->consumer?->district?->name,
-            numberFormat($invoice->consumption->net_consumption,2),
+            numberFormat($invoice->consumption?->net_consumption ?? 0, 2),
             $invoice->due_date ? dateFormat($invoice->due_date) : '',
-            numberFormat($invoice->payable_amount),
-            numberFormat($invoice->balance_amount),
-            $invoice?->status?->name,
+            numberFormat($invoice->payable_amount, 2),
+            numberFormat($invoice->balance_amount, 2),
+            $invoice->status?->name,
         ];
     }
 }

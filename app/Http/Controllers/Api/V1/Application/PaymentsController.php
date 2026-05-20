@@ -167,17 +167,19 @@ class PaymentsController extends Controller
             $newBalance = $invoice->balance_amount - $payAmount;
             $newPaid    = $invoice->paid_amount + $payAmount;
             // Create payment record for THIS invoice
-            PaymentService::create([
-                'invoice_id'      => $invoice->id,
-                'payment_date'    => date('Y-m-d'),
-                'payment_type_id' => $request->payment_type,
-                'transaction_id'  => $request->transaction_no,
-                'amount'          => $payAmount,
-                'balance'         => $newBalance,
-                'status_id'       => PaymentStatus::COMPLETED->value,
-                'notes'           => $request->notes,
-                'created_by'      => Auth::id(),
-            ]);
+            if($invoice->balance_amount > 0) {
+                PaymentService::create([
+                    'invoice_id'      => $invoice->id,
+                    'payment_date'    => date('Y-m-d'),
+                    'payment_type_id' => $request->payment_type,
+                    'transaction_id'  => $request->transaction_no,
+                    'amount'          => $payAmount,
+                    'balance'         => $newBalance,
+                    'status_id'       => PaymentStatus::COMPLETED->value,
+                    'notes'           => $request->notes,
+                    'created_by'      => Auth::id(),
+                ]);
+            }
 
             // Update invoice
             // $invoice->update([

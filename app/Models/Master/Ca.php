@@ -2,9 +2,11 @@
 
 namespace App\Models\Master;
 
+use App\Models\Admin\User;
 use App\Models\Consumer\CaCounter;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
@@ -60,5 +62,13 @@ class Ca extends Model
     public function consumerCounter(): HasOne
     {
         return $this->hasOne(CaCounter::class, 'ca_id');
+    }
+
+    /**
+     * Relation with Pivot Table ad_user_ca
+     */
+    public function user() : BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'adm_user_ca', 'ga_id', 'user_id');
     }
 }

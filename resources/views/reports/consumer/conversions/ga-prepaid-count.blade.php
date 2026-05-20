@@ -99,7 +99,9 @@
                                 'geo_area'=> [request()->ga_id], 
                                 'cns_status' => [\App\Enums\ConsumerStatus::ACTIVATE->value], 
                                 'connection_type_id' => \App\Enums\ConnectionType::POSTPAID->value, 
-                                'segments' => [request()->conv_segment_id]
+                                'segments' => [request()->conv_segment_id],
+                                'date_from' => request()->conv_date_from,
+                                'date_to' => request()->conv_date_to
                             ]) }}" target="_blank">{{ $consumer_target_sum[\App\Enums\ConsumerStatus::ACTIVATE->value] ?? 0 }}</a>
                         </div>
                     </div>
@@ -114,7 +116,9 @@
                                 'geo_area'=> [request()->ga_id], 
                                 'cns_status' => [\App\Enums\ConsumerStatus::TD->value], 
                                 'connection_type_id' => \App\Enums\ConnectionType::POSTPAID->value, 
-                                'segments' => [request()->conv_segment_id]
+                                'segments' => [request()->conv_segment_id],
+                                'date_from' => request()->conv_date_from,
+                                'date_to' => request()->conv_date_to
                             ]) }}" target="_blank">{{ $consumer_target_sum[\App\Enums\ConsumerStatus::TD->value] ?? 0 }}</a>
                         </div>
                     </div>
@@ -124,7 +128,9 @@
                                 'geo_area'=> [request()->ga_id], 
                                 'cns_status' => [\App\Enums\ConsumerStatus::PD->value], 
                                 'connection_type_id' => \App\Enums\ConnectionType::POSTPAID->value, 
-                                'segments' => [request()->conv_segment_id]
+                                'segments' => [request()->conv_segment_id],
+                                'date_from' => request()->conv_date_from,
+                                'date_to' => request()->conv_date_to
                             ]) }}" target="_blank">{{ $consumer_target_sum[\App\Enums\ConsumerStatus::PD->value] ?? 0 }}</a>
                         </div>
                     </div>
