@@ -13,45 +13,55 @@
 @section('page-content')
     <div>
         <form action="{{ url('reports/consumer/sdReport') }}" id="sd-report-form">
-            <div class="d-flex justify-content-between gap-2 mb-2">
-                <div class="d-flex gap-2">
-                    <div>
-                        <input type="radio" class="btn-check" name="filter_name" id="success-outlined" value="show" autocomplete="off" checked>
-                        <label class="btn btn-outline-secondary" for="success-outlined">
-                            <i class="bi bi-calendar-range"></i>&nbsp;Between Days
-                        </label>
-                        <input type="radio" class="btn-check" name="filter_name" id="danger-outlined" value="hide" autocomplete="off">
-                        <label class="btn btn-outline-secondary" for="danger-outlined">
-                            <i class="bi bi-calendar-check"></i>&nbsp;All Data
-                        </label>
-                    </div>
-                    <div>
-                        <div id="tar-div">
-                            <div class="input-group">
-                                <label for="date_from" class="input-group-text"><i class="bi bi-calendar3"></i>&nbsp;From</label>
-                                <input type="text" aria-label="From Date" class="form-control" name="date_from" id="date_from" placeholder="DD-MM-YYYY">  
-                                <label for="date_to" class="input-group-text"><i class="bi bi-calendar3"></i>&nbsp;To</label>
-                                <input type="text" aria-label="To Date" class="form-control" name="date_to" id="date_to" placeholder="DD-MM-YYYY">
-                            </div>
+            <div class="row g-1">
+                <div class="col-auto">
+                    <input type="radio" class="btn-check" name="filter_name" id="danger-outlined" value="hide" autocomplete="off">
+                    <label class="btn btn-outline-secondary" for="danger-outlined">
+                        <i class="bi bi-calendar-check"></i>&nbsp;All Data
+                    </label>
+                </div>
+                <div class="col-auto">
+                    <input type="radio" class="btn-check" name="filter_name" id="success-outlined" value="show" autocomplete="off" checked>
+                    <label class="btn btn-outline-secondary" for="success-outlined">
+                        <i class="bi bi-calendar-range"></i>&nbsp;Between Days
+                    </label>
+                </div>
+                <div class="col-auto">
+                    <div id="tar-div">
+                        <div class="input-group">
+                            <label for="date_from" class="input-group-text"><i class="bi bi-calendar3"></i>&nbsp;From</label>
+                            <input type="text" aria-label="From Date" class="form-control" name="date_from" id="date_from" placeholder="DD-MM-YYYY">  
+                            <label for="date_to" class="input-group-text"><i class="bi bi-calendar3"></i>&nbsp;To</label>
+                            <input type="text" aria-label="To Date" class="form-control" name="date_to" id="date_to" placeholder="DD-MM-YYYY">
                         </div>
                     </div>
-                    <div>
-                        <select name="status" id="status" class="form-select">
-                            <option value="">Select</option>
-                            <option value={{ \App\Enums\ConsumerStatus::PRE_REGISTER->value }}>TR</option>
-                            <option value={{ \App\Enums\ConsumerStatus::REGISTER->value }}>Register</option>
-                        </select>
-                    </div>
-                    <div>
-                        <button type="submit" class="btn btn-success" id="getDetailsBtn">
-                            <i class="bi bi-arrow-right-circle"></i>&nbsp;Get Report
-                        </button>
-                    </div>
-                    <div>
-                        <a href="{{ url('reports/consumer/sdReport') }}" class="btn btn-warning"><i class="bi bi-arrow-clockwise"></i></a>
-                    </div>
                 </div>
-                <div class="text-end">
+                <div class="col-auto">
+                    <select name="status" id="status" class="form-select">
+                        <option value="">Select</option>
+                        <option value={{ \App\Enums\ConsumerStatus::PRE_REGISTER->value }}>TR</option>
+                        <option value={{ \App\Enums\ConsumerStatus::REGISTER->value }}>Register</option>
+                    </select>
+                </div>
+                <div class="col-auto">
+                    <select name="con_type" id="con_type" class="form-select">
+                        <option value="">Connection Type</option>
+                    </select>
+                </div>
+                <div class="col-auto">
+                    <span class="form-control">
+                        Segment<x-master.segment-filter class="float-end" />
+                    </span>
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-success" id="getDetailsBtn">
+                        <i class="bi bi-arrow-right-circle"></i>&nbsp;Get Report
+                    </button>
+                </div>
+                <div class="col-auto">
+                    <a href="{{ url('reports/consumer/sdReport') }}" class="btn btn-warning"><i class="bi bi-arrow-clockwise"></i></a>
+                </div>
+                <div class="col-auto">
                     <!-- Export -->
                     <button type="button" id="exportBtn" class="btn btn-outline-info text-end"><i class="bi bi-file-earmark-excel"></i>&nbsp;Export</button>
                 </div>

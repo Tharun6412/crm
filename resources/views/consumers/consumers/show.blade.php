@@ -31,7 +31,7 @@
                                 <i class="bi bi-person"></i>&nbsp;Consumer Details
                             </a>
                             <a href="#" class="list-group-item list-group-item-action" id="nav-sd-tab" data-bs-toggle="tab" data-bs-target="#nav-sd" role="tab" aria-controls="nav-sd" aria-selected="false">
-                                <i class="bi bi-cash-stack"></i>&nbsp;SD Details
+                                <i class="bi bi-cash-stack"></i>&nbsp;Scheme Details
                             </a>
                             <a href="#" class="list-group-item list-group-item-action list-group-item-light" id="nav-mdata-tab" data-bs-toggle="tab" data-bs-target="#nav-mdata" role="tab" aria-controls="nav-mdata" aria-selected="false">
                                 <i class="bi bi-speedometer2"></i>&nbsp;Meter Data
@@ -95,9 +95,9 @@
                             <div class="card bg-{{ ($consumer->scheme->balance > 0) ? 'danger' : 'success' }}-subtle">
                                 <div class="card-body">
                                     <div class="d-flex justify-content-between align-items-center">
-                                        <div>
-                                            <h4 class="card-title mb-0">{{ numberFormat($consumer->scheme->balance, 2) }}</h4>
-                                            <span>Security Deposit</span>
+                                        <div class="row">
+                                            <h4 class="card-title mb-0"><i class="bi bi-currency-rupee"></i>&nbsp;{{ numberFormat($consumer->scheme->balance, 2) }}</h4>
+                                            <span>Security Deposit Outstanding</span>
                                         </div>
                                         <div class="p-2"><i class="bi bi-piggy-bank fs-3"></i></div>
                                     </div>
@@ -113,8 +113,8 @@
                                     <div class="card-body">
                                         <div class="d-flex justify-content-between align-items-center">
                                             <div>
-                                                <h4 class="card-title mb-0">{{ numberFormat($gasbill_outstand, 2) }}</h4>
-                                                <span>Gas Bills</span>
+                                                <h4 class="card-title mb-0"><i class="bi bi-currency-rupee"></i>&nbsp;{{ numberFormat($gasbill_outstand, 2) }}</h4>
+                                                <span>Gas Bills Outstanding</span>
                                             </div>
                                             <div class="p-2"><i class="bi bi-file-text fs-3"></i></div>
                                         </div>
@@ -124,8 +124,8 @@
                                     <div class="card-body">
                                         <div class="d-flex justify-content-between align-items-center">
                                             <div>
-                                                <h4 class="card-title mb-0">{{ numberFormat($invoice_outstand, 2) }}</h4>
-                                                <span>Invoices</span>
+                                                <h4 class="card-title mb-0"><i class="bi bi-currency-rupee"></i>&nbsp;{{ numberFormat($invoice_outstand, 2) }}</h4>
+                                                <span>Invoices Outstanding</span>
                                             </div>
                                             <div class="p-2"><i class="bi bi-file-ruled fs-3"></i></div>
                                         </div>
@@ -135,7 +135,7 @@
                                     <div class="card-body">
                                         <div class="d-flex justify-content-between align-items-center">
                                             <div>
-                                                <h4 class="card-title mb-0">{{ numberFormat($total_outstand, 2) }}</h4>
+                                                <h4 class="card-title mb-0"><i class="bi bi-currency-rupee"></i>&nbsp;{{ numberFormat($total_outstand, 2) }}</h4>
                                                 <span>Total Outstanding</span>
                                             </div>
                                             <div class="p-2"><i class="bi bi-alarm fs-3"></i></div>
@@ -149,9 +149,9 @@
                                         <div class="d-flex justify-content-between align-items-center">
                                             <div>
                                                 <h4 class="card-title mb-0" id="balance">{{ numberFormat($consumer->prepaidData->balance ?? 0, 2) }}</h4>
-                                                <span>Balance</span>
+                                                <span>Available Meter Balance</span>
                                                 <span class="text-body-tertiary">|</span>
-                                                <small id="balance_date">Balance Date: &nbsp;&nbsp;</small><a type="button" onclick="getPrepaidBalance({{ $consumer->id }})"><i class="bi bi-arrow-repeat fs-4 text-primary"></i></a>
+                                                <small id="balance_date">Last Fetch Date: &nbsp;&nbsp;</small><a type="button" onclick="getPrepaidBalance({{ $consumer->id }})"><i class="bi bi-arrow-repeat fs-4 text-primary"></i></a>
                                                 <small class="text-danger" id="message"></small>
                                             </div>
                                             <div class="p-2 text-end"><i class="bi bi-wallet fs-3"></i></div>

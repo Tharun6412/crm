@@ -122,7 +122,7 @@
                         <td>{{ $consumer->prepaidData->hes_date?->format('d-m-Y H:i') }}</td>
                     </tr>
                     <tr>
-                        <td class="bg-light">Initial Recharge</td>
+                        <td class="bg-light">Recharge Bonus</td>
                         <td>{{ numberFormat($consumer->prepaidData->bonus) }}</td>
                     </tr>
                     @if ($consumer->prepaidData->conversion_date)
