@@ -4,17 +4,24 @@
             <tr>
                 <th rowspan="3" width="1%" nowrap="nowrap">S No.</th>
                 <th rowspan="3">GA Name</th>
-                <th colspan="16" class="text-center bg-warning-subtle">Sale in SCMs</th>
+                <th colspan="4" class="text-center bg-warning-subtle">Sale in SCMs</th>
+                <th colspan="12" class="text-center bg-warning-subtle">Sale in Rs</th>
             </tr>
             <tr class="text-end">
-                <th colspan="4" class="text-center">Domestic Prepaid</th>
-                <th colspan="4" class="text-center">Domestic Postpaid</th>
-                <th colspan="4" class="text-center">Commercial Prepaid</th>
-                <th colspan="4" class="text-center">Commercial Postpaid</th>
+                <th class="text-center" nowrap>Domestic Prepaid</th>
+                <th class="text-center" nowrap>Domestic Postpaid</th>
+                <th class="text-center" nowrap>Commercial Prepaid</th>
+                <th class="text-center" nowrap>Commercial Postpaid</th>
+                <th colspan="3" class="text-center">Domestic Prepaid</th>
+                <th colspan="3" class="text-center">Domestic Postpaid</th>
+                <th colspan="3" class="text-center">Commercial Prepaid</th>
+                <th colspan="3" class="text-center">Commercial Postpaid</th>
             </tr>
             <tr>
                 @for ($i = 1; $i < 5; $i++)
                     <th nowrap>Sale(SCM)</th>
+                @endfor
+                @for ($i = 1; $i < 5; $i++)
                     <th nowrap>Base Amt.</th>
                     <th nowrap>Tax Amt.</th>
                     <th nowrap>Total Amt.</th>
@@ -75,23 +82,29 @@
                 <tr>
                     <td class="text-center">{{ $i++ }}</td>
                     <td>{{ $ga->name }}</td>
+                    {{-- GAS sale In SCMs --}}
                     {{-- Domestic Prepaid --}}
                     <td class="text-end">{{ numberFormat($dom_pre,2) }}</td>
+                    {{-- Domestic Postpaid --}}
+                    <td class="text-end">{{ numberFormat($dom_post,2) }}</td>
+                    {{-- Commercial Prepaid --}}
+                    <td class="text-end">{{ numberFormat($com_pre,2) }}</td>
+                    {{-- Commercial Postpaid --}}
+                    <td class="text-end">{{ numberFormat($com_post,2) }}</td>
+                    {{-- Revenue of GAS Sale --}}
+                    {{-- Domestic Prepaid --}}
                     <td class="text-end">{{ numberFormat($dom_pre_base_amt,2) }}</td>
                     <td class="text-end">{{ numberFormat($dom_pre_tax_amt,2) }}</td>
                     <td class="text-end">{{ numberFormat($dom_pre_tot_amt,2) }}</td>
                     {{-- Domestic Postpaid --}}
-                    <td class="text-end">{{ numberFormat($dom_post,2) }}</td>
                     <td class="text-end">{{ numberFormat($dom_post_base_amt,2) }}</td>
                     <td class="text-end">{{ numberFormat($dom_post_tax_amt,2) }}</td>
                     <td class="text-end">{{ numberFormat($dom_post_tot_amt,2) }}</td>
                     {{-- Commercial Prepaid --}}
-                    <td class="text-end">{{ numberFormat($com_pre,2) }}</td>
                     <td class="text-end">{{ numberFormat($com_pre_base_amt,2) }}</td>
                     <td class="text-end">{{ numberFormat($com_pre_tax_amt,2) }}</td>
                     <td class="text-end">{{ numberFormat($com_pre_tot_amt,2) }}</td>
                     {{-- Commercial Postpaid --}}
-                    <td class="text-end">{{ numberFormat($com_post,2) }}</td>
                     <td class="text-end">{{ numberFormat($com_post_base_amt,2) }}</td>
                     <td class="text-end">{{ numberFormat($com_post_tax_amt,2) }}</td>
                     <td class="text-end">{{ numberFormat($com_post_tot_amt,2) }}</td>
@@ -105,23 +118,30 @@
         <tfoot>
             <tr class="table-info fw-bold text-end">
                 <th colspan="2" class="text-end">Total</th>
+                    {{-- Total GAS Sale.  --}}
                     {{-- Total Domestic Prepaid --}}
                     <th>{{ numberFormat($total_dom_pre, 2) }}</th>
+                    {{-- Total Domestic Postpaid --}}
+                    <th>{{ numberFormat($total_dom_post, 2) }}</th>
+                    {{-- Total Commercial Prepaid --}}
+                    <th>{{ numberFormat($total_com_pre, 2) }}</th>
+                    {{-- Total Commercial Postpaid --}}
+                    <th>{{ numberFormat($total_com_post, 2) }}</th>
+                    
+                    {{-- Total Revenue of GAS Sale --}}
+                    {{-- Total Domestic Prepaid --}}
                     <th>{{ numberFormat($total_dom_pre_base, 2) }}</th>
                     <th>{{ numberFormat($total_dom_pre_tax, 2) }}</th>
                     <th>{{ numberFormat($total_dom_pre_total, 2) }}</th>
                     {{-- Total Domestic Postpaid --}}
-                    <th>{{ numberFormat($total_dom_post, 2) }}</th>
                     <th>{{ numberFormat($total_dom_post_base, 2) }}</th>
                     <th>{{ numberFormat($total_dom_post_tax, 2) }}</th>
                     <th>{{ numberFormat($total_dom_post_total, 2) }}</th>
                     {{-- Total Commercial Prepaid --}}
-                    <th>{{ numberFormat($total_com_pre, 2) }}</th>
                     <th>{{ numberFormat($total_com_pre_base, 2) }}</th>
                     <th>{{ numberFormat($total_com_pre_tax, 2) }}</th>
                     <th>{{ numberFormat($total_com_pre_total, 2) }}</th>
                     {{-- Total Commercial Postpaid --}}
-                    <th>{{ numberFormat($total_com_post, 2) }}</th>
                     <th>{{ numberFormat($total_com_post_base, 2) }}</th>
                     <th>{{ numberFormat($total_com_post_tax, 2) }}</th>
                     <th>{{ numberFormat($total_com_post_total, 2) }}</th>

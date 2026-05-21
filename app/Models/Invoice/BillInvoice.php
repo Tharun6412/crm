@@ -50,6 +50,11 @@ class BillInvoice extends Model
         'parent_invoice_id',
         'created_by',
         'updated_by',
+        's_paid_amount',
+        's_balance_amount',
+        's_payment_status',
+        'iteration_balance',
+        'reconciliation_flag'
     ];
 
     /**

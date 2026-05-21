@@ -14,11 +14,24 @@
         <div id="invoices-report-list" class="current-page-reload">
             @include('reports.invoice.invoice-report.invoices-list-body')
         </div>
+        <div id="invoices-list-counts"></div>
     </form>
 @endsection
 
 @once
     @push('scripts')
-        @include('scripts.ajax-form-search', ['form' => 'invoices-report'])
+        @include('scripts.ajax-form-search', ['form' => 'invoices-report', 'callback' => 'loadCounts()'])
+        <script>
+            function loadCounts() {
+                $('#invoices-list-counts').html('Loading....');
+                var params = $('#invoices-report-search-form').serializeArray();
+                $.get('{{ url('reports/invoices/list-counts') }}', params, function(data) {
+                    $('#invoices-list-counts').html(data);
+                });
+            }
+            $(document).ready(function() {
+                loadCounts();
+            });
+        </script>
     @endpush
 @endonce
