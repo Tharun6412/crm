@@ -116,11 +116,47 @@
                     </div>
                 </div>
             </div>
-            {{-- Consumer Conversions --}}
+            <div class="tab-pane fade" id="nav-current-status" role="tabpanel" aria-labelledby="nav-current-status-tab" tabindex="0">
+                <form action="{{ url('reports/consumer/onboarding/getCumulativeConsumerStatusCount') }}" id="report-current-status-search-form" method="GET">
+                    <div class="d-flex justify-content-between align-items-center border my-2 bg-light p-2 bg-secondary-subtle rounded">
+                        <h4 class="mb-0">Consumer cumulative counts</h4>
+                        <div class="row g-1">
+                            <div class="col-auto">
+                                <label for="status_date">Connection Type</label>
+                                <select name="connect_type" id="connect_type" class="form-select">
+                                    <option value="">All Connections</option>
+                                    @foreach ($connection_types as $item)
+                                        <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-auto">
+                                <label for="status_date">Segments</label>
+                                <select name="cumulative_segment_id" id="cumulative_segment_id" class="form-select">
+                                    <option value="">All Segments</option>
+                                    @foreach ($segments as $item)
+                                        <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-auto">
+                                <label for="status_date">&nbsp;</label>
+                                <div>
+                                    <button type="submit" class="btn btn-success"><i class="bi bi-search"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>    
+                </form>
+                <div id="report-current-status-list"> 
+                    @include('reports.consumer.onboarding.consumer-status-count')
+                </div>
+            </div>
+                        {{-- Consumer Conversions --}}
             <div class="tab-pane fade" id="nav-conversions" role="tabpanel" aria-labelledby="nav-conversions-tab" tabindex="0">
                 <form action="{{ url('reports/consumer/conversions') }}" id="report-conversions-search-form" method="GET">
                     <div class="d-flex justify-content-between align-items-center border my-2 bg-light p-2 bg-secondary-subtle rounded">
-                        <h4 class="mb-0">Consumer Conversions</h4>
+                        <h4 class="mb-0 ps-2">Consumer Conversions & Reconnections</h4>
                         <div class="row g-1">
                             <div class="col-auto">
                                 <label for="status_date">Segments</label>
@@ -158,42 +194,6 @@
                     <div class="alert alert-info mb-0">
                         Please choose dates!
                     </div>
-                </div>
-            </div>
-            <div class="tab-pane fade" id="nav-current-status" role="tabpanel" aria-labelledby="nav-current-status-tab" tabindex="0">
-                <form action="{{ url('reports/consumer/onboarding/getCumulativeConsumerStatusCount') }}" id="report-current-status-search-form" method="GET">
-                    <div class="d-flex justify-content-between align-items-center border my-2 bg-light p-2 bg-secondary-subtle rounded">
-                        <h4 class="mb-0">Consumer cumulative counts</h4>
-                        <div class="row g-1">
-                            <div class="col-auto">
-                                <label for="status_date">Connection Type</label>
-                                <select name="connect_type" id="connect_type" class="form-select">
-                                    <option value="">All Connections</option>
-                                    @foreach ($connection_types as $item)
-                                        <option value="{{ $item->id }}">{{ $item->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="col-auto">
-                                <label for="status_date">Segments</label>
-                                <select name="cumulative_segment_id" id="cumulative_segment_id" class="form-select">
-                                    <option value="">All Segments</option>
-                                    @foreach ($segments as $item)
-                                        <option value="{{ $item->id }}">{{ $item->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="col-auto">
-                                <label for="status_date">&nbsp;</label>
-                                <div>
-                                    <button type="submit" class="btn btn-success"><i class="bi bi-search"></i></button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>    
-                </form>
-                <div id="report-current-status-list"> 
-                    @include('reports.consumer.onboarding.consumer-status-count')
                 </div>
             </div>
         </div>

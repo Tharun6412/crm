@@ -35,60 +35,72 @@ class ConsumerConversionController extends Controller
         // Get data
         $geo_areas = Ga::where('status', 1)->orderBy('position')->get();
         $segments = Segment::all();
-        // Get Activated, TD, PD Counts
-        $target_consumers = Consumer::selectRaw('ga_id, status_id, count(status_id) as count')
-            ->where('connection_type_id', EnumsConnectionType::POSTPAID->value)
+
+        // Get currect active postpaid consumers count GA wise
+        $conversion_balance = Consumer::selectRaw('ga_id, COUNT(id) as count')->where([
+                'connection_type_id' => EnumsConnectionType::POSTPAID->value,
+                'status_id' => EnumsConsumerStatus::ACTIVATE->value
+            ])
             ->when(($request->has('conv_segment_id') AND !empty($request->conv_segment_id)), function($q) use($request) {
                 $q->where('segment_id', $request->conv_segment_id);
             })
-            ->whereIn('status_id', [EnumsConsumerStatus::ACTIVATE->value, EnumsConsumerStatus::TD->value, EnumsConsumerStatus::PD->value])
-            ->whereBetween('created_at', [$from, $to])
-            ->groupBy('ga_id', 'status_id')->get();
-        // Get all consumer status counts
-        $consumer_status_result = Prepaid::query()
-            ->join('cns_consumers', 'cns_consumers.id', '=', 'cns_prepaid.consumer_id')
-            ->when($request->filled('conv_segment_id'), function ($q) use ($request) {
+            ->groupBy('ga_id')->get()->pluck('count', 'ga_id')->toArray();
+            
+        // Get all acheived converions
+        $conversion_cumulative = Consumer::selectRaw('cns_consumers.ga_id, COUNT(cns_consumers.id) as count')
+            ->join('cns_prepaid', 'cns_consumers.id', '=', 'cns_prepaid.consumer_id')
+            ->whereNotNull('cns_prepaid.conversion_date')
+            ->when(($request->has('conv_segment_id') AND !empty($request->conv_segment_id)), function($q) use($request) {
                 $q->where('cns_consumers.segment_id', $request->conv_segment_id);
             })
-            ->selectRaw('cns_consumers.ga_id, COUNT(DISTINCT cns_consumers.id) as count')
+            ->groupBy('cns_consumers.ga_id')->get()->pluck('count', 'ga_id')->toArray();
+        // Get between acheived converions
+        $conversion_between = Consumer::selectRaw('cns_consumers.ga_id, COUNT(cns_consumers.id) as count')
+            ->join('cns_prepaid', 'cns_consumers.id', '=', 'cns_prepaid.consumer_id')
+            ->whereNotNull('cns_prepaid.conversion_date')
             ->whereBetween('cns_prepaid.conversion_date', [$from, $to])
-            ->whereNotIn('cns_consumers.status_id', [EnumsConsumerStatus::REJECT->value])
-            ->groupBy('cns_consumers.ga_id')
-            ->get();
-        // Get data
-        // Reconnect Status Fetch
-        $reconnect_status = ConsumerStatus::join('cns_consumers', 'cns_consumers.id', '=', 'cns_consumer_status.consumer_id')
-            ->select('cns_consumers.ga_id', DB::raw('COUNT(cns_consumer_status.id) as count'))
+            ->when(($request->has('conv_segment_id') AND !empty($request->conv_segment_id)), function($q) use($request) {
+                $q->where('cns_consumers.segment_id', $request->conv_segment_id);
+            })
+            ->groupBy('cns_consumers.ga_id')->get()->pluck('count', 'ga_id')->toArray();
+        
+        // Get Reconnect targets / Balance
+        $recon_balance = Consumer::selectRaw('ga_id, COUNT(id) as count')
+            ->where('status_id', EnumsConsumerStatus::TD->value)
+            ->when(($request->has('conv_segment_id') AND !empty($request->conv_segment_id)), function($q) use($request) {
+                $q->where('segment_id', $request->conv_segment_id);
+            })
+            ->groupBy('ga_id')->get()->pluck('count', 'ga_id')->toArray();
+        
+        // Get reconnected count cumulative
+        $recon_cumulative = Consumer::selectRaw('cns_consumers.ga_id, COUNT(cns_consumers.id) as count')
+            ->join('cns_consumer_status', 'cns_consumers.id', '=', 'cns_consumer_status.consumer_id')
+            ->where('cns_consumer_status.status_id', EnumsConsumerStatus::RECONNECT->value)
+            ->when(($request->has('conv_segment_id') AND !empty($request->conv_segment_id)), function($q) use($request) {
+                $q->where('cns_consumers.segment_id', $request->conv_segment_id);
+            })
+            ->groupBy('cns_consumers.ga_id')->get()->pluck('count', 'ga_id')->toArray();
+        
+        // Get reconnected count between dates
+        $recon_between = Consumer::selectRaw('cns_consumers.ga_id, COUNT(cns_consumers.id) as count')
+            ->join('cns_consumer_status', 'cns_consumers.id', '=', 'cns_consumer_status.consumer_id')
+            ->where('cns_consumer_status.status_id', EnumsConsumerStatus::RECONNECT->value)
             ->whereBetween('cns_consumer_status.created_at', [$from, $to])
             ->when(($request->has('conv_segment_id') AND !empty($request->conv_segment_id)), function($q) use($request) {
                 $q->where('cns_consumers.segment_id', $request->conv_segment_id);
             })
-            ->where('cns_consumer_status.status_id', EnumsConsumerStatus::RECONNECT->value)
-            ->groupBy('cns_consumers.ga_id')->get()->pluck('count', 'ga_id');
-        // Prepare data
-        $consumer_status_counts = [];
-        $consumer_status_sum = 0;
-        $consumer_target_counts = [];
-        $consumer_target_sum = [];
-        foreach($consumer_status_result as $row) {
-            $consumer_status_counts[$row->ga_id] = $row->count;
-            // $consumer_status_counts[$row->ga_id][$row->status_id] = $row->count;
-            // $consumer_status_sum[$row->status_id] = isset($consumer_status_sum[$row->status_id]) ? $consumer_status_sum[$row->status_id] + $row->count : $row->count;
-            $consumer_status_sum += $row->count;
-        }
-        foreach($target_consumers as $target) {
-            $consumer_target_counts[$target->ga_id][$target->status_id] = $target->count;
-            $consumer_target_sum[$target->status_id] = isset($consumer_target_sum[$target->status_id]) ? $consumer_target_sum[$target->status_id] + $target->count : $target->count;
-        }
+            ->groupBy('cns_consumers.ga_id')->get()->pluck('count', 'ga_id')->toArray();
+
         // Render output
         return view('reports.consumer.conversions.list', [
             'geo_areas' => $geo_areas,
             'segments' => $segments,
-            'consumer_status_counts' => $consumer_status_counts,
-            'consumer_status_sum' => $consumer_status_sum,
-            'consumer_target_counts' => $consumer_target_counts,
-            'consumer_target_sum' => $consumer_target_sum,
-            'reconnect_status' => $reconnect_status,
+            'conversion_balance' => $conversion_balance,
+            'conversion_cumulative' =>$conversion_cumulative,
+            'conversion_between' => $conversion_between,
+            'recon_balance' => $recon_balance,
+            'recon_cumulative' => $recon_cumulative,
+            'recon_between' => $recon_between,
         ]);
     }
 
