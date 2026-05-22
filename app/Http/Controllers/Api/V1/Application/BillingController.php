@@ -475,11 +475,12 @@ class BillingController extends Controller
             // Remaining advance amount settlement against gas bill.
             if ($rem_advance > 0) {
                 $gas_settlement = min($rem_advance, (float) $inv_insert->total_amount);
+                $payable_amt = round(($inv_insert->total_amount - $gas_settlement),2);
                 $inv_insert->update([
                     'advance_amount' => $gas_settlement,
-                    'payable_amount' => $inv_insert->total_amount - $gas_settlement,
-                    'balance_amount' => $inv_insert->total_amount - $gas_settlement,
-                    'status_id'      => ($inv_insert->total_amount - $gas_settlement <= 0)
+                    'payable_amount' => $payable_amt,
+                    'balance_amount' => $payable_amt,
+                    'status_id'      => ($payable_amt <= 0)
                                             ? InvoiceStatus::PAID->value
                                             : InvoiceStatus::NOT_PAID->value,
                 ]);
@@ -504,8 +505,7 @@ class BillingController extends Controller
                 }
             }
 
-            if($rem_advance > 0)
-            {
+            if ($rem_advance >= 0 && $consumer->advanceAmount) {
                 // If any remaining advance balance, update back to consumer.
                 $consumer->advanceAmount->update(['advance_amount' => $rem_advance, 'updated_at' => now()]);
             }
