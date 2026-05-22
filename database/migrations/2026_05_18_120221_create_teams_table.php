@@ -53,7 +53,7 @@ return new class extends Migration
             $table->foreignId('lead_channel_id')->nullable()->index()->after('area_id')->constrained(table:'lms_lead_channels')->noActionOnDelete()->noActionOnUpdate();
         });
         //adm_user_ca
-        Schema::table('adm_user_ca', function (Blueprint $table) {
+        Schema::create('adm_user_ca', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->nullable()->index()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();
             $table->foreignId('ca_id')->nullable()->index()->constrained(table:'mst_cas')->noActionOnDelete()->noActionOnUpdate();
