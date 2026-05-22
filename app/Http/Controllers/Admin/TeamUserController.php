@@ -11,11 +11,19 @@ class TeamUserController extends Controller
 {
     public function create($id)
     {
-        $team = Team::with('users')->findOrFail($id);
-        $users = User::where('ga_id',$team->ga_id)->get();
-        return view('admin.teams.users.create',['team' => $team, 'users' => $users]);
+        $team = Team::with(['users'])->findOrFail($id);
+        $users = User::with(['ga'])
+                ->whereHas('ga', function ($q) use ($team) {
+                    $q->where('mst_gas.id', $team->ga_id);
+                })->get();
+        return view('admin.teams.users.create', [
+            'team' => $team,
+            'users' => $users
+        ]);
     }
-
+    /**
+     * Based on the team store users
+     */
     public function store(Request $request,$id)
     {
         $team = Team::findOrFail($id);

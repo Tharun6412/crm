@@ -6,6 +6,7 @@ use App\Enums\ConsumerStatus;
 use App\Enums\Department;
 use App\Enums\Role;
 use App\Http\Controllers\Controller;
+use App\Models\Admin\Team;
 use App\Models\Admin\User;
 use App\Models\Consumer\Consumer;
 use App\Models\Master\ConnectionType;
@@ -23,6 +24,7 @@ class ConsumerWaitingController extends Controller
         $geo_areas = Ga::where('status', 1)->orderBy('position')->get();
         $segments = Segment::all();
         $connection_types = ConnectionType::all();
+        $total_teams = Team::where('status',1)->count();
         // Get all consumer status counts
         $consumer_status = Consumer::selectRaw('ga_id, status_id, count(status_id) as count')
             ->when(($request->has('connect_type_id') AND !empty($request->connect_type_id)), function($q) use($request) {
@@ -48,6 +50,7 @@ class ConsumerWaitingController extends Controller
                 'connection_types' => $connection_types,
                 'consumer_wait_list' => $consumer_wait_list,
                 'consumer_wait_sum' => $consumer_wait_sum,
+                'total_teams' => $total_teams,
             ]);    
         }else {
             return view('reports.consumer.waiting-report.report', [
@@ -56,6 +59,7 @@ class ConsumerWaitingController extends Controller
                 'connection_types' => $connection_types,
                 'consumer_wait_list' => $consumer_wait_list,
                 'consumer_wait_sum' => $consumer_wait_sum,
+                'total_teams' => $total_teams,
             ]);
         }
     }
@@ -139,5 +143,21 @@ class ConsumerWaitingController extends Controller
             }])
             ->get();
         return $users;
+    }
+    /**
+     * Ga Wise Teams counts
+     */
+    public function teams(Request $request)
+    {
+        $geo_areas = Ga::with('teams')->where('status', 1)->orderBy('position')->get();
+        return view('reports.consumer.waiting-report.teams',['geo_areas' => $geo_areas]);
+    }
+    /**
+     * Team list
+     */
+    public function getTeams(Request $request)
+    {
+        $teams = Team::with(['users','ga','departments'])->where('ga_id',$request->ga_id)->where('status',1)->get();
+        return view('reports.consumer.waiting-report.team-list',['teams' => $teams,'ga_name' => $request->ga_name]);
     }
 }

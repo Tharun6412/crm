@@ -6,26 +6,25 @@ use App\Models\Master\Ca;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class TeamCas extends Model
+class UserCa extends Model
 {
-    protected $table = 'adm_team_cas';
+    protected $table = 'adm_user_ca';
     protected $fillable = [
-        'team_id',
+        'user_id',
         'ca_id',
     ];
     /**
-     * Relation with team
+     * Relation with user
      */
-    public function team(): BelongsTo
+    public function user(): BelongsTo
     {
-        return $this->belongsTo(Team::class,'team_id');
+        return $this->belongsTo(User::class,'user_id');
     }
     /**
      * Relation with ca
      */
     public function ca(): BelongsTo
     {
-        return $this->belongsTo(Ca::class, 'ca_id');
+        return $this->belongsTo(Ca::class,'ca_id');
     }
 }
-

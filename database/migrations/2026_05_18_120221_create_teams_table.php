@@ -52,13 +52,21 @@ return new class extends Migration
          Schema::table('lms_leads', function (Blueprint $table) {
             $table->foreignId('lead_channel_id')->nullable()->index()->after('area_id')->constrained(table:'lms_lead_channels')->noActionOnDelete()->noActionOnUpdate();
         });
+        //adm_user_ca
+        Schema::table('adm_user_ca', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->nullable()->index()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();
+            $table->foreignId('ca_id')->nullable()->index()->constrained(table:'mst_cas')->noActionOnDelete()->noActionOnUpdate();
+        });
     }
 
     /**
      * Reverse the migrations.
      */
     public function down(): void
-    {   Schema::dropIfExists('adm_user_types');
+    {   
+        Schema::dropIfExists('adm_user_ca');
+        Schema::dropIfExists('adm_user_types');
         Schema::dropIfExists('adm_team_cas');
         Schema::dropIfExists('adm_team_users');
         Schema::dropIfExists('adm_teams');  

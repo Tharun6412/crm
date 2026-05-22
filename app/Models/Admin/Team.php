@@ -17,28 +17,40 @@ class Team extends Model
         'name',
         'ga_id',
         'department_id',
+        'status',
         'created_by',
     ];
-
+    /**
+     * Relation with ga
+     */
     public function ga(): BelongsTo
     {
         return $this->belongsTo(Ga::class,'ga_id');
     }
-
+    /**
+     * Relation with charge Area
+     */
     public function cas(): BelongsToMany
     {
         return $this->belongsToMany(Ca::class,'adm_team_cas','team_id','ca_id');
     }
-
-    public function department(): BelongsTo
+    /**
+     * Relation with departments
+     */
+    public function departments(): BelongsTo
     {
         return $this->belongsTo(Department::class,'department_id');
     }
-
+    /**
+     * Relation with users
+     */
     public function createdBy(): BelongsTo
     {
         return $this->belongsTo(User::class,'created_by');
     }
+    /**
+     * Relation with users
+     */
     public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class,'adm_team_users','team_id','user_id');

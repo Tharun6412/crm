@@ -50,6 +50,7 @@ class User extends Authenticatable
         'doj',
         'image',
         'type',
+        'type_id',
         'department_id',
         'activated_at',
     ];
@@ -128,6 +129,21 @@ class User extends Authenticatable
     public function ga(): BelongsToMany
     {
         return $this->belongsToMany(Ga::class, 'adm_user_ga', 'user_id', 'ga_id');
+    }
+
+    /**
+     * Relation with charge area table pivote user_ca
+     */
+    public function cas(): BelongsToMany
+    {
+        return $this->belongsToMany(Ca::class,'adm_user_ca','user_id','ca_id');
+    }
+    /**
+     * Relation with user type
+     */
+    public function types(): BelongsTo
+    {
+        return $this->belongsTo(UserType::class,'type_id');
     }
 
     /**

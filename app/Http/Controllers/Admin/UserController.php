@@ -9,6 +9,8 @@ use App\Models\Master\Ga;
 use App\Models\Admin\Role;
 use App\Models\Admin\User;
 use App\Models\Admin\UserStatusHistory;
+use App\Models\Admin\UserType;
+use App\Models\Master\Ca;
 use App\Models\Spot\SpotRoles;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -98,12 +100,14 @@ class UserController extends Controller
         $geo_areas = Ga::all();
         $departments = Department::all();
         $roles = Role::all();
+        $types = UserType::all();
 
         // Render output
         return view('admin.users.create', [
             'geo_areas' => $geo_areas,
             'departments' => $departments,
             'roles' => $roles,
+            'types' => $types,
         ]);
     }
 
@@ -120,6 +124,7 @@ class UserController extends Controller
             'last_name' => 'required',
             'mobile' => 'required',
             'department_id' => 'required',
+            'type_id' => 'required',
         ]);
 
         //-- Create New user
@@ -134,6 +139,7 @@ class UserController extends Controller
             'dob' => ($request->dob) ? Carbon::createFromFormat('d-m-Y', $request->dob) : null,
             'doj' => ($request->doj) ? Carbon::createFromFormat('d-m-Y', $request->doj) : null,
             'department_id' => $request->department_id,
+            'type_id' => $request->type_id,
             'status_id' => UserStatus::REGISTER->value,
         ]);
 
@@ -166,6 +172,7 @@ class UserController extends Controller
         $geo_areas = Ga::all();
         $departments = Department::all();
         $roles = Role::all();
+        $types = UserType::all();
         // $spot_roles = SpotRoles::all();
 
         return view('admin.users.edit', [
@@ -173,6 +180,7 @@ class UserController extends Controller
             'geo_areas' => $geo_areas,
             'departments' => $departments,
             'roles' => $roles,
+            'types' => $types,
             // 'spot_roles' => $spot_roles,
         ]);
     }
@@ -190,6 +198,7 @@ class UserController extends Controller
             'last_name' => 'required',
             'mobile' => 'required',
             'department_id' => 'required',
+            'type_id' => 'required',
         ]);
 
         // Update
@@ -200,6 +209,7 @@ class UserController extends Controller
         $user->last_name = $request->last_name;
         $user->mobile = $request->mobile;
         $user->department_id = $request->department_id;
+        $user->type_id = $request->type_id;
         $user->dob = ($request->dob) ? Carbon::createFromFormat('d-m-Y', $request->dob) : null;
         $user->doj = ($request->doj) ? Carbon::createFromFormat('d-m-Y', $request->doj) : null;
         $user->save();
@@ -236,5 +246,26 @@ class UserController extends Controller
 
         // Response
         return response()->json(['msg' => 'Password reset successful!']);
+    }
+
+    /**
+     *Manage user by ca edit
+     */
+    public function editUserCas($id)
+    {
+        $user = User::with(['cas','ga'])->findOrFail($id);
+        $gas = $user->ga->pluck('id');
+        $cas = Ca::with(['ga'])->whereIn('ga_id',$gas)->get()->groupBy('ga.name');
+        return view('admin.users.manage-cas',['user' => $user,'cas' => $cas]);
+    }
+    /**
+     * Manage user by ca update
+     */
+    public function updateUserCas(Request $request,$id)
+    {
+        $user = User::findOrFail($id);
+        $user->cas()->sync($request->ca_id ?? []);
+        return response()->json(['success' => 'Charge Areas Added Successfully']);
+        
     }
 }

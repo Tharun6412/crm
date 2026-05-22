@@ -50,6 +50,12 @@
                                 </dd>
                             </dl>
                             <dl class="d-flex">
+                                <dt>Charge Areas:</dt>
+                                <dd class="ps-2 mb-0">
+                                    {{ $user->cas->pluck("name") }}
+                                </dd>
+                            </dl>
+                            <dl class="d-flex">
                                 <dt>Department:</dt>
                                 <dd class="ps-2 mb-0">
                                     @isset($user->department->name)

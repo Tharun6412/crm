@@ -2,6 +2,7 @@
 
 namespace App\Models\Master;
 
+use App\Models\Admin\Team;
 use App\Models\Admin\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -81,5 +82,12 @@ class Ga extends Model
     public function districts(): HasMany
     {
         return $this->hasMany(District::class);
+    }
+    /**
+     * Relation with teams
+     */
+    public function teams(): HasMany
+    {
+        return $this->hasMany(Team::class)->where('status',1);
     }
 }

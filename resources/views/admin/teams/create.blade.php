@@ -11,12 +11,12 @@
                     @csrf
                     <div class="row mb-3">
                         {{-- Team Name --}}
-                        <label for="name" class="col-sm-2 col-form-label text-end">Team Name</label>
+                        <label for="name" class="col-sm-2 col-form-label text-end">Team Name :</label>
                         <div class="col-sm-4">
                             <input type="text" name="name" id="name" class="form-control" placeholder="Enter Team Name">
                         </div>
                         {{-- Department --}}
-                        <label for="department_id" class="col-sm-2 col-form-label text-end">Department</label>
+                        <label for="department_id" class="col-sm-2 col-form-label text-end">Department :</label>
                         <div class="col-sm-4">
                             <select name="department_id" id="department_id" class="form-select">
                                 <option value="">Select Department</option>
@@ -28,8 +28,8 @@
                     </div>
                     {{-- Geo Area --}}
                     <div class="row mb-3">
-                        <label for="ga_id" class="col-sm-2 col-form-label text-end">Geo Area</label>
-                        <div class="col-sm-3">
+                        <label for="ga_id" class="col-sm-2 col-form-label text-end">Geo Area :</label>
+                        <div class="col-sm-4">
                             <select name="ga_id" id="ga_id" class="form-select">
                                 <option value="">Select Geo Area</option>
                                 @foreach ($geo_areas as $ga)
@@ -42,12 +42,12 @@
                     {{-- Charge Areas --}}
                     <div class="row mb-3">
                         <div class="col-sm-12">
-                            <h5>Charge Areas</h5>
+                            <h4>Charge Areas :</h4>
                         </div>
                         <div class="col-sm-12">
                             <div id="ca_id" class="row row-cols-4 border rounded p-3">
                                 <div class="col-12">
-                                    <span class="text-muted"> Charge Areas</span>
+                                    <span class="text-muted"> Select GA to get Charge Areas</span>
                                 </div>
                             </div>
                         </div>

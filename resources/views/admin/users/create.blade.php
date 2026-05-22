@@ -60,6 +60,17 @@
                         </div>
                     </div>
                 </div>
+                <div class="row mb-3">
+                    <label for="type_id" class="col-sm-2 col-form-label text-end">Employee Type</label>
+                    <div class="col-sm-4">
+                        <select name="type_id" id="type_id" class="form-select">
+                            <option value="">Select Type</option>
+                            @foreach ($types as $item)
+                                <option value="{{ $item->id }}">{{ $item->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
                 <div class="row mb-3 d-none">
                     <label class="col-sm-2 col-form-label text-end">Cluster restriction</label>
                     <div class="col-sm-4 mt-2">

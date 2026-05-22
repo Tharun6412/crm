@@ -19,7 +19,8 @@
         @endphp
         <nav>
             <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                <button class="nav-link active fs-5 border border-bottom-0 me-2" id="nav-consumers-wait-tab" data-bs-toggle="tab" data-bs-target="#nav-consumers" type="button" role="tab" aria-controls="nav-consumers" aria-selected="true"><i class="bi bi-app-indicator"></i>&nbsp;Consumer waiting&nbsp;<span class="badge text-bg-success">{{ $wait_list }}</span></button>
+                <button class="nav-link active fs-5 border border-bottom-0 me-2" id="nav-consumers-wait-tab" data-bs-toggle="tab" data-bs-target="#nav-consumers-wait" type="button" role="tab" aria-controls="nav-consumers" aria-selected="true"><i class="bi bi-app-indicator"></i>&nbsp;Consumer waiting&nbsp;<span class="badge text-bg-success">{{ $wait_list }}</span></button>
+                <button class="nav-link fs-5 border border-bottom-0 me-2" id="nav-ga-teams-tab" data-bs-toggle="tab" data-bs-target="#nav-ga-teams" type="button" role="tab" aria-controls="nav-ga-teams" aria-selected="true"><i class="bi bi-people-fill me-1"></i>&nbsp;Teams&nbsp;<span class="badge bg-primary">{{ $total_teams }}</span></button>              
                 {{-- <button class="nav-link fs-5 border border-bottom-0 me-2" id="nav-current-status-tab" data-bs-toggle="tab" data-bs-target="#nav-current-status" type="button" role="tab" aria-controls="nav-current-status" aria-selected="false"><i class="bi bi-app-indicator"></i>&nbsp;Overview&nbsp;<span class="badge text-bg-success">{{ array_sum($consumer_status_sum) }}</span></button>
                 <button class="nav-link fs-5 border border-bottom-0 me-2" id="nav-cns-activity-tab" data-bs-toggle="tab" data-bs-target="#nav-cns-activity" type="button" role="tab" aria-controls="nav-cns-activity" aria-selected="false"><i class="bi bi-house-gear"></i>&nbsp;Onboard Activity</button>
                 <button class="nav-link fs-5 border border-bottom-0 me-2" id="nav-conversions-tab" data-bs-toggle="tab" data-bs-target="#nav-conversions" type="button" role="tab" aria-controls="nav-conversions" aria-selected="false"><i class="bi bi-arrow-right-square"></i>&nbsp;Conversions</button> --}}
@@ -60,6 +61,16 @@
                 </form>
                 <div id="report-cns-waiting-list"> 
                     @include('reports.consumer.waiting-report.report-body')
+                </div>
+            </div>
+            <div class="tab-pane fade" id="nav-ga-teams" role="tabpanel" aria-labelledby="nav-ga-teams-tab" tabindex="0">
+                <form action="{{ url('reports/consumer/teams') }}" id="report-ga-teams-search-form" method="GET">
+                    <div class="d-flex justify-content-between align-items-center border my-2 bg-light p-2 bg-secondary-subtle rounded">
+                        <h4 class="mb-0">Teams Report</h4>
+                    </div>    
+                </form>
+                <div id="report-ga-teams-list"> 
+                    @include('reports.consumer.waiting-report.teams')
                 </div>
             </div>
         </div>

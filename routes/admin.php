@@ -11,6 +11,10 @@ Route::middleware([ModuleAccess::class, 'auth'])->group(function() {
     Route::post('users/reset/{id}', [App\Http\Controllers\Admin\UserController::class, 'reset']);
     Route::resource('users', App\Http\Controllers\Admin\UserController::class);
     Route::resource('roles', App\Http\Controllers\Admin\RoleController::class);
+    //user cas
+    Route::get('users/editUserCas/{id}',[App\Http\Controllers\Admin\UserController::class,'editUserCas']);
+    Route::post('users/updateUserCas/{id}',[App\Http\Controllers\Admin\UserController::class,'updateUserCas']);
+
 
     // Module administration
     Route::get('modules/createSub/{id}', [App\Http\Controllers\Admin\ModuleController::class, 'createSub']);
@@ -20,7 +24,7 @@ Route::middleware([ModuleAccess::class, 'auth'])->group(function() {
     // API KEY
     Route::resource('api-keys', App\Http\Controllers\Admin\ApiKeyController::class);
 
-    //teams
+    //Teams
     Route::get('teams/',[App\Http\Controllers\Admin\TeamController::class,'index']);
     Route::get('teams/create',[App\Http\Controllers\Admin\TeamController::class,'create']);
     Route::post('teams/store',[App\Http\Controllers\Admin\TeamController::class,'store']);
@@ -28,7 +32,9 @@ Route::middleware([ModuleAccess::class, 'auth'])->group(function() {
     Route::get('teams/show',[App\Http\Controllers\Admin\TeamController::class,'show']);
     Route::get('teams/edit/{id}',[App\Http\Controllers\Admin\TeamController::class,'edit']);
     Route::put('teams/update/{id}',[App\Http\Controllers\Admin\TeamController::class,'update']);
-    //user routes
+    Route::get('teams/show/{id}',[App\Http\Controllers\Admin\TeamController::class,'show']);
+    Route::post('teams/{id}/toggleStatus',[App\Http\Controllers\Admin\TeamController::class,'toggleStatus']);
+    // Team user routes
     Route::get('teams/user/create/{id}',[App\Http\Controllers\Admin\TeamUserController::class,'create']);
     Route::post('teams/user/store/{id}',[App\Http\Controllers\Admin\TeamUserController::class,'store']);
 

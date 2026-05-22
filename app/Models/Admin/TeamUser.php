@@ -12,12 +12,16 @@ class TeamUser extends Model
         'team_id',
         'user_id',
     ];
-
+    /**
+     * Relation with team
+     */
     public function team(): BelongsTo
     {
         return $this->belongsTo(Team::class,'team_id');
     }
-
+    /**
+     * Relation with user
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class,'user_id');

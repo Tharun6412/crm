@@ -12,15 +12,36 @@ use Illuminate\Support\Facades\Auth;
 
 class TeamController extends Controller
 {
+    /**
+     * Teams List Page
+     */
     public function index(Request $request)
     {
-        $teams = Team::all();
+        $teams = Team::with([
+            'ga:id,name',
+            'departments:id,name',
+        ])
+        ->withCount(['users as users_count'])
+        ->when($request->filled('key'), function($q) use ($request) {
+            $q->where('name','like','%'.$request->key.'%');
+        })
+        ->when($request->has('geo_area'), function($q) use ($request) {
+            $q->whereIn('ga_id',$request->geo_area);
+        })
+        ->when($request->has('departments'), function($q) use ($request) {
+            $q->whereIn('department_id',$request->departments);
+        })
+        ->orderByDesc('created_at')
+        ->paginate(20)->withQueryString();
+
         if($request->ajax())
             return view('admin.teams.list-body',['teams' => $teams]);
         else
             return view('admin.teams.list',['teams' => $teams]);
     }
-
+    /**
+     * create Team
+     */
     public function create()
     {
         $geo_areas = Ga::all();
@@ -28,7 +49,9 @@ class TeamController extends Controller
         $departments = Department::all();
         return view('admin.teams.create',['geo_areas' => $geo_areas,'cas' => $cas,'departments' => $departments]);
     }
-
+    /**
+     * Store Team
+     */
     public function store(Request $request)
     {
         $request->validate([
@@ -41,8 +64,8 @@ class TeamController extends Controller
         $team = Team::create([
         'name' => $request->name,
         'ga_id' => $request->ga_id,
-        //'ca_id' => $request->ca_id,
         'department_id' => $request->department_id,
+        'status' => 1,
         'created_by' => Auth::id(),
         ]);
 
@@ -50,13 +73,17 @@ class TeamController extends Controller
         return response()->json(['success' => 'Team Created Successfully']);
 
     }
-
+    /**
+     * get ca based on the ga
+     */
     public function gaCas(Request $request)
     {
         $cas = Ca::where('ga_id',$request->ga_id)->get();
         return response()->json(['cas' => $cas]);
     }
-
+    /**
+     * team edit
+     */
     public function edit($id)
     {
         $team = Team::with('cas')->findOrFail($id);
@@ -65,7 +92,9 @@ class TeamController extends Controller
         $cas = Ca::where('ga_id', $team->ga_id)->get();
         return view('admin.teams.edit',['team' => $team,'geo_areas' => $geo_areas,'cas' => $cas,'departments' => $departments]);
     }
-
+    /**
+     * team update
+     */
     public function update(Request $request, $id)
     {
         $request->validate([
@@ -89,5 +118,29 @@ class TeamController extends Controller
             'success' => 'Team Updated Successfully'
         ]);
     }
+    /**
+     * charges areas show page
+     */
+    public function show($id)
+    {
+        $team = Team::with(['cas','ga','departments','users.roles'])->findOrFail($id);
+        return view('admin.teams.show',['team' => $team ]);
+    }
+    /**
+     * status 
+     */
+    public function toggleStatus($id)
+    {
+        $team = Team::findOrFail($id);
+        $team->status = !$team->status;
+        $team->save();
+
+        return response()->json([
+            'success' => 'true',
+            'message' => 'Status Change Successfully',
+            'status' => $team->status ? 'Active' : 'Inactive',
+        ]);
+    }
+
 }
 

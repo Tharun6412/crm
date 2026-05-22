@@ -62,6 +62,18 @@
                             </div>
                         </div>
                     </div>
+                    {{-- user type --}}
+                    <div class="row mb-3">
+                        <label for="type_id" class="col-sm-2 col-form-label text-end">Employee Type</label>
+                        <div class="col-sm-4">
+                            <select name="type_id" id="type_id" class="form-select">
+                                <option value="">Select Type</option>
+                                @foreach ($types as $item)
+                                    <option value="{{ $item->id }}" @selected($user->type_id == $item->id)>{{ $item->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
                 {{-- Geo Areas --}}
                 <div class="row">
                     <div class="col-sm-12 text-start">

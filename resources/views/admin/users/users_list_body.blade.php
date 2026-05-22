@@ -160,6 +160,9 @@
                                             @endif
                                         </a>
                                     </li>
+                                    <li>
+                                        <a class="dropdown-item link-modal" href="{{ url('admin/users/editUserCas/'.$user->id) }}"><i class="bi bi-geo-alt"></i>&nbsp;Manage Charge Areas</a>
+                                    </li>
                                 @endif
                             </ul>
                         </div>
