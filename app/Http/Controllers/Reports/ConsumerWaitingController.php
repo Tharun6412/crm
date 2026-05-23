@@ -14,10 +14,15 @@ use App\Models\Master\Ga;
 use App\Models\Master\Segment;
 use Illuminate\Http\Request;
 
+/**
+ * Consumer Waiting Controller
+ */
 class ConsumerWaitingController extends Controller
 {
     /**
-     * Index
+     * Index Method
+     * @param $request
+     * @return view
      */
     public function index(Request $request)
     {
@@ -65,17 +70,14 @@ class ConsumerWaitingController extends Controller
     }
 
     /**
-     * Employee List 
+     * Employee List Based on Role and Department
      */
     public function consumersListForEmployees(Request $request) 
     {
+        // Based on Status
         switch($request->cns_status) {
-            case ConsumerStatus::PRE_REGISTER->value: //Waiting to Register
-                $users_list = $this->getUsersListByStatus($request, $request->ga_id, $request->cns_status, Department::OM->value, ROLE::EMPLOYEE->value);
-                $status_val = ConsumerStatus::REGISTER->name;
-                break;
             case ConsumerStatus::REGISTER->value: //waiting to Accept
-                $users_list = $this->getUsersListByStatus($request, $request->ga_id, $request->cns_status, Department::OM->value, ROLE::EMPLOYEE->value);
+                $users_list = $this->getUsersListByStatus($request, $request->ga_id, $request->cns_status, Department::MDPE->value, ROLE::MDPE->value);
                 $status_val = ConsumerStatus::ACCEPT->name;
                 break;
             case ConsumerStatus::ACCEPT->value: //waiting to Execute
@@ -91,31 +93,29 @@ class ConsumerWaitingController extends Controller
                 $status_val = ConsumerStatus::ACTIVATE->name;
                 break;
             default:
-                $status_val = null;
-                $users_list = User::with(['teams', 'ca', 'teams.cas','department', 'consumers'])
-                    ->whereHas('ga', function($q) use($request) {
-                        $q->where('adm_user_ga.ga_id', $request->ga_id);
-                    })
-                    ->get();
-                foreach ($users_list as $user) {
-                    // Status Mapping
-                    $statuses = match ($user->department_id) {
-                        Department::OM->value => [ConsumerStatus::PRE_REGISTER->value, ConsumerStatus::REGISTER->value],
-                        Department::GI->value => [ConsumerStatus::ACCEPT->value],
-                        Department::HSE->value => [ConsumerStatus::EXECUTE->value],
-                        Department::ACTIVATION->value => [ConsumerStatus::HSC->value],
-                        default => []
-                    };
-                    $user->count = $user->consumers()->where('ga_id', $request->ga_id)->whereIn('status_id', $statuses)->count();
-
-                }
-            }
-        // $status_val = $request->status+1;
+                $status_val = null;$users_list = [];break;
+        }
+        // Array Preparation
+        // First Prepare Consumer GAs
+        $consumerCas = $users_list->flatMap(fn($u) => $u->consumers->pluck('ca_id'))->unique()->values();
+        // Getting teams List based on the Charge Areas.
+        $teams = Team::with('cas')->withCount('users as users_count')
+            ->whereHas('cas', function ($q) use ($consumerCas) {
+                $q->whereIn('ca_id', $consumerCas);
+            })
+            ->get();
+        // Teams Mapping with Consumers Based on Charge Area
+        foreach ($users_list as $user) {
+            $consumer_cas = $user->consumers->pluck('ca_id')->unique();
+            $user->team = $teams->filter(function ($team) use ($consumer_cas) {
+                return $team->cas->pluck('id')->intersect($consumer_cas)->isNotEmpty();
+            })->values();
+        }
         // Response
         return view('reports.consumer.waiting-report.emp-list', [
             'users_list' => $users_list,
             'status_name' => $status_val,
-            'ga_name' => Ga::where('id', $request->ga_id)->value('name'),
+            'ga_name' => Ga::select('id', 'name')->where('id', $request->ga_id)->first(),
         ]);
     }
 
@@ -124,7 +124,11 @@ class ConsumerWaitingController extends Controller
      */
     public function getUsersListByStatus(Request $request, $ga_id, $status, $department, $role)
     {
-        $users = User::with(['teams', 'ca', 'teams.cas','department', 'consumers'])
+        $users = User::with([
+                'ca',
+                'teams.cas',
+                'department',
+            ])
             ->where('department_id', $department)
             ->whereHas('ga', function($q) use($ga_id) {
                 $q->where('adm_user_ga.ga_id', $ga_id);
@@ -133,11 +137,11 @@ class ConsumerWaitingController extends Controller
                 $q->where('role_id', $role);
             })
             ->withCount(['consumers as count' => function($q) use($status, $ga_id, $request) {
-                if(!empty($request->connect_type_id)) {
-                    $q->where('connection_type_id', $request->connect_type_id);
+                if(!empty($request->connection_type_id)) {
+                    $q->where('connection_type_id', $request->connection_type_id);
                 }
-                if(!empty($request->onboard_segment_id)) {
-                    $q->where('segment_id', $request->onboard_segment_id);
+                if(!empty($request->segments)) {
+                    $q->where('segment_id', $request->segments);
                 }
                 $q->where('ga_id', $ga_id)->where('status_id', $status);
             }])

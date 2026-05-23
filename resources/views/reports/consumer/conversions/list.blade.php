@@ -1,8 +1,12 @@
 {{-- Consumer conversions with status --}}
 
 {{-- Dsiplay --}}
+<div class="mb-2 text-end">
+    <!-- Export -->
+    <button type="button" id="exportBtn" class="btn btn-outline-info"><i class="bi bi-file-earmark-excel"></i>&nbsp;Export</button>
+</div>
 <div class="table-responsive mt-2">
-    <table class="table table-bordered table-hover table-primary">
+    <table class="table table-bordered table-hover table-primary" id="conversions_table">
         <thead class="table-primary">
             <tr>
                 <th rowspan="2">GA</th>
@@ -104,3 +108,10 @@
     </table>
 </div>
 @include('scripts.link-modal')
+@include('scripts.export-table', [
+    'table' => 'conversions_table',
+    'button' => 'exportBtn',
+    'tabBased' => false,
+    'filename' => 'conversions_reconnections_report',
+    'sheet'    => 'Report',
+])

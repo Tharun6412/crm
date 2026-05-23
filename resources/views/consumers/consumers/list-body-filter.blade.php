@@ -8,6 +8,24 @@
         </select>
     </div>
     <div class="col-auto">
+        <div class="form-control d-flex align-items-center">
+            <div class="form-check form-switch m-0">
+                <input
+                    class="form-check-input"
+                    type="checkbox"
+                    role="switch"
+                    id="register_status"
+                    name="register_status"
+                    value="1"
+                    @checked(request()->register_status == "1")
+                >
+                <label class="form-check-label ms-2" for="register_status">
+                    Self Registered
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="col-auto">
         @if (request()->has('geo_area'))
             <div class="form-control">
                 Charge Area<x-master.charge-area-filter class="float-end"/>

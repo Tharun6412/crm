@@ -128,6 +128,7 @@ class ConsumerConversionController extends Controller
                 $q->where('segment_id', $request->conv_segment_id);
             }
         })
+        ->orderBy('conversion_date', 'desc')
         ->paginate(50)
         ->withQueryString();
         // Check Segment Filter

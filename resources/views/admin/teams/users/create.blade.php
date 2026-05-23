@@ -52,4 +52,4 @@
         </div>
     </div>
 </div>
-@include('scripts.ajax-file-submit', ['form' => 'team-user'])
+@include('scripts.ajax-form-submit', ['form' => 'team-user'])

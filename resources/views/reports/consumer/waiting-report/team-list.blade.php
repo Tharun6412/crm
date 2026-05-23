@@ -26,7 +26,7 @@
                                             <button type="button" class="btn btn-outline-dark btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Team Members - {{ $team->users->count() }}</button>
                                             <ul class="dropdown-menu">
                                                 @foreach ($team->users as $user)
-                                                    <li class="dropdown-item">{{ $user->emp_id . ' - ' . $user->name . ' - ' . $user->role }}</li>
+                                                    <li class="dropdown-item">{{ $user->emp_id . ' - ' . $user->name }}</li>
                                                 @endforeach
                                             </ul>
                                         </div>

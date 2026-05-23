@@ -66,7 +66,7 @@
         </div>
     </div>
 </div>
-@include('scripts.ajax-file-submit',['form' => 'team'])
+@include('scripts.ajax-form-submit',['form' => 'team'])
 <script type="module">
     $(function(){
         $("#ga_id").on('change', function(e) {

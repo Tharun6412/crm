@@ -44,7 +44,7 @@ class ConsumerPrepaidExport implements FromQuery, WithHeadings, WithMapping
                 if ($this->request->filled('conv_segment_id')) {
                     $q->where('segment_id', $this->request->conv_segment_id);
                 }
-            })->orderBy('created_at', 'desc');
+            })->orderBy('conversion_date', 'desc');
         return $consumers;
     }
 
@@ -53,7 +53,7 @@ class ConsumerPrepaidExport implements FromQuery, WithHeadings, WithMapping
      */
     public function headings():array
     {
-        return ['S.No', 'GA','CRN', 'Connection Type', 'Name', 'Status', 'Conversion Date', 'Updated By', 'Created Date'];
+        return ['S.No', 'GA','CRN', 'Name', 'Status', 'Conversion Date', 'New Scheme', 'Old Scheme'];
     }
 
     /**
@@ -66,12 +66,14 @@ class ConsumerPrepaidExport implements FromQuery, WithHeadings, WithMapping
             $this->i,
             $consumer->consumers->ga?->name,
             $consumer->consumers?->crn ?? $consumer->consumers->t_crn,
-            $consumer->consumers->connectType?->name,
+            // $consumer->consumers->connectType?->name,
             $consumer->consumers?->name,
             $consumer->consumers->status?->name,
             $consumer->conversion_date ? dateFormat($consumer->conversion_date) : '',
-            $consumer->consumers->createdBy?->name,
-            $consumer->consumers->created_at ? dateFormat($consumer->consumers->created_at) : '',
+            $consumer->consumers->prepaidData->prepaidScheme?->name,
+            $consumer->consumers->prepaidData->postpaidScheme?->name,
+            // $consumer->consumers->createdBy?->name,
+            // $consumer->consumers->created_at ? dateFormat($consumer->consumers->created_at) : '',
         ];
     }
 }

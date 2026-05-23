@@ -22,12 +22,14 @@
                         <th width="1%">S.No</th>
                         <th nowrap>Geo Area</th>
                         <th>CRN</th>
-                        <th>Connection Type</th>
+                        {{-- <th>Connection Type</th> --}}
                         <th>Name</th>
                         <th>Status</th>
                         <th>Conversion Date</th>
-                        <th>Updated By</th>
-                        <th>Created Date</th>
+                        <th>New Scheme</th>
+                        <th>Old Scheme</th>
+                        {{-- <th>Updated By</th>
+                        <th>Created Date</th> --}}
                     </tr>
                 </thead>
                 <tbody>
@@ -39,12 +41,16 @@
                             <td class="text-center">{{ $i++ }}</td>
                             <td nowrap>{{ $report->consumers->ga->name }}</td>
                             <td><a href="{{ url('consumers/'.$report->consumers->id) }}" target="_blank">{{ $report->consumers->crn ?? $report->consumers->t_crn }}</a></td>
-                            <td>{{ $report->consumers->connection_type_id == "1" ? "Postpaid" : "Prepaid" }}</td>
+                            {{-- <td>{{ $report->consumers->connection_type_id == "1" ? "Postpaid" : "Prepaid" }}</td> --}}
                             <td>{{ $report->consumers->fname }}&nbsp;{{ $report->consumers->lname }}</td>
                             <td>{{ $report->consumers->status->name }}</td>
                             <td>{{ dateFormat($report->conversion_date) }}</td>
-                            <td>{{ $report->consumers->createdBy?->name }}</td>
-                            <td>{{ $report->consumers->created_at?->format('d-m-Y') }}</td>
+                            <td>{{ $report->consumers->prepaidData->prepaidScheme?->name ?? '' }}</td>
+                            <td>
+                                {{ $report->consumers->prepaidData->postpaidScheme?->name ?? '' }}
+                            </td>
+                            {{-- <td>{{ $report->consumers->createdBy?->name }}</td>
+                            <td>{{ $report->consumers->created_at?->format('d-m-Y') }}</td> --}}
                         </tr>
                     @endforeach
                 </tbody>

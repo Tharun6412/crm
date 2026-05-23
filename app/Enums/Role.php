@@ -14,7 +14,9 @@ enum Role: int
     case FULL_ACCESS = 8;
     case EMPLOYEE = 9;
     case CALL_CENTER = 10;
-    case GI_ENGINEER = 11;
-    case HSE = 12;
-    case ACTIVATION = 13;
+    case MDPE = 13;
+    case STEEL = 14;
+    case GI_ENGINEER = 15;
+    case HSE = 16;
+    case ACTIVATION = 17;
 }

@@ -15,7 +15,11 @@
         @php
             $total = array_sum($consumer_wait_sum ?? []);
             $total_tr = $consumer_wait_sum[\App\Enums\ConsumerStatus::PRE_REGISTER->value] ?? 0;
-            $wait_list = $total - $total_tr;
+            $total_act = $consumer_wait_sum[\App\Enums\ConsumerStatus::ACTIVATE->value] ?? 0;
+            $total_td = $consumer_wait_sum[\App\Enums\ConsumerStatus::TD->value] ?? 0;
+            $total_pd = $consumer_wait_sum[\App\Enums\ConsumerStatus::PD->value] ?? 0;
+            $total_reject = $consumer_wait_sum[\App\Enums\ConsumerStatus::REJECT->value] ?? 0;
+            $wait_list = $total - ($total_tr + $total_reject + $total_act + $total_td + $total_pd);
         @endphp
         <nav>
             <div class="nav nav-tabs" id="nav-tab" role="tablist">

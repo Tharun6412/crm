@@ -141,7 +141,7 @@ class User extends Authenticatable
     /**
      * Relation with user type
      */
-    public function types(): BelongsTo
+    public function employeeType(): BelongsTo
     {
         return $this->belongsTo(UserType::class,'type_id');
     }

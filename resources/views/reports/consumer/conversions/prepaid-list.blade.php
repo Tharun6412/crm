@@ -4,7 +4,7 @@
         <div class="modal-header">
             <h1 class="modal-title fs-5" id="exampleModalLabel">
                 Converted Consumers -
-                {{ $request_data['ga_name'] }}&nbsp;>&nbsp;({{ $request_data['date_from'] }}&nbsp;-&nbsp;{{ $request_data['date_to'] }})&nbsp;{{ $segment ? "> ".$segment : '' }}
+                {{ $request_data['ga_name'] }}&nbsp;>&nbsp;({{ $request_data['date_from'] }}&nbsp;to&nbsp;{{ $request_data['date_to'] }})&nbsp;{{ $segment ? "> ".$segment : '' }}
             </h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
