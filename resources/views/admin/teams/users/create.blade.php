@@ -27,7 +27,7 @@
                                         <div class="col mb-2">
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox" name="user_id[]" value="{{ $user->id }}" id="user_{{ $user->id }}"@checked(in_array($user->id, $teamUsers))>
-                                                <label class="form-check-label" for="user_{{ $user->id }}">{{ $user->emp_id }} - {{ $user->first_name }}{{ $user->last_name }} - {{ $user->department->name }}</label>
+                                                <label class="form-check-label" for="user_{{ $user->id }}">{{ $user->emp_id }} - {{ $user->first_name }}{{ $user->last_name }} - {{ $user?->department?->name }}</label>
                                             </div>
                                         </div>
                                     @endforeach

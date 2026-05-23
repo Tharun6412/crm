@@ -66,6 +66,9 @@ class ConsumerExport implements FromQuery, WithHeadings, WithMapping
             ->when(!empty($this->request->area), function ($q) {
                 $q->whereIn('area_id', $this->request->area);
             })
+            ->when((int) $this->request->register_status == 1, function ($q) {
+                $q->where('self_register_status', $this->request->register_status);
+            })
             ->when(!empty($this->request->scheme), function ($q) {
                 $q->where(function($query) {
                     $query->whereHas('scheme', function($q1) {

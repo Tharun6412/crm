@@ -17,8 +17,8 @@
     <div class="col-sm-4">{{ $teams->ga->name ?? ''}}</div>
     <div class="col-sm-2 text-end fw-semibold">Employees : </div>
     <div class="col-sm-4">{{ $teams->users->count() }}</div>
-    <div class="col-sm-2 text-end fw-semibold">Create Date : </div>
+    <div class="col-sm-2 text-end fw-semibold">Created Date : </div>
     <div class="col-sm-4">{{ dateFormat($teams->created_at ?? '') }}</div>
-    <div class="col-sm-2 text-end fw-semibold">Create By : </div>
+    <div class="col-sm-2 text-end fw-semibold">Created By : </div>
     <div class="col-sm-4">{{ $teams->createdBy->name ?? '' }}</div>
 </div>

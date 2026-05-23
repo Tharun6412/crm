@@ -12,7 +12,7 @@ class TeamUserController extends Controller
     public function create($id)
     {
         $team = Team::with(['users'])->findOrFail($id);
-        $users = User::with(['ga'])
+        $users = User::with(['ga', 'department'])
                 ->whereHas('ga', function ($q) use ($team) {
                     $q->where('mst_gas.id', $team->ga_id);
                 })->get();
