@@ -10,6 +10,7 @@ use App\Http\Controllers\Master\DocumentCentre\DocumentUpload;
 use App\Http\Requests\Consumer\CommercialValidationRequest;
 use App\Models\Admin\User;
 use App\Models\Consumer\Consumer;
+use App\Models\Consumer\ConsumerData;
 use App\Models\Consumer\ConsumerDocument;
 use App\Models\Consumer\ConsumerScheme;
 use App\Models\Consumer\ConsumerStatus;
@@ -104,6 +105,11 @@ class CommercialRegistrationController extends Controller
         // Temporary CRN Generation
         $crn_code = "TR".$request->geo_area.$request->charge_area.str_pad($add_consumer->id, 5,'0', STR_PAD_LEFT);
         Consumer::where('id', $add_consumer->id)->update(['t_crn' => $crn_code, 'state_id' => $add_consumer->ga->state_id]);
+        // Consumers Data with GeoCoordinates
+        ConsumerData::create([
+            'consumer_id' => $add_consumer->id,
+            'kyc_status' => 0,
+        ]);
         // Consumer Status History
         ConsumerStatus::create([
             'consumer_id' => $add_consumer->id,

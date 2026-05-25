@@ -96,20 +96,33 @@ class ConsumerWaitingController extends Controller
                 $status_val = null;$users_list = [];break;
         }
         // Array Preparation
-        // First Prepare Consumer GAs
-        $consumerCas = $users_list->flatMap(fn($u) => $u->consumers->pluck('ca_id'))->unique()->values();
+        // First Prepare Consumer CAs
+        $consumerCas = Consumer::where('ga_id', $request->ga_id)->where('status_id', $request->cns_status)->distinct()->pluck('ca_id');
         // Getting teams List based on the Charge Areas.
-        $teams = Team::with('cas')->withCount('users as users_count')
-            ->whereHas('cas', function ($q) use ($consumerCas) {
-                $q->whereIn('ca_id', $consumerCas);
-            })
-            ->get();
+        $teams = Team::select('adm_teams.id', 'adm_teams.name', 'adm_teams.department_id')
+            ->with([
+                'cas:id',
+                'departments:id,name'
+            ])->withCount('users as users_count')
+            ->join('adm_team_cas', 'adm_teams.id', '=', 'adm_team_cas.team_id')
+            ->whereIn('adm_team_cas.ca_id', $consumerCas)->distinct()->get();
+        $teamMap = [];
         // Teams Mapping with Consumers Based on Charge Area
+        foreach ($teams as $team) {
+            foreach ($team->cas as $ca) {
+                $teamMap[$ca->id][$team->department_id][] = $team;
+            }
+        }
         foreach ($users_list as $user) {
-            $consumer_cas = $user->consumers->pluck('ca_id')->unique();
-            $user->team = $teams->filter(function ($team) use ($consumer_cas) {
-                return $team->cas->pluck('id')->intersect($consumer_cas)->isNotEmpty();
-            })->values();
+            $userTeams = collect();
+            // $consumerCas = $user->consumers->pluck('ca_id')->unique();
+            $consumerCas = $user->cas->pluck('id')->unique();
+            foreach ($consumerCas as $caId) {
+                if (isset($teamMap[$caId][$user->department_id])) {
+                    $userTeams = $userTeams->merge($teamMap[$caId][$user->department_id]);
+                }
+            }
+            $user->team = $userTeams->unique('id')->values();
         }
         // Response
         return view('reports.consumer.waiting-report.emp-list', [
@@ -124,10 +137,11 @@ class ConsumerWaitingController extends Controller
      */
     public function getUsersListByStatus(Request $request, $ga_id, $status, $department, $role)
     {
-        $users = User::with([
-                'ca',
-                'teams.cas',
-                'department',
+        $users = User::select('id', 'first_name', 'last_name', 'department_id', 'type_id')->with([
+                'cas',
+                'department:id,name',
+                'roles:id,name',
+                'employeeType:id,name'
             ])
             ->where('department_id', $department)
             ->whereHas('ga', function($q) use($ga_id) {

@@ -6,6 +6,8 @@ use App\Models\Consumer\Consumer;
 use App\Models\Invoice\BillInvoice;
 use Carbon\Carbon;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
@@ -126,4 +128,23 @@ class InvoiceExport implements FromQuery, ShouldQueue, WithChunkReading, WithHea
             $invoice->created_at ? dateFormat($invoice->created_at) : '',
         ];
     }
+
+    /**
+     * Handle a job failure.
+     *
+     * @param \Throwable $exception
+     */
+    public function failed(\Throwable $exception)
+    {
+        // Update export status to "2" (failed)
+        DB::table('adm_user_exports')
+            ->where('id', $this->exportId)
+            ->update(['status' => 2]);
+
+        // Optionally log the error for debugging
+        Log::error("Invoices List Export failed for exportId {$this->exportId}: " . $exception->getMessage(), [
+            'trace' => $exception->getTraceAsString()
+        ]);
+    }
 }
+

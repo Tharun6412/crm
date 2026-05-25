@@ -27,7 +27,20 @@
                         <td>{{ $loop->iteration }}</td>
                         <td>{{ $export->file_name }}</td>
                         <td>{{ $export->created_at->format('d-m-Y H:i') }}</td>
-                        <td>{{ $export->status == 0 ? "Pending" : "Completed" }}</td>
+                        <td>
+                            @php
+                                switch($export->status) {
+                                    case 1:
+                                        $status_val = "Completed"; break;
+                                    case 2:
+                                        $status_val = "Failed"; break;
+                                    default:
+                                        $status_val = "Pending";break; 
+                                }
+                            @endphp
+                            {{ $status_val }}
+                        </td>
+                        {{-- <td>{{ $export->status == 0 ? "Pending" : "Completed" }}</td> --}}
                         <td>
                             @if ($export->status == 1)
                                 <a href="{{ asset('storage/'.$export->file_name) }}" title="Download Export" class="btn btn-sm btn-primary"><i class="bi bi-download"></i>&nbsp;Download</a>

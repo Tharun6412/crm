@@ -196,9 +196,7 @@ class User extends Authenticatable
      */
     public function consumers() : BelongsToMany
     {
-        return $this->belongsToMany(
-            Consumer::class,
-            'adm_user_ca',
+        return $this->belongsToMany(Consumer::class, 'adm_user_ca',
             'user_id',
             'ca_id',
             'id',
