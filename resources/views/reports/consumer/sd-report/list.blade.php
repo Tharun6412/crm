@@ -44,9 +44,12 @@
                     </select>
                 </div>
                 <div class="col-auto">
-                    <select name="con_type" id="con_type" class="form-select">
+                    <span class="form-control">
+                        Connection Type<x-master.connection-type-filter class="float-end" />
+                    </span>
+                    {{-- <select name="con_type" id="con_type" class="form-select">
                         <option value="">Connection Type</option>
-                    </select>
+                    </select> --}}
                 </div>
                 <div class="col-auto">
                     <span class="form-control">

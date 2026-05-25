@@ -24,7 +24,14 @@ class SDReportController extends Controller
     {
         // Get GeoAreas
         $geo_areas = Ga::where('status', 1)->orderBy('position')->get();
-        $schemes = MasterConsumerScheme::select('id', 'code','name', 'security', 'consumption', 'total_deposit')->where('status', 1)->get();
+        $schemes = MasterConsumerScheme::select('id', 'code','name', 'security', 'consumption', 'total_deposit', 'connection_type_id')
+        ->when($request->filled('connection_type_id'), function($q) use($request) {
+            $q->whereIn('connection_type_id', $request->connection_type_id);
+        })->when($request->filled('segments'), function($q) use($request) {
+            $q->whereIn('segment_id', $request->segments);
+        })->get();
+        $prepaidSchemes = $schemes->where('connection_type_id', 2)->values();
+        $postpaidSchemes = $schemes->where('connection_type_id', 1)->values();
         if($request->ajax()) {
             // Validation
             if(($request->filter_name == "show") AND empty($request->date_from) AND empty($request->date_to)) {
@@ -53,6 +60,12 @@ class SDReportController extends Controller
                         });
                     }
                 )
+                ->when($request->filled('connection_type_id'), function($q) use($request) {
+                    $q->whereIn('cns_consumers.connection_type_id', $request->connection_type_id);
+                })
+                ->when($request->filled('segments'), function($q) use($request) {
+                    $q->whereIn('cns_consumers.segment_id', $request->segments);
+                })
                 ->selectRaw('cns_consumers.ga_id,schemes.scheme_id,
                     COUNT(*) as consumer_count,
                     SUM(schemes.total_deposit) as total_deposit,
@@ -73,7 +86,8 @@ class SDReportController extends Controller
             return view('reports.consumer.sd-report.list-body', [
                 'geo_areas' => $geo_areas,
                 'sd_amount_by_ga' => $sd_amount_by_ga,
-                'schemes' => $schemes,
+                'prepaid_schemes' => $prepaidSchemes,
+                'postpaid_schemes' => $postpaidSchemes,
             ]);
         }
         return view('reports.consumer.sd-report.list');
@@ -118,6 +132,9 @@ class SDReportController extends Controller
             }
             if ($request->filled('segments')) {
                 $q->whereIn('segment_id', $request->segments);
+            }
+            if ($request->filled('cns_status')) {
+                $q->whereIn('cns_consumers.status_id', $request->cns_status);
             }
             // Scheme filter
             if ($request->filled('scheme')) {
@@ -171,6 +188,9 @@ class SDReportController extends Controller
             }
             if ($request->filled('segments')) {
                 $q->whereIn('segment_id', $request->segments);
+            }
+            if ($request->filled('cns_status')) {
+                $q->whereIn('status_id', $request->cns_status);
             }
             // Scheme filter
             if ($request->filled('scheme')) {

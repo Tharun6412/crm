@@ -62,7 +62,7 @@
                 <th width="1%" nowrap>S No</th>
                 <th>CRN</th>
                 <th>GA<x-master.ga-filter class="float-end" /></th>
-                <th>Status</th>
+                <th>Status<x-consumer.status-filter class="float-end" /></th>
                 <th>Segment<x-master.segment-filter class="float-end" /></th>
                 <th>Connection Type<x-master.connection-type-filter class="float-end"/></th>
                 <th>Scheme<x-master.scheme-filter class="float-end"/></th>

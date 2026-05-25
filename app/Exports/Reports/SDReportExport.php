@@ -60,6 +60,9 @@ class SDReportExport implements FromQuery, WithHeadings, WithMapping
             if ($this->request->filled('segments')) {
                 $q->whereIn('segment_id', $this->request->segments);
             }
+            if ($this->request->filled('cns_status')) {
+                $q->whereIn('status_id', $this->request->cns_status);
+            }
             // Scheme filter
             if ($this->request->filled('scheme')) {
                 $q->whereHas('scheme', function ($query) {
