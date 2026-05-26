@@ -100,7 +100,7 @@ class InvoiceExport implements FromQuery, ShouldQueue, WithChunkReading, WithHea
 
     public function chunkSize(): int
     {
-        return 5000;
+        return 1000;
     }
 
     public function map($invoice) : array

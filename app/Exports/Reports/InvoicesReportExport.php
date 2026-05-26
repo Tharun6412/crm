@@ -121,7 +121,7 @@ class InvoicesReportExport implements FromQuery,ShouldQueue,WithChunkReading, Wi
 
     public function chunkSize(): int
     {
-        return 5000;
+        return 1000;
     }
 
     /**

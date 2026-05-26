@@ -17,7 +17,7 @@
                             <th>Department</th>
                             <th>Role</th>
                             <th>Employee Type</th>
-                            <th>Available Charge Areas</th>
+                            <th>Charge Areas</th>
                             <th>Consumers Waiting</th>
                             <th>Available Teams</th>
                         </tr>
@@ -47,8 +47,8 @@
                                 </td>
                                 <td>{{ $user->employeeType?->name }}</td>
                                 <td>
-                                    @if ($user->cas->count() > 0)
-                                        @foreach ($user->cas as $ca)
+                                    @if ($user->cas->where('ga_id', $ga_name->id)->count() > 0)
+                                        @foreach ($user->cas->where('ga_id', $ga_name->id) as $ca)
                                             @if ($loop->iteration == 1)
                                                 <div class="btn-group w-100">
                                                     <button type="button" class="btn btn-outline-dark btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
@@ -63,7 +63,7 @@
                                         </div>
                                     @endif
                                 </td>
-                                <td class="text-center"><a href="{{ url('consumers') }}?{{ http_build_query(['geo_area' => [$ga_name->id], 'cns_status' => [request()->cns_status]]) }}" target="_blank">{{ $user->count ?? 0 }}</a></td>
+                                <td class="text-center"><a href="{{ url('consumers') }}?{{ http_build_query(['geo_area' => [$ga_name->id], 'cns_status' => [request()->cns_status], 'charge_area' => $user->cas->where('ga_id', $ga_name->id)->pluck('id')->unique()->values()->toArray()]) }}" target="_blank">{{ $user->count ?? 0 }}</a></td>
                                 <td>
                                     @if ($user->team->count() > 0)
                                         <div class="btn-group w-100">

@@ -2,7 +2,7 @@
 
 return [
     'exports' => [
-        'chunk_size'       => 5000,     // rows dispatched per queued job
+        'chunk_size'       => 1000,     // rows dispatched per queued job
         'pre_calculate_formulas' => false,
         'csv' => [
             'delimiter'      => ',',

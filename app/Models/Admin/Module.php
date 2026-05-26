@@ -38,7 +38,7 @@ class Module extends Model
      */
     public function parent(): BelongsTo
     {
-        return $this->belongsTo(Module::class, 'parent_id');
+        return $this->belongsTo(Module::class, 'parent_id')->orderBy('position');
     }
 
     /**
@@ -46,7 +46,7 @@ class Module extends Model
      */
     public function children(): HasMany
     {
-        return $this->hasMany(Module::class, 'parent_id');
+        return $this->hasMany(Module::class, 'parent_id')->orderBy('position');
     }
 
     /**
