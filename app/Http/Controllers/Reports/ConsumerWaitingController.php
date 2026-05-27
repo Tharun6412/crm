@@ -9,10 +9,12 @@ use App\Http\Controllers\Controller;
 use App\Models\Admin\Team;
 use App\Models\Admin\User;
 use App\Models\Consumer\Consumer;
+use App\Models\Master\Ca;
 use App\Models\Master\ConnectionType;
 use App\Models\Master\Ga;
 use App\Models\Master\Segment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Consumer Waiting Controller
@@ -77,57 +79,44 @@ class ConsumerWaitingController extends Controller
         // Based on Status
         switch($request->cns_status) {
             case ConsumerStatus::REGISTER->value: //waiting to Accept
-                $users_list = $this->getUsersListByStatus($request, $request->ga_id, $request->cns_status, Department::MDPE->value, ROLE::MDPE->value);
+                $user_ca_list = $this->getConsumersListByCa($request, $request->ga_id, $request->cns_status, ROLE::MDPE->value);
+                $teams = Team::with(['cas:id,name', 'users:id'])->where('ga_id', $request->ga_id)->where('department_id', Department::MDPE->value)->get();
                 $status_val = ConsumerStatus::ACCEPT->name;
                 break;
             case ConsumerStatus::ACCEPT->value: //waiting to Execute
-                $users_list = $this->getUsersListByStatus($request, $request->ga_id, $request->cns_status, Department::GI->value, ROLE::GI_ENGINEER->value);
+                $user_ca_list = $this->getConsumersListByCa($request, $request->ga_id, $request->cns_status, ROLE::GI_ENGINEER->value);
+                $teams = Team::with(['cas:id,name', 'users:id'])->where('ga_id', $request->ga_id)->where('department_id', Department::GI->value)->get();
                 $status_val = ConsumerStatus::EXECUTE->name;
                 break;
             case ConsumerStatus::EXECUTE->value: //waiting to HSC
-                $users_list = $this->getUsersListByStatus($request, $request->ga_id, $request->cns_status, Department::HSE->value, ROLE::HSE->value);
+                $user_ca_list = $this->getConsumersListByCa($request, $request->ga_id, $request->cns_status, ROLE::HSE->value);
+                $teams = Team::with(['cas:id,name', 'users:id'])->where('ga_id', $request->ga_id)->where('department_id', Department::HSE->value)->get();
                 $status_val = ConsumerStatus::HSC->name;
                 break;
             case ConsumerStatus::HSC->value: //waiting to Activate
-                $users_list = $this->getUsersListByStatus($request, $request->ga_id, $request->cns_status, Department::ACTIVATION->value, ROLE::ACTIVATION->value);
+                $user_ca_list = $this->getConsumersListByCa($request, $request->ga_id, $request->cns_status, ROLE::ACTIVATION->value);
+                $teams = Team::with(['cas:id,name', 'users:id'])->where('ga_id', $request->ga_id)->where('department_id', Department::ACTIVATION->value)->get();
                 $status_val = ConsumerStatus::ACTIVATE->name;
                 break;
             default:
-                $status_val = null;$users_list = [];break;
+                $status_val = null;$user_ca_list = $teams = [];break;
         }
-        // Array Preparation
-        // First Prepare Consumer CAs
-        $consumerCas = Consumer::where('ga_id', $request->ga_id)->where('status_id', $request->cns_status)->distinct()->pluck('ca_id');
-        // Getting teams List based on the Charge Areas.
-        $teams = Team::select('adm_teams.id', 'adm_teams.name', 'adm_teams.department_id')
-            ->with([
-                'cas:id',
-                'departments:id,name'
-            ])->withCount('users as users_count')
-            ->join('adm_team_cas', 'adm_teams.id', '=', 'adm_team_cas.team_id')
-            ->whereIn('adm_team_cas.ca_id', $consumerCas)->distinct()->get();
-        $teamMap = [];
-        // Teams Mapping with Consumers Based on Charge Area
-        foreach ($teams as $team) {
-            foreach ($team->cas as $ca) {
-                $teamMap[$ca->id][$team->department_id][] = $team;
-            }
-        }
-        foreach ($users_list as $user) {
-            $userTeams = collect();
-            // $consumerCas = $user->consumers->pluck('ca_id')->unique();
-            $consumerCas = $user->cas->pluck('id')->unique();
-            foreach ($consumerCas as $caId) {
-                if (isset($teamMap[$caId][$user->department_id])) {
-                    $userTeams = $userTeams->merge($teamMap[$caId][$user->department_id]);
+        // Teams By CA
+        $team_ca = [];
+        if(count($teams) > 0) {
+            foreach($teams as $team) {
+                foreach ($team->cas as $ca) {
+                    $team_ca[$ca->id][] = $team;
                 }
             }
-            $user->team = $userTeams->unique('id')->values();
         }
         // Response
-        return view('reports.consumer.waiting-report.emp-list', [
-            'users_list' => $users_list,
+        return view('reports.consumer.waiting-report.ca-wait-report', [
+            'ca_list' => $user_ca_list['consumers_count'],
+            'users_list_ca' => $user_ca_list['users_list_ca'],
+            'charge_areas' => Ca::where('ga_id', $request->ga_id)->get(),
             'status_name' => $status_val,
+            'team_ca' => $team_ca,
             'ga_name' => Ga::select('id', 'name')->where('id', $request->ga_id)->first(),
         ]);
     }
@@ -135,32 +124,39 @@ class ConsumerWaitingController extends Controller
     /**
      * Common Function
      */
-    public function getUsersListByStatus(Request $request, $ga_id, $status, $department, $role)
+    public function getConsumersListByCa(Request $request, $ga_id, $status, $role)
     {
-        $users = User::select('id', 'first_name', 'last_name', 'department_id', 'type_id')->with([
-                'cas',
-                'department:id,name',
-                'roles:id,name',
-                'employeeType:id,name'
-            ])
-            ->where('department_id', $department)
-            ->whereHas('ga', function($q) use($ga_id) {
-                $q->where('adm_user_ga.ga_id', $ga_id);
+        // Consumers Count
+        $consumers_count = Consumer::select('ca_id', DB::raw('COUNT(id) as ca_count'))
+            ->when($request->filled('connection_type_id'), function($q) use($request) {
+                $q->where('connection_type_id', $request->connection_type_id);
             })
-            ->whereHas('roles', function($q) use($role) {
-                $q->where('role_id', $role);
+            ->when($request->filled('segments'), function($q) use($request) {
+                $q->where('segment_id', $request->segments);
             })
-            ->withCount(['consumers as count' => function($q) use($status, $ga_id, $request) {
-                if(!empty($request->connection_type_id)) {
-                    $q->where('connection_type_id', $request->connection_type_id);
-                }
-                if(!empty($request->segments)) {
-                    $q->where('segment_id', $request->segments);
-                }
-                $q->where('ga_id', $ga_id)->where('status_id', $status);
-            }])
-            ->get();
-        return $users;
+            ->where('ga_id', $ga_id)
+            ->where('status_id', $status)->groupBy('ca_id')->get()->pluck('ca_count', 'ca_id');
+        // Users List
+        $users_list = User::with([
+            'cas:id,name',
+            'department:id,name',
+            'roles:id,name',
+        ])->whereHas('ga', function($q) use($ga_id) {
+            $q->where('adm_user_ga.ga_id', $ga_id);
+        })->whereHas('roles', function($q) use($role) {
+            $q->where('role_id', $role);
+        })->get();
+        // Users List By Charge Area
+        $users_list_ca = [];
+        foreach ($users_list as $user) {
+            foreach ($user->cas as $ca) {
+                $users_list_ca[$ca->id][] = $user;
+            }
+        }
+        return [
+            'consumers_count' => $consumers_count,
+            'users_list_ca' => $users_list_ca,
+        ];
     }
     /**
      * Ga Wise Teams counts
