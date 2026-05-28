@@ -30,6 +30,22 @@
                                 <dd class="ps-2 mb-0">{{ $user->first_name . ' ' . $user->last_name }}</dd>
                             </dl>
                             <dl class="d-flex">
+                                <dt>Designation:</dt>
+                                <dd class="ps-2 mb-0">
+                                    @isset($user->designation->name)
+                                        {{ $user->designation->name }}
+                                    @endisset
+                                </dd>
+                            </dl>
+                            <dl class="d-flex">
+                                <dt>Department:</dt>
+                                <dd class="ps-2 mb-0">
+                                    @isset($user->department->name)
+                                        {{ $user->department->name }}
+                                    @endisset
+                                </dd>
+                            </dl>
+                            <dl class="d-flex">
                                 <dt>Role:</dt>
                                 <dd class="ps-2 mb-0">
                                         {{ $user->roles->pluck('name') }}
@@ -53,14 +69,6 @@
                                 <dt>Charge Areas:</dt>
                                 <dd class="ps-2 mb-0">
                                     {{ $user->cas->pluck("name") }}
-                                </dd>
-                            </dl>
-                            <dl class="d-flex">
-                                <dt>Department:</dt>
-                                <dd class="ps-2 mb-0">
-                                    @isset($user->department->name)
-                                        {{ $user->department->name }}
-                                    @endisset
                                 </dd>
                             </dl>
                             <dl class="d-flex">

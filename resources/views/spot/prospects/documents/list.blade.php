@@ -40,7 +40,7 @@
                         <tr>
                             <td class="text-center">{{ $i++; }}</td>
                             <td>
-                                <a href="{{ url('dc/documents/'.$document->doc_file_id) }}" title="{{ $document->file->file_name }}" target="_blank"><i class="bi bi-file-earmark-pdf fs-5 text-danger"></i></a>
+                                <a href="{{ url('master/dc/documents/'.$document->doc_file_id) }}" title="{{ $document->file->file_name }}" target="_blank"><i class="bi bi-file-earmark-pdf fs-5 text-danger"></i></a>
                             </td>
                             <td>{{ $document->documentType->name }}&nbsp;{{ $document->offer_count }}</td>
                             <td>
@@ -49,7 +49,7 @@
                             <td>{{ $document?->created_at }}</td>
                             <td>{{ $document->createdBy->first_name }}&nbsp;{{ $document->createdBy->last_name }}</td>
                             <td nowrap="">
-                                <a href="{{ url('dc/documents/'.$document->doc_file_id) }}" title="{{ $document->file->file_name }}" class="btn btn-sm btn-outline-primary" target="_blank"><i class="bi bi-file-earmark-pdf"></i></a>
+                                <a href="{{ url('master/dc/documents/'.$document->doc_file_id) }}" title="{{ $document->file->file_name }}" class="btn btn-sm btn-outline-primary" target="_blank"><i class="bi bi-file-earmark-pdf"></i></a>
                                 <a class="btn btn-sm btn-outline-danger ajax-link-file-delete" href="{{ url('spot/prospectDocument/'.$document->id) }}" title="Delete document"><i class="bi bi-trash"></i></a>
                             </td>
                         </tr>

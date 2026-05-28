@@ -11,7 +11,7 @@
     <div {{ $attributes->merge(['class' => 'rounded mb-2 p-2']) }}>
         <div class="row g-2 pb-2 mb-2 p-2">
             <div class="col-sm-2 text-end fw-semibold">CRN : </div>
-            <div class="col-sm-4"><x-auth.link href="{{ url('consumers/'.$consumer->id) }}" target="_blank">{{ $consumer->crn }}</x-auth.link></div>
+            <div class="col-sm-4"><a href="{{ url('consumers/'.$consumer->id) }}" target="_blank">{{ $consumer->crn }}</a></div>
             <div class="col-sm-2 text-end fw-semibold">Status : </div>
             <div class="col-sm-4"><x-consumer.status :status="$consumer->status" /></div>
             <div class="col-sm-2 text-end fw-semibold">Name : </div>
