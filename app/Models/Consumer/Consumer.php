@@ -103,6 +103,9 @@ class Consumer extends Model
         'price_group_id',
         'created_by',
         'self_register_status',
+        'activation_date',
+        'last_invoice_id',
+        'last_invoice_date',
         'updated_by',
     ];
 

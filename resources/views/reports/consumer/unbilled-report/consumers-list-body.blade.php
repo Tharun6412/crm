@@ -1,4 +1,5 @@
 <input type="hidden" name="ga_id" value="{{ request('ga_id') }}">
+<input type="hidden" name="aging" value="{{ request('aging') }}">
 <div class="d-flex justify-content-between">
     <div class="row gx-1 mb-1">
         <div class="col-auto">
@@ -25,7 +26,7 @@
     </div>
 </div>
 @php
-    $sort_by = (request()->has('sortBy')) ? request()->get('sortBy') : 'created_at';
+    $sort_by = (request()->has('sortBy')) ? request()->get('sortBy') : 'cns_consumers.created_at';
     $sort_order = (request()->has('sortOr')) ? request()->get('sortOr') : 'desc';
     $sort_order_inverse = ($sort_order == 'asc') ? 'desc' : 'asc';
     $sort_icon = ($sort_order == 'asc') ? 'bi-caret-down-fill' : 'bi-caret-up-fill';
@@ -112,6 +113,10 @@
     </table>
 </div>
 
+{{--  Reset pagination parameters for paginator --}}
+@php
+    $consumers->appends(['sortBy' => $sort_by, 'sortOr' => $sort_order]);
+@endphp
 <div>
     {{ $consumers->links('utils.paginator', ['modDiv' => 'unbilled-consumers-list']) }}
 </div>

@@ -92,6 +92,7 @@ class ReconnectController extends Controller
         // Consumer Status Update
         $consumer->update([
             'status_id' => EnumsConsumerStatus::ACTIVATE->value,
+            'activation_date' => now()->toDateTimeString(),
         ]);
         // Adding to Status History
         ConsumerStatus::create([

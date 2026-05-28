@@ -55,6 +55,7 @@ class ActivateController extends Controller
         $consumer = Consumer::find($id);
         $consumer->update([
             'status_id' => EnumsConsumerStatus::ACTIVATE->value,
+            'activation_date' => now()->toDateTimeString(),
             'updated_by' => Auth::id(),
         ]);
         // Status History

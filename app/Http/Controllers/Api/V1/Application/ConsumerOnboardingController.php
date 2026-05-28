@@ -223,6 +223,7 @@ class ConsumerOnboardingController extends Controller
             // 6 = Activation
             $consumer->update([
                 'status_id' => EnumsConsumerStatus::ACTIVATE->value,
+                'activation_date' => now()->toDateTimeString(),
                 'updated_by' => Auth::id(),
             ]);
             // Status History

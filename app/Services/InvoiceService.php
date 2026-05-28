@@ -103,7 +103,15 @@ class InvoiceService
             'created_by' => Auth::id(),
         ]);
         // Check if it is GAS Invoice
-        if($invoice->invoice_type == InvoiceType::GAS_BILL->value) {
+        if($invoice->type_id == InvoiceType::GAS_BILL->value) {
+            // Update the latest invoice id and invoice number into consumer table after the invoice cancellation.
+            $latestInvoice = BillInvoice::where('consumer_id',$invoice->consumer_id)->where('type_id', InvoiceType::GAS_BILL->value)->whereNot('status_id',InvoiceStatus::CANCEL->value)->latest()->first();
+            if($latestInvoice) {
+                $invoice->consumer->update(['last_invoice_date' => $latestInvoice->invoice_date, 'last_invoice_id' => $latestInvoice->id]);   
+            }
+            else {
+                $invoice->consumer->update(['last_invoice_date' => NULL, 'last_invoice_id' => NULL]);                       
+            }
             if($invoice->childInvoices->isNotEmpty()) {
                 foreach($invoice->childInvoices as $childInvoice) {
                     $childInvoice->update([

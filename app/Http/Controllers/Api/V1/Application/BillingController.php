@@ -509,6 +509,8 @@ class BillingController extends Controller
                 // If any remaining advance balance, update back to consumer.
                 $consumer->advanceAmount->update(['advance_amount' => $rem_advance, 'updated_at' => now()]);
             }
+
+            $consumer->update(['last_invoice_id' => $inv_insert->id, 'last_invoice_date' => $inv_insert->invoice_date]);
         }
         return [
             'invoice_id' => $inv_insert->id, 

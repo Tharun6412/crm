@@ -34,29 +34,84 @@
             <tr>
                 <th width="1%" nowrap="nowrap">S No.</th>
                 <th>GA Name</th>
-                <th class="text-end">Consumers Count</th>
+                <th class="text-end">Total Active Consumers</th>
+                <th class="text-end">Billable Consumers</th>
+                <th class="text-end">60 - 90 days</th>
+                <th class="text-end">90 - 120 days</th>
+                <th class="text-end">> 120 Days</th>
+                <th class="text-end">Total</th>
             </tr>
         </thead>
         <tbody>
             @php
                 $i = 1; 
+                $grand_total = 0;
             @endphp
             @forelse($gas as $ga)
                 @php
-                    $count = $consumers[$ga->id]->unbilled_count ?? 0;
+                    $active_count = $consumers[$ga->id]->total_active ?? 0;
+                    $bill_count = $consumers[$ga->id]->eligible_count ?? 0;
+                    $count_60_90 = $consumers[$ga->id]->unbilled_60_90 ?? 0;
+                    $count_90_120 = $consumers[$ga->id]->unbilled_90_120 ?? 0;
+                    $count_gt_120 = $consumers[$ga->id]->unbilled_120_plus ?? 0;
+                    $total_ga_unbilled = ($count_60_90 + $count_90_120 + $count_gt_120);
+                    $grand_total += $total_ga_unbilled;
                 @endphp
                 <tr>
                     <td class="text-center">{{ $i++ }}</td>
                     <td>{{ $ga->name }}</td>
+                    <td>{{ $active_count }}</td>
+                    <td>{{ $bill_count }}</td>
                     <td class="text-end"> 
-                        @if ($count > 0)
+                        @if ($count_60_90 > 0)
                             <a href="{{ url('reports/unbilled/list') }}?{{ http_build_query([
                                 'geo_area' => [$ga->id],
+                                'aging'        => '60_90',
+                                'segments'     => request()->segments ?? [],
                                 'invoice_type' => request()->invoice_type ?? [],
-                                ]) }}" class="aging-link" target="_blank">{{ numberFormat($count) }}
+                                ]) }}" class="aging-link" target="_blank">{{ numberFormat($count_60_90) }}
                             </a>
                         @else
-                        {{ $count }}
+                        {{ $count_60_90 }}
+                        @endif
+                    </td>
+                    <td class="text-end"> 
+                        @if ($count_90_120 > 0)
+                            <a href="{{ url('reports/unbilled/list') }}?{{ http_build_query([
+                                'geo_area' => [$ga->id],
+                                'aging'        => '90_120',
+                                'segments'     => request()->segments ?? [],
+                                'invoice_type' => request()->invoice_type ?? [],
+                                ]) }}" class="aging-link" target="_blank">{{ numberFormat($count_90_120) }}
+                            </a>
+                        @else
+                        {{ $count_90_120 }}
+                        @endif
+                    </td>
+                    <td class="text-end"> 
+                        @if ($count_gt_120 > 0)
+                            <a href="{{ url('reports/unbilled/list') }}?{{ http_build_query([
+                                'geo_area' => [$ga->id],
+                                'aging'        => 'gt_120',
+                                'segments'     => request()->segments ?? [],
+                                'invoice_type' => request()->invoice_type ?? [],
+                                ]) }}" class="aging-link" target="_blank">{{ numberFormat($count_gt_120) }}
+                            </a>
+                        @else
+                        {{ $count_gt_120 }}
+                        @endif
+                    </td>
+                    <td class="text-end"> 
+                        @if ($total_ga_unbilled > 0)
+                            <a href="{{ url('reports/unbilled/list') }}?{{ http_build_query([
+                                'geo_area' => [$ga->id],
+                                'aging'        => 'all',
+                                'segments'     => request()->segments ?? [],
+                                'invoice_type' => request()->invoice_type ?? [],
+                                ]) }}" class="aging-link" target="_blank">{{ numberFormat($total_ga_unbilled) }}
+                            </a>
+                        @else
+                        {{ $total_ga_unbilled }}
                         @endif
                     </td>
                 </tr>
@@ -69,7 +124,12 @@
         <tfoot>
             <tr class="table-info text-end">
                 <th colspan="2" class="text-end">Total</th>
-                <th>{{ numberFormat($totalUnbilled) }}</th>
+                <th>{{ numberFormat($totals->total_active) }}</th>
+                <th>{{ numberFormat($totals->eligible_count) }}</th>
+                <th>{{ numberFormat($totals->unbilled_60_90) }}</th>
+                <th>{{ numberFormat($totals->unbilled_90_120) }}</th>
+                <th>{{ numberFormat($totals->unbilled_120_plus) }}</th>
+                <th>{{ numberFormat($grand_total) }}</th>
             </tr>
         </tfoot>
     </table>

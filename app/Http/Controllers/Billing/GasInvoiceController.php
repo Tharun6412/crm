@@ -461,6 +461,9 @@ class GasInvoiceController extends Controller
                 $consumer->advanceAmount->update(['advance_amount' => $rem_advance, 'updated_at' => now()]);
             }
 
+            // Update the recent/ latest invoice id and invoice date into consumers 
+            $consumer->update(['last_invoice_id' => $inv_insert->id, 'last_invoice_date' => $inv_insert->invoice_date]);
+
         }
         return [
             'invoice_id' => $inv_insert->id, 
