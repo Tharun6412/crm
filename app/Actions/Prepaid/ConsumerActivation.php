@@ -11,7 +11,7 @@ class ConsumerActivation
     {
         $consumer = Consumer::where('crn', $payload['crn'])
         ->whereHas('activeMeter', function ($q) use ($payload) {
-            $q->where('meter_no', $payload['meter_no']);
+            $q->where('meter_serial_no', $payload['meter_no']);
         })
         ->first();
 
@@ -43,7 +43,7 @@ class ConsumerActivation
     {
         // update the meter reading
         $meter = $consumer->activeMeter()
-            ->where('meter_no', $payload['meter_no'])
+            ->where('meter_serial_no', $payload['meter_no'])
             ->first();
 
         $meter->update([
