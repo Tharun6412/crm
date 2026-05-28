@@ -11,6 +11,7 @@ use App\Models\Consumer\ConsumerSdPayment;
 use App\Models\Invoice\InvoicePayment;
 use App\Models\Master\Ca;
 use App\Models\Master\Department;
+use App\Models\Master\Designation;
 use App\Models\Master\Ga;
 use App\Models\Spot\SpotRoles;
 use App\Models\Traits\HasRoles;
@@ -52,6 +53,7 @@ class User extends Authenticatable
         'type',
         'type_id',
         'department_id',
+        'designation_id',
         'activated_at',
     ];
 
@@ -209,5 +211,13 @@ class User extends Authenticatable
     public function teams():BelongsToMany
     {
         return $this->belongsToMany(Team::class, 'adm_team_users', 'user_id', 'team_id');
+    }
+
+    /**
+     * Relation with Designation
+     */
+    public function designation():BelongsTo
+    {
+        return $this->belongsTo(Designation::class);
     }
 }

@@ -11,6 +11,9 @@
             {{ session('status') }}
         </div>
     @endif
+    @php
+        // dd($user->designation);
+    @endphp
     <div class="border p-3 bg-white">
         <div class="row align-items-center">
             <div class="col-sm-4 text-center">
@@ -35,6 +38,22 @@
                         <dd class="ps-2 mb-0">{{ $user->first_name . ' ' . $user->last_name }}</dd class="ps-2 mb-0">
                     </dl>
                     <dl class="d-flex">
+                        <dt>Designation:</dt>
+                        <dd class="ps-2 mb-0">
+                            @isset($user->designation->name)
+                                {{ $user->designation->name }}
+                            @endisset
+                        </dd class="ps-2 mb-0">
+                    </dl>
+                    <dl class="d-flex">
+                        <dt>Department:</dt>
+                        <dd class="ps-2 mb-0">
+                            @isset($user->department->name)
+                                {{ $user->department->name }}
+                            @endisset
+                        </dd class="ps-2 mb-0">
+                    </dl>
+                    <dl class="d-flex">
                         <dt>Role:</dt>
                         <dd class="ps-2 mb-0">
                             {{ $user->roles->pluck('name') }}
@@ -44,14 +63,6 @@
                         <dt>Geo area:</dt>
                         <dd class="ps-2 mb-0">
                             {{ $user->ga->pluck('name') }}
-                        </dd class="ps-2 mb-0">
-                    </dl>
-                    <dl class="d-flex">
-                        <dt>Department:</dt>
-                        <dd class="ps-2 mb-0">
-                            @isset($user->department->name)
-                                {{ $user->department->name }}
-                            @endisset
                         </dd class="ps-2 mb-0">
                     </dl>
                     <dl class="d-flex">

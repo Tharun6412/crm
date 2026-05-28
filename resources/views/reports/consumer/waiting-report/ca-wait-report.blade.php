@@ -8,7 +8,7 @@
         </div>
         <div class="modal-body">
             {{-- Consumer Charge Area status --}}
-            <table class="table table-bordered table-striped align-middle">
+            <table class="table table-bordered table-striped align-middle" id="waiting-report-table">
                 <thead>
                     <tr>
                         <td>S.No</td>
@@ -39,7 +39,7 @@
                                         <ul class="dropdown-menu">
                                             @foreach ($areaUsers as $list)
                                                 <li class="dropdown-item">
-                                                    {{ $list->emp_id }}&nbsp;-&nbsp;{{ $list?->name }}&nbsp;-&nbsp;<strong>{{ $list->department?->name }}</strong>
+                                                    {{ $list->emp_id }}&nbsp;-&nbsp;{{ $list?->name }}&nbsp;-&nbsp;<small>{{ $list->designation?->name }}</small>
                                                 </li>
                                             @endforeach
                                         </ul>
@@ -86,7 +86,16 @@
             
         </div>
         <div class="modal-footer">
+            <!-- Export -->
+            <button type="button" id="exportBtn" class="btn btn-outline-info"><i class="bi bi-file-earmark-excel"></i>&nbsp;Export</button>
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="bi bi-x"></i>&nbsp;Close</button>
         </div>
     </div>
 </div>
+@include('scripts.export-table', [
+    'table' => 'waiting-report-table',
+    'button' => 'exportBtn',
+    'tabBased' => false,
+    'filename' => 'consumer_waiting_report',
+    'sheet'    => 'Report',
+])
