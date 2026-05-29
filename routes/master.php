@@ -60,4 +60,14 @@ Route::middleware(['auth'])->group(function() {
         Route::get('search', [App\Http\Controllers\Master\DocumentCentre\DocumentBrowser::class, 'search']);
         Route::post('selectFiles', [App\Http\Controllers\Master\DocumentCentre\DocumentBrowser::class, 'selectFiles']);
     });
+
+    //Tickets
+    Route::prefix('tickets')->group(function() {
+        Route::get('/',[App\Http\Controllers\Master\Tickets\CategoriesController::class,'index']);
+        Route::get('create',[App\Http\Controllers\Master\Tickets\CategoriesController::class,'create']);
+        Route::post('store',[App\Http\Controllers\Master\Tickets\CategoriesController::class,'store']);
+        Route::get('edit/{id}/',[App\Http\Controllers\Master\Tickets\CategoriesController::class,'edit']);
+        Route::put('update/{id}/',[App\Http\Controllers\Master\Tickets\CategoriesController::class,'update']);
+        Route::get('status',[App\Http\Controllers\Master\Tickets\StatusController::class,'index']);
+    });
 });

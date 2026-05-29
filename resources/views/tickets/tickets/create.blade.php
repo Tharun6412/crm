@@ -1,0 +1,49 @@
+{{-- Create Ticket --}}
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h4 class="modal-title">Raise Ticket</h4>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            
+            <div id="ticket-success"> 
+                <form id="ticket-form" action="{{ url('tickets/store/'.$consumer->id) }}" method="POST">
+                    @csrf
+                    <div>
+                        <x-consumer.basic-details :consumer="$consumer" class="bg-info-subtle" />
+                    </div>
+                    <h5>Ticket Details :</h5>
+                    <div class="row mb-2">
+                        <label for="category_id" class="col-form-label col-sm-2 text-end">Category&nbsp;:<span class="text-danger">*</span></label>
+                        <div class="col-sm-8">
+                        <select id="category_id" name="category_id" class="form-select">
+                            <option value="">Select Category</option>
+                            @foreach ($categories as $category )
+                                <option value="{{ $category->id }}">{{ $category->name }} -> {{ $category->departments->name }}</option>
+                            @endforeach
+                        </select>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <label class="col-form-label col-sm-2 text-end">Description&nbsp;:<span class="text-danger">*</span></label>
+                        <div class="col-sm-8">
+                            <textarea name="description" id="description" class="form-control"></textarea>
+                            <small class="text-muted">Maximum 225 Characters Allowed</small>
+                        </div>
+                    </div>
+                    <div id="ticket-error"></div>
+                    <div class="row">
+                        <div class="offset-sm-3 col-sm-7">
+                            <button type="submit" class="btn btn-outline-success"><i class="bi bi-plus" aria-hidden="true">&nbsp;</i>Create</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal"><i class="bi bi-x">&nbsp;</i>Close</button>
+        </div>
+    </div>
+</div>
+@include('scripts.ajax-form-submit', ['form' => 'ticket'])

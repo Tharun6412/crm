@@ -19,4 +19,6 @@ enum Role: int
     case GI_ENGINEER = 15;
     case HSE = 16;
     case ACTIVATION = 17;
+    case TICKET_APPROVAL = 18;
+    case FINANCE = 19;
 }

@@ -159,6 +159,19 @@ if(!function_exists('isSalesOfficer')) {
         }
     }
 }
+/**
+ * Ticket  Approval Role
+ */
+if(!function_exists('isTicketApproval')) {
+    function isTicketApproval() {
+        if(in_array(Role::TICKET_APPROVAL->value, session()->get('user')['roles'])) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+}
 
 
 /**

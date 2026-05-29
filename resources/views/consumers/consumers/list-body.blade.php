@@ -75,9 +75,9 @@
                     @endif
                 </th>
                 <th>Scheme<x-master.scheme-filter class="float-end"/></th>
-                <th nowrap width="11%">
+                <th nowrap width="13%">
                     <a href="{{ $consumers->appends(['sortBy' => 'created_at','sortOr' => $sort_order_inverse])->url($consumers->currentPage()) }}">
-                        Status Date
+                        Created Date
                         @if ($sort_by == 'created_at')
                             <i class="bi {{ $sort_icon }}"></i>
                         @endif

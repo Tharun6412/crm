@@ -11,7 +11,7 @@
 @endsection
 
 @section('page-content')
-    <form action="{{ url('master/industrial-areas') }}" id="ca-search-form" method="GET">
+    <form action="{{ url('master/location/industrial-areas') }}" id="ia-search-form" method="GET">
         <div id="ia-list" class="current-page-reload">
             @include('master.locations.industrial-areas.list-body')
         </div>
