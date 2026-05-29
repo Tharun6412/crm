@@ -8,6 +8,7 @@ use App\Enums\MroStatus;
 use App\Enums\PaymentStatus;
 use App\Enums\PaymentType;
 use App\Enums\TaxType;
+use App\Helpers\ApiLogger;
 use App\Models\Consumer\Consumer;
 use App\Models\Invoice\BillInvoice;
 use App\Models\Invoice\BillInvoiceConsumption;
@@ -54,7 +55,7 @@ class MroProcessAction
                     $cf = ($cf > 0) ? $cf : 1;
                     // 4. calculation of overall readings and overall dates for billing cycle.
                     $readings_cnt = count($data['current_readings']);
-                    $start_reading = $data['current_readings'][0]['start_reading_1'];
+                    $start_reading = (floor($data['current_readings'][0]['start_reading_1'] * 100)/100);
                     $end_reading = $data['current_readings'][$readings_cnt-1]['end_reading_'.$readings_cnt];
                     $start_date = $data['current_readings'][0]['start_reading_date_time_1'];
                     $end_date = $data['current_readings'][$readings_cnt-1]['end_reading_date_time_'.$readings_cnt];
@@ -71,28 +72,37 @@ class MroProcessAction
                             'crn' => $data['crn'],
                             'reason' => "Invalid readings.."
                         ];
+                        throw new \RuntimeException("End reading must be greater than start reading.");
                     }
                     else {
                         // 6. Looping of meter readings array.
                         $total_consumption = 0;
                         $total_basic_amount = 0;
+                        // 7. Fetching of price group history id, vat for given selected period.
+                        $price = PriceGroupHistory::where('effective_from','<=', $end_date)->where('segment_id', $consumer->segment_id)->where('ga_id', $consumer->ga_id)->orderBy('effective_from', 'desc')->first();
+                        if (!$price) {
+                            throw new \RuntimeException("No price history found");
+                        }
+                        $tax_value = (float) $price->vat;
+
                         foreach ($data['current_readings'] as $key => $reading) {
                             $consmp_breakup = 0;
-                            $start = (float)$reading['start_reading_'.($key+1)];
+                            $start = (floor((float)$reading['start_reading_'.($key+1)] * 100)/100);
                             $end   = (float)$reading['end_reading_'.($key+1)];
-
                             $s_date = Carbon::parse($reading['start_reading_date_time_'.($key+1)])->toDateString();
                             $e_date = Carbon::parse($reading['end_reading_date_time_'.($key+1)])->toDateString();
                             $no_days = Carbon::parse($s_date)->diffInDays($e_date);
-                            
-                            // 7. Fetching of price group history id, vat for given selected period.
-                            // $price = PriceGroupHistory::where('effective_from','<=', $e_date)->where('segment_id', $consumer->segment_id)->where('ga_id', $consumer->ga_id)->orderBy('effective_from', 'desc')->first();
-                            $price = PriceHistory::where('effective_from','<=', $e_date)->where('segment_id', $consumer->segment_id)->where('district_id', $consumer->district_id)->orderBy('effective_from', 'desc')->first();
-                            if (!$price) {
-                                throw new \RuntimeException("No price history found");
+
+                            if($end < $start){
+                                $ackFailPayload[] = [
+                                    'mro_order_id' => $record->mro_number,
+                                    'meter_serial_no' => $data['meter_serial_no'],
+                                    'crn' => $data['crn'],
+                                    'reason' => "Invalid readings.."
+                                ];
+                                throw new \RuntimeException("End reading must be greater than start reading.");
                             }
                             // 8. calculation of meter readings and given gas price. (for consumption details).
-                            $tax_value = (float) $price->tax_value;
                             $net_price = $reading['gas_price_'.($key+1)]; 
                             $basic_price = round(($net_price*(100/(100+$tax_value))),2);
                             $consmp_breakup = ($end - $start);
@@ -220,7 +230,7 @@ class MroProcessAction
                     'notes' => $e->getMessage(),
                     'created_at' => now()
                 ]);
-                Log::error('MRO processing failed', [
+                ApiLogger::error('mro_api','mro_process_api','MRO processing failed', [
                     'mro_id'     => $record->id,
                     'mro_number' => $record->mro_number,
                     'error'      => $e->getMessage(),
@@ -254,24 +264,23 @@ class MroProcessAction
                     $status = $resp['status'] === 'success' ? MroStatus::BILL_SENT->value : MroStatus::PROCESS_FAIL->value;
                     $mroData->update([
                         'status_id' => $status,
-                        'error_code'=> $resp['error_code'] ?? null,
-                        'error_message'=> $resp['error_message'] ?? null,
                     ]);    
                     BillMroDataHistory::insert([
                         'mro_data_id' => $mroData->id,
                         'status_id'   => $status,
+                        'notes'=> $resp['error_message'] ?? null,
                         'created_at' => now()
                     ]);
                 }
             }
             // 5. update the logger file with updated count.
             print "Total MRO Bills Generated : ".count($responses);
-            Log::info('MRO API response received', [
+            ApiLogger::info('mro_api','mro_process_api','MRO API response received', [
                 'response_count' => count($responses)
             ]);
         }
         else {
-            Log::info('No MRO data to send');
+            ApiLogger::info('mro_api','mro_process_api','No MRO data to send');
             return;
         }
     }

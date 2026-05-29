@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Actions\Prepaid\MroProcessAction;
 use App\Contracts\Prepaid\Mro;
 use App\Enums\PrepaidApi;
+use App\Helpers\ApiLogger;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
@@ -46,7 +47,7 @@ class MroPreocessCommand extends Command
             // }
         }
         else {
-            Log::error("No Mro Request Data.");
+            ApiLogger::error('mro_api', 'mro_process_command', "No Mro Request Data.");
         }
     }
 }
