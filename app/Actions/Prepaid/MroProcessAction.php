@@ -306,12 +306,36 @@ class MroProcessAction
                 'amount' => ($invoice_data['invoice']['total_amount']),
             ], 'dr');
         }
+        
         return [
             'invoice_id' => $inv_insert->id, 
             'invoice_number' => $inv_number, 
             'net_consumption' => $invoice_data['consumption']['net_consumption'],
             'total_price' => $invoice_data['invoice']['payable_amount'],
             'due_date' => $invoice_data['invoice']['due_date'],
+        ];
+    }
+
+    /**
+     * Calculate interest, GST on interest
+     * 
+     * @param double $sdBalance Balance security deposit
+     * @param double $dayInterestRate Daily interest rate
+     * @param double $amount Deducted amount
+     * @param int $days Deducted number of days 
+     * 
+     * @return array
+     */
+    public static function calculateInterest($sdBalance, $dayInterestRate, $amount, $days)
+    {
+        $interest = $days * ($sdBalance * ($dayInterestRate / 100));
+        $interestGst = $interest * (18/100);
+        
+        // Return parameters
+        return [
+            'interest' => $interest,
+            'interestGst' => $interestGst,
+            'principal' => $amount - ($interest + $interestGst),
         ];
     }
 }

@@ -33,7 +33,7 @@ class ConsumerStatus extends Model
     /**
      * Relation with Consumer
      */
-    public function consumer():BelongsTo
+    public function consumer(): BelongsTo
     {
         return $this->belongsTo(Consumer::class, 'consumer_id')->withDefault();
     }
@@ -41,7 +41,7 @@ class ConsumerStatus extends Model
     /**
      * Relation with Segments
      */
-    public function status() :BelongsTo
+    public function status(): BelongsTo
     {
         return $this->belongsTo(MasterConsumerStatus::class, 'status_id')->withDefault();
     }
@@ -49,7 +49,7 @@ class ConsumerStatus extends Model
     /**
      * Realtion with CreatedBy
      */
-    public function createdBy():BelongsTo
+    public function createdBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by')->withDefault();
     }

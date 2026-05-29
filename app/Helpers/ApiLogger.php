@@ -10,8 +10,8 @@ class ApiLogger
 {
     public static function getLogger(string $folder, string $apiName): Logger|MonologLogger
     {
-        $date = now()->format('d m Y');          // 16-05-2026
-        $fileName = $apiName . '-' . $date . '.log';       // acquisition-16-05-2026
+        $date = now()->format('Ymd');                       // Example: 20260516
+        $fileName = $date . '-' . $apiName . '.log';        // Example: 20260516-acquisition
 
         $logPath = storage_path("logs/{$folder}/{$fileName}");
 
