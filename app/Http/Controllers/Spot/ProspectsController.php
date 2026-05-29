@@ -26,6 +26,7 @@ use App\Models\Spot\Status;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
 class ProspectsController extends Controller
@@ -71,9 +72,9 @@ class ProspectsController extends Controller
         })->When($request->has('segments'), function($q) use($request) {
             $q->whereIn('segment_id', $request->get('segments'));
         })
-        // ->when((!empty($request->date_from) and !empty($request->date_to)), function($q) use($request) {
-        //     $q->whereBetween('expected_date', [Carbon::createFromFormat('d-m-Y', $request->date_from)->startOfDay()->toDateTimeString(), Carbon::createFromFormat('d-m-Y', $request->date_to)->endOfDay()->toDateTimeString()]);
-        // })
+        ->when((!empty($request->expected_date_from) and !empty($request->expected_date_to)), function($q) use($request) {
+            $q->whereBetween('expected_date', [Carbon::createFromFormat('d-m-Y', $request->expected_date_from)->toDateString(), Carbon::createFromFormat('d-m-Y', $request->expected_date_to)->toDateString()]);
+        })
         ->when((!empty($request->date_from) and !empty($request->date_to)), function($q) use($request) {
             $q->whereBetween('created_at', [Carbon::createFromFormat('d-m-Y', $request->date_from)->startOfDay()->toDateTimeString(), Carbon::createFromFormat('d-m-Y', $request->date_to)->endOfDay()->toDateTimeString()]);
         });
@@ -83,10 +84,11 @@ class ProspectsController extends Controller
         $prospects = $query->orderBy($sortBy, $sortOr)->paginate($records)->withQueryString();
         $stages = Stage::where('type', 1)->where('parent_id', NULL)->get();
         $status = Status::all();
+        $potential = Prospects::select('stage_id', DB::raw('SUM(potential) as potential_val'))->groupBy('stage_id')->get()->pluck('potential_val', 'stage_id');
         if($request->ajax()) {
-            return view('spot.prospects.list-body', ['prospects' => $prospects, 'stages' => $stages, 'status_list' => $status]);
+            return view('spot.prospects.list-body', ['prospects' => $prospects, 'stages' => $stages, 'status_list' => $status, 'potential' => $potential]);
         }
-        return view('spot.prospects.list', ['prospects' => $prospects, 'stages' => $stages, 'status_list' => $status]);
+        return view('spot.prospects.list', ['prospects' => $prospects, 'stages' => $stages, 'status_list' => $status, 'potential' => $potential]);
     }
 
     /**

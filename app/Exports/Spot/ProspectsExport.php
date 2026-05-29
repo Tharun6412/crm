@@ -29,27 +29,30 @@ class ProspectsExport implements FromQuery, WithHeadings, WithMapping
         //
         $sortBy = ($this->request->get('sortBy')) ? $this->request->get('sortBy') : 'created_at';
         $sortOr = ($this->request->get('sortOr')) ? $this->request->get('sortOr') : 'desc';
-        $query = Prospects::with(['stage'])->when($this->request->has('search_key'), function($q) {
+        $query = Prospects::with(['stage'])->when($this->request->filled('search_key'), function($q) {
             $q->where(function($q) {
                 $q->where('name', 'like', '%'.$this->request->get('search_key').'%');
                 $q->orWhere('code', 'like', '%'.$this->request->get('search_key').'%');
             });
-        })->When($this->request->has('geo_area'), function($q) {
+        })->When($this->request->filled('geo_area'), function($q) {
             $q->whereIn('ga_id', $this->request->get('geo_area'));
-        })->When($this->request->has('industrial_area_id'), function($q) {
+        })->When($this->request->filled('industrial_area_id'), function($q) {
             $q->whereIn('industrial_area_id', $this->request->get('industrial_area_id'));
-        })->When($this->request->has('fuel_id'), function($q) {
+        })->When($this->request->filled('fuel_id'), function($q) {
             $q->whereIn('fuel_id', $this->request->get('fuel_id'));
-        })->when($this->request->has('stage_id'), function($q) {
+        })->when($this->request->filled('stage_id'), function($q) {
             $q->whereHas('stage', function($q2) {
                 $q2->whereIn('parent_id', $this->request->get('stage_id'));
             });
-        })->When($this->request->has('sub_stage_id'), function($q) {
+        })->When($this->request->filled('sub_stage_id'), function($q) {
             $q->whereIn('stage_id', $this->request->get('sub_stage_id'));
-        })->When($this->request->has('status_id'), function($q) {
+        })->When($this->request->filled('status_id'), function($q) {
             $q->whereIn('status_id', $this->request->get('status_id'));
-        })->When($this->request->has('segments'), function($q) {
+        })->When($this->request->filled('segments'), function($q) {
             $q->whereIn('segment_id', $this->request->get('segments'));
+        })
+        ->when((!empty($this->request->expected_date_from) and !empty($this->request->expected_date_to)), function($q) {
+            $q->whereBetween('expected_date', [Carbon::createFromFormat('d-m-Y', $this->request->expected_date_from)->toDateString(), Carbon::createFromFormat('d-m-Y', $this->request->expected_date_to)->toDateString()]);
         })
         ->when((!empty($this->request->date_from) and !empty($this->request->date_to)), function($q) {
             $q->whereBetween('created_at', [Carbon::createFromFormat('d-m-Y', $this->request->date_from)->startOfDay()->toDateTimeString(), Carbon::createFromFormat('d-m-Y', $this->request->date_to)->endOfDay()->toDateTimeString()]);

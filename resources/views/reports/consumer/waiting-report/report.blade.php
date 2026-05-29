@@ -4,7 +4,7 @@
 
 @section('title', 'Reports')
 
-@section('page-title', 'Consumer Waiting Report')
+@section('page-title', 'Connection Progress Dashboard')
 
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="{{ url('reports') }}">Reports</a></li>
@@ -23,7 +23,7 @@
         @endphp
         <nav>
             <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                <button class="nav-link active fs-5 border border-bottom-0 me-2" id="nav-consumers-wait-tab" data-bs-toggle="tab" data-bs-target="#nav-consumers-wait" type="button" role="tab" aria-controls="nav-consumers" aria-selected="true"><i class="bi bi-app-indicator"></i>&nbsp;Consumer waiting&nbsp;<span class="badge text-bg-success">{{ $wait_list }}</span></button>
+                <button class="nav-link active fs-5 border border-bottom-0 me-2" id="nav-consumers-wait-tab" data-bs-toggle="tab" data-bs-target="#nav-consumers-wait" type="button" role="tab" aria-controls="nav-consumers" aria-selected="true"><i class="bi bi-app-indicator"></i>&nbsp;Connection Progress&nbsp;<span class="badge text-bg-success">{{ $wait_list }}</span></button>
                 <button class="nav-link fs-5 border border-bottom-0 me-2" id="nav-ga-teams-tab" data-bs-toggle="tab" data-bs-target="#nav-ga-teams" type="button" role="tab" aria-controls="nav-ga-teams" aria-selected="true"><i class="bi bi-people-fill me-1"></i>&nbsp;Teams&nbsp;<span class="badge bg-primary">{{ $total_teams }}</span></button>              
                 {{-- <button class="nav-link fs-5 border border-bottom-0 me-2" id="nav-current-status-tab" data-bs-toggle="tab" data-bs-target="#nav-current-status" type="button" role="tab" aria-controls="nav-current-status" aria-selected="false"><i class="bi bi-app-indicator"></i>&nbsp;Overview&nbsp;<span class="badge text-bg-success">{{ array_sum($consumer_status_sum) }}</span></button>
                 <button class="nav-link fs-5 border border-bottom-0 me-2" id="nav-cns-activity-tab" data-bs-toggle="tab" data-bs-target="#nav-cns-activity" type="button" role="tab" aria-controls="nav-cns-activity" aria-selected="false"><i class="bi bi-house-gear"></i>&nbsp;Onboard Activity</button>

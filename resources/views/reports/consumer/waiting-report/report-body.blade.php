@@ -6,16 +6,16 @@
             <div class="bg-success bg-gradient rounded text-white py-1 px-2 fs-5">GA</div>
         </div>
         <div class="col-2">
-            <div class="bg-info bg-gradient rounded text-white text-center py-1 px-2 fs-5 text-nowrap">Waiting for Accepatance</div>
+            <div class="bg-info bg-gradient rounded text-white text-center py-1 px-2 fs-5 text-nowrap">Approve</div>
         </div>
         <div class="col-2">
-            <div class="bg-dark bg-gradient rounded text-white text-center py-1 px-2 fs-5">Waiting for Execution</div>
+            <div class="bg-dark bg-gradient rounded text-white text-center py-1 px-2 fs-5">Execute</div>
         </div>
         <div class="col-2">
-            <div class="text-bg-purple bg-gradient rounded text-white text-center py-1 px-2 fs-5">Waiting for HSC</div>
+            <div class="text-bg-purple bg-gradient rounded text-white text-center py-1 px-2 fs-5">Gassify</div>
         </div>
         <div class="col-2">
-            <div class="bg-success bg-gradient rounded text-white text-center py-1 px-2 fs-5">Waiting for Activation</div>
+            <div class="bg-success bg-gradient rounded text-white text-center py-1 px-2 fs-5">Activate</div>
         </div>
         <div class="col">
             <div class="bg-primary bg-gradient rounded text-white text-center py-1 px-2 fs-5">Total</div>

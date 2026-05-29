@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Admin\Team;
 use App\Models\Admin\User;
 use App\Models\Consumer\Consumer;
+use App\Models\Master\Area;
 use App\Models\Master\Ca;
 use App\Models\Master\ConnectionType;
 use App\Models\Master\Ga;
@@ -112,9 +113,8 @@ class ConsumerWaitingController extends Controller
         }
         // Response
         return view('reports.consumer.waiting-report.ca-wait-report', [
-            'ca_list' => $user_ca_list['consumers_count'],
+            'charge_areas' => $user_ca_list['consumers_count'],
             'users_list_ca' => $user_ca_list['users_list_ca'],
-            'charge_areas' => Ca::where('ga_id', $request->ga_id)->get(),
             'status_name' => $status_val,
             'team_ca' => $team_ca,
             'ga_name' => Ga::select('id', 'name')->where('id', $request->ga_id)->first(),
@@ -127,15 +127,24 @@ class ConsumerWaitingController extends Controller
     public function getConsumersListByCa(Request $request, $ga_id, $status, $role)
     {
         // Consumers Count
-        $consumers_count = Consumer::select('ca_id', DB::raw('COUNT(id) as ca_count'))
-            ->when($request->filled('connection_type_id'), function($q) use($request) {
-                $q->where('connection_type_id', $request->connection_type_id);
+        $consumers_count = Ca::select('mst_cas.id', 'mst_cas.name', DB::raw('COUNT(cns_consumers.id) as ca_count'))
+            ->leftJoin('cns_consumers', function ($join) use ($request, $ga_id, $status) {
+                $join->on('cns_consumers.ca_id', '=', 'mst_cas.id')
+                    ->where('cns_consumers.ga_id', $ga_id)
+                    ->where('cns_consumers.status_id', $status);
+
+                if ($request->filled('connection_type_id')) {
+                    $join->where('cns_consumers.connection_type_id', $request->connection_type_id);
+                }
+
+                if ($request->filled('segments')) {
+                    $join->where('cns_consumers.segment_id', $request->segments);
+                }
             })
-            ->when($request->filled('segments'), function($q) use($request) {
-                $q->where('segment_id', $request->segments);
-            })
-            ->where('ga_id', $ga_id)
-            ->where('status_id', $status)->groupBy('ca_id')->get()->pluck('ca_count', 'ca_id');
+            ->where('mst_cas.ga_id', $ga_id)
+            ->groupBy('mst_cas.id', 'mst_cas.name')
+            ->orderByDesc('ca_count')
+            ->get();
         // Users List
         $users_list = User::with([
             'cas:id,name',
@@ -153,6 +162,7 @@ class ConsumerWaitingController extends Controller
                 $users_list_ca[$ca->id][] = $user;
             }
         }
+        // Response
         return [
             'consumers_count' => $consumers_count,
             'users_list_ca' => $users_list_ca,
@@ -173,5 +183,14 @@ class ConsumerWaitingController extends Controller
     {
         $teams = Team::with(['users','ga','departments'])->where('ga_id',$request->ga_id)->where('status',1)->get();
         return view('reports.consumer.waiting-report.team-list',['teams' => $teams,'ga_name' => $request->ga_name]);
+    }
+
+    /**
+     * Get Areas List by CA
+     */
+    public function getAreasList(Request $request)
+    {
+        $areas = Area::where('ca_id', $request->ca_id)->get();
+        return view('reports.consumer.waiting-report.area-wait-report', ['areas' => $areas]);
     }
 }

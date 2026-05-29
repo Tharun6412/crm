@@ -26,9 +26,9 @@
         {{-- Right Section --}}
         <div class="d-flex align-items-center gap-2">
             @if ($prospects->count() > 0)    
-                <x-auth.link href="{{ url('spot/prospects/prospectsExport') }}?{{ http_build_query(request()->all()) }}" class="btn btn-outline-primary" action="exprt">
+                <a href="{{ url('spot/prospects/prospectsExport') . '?' . http_build_query(request()->query()) }}" class="btn btn-outline-primary" action="exprt">
                     <i class="bi bi-file-earmark-excel"></i>&nbsp;Export
-                </x-auth.link>
+                </a>
             @endif
             <x-auth.link href="{{ url('spot/prospects/create') }}" class="btn btn-outline-success link-modal" action="add">
                 <i class="bi bi-plus-lg"></i>&nbsp;Create
@@ -97,6 +97,7 @@
                                     <i class="bi {{ $sort_icon }}"></i>
                                 @endif
                             </a>
+                            <x-admin.date-filter class="float-end" :date_from="'expected_date_from'" :date_to="'expected_date_to'"/>
                         </div>                    
                     </th>
                     <th nowrap class="text-center">
@@ -138,8 +139,14 @@
                 </tr>
             </thead>
             <tbody>
+                @php
+                    $row_potential = $tot_potential = 0;
+                @endphp
                 @if ($prospects->count() > 0)
                     @foreach ($prospects as $prospect)
+                        @php
+                            $row_potential += $prospect->potential;
+                        @endphp
                         <tr>
                             <td class="text-center">{{ $i++ }}</td>
                             <td nowrap>{{ $prospect->ga->name }}</td>
@@ -264,6 +271,17 @@
                             </td>
                         </tr>
                     @endforeach
+                    <tr>
+                        <td colspan="6" class="text-end">Totals</td>
+                        <td class="text-end">{{ numberFormat($row_potential, 2) }}</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
                 @else
                     <tr>
                         <td colspan="15" class="text-center bg-info-subtle fw-semibold">No records found</td>
@@ -297,6 +315,26 @@
             {{ $prospects->links('utils.paginator', ['modDiv' => 'prospects-list']) }}
         </div>
     </div>
+    @if ($prospects->count() > 0)
+        <div class="row mt-2">
+            <div class="offset-md-6 col-md-6">
+                <div class="card-group">
+                    <div class="card text-bg-primary">
+                        <div class="card-body">
+                            <h4 class="card-title">{{ numberFormat($potential->sum(), 2) }}</h4>
+                            <p class="card-text">Total Potential (SCMD)</p>
+                        </div>
+                    </div>
+                    <div class="card text-bg-success">
+                        <div class="card-body">
+                            <h4 class="card-title">{{ numberFormat($potential[\App\Enums\SpotStages::COMMISSION->value], 2) }}</h4>
+                            <p class="card-text">Total Achieved (SCMD)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
 </form>
 <script type="text/javascript">
     function reloadProspects() {

@@ -64,9 +64,10 @@ Route::middleware(['auth', ModuleAccess::class])->group(function() {
     Route::get('unbilled/list', [App\Http\Controllers\Reports\UnbilledReport::class, 'list']);
 
     // Waiting Report
-    Route::get('consumer/waiting', [App\Http\Controllers\Reports\ConsumerWaitingController::class, 'index']);
+    Route::get('consumer/connectionProgress', [App\Http\Controllers\Reports\ConsumerWaitingController::class, 'index']);
     Route::get('consumer/waiting/consumersListForEmployees', [App\Http\Controllers\Reports\ConsumerWaitingController::class, 'consumersListForEmployees']);
     Route::get('consumer/waiting/teams',[App\Http\Controllers\Reports\ConsumerWaitingController::class,'teams']);
     Route::get('consumer/waiting/getTeams',[App\Http\Controllers\Reports\ConsumerWaitingController::class,'getTeams']);
+    Route::get('consumer/waiting/getAreasList',[App\Http\Controllers\Reports\ConsumerWaitingController::class,'getAreasList']);
 
 });

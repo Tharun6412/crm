@@ -3,7 +3,7 @@
 <div class="modal-dialog modal-xl">
     <div class="modal-content">
         <div class="modal-header">
-            <h1 class="modal-title fs-5" id="exampleModalLabel">Consumer Waiting Report&nbsp;-&nbsp;{{ $ga_name->name ?? "ALL"}}&nbsp;-&nbsp;{{ $status_name ?? "ALL" }}&nbsp;</h1>
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Connection Progress Report&nbsp;-&nbsp;{{ $ga_name->name ?? "ALL"}}&nbsp;-&nbsp;{{ $status_name ?? "ALL" }}&nbsp;</h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
@@ -26,7 +26,11 @@
                         <tr>
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $area->name }}</td>
-                            <td class="text-center"><a href="{{ url('consumers') }}?{{ http_build_query(['geo_area' => [$ga_name->id], 'cns_status' => [request()->cns_status], 'charge_area' => [$area->id], 'segments' => [request()->segments], 'connection_type_id' => [request()->connection_type_id]]) }}" target="_blank">{{ $ca_list[$area->id] ?? 0 }}</a></td>
+                            <td class="text-center">
+                                <a href="{{ url('consumers') }}?{{ http_build_query(['geo_area' => [$ga_name->id], 'cns_status' => [request()->cns_status], 'charge_area' => [$area->id], 'segments' => [request()->segments], 'connection_type_id' => [request()->connection_type_id]]) }}" target="_blank">
+                                    {{ $area->ca_count ?? 0 }}
+                                </a>
+                            </td>
                             <td class="text-center">
                                 @php
                                     $areaUsers = $users_list_ca[$area->id] ?? [];
@@ -78,7 +82,7 @@
                 </tbody>
                 <tr>
                     <td colspan="2" class="text-end">Totals</td>
-                    <td class="text-center"><a href="{{ url('consumers') }}?{{ http_build_query(['geo_area' => [$ga_name->id], 'cns_status' => [request()->cns_status], 'segments' => [request()->segments]]) }}" target="_blank">{{ numberFormat($ca_list->sum()) }}</a></td>
+                    <td class="text-center"><a href="{{ url('consumers') }}?{{ http_build_query(['geo_area' => [$ga_name->id], 'cns_status' => [request()->cns_status], 'segments' => [request()->segments]]) }}" target="_blank">{{ numberFormat($charge_areas->sum('ca_count')) }}</a></td>
                     <td></td>
                     <td></td>
                 </tr>
