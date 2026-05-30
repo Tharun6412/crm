@@ -94,22 +94,22 @@ class ConsumerWaitingController extends Controller
         switch($request->cns_status) {
             case ConsumerStatus::REGISTER->value: //waiting to Accept
                 $user_ca_list = $this->getConsumersListByCa($request, $request->ga_id, $request->cns_status, ROLE::MDPE->value);
-                $teams = Team::with(['cas:id,name', 'users:id'])->where('ga_id', $request->ga_id)->where('department_id', Department::MDPE->value)->get();
+                $teams = Team::with(['cas:id,name', 'users:id'])->where('ga_id', $request->ga_id)->where('department_id', EnumsDepartment::MDPE->value)->get();
                 $status_val = ConsumerStatus::ACCEPT->name;
                 break;
             case ConsumerStatus::ACCEPT->value: //waiting to Execute
                 $user_ca_list = $this->getConsumersListByCa($request, $request->ga_id, $request->cns_status, ROLE::GI_ENGINEER->value);
-                $teams = Team::with(['cas:id,name', 'users:id'])->where('ga_id', $request->ga_id)->where('department_id', Department::GI->value)->get();
+                $teams = Team::with(['cas:id,name', 'users:id'])->where('ga_id', $request->ga_id)->where('department_id', EnumsDepartment::GI->value)->get();
                 $status_val = ConsumerStatus::EXECUTE->name;
                 break;
             case ConsumerStatus::EXECUTE->value: //waiting to HSC
                 $user_ca_list = $this->getConsumersListByCa($request, $request->ga_id, $request->cns_status, ROLE::HSE->value);
-                $teams = Team::with(['cas:id,name', 'users:id'])->where('ga_id', $request->ga_id)->where('department_id', Department::HSE->value)->get();
+                $teams = Team::with(['cas:id,name', 'users:id'])->where('ga_id', $request->ga_id)->where('department_id', EnumsDepartment::HSE->value)->get();
                 $status_val = ConsumerStatus::HSC->name;
                 break;
             case ConsumerStatus::HSC->value: //waiting to Activate
                 $user_ca_list = $this->getConsumersListByCa($request, $request->ga_id, $request->cns_status, ROLE::ACTIVATION->value);
-                $teams = Team::with(['cas:id,name', 'users:id'])->where('ga_id', $request->ga_id)->where('department_id', Department::ACTIVATION->value)->get();
+                $teams = Team::with(['cas:id,name', 'users:id'])->where('ga_id', $request->ga_id)->where('department_id', EnumsDepartment::ACTIVATION->value)->get();
                 $status_val = ConsumerStatus::ACTIVATE->name;
                 break;
             default:
