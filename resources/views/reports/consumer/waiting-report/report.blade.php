@@ -34,7 +34,7 @@
             <div class="tab-pane fade show active" id="nav-consumers-wait" role="tabpanel" aria-labelledby="nav-consumers-wait-tab" tabindex="0">
                 <form action="{{ url('reports/consumer/waiting') }}" id="report-cns-waiting-search-form" method="GET">
                     <div class="d-flex justify-content-between align-items-center border my-2 bg-light p-2 bg-secondary-subtle rounded">
-                        <h4 class="mb-0">Consumer Waiting Report</h4>
+                        <h4 class="mb-0">Connection Progress</h4>
                         <div class="row g-1">
                             <div class="col-auto">
                                 <label for="status_date">Connection Type</label>

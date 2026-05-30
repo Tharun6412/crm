@@ -84,7 +84,40 @@ class ProspectsController extends Controller
         $prospects = $query->orderBy($sortBy, $sortOr)->paginate($records)->withQueryString();
         $stages = Stage::where('type', 1)->where('parent_id', NULL)->get();
         $status = Status::all();
-        $potential = Prospects::select('stage_id', DB::raw('SUM(potential) as potential_val'))->groupBy('stage_id')->get()->pluck('potential_val', 'stage_id');
+        $potential = Prospects::with(['ga','segment','industrialArea','fuelType','stage', 'statusType'])
+            ->select('stage_id', DB::raw('SUM(potential) as potential_val'))
+            ->when($request->has('search_key'), function($q) use($request) {
+                $q->where(function($q) use($request) {
+                    $q->where('name', 'like', '%'.$request->get('search_key').'%');
+                    $q->orWhere('code', 'like', '%'.$request->get('search_key').'%');
+                });
+            })
+            ->when(!(isAdmin() OR isGaHead() OR isClusterHead() OR isFullAccess() OR isSuperAdmin()), function($q) {
+                $q->whereIn('ga_id', session()->get('user')['gas']);
+            })
+            ->When($request->has('geo_area'), function($q) use($request) {
+                $q->whereIn('ga_id', $request->get('geo_area'));
+            })->When($request->has('industrial_area_id'), function($q) use($request) {
+                $q->whereIn('industrial_area_id', $request->get('industrial_area_id'));
+            })->When($request->has('fuel_id'), function($q) use($request) {
+                $q->whereIn('fuel_id', $request->get('fuel_id'));
+            })->when($request->has('stage_id'), function($q) use($request) {
+                $q->whereHas('stage', function($q2) use($request) {
+                    $q2->whereIn('parent_id', $request->get('stage_id'));
+                });
+            })->When($request->has('sub_stage_id'), function($q) use($request) {
+                $q->whereIn('stage_id', $request->get('sub_stage_id'));
+            })->When($request->has('status_id'), function($q) use($request) {
+                $q->whereIn('status_id', $request->get('status_id'));
+            })->When($request->has('segments'), function($q) use($request) {
+                $q->whereIn('segment_id', $request->get('segments'));
+            })
+            ->when((!empty($request->expected_date_from) and !empty($request->expected_date_to)), function($q) use($request) {
+                $q->whereBetween('expected_date', [Carbon::createFromFormat('d-m-Y', $request->expected_date_from)->toDateString(), Carbon::createFromFormat('d-m-Y', $request->expected_date_to)->toDateString()]);
+            })
+            ->when((!empty($request->date_from) and !empty($request->date_to)), function($q) use($request) {
+                $q->whereBetween('created_at', [Carbon::createFromFormat('d-m-Y', $request->date_from)->startOfDay()->toDateTimeString(), Carbon::createFromFormat('d-m-Y', $request->date_to)->endOfDay()->toDateTimeString()]);
+            })->groupBy('stage_id')->get()->pluck('potential_val', 'stage_id');
         if($request->ajax()) {
             return view('spot.prospects.list-body', ['prospects' => $prospects, 'stages' => $stages, 'status_list' => $status, 'potential' => $potential]);
         }

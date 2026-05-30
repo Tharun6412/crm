@@ -190,7 +190,28 @@ class ConsumerWaitingController extends Controller
      */
     public function getAreasList(Request $request)
     {
-        $areas = Area::where('ca_id', $request->ca_id)->get();
-        return view('reports.consumer.waiting-report.area-wait-report', ['areas' => $areas]);
+        // $areas = Area::where('ca_id', $request->ca_id)->get();
+        // Consumers Count
+        $consumers_count = Area::select('mst_areas.id', 'mst_areas.name', DB::raw('COUNT(cns_consumers.id) as area_count'))
+            ->leftJoin('cns_consumers', function ($join) use($request) {
+                $join->on('cns_consumers.area_id', '=', 'mst_areas.id')
+                    ->where('cns_consumers.ga_id', $request->ga_id)
+                    ->where('cns_consumers.status_id', $request->cns_status);
+
+                if ($request->filled('connection_type_id')) {
+                    $join->where('cns_consumers.connection_type_id', $request->connection_type_id);
+                }
+
+                if ($request->filled('segments')) {
+                    $join->where('cns_consumers.segment_id', $request->segments);
+                }
+            })
+            ->where('mst_areas.ca_id', $request->ca_id)
+            ->groupBy('mst_areas.id', 'mst_areas.name')
+            ->orderByDesc('area_count')
+            ->get();
+        return view('reports.consumer.waiting-report.area-wait-report', [
+            'areas' => $consumers_count,
+        ]);
     }
 }
