@@ -3,6 +3,7 @@
 use App\Http\Middleware\ApiBasicAuth;
 use App\Http\Middleware\ApiKeyMiddleware;
 use Illuminate\Support\Facades\Route;
+use Laravel\Passport\Http\Middleware\CheckToken;
 
 // Routes
 Route::middleware([ApiKeyMiddleware::class])->group(function(){
@@ -16,7 +17,19 @@ Route::middleware([ApiKeyMiddleware::class])->group(function(){
 /**
  * PNGRB Central Portal
  */
-Route::middleware([ApiBasicAuth::class])->group(function () {
+/*Route::middleware([ApiBasicAuth::class])->group(function () {
     Route::get('png-application', [App\Http\Controllers\Api\Pngrb\PngApplicationController::class, 'index']);
+    // Route::post('png-application', [App\Http\Controllers\Api\Pngrb\PngApplicationController::class, 'store']);
+});*/
+
+/**
+ * PNGRB Unified portal
+ * OAuth 2.0
+ */
+Route::middleware([CheckToken::class])->group(function() {
+    Route::get('/test', function  () {
+        return response()->json(['success' => 'success']);
+    });
+    // Receive application
     Route::post('png-application', [App\Http\Controllers\Api\Pngrb\PngApplicationController::class, 'store']);
 });

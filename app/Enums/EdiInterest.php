@@ -10,5 +10,5 @@ enum EdiInterest: string
 {
     case YEAR = "9.80";
     case MONTH = "0.78";
-    case DATY = "0.256";
+    case DAY = "0.256";
 }

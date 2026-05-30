@@ -43,6 +43,7 @@ class PngrbApplications extends Model
         'state',
         'pincode',
         'premiseType',
+        'occupancyType',
         'latitude',
         'longitude',
         'response_code',
