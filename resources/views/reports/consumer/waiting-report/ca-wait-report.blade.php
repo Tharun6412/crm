@@ -36,7 +36,7 @@
                                 <a href="{{ url('consumers') }}?{{ http_build_query(['geo_area' => [$ga_name->id], 'cns_status' => [request()->cns_status], 'charge_area' => [$area->id], 'segments' => [request()->segments], 'connection_type_id' => [request()->connection_type_id]]) }}" target="_blank">
                                     {{ $area->ca_count ?? 0 }}
                                 </a>
-                                <a type="button" href="{{ url('reports/consumer/waiting/getAreasList') }}?{{ http_build_query(['ga_id'=> $ga_name->id, 'cns_status' => request()->cns_status, 'connection_type_id' => request()->connection_type_id, 'segments' => [request()->onboard_segment_id], 'ca_id' => $area->id, 'ca_name' => $area->name]) }}" class="link-canvas float-end" title="Click to view Areas List"><i class="bi bi-arrow-right-square fs-3"></i></a>
+                                <a type="button" href="{{ url('reports/consumer/waiting/getAreasList') }}?{{ http_build_query(['ga_id'=> $ga_name->id, 'cns_status' => request()->cns_status, 'connection_type_id' => request()->connection_type_id, 'segments' => request()->segments, 'ca_id' => $area->id, 'ca_name' => $area->name]) }}" class="link-canvas float-end" title="Click to view Areas List"><i class="bi bi-arrow-right-square fs-3"></i></a>
                             </td>
                             <td class="text-center">
                                 @php
