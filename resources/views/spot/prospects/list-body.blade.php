@@ -189,7 +189,7 @@
                                         @endif
                                         {{-- Check user not in Hold Status --}}
                                         @if (checkProspectHold($prospect->status_id)) 
-                                            @if (isInProgress($prospect->status_id) AND (isAdmin() OR isGaHead() OR isClusterHead() OR isHOSales()) AND (in_array($prospect->ga_id, session()->get('user')['gas'])))    
+                                            @if (isInProgress($prospect->status_id) AND (isAdmin() OR isGaHead() OR isClusterHead() OR isHOSales() OR isSalesOfficer()) AND (in_array($prospect->ga_id, session()->get('user')['gas'])))    
                                                 <li>
                                                     <x-auth.link class="dropdown-item link-modal" href="{{ url('spot/prospects/'.$prospect->id.'/edit') }}" action="edit">
                                                         <i class="bi bi-pencil"></i>&nbsp;Edit

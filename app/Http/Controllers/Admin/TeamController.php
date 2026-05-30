@@ -25,6 +25,9 @@ class TeamController extends Controller
         ->when($request->filled('key'), function($q) use ($request) {
             $q->where('name','like','%'.$request->key.'%');
         })
+        ->when((!isAdmin() AND !isSuperAdmin() AND !isFullAccess()), function($q) {
+            $q->whereIn('ga_id',session('user')['gas']);
+        })
         ->when($request->has('geo_area'), function($q) use ($request) {
             $q->whereIn('ga_id',$request->geo_area);
         })
@@ -44,7 +47,9 @@ class TeamController extends Controller
      */
     public function create()
     {
-        $geo_areas = Ga::all();
+        $geo_areas = Ga::when((!isAdmin() AND !isSuperAdmin() AND !isFullAccess()), function($q) {
+            $q->whereIn('id',session('user')['gas']);
+        })->get();
         $cas = Ca::all();
         $departments = Department::all();
         return view('admin.teams.create',['geo_areas' => $geo_areas,'cas' => $cas,'departments' => $departments]);
@@ -86,11 +91,13 @@ class TeamController extends Controller
      */
     public function edit($id)
     {
-        $team = Team::with('cas')->findOrFail($id);
-        $geo_areas = Ga::all();
-        $departments = Department::all();
+        $team = Team::when((!isAdmin() AND !isSuperAdmin() AND !isFullAccess()), function($q) {
+            $q->whereIn('ga_id', session('user')['gas']);
+        })->with(['cas','ga','departments'])->findOrFail($id);
+        // $geo_areas = Ga::all();
+        // $departments = Department::all();
         $cas = Ca::where('ga_id', $team->ga_id)->get();
-        return view('admin.teams.edit',['team' => $team,'geo_areas' => $geo_areas,'cas' => $cas,'departments' => $departments]);
+        return view('admin.teams.edit',['team' => $team,'cas' => $cas]);
     }
     /**
      * team update

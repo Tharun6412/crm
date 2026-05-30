@@ -37,5 +37,10 @@ Route::middleware([ModuleAccess::class, 'auth'])->group(function() {
     // Team user routes
     Route::get('teams/user/create/{id}',[App\Http\Controllers\Admin\TeamUserController::class,'create']);
     Route::post('teams/user/store/{id}',[App\Http\Controllers\Admin\TeamUserController::class,'store']);
+    Route::get('teams/user/createUser',[App\Http\Controllers\Admin\TeamUserController::class,'createUser']);
+    Route::post('teams/user/storeUser',[App\Http\Controllers\Admin\TeamUserController::class,'storeUser']);
+
+
+
 
 });

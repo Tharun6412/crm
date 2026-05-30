@@ -14,10 +14,22 @@
                     <div class="row mb-3">
                         <label for="name" class="col-sm-2 col-form-label text-end">Team Name :</label>
                         <div class="col-sm-4">
-                            <input type="text" name="name" id="name" class="form-control" value="{{ $team->name }}" placeholder="Enter Team Name">
+                            <input type="text" name="name" id="name" class="form-control"
+                                value="{{ $team->name }}" placeholder="Enter Team Name">
                         </div>
+                        <label class="col-sm-2 col-form-label text-end">Department :</label>
+                        <div class="col-sm-4 pt-2">
+                            <strong>{{ $team->departments->name }}</strong>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label text-end">Geo Area :</label>
+                        <div class="col-sm-4 pt-2">
+                            <strong>{{ $team->ga->name }}</strong>
+                        </div>
+                    </div>
                         {{-- Department --}}
-                        <label for="department_id" class="col-sm-2 col-form-label text-end">Department :</label>
+                        {{-- <label for="department_id" class="col-sm-2 col-form-label text-end">Department :</label>
                         <div class="col-sm-4">
                             <select name="department_id" id="department_id" class="form-select">
                                 <option value=""> Select Department</option>
@@ -25,10 +37,11 @@
                                     <option value="{{ $department->id }}"@selected($team->department_id == $department->id)>{{ $department->name }}</option>
                                 @endforeach
                             </select>
-                        </div>
-                    </div>
+                        </div> --}}
+                        
+
                     {{-- Geo Area --}}
-                    <div class="row mb-3">
+                    {{-- <div class="row mb-3">
                         <label for="ga_id" class="col-sm-2 col-form-label text-end">Geo Area :</label>
                         <div class="col-sm-4">
                             <select name="ga_id" id="ga_id" class="form-select">
@@ -39,7 +52,7 @@
                             </select>
                         </div>
                     </div>
-                    <hr>
+                    <hr> --}}
                     {{-- Charge Areas --}}
                     <div class="row mb-3">
                         <div class="col-sm-12">

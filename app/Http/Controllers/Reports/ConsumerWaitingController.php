@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Reports;
 
 use App\Enums\ConsumerStatus;
-use App\Enums\Department;
+use App\Enums\Department as EnumsDepartment;
 use App\Enums\Role;
 use App\Http\Controllers\Controller;
 use App\Models\Admin\Team;
@@ -12,6 +12,7 @@ use App\Models\Consumer\Consumer;
 use App\Models\Master\Area;
 use App\Models\Master\Ca;
 use App\Models\Master\ConnectionType;
+use App\Models\Master\Department;
 use App\Models\Master\Ga;
 use App\Models\Master\Segment;
 use Illuminate\Http\Request;
@@ -33,6 +34,14 @@ class ConsumerWaitingController extends Controller
         $segments = Segment::all();
         $connection_types = ConnectionType::all();
         $total_teams = Team::where('status',1)->count();
+        $departments = Department::whereIn('id',[
+                EnumsDepartment::GI->value,
+                EnumsDepartment::MDPE->value,
+                EnumsDepartment::STEEL->value,
+                EnumsDepartment::HSE->value,
+                EnumsDepartment::ACTIVATION->value,
+            ])->get();
+            $teams = Team::select(['id','name','ga_id','department_id'])->withCount('users')->where('status',1)->get();  
         // Get all consumer status counts
         $consumer_status = Consumer::selectRaw('ga_id, status_id, count(status_id) as count')
             ->when(($request->has('connect_type_id') AND !empty($request->connect_type_id)), function($q) use($request) {
@@ -59,6 +68,8 @@ class ConsumerWaitingController extends Controller
                 'consumer_wait_list' => $consumer_wait_list,
                 'consumer_wait_sum' => $consumer_wait_sum,
                 'total_teams' => $total_teams,
+                'departments' => $departments,
+                'teams' => $teams,
             ]);    
         }else {
             return view('reports.consumer.waiting-report.report', [
@@ -67,7 +78,9 @@ class ConsumerWaitingController extends Controller
                 'connection_types' => $connection_types,
                 'consumer_wait_list' => $consumer_wait_list,
                 'consumer_wait_sum' => $consumer_wait_sum,
+                'departments' => $departments,
                 'total_teams' => $total_teams,
+                'teams' => $teams,
             ]);
         }
     }
@@ -169,21 +182,13 @@ class ConsumerWaitingController extends Controller
         ];
     }
     /**
-     * Ga Wise Teams counts
-     */
-    public function teams(Request $request)
-    {
-        $geo_areas = Ga::with('teams')->where('status', 1)->orderBy('position')->get();
-        return view('reports.consumer.waiting-report.teams',['geo_areas' => $geo_areas]);
-    }
-    /**
      * Team list
      */
-    public function getTeams(Request $request)
-    {
-        $teams = Team::with(['users','ga','departments'])->where('ga_id',$request->ga_id)->where('status',1)->get();
-        return view('reports.consumer.waiting-report.team-list',['teams' => $teams,'ga_name' => $request->ga_name]);
-    }
+    // public function getTeams(Request $request)
+    // {
+    //     $teams = Team::with(['users','ga','departments'])->where('ga_id',$request->ga_id)->where('status',1)->get();
+    //     return view('reports.consumer.waiting-report.team-list',['teams' => $teams,'ga_name' => $request->ga_name]);
+    // }
 
     /**
      * Get Areas List by CA

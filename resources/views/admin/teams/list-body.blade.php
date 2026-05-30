@@ -14,6 +14,7 @@
         </div>
     </div>
     <div>
+        <a href="{{ url('admin/teams/user/createUser') }}" class="btn btn-outline-success link-modal"><i class="bi bi-plus-lg"></i>&nbsp;Add User</a>
         <a href="{{ url('admin/teams/create') }}" class="btn btn-outline-success link-modal"><i class="bi bi-plus-lg"></i>&nbsp;Add Team</a>
     </div>
 </div>

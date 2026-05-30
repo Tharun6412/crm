@@ -1,27 +1,73 @@
-<div class="mt-2">
-    <div class="row row-cols-8 g-2 mb-2">
-        <div class="col-3">
-            <div class="bg-success bg-gradient rounded text-white py-1 px-2 fs-5">GA</div>
-        </div>
-        <div class="col-3">
-            <div class="bg-primary bg-gradient rounded text-white text-center py-1 px-2 fs-5">Teams</div>
-        </div>
-    </div>
-    @foreach ($geo_areas as $ga )
-        <div class="row row-cols-10 g-2 mb-2">
-            <div class="col-3">
-                <div class="bg-body-secondary rounded py-1 px-2 fs-5 text-truncate">
-                    <div class="d-flex justify-content-between">
-                        <span>{{ $ga->name }}</span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-3">
-                <div class="border rounded text-center py-1 px-2 fs-5">
-                    <span><a href="{{ url('reports/consumer/waiting/getTeams') }}?ga_id={{ $ga->id }}&ga_name={{ $ga->name }}" class="link-modal">{{ $ga->teams->count() }}</a></span>
-                </div>
-            </div>
-        </div>
-    @endforeach
+@php
+    $teamData = [];
+    foreach ($teams as $team) {
+        $teamData[$team->ga_id][$team->department_id][] = $team;
+    }
+@endphp
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead class="table-primary">
+            <tr>
+                <th>GA</th>
+                @foreach ($departments as $department)
+                    <th class="text-center">
+                        {{ $department->name }}
+                    </th>
+                @endforeach
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($geo_areas as $ga)
+                <tr>
+                    <td class="fw-bold">
+                        {{ $ga->name }}
+                    </td>
+                    @foreach ($departments as $department)
+                        @php
+                            $teamList = $teamData[$ga->id][$department->id] ?? [];
+                        @endphp
+                        <td>
+                            @if(count($teamList))
+                                <div class="dropdown">
+                                    <button class="btn btn-sm btn-outline-primary dropdown-toggle w-100" type="button" data-bs-toggle="dropdown">Teams {{ count($teamList) }}</button>
+                                    <ul class="dropdown-menu">
+                                        @foreach($teamList as $team)
+                                             <li>
+                                                <a href="{{ url('admin/teams/show/'.$team->id) }}"
+                                                class="dropdown-item link-modal">
+                                                    {{ $team->name }} - {{ $team->users_count }}
+                                                </a>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @else
+                                <span class="text-muted">No Teams</span>
+                            @endif
+                        </td>
+                    @endforeach
+                </tr>
+            @endforeach
+        </tbody>
+        <tfoot>
+                <th>Total</th>
+                @foreach ($departments as $department)
+                    @php
+                        $totalTeams = 0;
+                        $totalUsers = 0;
+                        foreach ($teams as $team) {
+                            if ($team->department_id == $department->id) {
+                                $totalTeams++;
+                                $totalUsers += $team->users_count;
+                            }
+                        }
+                    @endphp
+                    <td>
+                        Teams : {{ $totalTeams }} Users : {{ $totalUsers }}
+                    </td>
+                @endforeach
+            </tr>
+        </tfoot>
+    </table>
 </div>
 @include('scripts.link-modal')
