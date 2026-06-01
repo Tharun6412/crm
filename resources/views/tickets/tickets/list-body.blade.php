@@ -53,11 +53,11 @@
                     <tr>
                         <td>{{ $loop->iteration }}</td>
                         <td><a href="{{ url('tickets/show/'.$ticket->id) }}" class="link-modal">{{ $ticket->code }}</a></td>
-                        <td><a href="{{ url('consumers/'.$ticket->consumer_id) }}" target="_blank">{{ $ticket->consumer->crn }}</a></td>
-                        <td>{{ $ticket->consumer->name }}</td>
+                        <td><a href="{{ url('consumers/'.$ticket->consumer_id) }}" target="_blank">{{ $ticket->consumer->crn ?? ''}}</a></td>
+                        <td>{{ $ticket->consumer->name ?? '' }}</td>
                         <td>{{ $ticket->category->name}}</td>
                         <td><x-tickets.status-change :status="$ticket->status" /></td>
-                        <td>{{ $ticket->createdBy->name }}</td>
+                        <td>{{ $ticket->createdBy->name ?? '' }}</td>
                         <td>{{ dateFormat($ticket->created_at )}}</td>
                         <td>
                             <div class="dropdown">

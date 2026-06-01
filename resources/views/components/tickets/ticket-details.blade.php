@@ -9,7 +9,7 @@
     <div class="col-sm-2 text-end fw-semibold">Category : </div>
     <div class="col-sm-4">{{ $ticket->category->name }}</div>
     <div class="col-sm-2 text-end fw-semibold">Created By : </div>
-    <div class="col-sm-4">{{ $ticket->createdBy->name }}</div>
+    <div class="col-sm-4">{{ $ticket->createdBy->name ?? '' }}</div>
     <div class="col-sm-2 text-end fw-semibold">Created Date: </div>
     <div class="col-sm-4">{{ dateFormat($ticket->created_at) }}</div>
 </div>

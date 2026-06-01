@@ -144,7 +144,6 @@ class TicketController extends Controller
     public function show($id)
     {
         $ticket = Ticket::findOrFail($id);
-        $categories = TicketCategory::all();
         return view('tickets.tickets.show',['ticket' => $ticket]);
     }
     /**

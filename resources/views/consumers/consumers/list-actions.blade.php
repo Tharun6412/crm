@@ -52,6 +52,6 @@
         @if ($consumer->status_id == ConsumerStatus::PD->value)
             <li><x-auth.link class="dropdown-item link-modal" href="{{ url('consumers/refunds/refundRequest/'.$consumer->id) }}" action="refin"><i class="bi bi-chevron-right"></i>&nbsp;Initiate Refund</x-auth.link></li>
         @endif
-        <li><a href="{{ url('tickets/create/'.$consumer->id) }}" class="dropdown-item link-modal"><i class="bi bi-chevron-right"></i>&nbsp;Raise Ticket</a></li>
+        <li><x-auth.link class="dropdown-item link-modal" href="{{ url('tickets/create/'.$consumer->id) }}" action="tkt"> <i class="bi bi-chevron-right"></i>&nbsp;Raise Ticket</x-auth.link></li>
     </ul>
 </div>

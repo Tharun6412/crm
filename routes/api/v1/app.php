@@ -67,4 +67,12 @@ Route::middleware('auth:sanctum')->group(function () {
         // Route::get('edit/{id}', [App\Http\Controllers\Api\V1\Application\PaymentsController::class,'edit']);
         Route::post('update', [App\Http\Controllers\Api\V1\Application\PaymentsController::class,'update']);
     });
+
+    //Tickets
+    Route::prefix('tickets')->group(function() {
+        Route::get('create',[App\Http\Controllers\Api\V1\Application\TicketController::class,'create']);
+        Route::post('store/{consumer_id}',[App\Http\Controllers\Api\V1\Application\TicketController::class,'store']);
+        Route::get('list/{id}',[App\Http\Controllers\Api\V1\Application\TicketController::class,'list']);
+        Route::get('show/{id}',[App\Http\Controllers\Api\V1\Application\TicketController::class,'show']);
+    }); 
 });
