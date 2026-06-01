@@ -83,7 +83,7 @@ class PngApplicationController extends Controller
                 // applicantInfo
                 'name' => $request->applicantInfo['name'],
                 'mobileNumber' => $request->applicantInfo['mobileNumber'],
-                'father_spouse' => $request->applicantInfo['father-spouse'],
+                'father_spouse' => $request->applicantInfo['father_spouse'],
                 'dob' => $request->applicantInfo['dob'],
                 'email' => $request->applicantInfo['email'],
                 'whatsapp' => $request->applicantInfo['whatsapp'],
@@ -97,6 +97,7 @@ class PngApplicationController extends Controller
                 'state' => $request->pngAddress['state'],
                 'pincode' => $request->pngAddress['pincode'],
                 'premiseType' => $request->pngAddress['premiseType'],
+                'occupancyType' => $request->pngAddress['occupancyType'],
                 'latitude' => $request->pngAddress['latitude'],
                 'longitude' => $request->pngAddress['longitude'],
             ]);
@@ -127,9 +128,11 @@ class PngApplicationController extends Controller
 
         // Response
         return response()->json([
-            'acknowledged' => true,
-            'receivedAt' => Carbon::now()->format('Y-m-d\TH:i:s\Z'),
+            'success' => true,
+            'statusCode' => $httpCode,
             'message' => $message,
+            // 'receivedAt' => Carbon::now()->format('Y-m-d\TH:i:s\Z'),
+            'data' => ['applicationNumber' => $request->applicationNumber]
         ], $httpCode);
     }
 }

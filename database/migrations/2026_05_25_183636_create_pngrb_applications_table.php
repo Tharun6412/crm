@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('serviceabilityStatus')->nullable();
             $table->string('name')->nullable();
             $table->string('mobileNumber')->nullable();
-            $table->string('father')->nullable();
+            $table->string('father_spouse')->nullable();
             $table->string('dob')->nullable();
             $table->string('email')->nullable();
             $table->string('whatsapp')->nullable();
@@ -35,6 +35,7 @@ return new class extends Migration
             $table->string('state')->nullable();
             $table->string('pincode')->nullable();
             $table->string('premiseType')->nullable();
+            $table->string('occupancyType')->nullable();
             $table->string('latitude')->nullable();
             $table->string('longitude')->nullable();
             $table->foreignId('consumer_id')->nullable()->index()->constrained(table:'cns_consumers')->noActionOnDelete()->noActionOnUpdate();
