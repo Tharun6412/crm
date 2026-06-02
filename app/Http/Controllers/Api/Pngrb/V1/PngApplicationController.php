@@ -1,5 +1,5 @@
 <?php
-namespace App\Http\Controllers\Api\Pngrb;
+namespace App\Http\Controllers\Api\Pngrb\V1;
 
 use App\Helpers\ApiLogger;
 use App\Http\Controllers\Controller;
@@ -23,7 +23,7 @@ class PngApplicationController extends Controller
      * 
      * @param object $request JSON object
      * 
-     * @return object HTTP_STATUS
+     * @return object $response JSON HTTP_STATUS
      * 201 Created	Application Submitted Successfully
      * 200 OK	Application Already Exists
      * 400 Bad Request	Validation Error
@@ -62,10 +62,13 @@ class PngApplicationController extends Controller
 
         // Custom validation error response
         if ($validator->fails()) {
+            // Response
             return response()->json([
-                'acknowledged' => true,
-                'receivedAt' => Carbon::now()->format('Y-m-d\TH:i:sZ'),
+                'success' => false,
+                'statusCode' => 400,
                 'message' => $validator->errors()->all(),
+                // 'receivedAt' => Carbon::now()->format('Y-m-d\TH:i:s\Z'),
+                'data' => []
             ], 400);
         }
         
@@ -119,8 +122,8 @@ class PngApplicationController extends Controller
             $httpCode = 200;
         }
 
-        // Log API details
-        ApiLogger::info('pngrb-unified-portal', 'png-application', 'Application received', [
+        // Update Log with API details
+        ApiLogger::info('pngrb-unified-portal', 'png-application', 'Application Received', [
             $request->all(),
             'httpCode' => $httpCode,
             'message' => $message,
@@ -133,6 +136,78 @@ class PngApplicationController extends Controller
             'message' => $message,
             // 'receivedAt' => Carbon::now()->format('Y-m-d\TH:i:s\Z'),
             'data' => ['applicationNumber' => $request->applicationNumber]
+        ], $httpCode);
+    }
+
+    /**
+     * Update PNG Application status from Unified Portal
+     * 
+     * @param object $request JSON Object
+     * 
+     * @return object response JSON
+     */
+    public function update(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'applicationNumber' => 'required',
+            'applicationStatus' => 'required',
+            'updatedBy' => 'required',
+            'updatedAt' => 'required',
+        ]);
+        // Custom validation error response
+        if ($validator->fails()) {
+            // Response
+            return response()->json([
+                'status' => false,
+                'code' => 400,
+                'message' => $validator->errors()->all(),
+                'data' => []
+            ], 400);
+        }
+
+        // Check Applicaion and status
+        $application = PngrbApplications::where('applicationNumber', $request->applicationNumber)
+            ->whereNull('applicationStatus')->first();
+        if($application) {
+            // Update Application status
+            $application->applicationStatus = $request->applicationStatus;
+            $application->statusRemarks = $request->statusRemarks;
+            $application->updatedBy = $request->updatedBy;
+            $application->updatedAt = $request->updatedAt;
+            $application->reviewedDocuments = json_encode($request->reviewedDocuments);
+            $application->save();
+            // 
+            $status = true;
+            $httpCode = 200;
+            $message = 'Application updated successfully';
+            $data = [
+                'applicationNumber' => $request->applicationNumber,
+                'applicationStatus' => "APPROVED",
+                'updatedAt' => Carbon::now()->format('Y-m-d\TH:i:s\Z'),
+                'updatedBy' => $application->updatedBy
+            ];
+        }
+        else {
+            // Application status is already updated
+            $status = false;
+            $httpCode = 404;
+            $message = 'No application exists for the provided applicationId';
+            $data = '';
+        }
+
+        // Update Log with API details
+        ApiLogger::info('pngrb-unified-portal', 'png-application', 'Application Update', [
+            $request->all(),
+            'httpCode' => $httpCode,
+            'message' => $message,
+        ]);
+
+        // Response
+        return response()->json([
+            'status' => $status,
+            'code' => $httpCode,
+            'message' => $message,
+            'data' => $data
         ], $httpCode);
     }
 }

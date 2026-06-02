@@ -41,6 +41,13 @@ return new class extends Migration
             $table->foreignId('consumer_id')->nullable()->index()->constrained(table:'cns_consumers')->noActionOnDelete()->noActionOnUpdate();
             $table->integer('response_code')->nullable();
             $table->string('response_message')->nullable();
+            // Application Status Update
+            $table->string('applicationStatus')->nullable();
+            $table->string('statusRemarks')->nullable();
+            $table->string('updatedBy')->nullable();
+            $table->string('updatedAt')->nullable();
+            $table->string('reviewedDocuments')->nullable();
+            $table->integer('update_response_code')->nullable();
             $table->timestamps();
         });
     }

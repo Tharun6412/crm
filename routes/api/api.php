@@ -24,12 +24,16 @@ Route::middleware([ApiKeyMiddleware::class])->group(function(){
 
 /**
  * PNGRB Unified portal
+ * 
  * OAuth 2.0
+ * OAuth token generation API - /oauth/token [grant_type, client_id, client_secret]
  */
 Route::middleware([CheckToken::class])->group(function() {
     Route::get('/test', function  () {
         return response()->json(['success' => 'success']);
     });
-    // Receive application
-    Route::post('png-application', [App\Http\Controllers\Api\Pngrb\PngApplicationController::class, 'store']);
+    // Receive PNGRB application
+    Route::post('v1/png-application', [App\Http\Controllers\Api\Pngrb\V1\PngApplicationController::class, 'store']);
+    // Update application status
+    Route::post('v1/png-application/update', [App\Http\Controllers\Api\Pngrb\V1\PngApplicationController::class, 'update']);
 });
