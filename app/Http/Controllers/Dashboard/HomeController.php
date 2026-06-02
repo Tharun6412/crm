@@ -20,6 +20,7 @@ use App\Models\Invoice\BillInvoice;
 use App\Models\Invoice\InvoicePayment;
 use App\Models\Master\Cluster;
 use App\Models\Master\ConnectionType as MasterConnectionType;
+use App\Models\Master\Ga;
 use App\Notifications\RegisterOtpSMS;
 use App\Services\EmailService;
 use App\Services\OtpService;
@@ -59,6 +60,12 @@ class HomeController extends Controller
             ConsumerStatus::PD->value
         ])
         ->leftJoin('mst_gas', 'mst_gas.id', '=', 'cns_consumers.ga_id')
+        ->when($request->has('geo_area'), function($q) use($request) {
+            $q->whereIn('mst_gas.id', $request->geo_area);
+        })
+        ->when($request->has('cluster'), function($q) use($request) {
+            $q->where('mst_gas.cluster_id', $request->cluster);
+        })
         ->groupBy('mst_gas.cluster_id','cns_consumers.segment_id')->get();
 
         // Data Preparation
@@ -97,6 +104,8 @@ class HomeController extends Controller
         }
         // dd($consumer_count);
         // Get quicklinks
+        $geo_areas = Ga::all();
+        $clusters = Cluster::all();
         if(isSuperAdmin() OR isAdmin()){
             $quick_link = Module::where('quick_link',1)->where('status', 1)->orderBy('name')->get();
         }else{
@@ -107,6 +116,19 @@ class HomeController extends Controller
                             ->orderBy('name')
                             ->get();
         }
+        if($request->ajax()) {
+            return view('dashboard.home-body', [
+                'total_count' => $data['total_count'],
+                'total_postpaid' => $data['total_postpaid'],
+                'total_prepaid' => $data['total_prepaid'],
+                'consumer_data' => $data['consumer_data'] ?? [],
+                'consumer_segment' => $data['consumer_segment'] ?? [],
+                'clusters' => Cluster::all(),
+                'quick_link' => $quick_link,
+                'geo_areas' => $geo_areas,
+                'clusters' => $clusters,
+            ]);    
+        }
         // Render output
         return view('dashboard.home', [
             'total_count' => $data['total_count'],
@@ -116,6 +138,8 @@ class HomeController extends Controller
             'consumer_segment' => $data['consumer_segment'] ?? [],
             'clusters' => Cluster::all(),
             'quick_link' => $quick_link,
+            'geo_areas' => $geo_areas,
+            'clusters' => $clusters,
         ]);
     }
 }

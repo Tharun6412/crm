@@ -58,6 +58,11 @@ class ConsumerController extends Controller
             ->when($request->has('geo_area'), function ($q) use($request) {
                 $q->whereIn('ga_id', $request->geo_area);
             })
+            ->when($request->has('cluster'), function($q) use($request) {
+                $q->whereHas('ga', function($q1) use($request) {
+                    $q1->whereIn('cluster_id', $request->cluster);
+                });
+            })
             ->when($request->has('district'), function ($q) use($request) {
                 $q->whereIn('district_id', $request->district);
             })

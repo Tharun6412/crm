@@ -1,0 +1,33 @@
+<?php
+namespace App\Http\Controllers\Pngrb;
+
+use App\Http\Controllers\Controller;
+use App\Models\Consumer\PngrbApplications;
+use Illuminate\Http\Request;
+
+class PngrbApplicationController extends Controller
+{
+    public function index(Request $request)
+    {
+        $sortBy = ($request->filled('sortBy')) ? $request->get('sortBy') : 'created_at';
+        $sortOr = ($request->filled('sortOr')) ? $request->get('sortOr') : 'desc';
+        $applications = PngrbApplications::when($request->has('search_key'), function($q) use($request) {
+            $q->whereAny(['name', 'applicationNumber', 'email'], $request->search_key);
+        })->orderBy($sortBy, $sortOr)->paginate(20)->withQueryString();
+        // Response
+        if($request->ajax()) {
+            return view('pngrb.applications.list-body', ['applications' => $applications]);
+        }
+        return view('pngrb.applications.list', ['applications' => $applications]);
+    }
+
+    /**
+     * PNGRB Display
+     * @param $application_id
+     */
+    public function show(Request $request, $id)
+    {
+        $application = PngrbApplications::find($id);
+        return view('pngrb.applications.show', ['application' => $application]);
+    }
+}
