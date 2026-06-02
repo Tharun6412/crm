@@ -47,6 +47,7 @@ Route::middleware(['auth'])->group(function() {
         Route::resource('districts', App\Http\Controllers\Master\Location\DistrictController::class);
         Route::resource('charge-areas', App\Http\Controllers\Master\Location\ChargeAreaController::class);
         Route::resource('areas', App\Http\Controllers\Master\Location\AreaController::class);
+        Route::resource('subareas',App\Http\Controllers\Master\Location\SubAreaController::class);
         Route::resource('industrial-areas', App\Http\Controllers\Master\Location\IndustrialAreaController::class);
     });
 
