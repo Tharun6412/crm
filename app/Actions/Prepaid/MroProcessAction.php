@@ -103,7 +103,8 @@ class MroProcessAction
                                 throw new \RuntimeException("End reading must be greater than start reading.");
                             }
                             // 8. calculation of meter readings and given gas price. (for consumption details).
-                            $net_price = $reading['gas_price_'.($key+1)]; 
+                            $gas_price = $reading['gas_price_'.($key+1)]; 
+                            $net_price = ($gas_price / $cf ); 
                             $basic_price = round(($net_price*(100/(100+$tax_value))),2);
                             $consmp_breakup = ($end - $start);
                             $netReading = ($consmp_breakup * $cf);
@@ -136,7 +137,7 @@ class MroProcessAction
                         $invoice['invoice'] = [
                             'type_id' => InvoiceType::GAS_BILL->value, //1 => Gas Invoice
                             'consumer_id' => $consumer->id,
-                            'invoice_date' => Carbon::now()->format('Y-m-d'),
+                            'invoice_date' => Carbon::parse($end_date)->toDateString(),
                             'base_amount' => $basicAmount,
                             'taxable_amount' => $basicAmount,
                             'tax_id'=> TaxType::VAT->value,
@@ -146,8 +147,9 @@ class MroProcessAction
                             'payable_amount' => $totalAmount,
                             'paid_amount' => $totalAmount,
                             'balance_amount' => 0,
-                            'due_date' => Carbon::now()->addDays((int)Constants::DPNG_DUEDAYS->value)->format('Y-m-d'),
+                            'due_date' => Carbon::parse($end_date)->addDays((int)Constants::DPNG_DUEDAYS->value)->format('Y-m-d'),
                             'status_id' => InvoiceStatus::PAID->value, // paid
+                            'prepaid' => 2,
                         ];
                         // 12.Invoice Consumption Array.
                         $invoice['consumption'] = [
@@ -160,7 +162,9 @@ class MroProcessAction
                             'consumption' => $total_consumption,
                             'old_consumption' => NULL,
                             'net_consumption' => $net_consumption,
+                            'cf' => $cf,
                             'unit_price' => $avgPrice, // average price.
+                            'total_price' => $basicAmount,
                             'meter_change_id' => NULL,
                             'file_id' => NULL,
                         ];
@@ -172,7 +176,7 @@ class MroProcessAction
                             // Create payment record for THIS invoice
                             PaymentService::create([
                                 'invoice_id'      => $inv_resp['invoice_id'],
-                                'payment_date'    => date('Y-m-d'),
+                                'payment_date'    => Carbon::parse($end_date)->toDateString(),
                                 'payment_type_id' => PaymentType::CASH_PAYMENT->value,
                                 'transaction_id'  => "CASH",
                                 'amount'          => $totalAmount,
@@ -247,7 +251,7 @@ class MroProcessAction
     }
     /**
      * Update the response of acknowledgment API, back in the staging table.
-     * 
+     * @param array $responses response from the api.
      */
     public static function updateMroRequest($responses)
     {
@@ -287,6 +291,10 @@ class MroProcessAction
     
     /** 
      * Common function for the invoice generation.
+     * @param object $consumer total consumer object
+     * @param array  $invoice_data Invoice insertion array
+     * 
+     * @return array 
      */ 
     public static function invoiceInsert($consumer, $invoice_data)
     {

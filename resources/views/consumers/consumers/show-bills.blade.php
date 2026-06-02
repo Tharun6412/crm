@@ -43,6 +43,9 @@
                                             @if (in_array($invoice->status_id, [2,3]))
                                                 <li><x-auth.link class="dropdown-item link-modal" href="{{ url('payments/gasPayments/create/'.$invoice->id) }}" action="payinv"><i class="bi bi-cash"></i>&nbsp;Pay Invoice</x-auth.link></li>
                                             @endif
+                                            @if (isSuperAdmin() OR isFullAccess())
+                                                <li><a class="dropdown-item link-modal" href="{{ url('payments/oldPayment/'.$invoice->id.'/edit') }}"><i class="bi bi-cash"></i>&nbsp;Add Old Payment</a></li>
+                                            @endif
                                             @empty(!$invoice->consumption->file_id)
                                                 <li><a class="dropdown-item" href="{{ url('master/dc/documents/' . $invoice->consumption?->file_id) }}" title="{{ $invoice->consumption->file?->file_name }}" target="_blank"><i class="bi bi-image"></i>&nbsp;Meter Image</a></li>
                                             @endempty

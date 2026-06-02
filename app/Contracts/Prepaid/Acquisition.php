@@ -59,6 +59,7 @@ class Acquisition
                     'CONSUMPTION_SECURITY_DEP_AMOUNT_RECEIVED' => $consumerData->scheme->consumption_deposit,
                     'customer_mode' => $con_type,
                     'bp_grouping' => $consumerData->priceGroup?->code,
+                    'VOLUME_CORRECTION_FACTOR' => $consumerData->activeMeter->vcf,
                 ]]
             ]
         );

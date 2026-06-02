@@ -48,6 +48,7 @@ class BillInvoice extends Model
         'due_date',
         'status_id',
         'parent_invoice_id',
+        'prepaid',
         'created_by',
         'updated_by',
         's_paid_amount',

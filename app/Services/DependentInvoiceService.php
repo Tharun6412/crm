@@ -91,7 +91,7 @@ class DependentInvoiceService
                 
                 // Update the scheme details for every emi invoice generation.
                 ConsumerScheme::where('id', $scheme->id)->update([
-                    'paid_deposit' => ($scheme->paid_amount + $invoice_total),
+                    'paid_deposit' => ($scheme->paid_deposit + $invoice_total),
                     'balance' => $new_sd_balance,
                     'status' => ($new_sd_balance <= 0) ? 1 : 0, // toggle the status after the final emi generated.
                 ]);
