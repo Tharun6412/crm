@@ -10,10 +10,10 @@
     <div class="row g-3 mt-1 mb-2">
         @foreach ($modules as $module)
             <div class="col-12">
-                <div class="bg-light border-start border-4 border-primary rounded shadow-sm px-3 py-2 mb-2">
-                    <h5 class="mb-0 fw-bold text-uppercase text-primary">
+                <div class="border-start border-4 border-info rounded bg-info-subtle px-3 py-2 mb-2">
+                    <h4 class="mb-0 fw-bold text-uppercase p-1">
                         {{ $module->name ?? '' }}
-                    </h5>
+                    </h4>
                 </div>
             </div>
             @if ($module->recursiveActiveChilds->isNotEmpty())
@@ -23,7 +23,7 @@
                         <a href="{{ url($module1->url) }}" class="text-dark">
                             <div class="d-flex align-middle border border-secondary-subtle report-card-bg rounded p-3 fs-18 shadow-sm">
                                 <div><i class="bi {{ $module1->icon }} report-card-bg shadow-sm p-2 fs-3 rounded-3 border border-secondary-subtle"></i></div>
-                                <div class="mt-1">&nbsp;{{ $module1->name ?? '' }}</div>                    
+                                <div class="mt-1 fs-6">&nbsp;{{ $module1->name ?? '' }}</div>                    
                             </div>
                         </a>
                     </div>

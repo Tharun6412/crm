@@ -11,7 +11,7 @@
                         <tr>
                             <th width="1%" nowrap>S No</th>
                             <th>Invoice number</th>
-                            <th>Date</th>
+                            <th nowrap>Invoice Date</th>
                             <th>Payment Type</th>
                             <th>Transaction Number</th>
                             <th class="text-end">Amount</th>
@@ -27,7 +27,7 @@
                         @endphp
                         @foreach ($payments as $payment)
                             <tr>
-                                <td>{{ $i++ }}</td>
+                                <td class="text-center">{{ $i++ }}</td>
                                 <td>{{ $payment->invoice->invoice_number }}</td>
                                 <td>{{ $payment->payment_date?->format('d-m-Y') }}</td>
                                 <td>{{ $payment->paymentType->name }}</td>

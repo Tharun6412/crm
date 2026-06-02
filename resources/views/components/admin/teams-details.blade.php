@@ -2,7 +2,7 @@
 @props([
     'teams' => [],
 ])
-<div class="row g-2 pb-2 my-2 p-2 bg-secondary-subtle rounded">
+<div class="row g-2 pb-2 my-2 p-2 bg-primary-subtle rounded">
     <div class="col-sm-2 text-end fw-semibold">Team Name : </div>
     <div class="col-sm-4">{{ $teams->name ?? '' }}</div>
     <div class="col-sm-2 text-end fw-semibold">Team Status : </div>

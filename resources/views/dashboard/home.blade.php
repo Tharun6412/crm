@@ -19,7 +19,7 @@
                             <label for="quickSearch" class="input-group-text bg-white cursor-pointer"><i id="qs-clr" class="bi bi-x-circle d-none"></i></label>
                         </div>
                         {{-- Result --}}
-                        <div id="searchResults" class="list-group position-absolute w-100" style="z-index: 1000; display:none;">
+                        <div id="searchResults" class="list-group position-absolute w-100" style="z-index: 10; display:none; max-height: 450px; overflow-y: auto;">
                         </div>
                     </div>
                     </div>
@@ -27,28 +27,34 @@
             </div>
         </div>
         <div class="container">
-            <div class="d-flex justify-content-between align-items-center p-2 bg-light rounded-3">
-                <h3 class="mb-0"></h3>
-                <form id="consumer-filter-form" method="GET" action="{{ url('/') }}">
-                    <div class="row g-2 mb-0">
-                        <div class="col-auto">
-                            <div class="form-control">
-                                Cluster&nbsp;<x-master.cluster-filter />
+            <div class="row p-2 rounded-3 g-2">
+                <div class="col-md-6 col-xs-12">
+                    <h3 class="mb-0 text-decoration-underline text-primary-emphasis">Dashboard</h3>
+                </div>
+                <div class="col-md-6 col-xs-12">
+                    <div class="float-end">
+                        <form id="consumer-filter-form" method="GET" action="{{ url('/') }}">
+                            <div class="row g-2 mb-0">
+                                <div class="col-auto">
+                                    <div class="form-control">
+                                        Cluster&nbsp;<x-master.cluster-filter />
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <div class="form-control">
+                                        GA&nbsp;<x-master.ga-filter class="float-end" />
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <button type="submit" class="btn btn-success"><i class="bi bi-check-circle"></i></button>
+                                    <a href="{{ url('/') }}" class="btn btn-warning ajax-link" title="Reset">
+                                    <i class="bi bi-arrow-clockwise"></i>
+                                </a>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-auto">
-                            <div class="form-control">
-                                GA&nbsp;<x-master.ga-filter class="float-end" />
-                            </div>
-                        </div>
-                        <div class="col-auto">
-                            <button type="submit" class="btn btn-success"><i class="bi bi-arrow-right-circle"></i>&nbsp;Get Report</button>
-                            <a href="{{ url('/') }}" class="btn btn-warning ajax-link" title="Reset">
-                            <i class="bi bi-arrow-clockwise"></i>
-                        </a>
-                        </div>
+                        </form>
                     </div>
-                </form>
+                </div>
             </div>
             <div id="consumer-filter-loader">
                 @include('dashboard.home-body')
@@ -96,7 +102,7 @@
         box-shadow: #dadada 3px 4px 10px 1px;text-transform: uppercase;} .py-card-bg {background: #c7542a;background: linear-gradient(181deg, rgba(199, 84, 42, 0.14) 32%, rgba(126, 229, 247, 0.45) 100%);
         box-shadow: #dadada 3px 4px 10px 1px;text-transform: uppercase;} .cls-card-bg {background: #EEAECA;background: linear-gradient(180deg, rgb(238 174 223 / 43%) 0%, rgb(246 244 73 / 25%) 100%);
         box-shadow: #dadada 3px 4px 10px 1px;text-transform: uppercase; } .activated-card-bg {background: #dcffab;background: linear-gradient(180deg, rgba(220, 255, 171, 0.3) 0%, rgba(149, 194, 240, 0.59) 100%);
-        box-shadow: #dadada 3px 4px 10px 1px;text-transform: uppercase;} .total-card-bg {background: #abf9ff; background: linear-gradient(180deg, rgba(171, 249, 255, 0.24) 0%, rgba(197, 157, 237, 0.59) 100%);
+        box-shadow: #dadada 3px 4px 10px 1px;text-transform: uppercase;} .total-card-bg {background: #abf9ff; background: linear-gradient(180deg, rgb(255, 171, 171, 22%) 0%, rgba(197, 157, 237, 0.59) 100%);
         box-shadow: #dadada 3px 4px 10px 1px;text-transform: uppercase;} .disconnect-card-bg {background: #eb6d57;background: linear-gradient(180deg, rgba(235, 109, 87, 0.24) 0%, rgba(255, 255, 255, 0.59) 100%);
         box-shadow: #dadada 3px 4px 10px 1px;text-transform: uppercase;} .link-card-bg {background: #4253eb;background: linear-gradient(180deg, rgba(66, 83, 235, 0.2) 0%, rgba(160, 190, 250, 0.3) 100%);
         box-shadow: #cccccc 3px 1px 4px 0px;text-transform: uppercase;} #searchResults .list-group-item:hover {background-color: hsl(210, 10%, 88%)!important;}

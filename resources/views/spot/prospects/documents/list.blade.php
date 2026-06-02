@@ -38,7 +38,7 @@
                 <tbody>
                     @foreach ($prospect->documents as $key => $document)
                         <tr>
-                            <td class="text-center">{{ $i++; }}</td>
+                            <td class="text-center">{{ $i++ }}</td>
                             <td>
                                 <a href="{{ url('master/dc/documents/'.$document->doc_file_id) }}" title="{{ $document->file->file_name }}" target="_blank"><i class="bi bi-file-earmark-pdf fs-5 text-danger"></i></a>
                             </td>

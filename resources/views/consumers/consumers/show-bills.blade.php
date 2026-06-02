@@ -11,25 +11,25 @@
                     <thead class="table-primary">
                         <tr>
                             <th width="1%" nowrap>S No</th>
-                            <th>Invoice number</th>
-                            <th>Date</th>
-                            <th class="text-end">Consumption (SCM)</th>
-                            <th>Due Date</th>
+                            <th nowrap>Invoice number</th>
+                            <th class="text-center" nowrap>Invoice Date</th>
+                            <th class="text-end" nowrap>Consumption<br/>(SCM)</th>
+                            <th nowrap>Due Date</th>
                             <th class="text-end">Amount</th>
                             <th class="text-end">Balance</th>
                             <th>Status</th>
-                            <th>Created By</th>
+                            <th nowrap>Created By</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($invoices as $invoice)
                             <tr>
-                                <td>{{ $loop->iteration }}</td>
+                                <td class="text-center">{{ $loop->iteration }}</td>
                                 <td>{{ $invoice->invoice_number }}</td>
-                                <td>{{ $invoice->invoice_date?->format('d-m-y') }}</td>
+                                <td class="text-center" nowrap>{{ $invoice->invoice_date?->format('d-m-y') }}</td>
                                 <td class="text-end">{{ numberFormat($invoice->consumption->net_consumption, 3) }}</td>
-                                <td>{{ $invoice->due_date?->format('d-m-y') }}</td>
+                                <td class="text-center" nowrap>{{ $invoice->due_date?->format('d-m-y') }}</td>
                                 <td class="text-end">{{ numberFormat($invoice->total_amount, 2) }}</td>
                                 <td class="text-end">{{ numberFormat($invoice->balance_amount, 2) }}</td>
                                 <td><x-invoice.status :status="$invoice->status"/></td>

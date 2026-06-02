@@ -175,7 +175,7 @@
         </div>
     </div>
     <div class="col-sm-12 col-md-8 col-lg-8 col-xl-8">
-        <div class="overflow-y-auto">
+        <div class="overflow-y-auto shadow">
             <div class="card total-card-bg p-2 text-dark bg-opacity-10 border-3 border-light align-items-center">
                 <figure class="highcharts-figure">
                     <div id="cluster-consumers"></div>

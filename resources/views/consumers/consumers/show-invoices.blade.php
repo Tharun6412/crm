@@ -13,8 +13,8 @@
                             <th width="1%" nowrap>S No</th>
                             <th>Invoice Type</th>
                             <th>Invoice number</th>
-                            <th>Date</th>
-                            <th>Due Date</th>
+                            <th nowrap>Invoice Date</th>
+                            <th nowrap>Due Date</th>
                             <th class="text-end">Amount</th>
                             <th class="text-end">Balance</th>
                             <th>Status</th>
@@ -25,7 +25,7 @@
                     <tbody>
                         @foreach ($invoices as $invoice)
                             <tr>
-                                <td>{{ $loop->iteration }}</td>
+                                <td class="text-center">{{ $loop->iteration }}</td>
                                 <td>{{ $invoice->invoicetype->name }}</td>
                                 <td>{{ $invoice->invoice_number }}</td>
                                 <td>{{ $invoice->invoice_date?->format('d-m-y') }}</td>

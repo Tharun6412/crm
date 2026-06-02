@@ -1,24 +1,28 @@
-<div class="offcanvas-header">
-    <h5>Charge Area - {{ request()->ca_name ?? ''}}</h5>&nbsp;&nbsp;
-    <!-- Export -->
-    @if ($areas->count() > 0)
-        <button type="button" id="exportBtn2" class="btn btn-outline-info"><i class="bi bi-file-earmark-excel"></i>&nbsp;Export</button>
-    @endif
+<div class="offcanvas-header bg-secondary-subtle">
+    <h4>Charge Area - {{ request()->ca_name ?? ''}}</h4>&nbsp;&nbsp;
+    <!-- Export -->    
     <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
 </div>
 <div class="offcanvas-body">
-    <div class="form-check form-switch mb-2">
-        <input class="form-check-input" type="checkbox" id="showZeroAreaRows">
-        <label class="form-check-label" for="showZeroAreaRows">
-            Show All - ({{ $areas->count() }})
-        </label>
+    <div class="d-flex flex-row justify-content-between pb-3">
+        <div class="justify-content-start">
+            @if ($areas->count() > 0)
+                <button type="button" id="exportBtn2" class="btn btn-outline-info btn-sm"><i class="bi bi-file-earmark-excel"></i>&nbsp;Export</button>
+            @endif
+        </div>
+        <div class="form-check form-switch mb-2 justify-content-end fw-semibold">
+            <input class="form-check-input custom-check-input" type="checkbox" id="showZeroAreaRows">
+            <label class="form-check-label" for="showZeroAreaRows">
+                Show All - ({{ $areas->count() }})
+            </label>
+        </div>
     </div>
-    <table class="table table-bordered" id="area-report-table">
-        <thead>
+    <table class="table table-bordered table-striped table-light" id="area-report-table">
+        <thead class="table-info">
             <tr>
                 <th>S.No</th>
                 <th>Name</th>
-                <th class="text-nowrap">Consumers Waiting</th>
+                <th class="text-end">Consumers</th>
             </tr>
         </thead>
         <tbody>
@@ -31,14 +35,14 @@
                         $tot_count += $area->area_count;
                     @endphp
                     <tr class="{{ $area->area_count == 0 ? 'zero-area-count d-none' : '' }}">
-                        <td>{{ $loop->iteration }}</td>
+                        <td width="1%" class="text-center">{{ $loop->iteration }}</td>
                         <td>{{ $area->name }}</td>
-                        <td class="text-center">{{ $area->area_count ?? 0}}</td>
+                        <td class="text-end">{{ $area->area_count ?? 0}}</td>
                     </tr>
                 @endforeach
-                    <tr>
-                        <td colspan="2" class="text-end">Totals</td>
-                        <td class="text-center">{{ $tot_count }}</td>
+                    <tr class="fw-bold">
+                        <td colspan="2" class="text-end">Total Consumers</td>
+                        <td class="text-end">{{ $tot_count }}</td>
                     </tr>
             @else
                 <tr>
@@ -59,6 +63,10 @@
     }
     .offcanvas-backdrop {
         z-index: 1055 !important;
+    }
+    .custom-check-input {
+        height: 1.15em;
+        border: 1px solid #333;
     }
 </style>
 @include('scripts.export-table', [

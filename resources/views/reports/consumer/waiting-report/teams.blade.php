@@ -19,38 +19,38 @@
         <tbody>
             @foreach ($geo_areas as $ga)
                 <tr>
-                    <td class="fw-bold">
+                    <td class="fw-semibold">
                         {{ $ga->name }}
                     </td>
                     @foreach ($departments as $department)
                         @php
                             $teamList = $teamData[$ga->id][$department->id] ?? [];
                         @endphp
-                        <td>
+                        <td class="text-center">
                             @if(count($teamList))
                                 <div class="dropdown">
-                                    <button class="btn btn-sm btn-outline-primary dropdown-toggle w-100" type="button" data-bs-toggle="dropdown">Teams {{ count($teamList) }}</button>
+                                    <button class="btn btn-sm btn-outline-primary dropdown-toggle w-100" type="button" data-bs-toggle="dropdown"><i class="bi bi-people"></i> Teams {{ count($teamList) }}</button>
                                     <ul class="dropdown-menu">
                                         @foreach($teamList as $team)
                                              <li>
                                                 <a href="{{ url('admin/teams/show/'.$team->id) }}"
                                                 class="dropdown-item link-modal">
-                                                    {{ $team->name }} - {{ $team->users_count }}
+                                                   <i class="bi bi-person"></i> {{ $team->name }} - {{ $team->users_count }}
                                                 </a>
                                             </li>
                                         @endforeach
                                     </ul>
                                 </div>
                             @else
-                                <span class="text-muted">No Teams</span>
+                                <span class="text-body-tertiary"><i class="bi bi-person-slash"></i></span>
                             @endif
                         </td>
                     @endforeach
                 </tr>
             @endforeach
         </tbody>
-        <tfoot>
-                <th>Total</th>
+        <tfoot class="table-info">
+                <th class="text-end">Total Teams/Users</th>
                 @foreach ($departments as $department)
                     @php
                         $totalTeams = 0;
@@ -62,8 +62,8 @@
                             }
                         }
                     @endphp
-                    <td>
-                        Teams : {{ $totalTeams }} Users : {{ $totalUsers }}
+                    <td class="text-center fw-semibold">
+                        Teams : {{ $totalTeams }} <i class="bi bi-dash-lg"></i> Users : {{ $totalUsers }}
                     </td>
                 @endforeach
             </tr>
