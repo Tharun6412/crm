@@ -27,7 +27,7 @@
                                             @foreach($pipe_types as $type)
                                                 <option value="{{ $type->id }}" 
                                                         {{ $type->id == $pipeline->pipe_type_id ? 'selected' : '' }}>
-                                                    {{ $type->name }} - ({{ $type->size }}mm)
+                                                    {{ $type->name }} - ({{ $type->size }}&nbsp;{{ $type->units }})
                                                 </option>
                                             @endforeach
                                         </select>
@@ -53,7 +53,7 @@
                                         <select class="form-select form-select-sm" name="pipe_type_id[]">
                                             <option value="">Select Pipe Type</option>
                                             @foreach($pipe_types as $type)
-                                                <option value="{{ $type->id }}">{{ $type->name }} - ({{ $type->size }}mm)</option>
+                                                <option value="{{ $type->id }}">{{ $type->name }} - ({{ $type->size }}&nbsp;{{ $type->units }})</option>
                                             @endforeach
                                         </select>
                                     </td>
