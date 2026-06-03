@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Admin\Team;
+use App\Models\Admin\User;
 use App\Models\Master\Ca;
 use App\Models\Master\Department;
 use App\Models\Master\Ga;
@@ -50,9 +51,10 @@ class TeamController extends Controller
         $geo_areas = Ga::when((!isAdmin() AND !isSuperAdmin() AND !isFullAccess()), function($q) {
             $q->whereIn('id',session('user')['gas']);
         })->get();
-        $cas = Ca::all();
+       // $cas = Ca::all();
         $departments = Department::all();
-        return view('admin.teams.create',['geo_areas' => $geo_areas,'cas' => $cas,'departments' => $departments]);
+        
+        return view('admin.teams.create',['geo_areas' => $geo_areas,'departments' => $departments]);
     }
     /**
      * Store Team
@@ -64,6 +66,7 @@ class TeamController extends Controller
             'ga_id' => 'required',
             'department_id' => 'required',
             'ca_id' => 'required',
+            'responsible_user_id' => 'required',
         ]);
 
         $team = Team::create([
@@ -71,6 +74,7 @@ class TeamController extends Controller
         'ga_id' => $request->ga_id,
         'department_id' => $request->department_id,
         'status' => 1,
+        'responsible_user_id' => $request->responsible_user_id,
         'created_by' => Auth::id(),
         ]);
 
@@ -84,7 +88,8 @@ class TeamController extends Controller
     public function gaCas(Request $request)
     {
         $cas = Ca::where('ga_id',$request->ga_id)->get();
-        return response()->json(['cas' => $cas]);
+        $users = User::with(['department'])->where('ga_id',$request->ga_id)->get();
+        return response()->json(['cas' => $cas,'users' => $users]);
     }
     /**
      * team edit
@@ -97,7 +102,8 @@ class TeamController extends Controller
         // $geo_areas = Ga::all();
         // $departments = Department::all();
         $cas = Ca::where('ga_id', $team->ga_id)->get();
-        return view('admin.teams.edit',['team' => $team,'cas' => $cas]);
+        $users = User::where('ga_id', $team->ga_id)->get();
+        return view('admin.teams.edit',['team' => $team,'cas' => $cas,'users' => $users]);
     }
     /**
      * team update
@@ -106,8 +112,6 @@ class TeamController extends Controller
     {
         $request->validate([
             'name' => 'required',
-            'ga_id' => 'required',
-            'department_id' => 'required',
             'ca_id' => 'required',
         ]);
 
@@ -116,6 +120,7 @@ class TeamController extends Controller
         $team->update([
             'name' => $request->name,
             'ga_id' => $request->ga_id,
+            'responsible_user_id' => $request->responsible_user_id,
             'department_id' => $request->department_id,
         ]);
 

@@ -11,7 +11,11 @@
             </div>
             {{-- Employees Table --}}
             <div class="card border shadow-sm">
-                <div class="card-header bg-info-subtle fw-semibold"><i class="bi bi-person-lines-fill text-secondary"></i>&nbsp;Employees List</div>
+                <div class="card-header bg-info-subtle fw-semibold"><i class="bi bi-person-lines-fill text-secondary"></i>&nbsp;Employees List
+                    @if($team->responsible_user_id)
+                        <span class="float-end">Team Coordinator - {{ $team->responsibleUser->name ?? '' }} ({{ $team->responsibleUser->emp_id ?? ''}})</span>
+                    @endif
+                </div>
                 <div class="table-responsive p-2">
                     <table class="table table-bordered table-hover align-middle mb-3">
                         <thead class="table-secondary">
@@ -25,12 +29,18 @@
                         <tbody>
                             @if ($team->users->count() > 0)
                                 @foreach ($team->users as $user)
+                                @php
+                                $value="";
+                                    if($team->responsible_user_id == $user->id){
+                                        $value = "Team Coordinator";
+                                    }
+                                @endphp
                                     <tr>
                                         <td class="text-center fw-semibold">
                                             {{ $loop->iteration }}
                                         </td>
                                         <td>{{ $user->emp_id }}</td>
-                                        <td>{{ $user->name }}</td>
+                                        <td>{{ $user->name }} {{ !empty($value) ? "(".$value.")" : '' }}</td>
                                         <td>
                                             @if ($user->roles->count() > 0)
                                                 @foreach ($user->roles as $role)

@@ -10,4 +10,6 @@ enum Department: int
     case STEEL = 21;
     case GI = 22;
     case HSE = 23;
+    case MARKETING = 11;
+    case FINANCE = 1;
 }

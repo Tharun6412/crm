@@ -17,6 +17,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules\Enum;
 
 class TeamUserController extends Controller
 {
@@ -56,6 +57,9 @@ class TeamUserController extends Controller
             EnumsRole::MDPE->value,
             EnumsRole::HSE->value,
             EnumsRole::STEEL->value,
+            EnumsRole::ACTIVATION->value,
+            EnumsRole::FINANCE->value,
+            EnumsRole::MARKETING->value,
         ])->get();
         return view('admin.teams.users.add',['geo_areas' => $geo_areas,'departments' => $departments,'roles' => $roles,'types' => $types]);
     }

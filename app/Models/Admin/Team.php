@@ -18,6 +18,7 @@ class Team extends Model
         'ga_id',
         'department_id',
         'status',
+        'responsible_user_id',
         'created_by',
     ];
     /**
@@ -54,6 +55,13 @@ class Team extends Model
     public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class,'adm_team_users','team_id','user_id');
+    }
+    /**
+     * Relation with user
+     */
+    public function responsibleUser() : BelongsTo
+    {
+        return $this->belongsTo(User::class, 'responsible_user_id');
     }
 }
 

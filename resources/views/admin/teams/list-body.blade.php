@@ -29,6 +29,7 @@
                 <th>Charge Areas</th>
                 <th>Department <x-master.department-filter class="float-end"/></th>
                 <th>Status</th>
+                <th>Coordinator</th>
                 <th>Employees</th>
                 <th nowrap>Created At</th>
                 
@@ -41,7 +42,7 @@
                     <tr>
                         <td>{{ $loop->iteration }}</td>
                         <td><a class="link-modal" href="{{ url('admin/teams/show/'.$team->id) }}">{{ $team->name }}</a></td>
-                        <td>{{ $team->ga->name }}</td>
+                        <td>{{ $team->ga->name ?? '' }}</td>
                         <td>
                             @if ($team->cas->count() > 0)
                                 @foreach ($team->cas as $ca)
@@ -59,7 +60,7 @@
                                 </div>
                             @endif
                         </td>
-                        <td>{{ $team->departments->name }}</td>
+                        <td>{{ $team->departments->name ?? '' }}</td>
                         <td>
                             @if($team->status == 1)
                                 <span class="badge bg-success">Active</span>
@@ -67,6 +68,7 @@
                                 <span class="badge bg-danger">Inactive</span>
                             @endif
                         </td> 
+                        <td>{{ $team->responsibleUser->name ?? ''}}</td>
                         <td>{{ $team->users_count }}</td>                       
                         <td>{{ dateFormat($team->created_at) }}</td>
                         <td>

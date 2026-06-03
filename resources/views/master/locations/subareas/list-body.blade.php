@@ -10,7 +10,7 @@
             <a href="{{ url('master/location/subareas') }}" class="btn btn-warning"><i class="bi bi-arrow-clockwise"></i></a>
         </div>
         <div class="col-auto mb-1">
-            <span class="fw-semibold">{{ numberFormat($subareas->total())}}</span>Records Found
+            <span class="fw-semibold">({{ numberFormat($subareas->total())}})</span> Records Found
         </div>
     </div>
     <div>

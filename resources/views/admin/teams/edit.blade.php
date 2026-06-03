@@ -20,12 +20,23 @@
                         <label class="col-sm-2 col-form-label text-end">Department :</label>
                         <div class="col-sm-4 pt-2">
                             <strong>{{ $team->departments->name }}</strong>
+                            <input type="hidden" name="department_id" value="{{ $team->department_id }}">
                         </div>
                     </div>
                     <div class="row mb-3">
                         <label class="col-sm-2 col-form-label text-end">Geo Area :</label>
                         <div class="col-sm-4 pt-2">
                             <strong>{{ $team->ga->name }}</strong>
+                            <input type="hidden" name="ga_id" value="{{ $team->ga_id }}">
+                        </div>
+                        <label for="responsible_user_id" class="col-sm-2 col-form-label text-end">Coordinator : </label>
+                        <div class="col-sm-4">
+                            <select name="responsible_user_id" id="responsible_user_id" class="form-select">
+                                <option value="">Select Coordinator</option>
+                                @foreach($users as $user)
+                                    <option value="{{ $user->id }}"@selected($user->id == $team->responsible_user_id)>{{ $user->emp_id }} - {{ $user->name }} - {{ $user->department?->name }}</option>
+                                @endforeach
+                            </select>
                         </div>
                     </div>
                         {{-- Department --}}
@@ -91,26 +102,3 @@
 </div>
 
 @include('scripts.ajax-form-submit', ['form' => 'team'])
-<script type="module">
-    $(function(){
-        $("#ga_id").on('change', function(e) {
-            $.get("{{ url('teams/gaCas') }}",{'ga_id': e.target.value},function(response){
-                let options = '';
-                if(response.cas && response.cas.length > 0) {
-                    response.cas.forEach(function(ca) {
-                    options += `<div class="form-check" style="display:inline-block; width:220px; margin-bottom:10px;">
-                    <input class="form-check-input" type="checkbox" name="ca_id[]" value="${ca.id}" id="ca_${ca.id}">
-                    <label class="form-check-label" for="ca_${ca.id}">${ca.name}</label>
-                    </div>`;
-                    });
-
-                } else {
-
-                    options = `<span class="text-danger">No Charge Areas Found</span>`;
-                }
-
-                $('#ca_id').html(options);
-            });
-        });
-    });
-</script>

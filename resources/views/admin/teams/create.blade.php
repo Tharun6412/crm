@@ -37,7 +37,14 @@
                                 @endforeach
                             </select>
                         </div>
+                        <label for="responsible_user_id" class="col-sm-2 col-form-label text-end">Coordinator :</label>
+                        <div class="col-sm-4">
+                            <select name="responsible_user_id" id="responsible_user_id" class="form-select">
+                                <option value="">Select</option>
+                            </select>
+                        </div>
                     </div>
+                        
                     <hr>
                     {{-- Charge Areas --}}
                     <div class="row mb-3">
@@ -71,6 +78,7 @@
     $(function(){
         $("#ga_id").on('change', function(e) {
             $.get("{{ url('admin/teams/gaCas') }}",{'ga_id': e.target.value},function(response){
+                //for charge areas
                 let options = '';
                 if(response.cas && response.cas.length > 0) {
                     response.cas.forEach(function(ca) {
@@ -79,13 +87,19 @@
                     <label class="form-check-label" for="ca_${ca.id}">${ca.name}</label>
                     </div>`;
                     });
-
                 } else {
-
                     options = `<span class="text-danger">No Charge Areas Found</span>`;
                 }
-
                 $('#ca_id').html(options);
+                //for users
+                let userOptions = '<option value="">Select Coordinator</option>';
+                if(response.users && response.users.length > 0) {
+                    response.users.forEach(function(user) {
+                        userOptions += `<option value="${user.id}">${user.emp_id} - ${user.name} - ${user.department?.name ?? ''}</option>`;
+                    });
+                }
+                $('#responsible_user_id').html(userOptions);
+                
             });
         });
     });

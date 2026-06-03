@@ -40,7 +40,9 @@ class ConsumerWaitingController extends Controller
                 EnumsDepartment::STEEL->value,
                 EnumsDepartment::HSE->value,
                 EnumsDepartment::ACTIVATION->value,
-            ])->get();
+                EnumsDepartment::FINANCE->value,
+                EnumsDepartment::MARKETING->value,
+            ])->orderBy('position','Asc')->get();
             $teams = Team::select(['id','name','ga_id','department_id'])->withCount('users')->where('status',1)->get();  
         // Get all consumer status counts
         $consumer_status = Consumer::selectRaw('ga_id, status_id, count(status_id) as count')
