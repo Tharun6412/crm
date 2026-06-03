@@ -11,6 +11,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('schemeDetails', [App\Http\Controllers\Api\V1\Common\CommonController::class, 'schemeDetails']);
     Route::get('getSubCategories', [App\Http\Controllers\Api\V1\Common\CommonController::class, 'getSubCategories']);
     Route::get('gaSchemesByType', [App\Http\Controllers\Api\V1\Common\CommonController::class, 'gaSchemesByType']);
+    Route::get('getSubAreasList', [App\Http\Controllers\Api\V1\Common\CommonController::class, 'getSubAreasList']);
 
     // Dashboard
     Route::get('dashboard/list', [App\Http\Controllers\Api\V1\Application\DashboardController::class, 'list']);
@@ -22,6 +23,7 @@ Route::middleware('auth:sanctum')->group(function () {
         // Registration
         Route::get('create', [App\Http\Controllers\Api\V1\Application\ConsumerRegistrationController::class, 'create']);
         Route::post('store', [App\Http\Controllers\Api\V1\Application\ConsumerRegistrationController::class, 'store']);
+        Route::post('updateSubArea/{id}', [App\Http\Controllers\Api\V1\Application\ConsumerRegistrationController::class, 'updateSubArea']);
         // Onboarding Activity
         Route::post('acceptance/{id}', [App\Http\Controllers\Api\V1\Application\ConsumerOnboardingController::class, 'acceptance'])->whereNumber('id');
         Route::post('execution/{id}', [App\Http\Controllers\Api\V1\Application\ConsumerOnboardingController::class, 'execution'])->whereNumber('id');

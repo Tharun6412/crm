@@ -151,4 +151,25 @@ class ConsumerRegistrationController extends Controller
         // Rsponse
         return response()->json(['data' => "Consumer created Successfully"], 200);
     }
+
+    /**
+     * To Update Sub Area
+     */
+    public function updateSubArea(Request $request, $con_id)
+    {
+        // Validation
+        $request->validate([
+            'sub_area' => 'required',
+        ]);
+
+        $consumer = Consumer::find($con_id);
+        // Update Consumer Details
+        $consumer->update([
+            'subarea_id' => $request->sub_area,
+            'updated_by' => Auth::id(),
+        ]);
+
+        // Response
+        return response()->json(['success' => 'Consumer Sub Area Updated Successfully'], 200);
+    }
 }

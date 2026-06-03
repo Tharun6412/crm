@@ -10,20 +10,77 @@
             <div class="row justify-content-sm-center">
                 <div class="col-sm-7">
                     <div class="bg-light-subtle p-3 rounded-3 border border-secondary-subtle shadow-sm">
-                    <h3 class="text-start">Consumer Search</h3>
-                    <div class="position-relative">
-                        {{-- Quick search input --}}
-                        <div class="input-group input-group-lg">
-                            <label for="quickSearch" class="input-group-text bg-white"><i class="bi bi-search"></i></label>
-                            <input type="text" id="quickSearch" class="form-control no-focus-ring border-start-0 border-end-0" placeholder="CRN, Name, Mobile...">
-                            <label for="quickSearch" class="input-group-text bg-white cursor-pointer"><i id="qs-clr" class="bi bi-x-circle d-none"></i></label>
+                        <h3 class="text-start">Consumer Search</h3>
+                        <div class="position-relative">
+                            {{-- Quick search input --}}
+                            <div class="input-group input-group-lg">
+                                <label for="quickSearch" class="input-group-text bg-white"><i class="bi bi-search"></i></label>
+                                <input type="text" id="quickSearch" class="form-control no-focus-ring border-start-0 border-end-0" placeholder="CRN, Name, Mobile...">
+                                <label for="quickSearch" class="input-group-text bg-white cursor-pointer"><i id="qs-clr" class="bi bi-x-circle d-none"></i></label>
+                            </div>
+                            {{-- Result --}}
+                            <div id="searchResults" class="list-group position-absolute w-100" style="z-index: 1000; display:none;">
+                            </div>
                         </div>
-                        {{-- Result --}}
-                        <div id="searchResults" class="list-group position-absolute w-100" style="z-index: 10; display:none; max-height: 450px; overflow-y: auto;">
-                        </div>
-                    </div>
                     </div>
                 </div>
+                @if ($roles->count() > 0)
+                    <div class="col-sm-1">
+                        <div class="card" style="width: 18rem;">
+                            <div class="card-body">
+                                <h5 class="card-title">Consumers pending action at your stage.</h5>
+                            </div>
+                            <ul class="list-group list-group-flush">
+                                @foreach ($roles as $id => $role)
+                                    @switch($id)
+                                        @case(\App\Enums\Role::MARKETING->value)
+                                            @php
+                                                $count = $consumers_count[\App\Enums\ConsumerStatus::PRE_REGISTER->value] ?? 0;
+                                                $status_val = "REGISTRATION";
+                                                $status_id = \App\Enums\ConsumerStatus::PRE_REGISTER->value;
+                                            @endphp
+                                            @break
+                                        @case(\App\Enums\Role::MDPE->value)
+                                            @php
+                                                $count = $consumers_count[\App\Enums\ConsumerStatus::REGISTER->value] ?? 0;
+                                                $status_val = "ACCEPTANCE";
+                                                $status_id = \App\Enums\ConsumerStatus::REGISTER->value;
+                                            @endphp
+                                            @break
+                                        @case(\App\Enums\Role::GI_ENGINEER->value)
+                                            @php
+                                                $count = $consumers_count[\App\Enums\ConsumerStatus::ACCEPT->value] ?? 0;
+                                                $status_val = "EXECUTION";
+                                                $status_id = \App\Enums\ConsumerStatus::ACCEPT->value;
+                                            @endphp
+                                            @break
+                                        @case(\App\Enums\Role::HSE->value)
+                                            @php
+                                                $count = $consumers_count[\App\Enums\ConsumerStatus::EXECUTE->value] ?? 0;
+                                                $status_val = "HSC";
+                                                $status_id = \App\Enums\ConsumerStatus::EXECUTE->value;
+                                            @endphp
+                                            @break
+                                        @case(\App\Enums\Role::ACTIVATION->value)
+                                            @php
+                                                $count = $consumers_count[\App\Enums\ConsumerStatus::HSC->value] ?? 0;
+                                                $status_val = "ACTIVATION";
+                                                $status_id = \App\Enums\ConsumerStatus::HSC->value;
+                                            @endphp
+                                            @break
+                                        @default
+                                            @php
+                                                $count = 0;
+                                                $status_val = $status_id = '';
+                                            @endphp
+                                            @break
+                                    @endswitch
+                                    <li class="list-group-item">{{ $status_val }}&nbsp;-&nbsp;<a href="{{ url('consumers') }}?{{ http_build_query(['cns_status' => [$status_id], 'geo_area' => auth()->user()->ga->pluck('id')->toArray(), 'charge_area' => auth()->user()->cas->pluck('id')->toArray()]) }}" target="_blank"><strong>{{ numberFormat($count) }}</strong></a></li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    </div>
+                @endif
             </div>
         </div>
         <div class="container">

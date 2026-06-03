@@ -22,6 +22,7 @@ use App\Models\Master\PaymentType;
 use App\Models\Master\PriceGroups;
 use App\Models\Master\Segment;
 use App\Models\Master\State;
+use App\Models\Master\SubArea;
 use App\Models\Master\Title;
 use App\Models\Payments\PayAdvance;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -74,6 +75,7 @@ class Consumer extends Model
         'colony',
         'city',
         'ward',
+        'subarea_id',
         'area_id',
         'ca_id',
         'district_id',
@@ -218,9 +220,16 @@ class Consumer extends Model
      */
     public function area():BelongsTo
     {
-        return $this->belongsTo(Area::class, 'area_id')->withDefault();
+        return $this->belongsTo(Area::class, 'area_id');
     }
 
+    /**
+     * Relation with SubArea
+     */
+    public function subArea() : BelongsTo
+    {
+        return $this->belongsTo(SubArea::class, 'subarea_id');
+    }
     /**
      * Relation with Invoice
      */

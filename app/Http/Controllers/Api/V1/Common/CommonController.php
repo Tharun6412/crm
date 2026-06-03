@@ -9,6 +9,7 @@ use App\Models\Master\ComplaintCategory;
 use App\Models\Master\ConsumerSchemeGa;
 use App\Models\Master\District;
 use App\Models\Master\MasterConsumerScheme;
+use App\Models\Master\SubArea;
 use Illuminate\Http\Request;
 
 class CommonController extends Controller
@@ -75,6 +76,18 @@ class CommonController extends Controller
         $areas = Area::where('ca_id', $request->ca_id)->get();
 
         return response()->json(['areas' => $areas], 200);
+    }
+
+    /**
+     * Get Sub areas from area
+     * 
+     * @param $area_id
+     */
+    public function getSubAreasList(Request $request)
+    {
+        $sub_areas = SubArea::where('area_id', $request->area_id)->get();
+
+        return response()->json(['sub_areas' => $sub_areas], 200);
     }
 
     /**
