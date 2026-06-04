@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\prepaid;
 
 use App\Enums\ConnectionType;
+use App\Enums\InvoiceStatus;
 use App\Enums\MeterStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Consumer\Consumer;
@@ -24,13 +25,14 @@ class ConversionController extends Controller
      * Edit
      * 
      * Show conversion form
+     * @param int $consumer_id consumer id
      */
     public function edit($consumer_id)
     {
         // Get the consumer details
         $consumer = Consumer::find($consumer_id);
         // Get outstanding balances
-        $os_balance = BillInvoice::selectRaw('SUM(balance_amount) as balance')->where('consumer_id', $consumer_id)->first();
+        $os_balance = BillInvoice::selectRaw('SUM(balance_amount) as balance')->where('consumer_id', $consumer_id)->whereNot('status_id', InvoiceStatus::CANCEL->value)->first();
         // Get all prepaid schemes in the GA
         $ga_schemes = MasterConsumerScheme::whereHas('gas', function ($q) use($consumer) {
                 $q->where('ga_id', $consumer->ga_id);

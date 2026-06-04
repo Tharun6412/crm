@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\Reports;
 
 use App\Enums\PaymentStatus;
+use App\Enums\PaymentType;
 USE App\Enums\SDPaymentStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Admin\User;
@@ -88,6 +89,7 @@ class EmployeeCollectionReport extends Controller
             ->select('created_at', 'amount', 'payment_type_id', 'transaction_number', 'consumer_id')
             ->where('created_by', $request->emp_id)
             ->where('status_id', SDPaymentStatus::PAID->value)
+            ->whereNot('payment_type_id', PaymentType::SD_EMI->value)
             ->whereBetween('created_at', [Carbon::createFromFormat('d-m-Y', $request->date_from)->startOfDay(), Carbon::createFromFormat('d-m-Y', $request->date_to)->endOfDay()])
             ->get();
         
