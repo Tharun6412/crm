@@ -159,12 +159,14 @@ class ConsumerRegistrationController extends Controller
     {
         // Validation
         $request->validate([
-            'sub_area' => 'required',
+            'area_id' => 'required',
+            // 'sub_area' => 'required',
         ]);
 
         $consumer = Consumer::find($con_id);
         // Update Consumer Details
         $consumer->update([
+            'area_id' => $request->area_id,
             'subarea_id' => $request->sub_area,
             'updated_by' => Auth::id(),
         ]);

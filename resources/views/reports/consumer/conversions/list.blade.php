@@ -32,8 +32,6 @@
                             'cns_status' => [\App\Enums\ConsumerStatus::ACTIVATE->value], 
                             'connection_type_id' => \App\Enums\ConnectionType::POSTPAID->value, 
                             'segments' => [request()->conv_segment_id],
-                            'date_from' => request()->conv_date_from,
-                            'date_to' => request()->conv_date_to,
                         ]) }}" target="_blank">
                             {{ numberFormat($conversion_balance[$ga->id] ?? 0) }}
                         </a>
@@ -55,8 +53,6 @@
                             'geo_area'=> [$ga->id], 
                             'cns_status' => [\App\Enums\ConsumerStatus::TD->value],
                             'segments' => [request()->conv_segment_id],
-                            'date_from' => request()->conv_date_from,
-                            'date_to' => request()->conv_date_to,
                         ]) }}" target="_blank">
                             {{ numberFormat($recon_balance[$ga->id] ?? 0) }}
                         </a>

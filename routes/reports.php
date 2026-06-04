@@ -67,5 +67,6 @@ Route::middleware(['auth', ModuleAccess::class])->group(function() {
     Route::get('consumer/connectionProgress', [App\Http\Controllers\Reports\ConsumerWaitingController::class, 'index']);
     Route::get('consumer/waiting/consumersListForEmployees', [App\Http\Controllers\Reports\ConsumerWaitingController::class, 'consumersListForEmployees']);
     Route::get('consumer/waiting/getAreasList',[App\Http\Controllers\Reports\ConsumerWaitingController::class,'getAreasList']);
-
+    Route::get('consumer/activity',[App\Http\Controllers\Reports\ActivityController::class,'activity']);
+    Route::get('consumer/employee/activity',[App\Http\Controllers\Reports\EmployeeActivityController::class,'index']);
 });

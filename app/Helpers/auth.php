@@ -234,7 +234,7 @@ if(!function_exists('isApproved')) {
  */
 if(!function_exists('isClosedWon')) {
     function isClosedWon($stage_id = null) {
-        if($stage_id == SpotStages::CLOSE->value) {
+        if($stage_id == SpotStages::EXECUTION->value) {
             return true;
         }
         return false;
