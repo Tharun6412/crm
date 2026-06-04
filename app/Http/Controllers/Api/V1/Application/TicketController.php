@@ -74,7 +74,7 @@ class TicketController extends Controller
             'status:id,name',
             'createdBy:id,first_name,last_name',
             'statusHistory',
-            'statusHistory.status:id,name',
+            'statusHistory.updatedBy:id,first_name,last_name',
         ])->select(['id','code','category_id','description','status_id','created_at','created_by'])->where('id',$id)->first();
         return response()->json(['tickets' => $tickets],200);
     }
