@@ -19,7 +19,7 @@
         @foreach ($clusters as $item)
             <li class="dropdown-item">
                 <input type="checkbox" class="form-check-input cluster_filter" name="cluster[{{ $item->id }}]" id="cluster_{{ $item->id }}" value="{{ $item->id }}" @checked(in_array($item->id, $cluster_checked))>
-                <label for="cluster_{{ $item->id }}" class="form-check-label">{{ $item->name }}</label>
+                <label for="cluster_{{ $item->id }}" class="form-check-label">{{ $item->code ?? '' }}</label>
             </li>
         @endforeach
     </ul>
