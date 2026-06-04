@@ -25,8 +25,8 @@
             <div class="nav nav-tabs" id="nav-tab" role="tablist">
                 <button class="nav-link active fs-5 border border-bottom-0 me-2" id="nav-consumers-wait-tab" data-bs-toggle="tab" data-bs-target="#nav-consumers-wait" type="button" role="tab" aria-controls="nav-consumers" aria-selected="true"><i class="bi bi-app-indicator"></i>&nbsp;Connection Progress&nbsp;<span class="badge text-bg-success">{{ $wait_list }}</span></button>
                 <button class="nav-link fs-5 border border-bottom-0 me-2" id="nav-ga-teams-tab" data-bs-toggle="tab" data-bs-target="#nav-ga-teams" type="button" role="tab" aria-controls="nav-ga-teams" aria-selected="true"><i class="bi bi-people-fill me-1"></i>&nbsp;Teams&nbsp;<span class="badge bg-primary">{{ $total_teams }}</span></button>
-                <button class="nav-link fs-5 border border-bottom-0 me-2" id="nav-status-activity-tab" data-bs-toggle="tab" data-bs-target="#nav-status-activity" type="button" role="tab" aria-controls="nav-status-activity" aria-selected="true"><i class="bi bi-people-fill me-1"></i>&nbsp;My Activity&nbsp;<span class="badge bg-primary"></span></button>             
-             
+                <button class="nav-link fs-5 border border-bottom-0 me-2" id="nav-status-activity-tab" data-bs-toggle="tab" data-bs-target="#nav-status-activity" type="button" role="tab" aria-controls="nav-status-activity" aria-selected="true"><i class="bi bi-people-fill me-1"></i>&nbsp;Employee Onboarding Progress&nbsp;<span class="badge bg-primary"></span></button>                          
+                <button class="nav-link fs-5 border border-bottom-0 me-2" id="nav-emp-activity-tab" data-bs-toggle="tab" data-bs-target="#nav-emp-activity" type="button" role="tab" aria-controls="nav-emp-activity" aria-selected="true"><i class="bi bi-people-fill me-1"></i>&nbsp;Employee-wise Consumer Progress&nbsp;</button>               
             </div>
         </nav>
         <div class="tab-content bg-white p-2 border border-top-0" id="nav-tabContent">
@@ -76,7 +76,7 @@
             <div class="tab-pane fade" id="nav-status-activity" role="tabpanel" aria-labelledby="nav-status-activity-tab"tabindex="0">
                 <form action="{{ url('reports/consumer/activity') }}" id="report-status-activity-search-form" method="GET">
                     <div class="d-flex justify-content-between align-items-center border my-2 bg-light p-2 rounded">
-                        <h4 class="mb-0">Activity Report</h4>
+                        <h4 class="mb-0">Employee Onboarding Progress</h4>
                         <div class="row g-1">
                             <div class="col-auto mt-4">
                                 <div class="form-control">
@@ -105,6 +105,60 @@
                 </form>
                 <div id="report-status-activity-list"></div>
             </div>
+            <div class="tab-pane fade" id="nav-emp-activity" role="tabpanel" aria-labelledby="nav-emp-activity-tab" tabindex="0">
+                <form action="{{ url('reports/consumer/employee/activity') }}" id="report-emp-activity-search-form" method="GET">
+                    <div class="d-flex justify-content-between align-items-center border my-2 bg-light p-2 bg-secondary-subtle rounded">
+                        <h4 class="mb-0">Employee-wise Consumer Progress</h4>
+                        <div class="row g-1">
+                            <div class="col-auto">
+                                <label>&nbsp;</label>
+                                <div class="form-control"> 
+                                    Role&nbsp;<x-admin.role-filter class="float-end"/>
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <label>&nbsp;</label>
+                                <div class="form-control"> 
+                                    GA&nbsp;<x-master.ga-filter class="float-end"/>
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                @if (request()->geo_area)
+                                    <label>&nbsp;</label>
+                                    <div class="form-control"> 
+                                        Charge Area&nbsp;<x-master.charge-area-filter class="float-end"/>
+                                    </div>
+                                @endif
+                            </div>
+                            <div class="col-auto">
+                                <label for="date_from">From Date</label>
+                                <div class="input-group">
+                                    <input type="text" name="date_from" id="date_from" class="form-control" placeholder="DD-MM-YYYY" value="{{ request()->from_dt }}">
+                                    <label for="date_from" class="input-group-text"><i class="bi bi-calendar3"></i></label>
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <label for="date_to">To Date</label>
+                                <div class="input-group">
+                                    <input type="text" name="date_to" id="date_to" class="form-control" placeholder="DD-MM-YYYY" value="{{ request()->to_dt }}">
+                                    <label for="date_to" class="input-group-text"><i class="bi bi-calendar3"></i></label>
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <label for="status_date">&nbsp;</label>
+                                <div>
+                                    <button type="submit" class="btn btn-success"><i class="bi bi-search"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <div id="report-emp-activity-list">
+                    <div class="alert alert-info mb-0">
+                        Please choose GA and dates!
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 @endsection
@@ -112,5 +166,6 @@
 @push('scripts')
     @include('scripts.ajax-form-search', ['form' => 'report-cns-waiting'])
     @include('scripts.ajax-form-search', ['form' => 'report-status-activity'])
+    @include('scripts.ajax-form-search', ['form' => 'report-emp-activity'])
     @include('scripts.datepicker', ['list' => ['date_from', 'date_to', 'status_date', 'conv_date_from', 'conv_date_to']])
 @endpush

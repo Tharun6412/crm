@@ -117,7 +117,7 @@ class ConsumerOnboardingController extends Controller
                     $add_consumer_document = ConsumerDocument::create([
                         'consumer_id' => $id,
                         'status_id' => EnumsConsumerStatus::EXECUTE->value,
-                        'doc_type_id' => 5,
+                        'doc_type_id' => DocumentType::METER_IMAGE->value,
                         'file_id' => $documents_bulk['file_list'][0]['file_id'],
                     ]);
                 }
@@ -173,7 +173,7 @@ class ConsumerOnboardingController extends Controller
             ConsumerDocument::create([
                 'consumer_id' => $id,
                 'status_id' => EnumsConsumerStatus::HSC->value,
-                'doc_type_id' => 6,
+                'doc_type_id' => DocumentType::HSC_IMAGE->value,
                 'file_id' => $doc_upload['file_id'],
             ]);
             // 5 = HSC
