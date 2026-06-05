@@ -39,4 +39,11 @@
             </div>
         @endif
     </div>
+    <div class="col-auto">
+        @if (request()->has('area'))
+            <div class="form-control">
+                SubArea <x-master.sub-area-filter class="float-end"/>
+            </div>
+        @endif
+    </div>
 </div>

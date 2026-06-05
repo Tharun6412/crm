@@ -227,8 +227,12 @@
                                 <td>{{ $consumer->ca->name }}</td>
                             </tr>
                             <tr>
-                                <td class="fw-semibold">Location</td>
+                                <td class="fw-semibold">Area</td>
                                 <td>{{ $consumer->area->name }}</td>
+                            </tr>
+                            <tr>
+                                <td class="fw-semibold">SubArea</td>
+                                <td>{{ $consumer->subarea->name ?? '' }}</td>
                             </tr>
                         </table>                   
                     </div>

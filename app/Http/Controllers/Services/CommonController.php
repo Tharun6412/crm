@@ -9,6 +9,7 @@ use App\Models\Master\ConsumerSchemeGa;
 use App\Models\Master\District;
 use App\Models\Master\Ga;
 use App\Models\Master\MasterConsumerScheme;
+use App\Models\Master\SubArea;
 use Illuminate\Http\Request;
 
 class CommonController extends Controller
@@ -84,6 +85,14 @@ class CommonController extends Controller
         $areas = Area::where('ca_id', $request->ca_id)->get();
 
         return response()->json(['areas' => $areas]);
+    }
+    /**
+     * Get subarea from area
+     */
+    public function areaSubareas(Request $request)
+    {
+        $subareas = SubArea::where('area_id',$request->area_id)->get();
+        return response()->json(['subareas' => $subareas]);
     }
 
     /**

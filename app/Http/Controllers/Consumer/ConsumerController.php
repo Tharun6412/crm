@@ -72,6 +72,9 @@ class ConsumerController extends Controller
             ->when($request->has('area'), function ($q) use($request) {
                 $q->whereIn('area_id', $request->area);
             })
+            ->when($request->has('subarea'), function($q) use ($request) {
+                $q->whereIn('subarea_id', $request->subarea);
+            })
             ->when((int)$request->register_status == 1, function ($q) use($request) {
                 $q->where('self_register_status', $request->register_status);
             })

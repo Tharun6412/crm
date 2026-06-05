@@ -11,12 +11,8 @@
             </div>
             {{-- Employees Table --}}
             <div class="card border shadow-sm">
-                <div class="card-header bg-info-subtle fw-semibold"><i class="bi bi-person-lines-fill text-secondary"></i>&nbsp;Employees List
-                    @if($team->responsible_user_id)
-                        <span class="float-end">Team Coordinator - {{ $team->responsibleUser->name ?? '' }} ({{ $team->responsibleUser->emp_id ?? ''}})</span>
-                    @endif
-                </div>
-                <div class="table-responsive p-2">
+                <div class="card-header bg-info-subtle fw-semibold"><i class="bi bi-person-lines-fill text-secondary"></i>&nbsp;Employees List <span class="float-end">Team Coordinator - {{ $team->responsibleUser->name }} ({{ $team->responsibleUser->emp_id }})</span></div>
+                <div class="table-responsive">
                     <table class="table table-bordered table-hover align-middle mb-3">
                         <thead class="table-secondary">
                             <tr>

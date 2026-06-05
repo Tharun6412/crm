@@ -12,7 +12,7 @@
             <form id="add-commercial-form" action="{{ url('consumers/register/commercial') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="row bg-primary-subtle pb-3 rounded-1 p-2">
-                    <div class="col-sm-4 col-md-3">
+                    <div class="col-sm-4 col-md-2">
                         <label>Geo Area&nbsp;:<span class="text-danger">*</span></label>
                         <div>
                             <select name="geo_area" id="geo_area" class="form-select" onchange="getDistrictsByGa(this.value)">
@@ -24,7 +24,7 @@
                             <span class="text-danger validate-err-msg" id="geo_area-error"></span>
                         </div>
                     </div>
-                    <div class="col-sm-4 col-md-3">
+                    <div class="col-sm-4 col-md-2">
                         <label>District&nbsp;:<span class="text-danger">*</span></label>
                         <div>
                             <select name="district" id="district" class="form-select" onchange="getCasByDistrict(this.value)">
@@ -36,7 +36,7 @@
                             <span class="text-danger validate-err-msg" id="district-error"></span>
                         </div>
                     </div>
-                    <div class="col-sm-4 col-md-3">
+                    <div class="col-sm-4 col-md-2">
                         <label>Charge Area&nbsp;:<span class="text-danger">*</span></label>
                         <div>
                             <select name="charge_area" id="charge_area" class="form-select" onchange="getCaAreas(this.value)">
@@ -48,16 +48,28 @@
                             <span class="text-danger validate-err-msg" id="charge_area-error"></span>
                         </div>
                     </div>
-                    <div class="col-sm-4 col-md-3">
+                    <div class="col-sm-4 col-md-2">
                         <label>Area&nbsp;:<span class="text-danger">*</span></label>
                         <div>
-                            <select name="area" id="area" class="form-select">
+                            <select name="area" id="area" class="form-select" onchange="getAreaSubareas(this.value)">
                                 <option value="">Select Area</option>
                                 @foreach ($areas as $area)
                                     <option value="{{ $area->id }}">{{ $area->name }}</option>
                                 @endforeach
                             </select>
                             <span class="text-danger validate-err-msg" id="area-error"></span>
+                        </div>
+                    </div>
+                    <div class="col-sm-4 col-md-2">
+                        <label>SubArea&nbsp;:</label>
+                        <div>
+                            <select name="subarea" id="subarea" class="form-select">
+                                <option value="">Select SubArea</option>
+                                @foreach ($subareas as $sub)
+                                    <option value="{{ $sub->id }}">{{ $sub->name }}</option>
+                                @endforeach
+                            </select>
+                            <span class="text-danger validate-err-msg" id="subarea-error"></span>
                         </div>
                     </div>
                 </div>
@@ -538,6 +550,20 @@
                     });
                 }
                 $('#area').html(options);
+            });
+        }
+        
+        // Get Subarea by Area
+        function getAreaSubareas(area_id){
+            $.get("{{ url('common/areaSubareas') }}", {'area_id' :area_id}, function(data) {
+                $('#subarea').empty();
+                let options = '<option value="">Select SubArea</option>'
+                if(data.subareas && data.subareas.length > 0) {
+                    data.subareas.forEach(function(value) {
+                        options += `<option value="${value.id}">${value.name}</option>`;
+                    });
+                }
+                $('#subarea').html(options);
             });
         }
     </script>
