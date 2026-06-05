@@ -23,7 +23,7 @@ class ConsumerController extends Controller
     public function list(Request $request)
     {
         if(!empty($request->key) OR !empty($request->cns_status) OR !empty($request->connection_type_id) OR !empty($request->geo_area) OR !empty($request->segments)) {            
-            $consumers_q = Consumer::with(['ga:id,code,name', 'status:id,name'])->select('id', 'crn', 'fname', 'lname', 'ga_id', 'status_id', 'segment_id', 'connection_type_id')
+            $consumers_q = Consumer::with(['ga:id,code,name', 'status:id,name', 'ca:id,name'])->select('id', 'crn', 'fname', 'lname', 'ga_id', 'ca_id', 'status_id', 'segment_id', 'connection_type_id')
                 ->when((!isApiAdmin() AND !isApiSuperAdmin() AND !isApiFullAccess()), function ($q) use($request) {
                     $q->whereIn('ga_id', $request->user()->ga()->pluck('ga_id')->toArray());
                 })

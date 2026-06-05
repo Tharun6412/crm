@@ -71,6 +71,7 @@ class ConsumerRegistrationController extends Controller
             'colony' => $request->colony,
             'city' => $request->city,
             'ward' => $request->ward,
+            'subarea_id' => $request->sub_area,
             'area_id' => $request->area,
             'ca_id' => $request->charge_area,
             'district_id' => $request->district,

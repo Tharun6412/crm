@@ -21,6 +21,7 @@ class RegistrationValidationRequest extends FormRequest
             'district' => 'required',
             'charge_area' => 'required',
             'area' => 'required',
+            'sub_area' => 'nullable',
             'email' => 'nullable|email',
             'connection_type' => 'required',
             'scheme_id' => 'required',
