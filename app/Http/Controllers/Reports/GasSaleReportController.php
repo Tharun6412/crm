@@ -42,7 +42,8 @@ class GasSaleReportController extends Controller
                 SUM(bic.net_consumption) as total_sale,
                 SUM(bil_invoices.base_amount) as base_amount,
                 SUM(bil_invoices.tax_amount) as tax_amount,
-                SUM(bil_invoices.total_amount) as total_amount
+                SUM(bil_invoices.total_amount) as total_amount,
+                COUNT(bil_invoices.id) as invoice_count
             ')
             ->get();
         // Array Preparation
@@ -53,6 +54,7 @@ class GasSaleReportController extends Controller
                 'base_amount' => $row->base_amount,
                 'tax_amount' => $row->tax_amount,
                 'total_amount' => $row->total_amount,
+                'invoice_count' => $row->invoice_count,
             ];
         }
         // dd($gas_sale_array);

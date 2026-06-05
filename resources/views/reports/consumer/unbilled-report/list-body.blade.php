@@ -32,10 +32,15 @@
     <table class="table table-bordered table-hover page-sort table-striped bg-white" id="unbilled-report">
         <thead class="table-success">
             <tr>
-                <th width="1%" nowrap="nowrap">S No.</th>
-                <th>GA Name</th>
-                <th class="text-end">Total Active Consumers</th>
-                <th class="text-end">Billable Consumers</th>
+                <th width="1%" nowrap="nowrap" rowspan="2">S No.</th>
+                <th rowspan="2">GA Name</th>
+                <th colspan="2" class="text-center">Billable</th>
+                <th colspan="4" class="text-center">Unbilled</th>
+                <th rowspan="2" class="text-center">Billed</th>
+            </tr>
+            <tr>
+                <th class="text-end">Active</th>
+                <th class="text-end">Billable</th>
                 <th class="text-end">60 - 90 days</th>
                 <th class="text-end">90 - 120 days</th>
                 <th class="text-end">> 120 Days</th>
@@ -56,12 +61,13 @@
                     $count_gt_120 = $consumers[$ga->id]->unbilled_120_plus ?? 0;
                     $total_ga_unbilled = ($count_60_90 + $count_90_120 + $count_gt_120);
                     $grand_total += $total_ga_unbilled;
+                    $billed_count = $bill_count - $total_ga_unbilled;
                 @endphp
                 <tr>
                     <td class="text-center">{{ $i++ }}</td>
                     <td>{{ $ga->name }}</td>
-                    <td>{{ $active_count }}</td>
-                    <td>{{ $bill_count }}</td>
+                    <td class="text-end">{{ $active_count }}</td>
+                    <td class="text-end">{{ $bill_count }}</td>
                     <td class="text-end"> 
                         @if ($count_60_90 > 0)
                             <a href="{{ url('reports/unbilled/list') }}?{{ http_build_query([
@@ -114,6 +120,9 @@
                         {{ $total_ga_unbilled }}
                         @endif
                     </td>
+                    <td class="text-end">
+                        {{ $billed_count }}
+                    </td>
                 </tr>
             @empty
                 <tr>
@@ -130,6 +139,7 @@
                 <th>{{ numberFormat($totals->unbilled_90_120) }}</th>
                 <th>{{ numberFormat($totals->unbilled_120_plus) }}</th>
                 <th>{{ numberFormat($grand_total) }}</th>
+                <th>{{ numberFormat($totals->eligible_count - $grand_total) }}</th>
             </tr>
         </tfoot>
     </table>
