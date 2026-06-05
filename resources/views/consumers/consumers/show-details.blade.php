@@ -248,6 +248,7 @@
                                     {{ $consumer->cofDisplay?->name }} {{ $consumer->cof_name }}<br>
                                     {{ $consumer->hno }}, {{ $consumer->street }},<br>
                                     {{ $consumer->colony }}, {{ $consumer->city }},<br>
+                                    {{ $consumer->area?->name }}, {{ $consumer->ca?->name }}<br/>
                                     {{ $consumer->district->name ?? '' }}, {{ $consumer->ga->state->name ?? '' }} - {{ $consumer->pincode }}.
                                 </address>
                                 </td>
