@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware(['auth'])->group(function() {
     // Dashboard
     Route::get('/', [App\Http\Controllers\Dashboard\HomeController::class, 'index'])->name('home');
+    Route::get('myActivity', [App\Http\Controllers\Dashboard\MyActivityController::class, 'index']);
     Route::get('help', function(){
         return view('utils.help');
     });

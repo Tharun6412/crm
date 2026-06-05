@@ -173,6 +173,6 @@ class ConsumerRegistrationController extends Controller
         ]);
 
         // Response
-        return response()->json(['success' => 'Consumer Sub Area Updated Successfully'], 200);
+        return response()->json(['success' => 'Consumer details updated Successfully'], 200);
     }
 }

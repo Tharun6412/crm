@@ -110,11 +110,6 @@ class HomeController extends Controller
         // Get quicklinks
         $geo_areas = Ga::all();
         $clusters = Cluster::all();
-        // dd(Auth::user()->cas->pluck('id'));
-        // Consumer Waitin(g List for the Responsible User
-        $roles = AdminRole::whereIn('id', [Role::MDPE->value, Role::GI_ENGINEER->value, Role::HSE->value, Role::ACTIVATION->value, Role::MARKETING->value])
-            ->whereIn('id', Auth::user()->roles->pluck('id'))->pluck('name', 'id');
-        $consumers_count = Consumer::select('status_id', DB::raw('COUNT(id) as consumer_count'))->whereIn('ga_id', Auth::user()->ga->pluck('id'))->whereIn('ca_id', Auth::user()->cas->pluck('id'))->groupBy('status_id')->get()->pluck('consumer_count', 'status_id');
         if(isSuperAdmin() OR isAdmin()){
             $quick_link = Module::where('quick_link',1)->where('status', 1)->orderBy('name')->get();
         }else{
@@ -136,8 +131,6 @@ class HomeController extends Controller
                 'quick_link' => $quick_link,
                 'geo_areas' => $geo_areas,
                 'clusters' => $clusters,
-                'roles' => $roles,
-                'consumers_count' => $consumers_count,
             ]);    
         }
         // Render output
@@ -151,8 +144,6 @@ class HomeController extends Controller
             'quick_link' => $quick_link,
             'geo_areas' => $geo_areas,
             'clusters' => $clusters,
-            'roles' => $roles,
-            'consumers_count' => $consumers_count,
         ]);
     }
 }
