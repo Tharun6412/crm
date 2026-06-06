@@ -8,6 +8,7 @@ Route::middleware(['auth', ModuleAccess::class])->group(function() {
     Route::resource('register/domestic', App\Http\Controllers\Consumer\RegistrationController::class);
     Route::resource('register/commercial', App\Http\Controllers\Consumer\CommercialRegistrationController::class);
     Route::resource('register/industrial', App\Http\Controllers\Consumer\IndustrialRegistrationController::class);
+
     // Onboarding activites
     Route::resource('trPayment', App\Http\Controllers\Consumer\TRPaymentController::class);
     Route::resource('accept', App\Http\Controllers\Consumer\AcceptController::class);
@@ -80,6 +81,8 @@ Route::middleware(['auth', ModuleAccess::class])->group(function() {
 
     // Documents
     Route::resource('consumerDocument', App\Http\Controllers\Consumer\ConsumerDocumentController::class);
+    Route::resource('waiting/pending-consumers',App\Http\Controllers\Consumer\TeamConsumersController::class);
+
 
     // Prepaid consumer send to HES
     Route::get('prepaid/sendToHes/{id}', [App\Http\Controllers\Consumer\PrepaidConsumerController::class, 'sendToHes']);

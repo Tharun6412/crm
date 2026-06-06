@@ -93,7 +93,7 @@
                                 </div>
                             @endif
                         </td>
-                        <td class="text-center"><a href="{{ url('consumers') }}?{{ http_build_query(['geo_area' => $user->ga->pluck('id')->toArray(), 'charge_area' => $user->cas->pluck('id')->toArray(), 'cns_status' => [2,3,4,5], 'date_from' => request()->date_from, 'date_to' => request()->date_to]) }}" target="_blank">{{ $user->count ?? 0 }}</a></td>
+                        <td class="text-center"><a href="{{ url('consumers/waiting/pending-consumers') }}?{{ http_build_query(['geo_area' => $user->ga->pluck('id')->toArray(), 'charge_area' => $user->cas->pluck('id')->toArray(), 'cns_status' => [2,3,4,5], 'date_from' => request()->date_from, 'date_to' => request()->date_to]) }}" target="_blank">{{ $user->count ?? 0 }}</a></td>
                     </tr>
                 @endforeach
                     <tr>

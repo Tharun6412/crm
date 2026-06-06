@@ -407,6 +407,13 @@ class Consumer extends Model
     {
         return $this->hasMany(BillInvoice::class, 'consumer_id')->where('type_id', InvoiceType::GAS_BILL->value)->whereNot('status_id', InvoiceStatus::CANCEL->value);
     }
+    /**
+     * Relation with TeamConsumers
+     */
+    public function teamConsumer(): HasMany 
+    {
+        return $this->hasMany(TeamConsumer::class,'consumer_id');
+    }
 
     /**
      * Relation with the advance amount table.

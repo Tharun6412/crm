@@ -3,6 +3,7 @@
 namespace App\Models\Admin;
 
 use App\Models\Admin\User;
+use App\Models\Consumer\Consumer;
 use App\Models\Master\Ca;
 use App\Models\Master\Department;
 use App\Models\Master\Ga;
@@ -62,6 +63,13 @@ class Team extends Model
     public function responsibleUser() : BelongsTo
     {
         return $this->belongsTo(User::class, 'responsible_user_id');
+    }
+    /**
+     * Relation with Consumer
+     */
+    public function consumer(): BelongsTo
+    {
+        return $this->belongsTo(Consumer::class,'consumer_id');
     }
 }
 
