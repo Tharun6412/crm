@@ -1,3 +1,4 @@
+{{-- PNGRB Applications --}}
 <div>
     <div class="d-flex align-items-center justify-content-between pb-2 flex-wrap">
         <div class="d-flex align-items-center gap-1 flex-wrap">
@@ -31,39 +32,43 @@
     @endphp
 </div>
 <div class="table-responsive">
-    <table class="table table-bordered page-sort table-hover table-striped align-middle">
-        <thead>
+    <table class="table table-bordered page-sort table-hover align-middle table-primary">
+        <thead class="table-primary">
             <tr>
-                <td>S.No</td>
-                <td>
+                <th width="1%" nowrap>S.No</th>
+                <th>
                     <a href="{{ $applications->appends(['sortBy' => 'applicationNumber','sortOr' => $sort_order_inverse])->url($applications->currentPage()) }}">
                         Application Number
                         @if ($sort_by == 'applicationNumber')
                             <i class="bi {{ $sort_icon }}"></i>
                         @endif
                     </a>
-                </td>
-                <td>
+                </th>
+                <th>
                     <a href="{{ $applications->appends(['sortBy' => 'name','sortOr' => $sort_order_inverse])->url($applications->currentPage()) }}">
                         Name
                         @if ($sort_by == 'name')
                             <i class="bi {{ $sort_icon }}"></i>
                         @endif
                     </a>
-                </td>
-                <td>Mobile Number</td>
-                <td>Email</td>
-                <td>State</td>
-                <td>District</td>
-                <td>
+                </th>
+                <th>CGD Id</th>
+                <th>GA ID</th>
+                <th>State</th>
+                <th>District</th>
+                <th>E-KYC</th>
+                <th>Serviceability</th>
+                <th>Status</th>
+                <th>Approval</th>
+                <th>
                     <a href="{{ $applications->appends(['sortBy' => 'created_at','sortOr' => $sort_order_inverse])->url($applications->currentPage()) }}">
                         Added Date
                         @if ($sort_by == 'created_at')
                             <i class="bi {{ $sort_icon }}"></i>
                         @endif
                     </a>
-                </td>
-                <td>Actions</td>
+                </th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -73,13 +78,17 @@
                         <td>{{ $i++ }}</td>
                         <td>{{ $application?->applicationNumber }}</td>
                         <td>{{ $application?->name }}</td>
-                        <td>{{ $application?->mobileNumber }}</td>
-                        <td>{{ $application?->email }}</td>
+                        <td>{{ $application?->cgdId }}</td>
+                        <td>{{ $application?->gaId }}</td>
                         <td>{{ $application?->state }}</td>
                         <td>{{ $application?->district }}</td>
+                        <td>{{ $application?->ekycStatus }}</td>
+                        <td>{{ $application?->serviceabilityStatus }}</td>
+                        <td>{{ $application?->status }}</td>
+                        <td>{{ $application?->applicationStatus }}</td>
                         <td>{{ $application->created_at->format('d-m-Y') }}</td>
                         <td>
-                            <a type="button" class="btn btn-info btn-sm link-modal" href="{{ url('pngrb/applications/'.$application->id) }}">View</a>
+                            <a type="button" class="btn btn-outline-info btn-sm link-modal" href="{{ url('pngrb/applications/'.$application->id) }}"><i class="bi bi-info-circle"></i>&nbsp;View</a>
                         </td>
                     </tr>
                 @endforeach

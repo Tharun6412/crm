@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Pngrb;
 
 use App\Http\Controllers\Controller;
@@ -7,6 +8,9 @@ use Illuminate\Http\Request;
 
 class PngrbApplicationController extends Controller
 {
+    /**
+     * List Applications
+     */
     public function index(Request $request)
     {
         $sortBy = ($request->filled('sortBy')) ? $request->get('sortBy') : 'created_at';
@@ -23,7 +27,7 @@ class PngrbApplicationController extends Controller
 
     /**
      * PNGRB Display
-     * @param $application_id
+     * @param int $id Application Id
      */
     public function show(Request $request, $id)
     {
