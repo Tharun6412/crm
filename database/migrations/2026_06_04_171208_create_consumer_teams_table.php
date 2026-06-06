@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('team_id')->nullable()->index()->constrained(table:"adm_teams")->noActionOnDelete()->noActionOnUpdate();
             $table->foreignId('status_id')->nullable()->index()->constrained(table:"mst_cns_status")->noActionOnDelete()->noActionOnUpdate();
             $table->tinyInteger('status')->nullable();
-            $table->foreignId('updated_by')->nullable()->index()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();
+            $table->foreignId('created_by')->nullable()->index()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();
             $table->timestamps();
         });
     }
