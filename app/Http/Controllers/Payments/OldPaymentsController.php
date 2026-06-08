@@ -2,20 +2,112 @@
 
 namespace App\Http\Controllers\Payments;
 
+use App\Enums\Constants;
+use App\Enums\InvoiceItem;
 use App\Enums\InvoiceStatus;
 use App\Enums\InvoiceType;
+use App\Enums\SegmentType;
+use App\Enums\TaxType;
 use App\Helpers\ApiLogger;
 use App\Http\Controllers\Controller;
 use App\Models\Invoice\BillInvoice;
+use App\Models\Invoice\InvoiceItem as InvoiceInvoiceItem;
 use App\Models\Master\PaymentType;
+use App\Services\InvoiceService;
 use App\Services\PaymentService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 class OldPaymentsController extends Controller
 {
+    /**
+     * Function to generate LPC for old invoices.
+     * @param int $id invoice id
+     */
+    public function addLpc(Request $request, $id)
+    {
+        $bill = BillInvoice::find($id);
+        $lpc_exists = BillInvoice::where('parent_invoice_id',$bill->id)->where('type_id', InvoiceType::LATE_PAYMENT_CHARGES->value)->where('status_id', '!=', InvoiceStatus::CANCEL->value)->first();
+        return view('payments.old-payments.add-lpc', ['bill' => $bill, 'lpc_exists'=> $lpc_exists]);
+    }
+
+    public function generateLpc(Request $request)
+    {
+        $gas_invoice = BillInvoice::find($request->invoice_id);
+        $lpc_exists = BillInvoice::where('parent_invoice_id',$gas_invoice->id)->where('type_id', InvoiceType::LATE_PAYMENT_CHARGES->value)->where('status_id', '!=', InvoiceStatus::CANCEL->value)->first();
+        if($gas_invoice)
+        {
+            if($lpc_exists) {
+                throw ValidationException::withMessages(['add-old-invoice-lpc-error' => 'There is already one LPC, can not generate another!']);
+                return;
+            }
+            else {
+                if($gas_invoice->consumer->segment_id == SegmentType::DOMESTIC->value) {
+                    $inv_item = InvoiceItem::DLPC->value;
+                    $late_fee = Constants::DPNG_LPC->value;
+                }else if($gas_invoice->consumer->segment_id == SegmentType::COMMERCIAL->value) {
+                    $inv_item = InvoiceItem::CLPC->value;
+                    $late_fee = Constants::CPNG_LPC->value;
+                }else {
+                    $inv_item = InvoiceItem::ILPC->value;
+                    $late_fee = Constants::IPNG_LPC->value;
+                }
+                $tax_value = 18;
+                $basic_amount = round(($late_fee * (100 / (100 + $tax_value))),2);
+                $tax_amount = round(($late_fee - $basic_amount),2);
+                
+                // Invoice array preperation for invoice service.
+                $invoice_data = [
+                    'headers' => [
+                        'type_id' => InvoiceType::LATE_PAYMENT_CHARGES->value,
+                        'consumer_id' => $gas_invoice->consumer_id,
+                        'invoice_date' => Carbon::parse($gas_invoice->due_date)->addDay(),
+                        'invoice_number' => $gas_invoice->invoice_number."L",
+                        'base_amount' => $basic_amount,
+                        'taxable_amount' => $basic_amount,
+                        'tax_id' => TaxType::GST->value,
+                        'tax_value' => $tax_value,
+                        'tax_amount' => $tax_amount,
+                        'total_amount' => $late_fee,
+                        'payable_amount' => $late_fee,
+                        'paid_amount' => $late_fee,
+                        'balance_amount' => 0,
+                        'due_date' => Carbon::parse($gas_invoice->due_date)->addDay(),
+                        'status_id' => InvoiceStatus::PAID->value, //1 =  paid
+                        'parent_invoice_id' => $gas_invoice->id,
+                        'created_by' => Auth::id(),
+                        'created_at' => Carbon::parse($gas_invoice->due_date)->addDay()->toDateTimeString(),
+                        'updated_at' => Carbon::parse($gas_invoice->due_date)->addDay()->toDateTimeString(),
+                    ]
+                ];
+                // Generate Invoice with Invoice Service
+                $inv_number = BillInvoice::create($invoice_data['headers']);
+                if(!empty($inv_number)) {
+                    // Invoice items array preperation.
+                    $invoice_data = [
+                        'items' => [
+                            'invoice_id' => $inv_number->id,
+                            'item_id' => $inv_item,
+                            'quantity' => 1,
+                            'unit_price' => $basic_amount,
+                            'total_price' => $basic_amount,
+                        ]
+                    ];
+                    $inv_item = InvoiceInvoiceItem::insert($invoice_data['items']);
+                    return response()->json(['success' => 'LPC Invoice generated successfully']);
+                }
+                else {
+                    return response()->json(['danger' => 'LPC Invoice generation failed']);
+                }
+            }
+        }
+        else {
+            return response()->json(['danger' => 'Inovice not found']);
+        }
+    }
     /**
      * @param $request 
      * @param int $id

@@ -149,7 +149,7 @@
                                                     <thead>
                                                         <tr>
                                                             <th style="border-right: 1px solid #000000;border-bottom: 1px solid #000000;width: 10%;">&nbsp;</th>
-                                                            <th style="text-align: center;border-right: 1px solid #000000;border-bottom: 1px solid #000000;">Part - C {{ __('bill.part_b') }}</th>
+                                                            <th style="text-align: center;border-right: 1px solid #000000;border-bottom: 1px solid #000000;">Part - C {{ __('bill.part_c') }}</th>
                                                             <th style="text-align: right;border-bottom: 1px solid #000000;width: 27%;">(&nbsp;&#8377;&nbsp;)</th>
                                                         </tr>
                                                     </thead>
@@ -159,7 +159,7 @@
                                                     <tbody>
                                                         <tr>
                                                             <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">3.1</td>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">Part-C Recharge done in the A month {{ __('bill.fixed_daily_charges') }}</td>
+                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">Recharge done in the a month {{ __('bill.fixed_daily_charges') }}</td>
                                                             <td style="text-align: right;border-bottom: 1px solid #000000;">{{ numberFormat($partc, 2) }}</td>
                                                         </tr>
                                                     </tbody>
@@ -173,13 +173,13 @@
                                                         </tr>
                                                     </thead>
                                                     @php
-                                                        $partd = $rental->balance_amount ?? 0;
+                                                        $partd = $invoice->consumer->scheme->paid_deposit ?? 0;
                                                     @endphp
                                                     <tbody>
                                                         <tr>
                                                             <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">4.1</td>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">Part-D EMI Tenure(3/5/7 Years) {{ __('bill.fixed_daily_charges') }}</td>
-                                                            <td style="text-align: right;border-bottom: 1px solid #000000;">{{ numberFormat($rental->base_amount ?? 0, 2); }}</td>
+                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">{{ $invoice->consumer->scheme->scheme->name }} {{ __('bill.fixed_daily_charges') }}</td>
+                                                            <td style="text-align: right;border-bottom: 1px solid #000000;">{{ numberFormat($emi->payable_amount ?? 0, 2); }}</td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
@@ -192,13 +192,23 @@
                                                         </tr>
                                                     </thead>
                                                     @php
-                                                        $parte = $rental->balance_amount ?? 0;
+                                                        $parte = $rental->payable_amount ?? 0;
                                                     @endphp
                                                     <tbody>
                                                         <tr>
                                                             <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">5.1</td>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">Part-E Rental for the A month {{ __('bill.fixed_daily_charges') }}</td>
+                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">SD Interest {{ __('bill.fixed_daily_charges') }}</td>
                                                             <td style="text-align: right;border-bottom: 1px solid #000000;">{{ numberFormat($rental->base_amount ?? 0, 2); }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">5.2</td>
+                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">GST on SD Interest {{ __('bill.fixed_daily_charges') }}</td>
+                                                            <td style="text-align: right;border-bottom: 1px solid #000000;">{{ numberFormat($rental->tax_amount ?? 0, 2); }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;"></td>
+                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;"><b>Total Interest {{ __('bill.fixed_daily_charges') }}</b></td>
+                                                            <td style="text-align: right;border-bottom: 1px solid #000000;"><strong>{{ numberFormat($rental->payable_amount ?? 0, 2); }}</strong></td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
@@ -211,13 +221,13 @@
                                                         </tr>
                                                     </thead>
                                                     @php
-                                                        $partc = $rental->balance_amount ?? 0;
+                                                        $partf = $rechargeData->end_meter_balance ?? 0;
                                                     @endphp
                                                     <tbody>
                                                         <tr>
                                                             <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">6.1</td>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">Part-F Total Closing Balance {{ __('bill.fixed_daily_charges') }}</td>
-                                                            <td style="text-align: right;border-bottom: 1px solid #000000;">{{ numberFormat($rental->base_amount ?? 0, 2); }}</td>
+                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">Total Closing Balance {{ __('bill.fixed_daily_charges') }}</td>
+                                                            <td style="text-align: right;border-bottom: 1px solid #000000;">{{ numberFormat($rechargeData->end_meter_balance ?? 0, 2); }}</td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
@@ -235,25 +245,18 @@
                                                             $sd = ($invoice->consumer->scheme->scheme->emi_amount > 0) ? $emi : 0;
                                                             $consumption_deposit = 0;
                                                             $total_emis = ($sd > 0) ? round($invoice->consumer->scheme->security_deposit / $sd) : 0;
-                                                            $partc = $sd;
+                                                            $partg = $sd;
                                                         @endphp
                                                         <tr>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">3.1</td>
+                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">7.1</td>
                                                             <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">Security Deposit Payable<br/>{{ __('bill.security_deposit_payable') }}</td>
                                                             <td style="text-align: right;border-bottom: 1px solid #000000;">{{ $sd }}</td>
                                                         </tr>
                                                         <tr>
-                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">3.2</td>
+                                                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">7.2</td>
                                                             <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">Consumptioin Security Deposit<br/>{{ __('bill.consumption_security_deposit') }}</td>
                                                             <td style="text-align: right;border-bottom: 1px solid #000000;">{{ numberFormat($consumption_deposit,2) }}</td>
                                                         </tr>
-                                                        @if ($sd > 0)
-                                                            <tr>
-                                                                <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">3.3</td>
-                                                                <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">Current EMI No<br/>{{ __('bill.consumption_security_deposit') }}</td>
-                                                                <td style="text-align: right;border-bottom: 1px solid #000000;">{{ $invoice->consumer->sdPayment->last()?->emi_no ." / ". $total_emis}}</td>
-                                                            </tr>
-                                                        @endif
                                                         <tr>
                                                             <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">&nbsp;</td>
                                                             <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">Total Security Deposit Paid<br/>{{ __('bill.total_security_deposit_paid') }}</td>
@@ -281,7 +284,7 @@
                                                         <td style="border-bottom: 1px solid #000000;font-size: 12px;"><strong>&#8377;&nbsp;{{ numberFormat($parta+$partb+$partc,2) }}</strong>
                                                         </td>
                                                     </tr>
-                                                    <tr>
+                                                    {{-- <tr>
                                                         <td style="border-right: 1px solid #000000;border-bottom: 1px solid #000000;">After Due Date&nbsp;<span style="font-size: 8px;">(LPC Applicable)</span><br/>{{ __('bill.after_due_date') }}</td>
                                                         <td style="border-bottom: 1px solid #000000;font-size: 12px;"><strong>&#8377;&nbsp;
                                                             @php 
@@ -312,7 +315,7 @@
                                                     <tr>
                                                         <td style="border-right: 1px solid #000000;">Disconnection Date&nbsp;:&nbsp;<span style="font-size: 8px;">(if bill not paid within Due Date)</span><br/>{{ __('bill.disconnection') }}</td>
                                                         <td style="text-align: center;vertical-align: middle;font-size: 12px;"><span style="color: red;">IMMEDIATE&nbsp;<span style="font-size:8px;">({{ __('bill.immediate') }})</span></span></td>
-                                                    </tr>
+                                                    </tr> --}}
                                                 </tbody>
                                                 </table>
                                                 <table class="table table-borderless" style="table-layout: fixed; width: 100%;margin-bottom: 5px;">

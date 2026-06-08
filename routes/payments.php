@@ -31,5 +31,7 @@ Route::middleware(['auth', ModuleAccess::class])->group(function() {
     Route::resource('transactions', App\Http\Controllers\Payments\TransactionsController::class);
 
     // Old Payment update
+    Route::get('oldPayment/addLpc/{id}', [App\Http\Controllers\Payments\OldPaymentsController::class,'addLpc']);
+    Route::post('oldPayment/generateLpc', [App\Http\Controllers\Payments\OldPaymentsController::class,'generateLpc']);
     Route::resource('oldPayment', App\Http\Controllers\Payments\OldPaymentsController::class);
 });

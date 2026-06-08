@@ -208,7 +208,7 @@ class MroProcessAction
                             'mro_order_id' => $record->mro_number,
                             'meter_serial_no' => $data['meter_serial_no'],
                             'invoice_no' => $inv_resp['invoice_number'],
-                            'invoice_date' => now()->format('Y-m-d'),
+                            'invoice_date' => Carbon::parse($end_date)->toDateString(),
                             'month_consumption' => round($netReading, 3),
                             'month_amount' => round($totalAmount,2),
                             'remarks' => "Successfully generated.",

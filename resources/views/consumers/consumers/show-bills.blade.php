@@ -45,6 +45,7 @@
                                             @endif
                                             @if (isSuperAdmin() OR isFullAccess())
                                                 <li><a class="dropdown-item link-modal" href="{{ url('payments/oldPayment/'.$invoice->id.'/edit') }}"><i class="bi bi-cash"></i>&nbsp;Add Old Payment</a></li>
+                                                <li><a class="dropdown-item link-modal" href="{{ url('payments/oldPayment/addLpc/'.$invoice->id) }}"><i class="bi bi-file-text"></i>&nbsp;Add LPC</a></li>
                                             @endif
                                             @empty(!$invoice->consumption->file_id)
                                                 <li><a class="dropdown-item" href="{{ url('master/dc/documents/' . $invoice->consumption?->file_id) }}" title="{{ $invoice->consumption->file?->file_name }}" target="_blank"><i class="bi bi-image"></i>&nbsp;Meter Image</a></li>

@@ -228,7 +228,7 @@
                             </tr>
                             <tr>
                                 <td class="fw-semibold">Area</td>
-                                <td>{{ $consumer->area->name }}</td>
+                                <td>{{ $consumer->area->name ?? "" }}</td>
                             </tr>
                             <tr>
                                 <td class="fw-semibold">SubArea</td>

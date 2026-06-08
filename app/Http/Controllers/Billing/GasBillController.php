@@ -6,6 +6,7 @@ use App\Enums\InvoiceStatus;
 use App\Enums\InvoiceType;
 use App\Http\Controllers\Controller;
 use App\Models\Invoice\BillInvoice;
+use App\Models\Invoice\BillMroData;
 use App\Models\Master\Price;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\App;
@@ -69,7 +70,7 @@ class GasBillController extends Controller
 
         $billHistory = $last3Bills->reject(fn ($bill) => $bill->id === $invoice->id)->take(2);
         $price = Price::where(['segment_id' => $invoice->consumer->segment_id, 'district_id' => $invoice->consumer->district_id])->first();
-
+        $rechargeData = BillMroData::where('invoice_id', $invoice->id)->first();
 
         // Check gas bill
         if(!$invoice)
@@ -86,7 +87,8 @@ class GasBillController extends Controller
             'lpc' => $lpc,
             'emi' => $emi,
             'rental' => $rental,
-            'billHistory' => $billHistory
+            'billHistory' => $billHistory,
+            'rechargeData' => $rechargeData,
         ]);
     }
 }

@@ -11,4 +11,5 @@ enum InvoiceType: int
     case SD_EMI = 5;
     case CUSTOM_INVOICE = 6;
     case GEYSER_CONNECTION = 7;
+    case SD_INTEREST = 8;
 }
