@@ -53,7 +53,6 @@ class TeamConsumer extends Model
     {
         return $this->belongsTo(MasterConsumerStatus::class, 'status_id');
     }
-
     /**
      * Relation with user
      */

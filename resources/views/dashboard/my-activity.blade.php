@@ -6,7 +6,7 @@
 @section('page-content')
     <div class="fluid-container">
         @if ($roles->count() > 0)
-            <div class="m-2">Total Consumers - <strong>{{ numberFormat(array_sum($consumers_count->toArray())) }}</strong></div>
+            {{-- <div class="m-2">Total Consumers - <strong>{{ numberFormat(array_sum($consumers_count)) }}</strong></div> --}}
             @php
                 $roleData = [
                     \App\Enums\Role::MARKETING->value => [
@@ -14,7 +14,9 @@
                         'pending' => $consumers_count[\App\Enums\ConsumerStatus::PRE_REGISTER->value] ?? 0,
                         'completed' => $completed_consumers[\App\Enums\ConsumerStatus::REGISTER->value] ?? 0,
                         'total' => $consumers_count[\App\Enums\ConsumerStatus::REGISTER->value] ?? 0,
-                        'status_id' => \App\Enums\ConsumerStatus::REGISTER->value,
+                        'status_id' => \App\Enums\ConsumerStatus::PRE_REGISTER->value,
+                        'assigned' => $assigned_consumers[\App\Enums\ConsumerStatus::REGISTER->value] ?? 0,
+                        'unassigned' => ($consumers_count[\App\Enums\ConsumerStatus::PRE_REGISTER->value] ?? 0) - ($assigned_consumers[\App\Enums\ConsumerStatus::REGISTER->value] ?? 0),
                     ],
 
                     \App\Enums\Role::MDPE->value => [
@@ -22,7 +24,9 @@
                         'pending' => $consumers_count[\App\Enums\ConsumerStatus::REGISTER->value] ?? 0,
                         'completed' => $completed_consumers[\App\Enums\ConsumerStatus::ACCEPT->value] ?? 0,
                         'total' => $consumers_count[\App\Enums\ConsumerStatus::ACCEPT->value] ?? 0,
-                        'status_id' => \App\Enums\ConsumerStatus::ACCEPT->value,
+                        'status_id' => \App\Enums\ConsumerStatus::REGISTER->value,
+                        'assigned' => $assigned_consumers[\App\Enums\ConsumerStatus::ACCEPT->value] ?? 0,
+                        'unassigned' => ($consumers_count[\App\Enums\ConsumerStatus::REGISTER->value] ?? 0) - ($assigned_consumers[\App\Enums\ConsumerStatus::ACCEPT->value] ?? 0),
                     ],
 
                     \App\Enums\Role::GI_ENGINEER->value => [
@@ -30,7 +34,9 @@
                         'pending' => $consumers_count[\App\Enums\ConsumerStatus::ACCEPT->value] ?? 0,
                         'completed' => $completed_consumers[\App\Enums\ConsumerStatus::EXECUTE->value] ?? 0,
                         'total' => $consumers_count[\App\Enums\ConsumerStatus::EXECUTE->value] ?? 0,
-                        'status_id' => \App\Enums\ConsumerStatus::EXECUTE->value,
+                        'status_id' => \App\Enums\ConsumerStatus::ACCEPT->value,
+                        'assigned' => $assigned_consumers[\App\Enums\ConsumerStatus::EXECUTE->value] ?? 0,
+                        'unassigned' => ($consumers_count[\App\Enums\ConsumerStatus::ACCEPT->value] ?? 0) - ($assigned_consumers[\App\Enums\ConsumerStatus::EXECUTE->value] ?? 0),
                     ],
 
                     \App\Enums\Role::HSE->value => [
@@ -38,7 +44,9 @@
                         'pending' => $consumers_count[\App\Enums\ConsumerStatus::EXECUTE->value] ?? 0,
                         'completed' => $completed_consumers[\App\Enums\ConsumerStatus::HSC->value] ?? 0,
                         'total' => $consumers_count[\App\Enums\ConsumerStatus::HSC->value] ?? 0,
-                        'status_id' => \App\Enums\ConsumerStatus::HSC->value,
+                        'status_id' => \App\Enums\ConsumerStatus::EXECUTE->value,
+                        'assigned' => $assigned_consumers[\App\Enums\ConsumerStatus::HSC->value] ?? 0,
+                        'unassigned' => ($consumers_count[\App\Enums\ConsumerStatus::EXECUTE->value] ?? 0) - ($assigned_consumers[\App\Enums\ConsumerStatus::HSC->value] ?? 0),
                     ],
 
                     \App\Enums\Role::ACTIVATION->value => [
@@ -47,6 +55,8 @@
                         'completed' => $completed_consumers[\App\Enums\ConsumerStatus::ACTIVATE->value] ?? 0,
                         'total' => $consumers_count[\App\Enums\ConsumerStatus::ACTIVATE->value] ?? 0,
                         'status_id' => \App\Enums\ConsumerStatus::HSC->value,
+                        'assigned' => $assigned_consumers[\App\Enums\ConsumerStatus::ACTIVATE->value] ?? 0,
+                        'unassigned' => ($consumers_count[\App\Enums\ConsumerStatus::HSC->value] ?? 0) - ($assigned_consumers[\App\Enums\ConsumerStatus::ACTIVATE->value] ?? 0),
                     ],
                 ];
             @endphp
@@ -55,171 +65,77 @@
                     <thead>
                         <tr>
                             <th>Progress</th>
-                            @foreach($roles as $id => $role)
-                                <th>{{ $roleData[$id]['status'] ?? $role }}</th>
-                            @endforeach
+                            <th>Unassigned</th>
+                            <th>Assigned</th>
+                            <th>Total</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>Total</td>
-                            @foreach($roles as $id => $role)
-                                <td><a href="{{ url('consumers') }}">{{ $roleData[$id]['total'] ?? 0 }}</a></td>
+                        @foreach($roles as $id => $role)
+                            <tr>
+                                <td>{{ $roleData[$id]['status'] ?? $role }}</td>
+                                <td><a href="{{ url('consumers/waiting/pending-consumers') }}?{{ http_build_query(['cns_status' => [$roleData[$id]['status_id']], 'geo_area' => auth()->user()->ga->pluck('id')->toArray(), 'charge_area' => auth()->user()->ca->pluck('id')->toArray(), 'status' => [2]]) }}" target="_blank">{{ $roleData[$id]['unassigned'] }}</a></td>
+                                <td><a href="{{ url('consumers/waiting/pending-consumers') }}?{{ http_build_query(['cns_status' => [$roleData[$id]['status_id']], 'geo_area' => auth()->user()->ga->pluck('id')->toArray(), 'charge_area' => auth()->user()->ca->pluck('id')->toArray(), 'status' => [0,1]]) }}" target="_blank">{{ $roleData[$id]['assigned'] }}</a></td>
+                                <td>{{ $roleData[$id]['pending'] ?? $role }}</td>
+                            </tr>
                             @endforeach
-                        </tr>
-
-                        <tr>
-                            <td>Pending</td>
-                            @foreach($roles as $id => $role)
-                                <td>{{ $roleData[$id]['pending'] ?? 0 }}</td>
-                            @endforeach
-                        </tr>
-
-                        <tr>
-                            <td>Completed</td>
-                            @foreach($roles as $id => $role)
-                                <td>{{ $roleData[$id]['completed'] ?? 0 }}</td>
-                            @endforeach
-                        </tr>
+                            <tr>
+                                <td colspan="3" class="text-end">Total</td>
+                                <td>{{ numberFormat(array_sum($consumers_count)) }}</td>
+                            </tr>
                     </tbody>
                 </table>
             </div>
         @endif
-        <div class="row">
-            {{-- <div class="col-auto">
-                @if ($roles->count() > 0)
-                    <div class="col-sm-1">
-                        <div class="card" style="width: 18rem;">
-                            <div class="card-body">
-                                <h5 class="card-title">Consumers pending action at your stage.</h5>
-                            </div>
-                            <ul class="list-group list-group-flush">
-                                @foreach ($roles as $id => $role)
-                                    @switch($id)
-                                        @case(\App\Enums\Role::MARKETING->value)
-                                            @php
-                                                $count = $consumers_count[\App\Enums\ConsumerStatus::PRE_REGISTER->value] ?? 0;
-                                                $status_val = "REGISTRATION";
-                                                $status_id = \App\Enums\ConsumerStatus::PRE_REGISTER->value;
-                                            @endphp
-                                            @break
-                                        @case(\App\Enums\Role::MDPE->value)
-                                            @php
-                                                $count = $consumers_count[\App\Enums\ConsumerStatus::REGISTER->value] ?? 0;
-                                                $status_val = "ACCEPTANCE";
-                                                $status_id = \App\Enums\ConsumerStatus::REGISTER->value;
-                                            @endphp
-                                            @break
-                                        @case(\App\Enums\Role::GI_ENGINEER->value)
-                                            @php
-                                                $count = $consumers_count[\App\Enums\ConsumerStatus::ACCEPT->value] ?? 0;
-                                                $status_val = "EXECUTION";
-                                                $status_id = \App\Enums\ConsumerStatus::ACCEPT->value;
-                                            @endphp
-                                            @break
-                                        @case(\App\Enums\Role::HSE->value)
-                                            @php
-                                                $count = $consumers_count[\App\Enums\ConsumerStatus::EXECUTE->value] ?? 0;
-                                                $status_val = "HSC";
-                                                $status_id = \App\Enums\ConsumerStatus::EXECUTE->value;
-                                            @endphp
-                                            @break
-                                        @case(\App\Enums\Role::ACTIVATION->value)
-                                            @php
-                                                $count = $consumers_count[\App\Enums\ConsumerStatus::HSC->value] ?? 0;
-                                                $status_val = "ACTIVATION";
-                                                $status_id = \App\Enums\ConsumerStatus::HSC->value;
-                                            @endphp
-                                            @break
-                                        @default
-                                            @php
-                                                $count = 0;
-                                                $status_val = $status_id = '';
-                                            @endphp
-                                            @break
-                                    @endswitch
-                                    <li class="list-group-item">{{ $status_val }}&nbsp;-&nbsp;<a href="{{ url('consumers') }}?{{ http_build_query(['cns_status' => [$status_id], 'geo_area' => auth()->user()->ga->pluck('id')->toArray(), 'charge_area' => auth()->user()->cas->pluck('id')->toArray()]) }}" target="_blank"><strong>{{ numberFormat($count) }}</strong></a></li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    </div>
-                @endif
-            </div> --}}
-            <div class="col-auto">
-                @if ($teams->count() > 0)
-                    <div class="col-sm-1">
-                        <div class="card" style="width: 18rem;">
-                            <div class="card-body">
-                                <h5 class="card-title">Team List with Pending Consumers</h5>
-                            </div>
-                            <ul class="list-group list-group-flush">
-                                @foreach ($teams as $id => $team)
-                                    <li class="list-group-item"><a href="{{ url('admin/teams/show/'.$team->id) }}" class="link-modal">{{ $team->name }}</a>&nbsp;-&nbsp;<strong>{{ numberFormat($consumer_team_count[$team->id] ?? 0) }}</strong></li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    </div>
-                @endif
-            </div>
-            {{-- <div class="col-auto">
-                @if ($roles->count() > 0)
-                    <div class="col-sm-1">
-                        <div class="card" style="width: 18rem;">
-                            <div class="card-body">
-                                <h5 class="card-title">Consumers Completed List</h5>
-                            </div>
-                            <ul class="list-group list-group-flush">
-                                @foreach ($roles as $id => $role)
-                                    @switch($id)
-                                        @case(\App\Enums\Role::MARKETING->value)
-                                            @php
-                                                $count = $completed_consumers[\App\Enums\ConsumerStatus::REGISTER->value] ?? 0;
-                                                $status_val = "REGISTRATION";
-                                                $status_id = \App\Enums\ConsumerStatus::REGISTER->value;
-                                            @endphp
-                                            @break
-                                        @case(\App\Enums\Role::MDPE->value)
-                                            @php
-                                                $count = $completed_consumers[\App\Enums\ConsumerStatus::ACCEPT->value] ?? 0;
-                                                $status_val = "ACCEPTANCE";
-                                                $status_id = \App\Enums\ConsumerStatus::ACCEPT->value;
-                                            @endphp
-                                            @break
-                                        @case(\App\Enums\Role::GI_ENGINEER->value)
-                                            @php
-                                                $count = $completed_consumers[\App\Enums\ConsumerStatus::EXECUTE->value] ?? 0;
-                                                $status_val = "EXECUTION";
-                                                $status_id = \App\Enums\ConsumerStatus::EXECUTE->value;
-                                            @endphp
-                                            @break
-                                        @case(\App\Enums\Role::HSE->value)
-                                            @php
-                                                $count = $completed_consumers[\App\Enums\ConsumerStatus::HSC->value] ?? 0;
-                                                $status_val = "HSC";
-                                                $status_id = \App\Enums\ConsumerStatus::HSC->value;
-                                            @endphp
-                                            @break
-                                        @case(\App\Enums\Role::ACTIVATION->value)
-                                            @php
-                                                $count = $completed_consumers[\App\Enums\ConsumerStatus::ACTIVATE->value] ?? 0;
-                                                $status_val = "ACTIVATION";
-                                                $status_id = \App\Enums\ConsumerStatus::ACTIVATE->value;
-                                            @endphp
-                                            @break
-                                        @default
-                                            @php
-                                                $count = 0;
-                                                $status_val = $status_id = '';
-                                            @endphp
-                                            @break
-                                    @endswitch
-                                    <li class="list-group-item">{{ $status_val }}&nbsp;-&nbsp;<a href="{{ url('consumers') }}?{{ http_build_query(['cns_status' => [$status_id], 'geo_area' => auth()->user()->ga->pluck('id')->toArray(), 'charge_area' => auth()->user()->cas->pluck('id')->toArray()]) }}" target="_blank"><strong>{{ numberFormat($count) }}</strong></a></li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    </div>
-                @endif
-            </div> --}}
+        <div>
+            @if ($teams->count() > 0)
+                @php
+                    $consumers_list = $cns_status = [];
+                    foreach ($consumer_teams as $key => $value) {
+                        switch($value->status_id) {
+                            case \App\Enums\ConsumerStatus::PRE_REGISTER->value:
+                                $status_id = 1;break;
+                            case \App\Enums\ConsumerStatus::REGISTER->value:
+                                $status_id = \App\Enums\ConsumerStatus::PRE_REGISTER->value;break;
+                            case \App\Enums\ConsumerStatus::ACCEPT->value:
+                                $status_id = \App\Enums\ConsumerStatus::REGISTER->value;break;
+                            case \App\Enums\ConsumerStatus::EXECUTE->value:
+                                $status_id = \App\Enums\ConsumerStatus::ACCEPT->value;break;
+                            case \App\Enums\ConsumerStatus::HSC->value:
+                                $status_id = \App\Enums\ConsumerStatus::EXECUTE->value;break;
+                            case \App\Enums\ConsumerStatus::ACTIVATE->value:
+                                $status_id = \App\Enums\ConsumerStatus::HSC->value;break;
+                            default:$status_id = NULL;break;
+                        }
+                        $consumers_list[$value->team_id][$value->status] = $value->team_count;
+                        $cns_status[$value->team_id] = $status_id ?? NULL;
+                    }
+                    // print "<pre>";print_r($cns_status);
+                @endphp
+                <h4>My Teams</h4>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Team</th>
+                            <th>Department</th>
+                            <th>Pending</th>
+                            <th>Completed</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($teams as $team_id => $team)
+                            <tr>
+                                <td>{{ $team->name }}</td>
+                                <td>{{ $team->departments?->name }}</td>
+                                <td><a href="{{ url('consumers/waiting/pending-consumers') }}?{{ http_build_query(['cns_status' => [$cns_status[$team->id] ?? NULL], 'geo_area' => auth()->user()->ga->pluck('id')->toArray(), 'charge_area' => auth()->user()->ca->pluck('id')->toArray(), 'status' => [0], 'team_id' => [$team->id]]) }}" target="_blank">{{ $consumers_list[$team->id][0] ?? 0 }}</a></td>
+                                <td><a href="{{ url('consumers/waiting/pending-consumers') }}?{{ http_build_query(['cns_status' => [$cns_status[$team->id] ?? NULL], 'geo_area' => auth()->user()->ga->pluck('id')->toArray(), 'charge_area' => auth()->user()->ca->pluck('id')->toArray(), 'status' => [1], 'team_id' => [$team->id]]) }}" target="_blank">{{ $consumers_list[$team->id][1] ?? 0 }}</a></td>
+                                <td>{{ array_sum($consumers_list[$team->id] ?? []) }}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            @endif
         </div>
     </div>
 @endsection
