@@ -37,14 +37,17 @@
                         <div class="col-sm-2 text-end fw-semibold">Scheme Amount : </div>
                         <div class="col-sm-4">{{ $consumer->scheme->scheme->total_deposit}}</div>
                         <div class="col-sm-2 text-end fw-semibold">Paid Amount : </div>
-                        <div class="col-sm-4">{{ $consumer->sdPayment->sum('amount') ?? 0 }}</div>
+                        <div class="col-sm-4">{{ $consumer->scheme->paid_deposit ?? 0 }}</div>
                         <div class="col-sm-2 text-end fw-semibold">Balance : </div>
-                        <div class="col-sm-4">{{ $consumer->sdPayment->last()->balance ?? $consumer->scheme->scheme->total_deposit }}</div>
-                        @if ($consumer->scheme->scheme->emi_amount > 0)
+                        <div class="col-sm-4">{{ $consumer->scheme->balance ?? 0 }}</div>
+                        @if ($consumer->scheme?->emi_amount > 0)
+                            @php
+                                $no_of_emis = $consumer->scheme->paid_deposit/$consumer->scheme->emi_amount;
+                            @endphp
                             <div class="col-sm-2 text-end fw-semibold">Emi Amount :</div>
-                            <div class="col-sm-4">{{ $consumer->scheme->scheme->emi_amount }}</div>
+                            <div class="col-sm-4">{{ $consumer->scheme?->emi_amount }}</div>
                             <div class="col-sm-2 text-end fw-semibold">No of EMIs paid : </div>
-                            <div class="col-sm-4">{{ $consumer->sdPayment->last()->emi_no ?? 0 }}</div>
+                            <div class="col-sm-4">{{ round($no_of_emis) ?? 0 }}</div>
                         @endif
                     </div>
                 </div>
@@ -169,11 +172,6 @@
 {{-- Scripts --}}
 @push('scripts')
     @include('scripts.ajax-form-submit', ['form' => 'add-gas-bill'])
-    <script type="module">
-        $(function(){
-
-        });
-    </script>
     <script>
         function calculateReadings(reading) {
             var end_read = parseFloat(reading ?? 0);

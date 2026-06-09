@@ -94,6 +94,11 @@ class ConsumerWaitingController extends Controller
     {
         // Based on Status
         switch($request->cns_status) {
+            case ConsumerStatus::PRE_REGISTER->value: //waiting to Accept
+                $user_ca_list = $this->getConsumersListByCa($request, $request->ga_id, $request->cns_status, ROLE::MARKETING->value);
+                $teams = Team::with(['cas:id,name', 'users:id'])->where('ga_id', $request->ga_id)->where('department_id', EnumsDepartment::MARKETING->value)->get();
+                $status_val = ConsumerStatus::REGISTER->name;
+                break;
             case ConsumerStatus::REGISTER->value: //waiting to Accept
                 $user_ca_list = $this->getConsumersListByCa($request, $request->ga_id, $request->cns_status, ROLE::MDPE->value);
                 $teams = Team::with(['cas:id,name', 'users:id'])->where('ga_id', $request->ga_id)->where('department_id', EnumsDepartment::MDPE->value)->get();

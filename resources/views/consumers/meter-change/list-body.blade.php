@@ -44,13 +44,13 @@
                     <tr>
                         <td>{{ $i++ }}</td>
                         <td><a href="{{ url('consumers/'.$change->consumer_id) }}" target="_blank">{{ $change->consumer->crn }}</a></td>
-                        <td class="text-end">{{ $change->meter->meter_no }}</td>
+                        <td class="text-end">{{ $change->meter?->meter_no }}</td>
                         <td class="text-end">{{ $change->consumption }}</td>
-                        <td class="text-end">{{ $change->newMeter->meter_no }}</td>
+                        <td class="text-end">{{ $change->newMeter?->meter_no }}</td>
                         <td>{{ $change?->request_date?->format('d-m-Y') }}</td>
                         <td>{{ $change?->replace_date?->format('d-m-Y') }}</td>
                         <td>{{ $change->status_id == 1 ? "Pending" : "Completed" }}</td>
-                        <td>{{ $change?->createdBy->name }}</td>
+                        <td>{{ $change->createdBy?->name }}</td>
                         <td><a class="btn btn-primary btn-sm link-modal" href="{{ url('consumers/meterChange/'.$change->id) }}"><i class="bi bi-box-arrow-up-right"></i> View</a></td>
                     </tr>
                 @endforeach
