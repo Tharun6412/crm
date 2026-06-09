@@ -6,9 +6,15 @@
         </div>
         <div class="modal-body">
             <div id="team-success">
+<<<<<<< Updated upstream
                 <form id="team-form" action="{{ url('consumers/waiting/pending-consumers/store/'.$team_consumer->id) }}" method="POST">
                     @csrf
                     {{-- @method('PUT') --}}
+=======
+                <form id="team-form" action="{{ url('consumers/waiting/pending-consumers/'.$team_consumer->id) }}" method="POST">
+                    @csrf
+                    @method('PUT')
+>>>>>>> Stashed changes
                     <div class="row mb-3 align-items-center">
                         <label for="team_id" class="col-md-3 col-form-label text-md-end">Select Team :</label>
                         <div class="col-md-6">
@@ -20,7 +26,11 @@
                             </select>
                         </div>
                     </div>
+<<<<<<< Updated upstream
                     <div class="mb-2" id="team-error"></div>  
+=======
+                    <div class="mb-2" id="active-error"></div>  
+>>>>>>> Stashed changes
                     <div class="row ">
                         <div class="offset-sm-2 col-sm-10">
                             <button type="submit" class="btn btn-success btn-sm"><i class="bi bi-save" aria-hidden="true">&nbsp;</i>Assign</button>

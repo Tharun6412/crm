@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Consumer;
 
 use App\Enums\ConsumerStatus;
+<<<<<<< Updated upstream
 use App\Enums\Department;
+=======
+>>>>>>> Stashed changes
 use App\Http\Controllers\Controller;
 use App\Models\Admin\Team;
 use App\Models\Consumer\Consumer;
@@ -27,11 +30,14 @@ class TeamConsumersController extends Controller
         ->when($request->has('district'), function ($q) use ($request) {
             $q->whereIn('district_id', $request->district);
         })
+<<<<<<< Updated upstream
         ->when($request->has('team_id'), function ($q) use($request) {
             $q->whereHas('teamConsumer', function ($q1) use ($request) {
                 $q1->whereIn('team_id', $request->team_id);
             });
         })
+=======
+>>>>>>> Stashed changes
         ->when($request->has('charge_area'), function($q) use ($request) {
             $q->whereIn('ca_id', $request->charge_area);
         })
@@ -42,6 +48,7 @@ class TeamConsumersController extends Controller
             $q->whereIn('status_id', $request->cns_status);
         })
         ->when($request->has('status'), function($q) use ($request) {
+<<<<<<< Updated upstream
             if (in_array(2, $request->status)) {
                 // Unassigned = no teamConsumer record exists
                 $q->whereDoesntHave('teamConsumer');
@@ -50,6 +57,11 @@ class TeamConsumersController extends Controller
                     $q1->whereIn('status', $request->status);
                 });
             }
+=======
+            $q->whereHas('teamConsumer', function($q1) use ($request) {
+                $q1->whereIn('status', $request->status);
+            });
+>>>>>>> Stashed changes
         })->paginate(50)->withQueryString();
         if($request->ajax())
             return view('consumers.team-consumers.list-body', ['consumers' => $consumers]);
@@ -59,6 +71,7 @@ class TeamConsumersController extends Controller
     /**
      * To add teams to consumers
      */
+<<<<<<< Updated upstream
     public function create(Request $request, $id)
     {
         $team_consumer = Consumer::findOrFail($id);
@@ -86,16 +99,30 @@ class TeamConsumersController extends Controller
         return view('consumers.team-consumers.create',['team_consumer' => $team_consumer,'teams' => $teams]);
     }
     public function store(Request $request, $id)
+=======
+    public function edit($id)
+    {
+        $team_consumer = Consumer::findOrFail($id);
+        $teams = Team::where('ga_id',$team_consumer->ga_id)->where('status',1)->get();
+        return view('consumers.team-consumers.create',['team_consumer' => $team_consumer,'teams' => $teams]);
+    }
+    public function update(Request $request,$id)
+>>>>>>> Stashed changes
     {
         $request->validate([
             
             'team_id' => 'required',
         ]);
         $team_consumer = Consumer::find($id);
+<<<<<<< Updated upstream
         switch($team_consumer->status_id){
             case ConsumerStatus::PRE_REGISTER->value:
                 $statusId = ConsumerStatus::REGISTER->value;
                 break;
+=======
+
+        switch($team_consumer->status_id){
+>>>>>>> Stashed changes
             case ConsumerStatus::REGISTER->value:
                 $statusId = ConsumerStatus::ACCEPT->value;
                 break; 
