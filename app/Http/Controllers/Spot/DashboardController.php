@@ -102,4 +102,11 @@ class DashboardController extends Controller
                 });
             });
     }
+    /**
+     * Help
+     */
+    public function help()
+    {
+        return view('spot.dashboard.help');
+    }
 }

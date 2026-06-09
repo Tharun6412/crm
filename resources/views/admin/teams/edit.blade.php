@@ -33,7 +33,7 @@
                         <div class="col-sm-4">
                             <select name="responsible_user_id" id="responsible_user_id" class="form-select">
                                 <option value="">Select Coordinator</option>
-                                @foreach($users as $user)
+                                @foreach($team->users as $user)
                                     <option value="{{ $user->id }}"@selected($user->id == $team->responsible_user_id)>{{ $user->emp_id }} - {{ $user->name }} - {{ $user->department?->name }}</option>
                                 @endforeach
                             </select>

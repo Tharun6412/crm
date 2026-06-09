@@ -88,7 +88,9 @@ class TeamController extends Controller
     public function gaCas(Request $request)
     {
         $cas = Ca::where('ga_id',$request->ga_id)->get();
-        $users = User::with(['department'])->where('ga_id',$request->ga_id)->get();
+        $users = User::with(['department'])->whereHas('ga', function($q) use ($request){
+            $q->where('ga_id',$request->ga_id);
+        })->get();
         return response()->json(['cas' => $cas,'users' => $users]);
     }
     /**
@@ -102,7 +104,9 @@ class TeamController extends Controller
         // $geo_areas = Ga::all();
         // $departments = Department::all();
         $cas = Ca::where('ga_id', $team->ga_id)->get();
-        $users = User::where('ga_id', $team->ga_id)->get();
+        $users = User::whereHas('ga', function($q) use ($team){
+            $q->where('ga_id',$team->ga_id);
+        })->get();
         return view('admin.teams.edit',['team' => $team,'cas' => $cas,'users' => $users]);
     }
     /**

@@ -46,6 +46,7 @@ Route::middleware(['auth', ModuleAccess::class])->group(function() {
     Route::resource('prospectStatus', App\Http\Controllers\Spot\ProspectStatusController::class);
     // Dashboard
     Route::resource('dashboard', App\Http\Controllers\Spot\DashboardController::class);
+    Route::get('help',[App\HTTP\Controllers\Spot\DashboardController::class,'help']);
     // Targets
     Route::post('targets/manageTargetData/{id}', [App\Http\Controllers\Spot\TargetsController::class, 'manageTargetData']);
     Route::resource('targets', App\Http\Controllers\Spot\TargetsController::class);
