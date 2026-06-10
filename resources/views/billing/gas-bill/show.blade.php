@@ -169,7 +169,7 @@
                                                         <tr>
                                                             <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">2.1</td>
                                                             <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">Fixed Daily Charges {{ __('bill.fixed_daily_charges') }}</td>
-                                                            <td style="text-align: right;border-bottom: 1px solid #000000;">{{ numberFormat($rental->base_amount ?? 0, 2); }}</td>
+                                                            <td style="text-align: right;border-bottom: 1px solid #000000;">{{ numberFormat($rental->base_amount ?? 0, 2) }}</td>
                                                         </tr>
                                                         <tr>
                                                             <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">2.2</td>
@@ -204,7 +204,7 @@
                                                         <tr>
                                                             <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">&nbsp;</td>
                                                             <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;"><b>Total Charges (Part B) {{ __('bill.total_charges') }}</b></td>
-                                                            <td style="text-align: right;border-bottom: 1px solid #000000;">{{ $partb; }}</td>
+                                                            <td style="text-align: right;border-bottom: 1px solid #000000;">{{ $partb }}</td>
                                                         </tr>
                                                     </tbody>
                                                 </table>

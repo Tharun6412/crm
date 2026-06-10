@@ -141,7 +141,7 @@
                                                         <tr>
                                                             <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">2.1</td>
                                                             <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">Amount carry forward in A-1 month {{ __('bill.fixed_daily_charges') }}</td>
-                                                            <td style="text-align: right;border-bottom: 1px solid #000000;">{{ numberFormat($rental->base_amount ?? 0, 2); }}</td>
+                                                            <td style="text-align: right;border-bottom: 1px solid #000000;">{{ numberFormat($rental->base_amount ?? 0, 2) }}</td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
@@ -179,7 +179,7 @@
                                                         <tr>
                                                             <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">4.1</td>
                                                             <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">{{ $invoice->consumer->scheme->scheme->name }} {{ __('bill.fixed_daily_charges') }}</td>
-                                                            <td style="text-align: right;border-bottom: 1px solid #000000;">{{ numberFormat($emi->payable_amount ?? 0, 2); }}</td>
+                                                            <td style="text-align: right;border-bottom: 1px solid #000000;">{{ numberFormat($emi->payable_amount ?? 0, 2) }}</td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
@@ -198,17 +198,17 @@
                                                         <tr>
                                                             <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">5.1</td>
                                                             <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">SD Interest {{ __('bill.fixed_daily_charges') }}</td>
-                                                            <td style="text-align: right;border-bottom: 1px solid #000000;">{{ numberFormat($rental->base_amount ?? 0, 2); }}</td>
+                                                            <td style="text-align: right;border-bottom: 1px solid #000000;">{{ numberFormat($rental->base_amount ?? 0, 2) }}</td>
                                                         </tr>
                                                         <tr>
                                                             <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">5.2</td>
                                                             <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">GST on SD Interest {{ __('bill.fixed_daily_charges') }}</td>
-                                                            <td style="text-align: right;border-bottom: 1px solid #000000;">{{ numberFormat($rental->tax_amount ?? 0, 2); }}</td>
+                                                            <td style="text-align: right;border-bottom: 1px solid #000000;">{{ numberFormat($rental->tax_amount ?? 0, 2) }}</td>
                                                         </tr>
                                                         <tr>
                                                             <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;"></td>
                                                             <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;"><b>Total Interest {{ __('bill.fixed_daily_charges') }}</b></td>
-                                                            <td style="text-align: right;border-bottom: 1px solid #000000;"><strong>{{ numberFormat($rental->payable_amount ?? 0, 2); }}</strong></td>
+                                                            <td style="text-align: right;border-bottom: 1px solid #000000;"><strong>{{ numberFormat($rental->payable_amount ?? 0, 2) }}</strong></td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
@@ -227,7 +227,7 @@
                                                         <tr>
                                                             <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">6.1</td>
                                                             <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;">Total Closing Balance {{ __('bill.fixed_daily_charges') }}</td>
-                                                            <td style="text-align: right;border-bottom: 1px solid #000000;">{{ numberFormat($rechargeData->end_meter_balance ?? 0, 2); }}</td>
+                                                            <td style="text-align: right;border-bottom: 1px solid #000000;">{{ numberFormat($rechargeData->end_meter_balance ?? 0, 2) }}</td>
                                                         </tr>
                                                     </tbody>
                                                 </table>

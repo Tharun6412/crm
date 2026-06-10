@@ -79,7 +79,7 @@
                         <h4 class="mb-0">Employee Onboarding Progress</h4>
                         <div class="row g-1">
                             <div class="col-auto mt-4">
-                                <div class="form-control">
+                                <div class="form-control mt-2">
                                     GA&nbsp;<x-master.ga-filter class="float-end" />
                                 </div>
                             </div>
@@ -97,8 +97,11 @@
                                     <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
                                 </div>
                             </div>
-                            <div class="col-auto mt-4">
-                                <button type="submit" class="btn btn-success"><i class="bi bi-search"></i></button>
+                            <div class="col-auto">
+                                <label for="conv_date">&nbsp;</label>
+                                <div>
+                                 <button type="submit" class="btn btn-success mt-1"><i class="bi bi-search"></i></button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -108,8 +111,8 @@
             <div class="tab-pane fade" id="nav-emp-activity" role="tabpanel" aria-labelledby="nav-emp-activity-tab" tabindex="0">
                 <form action="{{ url('reports/consumer/employee/activity') }}" id="report-emp-activity-search-form" method="GET">
                     <div class="d-flex justify-content-between align-items-center border my-2 bg-light p-2 bg-secondary-subtle rounded">
-                        <h4 class="mb-0">Employee-wise Connection Progress</h4>
-                        <div class="row g-1">
+                        <h4 class="mb-0 ms-2">Employee-wise Connection Progress</h4>
+                        <div class="row g-1 mb-2">
                             <div class="col-auto">
                                 <label>&nbsp;</label>
                                 <div class="form-control"> 
@@ -154,8 +157,8 @@
                     </div>
                 </form>
                 <div id="report-emp-activity-list">
-                    <div class="alert alert-info mb-0">
-                        Please choose GA and dates!
+                    <div class="alert alert-info mb-0 fw-semibold">
+                        Please Select GA.
                     </div>
                 </div>
             </div>

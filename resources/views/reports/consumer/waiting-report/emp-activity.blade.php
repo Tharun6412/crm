@@ -1,16 +1,16 @@
 <div class="d-flex flex-row justify-content-between pb-3">
-    <div class="justify-content-start">
+    <div class="justify-content-end">
         @if ($users->count() > 0)
-            <button type="button" id="exportBtn2" class="btn btn-outline-info btn-sm"><i class="bi bi-file-earmark-excel"></i>&nbsp;Export</button>
+            <button type="button" id="exportBtn2" class="btn btn-outline-info btn-md"><i class="bi bi-file-earmark-excel"></i>&nbsp;Export</button>
         @endif
     </div>
 </div>
 <div class="table-responsive">
-    <table class="table table-bordered" id="ewcp-table">
-        <thead>
+    <table class="table table-bordered align-middle table-striped table-hover" id="ewcp-table">
+        <thead class="table-success align-middle">
             <tr>
                 <th rowspan="2">S.No</th>
-                <th rowspan="2">Employee ID</th>
+                <th rowspan="2" nowrap>Employee ID</th>
                 <th rowspan="2">Name</th>
                 <th rowspan="2">Department</th>
                 <th rowspan="2">Role</th>
@@ -20,7 +20,7 @@
             </tr>
             <tr>
                 @foreach ($statuses as $status)
-                    <th>{{ $status->name }}</th>
+                    <th class="table-warning">{{ $status->name }}</th>
                 @endforeach
             </tr>
         </thead>
@@ -42,7 +42,7 @@
                                 ->toArray();
                         @endphp
                         <tr class="">
-                            <td>{{ $i++ }}</td>
+                            <td class="text-center">{{ $i++ }}</td>
                             <td>{{ $user->emp_id }}</td>
                             <td>{{ $user?->name }}</td>
                             <td>{{ $user->department->name }}</td>
@@ -51,7 +51,7 @@
                                     @foreach ($user->roles as $role)
                                         @if ($loop->iteration == 1)
                                             <div class="btn-group w-100">
-                                                <button type="button" class="btn btn-outline-dark btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <button type="button" class="btn btn-outline-primary btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                                                     {{ $role->name }}
                                                 </button>
                                                 <ul class="dropdown-menu">                
@@ -119,7 +119,7 @@
                                         $status_totals[$status_id] = ($status_totals[$status_id] ?? 0) + ($consumer_counts[$user->id][$userga->id][$status_id] ?? 0);
                                     @endphp
                                     <td>
-                                        <a href="{{ url('consumers') }}?{{ http_build_query(['geo_area'=> [$userga->id], 'cns_status' => [$status_id], 'charge_area' => $user->cas->where('ga_id', $userga->id)->pluck('id')->toArray()]) }}" target="_blank">{{ $consumer_counts[$user->id][$userga->id][$status_id] ?? 0 }}</a>
+                                        <a class="fw-semibold" href="{{ url('consumers') }}?{{ http_build_query(['geo_area'=> [$userga->id], 'cns_status' => [$status_id], 'charge_area' => $user->cas->where('ga_id', $userga->id)->pluck('id')->toArray()]) }}" target="_blank">{{ $consumer_counts[$user->id][$userga->id][$status_id] ?? 0 }}</a>
                                     </td>
                                 @else
                                     <td></td>
@@ -128,8 +128,8 @@
                         </tr>
                     @endforeach
                 @endforeach
-                <tr>
-                    <td colspan="7" class="text-end">Totals</td>
+                <tr class="table-info">
+                    <td colspan="7" class="text-end fw-bold">Totals</td>
                     @foreach ($statuses as $status_val)
                         @switch($status_val->id)
                             @case(\App\Enums\ConsumerStatus::REGISTER->value)
@@ -163,7 +163,7 @@
                                 @endphp
                                 @break
                         @endswitch
-                        <td>{{ $status_totals[$status_id] ?? 0 }}</td>
+                        <td class="fw-bold">{{ $status_totals[$status_id] ?? 0 }}</td>
                     @endforeach
                 </tr>
             @else

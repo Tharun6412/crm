@@ -27,7 +27,7 @@ class TeamConsumer extends Model
         'team_id',
         'status_id',
         'status',
-        'updated_by',
+        'created_by',
     ];
 
     /**

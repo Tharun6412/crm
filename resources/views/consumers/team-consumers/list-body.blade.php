@@ -9,27 +9,27 @@
         <div class="col-auto">
             <a href="{{ url('consumers/waiting/pending-consumers') }}" class="btn btn-warning"><i class="bi bi-arrow-clockwise"></i></a>
         </div>
-        <div class="col-auto">
+        <div class="col-auto mt-2">
             <span class="fw-semibold">({{ $consumers->total() }})</span> Records found
         </div>
     </div>
 </div>
-<div class="table-responsive">
-    <table class="table table-bordered">
+<div class="table-responsive mt-2">
+    <table class="table table-bordered table-striped align-middle table-hover">
         <thead class="table-success">
             <tr>
                 <th>S.No</th>
                 <th>CRN</th>
                 <th>Consumer Name</th>
-                <th>Consumer Status</th>
-                <th>Assigned To</th>
-                <th>Status
+                <th width="12%">Consumer Status</th>
+                <th nowrap>Assigned To</th>
+                <th width="11%">Status
                     @php
                         $status_filters = ['' =>'Not Assigned', 0 => 'Assigned', 1 => 'Completed'];
                     @endphp
                     <x-admin.status-filter name="status" :data='$status_filters' class="float-end"/>
                 </th>
-                <th>Assign By</th>
+                <th nowrap>Assign By</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -37,23 +37,34 @@
             @if($consumers->count()>0)
                 @foreach ($consumers as $consumer )
                     <tr>
-                        <td>{{ $loop->iteration }}</td>
-                        <td>{{ $consumer->crn }}</td>
+                        <td class="text-center" width="1%">{{ $loop->iteration }}</td>
+                        <td>
+                            <a href="{{ url('consumers/' . $consumer->id) }}" target="_blank">
+                                {{ $consumer->crn }}
+                            </a>
+                        </td>
                         <td>{{ $consumer->name }}</td>
-                        <td>{{ $consumer->status->name }}</td>
+                        <td>
+                            <x-consumer.status :status="$consumer->status" mode='full' />
+                            {{-- {{ $consumer->status->name }} --}}
+                        </td>
                         <td>{{ $consumer->teamConsumer->first()?->team?->name ?? '' }}</td>
                         <td>
                             @if($consumer->teamConsumer->first()?->status == '')
-                                Not Assigned
+                            <span class="badge text-bg-danger"><i class="bi bi-x-lg"></i>&nbsp;Not Assigned</span>
+                                
                             @elseif ($consumer->teamConsumer->first()?->status == 0)
-                                Assigned
+                             <span class="badge text-bg-primary"><i class="bi bi-gear"></i>&nbsp;Assigned</span>
                             @elseif ($consumer->teamConsumer->first()?->status == 1)
-                                Completed
+                             <span class="badge text-bg-success"><i class="bi bi-check"></i>&nbsp;Completed</span>
                             @endif
                         </td>
                         <td>{{ $consumer->teamConsumer->first()?->updatedBy?->name ?? '' }}</td>
-                        <td>
-                            <div class="dropdown">
+                        <td nowrap>
+                             @if($consumer->teamConsumer->first()?->status == '')
+                                <a class="btn btn-outline-primary link-modal" href="{{ url('consumers/waiting/pending-consumers/create/'.$consumer->id) }}"><i class="bi bi-person-check-fill"></i>&nbsp;Assign</a>
+                             @endif
+                            {{-- <div class="dropdown">
                                 <button class="btn btn-sm btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     Actions
                                 </button>
@@ -62,7 +73,7 @@
                                         <li><a class="dropdown-item link-modal" href="{{ url('consumers/waiting/pending-consumers/create/'.$consumer->id) }}"><i class="bi bi-person-check-fill"></i>&nbsp;Assign</a></li>
                                     @endif
                                 </ul>
-                            </div>
+                            </div> --}}
                         </td>
                     </tr>
                 @endforeach

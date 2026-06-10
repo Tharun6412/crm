@@ -1,6 +1,6 @@
 @extends('layouts.layout')
-@section('title','TeamConsumers')
-@section('page-title','TeamConsumers')
+@section('title','Team Consumers')
+@section('page-title','Team Consumers')
 @section('page-content')
 <div>
     <form id="team-consumers-search-form" action="{{ url('consumers/waiting/pending-consumers') }}" method="GET">

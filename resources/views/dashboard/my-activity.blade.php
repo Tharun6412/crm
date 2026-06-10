@@ -61,8 +61,8 @@
                 ];
             @endphp
             <div class="table-responsive">
-                <table class="table table-bordered">
-                    <thead>
+                <table class="table table-bordered table-striped table-hover">
+                    <thead class="table-success">
                         <tr>
                             <th>Progress</th>
                             <th>Unassigned</th>
@@ -80,8 +80,8 @@
                             </tr>
                             @endforeach
                             <tr>
-                                <td colspan="3" class="text-end">Total</td>
-                                <td>{{ numberFormat(array_sum($consumers_count)) }}</td>
+                                <td colspan="3" class="text-end fw-semibold">Total</td>
+                                <td class="fw-semibold">{{ numberFormat(array_sum($consumers_count)) }}</td>
                             </tr>
                     </tbody>
                 </table>
@@ -112,9 +112,9 @@
                     }
                     // print "<pre>";print_r($cns_status);
                 @endphp
-                <h4>My Teams</h4>
-                <table class="table table-bordered">
-                    <thead>
+                <h3>My Teams</h3>
+                <table class="table table-bordered table-striped table-hover">
+                    <thead class="table-success">
                         <tr>
                             <th>Team</th>
                             <th>Department</th>
