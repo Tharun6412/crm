@@ -44,6 +44,9 @@ class OnboardingStatusReportController extends Controller
                 $q->where('created_at','>=', $status_date);
             }
         })
+        ->when($request->filled('user_id'), function ($q) use ($request) {
+            $q->where('created_by', $request->user_id);
+        })
         ->whereBetween('created_at', [$from, $to])
         ->where('status_id', $request->status_id)->orderBy('created_at', 'desc')->paginate(50)->withQueryString();
         // Check Connection Type Filter
