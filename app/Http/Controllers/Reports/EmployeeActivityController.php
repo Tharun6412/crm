@@ -43,7 +43,7 @@ class EmployeeActivityController extends Controller
                     $q1->whereIn('role_id', $request->roles);
                 });
             })
-            ->paginate(20)->withQueryString();
+            ->get();
             $baseRoles = [
                 Role::MDPE->value,
                 Role::ACTIVATION->value,
@@ -62,7 +62,7 @@ class EmployeeActivityController extends Controller
                 ->when($request->filled('roles'), function ($q) use ($request, $baseRoles) {
                     $q->whereIn('ur.role_id', array_intersect($baseRoles, $request->roles));
                 })
-                ->select('uga.user_id', 'c.ga_id', 'c.ca_id', 'c.status_id', DB::raw('COUNT(*) as total'))
+                ->select('uga.user_id', 'c.ga_id', 'c.status_id', DB::raw('COUNT(DISTINCT c.id) as total'))
                 ->whereIn('c.ga_id', $request->geo_area)
                 ->when(!empty($request->date_from) && !empty($request->date_to), function ($q) use ($request) {
                     $q->whereBetween('c.created_at', [
@@ -70,13 +70,14 @@ class EmployeeActivityController extends Controller
                         Carbon::createFromFormat('d-m-Y', $request->date_to)->endOfDay()
                     ]);
                 })
-                ->groupBy('uga.user_id', 'c.ga_id', 'c.ca_id', 'c.status_id')
+                ->groupBy('uga.user_id', 'c.ga_id', 'c.status_id')
                 ->get();
             // Get Consumer Count
-            $statsMap = [];
+            $consumer_counts = [];
             foreach ($consumerStats as $row) {
-                $statsMap[$row->user_id][$row->ga_id][$row->status_id] = $row->total;
+                $consumer_counts[$row->user_id][$row->ga_id][$row->status_id] = ($consumer_counts[$row->user_id][$row->ga_id][$row->status_id] ?? 0) + $row->total;
             }
+            // Mapping Roles to Consumer Status
             $roleStatusMap = [
                 Role::MARKETING->value => [EnumsConsumerStatus::PRE_REGISTER->value],
                 Role::MDPE->value => [EnumsConsumerStatus::REGISTER->value],
@@ -84,11 +85,11 @@ class EmployeeActivityController extends Controller
                 Role::HSE->value => [EnumsConsumerStatus::EXECUTE->value],
                 Role::ACTIVATION->value => [EnumsConsumerStatus::HSC->value],
             ];
-        // dd($statsMap);
+        // List of Consumers waiting for statuss
         $statuses = MasterConsumerStatus::whereIn('id', [EnumsConsumerStatus::REGISTER->value, EnumsConsumerStatus::EXECUTE->value, EnumsConsumerStatus::ACCEPT->value, EnumsConsumerStatus::HSC->value, EnumsConsumerStatus::ACTIVATE->value])->get();
         return view('reports.consumer.waiting-report.emp-activity', [
             'users' => $users, 
-            'statsMap' => $statsMap, 
+            'consumer_counts' => $consumer_counts, 
             'statuses' => $statuses,
             'roleStatusMap' => $roleStatusMap,
         ]);

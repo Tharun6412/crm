@@ -1,20 +1,12 @@
 <div class="d-flex flex-row justify-content-between pb-3">
     <div class="justify-content-start">
-        {{-- @if ($users->count() > 0)
+        @if ($users->count() > 0)
             <button type="button" id="exportBtn2" class="btn btn-outline-info btn-sm"><i class="bi bi-file-earmark-excel"></i>&nbsp;Export</button>
-        @endif --}}
+        @endif
     </div>
-    {{-- @if ($users->count() > 0)
-        <div class="form-check form-switch mb-2 justify-content-end fw-semibold">
-            <input class="form-check-input custom-check-input" type="checkbox" id="showZeroEmpRows">
-            <label class="form-check-label" for="showZeroEmpRows">
-                Show All - ({{ $users->count() }})
-            </label>
-        </div>
-    @endif --}}
 </div>
 <div class="table-responsive">
-    <table class="table table-bordered">
+    <table class="table table-bordered" id="ewcp-table">
         <thead>
             <tr>
                 <th rowspan="2">S.No</th>
@@ -35,8 +27,9 @@
         <tbody>
             @if ($users->count() > 0)
                 @php
-                    $i = (($users->currentPage() - 1) * $users->perPage())+1;
                     $total_count = 0;
+                    $i = 1;
+                    $status_totals = [];
                 @endphp
                 @foreach ($users as $user)
                     @foreach ($user->ga as $userga)
@@ -122,21 +115,57 @@
                                         @break
                                 @endswitch
                                 @if(in_array($status_id, $userAllowedStatuses[$user->id]))
+                                    @php
+                                        $status_totals[$status_id] = ($status_totals[$status_id] ?? 0) + ($consumer_counts[$user->id][$userga->id][$status_id] ?? 0);
+                                    @endphp
                                     <td>
-                                        <a href="{{ url('reports/consumer/waiting/consumersListForEmployees') }}?{{ http_build_query(['ga_id'=> $userga->id, 'cns_status' => $status_id]) }}" class="link-modal">{{ $statsMap[$user->id][$userga->id][$status_id] ?? 0 }}</a>
+                                        <a href="{{ url('consumers') }}?{{ http_build_query(['geo_area'=> [$userga->id], 'cns_status' => [$status_id], 'charge_area' => $user->cas->where('ga_id', $userga->id)->pluck('id')->toArray()]) }}" target="_blank">{{ $consumer_counts[$user->id][$userga->id][$status_id] ?? 0 }}</a>
                                     </td>
                                 @else
                                     <td></td>
                                 @endif
                             @endforeach
-                            {{-- <td class="text-center"><a href="{{ url('consumers/waiting/pending-consumers') }}?{{ http_build_query(['geo_area' => $user->ga->pluck('id')->toArray(), 'charge_area' => $user->cas->pluck('id')->toArray(), 'cns_status' => [2,3,4,5], 'date_from' => request()->date_from, 'date_to' => request()->date_to]) }}" target="_blank">{{ $user->count ?? 0 }}</a></td> --}}
                         </tr>
                     @endforeach
                 @endforeach
-                    {{-- <tr>
-                        <td colspan="7" class="text-end">Totals</td>
-                        <td class="text-center">{{ $total_count }}</td>
-                    </tr> --}}
+                <tr>
+                    <td colspan="7" class="text-end">Totals</td>
+                    @foreach ($statuses as $status_val)
+                        @switch($status_val->id)
+                            @case(\App\Enums\ConsumerStatus::REGISTER->value)
+                                @php
+                                    $status_id = \App\Enums\ConsumerStatus::PRE_REGISTER->value;
+                                @endphp
+                                @break
+                            @case(\App\Enums\ConsumerStatus::ACCEPT->value)
+                                @php
+                                    $status_id = \App\Enums\ConsumerStatus::REGISTER->value;
+                                @endphp
+                                @break
+                            @case(\App\Enums\ConsumerStatus::EXECUTE->value)
+                                @php
+                                    $status_id = \App\Enums\ConsumerStatus::ACCEPT->value;
+                                @endphp
+                                @break
+                            @case(\App\Enums\ConsumerStatus::HSC->value)
+                                @php
+                                    $status_id = \App\Enums\ConsumerStatus::EXECUTE->value;
+                                @endphp
+                                @break
+                            @case(\App\Enums\ConsumerStatus::ACTIVATE->value)
+                                @php
+                                    $status_id = \App\Enums\ConsumerStatus::HSC->value;
+                                @endphp
+                                @break
+                            @default
+                                @php
+                                    $status_id = NULL;
+                                @endphp
+                                @break
+                        @endswitch
+                        <td>{{ $status_totals[$status_id] ?? 0 }}</td>
+                    @endforeach
+                </tr>
             @else
                 <tr>
                     <td colspan="8">No records found</td>
@@ -144,12 +173,6 @@
             @endif
         </tbody>
     </table>
-    {{-- load utils file for pagination --}}
-    @if ($users->count() > 0)
-        <div class="col-sm-12">
-            {{ $users->links('utils.paginator', ['modDiv' => 'report-emp-activity-list']) }}
-        </div>
-    @endif
 </div>
 <script type="text/javascript">
     $('#showZeroEmpRows').on('change', function () {
@@ -157,3 +180,10 @@
     });
 </script>
 @include('scripts.link-modal')
+@include('scripts.export-table', [
+    'table' => 'ewcp-table',
+    'button' => 'exportBtn2',
+    'tabBased' => false,
+    'filename' => 'employee-wise-connection-progress',
+    'sheet'    => 'Report',
+])

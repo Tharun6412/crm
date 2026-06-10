@@ -7,11 +7,7 @@
             <button type="submit" class="btn btn-success"><i class="bi bi-search"></i></button>
         </div>
         <div class="col-auto">
-<<<<<<< Updated upstream
             <a href="{{ url('consumers/waiting/pending-consumers') }}" class="btn btn-warning"><i class="bi bi-arrow-clockwise"></i></a>
-=======
-            <a href="{{ url('lms/leads') }}" class="btn btn-warning"><i class="bi bi-arrow-clockwise"></i></a>
->>>>>>> Stashed changes
         </div>
         <div class="col-auto">
             <span class="fw-semibold">({{ $consumers->total() }})</span> Records found
@@ -63,11 +59,7 @@
                                 </button>
                                 <ul class="dropdown-menu">
                                     @if($consumer->teamConsumer->first()?->status == '')
-<<<<<<< Updated upstream
                                         <li><a class="dropdown-item link-modal" href="{{ url('consumers/waiting/pending-consumers/create/'.$consumer->id) }}"><i class="bi bi-person-check-fill"></i>&nbsp;Assign</a></li>
-=======
-                                        <li><a class="dropdown-item link-modal" href="{{ url('consumers/waiting/pending-consumers/'.$consumer->id.'/edit') }}"><i class="bi bi-person-check-fill"></i>&nbsp;Assign</a></li>
->>>>>>> Stashed changes
                                     @endif
                                 </ul>
                             </div>
