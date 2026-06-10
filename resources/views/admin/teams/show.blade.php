@@ -11,11 +11,7 @@
             </div>
             {{-- Employees Table --}}
             <div class="card border shadow-sm">
-<<<<<<< Updated upstream
                 <div class="card-header bg-info-subtle fw-semibold"><i class="bi bi-person-lines-fill text-secondary"></i>&nbsp;Employees List <span class="float-end">Team Coordinator - {{ $team->responsibleUser->name }} ({{ $team->responsibleUser->emp_id }})</span></div>
-=======
-                <div class="card-header bg-white fw-semibold"><i class="bi bi-person-lines-fill text-secondary"></i>&nbsp;Employees List <span class="float-end">Team Coordinator - {{ $team->responsibleUser->name }} ({{ $team->responsibleUser->emp_id }})</span></div>
->>>>>>> Stashed changes
                 <div class="table-responsive">
                     <table class="table table-bordered table-hover align-middle mb-3">
                         <thead class="table-secondary">
