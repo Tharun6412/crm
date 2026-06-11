@@ -20,7 +20,7 @@
 	}
 	// Potential Values based on stage
 	foreach($potentials as $pot) {
-		$potential[$pot->segment->id][$pot->stage->parent_id] = $pot->total_potential;
+		$potential[$pot->segment->id][$pot->stage->parent_id] = ($potential[$pot->segment->id][$pot->stage->parent_id] ?? 0) + $pot->total_potential;
 	}
 @endphp
 @foreach ($segments as $segment)

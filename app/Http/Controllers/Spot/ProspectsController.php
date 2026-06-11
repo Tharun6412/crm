@@ -67,6 +67,8 @@ class ProspectsController extends Controller
             });
         })->When($request->has('sub_stage_id'), function($q) use($request) {
             $q->whereIn('stage_id', $request->get('sub_stage_id'));
+        })->when(!$request->has('sub_stage_id'), function ($q) {
+            $q->whereNot('stage_id', SpotStages::LOSE->value);
         })->When($request->has('status_id'), function($q) use($request) {
             $q->whereIn('status_id', $request->get('status_id'));
         })->When($request->has('segments'), function($q) use($request) {
@@ -107,11 +109,9 @@ class ProspectsController extends Controller
                 });
             })->When($request->has('sub_stage_id'), function($q) use($request) {
                 $q->whereIn('stage_id', $request->get('sub_stage_id'));
-            })
-            ->when(!$request->has('sub_stage_id'), function ($q) {
+            })->when(!$request->has('sub_stage_id'), function ($q) {
                 $q->whereNot('stage_id', SpotStages::LOSE->value);
-            })
-            ->When($request->has('status_id'), function($q) use($request) {
+            })->When($request->has('status_id'), function($q) use($request) {
                 $q->whereIn('status_id', $request->get('status_id'));
             })->When($request->has('segments'), function($q) use($request) {
                 $q->whereIn('segment_id', $request->get('segments'));

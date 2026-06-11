@@ -51,7 +51,7 @@ class DashboardController extends Controller
         $data['fuel_raw_data'] = $fuel_query->groupBy('segment_id', 'fuel_id')->get();
         // Potential Values 
         $query = Prospects::select('segment_id','stage_id', DB::raw('SUM(potential) as total_potential'))
-            ->whereBetween('spt_prospects.expected_date', [$data['y_start'], $data['y_end']])
+            ->whereBetween('expected_date', [$data['y_start'], $data['y_end']])
             ->whereNotIn('status_id', [SpotStatus::HOLD->value, SpotStatus::CANCEL->value, SpotStatus::CLOSED_LOST->value]);
         $query = $this->filterData($query, $request);
         $data['potentials'] = $query->groupBy('segment_id','stage_id')->get();
