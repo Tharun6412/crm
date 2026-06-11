@@ -15,6 +15,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Dashboard
     Route::get('dashboard/list', [App\Http\Controllers\Api\V1\Application\DashboardController::class, 'list']);
+    Route::get('myActivity', [App\Http\Controllers\Api\V1\Application\MyActivityController::class, 'index']);
     // Consumers routes
     Route::prefix('consumer')->group(function () {
         // Consumer Controller

@@ -12,6 +12,7 @@ use App\Models\Consumer\ConsumerDocument;
 use App\Models\Consumer\ConsumerStatus;
 use App\Models\Consumer\ConsumerMeter;
 use App\Notifications\Consumer\ExecuteSmsNotification;
+use App\Services\ConsumerStatusService;
 use App\Services\SmsService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -88,6 +89,8 @@ class ExecuteController extends Controller
             'status_id' => EnumsConsumerStatus::EXECUTE->value,
             'updated_by' => Auth::id(),
         ]);
+        // Consumer Target Status 
+        $target_status = ConsumerStatusService::update($id, EnumsConsumerStatus::EXECUTE->value);
         // Status History
         ConsumerStatus::create([
             'consumer_id' => $id,

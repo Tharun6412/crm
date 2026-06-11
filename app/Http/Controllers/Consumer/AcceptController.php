@@ -5,11 +5,13 @@ use App\Enums\ConsumerStatus as EnumsConsumerStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Consumer\Consumer;
 use App\Models\Consumer\ConsumerStatus;
+use App\Models\Consumer\TeamConsumer;
 use App\Models\Invoice\BillInvoice;
 use App\Models\Invoice\InvoicePayment;
 use App\Models\Invoice\Ledger;
 use App\Notifications\Consumer\AcceptSmsNotification;
 use App\Notifications\Consumer\RejectSmsNotification;
+use App\Services\ConsumerStatusService;
 use App\Services\LedgerService;
 use App\Services\SmsService;
 use Carbon\Carbon;
@@ -62,6 +64,9 @@ class AcceptController extends Controller
             'status_id' => $con_status,
             'updated_by' => Auth::id(),
         ]);
+
+        // Consumer Target Status 
+        $target_status = ConsumerStatusService::update($id, EnumsConsumerStatus::ACCEPT->value);
         // Status History
         ConsumerStatus::create([
             'consumer_id' => $id,

@@ -46,6 +46,6 @@ class AppServiceProvider extends ServiceProvider
         require_once app_path('Helpers/utils.php');
 
         // Passport token configuration
-        Passport::clientCredentialsTokensExpireIn(new DateInterval('PT5M'));
+        // Passport::clientCredentialsTokensExpireIn(new DateInterval('PT5M'));
     }
 }

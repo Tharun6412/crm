@@ -45,12 +45,12 @@
                                 <td class="text-center">{{ $date->format('M-y') }}</td>
                                 <td class="text-end">{{ $targets[$segment->id][$date->format('m')] ?? '' }}</td>
                                 <td class="text-end">
-                                    <a href="{{ url('spot/prospects?'. http_build_query(['segments' => [$segment->id]]) .'&expected_date_from='. $date->startOfMonth()->format('d-m-Y') .'&expected_date_to='. $date->endOfMonth()->format('d-m-Y')) }}" target="_blank">
+                                    <a href="{{ url('spot/prospects?'. http_build_query(['segments' => [$segment->id]]) .'&expected_date_from='. $date->copy()->startOfMonth()->format('d-m-Y') .'&expected_date_to='. $date->copy()->endOfMonth()->format('d-m-Y')) }}" target="_blank">
                                         {{ $potential[$segment->id][$date->format('m')] ?? '' }}
                                     </a>
                                 </td>
                                 <td class="text-end">
-                                    <a href="{{ url('spot/prospects?'. http_build_query(['segments' => [$segment->id]]) .'&expected_date_from='. $date->startOfMonth()->format('d-m-Y') .'&expected_date_to='. $date->endOfMonth()->format('d-m-Y') . '&' . http_build_query(['sub_stage_id' => [16]])) }}" target="_blank">
+                                    <a href="{{ url('spot/prospects?'. http_build_query(['segments' => [$segment->id]]) .'&expected_date_from='. $date->copy()->startOfMonth()->format('d-m-Y') .'&expected_date_to='. $date->copy()->endOfMonth()->format('d-m-Y') . '&' . http_build_query(['sub_stage_id' => [16]])) }}" target="_blank">
                                         {{ $achieved[$segment->id][$date->format('m')] ?? '' }}
                                     </a>
                                 </td>

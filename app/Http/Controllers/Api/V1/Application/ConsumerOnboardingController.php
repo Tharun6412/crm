@@ -17,6 +17,7 @@ use App\Notifications\Consumer\ActivateSmsNotification;
 use App\Notifications\Consumer\ExecuteSmsNotification;
 use App\Notifications\Consumer\HscSmsNotification;
 use App\Notifications\Consumer\RejectSmsNotification;
+use App\Services\ConsumerStatusService;
 use App\Services\SmsService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -62,6 +63,8 @@ class ConsumerOnboardingController extends Controller
                 'status_id' => $con_status,
                 'updated_by' => Auth::id(),
             ]);
+            // Consumer Target Status 
+            $target_status = ConsumerStatusService::update($id, EnumsConsumerStatus::ACCEPT->value);
             // Status History
             ConsumerStatus::create([
                 'consumer_id' => $id,
@@ -138,6 +141,8 @@ class ConsumerOnboardingController extends Controller
                     'status_id' => EnumsConsumerStatus::EXECUTE->value,
                     'updated_by' => Auth::id(),
                 ]);
+                // Consumer Target Status 
+                $target_status = ConsumerStatusService::update($id, EnumsConsumerStatus::EXECUTE->value);
                 // Status History
                 ConsumerStatus::create([
                     'consumer_id' => $id,
@@ -181,6 +186,8 @@ class ConsumerOnboardingController extends Controller
                 'status_id' => 5,
                 'updated_by' => Auth::id(),
             ]);
+            // Consumer Target Status 
+            $target_status = ConsumerStatusService::update($id, EnumsConsumerStatus::HSC->value);
             // Consumer Status History
             ConsumerStatus::create([
                 'consumer_id' => $id,
@@ -226,6 +233,8 @@ class ConsumerOnboardingController extends Controller
                 'activation_date' => now()->toDateTimeString(),
                 'updated_by' => Auth::id(),
             ]);
+            // Consumer Target Status 
+            $target_status = ConsumerStatusService::update($id, EnumsConsumerStatus::ACTIVATE->value);
             // Status History
             ConsumerStatus::create([
                 'consumer_id' => $id,

@@ -107,7 +107,11 @@ class ProspectsController extends Controller
                 });
             })->When($request->has('sub_stage_id'), function($q) use($request) {
                 $q->whereIn('stage_id', $request->get('sub_stage_id'));
-            })->When($request->has('status_id'), function($q) use($request) {
+            })
+            ->when(!$request->has('sub_stage_id'), function ($q) {
+                $q->whereNot('stage_id', SpotStages::LOSE->value);
+            })
+            ->When($request->has('status_id'), function($q) use($request) {
                 $q->whereIn('status_id', $request->get('status_id'));
             })->When($request->has('segments'), function($q) use($request) {
                 $q->whereIn('segment_id', $request->get('segments'));
@@ -242,7 +246,7 @@ class ProspectsController extends Controller
     public function getDetailsByGA(Request $request)
     {
         $users_list = User::select('id', 'first_name', 'last_name')->whereHas('ga', function($q) use($request) {
-            $q->where('ga_id', $request->ga_id);
+            $q->where('mst_gas.id', $request->ga_id);
         })->whereHas('roles', function($q) use($request) {
             $q->whereIn('role_id', [Role::CLUSTER_HEAD->value, Role::GA_HEAD->value, Role::SALES_OFFICER->value]);
         })->get();

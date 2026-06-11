@@ -21,9 +21,9 @@
                         </div>
                     </div>
                     <div class="mb-2" id="team-error"></div>  
-                    <div class="row mt-3">
-                        <div class="col-sm-12 text-end">
-                            <button type="submit" class="btn btn-success btn-md"><i class="bi bi-save" aria-hidden="true">&nbsp;</i>Assign</button>
+                    <div class="row ">
+                        <div class="offset-sm-2 col-sm-10">
+                            <button type="submit" class="btn btn-success btn-sm"><i class="bi bi-save" aria-hidden="true">&nbsp;</i>Assign</button>
                         </div>
                     </div>
                 </div> 

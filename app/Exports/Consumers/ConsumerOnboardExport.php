@@ -29,8 +29,8 @@ class ConsumerOnboardExport implements FromQuery, WithHeadings, WithMapping
     public function query()
     {
         // Prepare params
-        $from = Carbon::parse($this->request->date_from)->startOfDay();
-        $to   = Carbon::parse($this->request->date_to)->endOfDay();
+        $from = $this->request->date_from ? Carbon::parse($this->request->date_from)->startOfDay() : '';
+        $to   = $this->request->date_to ? Carbon::parse($this->request->date_to)->endOfDay() : '';
         $status_date = NULL;
         if($this->request->filled('status_date')) {
             $status_date = Carbon::parse($this->request->status_date)->startOfDay();
@@ -50,7 +50,12 @@ class ConsumerOnboardExport implements FromQuery, WithHeadings, WithMapping
                     $q->where('created_at','>=', $status_date);
                 }
             })
-            ->whereBetween('created_at', [$from, $to])
+            ->when($this->request->filled('user_id'), function ($q) {
+                $q->where('created_by', $this->request->user_id);
+            })
+            ->when(!empty($this->request->filled('date_from')) AND !empty($this->request->filled('date_to')), function($q) use($from, $to) {
+                $q->whereBetween('created_at', [$from, $to]);
+            })
             ->where('status_id', $this->request->status_id)->orderBy('created_at', 'desc');
         return $consumers;
     }

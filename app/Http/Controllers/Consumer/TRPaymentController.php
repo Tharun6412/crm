@@ -20,6 +20,7 @@ use App\Models\Invoice\Ledger;
 use App\Models\Master\PaymentType;
 use App\Notifications\Consumer\AcceptSmsNotification;
 use App\Notifications\Consumer\WelcomeSmsNotification;
+use App\Services\ConsumerStatusService;
 use App\Services\InvoiceService;
 use App\Services\LedgerService;
 use App\Services\PaymentService;
@@ -95,6 +96,8 @@ class TRPaymentController extends Controller
                 'status_id' => EnumsConsumerStatus::REGISTER->value,
                 'updated_by' => Auth::id(),
             ]);
+            // Consumer Target Status 
+            $target_status = ConsumerStatusService::update($id, EnumsConsumerStatus::REGISTER->value);
             // Scheme Details
             // Paid Amount = Amount - Minimun Payment
             $paid_amt = $request->amount - $consumer_scheme->scheme->registration;

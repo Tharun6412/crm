@@ -10,6 +10,7 @@ use App\Models\Consumer\Consumer;
 use App\Models\Consumer\ConsumerDocument;
 use App\Models\Consumer\ConsumerStatus;
 use App\Notifications\Consumer\HscSmsNotification;
+use App\Services\ConsumerStatusService;
 use App\Services\SmsService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -56,6 +57,8 @@ class HscController extends Controller
             'status_id' => EnumsConsumerStatus::HSC->value,
             'updated_by' => Auth::id(),
         ]);
+        // Consumer Target Status 
+        $target_status = ConsumerStatusService::update($id, EnumsConsumerStatus::HSC->value);
         // Consumer Status History
         ConsumerStatus::create([
             'consumer_id' => $id,
