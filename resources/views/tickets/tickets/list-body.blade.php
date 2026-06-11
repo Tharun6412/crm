@@ -13,7 +13,7 @@
         <div class="col-auto">
             <a href="{{ url('tickets/') }}" class="btn btn-warning"><i class="bi bi-arrow-clockwise"></i></a>
         </div>
-        <div class="col-auto">
+        <div class="col-auto mt-2">
             <span class="fw-semibold">({{ $tickets->total() }})</span>Records Found
         </div>
     </div>
@@ -26,7 +26,7 @@
     $i = (($tickets->currentPage() - 1) * $tickets->perPage())+1;
 @endphp
 <div class="table-responsive">
-    <table class="table table-bordered">
+    <table class="table table-bordered table-striped table-hover">
         <thead class="table-success">
             <tr>
                 <th width="1%" nowrap>S.No</th>
@@ -51,7 +51,7 @@
             @if ($tickets->count()>0)
                 @foreach ($tickets as $ticket)
                     <tr>
-                        <td>{{ $loop->iteration }}</td>
+                        <td class="text-center">{{ $loop->iteration }}</td>
                         <td><a href="{{ url('tickets/show/'.$ticket->id) }}" class="link-modal">{{ $ticket->code }}</a></td>
                         <td><a href="{{ url('consumers/'.$ticket->consumer_id) }}" target="_blank">{{ $ticket->consumer->crn ?? ''}}</a></td>
                         <td>{{ $ticket->consumer->name ?? '' }}</td>

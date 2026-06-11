@@ -12,7 +12,7 @@
             <div>
                 <x-tickets.ticket-details :ticket="$ticket"/>
             </div>
-            <div class="row mb-2">
+            <div class="p-3">
                 <h4>Description : </h4> 
                 <div class="border rounded p-3">
                     {{ $ticket->description }}

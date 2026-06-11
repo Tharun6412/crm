@@ -119,7 +119,7 @@
                                         $status_totals[$status_id] = ($status_totals[$status_id] ?? 0) + ($consumer_counts[$user->id][$userga->id][$status_id] ?? 0);
                                     @endphp
                                     <td>
-                                        <a class="fw-semibold" href="{{ url('consumers') }}?{{ http_build_query(['geo_area'=> [$userga->id], 'cns_status' => [$status_id], 'charge_area' => $user->cas->where('ga_id', $userga->id)->pluck('id')->toArray()]) }}" target="_blank">{{ $consumer_counts[$user->id][$userga->id][$status_id] ?? 0 }}</a>
+                                        <a class="fs-5" href="{{ url('consumers') }}?{{ http_build_query(['geo_area'=> [$userga->id], 'cns_status' => [$status_id], 'charge_area' => $user->cas->where('ga_id', $userga->id)->pluck('id')->toArray()]) }}" target="_blank">{{ $consumer_counts[$user->id][$userga->id][$status_id] ?? 0 }}</a>
                                     </td>
                                 @else
                                     <td></td>
@@ -129,7 +129,7 @@
                     @endforeach
                 @endforeach
                 <tr class="table-info">
-                    <td colspan="7" class="text-end fw-bold">Totals</td>
+                    <td colspan="7" class="text-end fw-bold fs-5">Totals</td>
                     @foreach ($statuses as $status_val)
                         @switch($status_val->id)
                             @case(\App\Enums\ConsumerStatus::REGISTER->value)
@@ -163,7 +163,7 @@
                                 @endphp
                                 @break
                         @endswitch
-                        <td class="fw-bold">{{ $status_totals[$status_id] ?? 0 }}</td>
+                        <td class="fw-bold fs-5">{{ $status_totals[$status_id] ?? 0 }}</td>
                     @endforeach
                 </tr>
             @else

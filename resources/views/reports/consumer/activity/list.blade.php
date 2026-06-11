@@ -3,11 +3,11 @@
     <button type="button" id="exportBtn" class="btn btn-outline-info"><i class="bi bi-file-earmark-excel"></i>&nbsp;Export</button>
 </div>
 <div class="table-responsive mt-2" id="employee_progress_table">
-    <table class="table table-bordered">
+    <table class="table table-bordered table-striped table-hover">
         <thead class='table-success'>
             <tr class="text-center">
-                <th>S.No</th>
-                <th>Employee</th>
+                <th class="text-center">S.No</th>
+                <th class="text-start">Employee</th>
                 <th>TR</th>
                 <th>Registered</th>
                 <th>Accept</th>
@@ -22,7 +22,7 @@
         <tbody>
             @foreach($user_roles as $userId => $userName)
                 <tr>
-                    <td>{{ $loop->iteration }}</td>
+                    <td class="text-center">{{ $loop->iteration }}</td>
                     <td>{{ $userName }}</td>
                     <td class="text-center">
                         <a href="{{ url('reports/consumer/onboardingStatusReport') }}?{{ http_build_query([
@@ -35,7 +35,7 @@
                             'connection_type_id' => request()->connection_type_id,
                             'segment_id' => request()->segment_id,
                             'status_date' => request()->status_date,
-                        ]) }}" class="link-modal">
+                        ]) }}" class="link-modal fs-5">
                             {{ $users_data[$userId][\App\Enums\ConsumerStatus::PRE_REGISTER->value] ?? 0 }}
                         </a>
                     </td>
@@ -50,7 +50,7 @@
                             'connection_type_id' => request()->connection_type_id,
                             'segment_id' => request()->segment_id,
                             'status_date' => request()->status_date,
-                        ]) }}" class="link-modal">
+                        ]) }}" class="link-modal fs-5">
                             {{ $users_data[$userId][\App\Enums\ConsumerStatus::REGISTER->value] ?? 0 }}
                         </a>
                     </td>
@@ -66,7 +66,7 @@
                             'connection_type_id' => request()->connection_type_id,
                             'segment_id' => request()->segment_id,
                             'status_date' => request()->status_date,
-                        ]) }}" class="link-modal">
+                        ]) }}" class="link-modal fs-5">
                             {{ $users_data[$userId][\App\Enums\ConsumerStatus::ACCEPT->value] ?? 0 }}
                         </a>
                     </td>
@@ -81,7 +81,7 @@
                             'connection_type_id' => request()->connection_type_id,
                             'segment_id' => request()->segment_id,
                             'status_date' => request()->status_date,
-                        ]) }}" class="link-modal">
+                        ]) }}" class="link-modal fs-5">
                             {{ $users_data[$userId][\App\Enums\ConsumerStatus::EXECUTE->value] ?? 0 }}
                         </a>
                     </td>
@@ -96,7 +96,7 @@
                             'connection_type_id' => request()->connection_type_id,
                             'segment_id' => request()->segment_id,
                             'status_date' => request()->status_date,
-                        ]) }}" class="link-modal">
+                        ]) }}" class="link-modal fs-5">
                             {{ $users_data[$userId][\App\Enums\ConsumerStatus::HSC->value] ?? 0 }}
                         </a>
                     </td>
@@ -111,7 +111,7 @@
                             'connection_type_id' => request()->connection_type_id,
                             'segment_id' => request()->segment_id,
                             'status_date' => request()->status_date,
-                        ]) }}" class="link-modal">
+                        ]) }}" class="link-modal fs-5">
                             {{ $users_data[$userId][\App\Enums\ConsumerStatus::ACTIVATE->value] ?? 0 }}
                         </a>
                     </td>
@@ -126,7 +126,7 @@
                             'connection_type_id' => request()->connection_type_id,
                             'segment_id' => request()->segment_id,
                             'status_date' => request()->status_date,
-                        ]) }}" class="link-modal">
+                        ]) }}" class="link-modal fs-5">
                             {{ $users_data[$userId][\App\Enums\ConsumerStatus::TD->value] ?? 0 }}
                         </a>
                     </td>
@@ -141,7 +141,7 @@
                             'connection_type_id' => request()->connection_type_id,
                             'segment_id' => request()->segment_id,
                             'status_date' => request()->status_date,
-                        ]) }}" class="link-modal">
+                        ]) }}" class="link-modal fs-5">
                             {{ $users_data[$userId][\App\Enums\ConsumerStatus::PD->value] ?? 0 }}
                         </a>
                     </td>
@@ -156,7 +156,7 @@
                             'connection_type_id' => request()->connection_type_id,
                             'segment_id' => request()->segment_id,
                             'status_date' => request()->status_date,
-                        ]) }}" class="link-modal">
+                        ]) }}" class="link-modal fs-5">
                             {{ $users_data[$userId][\App\Enums\ConsumerStatus::REJECT->value] ?? 0 }}
                         </a>
                     </td>
@@ -164,8 +164,8 @@
             @endforeach
         </tbody>
         <tfoot>
-            <tr class="table-info fw-bold">
-                <td colspan="2">Totals</td>
+            <tr class="table-info fw-bold fs-5">
+                <td colspan="2" class="text-end">Total Counts</td>
                 <td class="text-center">
                     {{ $users_sum[\App\Enums\ConsumerStatus::PRE_REGISTER->value] ?? 0 }}
                 </td>
