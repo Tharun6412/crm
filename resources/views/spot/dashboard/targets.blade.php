@@ -111,12 +111,12 @@
                                 <td class="text-center">{{ "Q".$q }}({{ $q_start->format('M y')." - ".$q_end->format('M y') }})</td>
                                 <td class="text-end">{{ $target_sum }}</td>
                                 <td class="text-end">
-                                    <a href="{{ url('spot/prospects?' . http_build_query(['segments' => [$segment->id]]) . '&expected_date_from='. $q_start->format('d-m-Y') .'&expected_date_to='. $q_end->format('d-m-Y')) }}">
+                                    <a href="{{ url('spot/prospects?' . http_build_query(['segments' => [$segment->id]]) . '&expected_date_from='. $q_start->format('d-m-Y') .'&expected_date_to='. $q_end->endOfMonth()->format('d-m-Y')) }}">
                                         {{ $potential_sum }}
                                     </a>
                                 </td>
                                 <td class="text-end">
-                                    <a href="{{ url('spot/prospects?' . http_build_query(['segments' => [$segment->id]]) . '&expected_date_from='. $q_start->format('d-m-Y') .'&expected_date_to='. $q_end->format('d-m-Y') . '&' . http_build_query(['sub_stage_id' => [16]])) }}">
+                                    <a href="{{ url('spot/prospects?' . http_build_query(['segments' => [$segment->id]]) . '&expected_date_from='. $q_start->format('d-m-Y') .'&expected_date_to='. $q_end->endOfMonth()->format('d-m-Y') . '&' . http_build_query(['sub_stage_id' => [16]])) }}">
                                         {{ $achieved_sum }}
                                     </a>
                                 </td>
