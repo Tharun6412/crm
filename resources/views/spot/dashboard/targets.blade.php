@@ -116,7 +116,7 @@
                                     </a>
                                 </td>
                                 <td class="text-end">
-                                    <a href="{{ url('spot/prospects?' . http_build_query(['segments' => [$segment->id]]) . '&expected_date_from='. $q_start->format('d-m-Y') .'&expected_date_to='. $q_end->endOfMonth()->format('d-m-Y') . '&' . http_build_query(['sub_stage_id' => [16]])) }}">
+                                    <a href="{{ url('spot/prospects?' . http_build_query(['segments' => [$segment->id]]) . '&expected_date_from='. $q_start->format('d-m-Y') .'&expected_date_to='. $q_end->endOfMonth()->format('d-m-Y') . '&' . http_build_query(['sub_stage_id' => [19]])) }}">
                                         {{ $achieved_sum }}
                                     </a>
                                 </td>

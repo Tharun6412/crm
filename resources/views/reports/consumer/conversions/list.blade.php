@@ -79,25 +79,25 @@
                 <td class="text-end">{{ numberFormat(array_sum($conversion_balance)) }}</td>
                 <td class="text-end">{{ numberFormat(array_sum($conversion_cumulative)) }}</td>
                 <td class="text-end">
-                    <a href="{{ url('reports/consumer/conversions/prepaidConsumers') }}?{{ http_build_query([
+                    {{-- <a href="{{ url('reports/consumer/conversions/prepaidConsumers') }}?{{ http_build_query([
                         'date_from' => request()->conv_date_from,
                         'date_to' => request()->conv_date_to,
                         'conv_segment_id' => request()->conv_segment_id,
                     ]) }}" class="link-modal">
-                        {{ numberFormat(array_sum($conversion_between)) }}
-                    </a>
+                    </a> --}}
+                    {{ numberFormat(array_sum($conversion_between)) }}
                 </td>
                 <td class="text-end">{{ numberFormat(array_sum($recon_balance)) }}</td>
                 <td class="text-end">{{ numberFormat(array_sum($recon_cumulative)) }}</td>
                 <td class="text-end">
-                    <a href="{{ url('reports/consumer/onboardingStatusReport') }}?{{ http_build_query([
+                    {{-- <a href="{{ url('reports/consumer/onboardingStatusReport') }}?{{ http_build_query([
                         'status_id' => \App\Enums\ConsumerStatus::RECONNECT->value,
                         'date_from' => request()->conv_date_from,
                         'date_to' => request()->conv_date_to,
                         'segment_id' => request()->segment_id,
                     ]) }}" class="link-modal">
-                        {{ numberFormat(array_sum($recon_between)) }}
-                    </a>
+                    </a> --}}
+                    {{ numberFormat(array_sum($recon_between)) }}
                 </td>
             </tr>
         </tfoot>
