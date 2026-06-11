@@ -29,7 +29,7 @@ class DashboardController extends Controller
      * - Prospects Status count
      *
      * @param Request $request
-     * @return view
+     * @return Object view
      */
     public function index(Request $request)
     {
@@ -40,23 +40,24 @@ class DashboardController extends Controller
         $data['y_start'] = Carbon::create($data['target_year'], 4, 1);
         $data['y_end'] = $data['y_start']->copy()->addYear()->subMonth()->endOfMonth();
         
+        // Queries
         $data['status_list'] = Stage::where('type', 1)->whereNull('parent_id')->get();
         // Fuel Data Preparation Process
         $data['fuel_types'] = FuelType::all();
         $fuel_query = Prospects::select('segment_id', 'fuel_id', DB::raw('SUM(potential) as fuel_potential'))
-            ->whereBetween('created_at', [$data['y_start'], $data['y_end']]);
+            ->whereBetween('expected_date', [$data['y_start'], $data['y_end']]);
         $fuel_query = $this->filterData($fuel_query, $request);
         $data['fuel_raw_data'] = $fuel_query->groupBy('segment_id', 'fuel_id')->get();
         // Potential Values 
         $query = Prospects::select('segment_id','stage_id', DB::raw('SUM(potential) as total_potential'))
-            ->whereBetween('spt_prospects.created_at', [$data['y_start'], $data['y_end']]);
+            ->whereBetween('spt_prospects.expected_date', [$data['y_start'], $data['y_end']]);
         $query = $this->filterData($query, $request);
         $data['potentials'] = $query->groupBy('segment_id','stage_id')->get();
         // Prospects List
         $prospect_query = Prospects::select('spt_prospects.segment_id', 'spt_stages.parent_id', DB::raw('COUNT(spt_prospects.stage_id) as status_count'))
             ->join('spt_stages', 'spt_prospects.stage_id', '=', 'spt_stages.id')
             ->leftJoin('mst_gas', 'spt_prospects.ga_id', '=', 'mst_gas.id')
-            ->whereBetween('spt_prospects.created_at', [$data['y_start'], $data['y_end']]);
+            ->whereBetween('spt_prospects.expected_date', [$data['y_start'], $data['y_end']]);
         $prospect_query = $this->filterData($prospect_query, $request);
         $data['prospect_data'] = $prospect_query->groupBy('spt_prospects.segment_id', 'spt_stages.parent_id')->get();
         // Monthly Targets Data
@@ -90,7 +91,7 @@ class DashboardController extends Controller
 
     /**
      * Callback Function for filter
-     * @param query, request
+     * @param Object $query
      */
     public function filterData($query, Request $request) {
         return 
@@ -102,6 +103,7 @@ class DashboardController extends Controller
                 });
             });
     }
+    
     /**
      * Help
      */

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Dashboard;
 
+use App\Contracts\PngrbUnifiedPortal\Application;
 use App\Enums\ComplaintStatus;
 use App\Enums\ConnectionType;
 use App\Enums\ConsumerStatus;
@@ -145,5 +146,15 @@ class HomeController extends Controller
             'geo_areas' => $geo_areas,
             'clusters' => $clusters,
         ]);
+    }
+
+    /**
+     * Test mothod
+     */
+    public function testSomething()
+    {
+        $response = Application::updateStatus();
+        // $response = Application::send();
+        print_r($response);
     }
 }

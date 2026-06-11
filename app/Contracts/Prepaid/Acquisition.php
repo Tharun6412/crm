@@ -11,6 +11,7 @@ class Acquisition
 {
     /**
      * Acquisition API
+     * @param object $consumerData
      */
     public function push($consumerData)
     {

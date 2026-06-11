@@ -12,4 +12,7 @@ Route::middleware(['auth'])->group(function() {
     Route::resource('notifications', App\Http\Controllers\Admin\NotificationsController::class);
     Route::resource('user/exports', App\Http\Controllers\Admin\UserExportController::class);
     Route::resource('invoicesSet', App\Http\Controllers\InvoicesSetController::class);
+
+    // Test Route
+    Route::get('testSomething', [App\Http\Controllers\Dashboard\HomeController::class, 'testSomething']);
 });
