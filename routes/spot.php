@@ -45,8 +45,8 @@ Route::middleware(['auth', ModuleAccess::class])->group(function() {
     Route::post('prospectStatus/updateCancelStatus/{id}', [App\Http\Controllers\Spot\ProspectStatusController::class, 'updateCancelStatus']);
     Route::resource('prospectStatus', App\Http\Controllers\Spot\ProspectStatusController::class);
     // Dashboard
-    Route::resource('dashboard', App\Http\Controllers\Spot\DashboardController::class);
     Route::get('help',[App\HTTP\Controllers\Spot\DashboardController::class,'help']);
+    Route::resource('dashboard', App\Http\Controllers\Spot\DashboardController::class);
     // Targets
     Route::post('targets/manageTargetData/{id}', [App\Http\Controllers\Spot\TargetsController::class, 'manageTargetData']);
     Route::resource('targets', App\Http\Controllers\Spot\TargetsController::class);

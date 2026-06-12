@@ -37,7 +37,7 @@ class TicketController extends Controller
         ->when(!empty($request->date_from) && !empty($request->date_to),function($q) use ($request) {
             $q->whereBetween('created_at',[Carbon::createFromFormat('d-m-Y',$request->date_from)->startOfDay()->toDateTimeString(), Carbon::createFromFormat('d-m-Y',$request->date_to)->endOfDay()->toDateTimeString()]);
         })
-        ->orderByDesc('created_at')->paginate(10)->withQueryString();
+        ->orderByDesc('created_at')->paginate(50)->withQueryString();
 
         if($request->ajax())
             return view('tickets.tickets.list-body',['tickets' => $tickets]);
@@ -76,7 +76,6 @@ class TicketController extends Controller
         TicketStatusHistory::create([
             'ticket_id' => $ticket->id,
             'status_id' => TicketStatus::REGISTER->value,
-            'notes' => $request->description,
             'updated_by' => Auth::id(),
         ]);
         return response()->json(['success' => 'Ticket Created Successfully. Ticket Code : '.$ticketCode,]);

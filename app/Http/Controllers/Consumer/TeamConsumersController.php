@@ -17,7 +17,7 @@ class TeamConsumersController extends Controller
     public function index(Request $request)
     {
         $consumers = Consumer::with(['teamConsumer.team'])
-        ->select('id','fname','lname','crn','status_id')
+        ->select('id','fname','lname','crn','status_id','ga_id','ca_id','area_id','subarea_id')
         ->when($request->filled('key'), function($q) use ($request) {
             $q->where('crn','like','%'.$request->key.'%');
         })

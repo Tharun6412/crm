@@ -2,6 +2,7 @@
     <div class="row gx-1">
         <div class="col-auto">
             <input type="text" name="key" class="form-control" placeholder="Search..." value="{{ request()->key }}"/>
+            <input type="hidden" name="cns_status[]" value="{{ request()->cns_status[0] }}" />
         </div>
         <div class="col-auto">
             <button type="submit" class="btn btn-success"><i class="bi bi-search"></i></button>
@@ -20,8 +21,12 @@
             <tr>
                 <th>S.No</th>
                 <th>CRN</th>
-                <th>Consumer Name</th>
-                <th width="12%">Consumer Status</th>
+                <th nowrap>Consumer Name</th>
+                <th>GA</th>
+                <th nowrap>Charge Area</th>
+                <th>Area</th>
+                <th>SubArea</th>
+                <th width="12%" nowrap>Consumer Status</th>
                 <th nowrap>Assigned To</th>
                 <th width="11%">Status
                     @php
@@ -44,6 +49,10 @@
                             </a>
                         </td>
                         <td>{{ $consumer->name }}</td>
+                        <td>{{ $consumer->ga->name ?? '' }}</td>
+                        <td>{{ $consumer->ca->name ?? '' }}</td>
+                        <td>{{ $consumer->area->name ?? '' }}</td>
+                        <td>{{ $consumer->subarea->name ?? '' }}</td>
                         <td>
                             <x-consumer.status :status="$consumer->status" mode='full' />
                             {{-- {{ $consumer->status->name }} --}}
@@ -62,7 +71,7 @@
                         <td>{{ $consumer->teamConsumer->first()?->updatedBy?->name ?? '' }}</td>
                         <td nowrap>
                              @if($consumer->teamConsumer->first()?->status == '')
-                                <a class="btn btn-outline-primary link-modal" href="{{ url('consumers/waiting/pending-consumers/create/'.$consumer->id) }}"><i class="bi bi-person-check-fill"></i>&nbsp;Assign</a>
+                                <a class="btn btn-outline-primary btn-sm link-modal" href="{{ url('consumers/waiting/pending-consumers/create/'.$consumer->id) }}"><i class="bi bi-person-check-fill"></i>&nbsp;Assign</a>
                              @endif
                             {{-- <div class="dropdown">
                                 <button class="btn btn-sm btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -79,7 +88,7 @@
                 @endforeach
             @else
                 <tr>
-                    <td colspan="10">No Records Found</td>
+                    <td colspan="15">No Records Found</td>
                 </tr>
             @endif
         </tbody>

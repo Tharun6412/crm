@@ -68,7 +68,7 @@
             </a>
         </div>
         <div class="col-sm-3">
-            <a href="{{ url('master') }}?{{ http_build_query(['status' => [TicketStatus::CLOSE->value]]) }}" target="_blank" class="text-body-secondary">
+            <a href="{{ url('tickets') }}?{{ http_build_query(['status' => [TicketStatus::CLOSE->value]]) }}" target="_blank" class="text-body-secondary">
                 <div class="py-2 px-2 border border-3 border-light shadow-sm rounded-3 closed-bg">
                     <div class="d-flex justify-content-between align-items-center p-2">
                         <div class="text-center">
@@ -113,7 +113,7 @@
             </a>
         </div>
         <div class="col-sm-3">
-            <a href="{{ url('tickets') }}?{{ http_build_query(['status' => [TicketStatus::CANCEL->value]]) }}" target="_blank" class="text-body-secondary">
+            <a href="{{ url('tickets') }}" target="_blank" class="text-body-secondary">
                 <div class="py-2 px-2 border border-3 border-light shadow-sm rounded-3 total-bg">
                     <div class="d-flex justify-content-between align-items-center p-2">
                         <div class="text-center">

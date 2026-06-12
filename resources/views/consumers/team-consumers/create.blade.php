@@ -29,7 +29,10 @@
                 </div> 
                 </form>
             </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal"><i class="bi bi-x">&nbsp;</i>Close</button>
         </div>
+        </div> 
     </div>
 </div>
 @include('scripts.ajax-form-submit',['form' => 'team'])

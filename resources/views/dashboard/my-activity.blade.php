@@ -154,7 +154,7 @@
                 </table>
             @endif
         </div>
-        @if ($roles->count() > 0)
+        {{-- @if ($roles->count() > 0) --}}
             <h4>My Work Report</h4>
             <div class="table-responsive">
                 <table class="table table-bordered">
@@ -179,7 +179,7 @@
                     </tbody>
                 </table>
             </div>
-        @endif
+        {{-- @endif --}}
     </div>
 @endsection
 @include('scripts.link-modal')
