@@ -1,5 +1,6 @@
 <div class="d-flex flex-row justify-content-between pb-3">
-    <div class="justify-content-end">
+    <div>&nbsp;</div>
+    <div>
         @if ($users->count() > 0)
             <button type="button" id="exportBtn2" class="btn btn-outline-info btn-md"><i class="bi bi-file-earmark-excel"></i>&nbsp;Export</button>
         @endif
@@ -13,14 +14,14 @@
                 <th rowspan="2" nowrap>Employee ID</th>
                 <th rowspan="2">Name</th>
                 <th rowspan="2">Department</th>
-                <th rowspan="2">Role</th>
+                <th rowspan="2">Role(s)</th>
                 <th rowspan="2">Geo Area</th>
                 <th rowspan="2">Charge Areas</th>
-                <th colspan="{{ $statuses->count() }}" class="text-center">Consumers Waiting</th>
+                <th colspan="{{ $statuses->count() }}" class="text-center">Consumers Progress</th>
             </tr>
             <tr>
                 @foreach ($statuses as $status)
-                    <th class="table-warning">{{ $status->name }}</th>
+                    <th class="bg-success bg-opacity-75 text-end">{{ $status->name }}</th>
                 @endforeach
             </tr>
         </thead>
@@ -118,7 +119,7 @@
                                     @php
                                         $status_totals[$status_id] = ($status_totals[$status_id] ?? 0) + ($consumer_counts[$user->id][$userga->id][$status_id] ?? 0);
                                     @endphp
-                                    <td>
+                                    <td class="text-end">
                                         <a class="fs-5" href="{{ url('consumers') }}?{{ http_build_query(['geo_area'=> [$userga->id], 'cns_status' => [$status_id], 'charge_area' => $user->cas->where('ga_id', $userga->id)->pluck('id')->toArray()]) }}" target="_blank">{{ $consumer_counts[$user->id][$userga->id][$status_id] ?? 0 }}</a>
                                     </td>
                                 @else
@@ -163,12 +164,12 @@
                                 @endphp
                                 @break
                         @endswitch
-                        <td class="fw-bold fs-5">{{ $status_totals[$status_id] ?? 0 }}</td>
+                        <td class="fw-bold fs-5 text-end">{{ $status_totals[$status_id] ?? 0 }}</td>
                     @endforeach
                 </tr>
             @else
                 <tr>
-                    <td colspan="8">No records found</td>
+                    <td colspan="12">No records found</td>
                 </tr>
             @endif
         </tbody>

@@ -25,8 +25,8 @@ class ConsumerWaitingController extends Controller
 {
     /**
      * Index Method
-     * @param $request
-     * @return view
+     * @param object $request
+     * @return object view
      */
     public function index(Request $request)
     {
