@@ -18,6 +18,7 @@ use App\Notifications\Consumer\ExecuteSmsNotification;
 use App\Notifications\Consumer\HscSmsNotification;
 use App\Notifications\Consumer\RejectSmsNotification;
 use App\Services\ConsumerStatusService;
+use App\Services\ReferralService;
 use App\Services\SmsService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -244,6 +245,8 @@ class ConsumerOnboardingController extends Controller
                 'notes' => $request->notes,
                 'created_by' => Auth::id(),
             ]);
+            // check the referal request and redeem the amount.
+            $redeem = ReferralService::redeem($id);
         }
         // Sms Notification
         $sms_response = SmsService::dispatch($consumer, new ActivateSmsNotification(['crn' => $consumer->crn]));

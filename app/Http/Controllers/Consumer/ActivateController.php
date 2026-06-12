@@ -2,15 +2,19 @@
 namespace App\Http\Controllers\Consumer;
 
 use App\Enums\AwsPath;
+use App\Enums\Constants;
 use App\Enums\ConsumerStatus as EnumsConsumerStatus;
 use App\Enums\DocumentType;
+use App\Enums\ReferralStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Master\DocumentCentre\DocumentUpload;
 use App\Models\Consumer\Consumer;
 use App\Models\Consumer\ConsumerDocument;
 use App\Models\Consumer\ConsumerStatus;
+use App\Models\Consumer\ReferralRequest;
 use App\Notifications\Consumer\ActivateSmsNotification;
 use App\Services\ConsumerStatusService;
+use App\Services\ReferralService;
 use App\Services\SmsService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -52,6 +56,7 @@ class ActivateController extends Controller
                 'file_id' => $doc_upload['file_id'],
             ]);
         }
+        
         // 6 = Activation
         $consumer = Consumer::find($id);
         $consumer->update([
@@ -68,6 +73,8 @@ class ActivateController extends Controller
             'notes' => $request->notes,
             'created_by' => Auth::id(),
         ]);
+        // check the referal request and redeem the amount.
+        $redeem = ReferralService::redeem($id);
 
         // SmS Integration
         $sms_response = SmsService::dispatch($consumer, new ActivateSmsNotification(['crn' => $consumer->crn]));

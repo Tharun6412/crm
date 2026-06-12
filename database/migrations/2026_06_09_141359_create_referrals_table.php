@@ -16,13 +16,19 @@ return new class extends Migration
             $table->foreignId('consumer_id')->nullable()->index()->constrained(table:'cns_consumers')->noActionOnDelete()->noActionOnUpdate();
             $table->string('name',length:255)->nullable();
             $table->string('phone', length:16)->nullable();
-            $table->tinyInteger('status')->nullable();
-            $table->date('reedem_date')->nullable();
-            $table->decimal('reedem_amount', 8, 3)->nullable();
-            $table->foreignId('referral_consumer_id')->nullable()->index()->constrained(table:'cns_consumers')->noActionOnDelete()->noActionOnUpdate();
             $table->foreignId('created_by')->nullable()->index()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();
             $table->foreignId('updated_by')->nullable()->index()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();
             $table->timestamps();
+        });
+        Schema::table('cns_referral_consumers', function(Blueprint $table) {
+            $table->id();
+            $table->foreignId('request_id')->nullable()->index()->constrained(table:'cns_referral_requests')->noActionOnDelete()->noActionOnUpdate();
+            $table->foreignId('referral_consumer_id')->nullable()->index()->constrained(table:'cns_consumers')->noActionOnDelete()->noActionOnUpdate();
+            $table->tinyInteger('status')->nullable();
+            $table->date('reedem_date')->nullable();
+            $table->decimal('reedem_amount', 8, 3)->nullable();
+            $table->timestamps();
+
         });
         Schema::table('cns_consumer_data',function(Blueprint $table) {
             $table->string('reference_code')->nullable()->after('consumer_id');
@@ -37,5 +43,6 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('cns_referral_requests');
+        Schema::dropIfExists('cns_referral_consumers');
     }
 };

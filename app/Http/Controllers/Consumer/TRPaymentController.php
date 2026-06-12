@@ -12,6 +12,7 @@ use App\Enums\TaxType;
 use App\Http\Controllers\Controller;
 use App\Models\Consumer\CaCounter;
 use App\Models\Consumer\Consumer;
+use App\Models\Consumer\ConsumerData;
 use App\Models\Consumer\ConsumerSdPayment;
 use App\Models\Consumer\ConsumerScheme;
 use App\Models\Consumer\ConsumerStatus;
@@ -98,6 +99,10 @@ class TRPaymentController extends Controller
             ]);
             // Consumer Target Status 
             $target_status = ConsumerStatusService::update($id, EnumsConsumerStatus::REGISTER->value);
+
+            // A Unique reference number generation for every consumer.
+            $reference_number = $district_code.$segment_type.str_pad($ca_code, 2, 0,STR_PAD_LEFT).str_pad($ca_data->count, 6, "0", STR_PAD_LEFT);
+            ConsumerData::where('consumer_id', $id)->update(['reference_code' => $reference_number]);
             // Scheme Details
             // Paid Amount = Amount - Minimun Payment
             $paid_amt = $request->amount - $consumer_scheme->scheme->registration;

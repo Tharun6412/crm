@@ -310,6 +310,14 @@
                         <input type="text" name="tenant_email" id="tenant_email" class="form-control" placeholder="Tenant Email"/>
                     </div>
                 </div>
+                <div class="mt-3 mb-1 fs-5 fw-semibold text-primary">Referral Code&nbsp;:</div>
+                <div class="row mb-2 pt-2">
+                    <div class="col-md-3 col-sm-6 col-xs-12">
+                        <label class="form-label" for="referral_code">Referral Code&nbsp;:&nbsp;</label>
+                        <input type="text" name="referral_code" id="referral_code" class="form-control" placeholder="Enter the Referral Code"/>
+                        <span class="text-danger validate-err-msg" id="referral_code-error"></span>
+                    </div>
+                </div>
                 <div class="mt-3 mb-1 fs-5 fw-semibold text-primary">Documents&nbsp;:</div>
                 <div class="row mb-2 pt-2">
                     <div class="col-md-3 col-sm-6 col-xs-6">

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Consumer;
 
 use App\Enums\AwsPath;
 use App\Enums\ConsumerStatus as EnumsConsumerStatus;
+use App\Enums\ReferralStatus;
 use App\Enums\SegmentType;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Master\DocumentCentre\DocumentUpload;
@@ -14,6 +15,8 @@ use App\Models\Consumer\ConsumerDocument;
 use App\Models\Consumer\ConsumerScheme;
 use App\Models\Consumer\ConsumerStatus;
 use App\Models\Consumer\Prepaid;
+use App\Models\Consumer\ReferralConsumer;
+use App\Models\Consumer\ReferralRequest;
 use App\Models\DocumentCentre\DocumentTypes;
 use App\Models\Master\ConnectionType;
 use App\Models\Master\ConsumerGasRequired;
@@ -23,9 +26,11 @@ use App\Models\Master\MasterConsumerScheme;
 use App\Models\Master\Segment;
 use App\Models\Master\Title;
 use App\Notifications\Consumer\RegistrationSmsNotification;
+use App\Services\ReferralService;
 use App\Services\SmsService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 
 class RegistrationController extends Controller
 {
@@ -57,6 +62,19 @@ class RegistrationController extends Controller
     public function store(RegistrationValidationRequest $request)
     {
         // dd($request->all());
+        $referral_id = 0;
+
+        // Referral Code Validattion Service.
+        if(!empty($request->referral_code))
+        {
+            $referral = ReferralService::checkValidation($request);
+            if(!empty($referral))
+            {
+                $referral_id = $referral['referral_id'];
+            }
+        }
+
+
         // Data Preparation
         $add_consumer = Consumer::create([
             'segment_id' => SegmentType::DOMESTIC->value,
@@ -101,6 +119,17 @@ class RegistrationController extends Controller
         // Generate Temporary CRN and update
         $crn_code = 'TR' . $request->geo_area . $request->charge_area . str_pad($add_consumer->id, 5, '0', STR_PAD_LEFT);
         Consumer::where('id', $add_consumer->id)->update(['t_crn' => $crn_code, 'state_id' => $add_consumer->ga->state_id]);
+
+        // Update the consumer id in the referal request.
+        if($referral_id)
+        {
+            ReferralConsumer::create([
+                'request_id'           => $referral_id,
+                'status'               => ReferralStatus::OPEN->value,
+                'referral_consumer_id' => $add_consumer->id,
+            ]);
+        }
+
         // Consumers Data with GeoCoordinates
         ConsumerData::create([
             'consumer_id' => $add_consumer->id,

@@ -9,4 +9,5 @@ enum Constants: string
     case IPNG_LPC = '100';
     case DPNG_DUEDAYS = '15';
     case CORRECTION_FACTOR = '1';
+    case REFERRAL_AMOUNT = '150';
 }
