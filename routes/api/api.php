@@ -2,6 +2,7 @@
 
 use App\Http\Middleware\ApiBasicAuth;
 use App\Http\Middleware\ApiKeyMiddleware;
+use App\Http\Middleware\CustomCheckToken;
 use Illuminate\Support\Facades\Route;
 use Laravel\Passport\Http\Middleware\CheckToken;
 
@@ -28,7 +29,7 @@ Route::middleware([ApiKeyMiddleware::class])->group(function(){
  * OAuth 2.0
  * OAuth token generation API - /oauth/token [grant_type, client_id, client_secret]
  */
-Route::middleware([CheckToken::class])->group(function() {
+Route::middleware([CustomCheckToken::class])->group(function() {
     Route::get('/test', function  () {
         return response()->json(['success' => 'success']);
     });

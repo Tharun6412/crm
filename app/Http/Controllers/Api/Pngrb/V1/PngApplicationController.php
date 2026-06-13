@@ -47,28 +47,36 @@ class PngApplicationController extends Controller
             'serviceabilityStatus' => 'required',
             // applicantInfo
             'applicantInfo.name' => 'required',
-            'applicantInfo.mobileNumber' => 'required',
+            'applicantInfo.mobileNumber' => 'required|digits:10',
             // pngAddress
             'pngAddress.houseNo' => 'required',
             'pngAddress.area' => 'required',
             'pngAddress.city' => 'required',
             'pngAddress.district' => 'required',
             'pngAddress.state' => 'required',
-            'pngAddress.pincode' => 'required',
+            'pngAddress.pincode' => 'required|digits:6',
             'pngAddress.premiseType' => 'required',
-            'pngAddress.latitude' => 'required',
-            'pngAddress.longitude' => 'required',
+            'pngAddress.latitude' => 'required|numeric',
+            'pngAddress.longitude' => 'required|numeric',
         ]);
 
         // Custom validation error response
         if ($validator->fails()) {
-            // Response
+            // Custom error message
+            $error_data = [];
+            foreach ($validator->errors()->messages() as $field => $messages) {
+                foreach ($messages as $message) {
+                    $error_data[] = [
+                        'field'   => $field,
+                        'message' => $message,
+                    ];
+                }
+            }
             return response()->json([
                 'success' => false,
                 'statusCode' => 400,
-                'message' => $validator->errors()->all(),
-                // 'receivedAt' => Carbon::now()->format('Y-m-d\TH:i:s\Z'),
-                'data' => []
+                'message' => 'Validation failed',
+                'errors' => $error_data,
             ], 400);
         }
         
@@ -134,8 +142,16 @@ class PngApplicationController extends Controller
             'success' => true,
             'statusCode' => $httpCode,
             'message' => $message,
-            // 'receivedAt' => Carbon::now()->format('Y-m-d\TH:i:s\Z'),
-            'data' => ['applicationNumber' => $request->applicationNumber]
+            'data' => [
+                'applicationNumber' => $request->applicationNumber,
+                'cgdId' => $request->cgdId,
+                'gaId' => $request->gaId,
+                'status' => $request->status,
+                'ekycStatus' => $request->ekycStatus,
+                'submittedAt' => Carbon::now()->format('Y-m-d\TH:i:s\Z'),
+                'referenceId' => 'MCGDPL-REF-ID',
+                'portalRedirectUrl' => 'https://www.meghagas.com',
+            ]
         ], $httpCode);
     }
 
@@ -156,12 +172,22 @@ class PngApplicationController extends Controller
         ]);
         // Custom validation error response
         if ($validator->fails()) {
+            // Custom error message
+            $error_data = [];
+            foreach ($validator->errors()->messages() as $field => $messages) {
+                foreach ($messages as $message) {
+                    $error_data[] = [
+                        'field'   => $field,
+                        'message' => $message,
+                    ];
+                }
+            }
             // Response
             return response()->json([
-                'status' => false,
-                'code' => 400,
-                'message' => $validator->errors()->all(),
-                'data' => []
+                'success' => false,
+                'statusCode' => 400,
+                'message' => 'Validation failed',
+                'errors' => $error_data
             ], 400);
         }
 
@@ -186,28 +212,43 @@ class PngApplicationController extends Controller
                 'updatedAt' => Carbon::now()->format('Y-m-d\TH:i:s\Z'),
                 'updatedBy' => $application->updatedBy
             ];
+
+            // Update Log with API details
+            ApiLogger::info('pngrb-unified-portal', 'png-application', 'Application Update', [
+                $request->all(),
+                'httpCode' => $httpCode,
+                'message' => $message,
+            ]);
+
+            // Response
+            return response()->json([
+                'success' => $status,
+                'statusCode' => $httpCode,
+                'message' => $message,
+                'data' => $data
+            ], $httpCode);
         }
         else {
             // Application status is already updated
             $status = false;
             $httpCode = 404;
-            $message = 'No application exists for the provided applicationId';
-            $data = '';
+            $message = 'Not found';
+            $errors = [['field' => 'applicationNumber', 'message' => 'No application exists for the provided applicationNumber']];
+            
+            // Update Log with API details
+            ApiLogger::info('pngrb-unified-portal', 'png-application', 'Application Update', [
+                $request->all(),
+                'httpCode' => $httpCode,
+                'message' => $message,
+            ]);
+    
+            // Response
+            return response()->json([
+                'success' => $status,
+                'statusCode' => $httpCode,
+                'message' => $message,
+                'errors' => $errors
+            ], $httpCode);
         }
-
-        // Update Log with API details
-        ApiLogger::info('pngrb-unified-portal', 'png-application', 'Application Update', [
-            $request->all(),
-            'httpCode' => $httpCode,
-            'message' => $message,
-        ]);
-
-        // Response
-        return response()->json([
-            'status' => $status,
-            'code' => $httpCode,
-            'message' => $message,
-            'data' => $data
-        ], $httpCode);
     }
 }
