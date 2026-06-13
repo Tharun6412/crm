@@ -226,4 +226,34 @@ class ConsumerWaitingController extends Controller
             'areas' => $consumers_count,
         ]);
     }
+
+    /**
+     * Ageing Progress Report
+     */
+    public function ageingProgress(Request $request) 
+    {
+        $statusSubQuery = DB::table('cns_consumer_status')
+            ->select('consumer_id', DB::raw('MIN(created_at) as status_created_at'))
+            ->where('status_id', $request->cns_status)
+            ->groupBy('consumer_id');
+        $ageing_consumers = Consumer::joinSub($statusSubQuery, 'status_history','status_history.consumer_id', '=', 'cns_consumers.id')
+            ->selectRaw("
+                SUM(CASE WHEN DATEDIFF(CURDATE(), status_history.status_created_at) BETWEEN 0 AND 30 THEN 1 ELSE 0 END) as days_0_30,
+                SUM(CASE WHEN DATEDIFF(CURDATE(), status_history.status_created_at) BETWEEN 31 AND 60 THEN 1 ELSE 0 END) as days_31_60,
+                SUM(CASE WHEN DATEDIFF(CURDATE(), status_history.status_created_at) BETWEEN 61 AND 90 THEN 1 ELSE 0 END) as days_61_90,
+                SUM(CASE WHEN DATEDIFF(CURDATE(), status_history.status_created_at) BETWEEN 91 AND 180 THEN 1 ELSE 0 END) as days_91_180,
+                SUM(CASE WHEN DATEDIFF(CURDATE(), status_history.status_created_at) > 180 THEN 1 ELSE 0 END) as days_180_plus
+            ")
+            ->when(($request->has('connect_type_id') AND !empty($request->connect_type_id)), function($q) use($request) {
+                $q->where('connection_type_id', $request->connect_type_id);
+            })
+            ->when(($request->has('onboard_segment_id') AND !empty($request->onboard_segment_id)), function($q) use($request) {
+                $q->where('segment_id', $request->onboard_segment_id);
+            })
+            ->where('cns_consumers.status_id', $request->cns_status)
+            ->where('cns_consumers.ga_id', $request->ga_id)
+            ->first();
+        // dd($ageing_consumers);
+        return view('reports.consumer.waiting-report.ageing-progress-report', ['ageing_consumers' => $ageing_consumers, 'status_name' => $request->status_name]);
+    }
 }

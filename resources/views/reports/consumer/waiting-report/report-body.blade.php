@@ -44,22 +44,26 @@
             </div>
             <div class="col">
                 <div class="border rounded text-end py-1 px-2 fs-5">
-                    <a href="{{ url('reports/consumer/waiting/consumersListForEmployees') }}?{{ http_build_query(['ga_id'=> $ga->id, 'cns_status' => \App\Enums\ConsumerStatus::REGISTER->value, 'connection_type_id' => request()->connect_type_id, 'segments' => request()->onboard_segment_id]) }}" class="link-modal">{{ numberFormat($accept) }}</a>
+                    <a href="{{ url('reports/consumer/waiting/consumersListForEmployees') }}?{{ http_build_query(['ga_id'=> $ga->id, 'cns_status' => \App\Enums\ConsumerStatus::REGISTER->value, 'connection_type_id' => request()->connect_type_id, 'segments' => request()->onboard_segment_id]) }}" class="link-modal text-start">{{ numberFormat($accept) }}</a>&nbsp;&nbsp;
+                    <a type="button" href="{{ url('reports/consumer/connectionProgress/ageingProgress') }}?{{ http_build_query(['ga_id'=> $ga->id,'status_name' => 'Register', 'cns_status' => \App\Enums\ConsumerStatus::REGISTER->value, 'connection_type_id' => request()->connect_type_id, 'segments' => request()->onboard_segment_id]) }}" class="link-canvas text-end" title="Click to view Ageing Report"><i class="bi bi-box-arrow-right fs-4"></i></a>
                 </div>
             </div>
             <div class="col">
                 <div class="border rounded text-end py-1 px-2 fs-5">
-                    <a href="{{ url('reports/consumer/waiting/consumersListForEmployees') }}?{{ http_build_query(['ga_id'=> $ga->id, 'cns_status' => \App\Enums\ConsumerStatus::ACCEPT->value, 'connection_type_id' => request()->connect_type_id, 'segments' => [request()->onboard_segment_id]]) }}" class="link-modal">{{ numberFormat($execute) }}</a>
+                    <a href="{{ url('reports/consumer/waiting/consumersListForEmployees') }}?{{ http_build_query(['ga_id'=> $ga->id, 'cns_status' => \App\Enums\ConsumerStatus::ACCEPT->value, 'connection_type_id' => request()->connect_type_id, 'segments' => [request()->onboard_segment_id]]) }}" class="link-modal">{{ numberFormat($execute) }}</a>&nbsp;&nbsp;
+                    <a type="button" href="{{ url('reports/consumer/connectionProgress/ageingProgress') }}?{{ http_build_query(['ga_id'=> $ga->id,'status_name' => 'Accept', 'cns_status' => \App\Enums\ConsumerStatus::ACCEPT->value, 'connection_type_id' => request()->connect_type_id, 'segments' => request()->onboard_segment_id]) }}" class="link-canvas text-end" title="Click to view Ageing Report"><i class="bi bi-box-arrow-right fs-4"></i></a>
                 </div>
             </div>
             <div class="col">
                 <div class="border rounded text-end py-1 px-2 fs-5">
-                    <a href="{{ url('reports/consumer/waiting/consumersListForEmployees') }}?{{ http_build_query(['ga_id'=> $ga->id, 'cns_status' => \App\Enums\ConsumerStatus::EXECUTE->value, 'connection_type_id' => request()->connect_type_id, 'segments' => [request()->onboard_segment_id]]) }}" class="link-modal">{{ numberFormat($hsc) }}</a>
+                    <a href="{{ url('reports/consumer/waiting/consumersListForEmployees') }}?{{ http_build_query(['ga_id'=> $ga->id, 'cns_status' => \App\Enums\ConsumerStatus::EXECUTE->value, 'connection_type_id' => request()->connect_type_id, 'segments' => [request()->onboard_segment_id]]) }}" class="link-modal">{{ numberFormat($hsc) }}</a>&nbsp;&nbsp;
+                    <a type="button" href="{{ url('reports/consumer/connectionProgress/ageingProgress') }}?{{ http_build_query(['ga_id'=> $ga->id,'status_name' => 'Execute', 'cns_status' => \App\Enums\ConsumerStatus::EXECUTE->value, 'connection_type_id' => request()->connect_type_id, 'segments' => request()->onboard_segment_id]) }}" class="link-canvas text-end" title="Click to view Ageing Report"><i class="bi bi-box-arrow-right fs-4"></i></a>
                 </div>
             </div>
             <div class="col">
                 <div class="border rounded text-end py-1 px-2 fs-5">
-                    <a href="{{ url('reports/consumer/waiting/consumersListForEmployees') }}?{{ http_build_query(['ga_id'=> $ga->id, 'cns_status' => \App\Enums\ConsumerStatus::HSC->value, 'connection_type_id' => request()->connect_type_id, 'segments' => [request()->onboard_segment_id]]) }}" class="link-modal">{{ numberFormat($activate) }}</a>
+                    <a href="{{ url('reports/consumer/waiting/consumersListForEmployees') }}?{{ http_build_query(['ga_id'=> $ga->id, 'cns_status' => \App\Enums\ConsumerStatus::HSC->value, 'connection_type_id' => request()->connect_type_id, 'segments' => [request()->onboard_segment_id]]) }}" class="link-modal">{{ numberFormat($activate) }}</a>&nbsp;&nbsp;
+                    <a type="button" href="{{ url('reports/consumer/connectionProgress/ageingProgress') }}?{{ http_build_query(['ga_id'=> $ga->id,'status_name' => 'HSC', 'cns_status' => \App\Enums\ConsumerStatus::HSC->value, 'connection_type_id' => request()->connect_type_id, 'segments' => request()->onboard_segment_id]) }}" class="link-canvas text-end" title="Click to view Ageing Report"><i class="bi bi-box-arrow-right fs-4"></i></a>
                 </div>
             </div>
             <div class="col">
@@ -98,3 +102,4 @@
     </div>
 </div>
 @include('scripts.link-modal')
+@include('scripts.link-canvas')
