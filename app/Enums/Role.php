@@ -22,4 +22,6 @@ enum Role: int
     case TICKET_APPROVAL = 18;
     case FINANCE = 19;
     case MARKETING = 20;
+    case EXECUTION = 11;
+    case ENGINEER = 23;
 }

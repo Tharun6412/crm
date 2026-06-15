@@ -53,13 +53,9 @@ class TeamUserController extends Controller
         $departments = Department::all();
         $types = UserType::all();
         $roles = Role::whereIn('id', [
-            EnumsRole::GI_ENGINEER->value,
-            EnumsRole::MDPE->value,
-            EnumsRole::HSE->value,
-            EnumsRole::STEEL->value,
-            EnumsRole::ACTIVATION->value,
-            EnumsRole::FINANCE->value,
-            EnumsRole::MARKETING->value,
+            EnumsRole::EMPLOYEE->value,
+            EnumsRole::EXECUTION->value,
+            EnumsRole::ENGINEER->value,
         ])->get();
         return view('admin.teams.users.add',['geo_areas' => $geo_areas,'departments' => $departments,'roles' => $roles,'types' => $types]);
     }

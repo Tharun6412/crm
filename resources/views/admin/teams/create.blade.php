@@ -60,7 +60,7 @@
                         </div>
                     </div>
                     {{-- Error --}}
-                    <div class="mb-3" id="inprogress-error"></div>
+                    <div class="mb-3" id="team-error"></div>
                     {{-- Submit --}}
                     <div class="text-center">
                         <button type="submit" class="btn btn-success"><i class="bi bi-save"></i>&nbsp;Save Team</button>

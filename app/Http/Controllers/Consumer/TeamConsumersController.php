@@ -67,7 +67,7 @@ class TeamConsumersController extends Controller
                 $dept_id = Department::MARKETING->value;
                 break;
             case ConsumerStatus::REGISTER->value:
-                $dept_id = Department::MDPE->value;
+                $dept_id = Department::MARKETING->value;
                 break; 
             case ConsumerStatus::ACCEPT->value:
                 $dept_id = Department::GI->value;
@@ -88,7 +88,6 @@ class TeamConsumersController extends Controller
     public function store(Request $request, $id)
     {
         $request->validate([
-            
             'team_id' => 'required',
         ]);
         $team_consumer = Consumer::find($id);

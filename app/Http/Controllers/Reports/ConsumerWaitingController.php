@@ -36,8 +36,8 @@ class ConsumerWaitingController extends Controller
         $total_teams = Team::where('status',1)->count();
         $departments = Department::whereIn('id',[
                 EnumsDepartment::GI->value,
-                EnumsDepartment::MDPE->value,
-                EnumsDepartment::STEEL->value,
+                // EnumsDepartment::MDPE->value,
+                // EnumsDepartment::STEEL->value,
                 EnumsDepartment::HSE->value,
                 EnumsDepartment::ACTIVATION->value,
                 EnumsDepartment::FINANCE->value,
@@ -100,8 +100,8 @@ class ConsumerWaitingController extends Controller
                 $status_val = ConsumerStatus::REGISTER->name;
                 break;
             case ConsumerStatus::REGISTER->value: //waiting to Accept
-                $user_ca_list = $this->getConsumersListByCa($request, $request->ga_id, $request->cns_status, ROLE::MDPE->value);
-                $teams = Team::with(['cas:id,name', 'users:id'])->where('ga_id', $request->ga_id)->where('department_id', EnumsDepartment::MDPE->value)->get();
+                $user_ca_list = $this->getConsumersListByCa($request, $request->ga_id, $request->cns_status, ROLE::MARKETING->value);
+                $teams = Team::with(['cas:id,name', 'users:id'])->where('ga_id', $request->ga_id)->where('department_id', EnumsDepartment::MARKETING->value)->get();
                 $status_val = ConsumerStatus::ACCEPT->name;
                 break;
             case ConsumerStatus::ACCEPT->value: //waiting to Execute
@@ -238,11 +238,11 @@ class ConsumerWaitingController extends Controller
             ->groupBy('consumer_id');
         $ageing_consumers = Consumer::joinSub($statusSubQuery, 'status_history','status_history.consumer_id', '=', 'cns_consumers.id')
             ->selectRaw("
-                SUM(CASE WHEN DATEDIFF(CURDATE(), status_history.status_created_at) BETWEEN 0 AND 30 THEN 1 ELSE 0 END) as days_0_30,
-                SUM(CASE WHEN DATEDIFF(CURDATE(), status_history.status_created_at) BETWEEN 31 AND 60 THEN 1 ELSE 0 END) as days_31_60,
-                SUM(CASE WHEN DATEDIFF(CURDATE(), status_history.status_created_at) BETWEEN 61 AND 90 THEN 1 ELSE 0 END) as days_61_90,
-                SUM(CASE WHEN DATEDIFF(CURDATE(), status_history.status_created_at) BETWEEN 91 AND 180 THEN 1 ELSE 0 END) as days_91_180,
-                SUM(CASE WHEN DATEDIFF(CURDATE(), status_history.status_created_at) > 180 THEN 1 ELSE 0 END) as days_180_plus
+                SUM(CASE WHEN DATEDIFF(NOW(), status_history.status_created_at) BETWEEN 0 AND 30 THEN 1 ELSE 0 END) as days_0_30,
+                SUM(CASE WHEN DATEDIFF(NOW(), status_history.status_created_at) BETWEEN 31 AND 60 THEN 1 ELSE 0 END) as days_31_60,
+                SUM(CASE WHEN DATEDIFF(NOW(), status_history.status_created_at) BETWEEN 61 AND 90 THEN 1 ELSE 0 END) as days_61_90,
+                SUM(CASE WHEN DATEDIFF(NOW(), status_history.status_created_at) BETWEEN 91 AND 180 THEN 1 ELSE 0 END) as days_91_180,
+                SUM(CASE WHEN DATEDIFF(NOW(), status_history.status_created_at) > 180 THEN 1 ELSE 0 END) as days_180_plus
             ")
             ->when(($request->has('connect_type_id') AND !empty($request->connect_type_id)), function($q) use($request) {
                 $q->where('connection_type_id', $request->connect_type_id);
