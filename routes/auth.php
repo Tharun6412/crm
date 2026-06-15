@@ -24,6 +24,7 @@ Route::middleware('guest')->group(function(){
     Route::post('updatePassword/{id}', [App\Http\Controllers\Auth\ForgotPassword::class, 'updatePassword']);
     Route::get('cancelReset', [App\Http\Controllers\Auth\ForgotPassword::class, 'cancelReset']);
 });
+
 // Authenticated
 Route::middleware('auth')->group(function(){
     Route::get('profile', [App\Http\Controllers\Auth\UserProfile::class, 'index'])->name('profile');
@@ -31,4 +32,10 @@ Route::middleware('auth')->group(function(){
     Route::get('changePassword', [App\Http\Controllers\Auth\ChangePassword::class, 'index']);
     Route::post('changePassword', [App\Http\Controllers\Auth\ChangePassword::class, 'store']);
     Route::post('logout', [App\Http\Controllers\Auth\Authentication::class, 'destroy']);
+});
+
+Route::middleware('guest')->prefix('authorize')->group(function () {
+    Route::prefix('v1')->group(function() {
+        Route::post('png-application/token', [App\Http\Controllers\Api\Pngrb\V1\AuthorizationController::class, 'authorize']);
+    });
 });
