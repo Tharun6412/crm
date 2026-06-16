@@ -27,16 +27,16 @@ class MyActivityController extends Controller
         // USer Gas And Cas
         $user_cas = Auth::user()->cas->pluck('id');
         // Consumer Waiting List for the Responsible User
-        $roles = Role::whereIn('id', [EnumsRole::MDPE->value, EnumsRole::GI_ENGINEER->value, EnumsRole::HSE->value, EnumsRole::ACTIVATION->value, EnumsRole::MARKETING->value])
+        $roles = Role::whereIn('id', [EnumsRole::GI_ENGINEER->value, EnumsRole::HSE->value, EnumsRole::ACTIVATION->value, EnumsRole::MARKETING->value])
             ->whereIn('id', Auth::user()->roles->pluck('id'))->orderBy('position')->pluck('name', 'id');
         $status_ids = [];
         foreach($roles as $id => $role_name) {
             switch($id) {
                 case EnumsRole::MARKETING->value:
-                    $status_ids[] = EnumsConsumerStatus::PRE_REGISTER->value;break;
-                    // $status_ids[] = EnumsConsumerStatus::REGISTER->value;break;
-                case EnumsRole::MDPE->value:
+                    $status_ids[] = EnumsConsumerStatus::PRE_REGISTER->value;
                     $status_ids[] = EnumsConsumerStatus::REGISTER->value;break;
+                // case EnumsRole::MDPE->value:
+                //     $status_ids[] = EnumsConsumerStatus::REGISTER->value;break;
                     // $status_ids[] = EnumsConsumerStatus::ACCEPT->value;break;
                 case EnumsRole::GI_ENGINEER->value:
                     // $status_ids[] = EnumsConsumerStatus::EXECUTE->value;

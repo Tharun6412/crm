@@ -28,6 +28,7 @@ class TeamConsumer extends Model
         'status_id',
         'status',
         'created_by',
+        'updated_by',
     ];
 
     /**
@@ -59,5 +60,12 @@ class TeamConsumer extends Model
     public function updatedBy(): BelongsTo
     {
         return $this->belongsTo(User::class,'updated_by');
+    }
+    /**
+     * Relation with user
+     */
+    public function createdBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class,'created_by');
     }
 }

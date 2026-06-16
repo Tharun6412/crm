@@ -37,7 +37,11 @@
                     <tr class="{{ $area->area_count == 0 ? 'zero-area-count d-none' : '' }}">
                         <td width="1%" class="text-center">{{ $loop->iteration }}</td>
                         <td>{{ $area->name }}</td>
-                        <td class="text-end">{{ $area->area_count ?? 0}}</td>
+                        <td class="text-end">
+                            <a href="{{ url('consumers') }}?{{ http_build_query(['geo_area' => [request()->ga_id], 'cns_status' => [request()->cns_status], 'charge_area' => [request()->ca_id],'area' => [$area->id], 'segments' => [request()->segments], 'connection_type_id' => [request()->connection_type_id]]) }}" target="_blank" title="Consumers List">
+                            {{ $area->area_count ?? 0}}
+                            </a>
+                        </td>
                     </tr>
                 @endforeach
                     <tr class="fw-bold">

@@ -68,7 +68,7 @@
                              <span class="badge text-bg-success"><i class="bi bi-check"></i>&nbsp;Completed</span>
                             @endif
                         </td>
-                        <td>{{ $consumer->teamConsumer->first()?->updatedBy?->name ?? '' }}</td>
+                        <td>{{ $consumer->teamConsumer->first()?->createdBy?->name ?? '' }}</td>
                         <td nowrap>
                              @if($consumer->teamConsumer->first()?->status == '')
                                 <a class="btn btn-outline-primary btn-sm link-modal" href="{{ url('consumers/waiting/pending-consumers/create/'.$consumer->id) }}"><i class="bi bi-person-check-fill"></i>&nbsp;Assign</a>

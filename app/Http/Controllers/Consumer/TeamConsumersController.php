@@ -82,7 +82,9 @@ class TeamConsumersController extends Controller
                 $dept_id = Null;
                 break;
         }
-        $teams = Team::where('ga_id',$team_consumer->ga_id)->where('department_id', $dept_id)->where('status',1)->get();
+        $teams = Team::where('ga_id',$team_consumer->ga_id)->whereHas('cas', function($q) use($team_consumer) {
+            $q->where('mst_cas.id', $team_consumer->ca_id);
+        })->where('department_id', $dept_id)->where('status',1)->get();
         return view('consumers.team-consumers.create',['team_consumer' => $team_consumer,'teams' => $teams]);
     }
     public function store(Request $request, $id)
@@ -117,7 +119,7 @@ class TeamConsumersController extends Controller
                 'status_id' => $statusId,
                 'team_id' => $request->team_id,
                 'status' => 0, //0 = inprogress,1 = completed
-                'updated_by' => Auth::id(),
+                'created_by' => Auth::id(),
             ]);
             return response()->json(['success' => 'Team Successfully assigned to Consumer']);
         }else{

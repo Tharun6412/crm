@@ -2,14 +2,18 @@
 namespace App\Http\Controllers\Reports;
 
 use App\Enums\ConsumerStatus as EnumsConsumerStatus;
+use App\Enums\Department;
 use App\Enums\Role;
 use App\Http\Controllers\Controller;
+use App\Models\Admin\Team;
 use App\Models\Admin\User;
 use App\Models\Consumer\Consumer;
 use App\Models\Consumer\ConsumerStatus;
+use App\Models\Consumer\TeamConsumer;
 use App\Models\Master\MasterConsumerStatus;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -36,7 +40,7 @@ class EmployeeActivityController extends Controller
             ->whereHas('ga', function($q) use($request) {
                 $q->whereIn('ga_id', $request->geo_area);
             })->whereHas('roles', function($q) use($request) {
-                $q->whereIn('role_id', [Role::MDPE->value, Role::ACTIVATION->value, Role::GI_ENGINEER->value, Role::MARKETING->value, Role::HSE->value]);
+                $q->whereIn('role_id', [Role::ACTIVATION->value, Role::GI_ENGINEER->value, Role::MARKETING->value, Role::HSE->value]);
             })
             ->when($request->has('roles'), function($q) use($request) {
                 $q->whereHas('roles', function($q1) use($request) {
@@ -45,7 +49,6 @@ class EmployeeActivityController extends Controller
             })
             ->get();
             $baseRoles = [
-                Role::MDPE->value,
                 Role::ACTIVATION->value,
                 Role::GI_ENGINEER->value,
                 Role::MARKETING->value,
@@ -79,8 +82,7 @@ class EmployeeActivityController extends Controller
             }
             // Mapping Roles to Consumer Status
             $roleStatusMap = [
-                Role::MARKETING->value => [EnumsConsumerStatus::PRE_REGISTER->value],
-                Role::MDPE->value => [EnumsConsumerStatus::REGISTER->value],
+                Role::MARKETING->value => [EnumsConsumerStatus::PRE_REGISTER->value, EnumsConsumerStatus::REGISTER->value],
                 Role::GI_ENGINEER->value => [EnumsConsumerStatus::ACCEPT->value],
                 Role::HSE->value => [EnumsConsumerStatus::EXECUTE->value],
                 Role::ACTIVATION->value => [EnumsConsumerStatus::HSC->value],
@@ -92,6 +94,69 @@ class EmployeeActivityController extends Controller
             'consumer_counts' => $consumer_counts, 
             'statuses' => $statuses,
             'roleStatusMap' => $roleStatusMap,
+        ]);
+    }
+
+    /**
+     * To get Assigned and Assigned List 
+     * Teams with Assigned List
+     * @param $user_id
+     */
+    public function getUserAssignedTeams(Request $request)
+    {
+        // Map Status ID
+        switch($request->cns_status) {
+            case 1:
+                $status = 2;
+                $status_id = 1;
+                break;
+            case 2:
+                $status = 3;
+                $status_id = 2;
+                break;
+            case 3:
+                $status = 4;
+                $status_id = 3;
+                break;
+            case 4:
+                $status = 5;
+                $status_id = 4;
+                break;
+            case 5:
+                $status = 6;
+                $status_id = 5;
+                break;
+            default:
+                $status_name = $status_id = ''; break; 
+        }
+        // Map Departments Based on Roles
+        $roleDepartmentMap = [
+            Role::MARKETING->value => [Department::MARKETING->value],
+            Role::GI_ENGINEER->value => [Department::GI->value],
+            Role::HSE->value => [Department::HSE->value],
+            Role::ACTIVATION->value => [Department::ACTIVATION->value],
+        ];
+        // fetch User Details and get Role IDs
+        $user = User::find($request->user_id);
+        $roleIds = $user?->roles->pluck('id') ?? collect();
+        $caIds = $user?->cas->pluck('id') ?? collect();
+        // Map DepartmentIds with Roles
+        $departmentIds = $roleIds->map(fn ($roleId) => $roleDepartmentMap[$roleId] ?? null)
+                ->filter()->unique()->values()->toArray();
+        // Fetch Teams List
+        $teams = Team::whereIn('ga_id', $request->ga_id)->whereHas('cas', function($q) use($caIds) {
+            $q->whereIn('mst_cas.id', $caIds);
+        })->whereIn('department_id', $departmentIds)->get();
+        // List of Assigned Consumers by User
+        $assigned_consumers = TeamConsumer::select('team_id', DB::raw('COUNT(id) as team_count'))->whereIn('team_id', $teams->pluck('id'))->where('status_id', $status)->groupBy('team_id')->get()->pluck('team_count', 'team_id');
+        $total = $request->total;
+        $unassigned_list = $total - $assigned_consumers->sum();
+        return view('reports.consumer.waiting-report.user-assigned-teams', [
+            'teams' => $teams,
+            'assigned_consumers' => $assigned_consumers,
+            'unassigned' => $unassigned_list ?? 0,
+            'user' => $user,
+            'status_id' => $status_id,
         ]);
     }
 }

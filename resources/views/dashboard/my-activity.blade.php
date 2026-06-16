@@ -7,8 +7,9 @@
     <div class="fluid-container">
         {{-- Data Preparation --}}
         @php
-            $roleData = [
-                \App\Enums\Role::MARKETING->value => [
+        $roleData = [
+                [
+                    'role_id' => \App\Enums\Role::MARKETING->value,
                     'status' => 'REGISTRATION',
                     'pending' => $consumers_count[\App\Enums\ConsumerStatus::PRE_REGISTER->value] ?? 0,
                     'my_pending_list' => $user_pending_list[\App\Enums\ConsumerStatus::REGISTER->value] ?? 0,
@@ -18,8 +19,8 @@
                     'assigned' => $assigned_consumers[\App\Enums\ConsumerStatus::REGISTER->value] ?? 0,
                     'unassigned' => ($consumers_count[\App\Enums\ConsumerStatus::PRE_REGISTER->value] ?? 0) - ($assigned_consumers[\App\Enums\ConsumerStatus::REGISTER->value] ?? 0),
                 ],
-
-                \App\Enums\Role::MDPE->value => [
+                [
+                    'role_id' => \App\Enums\Role::MARKETING->value,
                     'status' => 'ACCEPTANCE',
                     'pending' => $consumers_count[\App\Enums\ConsumerStatus::REGISTER->value] ?? 0,
                     'my_pending_list' => $user_pending_list[\App\Enums\ConsumerStatus::ACCEPT->value] ?? 0,
@@ -29,8 +30,8 @@
                     'assigned' => $assigned_consumers[\App\Enums\ConsumerStatus::ACCEPT->value] ?? 0,
                     'unassigned' => ($consumers_count[\App\Enums\ConsumerStatus::REGISTER->value] ?? 0) - ($assigned_consumers[\App\Enums\ConsumerStatus::ACCEPT->value] ?? 0),
                 ],
-
-                \App\Enums\Role::GI_ENGINEER->value => [
+                [
+                    'role_id' => \App\Enums\Role::GI_ENGINEER->value,
                     'status' => 'EXECUTION',
                     'pending' => $consumers_count[\App\Enums\ConsumerStatus::ACCEPT->value] ?? 0,
                     'my_pending_list' => $user_pending_list[\App\Enums\ConsumerStatus::EXECUTE->value] ?? 0,
@@ -40,8 +41,8 @@
                     'assigned' => $assigned_consumers[\App\Enums\ConsumerStatus::EXECUTE->value] ?? 0,
                     'unassigned' => ($consumers_count[\App\Enums\ConsumerStatus::ACCEPT->value] ?? 0) - ($assigned_consumers[\App\Enums\ConsumerStatus::EXECUTE->value] ?? 0),
                 ],
-
-                \App\Enums\Role::HSE->value => [
+                [
+                    'role_id' => \App\Enums\Role::HSE->value,
                     'status' => 'HSC',
                     'pending' => $consumers_count[\App\Enums\ConsumerStatus::EXECUTE->value] ?? 0,
                     'my_pending_list' => $user_pending_list[\App\Enums\ConsumerStatus::HSC->value] ?? 0,
@@ -51,8 +52,8 @@
                     'assigned' => $assigned_consumers[\App\Enums\ConsumerStatus::HSC->value] ?? 0,
                     'unassigned' => ($consumers_count[\App\Enums\ConsumerStatus::EXECUTE->value] ?? 0) - ($assigned_consumers[\App\Enums\ConsumerStatus::HSC->value] ?? 0),
                 ],
-
-                \App\Enums\Role::ACTIVATION->value => [
+                [
+                    'role_id' => \App\Enums\Role::ACTIVATION->value,
                     'status' => 'ACTIVATION',
                     'pending' => $consumers_count[\App\Enums\ConsumerStatus::HSC->value] ?? 0,
                     'my_pending_list' => $user_pending_list[\App\Enums\ConsumerStatus::ACTIVATE->value] ?? 0,
@@ -63,11 +64,72 @@
                     'unassigned' => ($consumers_count[\App\Enums\ConsumerStatus::HSC->value] ?? 0) - ($assigned_consumers[\App\Enums\ConsumerStatus::ACTIVATE->value] ?? 0),
                 ],
             ];
+            // $roleData = [
+            //     \App\Enums\Role::MARKETING->value => [
+            //         'role_id' => \App\Enums\Role::MARKETING->value,
+            //         'status' => 'REGISTRATION',
+            //         'pending' => $consumers_count[\App\Enums\ConsumerStatus::PRE_REGISTER->value] ?? 0,
+            //         'my_pending_list' => $user_pending_list[\App\Enums\ConsumerStatus::REGISTER->value] ?? 0,
+            //         'completed' => $completed_consumers[\App\Enums\ConsumerStatus::REGISTER->value] ?? 0,
+            //         'total' => $consumers_count[\App\Enums\ConsumerStatus::REGISTER->value] ?? 0,
+            //         'status_id' => \App\Enums\ConsumerStatus::PRE_REGISTER->value,
+            //         'assigned' => $assigned_consumers[\App\Enums\ConsumerStatus::REGISTER->value] ?? 0,
+            //         'unassigned' => ($consumers_count[\App\Enums\ConsumerStatus::PRE_REGISTER->value] ?? 0) - ($assigned_consumers[\App\Enums\ConsumerStatus::REGISTER->value] ?? 0),
+            //     ],
+
+            //     \App\Enums\Role::MDPE->value => [
+            //         'status' => 'ACCEPTANCE',
+            //         'pending' => $consumers_count[\App\Enums\ConsumerStatus::REGISTER->value] ?? 0,
+            //         'my_pending_list' => $user_pending_list[\App\Enums\ConsumerStatus::ACCEPT->value] ?? 0,
+            //         'completed' => $completed_consumers[\App\Enums\ConsumerStatus::ACCEPT->value] ?? 0,
+            //         'total' => $consumers_count[\App\Enums\ConsumerStatus::ACCEPT->value] ?? 0,
+            //         'status_id' => \App\Enums\ConsumerStatus::REGISTER->value,
+            //         'assigned' => $assigned_consumers[\App\Enums\ConsumerStatus::ACCEPT->value] ?? 0,
+            //         'unassigned' => ($consumers_count[\App\Enums\ConsumerStatus::REGISTER->value] ?? 0) - ($assigned_consumers[\App\Enums\ConsumerStatus::ACCEPT->value] ?? 0),
+            //     ],
+
+            //     \App\Enums\Role::GI_ENGINEER->value => [
+            //         'status' => 'EXECUTION',
+            //         'pending' => $consumers_count[\App\Enums\ConsumerStatus::ACCEPT->value] ?? 0,
+            //         'my_pending_list' => $user_pending_list[\App\Enums\ConsumerStatus::EXECUTE->value] ?? 0,
+            //         'completed' => $completed_consumers[\App\Enums\ConsumerStatus::EXECUTE->value] ?? 0,
+            //         'total' => $consumers_count[\App\Enums\ConsumerStatus::EXECUTE->value] ?? 0,
+            //         'status_id' => \App\Enums\ConsumerStatus::ACCEPT->value,
+            //         'assigned' => $assigned_consumers[\App\Enums\ConsumerStatus::EXECUTE->value] ?? 0,
+            //         'unassigned' => ($consumers_count[\App\Enums\ConsumerStatus::ACCEPT->value] ?? 0) - ($assigned_consumers[\App\Enums\ConsumerStatus::EXECUTE->value] ?? 0),
+            //     ],
+
+            //     \App\Enums\Role::HSE->value => [
+            //         'status' => 'HSC',
+            //         'pending' => $consumers_count[\App\Enums\ConsumerStatus::EXECUTE->value] ?? 0,
+            //         'my_pending_list' => $user_pending_list[\App\Enums\ConsumerStatus::HSC->value] ?? 0,
+            //         'completed' => $completed_consumers[\App\Enums\ConsumerStatus::HSC->value] ?? 0,
+            //         'total' => $consumers_count[\App\Enums\ConsumerStatus::HSC->value] ?? 0,
+            //         'status_id' => \App\Enums\ConsumerStatus::EXECUTE->value,
+            //         'assigned' => $assigned_consumers[\App\Enums\ConsumerStatus::HSC->value] ?? 0,
+            //         'unassigned' => ($consumers_count[\App\Enums\ConsumerStatus::EXECUTE->value] ?? 0) - ($assigned_consumers[\App\Enums\ConsumerStatus::HSC->value] ?? 0),
+            //     ],
+
+            //     \App\Enums\Role::ACTIVATION->value => [
+            //         'status' => 'ACTIVATION',
+            //         'pending' => $consumers_count[\App\Enums\ConsumerStatus::HSC->value] ?? 0,
+            //         'my_pending_list' => $user_pending_list[\App\Enums\ConsumerStatus::ACTIVATE->value] ?? 0,
+            //         'completed' => $completed_consumers[\App\Enums\ConsumerStatus::ACTIVATE->value] ?? 0,
+            //         'total' => $consumers_count[\App\Enums\ConsumerStatus::ACTIVATE->value] ?? 0,
+            //         'status_id' => \App\Enums\ConsumerStatus::HSC->value,
+            //         'assigned' => $assigned_consumers[\App\Enums\ConsumerStatus::ACTIVATE->value] ?? 0,
+            //         'unassigned' => ($consumers_count[\App\Enums\ConsumerStatus::HSC->value] ?? 0) - ($assigned_consumers[\App\Enums\ConsumerStatus::ACTIVATE->value] ?? 0),
+            //     ],
+            // ];
             // print "<pre>"; print_r($roleData[\App\Enums\Role::MARKETING->value]['my_pending_list']);
         @endphp
+        <h4 class="border-start border-5 border-info p-1">My Responsible Consumers</h4>
         @if ($roles->count() > 0)
+                @php
+                    $userRoleIds = $roles->keys()->toArray();
+                    $filteredRoleData = collect($roleData)->filter(fn ($row) => in_array($row['role_id'], $userRoleIds))->values();
+                @endphp
             <div class="table-responsive mt-3">
-                <h4 class="border-start border-5 border-info p-1">My Responsible Consumers</h4>
                 <table class="table table-bordered table-striped table-hover">
                     <thead class="table-success align-middle">
                         <tr>
@@ -82,13 +144,13 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($roles as $id => $role)
+                        @foreach($filteredRoleData as $id => $role)
                             <tr>
                                 <td  class="text-center" width="1%">{{ $loop->iteration }}</td>
-                                <td>{{ $roleData[$id]['status'] ?? $role }}</td>
-                                <td  class="text-center fs-5"><a href="{{ url('consumers/waiting/pending-consumers') }}?{{ http_build_query(['cns_status' => [$roleData[$id]['status_id']], 'geo_area' => auth()->user()->ga->pluck('id')->toArray(), 'charge_area' => auth()->user()->ca->pluck('id')->toArray(), 'status' => [2]]) }}" target="_blank">{{ $roleData[$id]['unassigned'] }}</a></td>
-                                <td class="text-center fs-5"><a href="{{ url('consumers/waiting/pending-consumers') }}?{{ http_build_query(['cns_status' => [$roleData[$id]['status_id']], 'geo_area' => auth()->user()->ga->pluck('id')->toArray(), 'charge_area' => auth()->user()->ca->pluck('id')->toArray(), 'status' => [0,1]]) }}" target="_blank">{{ $roleData[$id]['assigned'] }}</a></td>
-                                <td class="text-center fs-5">{{ $roleData[$id]['pending'] ?? $role }}</td>
+                                <td>{{ $role['status'] ?? $role }}</td>
+                                <td  class="text-center fs-5"><a href="{{ url('consumers/waiting/pending-consumers') }}?{{ http_build_query(['cns_status' => [$role['status_id']], 'geo_area' => auth()->user()->ga->pluck('id')->toArray(), 'charge_area' => auth()->user()->ca->pluck('id')->toArray(), 'status' => [2]]) }}" target="_blank">{{ $role['unassigned'] }}</a></td>
+                                <td class="text-center fs-5"><a href="{{ url('consumers/waiting/pending-consumers') }}?{{ http_build_query(['cns_status' => [$role['status_id']], 'geo_area' => auth()->user()->ga->pluck('id')->toArray(), 'charge_area' => auth()->user()->ca->pluck('id')->toArray(), 'status' => [0,1]]) }}" target="_blank">{{ $role['assigned'] }}</a></td>
+                                <td class="text-center fs-5">{{ $role['pending'] }}</td>
                             </tr>
                             @endforeach
                             <tr class="fs-5">
@@ -98,8 +160,13 @@
                     </tbody>
                 </table>
             </div>
+        @else
+            <div class="alert alert-info">
+                <div>No Consumers found</div>
+            </div>
         @endif
-        <div>
+        <div class="mb-4">
+            <h4 class="border-start border-5 border-warning p-1">My Team Assigned Consumers</h4>
             @if ($teams->count() > 0)
                 @php
                     $consumers_list = $cns_status = [];
@@ -124,7 +191,6 @@
                     }
                     // print "<pre>";print_r($cns_status);
                 @endphp
-                <h4 class="border-start border-5 border-warning p-1">My Team Assigned Consumers</h4>
                 <table class="table table-bordered table-striped table-hover align-middle">
                     <thead class="table-success align-middle">
                         <tr>
@@ -152,6 +218,10 @@
                         @endforeach
                     </tbody>
                 </table>
+            @else
+                <div class="alert alert-warning">
+                    <div>No Teams available</div>
+                </div>
             @endif
         </div>
         {{-- @if ($roles->count() > 0) --}}

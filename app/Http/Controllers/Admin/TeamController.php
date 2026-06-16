@@ -70,12 +70,12 @@ class TeamController extends Controller
         ]);
 
         $team = Team::create([
-        'name' => $request->name,
-        'ga_id' => $request->ga_id,
-        'department_id' => $request->department_id,
-        'status' => 1,
-        'responsible_user_id' => $request->responsible_user_id,
-        'created_by' => Auth::id(),
+            'name' => $request->name,
+            'ga_id' => $request->ga_id,
+            'department_id' => $request->department_id,
+            'status' => 1,
+            'responsible_user_id' => $request->responsible_user_id,
+            'created_by' => Auth::id(),
         ]);
 
         $team->cas()->sync($request->ca_id ?? []);
@@ -100,7 +100,7 @@ class TeamController extends Controller
     {
         $team = Team::when((!isAdmin() AND !isSuperAdmin() AND !isFullAccess()), function($q) {
             $q->whereIn('ga_id', session('user')['gas']);
-        })->with(['cas','ga','departments'])->findOrFail($id);
+        })->with(['cas','ga','departments','responsibleUser'])->findOrFail($id);
         // $geo_areas = Ga::all();
         // $departments = Department::all();
         $cas = Ca::where('ga_id', $team->ga_id)->get();
@@ -139,7 +139,7 @@ class TeamController extends Controller
      */
     public function show($id)
     {
-        $team = Team::with(['cas','ga','departments','users.roles'])->findOrFail($id);
+        $team = Team::with(['cas','ga','departments','users.roles','responsibleUser'])->findOrFail($id);
         return view('admin.teams.show',['team' => $team ]);
     }
     /**
