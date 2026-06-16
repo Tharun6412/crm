@@ -25,8 +25,12 @@ return new class extends Migration
             $table->foreignId('request_id')->nullable()->index()->constrained(table:'cns_referral_requests')->noActionOnDelete()->noActionOnUpdate();
             $table->foreignId('referral_consumer_id')->nullable()->index()->constrained(table:'cns_consumers')->noActionOnDelete()->noActionOnUpdate();
             $table->tinyInteger('status')->nullable();
-            $table->date('reedem_date')->nullable();
-            $table->decimal('reedem_amount', 8, 3)->nullable();
+            $table->decimal('referrer_amount', 8, 3)->nullable();
+            $table->date('referrer_reedem_date')->nullable();
+            $table->date('referrer_reedem_status')->nullable();
+            $table->decimal('referral_amount', 8, 3)->nullable();
+            $table->date('referral_reedem_date')->nullable();
+            $table->date('referral_reedem_status')->nullable();
             $table->timestamps();
 
         });

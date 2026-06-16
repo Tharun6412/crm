@@ -40,8 +40,12 @@
                                 <td>{{ maskNumber($consumer->phone_alt) }}</td>
                             </tr>
                             <tr>
-                                <td class="fw-semibold">Status</td>
-                                <td><x-consumer.status :status="$consumer->status" /></td>
+                                <td class="fw-semibold">Referral Code</td>
+                                <td>{{ $consumer->consumerData?->reference_code  }}</td>
+                            </tr>
+                            <tr>
+                                <td class="fw-semibold">Referred By</td>
+                                <td><a href="{{ url('consumers/'.$consumer->consumerData?->referrer_consumer_id) }}" target="_blank" >{{ $consumer->consumerData?->referredBy?->consumerData?->reference_code  }}</a></td>
                             </tr>
                         </table>                   
                     </div>

@@ -11,7 +11,6 @@ use App\Http\Controllers\Master\DocumentCentre\DocumentUpload;
 use App\Models\Consumer\Consumer;
 use App\Models\Consumer\ConsumerDocument;
 use App\Models\Consumer\ConsumerStatus;
-use App\Models\Consumer\ReferralRequest;
 use App\Notifications\Consumer\ActivateSmsNotification;
 use App\Services\ConsumerStatusService;
 use App\Services\ReferralService;

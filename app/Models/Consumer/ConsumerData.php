@@ -24,6 +24,8 @@ class ConsumerData extends Model
         'lat',
         'lng',
         'kyc_status',
+        'reference_code',
+        'referrer_consumer_id',
     ];
 
     /**
@@ -32,5 +34,13 @@ class ConsumerData extends Model
     public function consumer():BelongsTo
     {
         return $this->belongsTo(Consumer::class, 'consumer_id')->withDefault();
+    }
+
+    /**
+     * Referred By
+     */
+    public function referredBy(): BelongsTo
+    {
+        return $this->belongsTo(Consumer::class, 'referrer_consumer_id');
     }
 }

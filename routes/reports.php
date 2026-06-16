@@ -62,7 +62,7 @@ Route::middleware(['auth', ModuleAccess::class])->group(function() {
     // Route::get('invoices/all-counts', [App\Http\Controllers\Reports\InvoicesReportController::class, 'reportCounts']);
     Route::get('unbilled/listExport', [App\Http\Controllers\Reports\UnbilledReport::class, 'listExport']);
     Route::get('unbilled/list', [App\Http\Controllers\Reports\UnbilledReport::class, 'list']);
-
+    
     // Waiting Report
     Route::get('consumer/connectionProgress', [App\Http\Controllers\Reports\ConsumerWaitingController::class, 'index']);
     Route::get('consumer/connectionProgress/ageingProgress', [App\Http\Controllers\Reports\ConsumerWaitingController::class, 'ageingProgress']);
@@ -71,4 +71,8 @@ Route::middleware(['auth', ModuleAccess::class])->group(function() {
     Route::get('consumer/activity',[App\Http\Controllers\Reports\ActivityController::class,'activity']);
     Route::get('consumer/employee/activity/getUserAssignedTeams', [App\Http\Controllers\Reports\EmployeeActivityController::class, 'getUserAssignedTeams']);
     Route::get('consumer/employee/activity',[App\Http\Controllers\Reports\EmployeeActivityController::class,'index']);
+    
+    // Referral Report
+    Route::get('referrals', [App\Http\Controllers\Reports\ReferralsController::class, 'index']);
+    Route::resource('referrals', App\Http\Controllers\Reports\ReferralsController::class);
 });

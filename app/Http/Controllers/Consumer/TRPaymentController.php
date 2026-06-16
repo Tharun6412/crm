@@ -25,6 +25,7 @@ use App\Services\ConsumerStatusService;
 use App\Services\InvoiceService;
 use App\Services\LedgerService;
 use App\Services\PaymentService;
+use App\Services\ReferralService;
 use App\Services\SmsService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -101,7 +102,7 @@ class TRPaymentController extends Controller
             $target_status = ConsumerStatusService::update($id, EnumsConsumerStatus::REGISTER->value);
 
             // A Unique reference number generation for every consumer.
-            $reference_number = $district_code.$segment_type.str_pad($ca_code, 2, 0,STR_PAD_LEFT).str_pad($ca_data->count, 6, "0", STR_PAD_LEFT);
+            $reference_number = ReferralService::generateReferralCode();
             ConsumerData::where('consumer_id', $id)->update(['reference_code' => $reference_number]);
             // Scheme Details
             // Paid Amount = Amount - Minimun Payment

@@ -16,7 +16,6 @@ use App\Models\Consumer\ConsumerScheme;
 use App\Models\Consumer\ConsumerStatus;
 use App\Models\Consumer\Prepaid;
 use App\Models\Consumer\ReferralConsumer;
-use App\Models\Consumer\ReferralRequest;
 use App\Models\DocumentCentre\DocumentTypes;
 use App\Models\Master\ConnectionType;
 use App\Models\Master\ConsumerGasRequired;
@@ -63,6 +62,7 @@ class RegistrationController extends Controller
     {
         // dd($request->all());
         $referral_id = 0;
+        $referrer_id = "";
 
         // Referral Code Validattion Service.
         if(!empty($request->referral_code))
@@ -71,6 +71,7 @@ class RegistrationController extends Controller
             if(!empty($referral))
             {
                 $referral_id = $referral['referral_id'];
+                $referrer_id = $referral['referrer_id'];
             }
         }
 
@@ -125,7 +126,7 @@ class RegistrationController extends Controller
         {
             ReferralConsumer::create([
                 'request_id'           => $referral_id,
-                'status'               => ReferralStatus::OPEN->value,
+                'status'               => ReferralStatus::PROCESSING->value,
                 'referral_consumer_id' => $add_consumer->id,
             ]);
         }
@@ -134,6 +135,7 @@ class RegistrationController extends Controller
         ConsumerData::create([
             'consumer_id' => $add_consumer->id,
             'kyc_status' => 0,
+            'referrer_consumer_id' => $referrer_id,
         ]);
         // Consumer Status History
         ConsumerStatus::create([

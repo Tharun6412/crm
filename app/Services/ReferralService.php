@@ -4,11 +4,29 @@ namespace App\Services;
 
 use App\Enums\Constants;
 use App\Enums\ReferralStatus;
-use App\Models\Consumer\ReferralRequest;
+use App\Models\Consumer\ConsumerData;
+use App\Models\Consumer\Referral;
+use App\Models\Consumer\ReferralConsumer;
 use Illuminate\Validation\ValidationException;
 
 class ReferralService 
 {
+    /**
+     * Generate a new unique Referral code for every consumer
+     */
+    public static function generateReferralCode()
+    {
+        $characters = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+        do {
+            $code = '';
+            for ($i = 0; $i < 8; $i++) {
+                $code .= $characters[random_int(0, strlen($characters) - 1)];
+            }
+        } while (
+            ConsumerData::where('reference_code', $code)->exists()
+        );
+        return $code;
+    }
     /**
      * Validation function for Referral code
      * @param object $data
@@ -16,11 +34,12 @@ class ReferralService
     public static function checkValidation($data)
     {
         $referral_id = 0;
+        $referrer_id = "";
         if(!empty($data->referral_code))
         {
             $mobile_no = $data->phone;
             $referal_code = $data->referral_code;
-            $ref_request = ReferralRequest::where('phone', $mobile_no)->first();
+            $ref_request = Referral::where('phone', $mobile_no)->first();
             if ($ref_request) {
                 $matched = false;
                 $ref_redeems_count = $ref_request->referralConsumers()->count();
@@ -35,6 +54,7 @@ class ReferralService
 
                     if ($referal_code == $reference_code) {
                         $referral_id = $ref_request->id;
+                        $referrer_id = $ref_request->consumer->id;
                         $matched = true;
                     }
                 }
@@ -46,7 +66,7 @@ class ReferralService
                         ]);
                 }
                 else {
-                    return ['referral_id' => $referral_id, 'matched' => $matched];
+                    return ['referral_id' => $referral_id, 'matched' => $matched, 'referrer_id' => $referrer_id];
 
                 }
             } else {
@@ -64,11 +84,11 @@ class ReferralService
      */
     public static function redeem($consumer_id)
     {
-        $ref_amt = ReferralRequest::where('referral_consumer_id', $consumer_id)->where('status', ReferralStatus::OPEN->value)->first();
+        $ref_amt = ReferralConsumer::where('referral_consumer_id', $consumer_id)->where('status', ReferralStatus::PROCESSING->value)->first();
         if($ref_amt)
         {
             $redeem_amt = Constants::REFERRAL_AMOUNT->value;
-            $redeem = $ref_amt->update(['status' => ReferralStatus::CLOSE->value ,'reedem_date' => now()->toDateString(), 'reedem_amount' => $redeem_amt]);
+            $redeem = $ref_amt->update(['status' => ReferralStatus::EARNED->value , 'referrer_amount' => $redeem_amt,  'referral_amount' => $redeem_amt]);
 
             return ['status' => true, 'message' => 'Successfully redeemed'];
         }

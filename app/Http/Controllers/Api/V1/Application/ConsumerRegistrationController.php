@@ -55,6 +55,7 @@ class ConsumerRegistrationController extends Controller
     {
         // Insert data
         $referral_id = 0;
+        $referrer_id = "";
 
         // Referral Code Validattion Service.
         if(!empty($request->referral_code))
@@ -63,6 +64,7 @@ class ConsumerRegistrationController extends Controller
             if(!empty($referral))
             {
                 $referral_id = $referral['referral_id'];
+                $referrer_id = $referral['referrer_id'];
             }
         }
         // Data Preparation
@@ -114,7 +116,7 @@ class ConsumerRegistrationController extends Controller
         {
             ReferralConsumer::create([
                 'request_id'           => $referral_id,
-                'status'               => ReferralStatus::OPEN->value,
+                'status'               => ReferralStatus::PROCESSING->value,
                 'referral_consumer_id' => $add_consumer->id,
             ]);
         }
@@ -125,6 +127,7 @@ class ConsumerRegistrationController extends Controller
             'lat' => $request->lat,
             'lng' => $request->lng,
             'kyc_status' => 0,
+            'referrer_consumer_id' => $referrer_id,
         ]);
         // Documents Data Preparation
         if($request->has('document_type')) {

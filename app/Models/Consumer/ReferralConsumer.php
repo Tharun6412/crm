@@ -22,10 +22,14 @@ class ReferralConsumer extends Model
      */
     protected $fillable = [
         'request_id',
-        'status',
         'referral_consumer_id',
-        'redeem_amount',
-        'redeem_date',
+        'status',
+        'referrer_amount',
+        'referrer_redeem_date',
+        'referrer_redeem_status',
+        'referral_amount',
+        'referral_redeem_date',
+        'referral_redeem_status',
     ];
 
     
@@ -35,13 +39,13 @@ class ReferralConsumer extends Model
      */
     public function request(): BelongsTo
     {
-        return $this->belongsTo(ReferralRequest::class, 'request_id');
+        return $this->belongsTo(Referral::class, 'request_id');
     }
 
     /**
      * Relation with consumers
      */
-    public function consumers(): BelongsTo
+    public function consumer(): BelongsTo
     {
         return $this->belongsTo(Consumer::class, 'referral_consumer_id');
     }
