@@ -19,4 +19,5 @@ enum PaymentType: int
     case FROM_SD = 13;
     case TO_INVOICE = 14;
     case PINE_LABS_EMI = 15;
+    case REFERRAL_REWARDS = 16;
 }

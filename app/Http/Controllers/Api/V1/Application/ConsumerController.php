@@ -86,12 +86,14 @@ class ConsumerController extends Controller
             'sdPayment.paymentType:id,name',
             'activeMeter:id,consumer_id,meter_no,meter_serial_no,initial_reading,status',
             'activeMeter.meterStatus:id,name',
-            'consumerData:id,consumer_id,lat,lng'
+            'consumerData:id,consumer_id,reference_code,referrer_consumer_id,lat,lng',
         ])->when((!isApiAdmin() AND !isApiSuperAdmin() AND !isApiFullAccess()), function ($q) use($request) {
             $q->whereIn('ga_id', $request->user()->ga()->pluck('ga_id')->toArray());
         })->find($id);
         $consumer->mobile = maskNumber($consumer->phone);
         $consumer->aadhar_val = maskNumber($consumer->aadhar);
+        $consumer->referral_code = $consumer->consumerData->reference_code;
+        $consumer->referred_by = $consumer->consumerData?->referredBy?->consumerData?->reference_code;
         unset($consumer->phone, $consumer->aadhar);
 
         // Abort if consumer not found

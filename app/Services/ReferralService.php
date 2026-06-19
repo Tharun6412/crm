@@ -19,7 +19,7 @@ class ReferralService
         $characters = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
         do {
             $code = '';
-            for ($i = 0; $i < 8; $i++) {
+            for ($i = 0; $i < 6; $i++) {
                 $code .= $characters[random_int(0, strlen($characters) - 1)];
             }
         } while (

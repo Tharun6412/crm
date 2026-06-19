@@ -55,7 +55,7 @@ class ConsumerRegistrationController extends Controller
     {
         // Insert data
         $referral_id = 0;
-        $referrer_id = "";
+        $referrer_id = NULL;
 
         // Referral Code Validattion Service.
         if(!empty($request->referral_code))

@@ -2,9 +2,11 @@
 
 namespace App\Models\Consumer;
 
+use App\Models\Payments\PayAdvanceTransaction;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Referral extends Model
 {
@@ -42,5 +44,15 @@ class Referral extends Model
     public function referralConsumers(): HasMany
     {
         return $this->hasMany(ReferralConsumer::class, 'request_id', 'id');
+    }
+
+    /**
+     * #PolyMorphic relation
+     * Relation with Advance Transaction
+     * MorphMany
+     */
+    public function advance():MorphMany
+    {
+        return $this->morphMany(PayAdvanceTransaction::class, 'advancable');
     }
 }

@@ -102,8 +102,12 @@ class TRPaymentController extends Controller
             $target_status = ConsumerStatusService::update($id, EnumsConsumerStatus::REGISTER->value);
 
             // A Unique reference number generation for every consumer.
-            $reference_number = ReferralService::generateReferralCode();
-            ConsumerData::where('consumer_id', $id)->update(['reference_code' => $reference_number]);
+            $cleanName = preg_replace('/[^A-Za-z]/', '', $consumer_scheme->consumer->fname);
+            $prefix = str_pad(
+                strtoupper(substr($cleanName, 0, 2)),2,'X',STR_PAD_RIGHT);
+            ConsumerData::where('consumer_id', $id)->update([
+                'reference_code' => $prefix.ReferralService::generateReferralCode(),
+            ]);
             // Scheme Details
             // Paid Amount = Amount - Minimun Payment
             $paid_amt = $request->amount - $consumer_scheme->scheme->registration;

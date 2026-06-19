@@ -20,17 +20,17 @@ return new class extends Migration
             $table->foreignId('updated_by')->nullable()->index()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();
             $table->timestamps();
         });
-        Schema::table('cns_referral_consumers', function(Blueprint $table) {
+        Schema::create('cns_referral_consumers', function(Blueprint $table) {
             $table->id();
             $table->foreignId('request_id')->nullable()->index()->constrained(table:'cns_referral_requests')->noActionOnDelete()->noActionOnUpdate();
             $table->foreignId('referral_consumer_id')->nullable()->index()->constrained(table:'cns_consumers')->noActionOnDelete()->noActionOnUpdate();
             $table->tinyInteger('status')->nullable();
             $table->decimal('referrer_amount', 8, 3)->nullable();
-            $table->date('referrer_reedem_date')->nullable();
-            $table->date('referrer_reedem_status')->nullable();
+            $table->date('referrer_redeem_date')->nullable();
+            $table->tinyInteger('referrer_redeem_status')->nullable()->default('1');
             $table->decimal('referral_amount', 8, 3)->nullable();
-            $table->date('referral_reedem_date')->nullable();
-            $table->date('referral_reedem_status')->nullable();
+            $table->date('referral_redeem_date')->nullable();
+            $table->tinyInteger('referral_redeem_status')->nullable()->default('1');
             $table->timestamps();
 
         });
