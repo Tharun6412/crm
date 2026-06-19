@@ -16,8 +16,6 @@ class TeamConsumersController extends Controller
 {
     public function index(Request $request)
     {
-        // dd($request->all());
-        $team_status = $request->status ?? [2];
          // Mapping Departments based on Status
         $status_val = $request->cns_status[0] ?? '';
         switch($status_val){
@@ -45,8 +43,10 @@ class TeamConsumersController extends Controller
             return redirect(url('myActivity'));
         }
         // Get Consumers List
-        $consumers = Consumer::with(['ga', 'ca', 'area','subArea', 'status','teamConsumer.team', 'teamConsumer.status'])
-            ->leftJoin('cns_consumer_teams', 'cns_consumer_teams.consumer_id', '=', 'cns_consumers.id')
+        $consumers = Consumer::with(['ga', 'ca', 'area','subArea', 'status','teamConsumer.team'])->leftJoin('cns_consumer_teams', function ($join) use($request) {
+            $join->on('cns_consumers.id', '=', 'cns_consumer_teams.consumer_id')
+                ->whereIn('cns_consumer_teams.status_id', $request->target_status);
+            })
             ->leftJoin('adm_teams', 'adm_teams.id', '=', 'cns_consumer_teams.team_id')
             ->leftJoin('users', 'users.id', '=', 'cns_consumer_teams.created_by')
             ->leftJoin('mst_cns_status', 'mst_cns_status.id', '=', 'cns_consumer_teams.status_id')
@@ -64,18 +64,18 @@ class TeamConsumersController extends Controller
             ->when($request->has('team_id'), function ($q) use($request) {
                 $q->whereIn('team_id', $request->team_id);
             })
-            ->when($team_status, function ($q) use ($request, $team_status) {
-                if (in_array(2, $team_status)) {
+            ->when($request->has('status'), function ($q) use ($request) {
+                if (in_array(2, $request->status)) {
                     // Unassigned
                     $q->whereNull('cns_consumer_teams.id')
                         ->when($request->has('cns_status'), function ($q1) use($request) {
-                                $q1->whereIn('cns_consumers.status_id', $request->cns_status ?? []);
+                                $q1->whereIn('cns_consumers.status_id', $request->cns_status);
                         });
                 } else {
                     // Assigned / Completed
-                    $q->whereNotNull('cns_consumer_teams.id')->whereIn('cns_consumer_teams.status', $team_status)
+                    $q->whereNotNull('cns_consumer_teams.id')->whereIn('cns_consumer_teams.status', $request->status)
                         ->when($request->has('target_status'), function ($q1) use($request) {
-                                $q1->whereIn('cns_consumer_teams.status_id', $request->target_status ?? []);
+                                $q1->whereIn('cns_consumer_teams.status_id', $request->target_status);
                         });
                 }
             })
