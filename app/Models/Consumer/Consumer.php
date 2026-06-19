@@ -422,4 +422,12 @@ class Consumer extends Model
     {
         return $this->hasOne(PayAdvance::class, 'consumer_id');
     }
+
+    /**
+     * Latest Team Consumer
+     */
+    // public function latestTeamConsumer()
+    // {
+    //     return $this->hasOne(TeamConsumer::class)->where('status_id', 3);
+    // }
 }

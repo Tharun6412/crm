@@ -7,6 +7,7 @@ Route::middleware(['auth'])->group(function() {
     Route::get('/', [App\Http\Controllers\Dashboard\HomeController::class, 'index'])->name('home');
     Route::get('myActivity', [App\Http\Controllers\Dashboard\MyActivityController::class, 'index']);
     Route::get('myActivity/myConsumersList', [App\Http\Controllers\Dashboard\MyActivityController::class, 'myConsumersList']);
+    Route::get('myActivity/getConsumersByCa', [App\Http\Controllers\Dashboard\MyActivityController::class, 'getConsumersByCa']);
     Route::get('help', function(){
         return view('utils.help');
     });
