@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\Api\V1\Application;
 
 use App\Enums\AwsPath;
+use App\Enums\Constants;
 use App\Enums\ConsumerStatus as EnumsConsumerStatus;
 use App\Enums\ReferralStatus;
 use App\Http\Controllers\Controller;
@@ -118,7 +119,9 @@ class ConsumerRegistrationController extends Controller
                 'request_id'           => $referral_id,
                 'status'               => ReferralStatus::PROCESSING->value,
                 'referral_consumer_id' => $add_consumer->id,
-            ]);
+                'referral_amount' => Constants::REFERRAL_AMOUNT->value,
+                'referrer_amount' => Constants::REFERRER_AMOUNT(),
+             ]);
         }
 
         // Consumers Data with GeoCoordinates

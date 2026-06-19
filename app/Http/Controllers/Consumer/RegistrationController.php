@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Consumer;
 
 use App\Enums\AwsPath;
+use App\Enums\Constants;
 use App\Enums\ConsumerStatus as EnumsConsumerStatus;
 use App\Enums\ReferralStatus;
 use App\Enums\SegmentType;
@@ -128,6 +129,8 @@ class RegistrationController extends Controller
                 'request_id'           => $referral_id,
                 'status'               => ReferralStatus::PROCESSING->value,
                 'referral_consumer_id' => $add_consumer->id,
+                'referrer_amount' => Constants::REFERRER_AMOUNT(),
+                'referral_amount' => Constants::REFERRAL_AMOUNT->value,
             ]);
         }
 

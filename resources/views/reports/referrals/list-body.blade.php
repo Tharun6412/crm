@@ -46,15 +46,15 @@
     <table class="table table-bordered table-hover page-sort table-striped align-middle">
         <thead class="table-success align-middle">
             <tr>
-                <th colspan="7" class="text-center">Referrer</th>
+                <th width="1%" rowspan="2" nowrap>S No</th>
+                <th colspan="6" class="text-center">Referrer</th>
                 <th colspan="2" class="text-center">Referral</th>
                 <th colspan="3" class="text-center">Referral Consumers</th>
                 <th width="2%" nowrap rowspan="2">Actions</th>
             </tr>
             <tr>
-                <th width="1%" nowrap>S No</th>
-                <th>Referral Date <x-master.date-filter/></th>
-                <th nowrap>
+                <th class="bg-success bg-opacity-25">Referral Date <x-master.date-filter/></th>
+                <th nowrap class="bg-success bg-opacity-25 text-white">
                     <a href="{{ $ref_requests->appends(['sortBy' => 'crn','sortOr' => $sort_order_inverse])->url($ref_requests->currentPage()) }}">
                         CRN
                         @if ($sort_by == 'crn')
@@ -62,7 +62,7 @@
                         @endif
                     </a>
                 </th>
-                <th>
+                <th class="bg-success bg-opacity-25">
                     <a href="{{ $ref_requests->appends(['sortBy' => 'fname','sortOr' => $sort_order_inverse])->url($ref_requests->currentPage()) }}">
                         Name
                         @if ($sort_by == 'fname')
@@ -70,14 +70,14 @@
                         @endif
                     </a>
                 </th>
-                <th nowrap>Referral Code</th>
-                <th>Status<x-consumer.statusFilter class="float-end" /></th>
-                <th>GA<x-master.gaFilter class="float-end" /></th>
-                <th>Name</th>
-                <th>Phone</th>
-                <th>CRN</th>
-                <th>Status</th>
-                <th>Referral Status</th>
+                <th nowrap class="bg-success bg-opacity-25">Referral Code</th>
+                <th nowrap class="bg-success bg-opacity-25">Status<x-consumer.statusFilter class="float-end" /></th>
+                <th nowrap class="bg-success bg-opacity-25">GA<x-master.gaFilter class="float-end" /></th>
+                <th class="bg-success bg-opacity-25" nowrap>Name</th>
+                <th class="bg-success bg-opacity-25" nowrap>Phone</th>
+                <th class="bg-success bg-opacity-25" nowrap>CRN</th>
+                <th class="bg-success bg-opacity-25" nowrap>Status</th>
+                <th class="bg-success bg-opacity-25" nowrap>Referral Status</th>
                 {{-- <th width="2%" nowrap rowspan="2">Actions</th> --}}
             </tr>
         </thead>
@@ -91,7 +91,7 @@
                     @endphp
                     <tr>
                         <td rowspan="{{ $rowspan }}" class="text-center">{{ $loop->iteration }}</td>
-                        <td rowspan="{{ $rowspan }}">{{ $referral->created_at->format('d-m-Y') }}</td>
+                        <td rowspan="{{ $rowspan }}" nowrap>{{ $referral->created_at->format('d-m-Y') }}</td>
                         <td rowspan="{{ $rowspan }}" nowrap>
                             <i class="bi bi-{{ ($referral->consumer->connection_type_id == 1) ? 'speedometer2' : 'wifi'}}"></i>
                             <a href="{{ url('consumers/' . $referral->consumer->id) }}" target="_blank">
@@ -109,22 +109,30 @@
                         <td rowspan="{{ $rowspan }}">{{ maskNumber($referral->phone) }}</td>
                         {{-- First consumer inline in the same <tr> --}}
                         @if ($firstCon)
-                            <td>{{ $firstCon->consumer?->crn ?? $firstCon->consumer?->t_crn }}</td>
+                            <td>
+                                 <a href="{{ url('consumers/' . $firstCon->consumer->id) }}" target="_blank">
+                                    {{ $firstCon->consumer?->crn ?? $firstCon->consumer?->t_crn }}
+                                 </a>
+                            </td>
                             <td><x-consumer.status :status="$firstCon->consumer?->status" mode='full' /></td>
-                            <td>{{ $firstCon->status == 1 ? 'Earned' : 'Processing' }}</td>
+                            <td><x-referrals.status :status="$firstCon->status" /></td>
                         @else
                             <td>-</td><td>-</td><td>-</td>
                         @endif
-                        <td rowspan="{{ $rowspan }}"><a href="{{ url('reports/referrals/'.$referral->id) }}" class="btn btn-info btn-sm link-modal">
-                            <i class="bi bi-eye">View</i>
+                        <td rowspan="{{ $rowspan }}" nowrap><a href="{{ url('reports/referrals/'.$referral->id) }}" class="btn btn-info btn-sm link-modal">
+                            <i class="bi bi-eye">&nbsp;</i>View
                         </a></td>
                     </tr>
                     {{-- Remaining consumers each in their own <tr> --}}
                     @foreach ($consumers->skip(1) as $con)
                         <tr>
-                            <td>{{ $con->consumer?->crn ?? $con->consumer?->t_crn }}</td>
+                            <td>
+                                 <a href="{{ url('consumers/' . $con->consumer->id) }}" target="_blank">
+                                    {{ $con->consumer?->crn ?? $con->consumer?->t_crn }}
+                                 </a>
+                            </td>
                             <td><x-consumer.status :status="$con->consumer?->status" mode='full' /></td>
-                            <td>{{ $con->status == 1 ? 'Earned' : 'Processing' }}</td>
+                            <td><x-referrals.status :status="$con->status" /></td>
                         </tr>
                     @endforeach
                 @endforeach

@@ -87,8 +87,7 @@ class ReferralService
         $ref_amt = ReferralConsumer::where('referral_consumer_id', $consumer_id)->where('status', ReferralStatus::PROCESSING->value)->first();
         if($ref_amt)
         {
-            $redeem_amt = Constants::REFERRAL_AMOUNT->value;
-            $redeem = $ref_amt->update(['status' => ReferralStatus::EARNED->value , 'referrer_amount' => $redeem_amt,  'referral_amount' => $redeem_amt]);
+            $redeem = $ref_amt->update(['status' => ReferralStatus::EARNED->value]);
 
             return ['status' => true, 'message' => 'Successfully redeemed'];
         }
