@@ -60,6 +60,8 @@
                 <div class="col-sm-4">{{ $complaint->category->type?->name }}</div>
                 <div class="col-sm-2 text-end fw-semibold">Sub Category : </div>
                 <div class="col-sm-4">{{ $complaint->category?->name }}</div>
+                <div class="col-sm-2 text-end fw-semibold">Irregularities : </div>
+                <div class="col-sm-4">{{ $complaint->irregularities?->name }}</div>
                 <div class="col-sm-2 text-end fw-semibold">Resolution : </div>
                 <div class="col-sm-4">
                     {{ $complaint->category?->resolution }}&nbsp;{{ ($complaint->category?->resolution_type == 1) ? "Days" : "Hours" }}

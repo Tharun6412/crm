@@ -20,6 +20,7 @@ use App\Models\Complaint\ComplaintDocument;
 use App\Models\Complaint\ComplaintStatusHistory;
 use App\Models\Consumer\Consumer;
 use App\Models\Master\ComplaintCategory;
+use App\Models\Master\ComplaintIrregularity;
 use App\Models\Master\ComplaintMedia;
 use App\Models\Master\ComplaintPriority;
 use App\Models\Master\ComplaintSegment;
@@ -141,6 +142,7 @@ class ComplaintsController extends Controller
         $media = ComplaintMedia::all();
         $segments = ComplaintSegment::all();
         $priorities = ComplaintPriority::all();
+        $irregularities = ComplaintIrregularity::all();
         $categories = ComplaintCategory::whereNull('parent_id')->get();
         return view('complaints.create', [
             'consumer' => $consumer,
@@ -149,6 +151,7 @@ class ComplaintsController extends Controller
             'segments' => $segments,
             'categories' => $categories,
             'priorities' => $priorities,
+            'irregularities' => $irregularities,
             'sub_categories' => [],
         ]);
     }
@@ -220,6 +223,7 @@ class ComplaintsController extends Controller
             'segment_id' => $request->segment_id,
             'type_id' => $request->type_id,
             'media_id' => $request->media_id,
+            'irregularities_id' => $request->irregularities_id,
            // 'priority_id' => $request->priority_id,
             'estimated_closed_at' => $est_close_at->toDateTimeString(),
             'status_id' => ComplaintStatus::REGISTER->value,
@@ -257,6 +261,7 @@ class ComplaintsController extends Controller
         $types = ComplaintType::all();
         $media = ComplaintMedia::all();
         $segments = ComplaintSegment::all();
+        $irregularities = ComplaintIrregularity::all();
        // $priorities = ComplaintPriority::all();
         $categories = ComplaintCategory::whereNull('parent_id')->get();
         $complaint = Complaint::find($id);
@@ -268,6 +273,7 @@ class ComplaintsController extends Controller
             'media' => $media,
             'segments' => $segments,
             'categories' => $categories,
+            'irregularities' => $irregularities,
             'sub_categories' => $sub_categories,
         ]);
     }
@@ -311,6 +317,7 @@ class ComplaintsController extends Controller
             'segment_id' => $request->segment_id,
             'type_id' => $request->type_id,
             'media_id' => $request->media_id,
+            'irregularities_id' => $request->irregularities_id, 
             //'priority_id' => $request->priority_id,
             'estimated_closed_at' => $est_close_at->toDateTimeString(),
             'updated_by' => Auth::id(),

@@ -116,6 +116,18 @@
                         </div>
                     </div>
                     <div class="row mb-2">
+                        <label class="col-form-label col-sm-3 text-end">Irregularities&nbsp;:</label>
+                        <div class="col-sm-8">
+                            <select class="form-select form-select-sm" name="irregularities_id" id="irregularities_id">
+                                <option value="">select</option>
+                                @foreach ($irregularities as $item)
+                                    <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                @endforeach
+                            </select>
+                            <span class="text-danger validate-err-msg" id="irregularities_id-error"></span>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
                         <label class="form-label col-sm-3 text-end">Documents&nbsp;:</label>
                         <div class="col-sm-8">
                             <div class="input-group input-group-sm">

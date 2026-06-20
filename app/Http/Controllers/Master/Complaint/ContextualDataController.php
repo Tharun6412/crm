@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Master\Complaint;
 
 use App\Http\Controllers\Controller;
+use App\Models\Master\ComplaintIrregularity;
 use App\Models\Master\ComplaintMedia;
 use App\Models\Master\ComplaintPriority;
 use App\Models\Master\ComplaintSegment;
@@ -22,6 +23,7 @@ class ContextualDataController extends Controller
         $media = ComplaintMedia::all();
         $status = MasterComplaintStatus::all();
         $priorities = ComplaintPriority::all();
+        $irregularities = ComplaintIrregularity::all();
 
         // Render output
         return view('master.complaint.contextual_data.list', [
@@ -30,6 +32,7 @@ class ContextualDataController extends Controller
             'media' => $media,
             'status' => $status,
             'priorities' => $priorities,
+            'irregularities' => $irregularities,
         ]);
     }
 }

@@ -103,6 +103,24 @@
                     </div>
                 </div>
             </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed fs-5 fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#panel-irregularities" aria-expanded="true" aria-controls="panel-irregularities">
+                        <i class="bi bi-info-circle"></i>&nbsp;Irregularities
+                    </button>
+                </h2>
+                <div id="panel-irregularities" class="accordion-collapse collapse">
+                    <div class="accordion-body">
+                        @if ($irregularities->count() > 0)
+                            @foreach ($irregularities as $item)
+                                <div class="mb-1"><i class="bi bi-arrow-right-short"></i>&nbsp;{{ $item->name }}</div>
+                            @endforeach
+                        @else
+                            <x-layouts.callout-info>No data found!</x-common-callout-info>
+                        @endif
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 @endsection

@@ -92,7 +92,7 @@ class ConsumerController extends Controller
         })->find($id);
         $consumer->mobile = maskNumber($consumer->phone);
         $consumer->aadhar_val = maskNumber($consumer->aadhar);
-        $consumer->referral_code = $consumer->consumerData->reference_code;
+        $consumer->referral_code = $consumer->consumerData?->reference_code;
         $consumer->referred_by = $consumer->consumerData?->referredBy?->consumerData?->reference_code;
         unset($consumer->phone, $consumer->aadhar);
 

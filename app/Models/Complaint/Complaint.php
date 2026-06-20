@@ -5,6 +5,7 @@ namespace App\Models\Complaint;
 use App\Models\Admin\User;
 use App\Models\Consumer\Consumer;
 use App\Models\Master\ComplaintCategory;
+use App\Models\Master\ComplaintIrregularity;
 use App\Models\Master\ComplaintMedia;
 use App\Models\Master\ComplaintPriority;
 use App\Models\Master\ComplaintSegment;
@@ -52,6 +53,7 @@ class Complaint extends Model
         'type_id',
         'media_id',
         'priority_id',
+        'irregularities_id',
         'estimated_closed_at',
         'closed_at',
         'status_id',
@@ -205,5 +207,12 @@ class Complaint extends Model
     public function feedback():HasOne
     {
         return $this->hasOne(ComplaintFeedback::class, 'complaint_id', 'id');
+    }
+    /**
+     * Relation with irregularities
+     */
+    public function irregularities(): BelongsTo
+    {
+        return $this->belongsTo(ComplaintIrregularity::class,'irregularities_id');
     }
 }
