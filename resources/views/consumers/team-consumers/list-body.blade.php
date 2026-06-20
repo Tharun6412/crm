@@ -60,9 +60,25 @@
                         </td>
                         <td>{{ $consumer->team_created_by ?? '' }}</td>
                         <td nowrap>
-                             @if(is_null($consumer->team_status))
+                            @if(is_null($consumer->team_status))
                                 <a class="btn btn-outline-primary btn-sm link-modal" href="{{ url('consumers/waiting/pending-consumers/create/'.$consumer->id) }}"><i class="bi bi-person-check-fill"></i>&nbsp;Assign</a>
-                             @endif
+                            @else
+                                @if ($consumer->team_status == 0 AND $consumer->team_status_id == \App\Enums\ConsumerStatus::REGISTER->value)
+                                    <x-auth.link class="btn btn-primary btn-sm link-modal" href="{{ url('consumers/trPayment/' . $consumer->id . '/edit') }}" action="psdpst"></i>&nbsp;Pay Deposit</x-auth.link>
+                                @endif
+                                @if ($consumer->team_status == 0 AND $consumer->team_status_id == \App\Enums\ConsumerStatus::ACCEPT->value)
+                                    <x-auth.link class="btn btn-info btn-sm link-modal" href="{{ url('consumers/accept/'.$consumer->id.'/edit') }}" action="psdpst"></i>&nbsp;Accept</x-auth.link>
+                                @endif
+                                @if ($consumer->team_status == 0 AND $consumer->team_status_id == \App\Enums\ConsumerStatus::EXECUTE->value)
+                                    <x-auth.link class="btn btn-secondary btn-sm link-modal" href="{{ url('consumers/execute/'.$consumer->id.'/edit') }}" action="psdpst"></i>&nbsp;Execute</x-auth.link>
+                                @endif
+                                @if ($consumer->team_status == 0 AND $consumer->team_status_id == \App\Enums\ConsumerStatus::HSC->value)
+                                    <x-auth.link class="btn btn-warning btn-sm link-modal" href="{{ url('consumers/hsconnect/'.$consumer->id.'/edit') }}" action="psdpst"></i>&nbsp;HSC</x-auth.link>
+                                @endif
+                                @if ($consumer->team_status == 0 AND $consumer->team_status_id == \App\Enums\ConsumerStatus::ACTIVATE->value)
+                                    <x-auth.link class="btn btn-success btn-sm link-modal" href="{{ url('consumers/activate/'.$consumer->id.'/edit') }}" action="psdpst"></i>&nbsp;Activate</x-auth.link>
+                                @endif
+                            @endif
                         </td>
                     </tr>
                 @endforeach

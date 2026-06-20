@@ -19,6 +19,7 @@ class ConsumerStatusService
         if($consumer_target_data) {
             $consumer_target_data->update([
                 'status' => 1, //1 = completed
+                'updated_by' => Auth::id(),
             ]);
         }
         return true;

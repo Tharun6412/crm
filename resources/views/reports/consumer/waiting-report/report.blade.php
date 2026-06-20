@@ -26,6 +26,7 @@
                 <button class="nav-link active fs-5 border border-bottom-0 me-2" id="nav-consumers-wait-tab" data-bs-toggle="tab" data-bs-target="#nav-consumers-wait" type="button" role="tab" aria-controls="nav-consumers" aria-selected="true"><i class="bi bi-app-indicator"></i>&nbsp;Connection Progress - GA&nbsp;<span class="badge text-bg-success">{{ numberFormat($wait_list) }}</span></button>
                 <button class="nav-link fs-5 border border-bottom-0 me-2" id="nav-emp-activity-tab" data-bs-toggle="tab" data-bs-target="#nav-emp-activity" type="button" role="tab" aria-controls="nav-emp-activity" aria-selected="true"><i class="bi bi-rocket-takeoff me-1"></i>&nbsp;Connection Progress - Employee</button>               
                 <button class="nav-link fs-5 border border-bottom-0 me-2" id="nav-status-activity-tab" data-bs-toggle="tab" data-bs-target="#nav-status-activity" type="button" role="tab" aria-controls="nav-status-activity" aria-selected="true"><i class="bi bi-activity me-1"></i>&nbsp;Employee Progress Report</button>                          
+                {{-- <button class="nav-link fs-5 border border-bottom-0 me-2" id="nav-team-progress-tab" data-bs-toggle="tab" data-bs-target="#nav-team-progress" type="button" role="tab" aria-controls="nav-team-progress" aria-selected="true"><i class="bi bi-activity me-1"></i>&nbsp;Team Progress Report</button>                           --}}
                 <button class="nav-link fs-5 border border-bottom-0 me-2" id="nav-ga-teams-tab" data-bs-toggle="tab" data-bs-target="#nav-ga-teams" type="button" role="tab" aria-controls="nav-ga-teams" aria-selected="true"><i class="bi bi-people-fill me-1"></i>&nbsp;Teams&nbsp;<span class="badge bg-primary">{{ numberFormat($total_teams) }}</span></button>
             </div>
         </nav>
@@ -144,6 +145,41 @@
                     </div>
                 </div>
             </div>
+            <div class="tab-pane fade" id="nav-team-progress" role="tabpanel" aria-labelledby="nav-team-progress-tab"tabindex="0">
+                <form action="{{ url('reports/consumer/teamProgress') }}" id="report-team-progress-search-form" method="GET">
+                    <div class="d-flex justify-content-between align-items-center border my-2 bg-light p-2 rounded">
+                        <h4 class="mb-0 ms-2">Team Progress Report</h4>
+                        <div class="row g-1">
+                            <div class="col-auto mt-4">
+                                <div class="form-control mt-2">
+                                    GA&nbsp;<x-master.ga-filter class="float-end" />
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <label for="team_date_from" class="form-label mb-1">From Date</label>
+                                <div class="input-group">
+                                    <input type="text" name="team_date_from" id="team_date_from" class="form-control" placeholder="DD-MM-YYYY">
+                                    <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <label for="team_date_to" class="form-label mb-1">To Date</label>
+                                <div class="input-group">
+                                    <input type="text" name="team_date_to" id="team_date_to" class="form-control" placeholder="DD-MM-YYYY">
+                                    <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <label for="team_date">&nbsp;</label>
+                                <div>
+                                 <button type="submit" class="btn btn-success mt-1"><i class="bi bi-search"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <div id="report-team-progress-list"></div>
+            </div>
         </div>
     </div>
 @endsection
@@ -152,5 +188,6 @@
     @include('scripts.ajax-form-search', ['form' => 'report-cns-waiting'])
     @include('scripts.ajax-form-search', ['form' => 'report-status-activity'])
     @include('scripts.ajax-form-search', ['form' => 'report-emp-activity'])
-    @include('scripts.datepicker', ['list' => ['date_from', 'date_to', 'status_date', 'conv_date_from', 'conv_date_to']])
+    @include('scripts.ajax-form-search', ['form' => 'report-team-progress'])
+    @include('scripts.datepicker', ['list' => ['date_from', 'date_to', 'status_date', 'conv_date_from', 'conv_date_to', 'team_date_from', 'team_date_to']])
 @endpush
