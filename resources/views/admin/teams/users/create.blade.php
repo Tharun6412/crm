@@ -43,11 +43,10 @@
                     </div>
                     {{-- Error --}}
                     <div class="mt-3" id="team-user-error"></div>
-                    @if ($users->count() > 0)
-                        {{-- Submit --}}
-                        <div class="text-center mt-4"><button type="submit" class="btn btn-success"><i class="bi bi-save"></i>&nbsp;Save Users</button>
-                    @endif
-                    </div>
+                        @if ($users->count() > 0)
+                            {{-- Submit --}}
+                            <div class="text-center mt-4"><button type="submit" class="btn btn-success"><i class="bi bi-save"></i>&nbsp;Save Users</button></div>
+                        @endif
                 </form>
             </div>
         </div>
