@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\Department as EnumsDepartment;
 use App\Enums\Role as EnumsRole;
 use App\Enums\UserStatus;
 use App\Http\Controllers\Controller;
@@ -24,10 +25,35 @@ class TeamUserController extends Controller
     public function create($id)
     {
         $team = Team::with(['users'])->findOrFail($id);
+        // dd($team);
+        $role_id = [];
+        switch($team->department_id) {
+            case EnumsDepartment::MARKETING->value:
+                $role_id[] = EnumsRole::MARKETING->value;
+                $role_id[] = EnumsRole::MARKETING_EMPLOYEE->value; break;
+            case EnumsDepartment::MDPE->value:
+                $role_id[] = EnumsRole::MDPE->value;break;
+                // $role_id[] = EnumsRole::MARKETING_EMPLOYEE->value; break;
+            case EnumsDepartment::STEEL->value:
+                $role_id[] = EnumsRole::STEEL->value;break;
+            case EnumsDepartment::GI->value:
+                $role_id[] = EnumsRole::GI_ENGINEER->value;
+                $role_id[] = EnumsRole::GI_EMPLOYEE->value; break;
+            case EnumsDepartment::HSE->value:
+                $role_id[] = EnumsRole::HSE_EMPLOYEE->value;
+                $role_id[] = EnumsRole::HSE->value; break;
+            case EnumsDepartment::ACTIVATION->value:
+                $role_id[] = EnumsRole::ACTIVATION->value;
+                $role_id[] = EnumsRole::ACTIVATION_EMPLOYEE->value; break;
+            default: $role_id = []; break;
+        }
         $users = User::with(['ga', 'department'])
                 ->whereHas('ga', function ($q) use ($team) {
                     $q->where('mst_gas.id', $team->ga_id);
-                })->get();
+                })->whereHas('roles', function($q) use($role_id) {
+                    $q->whereIn('adm_roles.id', array_unique($role_id));
+                })
+                ->get();
         return view('admin.teams.users.create', [
             'team' => $team,
             'users' => $users
@@ -50,12 +76,22 @@ class TeamUserController extends Controller
         $geo_areas = Ga::when((!isAdmin() && !isSuperAdmin() && !isFullAccess()), function($q) {
             $q->whereIn('id', session('user')['gas']);
         })->get();
-        $departments = Department::all();
+        $departments = Department::whereIn('id', [
+            EnumsDepartment::ACTIVATION->value,
+            EnumsDepartment::HSE->value,
+            EnumsDepartment::MARKETING->value,
+            EnumsDepartment::GI->value,
+            EnumsDepartment::MDPE->value,
+            EnumsDepartment::STEEL->value,
+        ])->orderBy('name', 'asc')->get();
         $types = UserType::all();
         $roles = Role::whereIn('id', [
-            EnumsRole::EMPLOYEE->value,
-            EnumsRole::EXECUTION->value,
-            EnumsRole::ENGINEER->value,
+            EnumsRole::MDPE->value,
+            EnumsRole::STEEL->value,
+            EnumsRole::MARKETING_EMPLOYEE->value,
+            EnumsRole::GI_EMPLOYEE->value,
+            EnumsRole::ACTIVATION_EMPLOYEE->value,
+            EnumsRole::HSE_EMPLOYEE->value,
         ])->get();
         return view('admin.teams.users.add',['geo_areas' => $geo_areas,'departments' => $departments,'roles' => $roles,'types' => $types]);
     }

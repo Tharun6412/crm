@@ -33,11 +33,10 @@ class TeamProgressController extends Controller
         ]);
         // Get Consumer Teams Assigned List
         $assigned_consumers = TeamConsumer::select('team_id', 'status', DB::raw('COUNT(id) as total_count'))->whereHas('team', function($q) use($request) {
-            $q->whereIn('ga_id', $request->geo_area);
-        })
-        ->whereBetween('created_at', [Carbon::createFromFormat('d-m-Y', $request->team_date_from)->startOfDay(), Carbon::createFromFormat('d-m-Y', $request->team_date_to)->endOfDay()])
-        ->groupBy('team_id', 'status')
-        ->get();
+                $q->whereIn('ga_id', $request->geo_area);
+            })
+            ->whereBetween('created_at', [Carbon::createFromFormat('d-m-Y', $request->team_date_from)->startOfDay(), Carbon::createFromFormat('d-m-Y', $request->team_date_to)->endOfDay()])
+            ->groupBy('team_id', 'status')->get();
         $consumer_team_assign = [];
         foreach($assigned_consumers as $assign) {
             $consumer_team_assign[$assign->team_id][$assign->status] = $assign->total_count;

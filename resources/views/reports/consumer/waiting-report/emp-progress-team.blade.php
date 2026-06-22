@@ -14,7 +14,7 @@
                         <div class="text-end">Team Coordinator&nbsp;-&nbsp;<strong>{{ $team->responsibleUser->name ?? '' }}</strong></div>
                     </div>
                 </div>
-                <table class="table table-bordered table-hover align-middle">
+                <table class="table table-bordered table-hover align-middle" id="team-progress-table">
                     <thead>
                         <tr>
                             <th>S.No</th>
@@ -34,7 +34,9 @@
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $emp->name ?? '' }}&nbsp;({{ $emp->emp_id ?? '' }})</td>
-                                <td>{{ $user }}</td>
+                                <td>
+                                    {{ $user }}
+                                </td>
                             </tr>
                         @endforeach
                             <tr>
@@ -51,15 +53,17 @@
         </div>
         <div class="modal-footer">
             <!-- Export -->
-            <button type="button" id="exportBtn" class="btn btn-outline-info"><i class="bi bi-file-earmark-excel"></i>&nbsp;Export</button>
+            @if ($team->name)
+                <button type="button" id="exportBtn" class="btn btn-outline-info"><i class="bi bi-file-earmark-excel"></i>&nbsp;Export</button>
+            @endif
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="bi bi-x"></i>&nbsp;Close</button>
         </div>
     </div>
 </div>
 @include('scripts.export-table', [
-    'table' => 'waiting-report-table',
+    'table' => 'team-progress-table',
     'button' => 'exportBtn',
     'tabBased' => false,
-    'filename' => 'consumer_waiting_report',
+    'filename' => 'team_progress'." - ". $team?->name,
     'sheet'    => 'Report',
 ])

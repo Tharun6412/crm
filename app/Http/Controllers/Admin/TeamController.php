@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\Department as EnumsDepartment;
+use App\Enums\Role;
 use App\Http\Controllers\Controller;
 use App\Models\Admin\Team;
 use App\Models\Admin\User;
@@ -52,7 +54,14 @@ class TeamController extends Controller
             $q->whereIn('id',session('user')['gas']);
         })->get();
        // $cas = Ca::all();
-        $departments = Department::all();
+        $departments = Department::whereIn('id', [
+            EnumsDepartment::ACTIVATION->value,
+            EnumsDepartment::HSE->value,
+            EnumsDepartment::MARKETING->value,
+            EnumsDepartment::GI->value,
+            EnumsDepartment::MDPE->value,
+            EnumsDepartment::STEEL->value,
+        ])->orderBy('name', 'asc')->get();
         
         return view('admin.teams.create',['geo_areas' => $geo_areas,'departments' => $departments]);
     }
@@ -104,9 +113,28 @@ class TeamController extends Controller
         // $geo_areas = Ga::all();
         // $departments = Department::all();
         $cas = Ca::where('ga_id', $team->ga_id)->get();
+        $role_id = [];
+        switch($team->department_id) {
+            case EnumsDepartment::MARKETING->value:
+                $role_id[] = Role::MARKETING->value;break;
+            case EnumsDepartment::MDPE->value:
+                $role_id[] = Role::MDPE->value;break;
+            case EnumsDepartment::STEEL->value:
+                $role_id[] = Role::STEEL->value;break;
+            case EnumsDepartment::GI->value:
+                $role_id[] = Role::GI_ENGINEER->value;break;
+            case EnumsDepartment::HSE->value:
+                $role_id[] = Role::HSE->value; break;
+            case EnumsDepartment::ACTIVATION->value:
+                $role_id[] = Role::ACTIVATION->value;break;
+            default: $role_id = []; break;
+        }
         $users = User::whereHas('ga', function($q) use ($team){
             $q->where('ga_id',$team->ga_id);
-        })->get();
+        })->whereHas('roles', function($q) use($role_id) {
+            $q->whereIn('adm_roles.id', array_unique($role_id));
+        })
+        ->get();
         return view('admin.teams.edit',['team' => $team,'cas' => $cas,'users' => $users]);
     }
     /**

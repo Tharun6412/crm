@@ -29,8 +29,9 @@
                             <a href="{{ url('consumers/waiting/pending-consumers') }}?{{ http_build_query(
                                 [
                                     'cns_status' => [$status_id ?? NULL], 
-                                    'geo_area' => $user->ga->pluck('id')->toArray(), 
-                                    'charge_area' => $user->ca->pluck('id')->toArray(), 
+                                    'target_status' => [$status_id+1],
+                                    'ugas' => $user->ga->pluck('id')->toArray(), 
+                                    'ucas' => $user->ca->pluck('id')->toArray(), 
                                     'status' => [0], 
                                     'team_id' => [$team->id]
                                 ]) }}" target="_blank">

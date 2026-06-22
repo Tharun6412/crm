@@ -24,4 +24,8 @@ enum Role: int
     case MARKETING = 20;
     case EXECUTION = 11;
     case ENGINEER = 23;
+    case MARKETING_EMPLOYEE = 24;
+    case GI_EMPLOYEE = 25;
+    case HSE_EMPLOYEE = 26;
+    case ACTIVATION_EMPLOYEE = 27;
 }

@@ -108,47 +108,41 @@ class EmployeeActivityController extends Controller
         switch($request->cns_status) {
             case 1:
                 $status = 2;
+                $dept_id = Department::MARKETING->value;
                 $status_id = 1;
                 break;
             case 2:
                 $status = 3;
+                $dept_id = Department::MARKETING->value;
                 $status_id = 2;
                 break;
             case 3:
                 $status = 4;
+                $dept_id = Department::GI->value;
                 $status_id = 3;
                 break;
             case 4:
                 $status = 5;
+                $dept_id = Department::HSE->value;
                 $status_id = 4;
                 break;
             case 5:
                 $status = 6;
+                $dept_id = Department::ACTIVATION->value;
                 $status_id = 5;
                 break;
             default:
-                $status_name = $status_id = ''; break; 
+                $status = $status_id = $dept_id =  ''; break; 
         }
-        // Map Departments Based on Roles
-        $roleDepartmentMap = [
-            Role::MARKETING->value => [Department::MARKETING->value],
-            Role::GI_ENGINEER->value => [Department::GI->value],
-            Role::HSE->value => [Department::HSE->value],
-            Role::ACTIVATION->value => [Department::ACTIVATION->value],
-        ];
         // fetch User Details and get Role IDs
         $user = User::find($request->user_id);
-        $roleIds = $user?->roles->pluck('id') ?? collect();
         $caIds = $user?->cas->pluck('id') ?? collect();
-        // Map DepartmentIds with Roles
-        $departmentIds = $roleIds->map(fn ($roleId) => $roleDepartmentMap[$roleId] ?? null)
-                ->filter()->unique()->values()->toArray();
         // Fetch Teams List
         $teams = Team::whereIn('ga_id', $request->ga_id)->whereHas('cas', function($q) use($caIds) {
             $q->whereIn('mst_cas.id', $caIds);
-        })->whereIn('department_id', $departmentIds)->get();
+        })->where('department_id', $dept_id)->get();
         // List of Assigned Consumers by User
-        $assigned_consumers = TeamConsumer::select('team_id', DB::raw('COUNT(id) as team_count'))->whereIn('team_id', $teams->pluck('id'))->where('status_id', $status)->groupBy('team_id')->get()->pluck('team_count', 'team_id');
+        $assigned_consumers = TeamConsumer::select('team_id', DB::raw('COUNT(id) as team_count'))->whereIn('team_id', $teams->pluck('id'))->where('status_id', $status)->where('status', 0)->groupBy('team_id')->get()->pluck('team_count', 'team_id');
         $total = $request->total;
         $unassigned_list = $total - $assigned_consumers->sum();
         return view('reports.consumer.waiting-report.user-assigned-teams', [

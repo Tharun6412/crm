@@ -32,8 +32,10 @@
                                         </div>
                                     @endforeach
                                 @else
-                                    <div class="col-12 text-center">
-                                        <span class="text-danger">No Users Found</span>
+                                    <div class="col-12">
+                                        <div class="alert alert-danger mb-0">
+                                            No Users Found
+                                        </div>
                                     </div>
                                 @endif
                             </div>
@@ -41,8 +43,10 @@
                     </div>
                     {{-- Error --}}
                     <div class="mt-3" id="team-user-error"></div>
-                    {{-- Submit --}}
-                    <div class="text-center mt-4"><button type="submit" class="btn btn-success"><i class="bi bi-save"></i>&nbsp;Save Users</button>
+                    @if ($users->count() > 0)
+                        {{-- Submit --}}
+                        <div class="text-center mt-4"><button type="submit" class="btn btn-success"><i class="bi bi-save"></i>&nbsp;Save Users</button>
+                    @endif
                     </div>
                 </form>
             </div>
