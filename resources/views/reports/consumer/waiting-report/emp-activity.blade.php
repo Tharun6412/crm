@@ -119,9 +119,9 @@
                                     @php
                                         $status_totals[$status_id] = ($status_totals[$status_id] ?? 0) + ($consumer_counts[$user->id][$userga->id][$status_id] ?? 0);
                                     @endphp
-                                    <td class="text-end">
+                                    <td class="text-end" nowrap>
                                         <a class="fs-5" href="{{ url('consumers') }}?{{ http_build_query(['geo_area'=> [$userga->id], 'cns_status' => [$status_id], 'charge_area' => $user->cas->where('ga_id', $userga->id)->pluck('id')->toArray()]) }}" target="_blank">{{ $consumer_counts[$user->id][$userga->id][$status_id] ?? 0 }}</a>&nbsp;&nbsp;
-                                        <a type="button" href="{{ url('reports/consumer/employee/activity/getUserAssignedTeams') }}?{{ http_build_query(['ga_id'=> [$userga->id],'user_id' => $user->id, 'cns_status' => $status_id, 'charge_area' => $user->cas->where('ga_id', $userga->id)->pluck('id')->toArray(), 'total' => $consumer_counts[$user->id][$userga->id][$status_id] ?? 0]) }}" class="link-canvas float-end" title="Click to view teams List"><i class="bi bi-box-arrow-right fs-4"></i></a>
+                                        <a type="button" href="{{ url('reports/consumer/employee/activity/getUserAssignedTeams') }}?{{ http_build_query(['ga_id'=> [$userga->id],'user_id' => $user->id, 'cns_status' => $status_id, 'charge_area' => $user->cas->where('ga_id', $userga->id)->pluck('id')->toArray(), 'total' => $consumer_counts[$user->id][$userga->id][$status_id] ?? 0]) }}" class="link-canvas" title="Click to view teams List"><i class="bi bi-box-arrow-right fs-4"></i></a>
                                     </td>
                                 @else
                                     <td></td>

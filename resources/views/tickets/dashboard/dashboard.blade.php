@@ -30,7 +30,7 @@
                             <div class="fs-3 fw-semibold">{{ numberFormat($register) }}</div>
                             <div class="fw-semibold text-secondary">Registered</div>
                         </div>
-                        <div class="p-1 bg-opacity-25 rounded-4 py-2 px-3 shadow-sm">
+                        <div class="p-1 bg-opacity-25 rounded-4 py-2 px-3 shadow-sm border border-dark-subtle">
                             <i class="fs-3 bi bi-person-square"></i>
                         </div>
                     </div>
@@ -45,7 +45,7 @@
                             <div class="fs-3 fw-semibold">{{ numberFormat($approve) }}</div>
                             <div class="fw-semibold text-secondary">Approve</div>
                         </div>
-                        <div class="p-1 bg-opacity-25 rounded-4 py-2 px-3 shadow-sm">
+                        <div class="p-1 bg-opacity-25 rounded-4 py-2 px-3 shadow-sm border border-dark-subtle">
                             <i class="fs-3 bi bi-check2-circle"></i>
                         </div>
                     </div>
@@ -60,7 +60,7 @@
                             <div class="fs-3 fw-semibold">{{ numberFormat($processing) }}</div>
                             <div class="fw-semibold text-secondary">Processing</div>
                         </div>
-                        <div class="p-1 bg-opacity-25 rounded-4 py-2 px-3 shadow-sm">
+                        <div class="p-1 bg-opacity-25 rounded-4 py-2 px-3 shadow-sm border border-dark-subtle">
                             <i class="fs-3 bi bi-gear-wide-connected"></i>
                         </div>
                     </div>
@@ -75,7 +75,7 @@
                             <div class="fs-3 fw-semibold">{{ numberFormat($close) }}</div>
                             <div class="fw-semibold text-secondary">Close</div>
                         </div>
-                        <div class="p-1 bg-opacity-25 rounded-4 py-2 px-3 shadow-sm">
+                        <div class="p-1 bg-opacity-25 rounded-4 py-2 px-3 shadow-sm border border-dark-subtle">
                             <i class="fs-3 bi bi-check2-square"></i>
                         </div>
                     </div>
@@ -90,7 +90,7 @@
                             <div class="fs-3 fw-semibold">{{ numberFormat($hold) }}</div>
                             <div class="fw-semibold text-secondary">Hold</div>
                         </div>
-                        <div class="p-1 bg-opacity-25 rounded-4 py-2 px-3 shadow-sm">
+                        <div class="p-1 bg-opacity-25 rounded-4 py-2 px-3 shadow-sm border border-dark-subtle">
                             <i class="fs-3 bi bi-pause-circle"></i>
                         </div>
                     </div>
@@ -105,7 +105,7 @@
                             <div class="fs-3 fw-semibold">{{ numberFormat($cancel) }}</div>
                             <div class="fw-semibold text-secondary">Cancel</div>
                         </div>
-                        <div class="p-1 bg-opacity-25 rounded-4 py-2 px-3 shadow-sm">
+                        <div class="p-1 bg-opacity-25 rounded-4 py-2 px-3 shadow-sm border border-dark-subtle">
                             <i class="fs-3 bi bi-x-circle"></i>
                         </div>
                     </div>
@@ -120,7 +120,7 @@
                             <div class="fs-3 fw-semibold">{{ numberFormat($total) }}</div>
                             <div class="fw-semibold text-secondary">Total</div>
                         </div>
-                        <div class="p-1 bg-opacity-25 rounded-4 py-2 px-3 shadow-sm">
+                        <div class="p-1 bg-opacity-25 rounded-4 py-2 px-3 shadow-sm border border-dark-subtle">
                             <i class="fs-3 bi bi-files"></i>
                         </div>
                     </div>
