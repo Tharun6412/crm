@@ -421,6 +421,37 @@ class ComplaintsController extends Controller
             'status_id' => ComplaintStatus::CLOSE->value,
         ]);
     }
+    /**
+     * Reopen
+     */
+    public function reopen(Request $request, $id)
+    {
+        $complaint = Complaint::find($id);
+        return view('complaints.reopen',[
+            'complaint' => $complaint,
+            'status_id' => ComplaintStatus::REOPEN->value,
+        ]);
+    }
+    /**
+     * Reopen update
+     */
+    public function reopenUpdate(Request $request, $id)
+    {
+        $request->validate([
+            'notes' => 'required',
+        ]);
+        $complaint = Complaint::findOrFail($id);
+        $complaint->update([
+            'status_id' => ComplaintStatus::REGISTER->value,
+        ]);
+        ComplaintStatusHistory::create([
+            'complaint_id' => $id,
+            'status_id' => ComplaintStatus::REOPEN->value,
+            'notes' => $request->notes,
+            'created_by' => Auth::id(),
+        ]);
+        return response()->json(['success' => 'Complaint Reopen Successfully']);
+    }
 
     /**
      * Close OTP

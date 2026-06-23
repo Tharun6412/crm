@@ -34,6 +34,8 @@ Route::middleware(['auth', ModuleAccess::class])->group(function() {
     Route::post('assignTo/{id}',[App\Http\Controllers\Complaints\ComplaintsController::class, 'assignTo']);
     Route::post('statusChange/{id}/{status}',[App\Http\Controllers\Complaints\ComplaintsController::class, 'statusChange']);
     Route::post('closeComplaint/{id}/{status}',[App\Http\Controllers\Complaints\ComplaintsController::class, 'closeComplaint']);
+    Route::get('reopen/{id}',[App\Http\Controllers\Complaints\ComplaintsController::class,'reopen']);
+    Route::post('reopenUpdate/{id}',[App\Http\Controllers\Complaints\ComplaintsController::class,'reopenUpdate']);
     // OTP
     Route::post('closeOTP',[App\Http\Controllers\Complaints\ComplaintsController::class, 'closeOTP']);
     Route::post('resendOTP',[App\Http\Controllers\Complaints\ComplaintsController::class, 'resendOTP']);

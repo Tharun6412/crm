@@ -204,9 +204,9 @@ class Complaint extends Model
     /**
      * Relation with feedback
      */
-    public function feedback():HasOne
+    public function feedback():HasMany
     {
-        return $this->hasOne(ComplaintFeedback::class, 'complaint_id', 'id');
+        return $this->hasMany(ComplaintFeedback::class, 'complaint_id', 'id');
     }
     /**
      * Relation with irregularities

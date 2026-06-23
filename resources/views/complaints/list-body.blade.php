@@ -140,10 +140,10 @@
                         <td nowrap>{{ $complaint->category?->priority?->name }}</td>
                         <td nowrap><x-complaint.status :status="$complaint?->status"/></td>
                         <td nowrap>
-                            @if ($complaint->feedback)
-                                <x-complaint.rating :rating="$complaint?->feedback->rating"/>
+                            @if ($complaint->feedback->count() > 0)
+                                <x-complaint.rating :rating="$complaint->feedback->last()?->rating"/>
                             @else
-                                NA 
+                                NA
                             @endif
                         </td>
                         <td>
@@ -168,8 +168,14 @@
                                     @if ($complaint->status_id == ComplaintStatus::IN_PROGRESS->value OR $complaint->status_id == ComplaintStatus::INVESTIGATION->value)
                                         <li><x-auth.link class="dropdown-item link-modal" href="{{ url('calls/close/'.$complaint->id) }}" action="close"><i class="bi bi-chevron-right"></i>&nbsp;Close</x-auth.link></li>
                                     @endif
-                                    @if ($complaint->status_id == ComplaintStatus::CLOSE->value and $complaint->feedback == null)
+                                    @if ($complaint->status_id == ComplaintStatus::CLOSE->value && ($complaint->feedback->count() == 0))
                                         <li><x-auth.link class="dropdown-item link-modal" href="{{ url('calls/feedback/'.$complaint->id.'/edit') }}" action="fedbk"><i class="bi bi-chevron-right"></i>&nbsp;Feedback</x-auth.link></li>
+                                    @endif
+                                    @if ($complaint->status_id == ComplaintStatus::CLOSE->value AND in_array(7, $complaint->statushistory->pluck('status_id')->unique()->toArray()) AND ($complaint->feedback->count() < 2))
+                                        <li><x-auth.link class="dropdown-item link-modal" href="{{ url('calls/feedback/'.$complaint->id.'/edit') }}" action="fedbk"><i class="bi bi-chevron-right"></i>&nbsp;Feedback</x-auth.link></li>
+                                    @endif
+                                    @if ($complaint->status_id == ComplaintStatus::CLOSE->value && $complaint->feedback->count() == 1 && !in_array(ComplaintStatus::REOPEN->value,$complaint->statusHistory->pluck('status_id')->toArray()))
+                                        <li><x-auth.link class="dropdown-item link-modal" href="{{ url('calls/reopen/'.$complaint->id) }}" action="reopen">Reopen</x-auth.link></li>
                                     @endif
                                 </ul>
                             </div>

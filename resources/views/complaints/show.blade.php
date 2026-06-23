@@ -13,22 +13,24 @@
                 <x-consumer.complaint-statushistroy :complaint="$complaint" class="bg-info-subtle"/>
             </div>
             {{-- Feedback --}}
-            @if ($complaint->feedback)
-                <div class="mx-3 p-3 border">
-                    <h4 class="text-info text-decoration-underline">Feedback Details:</h4>
-                    <div>
-                        <span class="fw-semibold"><i class="bi bi-person-heart"></i>&nbsp;{{ $complaint->feedback->collectable?->name }}</span>&nbsp;
-                        <x-complaint.rating :rating="$complaint->feedback->rating"/>
-                    </div>
-                    <figure class="ms-3">
-                        <blockquote class="blockquote">
-                            <p>{{ $complaint->feedback->notes }}</p>
-                        </blockquote>
-                        <figcaption class="blockquote-footer">
-                            {{ $complaint->feedback->created_at?->format('d-m-Y') }} <cite title="Source Title">EMP</cite>
-                        </figcaption>
-                    </figure>
-                </div>
+            @if ($complaint->feedback->count()>0)
+                <h4 class="text-info text-decoration-underline">Feedback Details:</h4>
+                @foreach ($complaint->feedback as $feedback)
+                    <div class="mx-3 p-3 border">
+                        <div>
+                            <span class="fw-semibold"><i class="bi bi-person-heart"></i>&nbsp;{{ $feedback->collectable?->name }}</span>&nbsp;
+                            <x-complaint.rating :rating="$feedback->rating"/>
+                        </div>
+                        <figure class="ms-3">
+                            <blockquote class="blockquote">
+                                <p>{{ $feedback->notes }}</p>
+                            </blockquote>
+                            <figcaption class="blockquote-footer">
+                                {{ $feedback->created_at?->format('d-m-Y') }} <cite title="Source Title">EMP</cite>
+                            </figcaption>
+                        </figure>
+                    </div>   
+                @endforeach
             @endif
 
             {{-- Comments --}}

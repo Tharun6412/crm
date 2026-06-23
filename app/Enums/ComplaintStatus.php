@@ -10,4 +10,5 @@ enum ComplaintStatus: int
     case INVESTIGATION = 4;
     case CLOSE = 5;
     case CANCEL = 6;
+    case REOPEN = 7;
 }

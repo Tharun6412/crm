@@ -33,7 +33,9 @@
                 <div class="col-sm-2 text-end fw-semibold">Rating : </div>
                 <div class="col-sm-4">
                     @if ($complaint->feedback)
-                        <x-complaint.rating :rating="$complaint?->feedback->rating"/>
+                    @foreach ($complaint->feedback as $feedback)
+                        <x-complaint.rating :rating="$feedback?->rating"/>
+                    @endforeach 
                     @endif
                 </div>
                 <div class="col-sm-2 text-end fw-semibold">Description : </div>

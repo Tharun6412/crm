@@ -86,8 +86,8 @@ class TeamUserController extends Controller
         ])->orderBy('name', 'asc')->get();
         $types = UserType::all();
         $roles = Role::whereIn('id', [
-            EnumsRole::MDPE->value,
-            EnumsRole::STEEL->value,
+            EnumsRole::MDPE_EMPLOYEE->value,
+            EnumsRole::STEEL_EMPLOYEE->value,
             EnumsRole::MARKETING_EMPLOYEE->value,
             EnumsRole::GI_EMPLOYEE->value,
             EnumsRole::ACTIVATION_EMPLOYEE->value,

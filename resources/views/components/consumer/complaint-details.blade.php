@@ -74,11 +74,11 @@
                         @endforeach
                     @endif
                 </div>
-                {{-- <div class="col-sm-6"></div> --}}
+                <div class="col-sm-6"></div>
                 <div class="col-sm-2 text-end fw-semibold">Rating : </div>
                 <div class="col-sm-4">
                     @if ($complaint->feedback)
-                        <x-complaint.rating :rating="$complaint?->feedback->rating"/>
+                        <x-complaint.rating :rating="$complaint?->feedback->last()?->rating"/>
                     @endif
                 </div>
             </div>
