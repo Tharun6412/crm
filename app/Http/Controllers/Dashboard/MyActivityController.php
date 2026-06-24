@@ -26,10 +26,13 @@ class MyActivityController extends Controller
     public function index(Request $request)
     {
         // USer Gas And Cas
-        $user_cas = Auth::user()->cas->pluck('id');
+        $user = Auth::user();
+        $user_cas = $user->cas->pluck('id');
         // Consumer Waiting List for the Responsible User
-        $roles = Role::whereIn('id', [EnumsRole::GI_ENGINEER->value, EnumsRole::HSE->value, EnumsRole::ACTIVATION->value, EnumsRole::MARKETING->value])
-            ->whereIn('id', Auth::user()->roles->pluck('id'))->orderBy('position')->pluck('name', 'id');
+        $roles = $user->roles()->whereIn('adm_roles.id', [EnumsRole::GI_ENGINEER->value, EnumsRole::HSE->value, EnumsRole::ACTIVATION->value, EnumsRole::MARKETING->value])
+            ->orderBy('position')->pluck('adm_roles.name', 'adm_roles.id');
+        // $roles = Role::whereIn('id', [EnumsRole::GI_ENGINEER->value, EnumsRole::HSE->value, EnumsRole::ACTIVATION->value, EnumsRole::MARKETING->value])
+        //     ->whereIn('id', Auth::user()->roles->pluck('id'))->orderBy('position')->pluck('name', 'id');
         $status_ids = $consumers_count = $assign_list = $consumers_list = $cns_status = [];
         foreach($roles as $id => $role_name) {
             switch($id) {
@@ -46,8 +49,8 @@ class MyActivityController extends Controller
                     $status_ids[] = NULL;break;
             }
         }
-        $consumers_list_data = Consumer::select('status_id', DB::raw('COUNT(id) as consumer_count'), DB::raw('GROUP_CONCAT(id) as consumer_ids'))
-            ->whereIn('ga_id', Auth::user()->ga->pluck('id'))
+        $consumers_list_data = Consumer::select('status_id', DB::raw('COUNT(id) as consumer_count'))
+            ->whereIn('ga_id', $user->ga->pluck('id'))
             ->whereIn('ca_id', $user_cas)
             ->whereIn('status_id', array_unique($status_ids))
             ->groupBy('status_id')->get();
@@ -56,8 +59,8 @@ class MyActivityController extends Controller
         }
         // Assigned List
         $assigned_consumers = TeamConsumer::join('cns_consumers', 'cns_consumers.id', '=', 'cns_consumer_teams.consumer_id')
-            ->whereIn('cns_consumers.ga_id', Auth::user()->ga->pluck('id')->toArray())
-            ->where('cns_consumer_teams.created_by', Auth::id())
+            ->whereIn('cns_consumers.ga_id', $user->ga->pluck('id')->toArray())
+            ->where('cns_consumer_teams.created_by', $user->id)
             ->select('cns_consumer_teams.status_id','cns_consumer_teams.status', DB::raw('COUNT(cns_consumer_teams.id) as assign_count'))->groupBy('status_id', 'status')->get();
         foreach($assigned_consumers as $assign) {
             $assign_list[$assign->status_id][$assign->status] = $assign->assign_count;
@@ -65,49 +68,49 @@ class MyActivityController extends Controller
         //Array Preparation For Assigned and UnAssigned
         $roleData = [
             [
-                'role_id' => \App\Enums\Role::MARKETING->value,
+                'role_id' => EnumsRole::MARKETING->value,
                 'status' => 'REGISTRATION',
-                'pending' => $consumers_count[\App\Enums\ConsumerStatus::PRE_REGISTER->value] ?? 0,
-                'status_id' => \App\Enums\ConsumerStatus::PRE_REGISTER->value,
-                'consumers_pending' => $assign_list[\App\Enums\ConsumerStatus::REGISTER->value][0] ?? 0,
-                'consumers_completed' => $assign_list[\App\Enums\ConsumerStatus::REGISTER->value][1] ?? 0,
-                'unassigned' => ($consumers_count[\App\Enums\ConsumerStatus::PRE_REGISTER->value] ?? 0) - ($assign_list[\App\Enums\ConsumerStatus::REGISTER->value][0] ?? 0),
+                'pending' => $consumers_count[EnumsConsumerStatus::PRE_REGISTER->value] ?? 0,
+                'status_id' => EnumsConsumerStatus::PRE_REGISTER->value,
+                'consumers_pending' => $assign_list[EnumsConsumerStatus::REGISTER->value][0] ?? 0,
+                'consumers_completed' => $assign_list[EnumsConsumerStatus::REGISTER->value][1] ?? 0,
+                'unassigned' => ($consumers_count[EnumsConsumerStatus::PRE_REGISTER->value] ?? 0) - ($assign_list[EnumsConsumerStatus::REGISTER->value][0] ?? 0),
             ],
             [
-                'role_id' => \App\Enums\Role::MARKETING->value,
+                'role_id' => EnumsRole::MARKETING->value,
                 'status' => 'ACCEPTANCE',
-                'pending' => $consumers_count[\App\Enums\ConsumerStatus::REGISTER->value] ?? 0,
-                'status_id' => \App\Enums\ConsumerStatus::REGISTER->value,
-                'consumers_pending' => $assign_list[\App\Enums\ConsumerStatus::ACCEPT->value][0] ?? 0,
-                'consumers_completed' => $assign_list[\App\Enums\ConsumerStatus::ACCEPT->value][1] ?? 0,
-                'unassigned' => ($consumers_count[\App\Enums\ConsumerStatus::REGISTER->value] ?? 0) - ($assign_list[\App\Enums\ConsumerStatus::ACCEPT->value][0] ?? 0),
+                'pending' => $consumers_count[EnumsConsumerStatus::REGISTER->value] ?? 0,
+                'status_id' => EnumsConsumerStatus::REGISTER->value,
+                'consumers_pending' => $assign_list[EnumsConsumerStatus::ACCEPT->value][0] ?? 0,
+                'consumers_completed' => $assign_list[EnumsConsumerStatus::ACCEPT->value][1] ?? 0,
+                'unassigned' => ($consumers_count[EnumsConsumerStatus::REGISTER->value] ?? 0) - ($assign_list[EnumsConsumerStatus::ACCEPT->value][0] ?? 0),
             ],
             [
-                'role_id' => \App\Enums\Role::GI_ENGINEER->value,
+                'role_id' => EnumsRole::GI_ENGINEER->value,
                 'status' => 'EXECUTION',
-                'pending' => $consumers_count[\App\Enums\ConsumerStatus::ACCEPT->value] ?? 0,
-                'status_id' => \App\Enums\ConsumerStatus::ACCEPT->value,
-                'consumers_pending' => $assign_list[\App\Enums\ConsumerStatus::EXECUTE->value][0] ?? 0,
-                'consumers_completed' => $assign_list[\App\Enums\ConsumerStatus::EXECUTE->value][1] ?? 0,
-                'unassigned' => ($consumers_count[\App\Enums\ConsumerStatus::ACCEPT->value] ?? 0) - ($assign_list[\App\Enums\ConsumerStatus::EXECUTE->value][0] ?? 0),
+                'pending' => $consumers_count[EnumsConsumerStatus::ACCEPT->value] ?? 0,
+                'status_id' => EnumsConsumerStatus::ACCEPT->value,
+                'consumers_pending' => $assign_list[EnumsConsumerStatus::EXECUTE->value][0] ?? 0,
+                'consumers_completed' => $assign_list[EnumsConsumerStatus::EXECUTE->value][1] ?? 0,
+                'unassigned' => ($consumers_count[EnumsConsumerStatus::ACCEPT->value] ?? 0) - ($assign_list[EnumsConsumerStatus::EXECUTE->value][0] ?? 0),
             ],
             [
-                'role_id' => \App\Enums\Role::HSE->value,
+                'role_id' => EnumsRole::HSE->value,
                 'status' => 'HSC',
-                'pending' => $consumers_count[\App\Enums\ConsumerStatus::EXECUTE->value] ?? 0,
-                'status_id' => \App\Enums\ConsumerStatus::EXECUTE->value,
-                'consumers_pending' => $assign_list[\App\Enums\ConsumerStatus::HSC->value][0] ?? 0,
-                'consumers_completed' => $assign_list[\App\Enums\ConsumerStatus::HSC->value][1] ?? 0,
-                'unassigned' => ($consumers_count[\App\Enums\ConsumerStatus::EXECUTE->value] ?? 0) - ($assign_list[\App\Enums\ConsumerStatus::HSC->value][0] ?? 0),
+                'pending' => $consumers_count[EnumsConsumerStatus::EXECUTE->value] ?? 0,
+                'status_id' => EnumsConsumerStatus::EXECUTE->value,
+                'consumers_pending' => $assign_list[EnumsConsumerStatus::HSC->value][0] ?? 0,
+                'consumers_completed' => $assign_list[EnumsConsumerStatus::HSC->value][1] ?? 0,
+                'unassigned' => ($consumers_count[EnumsConsumerStatus::EXECUTE->value] ?? 0) - ($assign_list[EnumsConsumerStatus::HSC->value][0] ?? 0),
             ],
             [
-                'role_id' => \App\Enums\Role::ACTIVATION->value,
+                'role_id' => EnumsRole::ACTIVATION->value,
                 'status' => 'ACTIVATION',
-                'pending' => $consumers_count[\App\Enums\ConsumerStatus::HSC->value] ?? 0,                    
-                'status_id' => \App\Enums\ConsumerStatus::HSC->value,
-                'consumers_pending' => $assign_list[\App\Enums\ConsumerStatus::ACTIVATE->value][0] ?? 0,
-                'consumers_completed' => $assign_list[\App\Enums\ConsumerStatus::ACTIVATE->value][1] ?? 0,
-                'unassigned' => ($consumers_count[\App\Enums\ConsumerStatus::HSC->value] ?? 0) - ($assign_list[\App\Enums\ConsumerStatus::ACTIVATE->value][0] ?? 0),
+                'pending' => $consumers_count[EnumsConsumerStatus::HSC->value] ?? 0,                    
+                'status_id' => EnumsConsumerStatus::HSC->value,
+                'consumers_pending' => $assign_list[EnumsConsumerStatus::ACTIVATE->value][0] ?? 0,
+                'consumers_completed' => $assign_list[EnumsConsumerStatus::ACTIVATE->value][1] ?? 0,
+                'unassigned' => ($consumers_count[EnumsConsumerStatus::HSC->value] ?? 0) - ($assign_list[EnumsConsumerStatus::ACTIVATE->value][0] ?? 0),
             ],
         ];
         $userRoleIds = $roles->keys()->toArray();
@@ -115,8 +118,8 @@ class MyActivityController extends Controller
         
         // 2. Teams List and Get the Consumers Count Pending and Completed
         // Get Teams List
-        $teams = Team::whereHas('users', function($q) use($request) {
-            $q->where('user_id', Auth::id());
+        $teams = Team::with(['departments:id,name'])->whereHas('users', function($q) use($user) {
+            $q->where('user_id', $user->id);
         })->get();
         $team_keys = $teams->pluck('id')->toArray();
         // Pending Consumers List
@@ -128,7 +131,7 @@ class MyActivityController extends Controller
 
         // 3.Get Login User Work Progress
         // Completed consumers List
-        $completed_consumers = ConsumerStatus::select('status_id', DB::raw('COUNT(id) as total_count'))->where('created_by', Auth::id())->groupBy('status_id')->get()->pluck('total_count', 'status_id');
+        $completed_consumers = ConsumerStatus::select('status_id', DB::raw('COUNT(id) as total_count'))->where('created_by', $user->id)->groupBy('status_id')->get()->pluck('total_count', 'status_id');
         // Status List
         $status_list = MasterConsumerStatus::all();
         // Render output
