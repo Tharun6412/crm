@@ -14,6 +14,7 @@ use App\Models\Complaint\ComplaintDocument;
 use App\Models\Complaint\ComplaintStatusHistory;
 use App\Models\Consumer\Consumer;
 use App\Models\Master\ComplaintCategory;
+use App\Models\Master\ComplaintIrregularity;
 use App\Models\Master\ComplaintMedia;
 use App\Models\Master\ComplaintPriority;
 use App\Models\Master\ComplaintSegment;
@@ -78,6 +79,7 @@ class ComplaintsController extends Controller
             'segments' => ComplaintSegment::select('id', 'name')->get(),
             'categories' => ComplaintCategory::select('id', 'name')->whereNull('parent_id')->get(),
             'priorities' => ComplaintPriority::select('id', 'name')->get(),
+            'irregularities' => ComplaintIrregularity::select('id','name','status')->where('status',1)->get(),
         ], 200);
     }
     /**
@@ -107,6 +109,7 @@ class ComplaintsController extends Controller
             'segment_id' => $request->segment_id,
             'type_id' => $request->type_id,
             'media_id' => $request->media_id,
+            'irregularities_id' => $request->irregularities_id,
             'estimated_closed_at' => $est_close_at->toDateTimeString(),
             'status_id' => ComplaintStatus::REGISTER->value,
             'created_by' => Auth::id(),
@@ -146,6 +149,7 @@ class ComplaintsController extends Controller
             'category.priority:id,name',
             'type:id,name',
             'media:id,name',
+            'irregularities:id,name,status',
             'createdBy:id,first_name,last_name',
             'status:id,name',
             'statusHistory',
@@ -156,7 +160,7 @@ class ComplaintsController extends Controller
             'complaintDocuments:id,complaint_id,file_id,created_at',
             'complaintDocuments.file:id,doc_number,file_name',
             'feedback:id,complaint_id,rating,notes,created_at',
-        ])->select('id', 'code', 'category_id', 'segment_id', 'priority_id', 'media_id', 'type_id', 'estimated_closed_at', 'closed_at', 'status_id', 'created_at', 'created_by')
+        ])->select('id', 'code', 'category_id', 'segment_id', 'priority_id', 'media_id','irregularities_id', 'type_id', 'estimated_closed_at', 'closed_at', 'status_id', 'created_at', 'created_by')
           ->where('id', $id)->first();
         // Response
         return response()->json([

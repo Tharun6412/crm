@@ -142,7 +142,7 @@ class ComplaintsController extends Controller
         $media = ComplaintMedia::all();
         $segments = ComplaintSegment::all();
         $priorities = ComplaintPriority::all();
-        $irregularities = ComplaintIrregularity::all();
+        $irregularities = ComplaintIrregularity::where('status',1)->get();
         $categories = ComplaintCategory::whereNull('parent_id')->get();
         return view('complaints.create', [
             'consumer' => $consumer,
@@ -261,7 +261,7 @@ class ComplaintsController extends Controller
         $types = ComplaintType::all();
         $media = ComplaintMedia::all();
         $segments = ComplaintSegment::all();
-        $irregularities = ComplaintIrregularity::all();
+        $irregularities = ComplaintIrregularity::where('status',1)->get();
        // $priorities = ComplaintPriority::all();
         $categories = ComplaintCategory::whereNull('parent_id')->get();
         $complaint = Complaint::find($id);
