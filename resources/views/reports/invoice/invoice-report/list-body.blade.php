@@ -56,6 +56,12 @@
                     </div>
                 </th>
                 <th nowrap>
+                    <div class="d-flex">
+                        <div>Invoice Category</div>
+                        <div><x-master.connection-type-filter /></div>
+                    </div>
+                </th>
+                <th nowrap>
                     <a href="{{ $sortUrl('consumer.crn') }}">
                     CRN
                     @if ($sort_by == 'consumer.crn')
@@ -76,12 +82,6 @@
                         <div>Segment</div>
                         <div><x-master.segment-filter /></div>
                     </div>                    
-                </th>
-                <th nowrap>
-                    <div class="d-flex">
-                        <div>Connection Type</div>
-                        <div><x-master.connection-type-filter /></div>
-                    </div>
                 </th>
                 <th nowrap>
                     <div class="d-flex">
@@ -173,10 +173,10 @@
                     <td><a href="{{ url('bill/invoice/' . $inv->id) }}" target="_blank">&nbsp;{{ $inv->invoice_number }}</a></td>
                     <td>{{ dateFormat($inv->invoice_date) }}</td>
                     <td nowrap>{{ $inv->invoiceType->name }}</td>
+                    <td>{{ ($inv->prepaid == 2 ) ? "Prepaid" : "Postpaid" }}</td>
                     <td><a href="{{ url('consumers/' . $inv->consumer_id) }}" target="_blank">&nbsp;{{ $inv->consumer->crn }}</a></td>
                     <td>{{ $inv->consumer->name }}</td>
                     <td>{{ $inv->consumer->segment->name }}</td>
-                    <td>{{ $inv->consumer->connectType->name }}</td>
                     <td nowrap>{{ $inv->consumer->ga->name }}</td>
                     <td>{{ $inv->consumer->district->name }}</td>
                     <td class="text-end">{{ $inv->consumption->net_consumption ?? 0 }}</td>

@@ -82,9 +82,9 @@
             <tr>
                 <td>{{ $i++ }}</td>
                 <td><i class="bi bi-{{ ($consumer->connection_type_id == 1) ? 'speedometer2' : 'wifi'}}"></i>
-                            <x-auth.link href="{{ url('consumers/' . $consumer->id) }}">
+                            <a href="{{ url('consumers/' . $consumer->id) }}" target="_blank">
                             {{ $consumer->crn }}
-                            </x-auth.link>
+                            </a>
                 </td>
                 <td>{{ $consumer->name}}</td>
                 <td>{{ $consumer->segment->name }}</td>

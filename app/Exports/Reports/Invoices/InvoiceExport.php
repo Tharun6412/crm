@@ -57,7 +57,7 @@ class InvoiceExport implements FromQuery, ShouldQueue, WithChunkReading, WithHea
                 $q->whereIn('bil_invoices.status_id', $this->request['status_id']);
             })
             ->when(!empty($this->request['connection_type_id']), function ($q) {
-                $q->whereIn('cns_consumers.connection_type_id', $this->request['connection_type_id']);
+                $q->whereIn('bil_invoices.prepaid', $this->request['connection_type_id']);
             })
             ->when(!empty($this->request['geo_area']), function ($q) {
                 $q->whereIn('cns_consumers.ga_id', $this->request['geo_area']);
@@ -79,6 +79,7 @@ class InvoiceExport implements FromQuery, ShouldQueue, WithChunkReading, WithHea
             'ID',
             'Invoice Number',
             'Invoice Date',
+            'Invoice Category',
             'CRN',
             'Name',
             'GA',
@@ -110,6 +111,7 @@ class InvoiceExport implements FromQuery, ShouldQueue, WithChunkReading, WithHea
             $this->i,
             $invoice->invoice_number ?? '',
             dateFormat($invoice->invoice_date),
+            ($invoice->prepaid == 2) ? "Prepaid" : "Postpaid",
             $invoice->consumer->crn ?? '',
             $invoice->consumer->name ?? '',
             $invoice->consumer->ga->name ?? '',

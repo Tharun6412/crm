@@ -30,7 +30,7 @@
                 <!-- Submit -->
                 <button type="submit" class="btn btn-success"><i class="bi bi-search"></i></button>
                 <!-- Reset -->
-                <a href="{{ url('reports/invoices/report') }}" class="btn btn-warning"><i class="bi bi-arrow-clockwise"></i></a>
+                <a href="{{ url('reports/invoices/all') }}" class="btn btn-warning"><i class="bi bi-arrow-clockwise"></i></a>
             </div>
             {{-- <div>
                 <x-auth.link :href="url('reports/invoiceReport/invoicesReportExport') . '?' . request()->getQueryString()" class="btn btn-outline-info"><i class="bi bi-file-earmark-excel"></i>&nbsp;Export</x-auth.link>
@@ -38,7 +38,14 @@
         </div>
         <div id="invoices-list" class="current-page-reload">
             {{-- @include('reports.invoice.invoice-report.list-body') --}}
-            <div class="bg-white p-4 border rounded">Please select date range!</div>
+            {{-- <div class="bg-white p-4 border rounded">Please select date range!</div> --}}
+             @if(isset($invoices))
+                @include('reports.invoice.invoice-report.list-body')
+            @else
+                <div class="bg-white p-4 border rounded">
+                    Please select date range!
+                </div>
+            @endif
         </div>
         <div id="inv-counts"></div>
     </form>
@@ -56,6 +63,12 @@
                     $('#inv-counts').html(data);
                 });
             }
+
+            @if(isset($invoices))
+                $(function () {
+                    loadCounts();
+                });
+            @endif
         </script>
     @endpush
 @endonce

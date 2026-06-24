@@ -36,6 +36,10 @@
         </thead>
         <tbody>
             @php
+                $fromDate = $date_from->format('d-m-Y');
+                $toDate = $date_to->format('d-m-Y');
+            @endphp
+            @php
                 $i = 1;
                 $total_dom_pre_count = $total_dom_pos_count = $total_dom_pre = $total_dom_post = $total_dom_pre_base = $total_dom_pre_tax = $total_dom_pre_total = $total_dom_post_base = $total_dom_post_tax = $total_dom_post_total = 0;
                 $total_com_pre_count = $total_com_pos_count = $total_com_pre = $total_com_post = $total_com_pre_base = $total_com_pre_tax = $total_com_pre_total = $total_com_post_base = $total_com_post_tax = $total_com_post_total = 0;
@@ -97,10 +101,63 @@
                     <td class="text-center">{{ $i++ }}</td>
                     <td>{{ $ga->name }}</td>
                     {{-- Invoice counts --}}
-                    <td class="text-end">{{ numberFormat($dom_pre_count) }}</td>
-                    <td class="text-end">{{ numberFormat($dom_pos_count) }}</td>
-                    <td class="text-end">{{ numberFormat($com_pre_count) }}</td>
-                    <td class="text-end">{{ numberFormat($com_pos_count) }}</td>
+                    <td class="text-end">
+                        @if ($dom_pre_count > 0)
+                            <a href="{{ url('reports/invoices/all') }}?{{ http_build_query([
+                                    'geo_area' => [$ga->id],
+                                    'date_from' => $fromDate,
+                                    'date_to'   => $toDate,
+                                    'segments'     => [1] ,
+                                    'invoice_type' => [1],
+                                    'connection_type_id' => [2],
+                                    ]) }}" target="_blank">{{ numberFormat($dom_pre_count) }}</a>
+                        @else
+                            {{ numberFormat($dom_pre_count) }}    
+                        @endif
+                    </td>
+                    <td class="text-end">
+                        @if ($dom_pos_count)
+                            <a href="{{ url('reports/invoices/all') }}?{{ http_build_query([
+                                    'geo_area' => [$ga->id],
+                                    'date_from' => $fromDate,
+                                    'date_to'   => $toDate,
+                                    'segments'     => [1] ,
+                                    'invoice_type' => [1],
+                                    'connection_type_id' => [1],
+                                    ]) }}" target="_blank">{{ numberFormat($dom_pos_count) }}
+                            </a>
+                        @else
+                            {{ numberFormat($dom_pos_count) }}
+                        @endif
+                    </td>
+                    <td class="text-end">
+                        @if ($com_pre_count > 0)
+                            <a href="{{ url('reports/invoices/all') }}?{{ http_build_query([
+                                    'geo_area' => [$ga->id],
+                                    'date_from' => $fromDate,
+                                    'date_to'   => $toDate,
+                                    'segments'     => [2] ,
+                                    'invoice_type' => [1],
+                                    'connection_type_id' => [2],
+                                    ]) }}" target="_blank">{{ numberFormat($com_pre_count) }}</a>
+                        @else
+                            {{ numberFormat($com_pre_count) }}
+                        @endif
+                    </td>
+                    <td class="text-end">
+                        @if ($com_pos_count > 0)
+                            <a href="{{ url('reports/invoices/all') }}?{{ http_build_query([
+                                    'geo_area' => [$ga->id],
+                                    'date_from' => $fromDate,
+                                    'date_to'   => $toDate,
+                                    'segments'     => [2] ,
+                                    'invoice_type' => [1],
+                                    'connection_type_id' => [1],
+                                    ]) }}" target="_blank">{{ numberFormat($com_pos_count) }}</a>
+                        @else
+                            {{ numberFormat($com_pos_count) }}
+                        @endif
+                    </td>
                     {{-- GAS sale In SCMs --}}
                     {{-- Domestic Prepaid --}}
                     <td class="text-end">{{ numberFormat($dom_pre,2) }}</td>

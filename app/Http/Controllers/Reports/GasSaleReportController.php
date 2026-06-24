@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Reports;
 
+use App\Enums\InvoiceStatus;
 use App\Enums\InvoiceType;
 use App\Http\Controllers\Controller;
 use App\Models\Master\Ga;
@@ -34,11 +35,12 @@ class GasSaleReportController extends Controller
             ->join(DB::raw('cns_consumers as c FORCE INDEX (filter_index)'), 'c.id', '=', 'bil_invoices.consumer_id')
             ->where('bil_invoices.type_id', InvoiceType::GAS_BILL->value)
             ->whereBetween('bil_invoices.invoice_date', [$fromDate, $toDate])
-            ->groupBy('c.ga_id', 'c.segment_id', 'c.connection_type_id')
+            ->where('bil_invoices.status_id', '!=', InvoiceStatus::CANCEL->value)
+            ->groupBy('c.ga_id', 'c.segment_id', 'bil_invoices.prepaid')
             ->selectRaw('
                 c.ga_id,
                 c.segment_id,
-                c.connection_type_id,
+                bil_invoices.prepaid as connection_type_id,
                 SUM(bic.net_consumption) as total_sale,
                 SUM(bil_invoices.base_amount) as base_amount,
                 SUM(bil_invoices.tax_amount) as tax_amount,
