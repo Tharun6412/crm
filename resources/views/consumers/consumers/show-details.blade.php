@@ -292,6 +292,10 @@
                     <div class="card-body">
                         <table class="table table-hover">
                             <tr>
+                                <td class="fw-semibold">LPG ID</td>
+                                <td>{{ $consumer?->lpg_id }}</td>
+                            </tr>
+                            <tr>
                                 <td class="fw-semibold">LPG Connections</td>
                                 <td>{{ $consumer->lpg_connections }}</td>
                             </tr>

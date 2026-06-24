@@ -33,6 +33,7 @@ class RegistrationValidationRequest extends FormRequest
             'pincode' => 'required|numeric|digits:6',
             'owner_phone' => 'nullable|numeric|digits:10',
             'tenant_phone' => 'nullable|numeric|digits:10',
+            'lpg_id' => 'required|min:10|max:17',
             'document_type.0' => 'required',
             'document_type.1' => 'required',
             'document_type.2' => 'nullable',

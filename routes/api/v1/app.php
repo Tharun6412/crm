@@ -16,6 +16,9 @@ Route::middleware('auth:sanctum')->group(function () {
     // Dashboard
     Route::get('dashboard/list', [App\Http\Controllers\Api\V1\Application\DashboardController::class, 'list']);
     Route::get('myActivity', [App\Http\Controllers\Api\V1\Application\MyActivityController::class, 'index']);
+    Route::get('consumerTeams', [App\Http\Controllers\Api\V1\Application\ConsumerTeamController::class, 'index']);
+    Route::get('consumerTeams/assignTeam/{id}', [App\Http\Controllers\Api\V1\Application\ConsumerTeamController::class, 'assignTeam']);
+    Route::post('consumerTeams/updateTeamAssignment/{id}', [App\Http\Controllers\Api\V1\Application\ConsumerTeamController::class, 'updateTeamAssignment']);
     // Consumers routes
     Route::prefix('consumer')->group(function () {
         // Consumer Controller

@@ -44,10 +44,10 @@ class ComplaintsController extends Controller
         // Complaints list
         $complaints_q = Complaint::with([
             'ga:id,name',
-            'category:id,name',
+            'category:id,name,priority_id',
             'type:id,name',
             'media:id,name',
-            'priority:id,name',
+            'category.priority:id,name',
             'status:id,name' 
         ])
         ->select('id', 'code', 'category_id', 'segment_id', 'priority_id', 'media_id', 'type_id', 'estimated_closed_at', 'closed_at', 'status_id', 'created_at')

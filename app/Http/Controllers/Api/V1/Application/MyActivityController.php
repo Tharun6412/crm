@@ -62,7 +62,7 @@ class MyActivityController extends Controller
             'team_data' => $team_data,
             'status_list' => $status_list,
             'completed_consumers' => $completed_consumers,
-        ]);
+        ], 200);
     }
 
     /**
