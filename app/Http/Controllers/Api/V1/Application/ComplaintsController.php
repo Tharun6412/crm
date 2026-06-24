@@ -159,9 +159,11 @@ class ComplaintsController extends Controller
             'comments:id,complaint_id,comments,created_at',
             'complaintDocuments:id,complaint_id,file_id,created_at',
             'complaintDocuments.file:id,doc_number,file_name',
-            'feedback:id,complaint_id,rating,notes,created_at',
+            'feedbackLatest:id,complaint_id,rating,notes,created_at',
         ])->select('id', 'code', 'category_id', 'segment_id', 'priority_id', 'media_id','irregularities_id', 'type_id', 'estimated_closed_at', 'closed_at', 'status_id', 'created_at', 'created_by')
           ->where('id', $id)->first();
+          $complaint->feedback = $complaint->feedbackLatest ?? null;
+          $complaint->makeHidden(['feedbackLatest']);
         // Response
         return response()->json([
             'complaint' => $complaint,

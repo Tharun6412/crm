@@ -208,6 +208,14 @@ class Complaint extends Model
     {
         return $this->hasMany(ComplaintFeedback::class, 'complaint_id', 'id');
     }
+
+    /**
+     * Relation with feedback
+     */
+    public function feedbackLatest():HasOne
+    {
+        return $this->hasOne(ComplaintFeedback::class, 'complaint_id', 'id');
+    }
     /**
      * Relation with irregularities
      */
