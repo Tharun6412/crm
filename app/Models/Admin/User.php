@@ -8,6 +8,7 @@ use App\Models\Complaint\ComplaintComment;
 use App\Models\Complaint\ComplaintFeedback;
 use App\Models\Consumer\Consumer;
 use App\Models\Consumer\ConsumerSdPayment;
+use App\Models\Invoice\BillInvoice;
 use App\Models\Invoice\InvoicePayment;
 use App\Models\Master\Ca;
 use App\Models\Master\Department;
@@ -173,13 +174,19 @@ class User extends Authenticatable
     }
 
     /**
-     * 
-     * Payment colection relations
-     * 
+     * Relations with 
+     * Invoices (Bills) and Payment colections
+     * Security deposit payments
      */
+
     /**
      * Invoice payments
      */
+    public function invoices(): HasMany
+    {
+        return $this->hasMany(BillInvoice::class, 'created_by');
+    }
+
     public function invoicePayments(): HasMany
     {
         return $this->hasMany(InvoicePayment::class, 'created_by');
@@ -205,7 +212,8 @@ class User extends Authenticatable
             'ca_id'
         );
     }
-    /***
+
+    /**
      * Pivot Relation
      */
     public function teams():BelongsToMany

@@ -28,16 +28,16 @@
     <nav>
         <div class="nav nav-tabs d-flex flex-nowrap gap-2 mt-2" id="nav-tab1" role="tablist">
             <button class="nav-link active fs-5 border border-bottom-0 me-2 text-nowrap" id="connection-progress-tab" data-bs-toggle="tab" data-bs-target="#connection-progress" type="button" role="tab" aria-controls="connection-progress" aria-selected="true"><i class="bi bi-hourglass-split"></i>&nbsp;Connection Progress</button>
-            <button class="nav-link fs-5 border border-bottom-0 me-2 text-nowrap" id="emp-progress-tab" data-bs-toggle="tab" data-bs-target="#emp-progress" type="button" role="tab" aria-controls="emp-progress" aria-selected="false"><i class="bi bi-person-gear me-1"></i>&nbsp;Employee Progress</button>
+            <button class="nav-link fs-5 border border-bottom-0 me-2 text-nowrap" id="emp-progress-tab" data-bs-toggle="tab" data-bs-target="#emp-progress" type="button" role="tab" aria-controls="emp-progress" aria-selected="false"><i class="bi bi-person-gear me-1"></i>&nbsp;Team Progress</button>
             <button class="nav-link fs-5 border border-bottom-0 me-2 text-nowrap" id="nav-ga-teams-tab" data-bs-toggle="tab" data-bs-target="#nav-ga-teams" type="button" role="tab" aria-controls="nav-ga-teams" aria-selected="true"><i class="bi bi-people-fill me-1"></i>&nbsp;Teams&nbsp;<span class="badge bg-primary">{{ numberFormat($total_teams) }}</span></button>
         </div>
     </nav>
-    <div class="tab-content bg-white mt-3" id="nav-tabContentMain">
+    <div class="tab-content bg-white p-1 border border-top-0" id="nav-tabContentMain">
         <div class="tab-pane fade show active" id="connection-progress" role="tabpanel" aria-labelledby="connection-progress-tab" tabindex="0">
             <nav>
-                <div class="nav nav-tabs d-flex flex-nowrap gap-2 mt-2" id="nav-tab2" role="tablist">
-                    <button class="nav-link active fs-5 border border-bottom-0 me-2 text-nowrap" id="nav-consumers-wait-tab" data-bs-toggle="tab" data-bs-target="#nav-consumers-wait" type="button" role="tab" aria-controls="nav-consumers" aria-selected="true"><i class="bi bi-app-indicator"></i>&nbsp;Connection Progress - GA&nbsp;<span class="badge text-bg-success">{{ numberFormat($wait_list) }}</span></button>
-                    <button class="nav-link fs-5 border border-bottom-0 me-2 text-nowrap" id="nav-emp-activity-tab" data-bs-toggle="tab" data-bs-target="#nav-emp-activity" type="button" role="tab" aria-controls="nav-emp-activity" aria-selected="true"><i class="bi bi-rocket-takeoff me-1"></i>&nbsp;Connection Progress - Employee</button>  
+                <div class="nav nav-tabs d-flex flex-nowrap gap-2 mt-0" id="nav-tab2" role="tablist">
+                    <button class="nav-link active bg-light border border-bottom-0 text-nowrap" id="nav-consumers-wait-tab" data-bs-toggle="tab" data-bs-target="#nav-consumers-wait" type="button" role="tab" aria-controls="nav-consumers" aria-selected="true"><i class="bi bi-pin-map"></i>&nbsp;GA Wise&nbsp;<span class="badge text-bg-success">{{ numberFormat($wait_list) }}</span></button>
+                    <button class="nav-link bg-light border border-bottom-0 text-nowrap" id="nav-emp-activity-tab" data-bs-toggle="tab" data-bs-target="#nav-emp-activity" type="button" role="tab" aria-controls="nav-emp-activity" aria-selected="true"><i class="bi bi-person-workspace me-1"></i>&nbsp;Employee Wise</button>  
                 </div>
             </nav>
             <div class="tab-content" id="nav-tabContentCns">
@@ -114,9 +114,9 @@
         </div>
         <div class="tab-pane fade" id="emp-progress" role="tabpanel" aria-labelledby="emp-progress-tab" tabindex="0">
             <nav>
-                <div class="nav nav-tabs d-flex flex-nowrap gap-2 mt-2" id="nav-tab3" role="tablist">
-                    <button class="nav-link fs-5 border border-bottom-0 me-2 text-nowrap" id="nav-status-activity-tab" data-bs-toggle="tab" data-bs-target="#nav-status-activity" type="button" role="tab" aria-controls="nav-status-activity" aria-selected="true"><i class="bi bi-activity me-1"></i>&nbsp;Employee Progress Report</button>                          
-                    <button class="nav-link fs-5 border border-bottom-0 me-2 text-nowrap" id="nav-team-progress-tab" data-bs-toggle="tab" data-bs-target="#nav-team-progress" type="button" role="tab" aria-controls="nav-team-progress" aria-selected="true"><i class="bi bi-activity me-1"></i>&nbsp;Team Progress Report</button>
+                <div class="nav nav-tabs d-flex flex-nowrap gap-2 mt-0" id="nav-tab3" role="tablist">
+                    <button class="nav-link border border-bottom-0 bg-light text-nowrap" id="nav-team-progress-tab" data-bs-toggle="tab" data-bs-target="#nav-team-progress" type="button" role="tab" aria-controls="nav-team-progress" aria-selected="true"><i class="bi bi-people me-1"></i>&nbsp;Team Wise Report</button>
+                    <button class="nav-link border border-bottom-0 bg-light text-nowrap" id="nav-status-activity-tab" data-bs-toggle="tab" data-bs-target="#nav-status-activity" type="button" role="tab" aria-controls="nav-status-activity" aria-selected="true"><i class="bi bi-activity me-1"></i>&nbsp;Employee Wise Report</button>                          
                 </div>
             </nav>
             <div class="tab-content" id="nav-tabContentEmp">                 
@@ -194,8 +194,8 @@
         </div>
         <div class="tab-pane fade" id="nav-ga-teams" role="tabpanel" aria-labelledby="nav-ga-teams-tab" tabindex="0">
             <form action="{{ url('reports/consumer/teams') }}" id="report-ga-teams-search-form" method="GET">
-                <div class="d-flex justify-content-between align-items-center border my-2 bg-light p-3 rounded">
-                    <h4 class="mb-0 ms-2">Teams Report</h4>
+                <div class="d-flex justify-content-between align-items-center border my-2 bg-light p-2 rounded">
+                    <h4 class="mb-0 ms-2">Teams Data</h4>
                 </div>    
             </form>
             <div id="report-ga-teams-list"> 

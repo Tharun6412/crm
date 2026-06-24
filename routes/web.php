@@ -8,13 +8,13 @@ Route::middleware(['auth'])->group(function() {
     Route::get('myActivity', [App\Http\Controllers\Dashboard\MyActivityController::class, 'index']);
     Route::get('myActivity/myConsumersList', [App\Http\Controllers\Dashboard\MyActivityController::class, 'myConsumersList']);
     Route::get('myActivity/getConsumersByCa', [App\Http\Controllers\Dashboard\MyActivityController::class, 'getConsumersByCa']);
-    Route::get('help', function(){
-        return view('utils.help');
-    });
     Route::resource('notifications', App\Http\Controllers\Admin\NotificationsController::class);
     Route::resource('user/exports', App\Http\Controllers\Admin\UserExportController::class);
     Route::resource('invoicesSet', App\Http\Controllers\InvoicesSetController::class);
-
+    // Help 
+    Route::get('help', function() {
+        return view('utils.help');
+    });
     // Test Route
     Route::get('testSomething', [App\Http\Controllers\Dashboard\HomeController::class, 'testSomething']);
 });

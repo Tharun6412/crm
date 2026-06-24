@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Dashboard;
 
-use App\Contracts\PngrbUnifiedPortal\Application;
+use App\Contracts\PngrbUnifiedPortal\ConsumerApplication;
 use App\Enums\ComplaintStatus;
 use App\Enums\ConnectionType;
 use App\Enums\ConsumerStatus;
@@ -153,8 +153,10 @@ class HomeController extends Controller
      */
     public function testSomething()
     {
-        $response = Application::updateStatus();
-        // $response = Application::send();
+        // fopen(storage_path('sample-document.pdf'), 'r');
+        // $response = ConsumerApplication::updateStatus();
+        // $response = ConsumerApplication::send();
+        $response = ConsumerApplication::sendDocument();
         print_r($response);
     }
 }
