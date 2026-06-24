@@ -94,6 +94,7 @@ class ConsumerRegistrationController extends Controller
             'district_id' => $request->district,
             'ga_id' => $request->geo_area,
             'pincode' => $request->pincode,
+            'lpg_id' => $request->lpg_id,
             'lpg_connections' => $request->lpg_connections,
             'dcq' => $request->dcq,
             'expected_date' => !empty($request->expected_date) ? Carbon::createFromFormat('d-m-Y', $request->expected_date) : null,
@@ -205,5 +206,18 @@ class ConsumerRegistrationController extends Controller
 
         // Response
         return response()->json(['success' => 'Consumer details updated Successfully'], 200);
+    }
+    //Update Lpg
+    public function lpgUpdate(Request $request,$id)
+    {
+        $request->validate([
+            'lpg_id' => 'required',
+        ]);
+        $consumer = Consumer::findOrFail($id);
+        $consumer->update([
+            'lpg_id' => $request->lpg_id,
+            'lpg_connections' => $request->lpg_connections,
+        ]);
+        return response()->json(['success' => 'Lpg Updated Successfully'],200);
     }
 }

@@ -175,7 +175,7 @@
                                         <li><x-auth.link class="dropdown-item link-modal" href="{{ url('calls/feedback/'.$complaint->id.'/edit') }}" action="fedbk"><i class="bi bi-chevron-right"></i>&nbsp;Feedback</x-auth.link></li>
                                     @endif
                                     @if ($complaint->status_id == ComplaintStatus::CLOSE->value && $complaint->feedback->count() == 1 && !in_array(ComplaintStatus::REOPEN->value,$complaint->statusHistory->pluck('status_id')->toArray()))
-                                        <li><x-auth.link class="dropdown-item link-modal" href="{{ url('calls/reopen/'.$complaint->id) }}" action="reopen">Reopen</x-auth.link></li>
+                                        <li><x-auth.link class="dropdown-item link-modal" href="{{ url('calls/reopen/'.$complaint->id) }}" action="reopen"><i class="bi bi-chevron-right"></i>&nbsp;Reopen</x-auth.link></li>
                                     @endif
                                 </ul>
                             </div>

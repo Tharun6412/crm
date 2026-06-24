@@ -82,6 +82,7 @@ class Consumer extends Model
         'ga_id',
         'state_id',
         'pincode',
+        'lpg_id',
         'lpg_connections',
         'dcq',
         'expected_date',

@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', ModuleAccess::class])->group(function() {
     // Registration Controller
+    Route::get('register/domestic/lpg/{id}',[App\Http\Controllers\Consumer\RegistrationController::class,'lpg']);
+    Route::post('register/domestic/lpgUpdate/{id}',[App\Http\Controllers\Consumer\RegistrationController::class,'lpgUpdate']);
     Route::resource('register/domestic', App\Http\Controllers\Consumer\RegistrationController::class);
     Route::resource('register/commercial', App\Http\Controllers\Consumer\CommercialRegistrationController::class);
     Route::resource('register/industrial', App\Http\Controllers\Consumer\IndustrialRegistrationController::class);

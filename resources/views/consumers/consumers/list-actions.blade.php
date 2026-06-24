@@ -53,5 +53,6 @@
             <li><x-auth.link class="dropdown-item link-modal" href="{{ url('consumers/refunds/refundRequest/'.$consumer->id) }}" action="refin"><i class="bi bi-chevron-right"></i>&nbsp;Initiate Refund</x-auth.link></li>
         @endif
         <li><x-auth.link class="dropdown-item link-modal" href="{{ url('tickets/create/'.$consumer->id) }}" action="tkt"> <i class="bi bi-chevron-right"></i>&nbsp;Raise Ticket</x-auth.link></li>
+        <li><x-auth.link class="dropdown-item link-modal" href="{{ url('consumers/register/domestic/lpg/'.$consumer->id) }}" action="lpg"> <i class="bi bi-chevron-right"></i>&nbsp;LPG Update</x-auth.link></li>
     </ul>
 </div>

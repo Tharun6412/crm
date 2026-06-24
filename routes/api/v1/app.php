@@ -22,6 +22,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('list', [App\Http\Controllers\Api\V1\Application\ConsumerController::class, 'list']);
         Route::get('details/{id}', [App\Http\Controllers\Api\V1\Application\ConsumerController::class, 'details']);
         // Registration
+        Route::post('lpgUpdate/{id}',[App\Http\Controllers\Api\V1\Application\ConsumerRegistrationController::class,'lpgUpdate']);
         Route::get('create', [App\Http\Controllers\Api\V1\Application\ConsumerRegistrationController::class, 'create']);
         Route::post('store', [App\Http\Controllers\Api\V1\Application\ConsumerRegistrationController::class, 'store']);
         Route::post('updateSubArea/{id}', [App\Http\Controllers\Api\V1\Application\ConsumerRegistrationController::class, 'updateSubArea']);

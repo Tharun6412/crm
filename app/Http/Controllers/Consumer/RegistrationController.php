@@ -29,6 +29,7 @@ use App\Notifications\Consumer\RegistrationSmsNotification;
 use App\Services\ReferralService;
 use App\Services\SmsService;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 
@@ -75,8 +76,6 @@ class RegistrationController extends Controller
                 $referrer_id = $referral['referrer_id'];
             }
         }
-
-
         // Data Preparation
         $add_consumer = Consumer::create([
             'segment_id' => SegmentType::DOMESTIC->value,
@@ -103,6 +102,7 @@ class RegistrationController extends Controller
             'district_id' => $request->district,
             'ga_id' => $request->geo_area,
             'pincode' => $request->pincode,
+            'lpg_id' => $request->lpg_id,
             'lpg_connections' => $request->lpg_connections,
             'dcq' => $request->dcq,
             'expected_date' => !empty($request->expected_date) ? Carbon::createFromFormat('d-m-Y', $request->expected_date) : null,
@@ -197,5 +197,24 @@ class RegistrationController extends Controller
         return response()->json([
             'success' => 'Consumer Created Successfully with TR number ' . $crn_code . ', click <a href="'.url('consumers').'">here</a> to see all consumers.'
         ]);
+    }
+    //lpg 
+    public function lpg($id)
+    {
+        $consumer = Consumer::findOrFail($id);
+        return view('consumers.registration.lpg-edit',['consumer' => $consumer]);
+    }
+    //lpg update
+    public function lpgUpdate(Request $request,$id)
+    {
+        $request->validate([
+            'lpg_id' => 'required',
+        ]);
+        $consumer = Consumer::findOrFail($id);
+        $consumer->update([
+            'lpg_id' => $request->lpg_id,
+            'lpg_connections' => $request->lpg_connections,
+        ]);
+        return response()->json(['success' => 'Lpg Updated Successfully']);
     }
 } 

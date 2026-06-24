@@ -236,31 +236,36 @@
                 <div class="pt-2 pb-2"><hr></div>
                 <div class="mb-1 fs-5 fw-semibold text-primary">Additional details&nbsp;:</div>
                 <div class="row mb-2 pt-2">
-                    <div class="col-md-3 col-sm-6 col-xs-12">
+                    <div class="col-md-4 col-sm-6 col-xs-12">
+                        <label class="form-label" for="lpg_id">LPG Id&nbsp;:<span class="text-danger">*</span></label>
+                        <input name="lpg_id" id="lpg_id" class="form-control" placeholder="lpg id" type="text"/>
+                        <span class="text-danger validate-err-msg" id="lpg_id-error"></span>
+                    </div>
+                    <div class="col-md-4 col-sm-6 col-xs-12">
                         <label class="form-label" for="lpg_no">LPG Connections no (if any)&nbsp;:&nbsp;</label>
                         <input type="number" name="lpg_connections" id="lpg_connections" class="form-control" placeholder="LPG Connections"/>
                     </div>
-                    <div class="col-md-3 col-sm-6 col-xs-12">
+                    <div class="col-md-4 col-sm-6 col-xs-12">
                         <label class="form-label" for="dcq">Expected required PNG per day&nbsp;:&nbsp;</label>
                         <input name="dcq" id="dcq" class="form-control" placeholder="DCQ" type="text"/>
                     </div>
-                    <div class="col-md-3 col-sm-6 col-xs-12">
+                </div>
+                <div class="row mb-2 pt-2">
+                    <div class="col-md-4 col-sm-6 col-xs-12">
                         <label class="form-label" for="expected_date">Expected Date&nbsp;:&nbsp;</label>
                         <div class="input-group">
                             <input name="expected_date" id="expected_date" class="form-control" placeholder="Expected Date( DD-MM-YYYY )" type="text"/>
                             <span class="input-group-text"><i class="bi bi-calendar2-event"></i></span>
                         </div>
                     </div>
-                    <div class="col-md-3 col-sm-6 col-xs-12">
+                    <div class="col-md-4 col-sm-6 col-xs-12">
                         <label class="form-label" for="distance">Distance&nbsp;:&nbsp;</label>
                         <div class="input-group">
                             <input type="text" name="distance" id="distance" class="form-control" placeholder="Distance"/>
                             <span class="input-group-text" >Mts</label>
                         </div>
                     </div>
-                </div>
-                <div class="row mb-2 pt-2">
-                    <div class="col-md-3 col-sm-6 col-xs-12">
+                    <div class="col-md-4 col-sm-6 col-xs-12">
                         <!-- 1=> Own. 2=> Rented.-->
                         <label class="form-label" for="property_type">House&nbsp;:&nbsp;</label>
                         <select name="property_type" id="property_type" class="form-select">
@@ -270,11 +275,13 @@
                             <option value="3">Lease</option>
                         </select>
                     </div>
-                    <div class="col-md-3 col-sm-6 col-xs-12">
+                </div>
+                <div class="row mb-2 pt-2">
+                    <div class="col-md-4 col-sm-6 col-xs-12">
                         <label class="form-label" for="owner_name">Owner name (In case rented)&nbsp;:&nbsp;</label>
                         <input type="text" name="owner_name" id="owner_name" class="form-control" placeholder="Owner Name"/>
                     </div>
-                    <div class="col-md-3 col-sm-6 col-xs-12">
+                    <div class="col-md-4 col-sm-6 col-xs-12">
                         <label class="form-label" for="owner_phone">Owner contact number (In case rented)&nbsp;:&nbsp;</label>
                         <div class="input-group">
                             <span class="input-group-text">+91</span>
@@ -282,7 +289,7 @@
                             <span class="text-danger validate-err-msg" id="owner_phone-error"></span>
                         </div>
                     </div>
-                    <div class="col-md-3 col-sm-6 col-xs-12">
+                    <div class="col-md-4 col-sm-6 col-xs-12">
                         <label class="form-label" for="gas_required_id">Natural gas required for&nbsp;:&nbsp;</label>
                         <select name="gas_required_id" id="gas_required_id" class="form-select">
                             <option value="">Select</option>
@@ -293,11 +300,11 @@
                     </div>
                 </div>
                 <div class="row mb-2 pt-2">
-                    <div class="col-md-3 col-sm-6 col-xs-12">
+                    <div class="col-md-4 col-sm-6 col-xs-12">
                         <label class="form-label" for="tenant_name">Tenant name&nbsp;:&nbsp;</label>
                         <input type="text" name="tenant_name" id="tenant_name" class="form-control" placeholder="Tenant Name"/>
                     </div>
-                    <div class="col-md-3 col-sm-6 col-xs-12">
+                    <div class="col-md-4 col-sm-6 col-xs-12">
                         <label class="form-label" for="tenant_phone">Tenant contact number&nbsp;:&nbsp;</label>
                         <div class="input-group">
                             <span class="input-group-text">+91</span>
@@ -305,7 +312,7 @@
                             <span class="text-danger validate-err-msg" id="tenant_phone-error"></span>
                         </div>
                     </div>
-                    <div class="col-md-3 col-sm-6 col-xs-12">
+                    <div class="col-md-4 col-sm-6 col-xs-12">
                         <label class="form-label" for="tenant_email">Tenant Email&nbsp;:&nbsp;</label>
                         <input type="text" name="tenant_email" id="tenant_email" class="form-control" placeholder="Tenant Email"/>
                     </div>
