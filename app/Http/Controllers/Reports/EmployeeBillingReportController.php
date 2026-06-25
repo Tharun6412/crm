@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Reports;
 
 use App\Enums\InvoiceStatus;
+use App\Enums\InvoiceType;
 use App\Http\Controllers\Controller;
 use App\Models\Admin\User;
 use App\Models\Master\Ga;
@@ -29,12 +30,35 @@ class EmployeeBillingReportController extends Controller
 
             // Get Report
             // Employee collection
+            // $employee_bills = User::select('id', 'emp_id', 'first_name', 'last_name')
+            //     ->whereHas('ga', fn($q) => $q->where('ga_id', $request->ga_id))
+            //     ->whereHas('invoices.consumer', fn($q) => $q->where('ga_id', $request->ga_id))
+            //     ->withCount(['invoices as invoice_count' => function ($q) use($request) {
+            //         $q->whereNot('status_id', InvoiceStatus::CANCEL->value)->whereBetween('created_at', [Carbon::createFromFormat('d-m-Y', $request->date_from)->startOfDay(), Carbon::createFromFormat('d-m-Y', $request->date_to)->endOfDay()]);
+            //     }])
+            //     ->get();
+
             $employee_bills = User::select('id', 'emp_id', 'first_name', 'last_name')
-                ->whereHas('ga', fn($q) => $q->where('ga_id', $request->ga_id))
-                ->whereHas('invoices.consumer', fn($q) => $q->where('ga_id', $request->ga_id))
-                ->withCount(['invoices as invoice_count' => function ($q) use($request) {
-                    $q->whereNot('status_id', InvoiceStatus::CANCEL->value)->whereBetween('created_at', [Carbon::createFromFormat('d-m-Y', $request->date_from)->startOfDay(), Carbon::createFromFormat('d-m-Y', $request->date_to)->endOfDay()]);
-                }])
+                ->whereHas('ga', fn ($q) => $q->where('ga_id', $request->ga_id))
+                ->whereHas('invoices', function ($q) use ($request) {
+                    $q->whereNot('status_id', InvoiceStatus::CANCEL->value)
+                        ->where('type_id', InvoiceType::GAS_BILL->value)
+                        ->whereBetween('created_at', [
+                            Carbon::createFromFormat('d-m-Y', $request->date_from)->startOfDay(),
+                            Carbon::createFromFormat('d-m-Y', $request->date_to)->endOfDay()
+                        ]);
+                })
+                ->whereHas('invoices.consumer', fn ($q) => $q->where('ga_id', $request->ga_id))
+                ->withCount([
+                    'invoices as invoice_count' => function ($q) use ($request) {
+                        $q->whereNot('status_id', InvoiceStatus::CANCEL->value)
+                            ->where('type_id', InvoiceType::GAS_BILL->value)
+                            ->whereBetween('created_at', [
+                                Carbon::createFromFormat('d-m-Y', $request->date_from)->startOfDay(),
+                                Carbon::createFromFormat('d-m-Y', $request->date_to)->endOfDay()
+                            ]);
+                    }
+                ])
                 ->get();
 
             // Render output
