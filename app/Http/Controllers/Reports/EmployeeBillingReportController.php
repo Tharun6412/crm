@@ -31,14 +31,17 @@ class EmployeeBillingReportController extends Controller
             // Employee collection
             $employee_bills = User::select('id', 'emp_id', 'first_name', 'last_name')
                 ->whereHas('ga', fn($q) => $q->where('ga_id', $request->ga_id))
+                ->whereHas('invoices.consumer', fn($q) => $q->where('ga_id', $request->ga_id))
                 ->withCount(['invoices as invoice_count' => function ($q) use($request) {
                     $q->whereNot('status_id', InvoiceStatus::CANCEL->value)->whereBetween('created_at', [Carbon::createFromFormat('d-m-Y', $request->date_from)->startOfDay(), Carbon::createFromFormat('d-m-Y', $request->date_to)->endOfDay()]);
                 }])
                 ->get();
-            
 
             // Render output
-            return view('reports.employee.bill-report.list-body', ['geo_areas' => $geo_areas]);
+            return view('reports.employee.bill-report.list-body', [
+                'geo_areas' => $geo_areas,
+                'employee_bills' => $employee_bills,
+            ]);
         }
 
         // Render output

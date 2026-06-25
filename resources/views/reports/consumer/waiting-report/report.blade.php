@@ -35,9 +35,9 @@
     <div class="tab-content bg-white p-1 border border-top-0" id="nav-tabContentMain">
         <div class="tab-pane fade show active" id="connection-progress" role="tabpanel" aria-labelledby="connection-progress-tab" tabindex="0">
             <nav>
-                <div class="nav nav-tabs d-flex flex-nowrap gap-2 mt-0" id="nav-tab2" role="tablist">
-                    <button class="nav-link active bg-light border border-bottom-0 text-nowrap" id="nav-consumers-wait-tab" data-bs-toggle="tab" data-bs-target="#nav-consumers-wait" type="button" role="tab" aria-controls="nav-consumers" aria-selected="true"><i class="bi bi-pin-map"></i>&nbsp;GA Wise&nbsp;<span class="badge text-bg-success">{{ numberFormat($wait_list) }}</span></button>
-                    <button class="nav-link bg-light border border-bottom-0 text-nowrap" id="nav-emp-activity-tab" data-bs-toggle="tab" data-bs-target="#nav-emp-activity" type="button" role="tab" aria-controls="nav-emp-activity" aria-selected="true"><i class="bi bi-person-workspace me-1"></i>&nbsp;Employee Wise</button>  
+                <div class="nav nav-tabs bg-light" id="nav-tab2" role="tablist">
+                    <button class="nav-link active" id="nav-consumers-wait-tab" data-bs-toggle="tab" data-bs-target="#nav-consumers-wait" type="button" role="tab" aria-controls="nav-consumers" aria-selected="true"><i class="bi bi-pin-map"></i>&nbsp;GA Wise&nbsp;<span class="badge text-bg-success">{{ numberFormat($wait_list) }}</span></button>
+                    <button class="nav-link" id="nav-emp-activity-tab" data-bs-toggle="tab" data-bs-target="#nav-emp-activity" type="button" role="tab" aria-controls="nav-emp-activity" aria-selected="true"><i class="bi bi-person-workspace me-1"></i>&nbsp;Employee Wise</button>  
                 </div>
             </nav>
             <div class="tab-content" id="nav-tabContentCns">
@@ -114,48 +114,13 @@
         </div>
         <div class="tab-pane fade" id="emp-progress" role="tabpanel" aria-labelledby="emp-progress-tab" tabindex="0">
             <nav>
-                <div class="nav nav-tabs d-flex flex-nowrap gap-2 mt-0" id="nav-tab3" role="tablist">
-                    <button class="nav-link border border-bottom-0 bg-light text-nowrap" id="nav-team-progress-tab" data-bs-toggle="tab" data-bs-target="#nav-team-progress" type="button" role="tab" aria-controls="nav-team-progress" aria-selected="true"><i class="bi bi-people me-1"></i>&nbsp;Team Wise Report</button>
-                    <button class="nav-link border border-bottom-0 bg-light text-nowrap" id="nav-status-activity-tab" data-bs-toggle="tab" data-bs-target="#nav-status-activity" type="button" role="tab" aria-controls="nav-status-activity" aria-selected="true"><i class="bi bi-activity me-1"></i>&nbsp;Employee Wise Report</button>                          
+                <div class="nav nav-tabs bg-light" id="nav-tab3" role="tablist">
+                    <button class="nav-link text-nowrap active" id="nav-team-progress-tab" data-bs-toggle="tab" data-bs-target="#nav-team-progress" type="button" role="tab" aria-controls="nav-team-progress" aria-selected="true"><i class="bi bi-people me-1"></i>&nbsp;Team Wise Report</button>
+                    <button class="nav-link text-nowrap" id="nav-status-activity-tab" data-bs-toggle="tab" data-bs-target="#nav-status-activity" type="button" role="tab" aria-controls="nav-status-activity" aria-selected="true"><i class="bi bi-activity me-1"></i>&nbsp;Employee Wise Report</button>                          
                 </div>
             </nav>
-            <div class="tab-content" id="nav-tabContentEmp">                 
-                <div class="tab-pane fade show active" id="nav-status-activity" role="tabpanel" aria-labelledby="nav-status-activity-tab"tabindex="0">
-                    <form action="{{ url('reports/consumer/activity') }}" id="report-status-activity-search-form" method="GET">
-                        <div class="d-flex justify-content-between align-items-center border my-2 bg-light p-2 rounded">
-                            <h4 class="mb-0 ms-2">Employee Progress Report</h4>
-                            <div class="row g-1">
-                                <div class="col-auto mt-4">
-                                    <div class="form-control mt-2">
-                                        GA&nbsp;<x-master.ga-filter class="float-end" />
-                                    </div>
-                                </div>
-                                <div class="col-auto">
-                                    <label for="conv_date_from" class="form-label mb-1">From Date</label>
-                                    <div class="input-group">
-                                        <input type="text" name="conv_date_from" id="conv_date_from" class="form-control" placeholder="DD-MM-YYYY">
-                                        <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
-                                    </div>
-                                </div>
-                                <div class="col-auto">
-                                    <label for="conv_date_to" class="form-label mb-1">To Date</label>
-                                    <div class="input-group">
-                                        <input type="text" name="conv_date_to" id="conv_date_to" class="form-control" placeholder="DD-MM-YYYY">
-                                        <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
-                                    </div>
-                                </div>
-                                <div class="col-auto">
-                                    <label for="conv_date">&nbsp;</label>
-                                    <div>
-                                        <button type="submit" class="btn btn-success mt-1"><i class="bi bi-search"></i></button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                    <div id="report-status-activity-list"></div>
-                </div>
-                <div class="tab-pane fade" id="nav-team-progress" role="tabpanel" aria-labelledby="nav-team-progress-tab"tabindex="0">
+            <div class="tab-content" id="nav-tabContentEmp">
+                <div class="tab-pane fade show active" id="nav-team-progress" role="tabpanel" aria-labelledby="nav-team-progress-tab"tabindex="0">
                     <form action="{{ url('reports/consumer/teamProgress') }}" id="report-team-progress-search-form" method="GET">
                         <div class="d-flex justify-content-between align-items-center border my-2 bg-light p-2 rounded">
                             <h4 class="mb-0 ms-2">Team Progress Report</h4>
@@ -189,6 +154,41 @@
                         </div>
                     </form>
                     <div id="report-team-progress-list"></div>
+                </div>
+                <div class="tab-pane fade" id="nav-status-activity" role="tabpanel" aria-labelledby="nav-status-activity-tab"tabindex="0">
+                    <form action="{{ url('reports/consumer/activity') }}" id="report-status-activity-search-form" method="GET">
+                        <div class="d-flex justify-content-between align-items-center border my-2 bg-light p-2 rounded">
+                            <h4 class="mb-0 ms-2">Employee Progress Report</h4>
+                            <div class="row g-1">
+                                <div class="col-auto mt-4">
+                                    <div class="form-control mt-2">
+                                        GA&nbsp;<x-master.ga-filter class="float-end" />
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <label for="conv_date_from" class="form-label mb-1">From Date</label>
+                                    <div class="input-group">
+                                        <input type="text" name="conv_date_from" id="conv_date_from" class="form-control" placeholder="DD-MM-YYYY">
+                                        <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <label for="conv_date_to" class="form-label mb-1">To Date</label>
+                                    <div class="input-group">
+                                        <input type="text" name="conv_date_to" id="conv_date_to" class="form-control" placeholder="DD-MM-YYYY">
+                                        <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <label for="conv_date">&nbsp;</label>
+                                    <div>
+                                        <button type="submit" class="btn btn-success mt-1"><i class="bi bi-search"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="report-status-activity-list"></div>
                 </div>
             </div>
         </div>
