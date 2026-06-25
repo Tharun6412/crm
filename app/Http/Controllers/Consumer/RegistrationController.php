@@ -208,7 +208,7 @@ class RegistrationController extends Controller
     public function lpgUpdate(Request $request,$id)
     {
         $request->validate([
-            'lpg_id' => 'required',
+            'lpg_id' => 'required|min:10|max:17',
         ]);
         $consumer = Consumer::findOrFail($id);
         $consumer->update([

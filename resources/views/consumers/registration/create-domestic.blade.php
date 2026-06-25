@@ -237,9 +237,8 @@
                 <div class="mb-1 fs-5 fw-semibold text-primary">Additional details&nbsp;:</div>
                 <div class="row mb-2 pt-2">
                     <div class="col-md-4 col-sm-6 col-xs-12">
-                        <label class="form-label" for="lpg_id">LPG Id&nbsp;:<span class="text-danger">*</span></label>
-                        <input name="lpg_id" id="lpg_id" class="form-control" placeholder="lpg id" type="text"/>
-                        <span class="text-danger validate-err-msg" id="lpg_id-error"></span>
+                        <label class="form-label" for="lpg_id">LPG ID</label>
+                        <input name="lpg_id" id="lpg_id" class="form-control" placeholder="LPG ID" type="text"/>
                     </div>
                     <div class="col-md-4 col-sm-6 col-xs-12">
                         <label class="form-label" for="lpg_no">LPG Connections no (if any)&nbsp;:&nbsp;</label>
