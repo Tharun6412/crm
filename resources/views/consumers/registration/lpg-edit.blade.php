@@ -2,7 +2,7 @@
 <div class="modal-dialog modal-lg">
     <div class="modal-content">
         <div class="modal-header">
-            <h4 class="modal-title">Edit LPG Details</h4>
+            <h4 class="modal-title">Update LPG Details</h4>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
@@ -13,12 +13,12 @@
                     <h5>LPG Details :</h5>
                     <div class="row mb-2">
                         <div class="col-md-4 col-sm-6 col-xs-12">
-                            <label class="form-label" for="lpg_id">LPG Id&nbsp;:<span class="text-danger">*</span></label>
-                            <input name="lpg_id" id="lpg_id" class="form-control" placeholder="lpg id" type="text"/>
+                            <label class="form-label" for="lpg_id">LPG ID&nbsp;:<span class="text-danger">*</span></label>
+                            <input name="lpg_id" id="lpg_id" class="form-control" placeholder="LPG ID" value="{{ $consumer->lpg_id }}" type="text"/>
                         </div>
                         <div class="col-md-4 col-sm-6 col-xs-12">
                             <label class="form-label" for="lpg_no">LPG Connections no (if any)&nbsp;:&nbsp;</label>
-                            <input type="number" name="lpg_connections" id="lpg_connections" class="form-control" placeholder="LPG Connections"/>
+                            <input type="number" name="lpg_connections" id="lpg_connections" class="form-control" placeholder="LPG Connections" value="{{ $consumer->lpg_connections ?? '' }}"/>
                         </div>
                     </div>
                     <div id="lpg-error"></div>
