@@ -69,6 +69,7 @@ Route::middleware(['auth', ModuleAccess::class])->group(function() {
     Route::get('unbilled/list', [App\Http\Controllers\Reports\UnbilledReport::class, 'list']);
     
     // Team Progress
+    Route::get('consumer/progressList', [App\Http\Controllers\Reports\ConsumerProgressController::class, 'index']);
     Route::get('consumer/teamProgress', [App\Http\Controllers\Reports\TeamProgressController::class, 'index']);
     Route::get('consumer/teamProgress/employeeProgress/{team_id}', [App\Http\Controllers\Reports\TeamProgressController::class, 'employeeProgress']);
     // Waiting Report

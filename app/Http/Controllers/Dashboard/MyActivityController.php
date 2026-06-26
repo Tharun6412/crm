@@ -57,6 +57,7 @@ class MyActivityController extends Controller
         foreach($consumers_list_data as $list) {
             $consumers_count[$list->status_id] = $list->consumer_count;
         }
+        // print "<pre>"; print_r($consumers_count);
         // Assigned List
         $assigned_consumers = TeamConsumer::join('cns_consumers', 'cns_consumers.id', '=', 'cns_consumer_teams.consumer_id')
             ->whereIn('cns_consumers.ga_id', $user->ga->pluck('id')->toArray())

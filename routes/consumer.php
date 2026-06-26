@@ -84,6 +84,7 @@ Route::middleware(['auth', ModuleAccess::class])->group(function() {
     // Documents
     Route::resource('consumerDocument', App\Http\Controllers\Consumer\ConsumerDocumentController::class);
     Route::get('waiting/pending-consumers/create/{con_id}', [App\Http\Controllers\Consumer\TeamConsumersController::class, 'create']);
+    Route::get('waiting/pending-consumers/getEmployeesByTeam', [App\Http\Controllers\Consumer\TeamConsumersController::class, 'getEmployeesByTeam']);
     Route::post('waiting/pending-consumers/store/{con_id}', [App\Http\Controllers\Consumer\TeamConsumersController::class, 'store']);
     Route::post('waiting/pending-consumers/consumersBatchAssign', [App\Http\Controllers\Consumer\TeamConsumersController::class, 'consumersBatchAssign']);
     Route::resource('waiting/pending-consumers',App\Http\Controllers\Consumer\TeamConsumersController::class);

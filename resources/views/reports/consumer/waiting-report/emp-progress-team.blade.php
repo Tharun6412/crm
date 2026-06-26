@@ -35,13 +35,15 @@
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $emp->name ?? '' }}&nbsp;({{ $emp->emp_id ?? '' }})</td>
                                 <td>
-                                    {{ $user }}
+                                    <a href="{{ url('reports/consumer/progressList') }}?{{ http_build_query(['geo_area' => [$team->ga_id], 'date_from' => request()->date_from, 'date_to' => request()->date_to, 'team_id' => $team->id, 'status' => [1], 'updated_by' => $emp->id]) }}" target="_blank">{{ $user }}</a>
                                 </td>
                             </tr>
                         @endforeach
                             <tr>
                                 <td colspan="2" class="text-end">Total</td>
-                                <td>{{ $count }}</td>
+                                <td>
+                                    <a href="{{ url('reports/consumer/progressList') }}?{{ http_build_query(['geo_area' => [$team->ga_id], 'date_from' => request()->date_from, 'date_to' => request()->date_to, 'team_id' => $team->id, 'status' => [1]]) }}" target="_blank">{{ $count }}</a>
+                                </td>
                             </tr>
                     </tbody>
                 </table>

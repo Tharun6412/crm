@@ -12,11 +12,19 @@
                     <div class="row mb-3 align-items-center">
                         <label for="team_id" class="col-md-3 col-form-label text-md-end">Select Team :</label>
                         <div class="col-md-6">
-                            <select name="team_id" id="team_id" class="form-select">
+                            <select name="team_id" id="team_id" class="form-select" onchange="getEmployeesByTeam(this.value)">
                                 <option value=""> Select Team </option>
                                 @foreach ($teams as $team)
                                     <option value="{{ $team->id }}">{{ $team->name }} - {{ $team->departments->name }}</option>
                                 @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row mb-3 align-items-center">
+                        <label for="team_id" class="col-md-3 col-form-label text-md-end">Select Employee :</label>
+                        <div class="col-md-6">
+                            <select name="assign_id" id="assign_id" class="form-select">
+                                <option value="">Select Employee</option>
                             </select>
                         </div>
                     </div>
@@ -36,3 +44,19 @@
     </div>
 </div>
 @include('scripts.ajax-form-submit',['form' => 'team'])
+<script type="text/javascript">
+    // Get Team Employees
+    function getEmployeesByTeam(team_id)
+    {
+        $.get("{{ url('consumers/waiting/pending-consumers/getEmployeesByTeam') }}", {'team_id' : team_id}, function(data) {
+            $('#assign_id').empty();
+            let options = '<option value = "">Select Employee</option>'
+            if(data.users && data.users.length > 0) {
+                data.users.forEach(function(user) {
+                    options += `<option value="${user.id}">${user.name}</option>`;
+                });
+            }
+            $('#assign_id').html(options);
+        });
+    }
+</script>

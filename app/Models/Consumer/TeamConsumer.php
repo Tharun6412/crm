@@ -27,6 +27,7 @@ class TeamConsumer extends Model
         'team_id',
         'status_id',
         'status',
+        'assign_to',
         'created_by',
         'updated_by',
     ];
@@ -50,9 +51,17 @@ class TeamConsumer extends Model
     /**
      * Relation with status
      */
-    public function status() : BelongsTo
+    public function assignStatus() : BelongsTo
     {
         return $this->belongsTo(MasterConsumerStatus::class, 'status_id');
+    }
+
+    /**
+     * Assign Details
+     */
+    public function assignTo():BelongsTo
+    {
+        return $this->belongsTo(User::class, 'assign_to');
     }
     /**
      * Relation with user

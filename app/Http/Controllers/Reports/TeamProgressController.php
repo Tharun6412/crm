@@ -55,6 +55,7 @@ class TeamProgressController extends Controller
      */
     public function employeeProgress(Request $request, $team_id)
     {
+        // dd($request->all());
         // Get the Employee Progress Count for team
         $team = Team::find($team_id);
         $emp_ids = $team->users->pluck('id')->toArray();
