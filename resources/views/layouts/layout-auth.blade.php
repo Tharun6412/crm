@@ -52,6 +52,7 @@
         {{-- Dynamic CSS files / styles --}}
         @stack('styles')
         <script type="text/javascript">var WEBROOT = "{{ url('/') }}";</script>
+        {{-- @include('partials.google-analytics') --}}
     </head>
     <body>
         <!-- Section: Design Block -->
