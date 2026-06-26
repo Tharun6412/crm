@@ -62,6 +62,9 @@ class PrepaidConsumerController extends Controller
             ->when($request->has('hes_status'), function($q) use($request) {
                 $q->whereHas('prepaidData', fn ($q) => $q->whereIn('hes_status', $request->hes_status));
             })
+            ->when((!empty($request->date_from) and !empty($request->date_to)), function($q) use($request) {
+                $q->whereHas('prepaidData', fn ($q) => $q->whereBetween('hes_date', [Carbon::createFromFormat('d-m-Y', $request->date_from)->startOfDay()->toDateTimeString(), Carbon::createFromFormat('d-m-Y', $request->date_to)->endOfDay()->toDateTimeString()]));
+            })
             ->where('connection_type_id', 2)
             ->paginate(50)->withQueryString();
         

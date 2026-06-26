@@ -22,13 +22,24 @@
         <!-- Reset -->
         <a href="{{ url('reports/paymentsReport') }}" class="btn btn-warning"><i class="bi bi-arrow-clockwise"></i></a>
         <!-- Record Count -->
-        <span class="small text-muted">
+        {{-- <span class="small text-muted">
           <span class="fw-semibold">({{ numberFormat($tRecords ?? 0) }})</span> Records found
-        </span>
+        </span> --}}
     </div>
-    <div>
-        {{-- <x-auth.link :href="url('reports/paymentsReport/paymentsReportExport') . '?' . request()->getQueryString()" class="btn btn-outline-info"><i class="bi bi-file-earmark-excel"></i>&nbsp;Export</x-auth.link> --}}
+    {{-- <div>
+        <x-auth.link :href="url('reports/paymentsReport/paymentsReportExport') . '?' . request()->getQueryString()" class="btn btn-outline-info"><i class="bi bi-file-earmark-excel"></i>&nbsp;Export</x-auth.link>
         {{ $payments->links('utils.cursor', ['modDiv' => 'payments-report-list']) }}
+    </div> --}}
+    <div class="d-flex justify-content-between mb-1">
+        <div class="fs-5 fw-semibold">({{ numberFormat($tRecords ?? 0) }})&nbsp;Records found</div>
+        <div class="d-flex justify-content-end">
+            <a href="{{ url('reports/paymentsReport/paymentsReportExport') }}?{{ http_build_query(request()->all()) }}" class="btn btn-outline-primary link-modal me-2">
+                <i class="bi bi-filetype-csv"></i>&nbsp;Export
+            </a>
+            <div>
+                {{ $payments->links('utils.cursor', ['modDiv' => 'payments-report-list']) }}
+            </div>
+        </div>
     </div>
 </div>
 @php
@@ -166,6 +177,14 @@
         </tfoot>
     </table>
 </div>
+<div class="card-group">
+    <div class="card text-bg-primary mb-3" style="max-width: 15rem;">
+        <div class="card-body">
+            <h4 class="card-title">Total Paid Amount</h4>
+            <p class="card-text">{{ numberFormat($tAmount,2) }}</p>
+        </div>
+    </div>
+</div>
 {{--  Reset pagination parameters for paginator --}}
 @php
     // $payments->appends(['sortBy' => $sort_by, 'sortOr' => $sort_order]);
@@ -176,3 +195,4 @@
 </div>
 {{-- Scripts --}}
 @include('scripts.datepicker', ['list' => ['date_from', 'date_to']])
+@include('scripts.link-modal')

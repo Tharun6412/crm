@@ -4,21 +4,27 @@ namespace App\Exports\Reports;
 use App\Enums\PaymentStatus;
 use App\Models\Invoice\InvoicePayment;
 use Carbon\Carbon;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromQuery;
+use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 
-class PaymentsReportExport implements FromQuery, WithHeadings, WithMapping 
+class PaymentsReportExport implements FromQuery, ShouldQueue, WithChunkReading, WithHeadings, WithMapping 
 {
     use Exportable;
     /**
      * Construct Method
      */
+    protected $exportId;
     protected $request;
     protected $i = 0;
-    public function __construct($request)
+    public function __construct($request, $exportId)
     {
+        $this->exportId = $exportId;
         $this->request = $request;
     }
     /**
@@ -70,6 +76,11 @@ class PaymentsReportExport implements FromQuery, WithHeadings, WithMapping
         return ['S.No', 'Payment Code','Payment Date','Amount','Payment Type','Invoice Number', 'Invoice Date', 'Invoice Type', 'CRN', 'Name', 'Segment','Connection Type','GA'];
     }
 
+    public function chunkSize(): int
+    {
+        return 1000;
+    }
+
     /**
      * Mapping [Loop the data from the query]
      */
@@ -91,5 +102,23 @@ class PaymentsReportExport implements FromQuery, WithHeadings, WithMapping
             $payment->invoice->consumer->connectType->name,
             $payment->invoice->consumer->ga->name,
         ];
+    }
+
+    /**
+     * Handle a job failure.
+     *
+     * @param \Throwable $exception
+     */
+    public function failed(\Throwable $exception)
+    {
+        // Update export status to "2" (failed)
+        DB::table('adm_user_exports')
+            ->where('id', $this->exportId)
+            ->update(['status' => 2]);
+
+        // Optionally log the error for debugging
+        Log::error("Payment Report Export failed for exportId {$this->exportId}: " . $exception->getMessage(), [
+            'trace' => $exception->getTraceAsString()
+        ]);
     }
 }

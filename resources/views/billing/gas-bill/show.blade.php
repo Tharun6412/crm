@@ -559,7 +559,9 @@
                                 <div>
                                     <br><strong style="font-size: 10px;">Bill Collection Center</strong>
                                 </div>
-                                <table class="table table-borderless" style="table-layout: fixed; width: 100%;border: 1px solid #000000;border-spacing: 0;border-collapse: collapse;margin-bottom: 1px;margin-top: 1px;">
+                                {{-- Bill Collection Centers --}}
+                                <x-master.bill-collection :ga-id="$invoice->consumer->ga_id" />
+                                {{-- <table class="table table-borderless" style="table-layout: fixed; width: 100%;border: 1px solid #000000;border-spacing: 0;border-collapse: collapse;margin-bottom: 1px;margin-top: 1px;">
                                     <thead>
                                         <tr>
                                             <th style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 8px;width: 15%;text-align: center;">GA Name</th>
@@ -641,7 +643,7 @@
                                             <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 8px;">10:00 to 17:00</td>
                                         </tr>
                                     </tbody>
-                                </table>
+                                </table> --}}
                                 <div style="font-size: 10px;">
                                     <br><br>
                                     <u>Note:</u> Be very cautious about unsolicited calls or messages claiming to be from MeghaGas. MeghaGas never sends any message or makes any call for bill payments or immediate disconnection. Also, never sends any suspecious links asking to download apps. Beware of such fraudulent messages or calls. If you receive any such messages, call us immediatly on 040-46565 555 / 040-69085 555.

@@ -87,8 +87,23 @@
                         <td>{{ $application?->status }}</td>
                         <td>{{ $application?->applicationStatus }}</td>
                         <td>{{ $application->created_at->format('d-m-Y') }}</td>
-                        <td>
+                        {{-- <td>
                             <a type="button" class="btn btn-outline-info btn-sm link-modal" href="{{ url('pngrb/applications/'.$application->id) }}"><i class="bi bi-info-circle"></i>&nbsp;View</a>
+                        </td> --}}
+                        <td>
+                            <div class="dropdown">
+                                <button class="btn btn-sm btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Actions
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item link-modal" href="{{ url('pngrb/applications/'.$application->id) }}"><i class="bi bi-chevron-right"></i>&nbsp;View</a></li>
+                                    <li><a href="#" target="_self" class="dropdown-item link-modal"><i class="bi bi-chevron-right"></i>&nbsp;Approve</a></li>
+                                    <li><a href="#" target="_self" class="dropdown-item link-modal"><i class="bi bi-chevron-right"></i>&nbsp;Reject</a></li>
+                                    @if ($application->applicationStatus == "APPROVED")
+                                        <li><a class="dropdown-item" href="{{ url('pngrb/applications/'.$application->id.'/edit') }}" target="_blank"><i class="bi bi-chevron-right"></i>&nbsp;Register</a></li>
+                                    @endif
+                                </ul>
+                            </div>
                         </td>
                     </tr>
                 @endforeach

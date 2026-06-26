@@ -132,6 +132,8 @@ class ConversionController extends Controller
             'meter_no' => $request->meter_no,
             'meter_serial_no' => $request->meter_sno,
             'initial_reading' => $request->meter_reading,
+            'install_date' => now()->toDateTimeString(),
+            'install_by' => Auth::id(),
             'status' => MeterStatus::ACTIVE->value,
             'created_by' => Auth::id(),
         ]);

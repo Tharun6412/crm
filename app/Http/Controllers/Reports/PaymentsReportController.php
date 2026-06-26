@@ -5,9 +5,12 @@ namespace App\Http\Controllers\Reports;
 use App\Enums\PaymentStatus;
 use App\Exports\Reports\PaymentsReportExport;
 use App\Http\Controllers\Controller;
+use App\Jobs\AfterExportJob;
 use App\Models\Invoice\InvoicePayment;
+use App\Services\UserExportService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Excel;
 
 class PaymentsReportController extends Controller
 {
@@ -58,12 +61,13 @@ class PaymentsReportController extends Controller
             // })
             // ->orderBy($sortBy)
         $tRecords = (clone $payments_qry)->count();
+        $tAmount  = (clone $payments_qry)->sum('amount'); // <-- grand total
         $payments = $payments_qry->orderBy('id')->cursorPaginate($records)->withQueryString();
         // Render output
         if ($request->ajax()) {
-            return view('reports.payments.payment-report.list-body', ['payments' => $payments, 'tRecords' => $tRecords]);
+            return view('reports.payments.payment-report.list-body', ['payments' => $payments, 'tRecords' => $tRecords,'tAmount'  => $tAmount]);
         }
-        return view('reports.payments.payment-report.list', ['payments' => $payments, 'tRecords' => $tRecords]);
+        return view('reports.payments.payment-report.list', ['payments' => $payments, 'tRecords' => $tRecords, 'tAmount'  => $tAmount,]);
     }
 
     /**
@@ -71,6 +75,18 @@ class PaymentsReportController extends Controller
      */
     public function paymentsReportExport(Request $request)
     {
-        return (new PaymentsReportExport($request))->download('PaymentsReport.xlsx');
+        // return (new PaymentsReportExport($request))->download('PaymentsReport.xlsx');
+         $filename = 'payment_report_' . time() . '.csv';
+
+        // Add export job with export service
+        $export_id = UserExportService::create($filename);
+        // Check export limit
+        if($export_id) {
+            // Queue the export and attach AfterExportJob to run AFTER storage
+            Excel::queue(new PaymentsReportExport($request->all(), $export_id->id), $filename, 'public')
+                ->chain([new AfterExportJob($export_id->id)]);
+        }
+        // response in modal
+        return view('admin.exports.create', ['export_id' => $export_id]);
     }
 }

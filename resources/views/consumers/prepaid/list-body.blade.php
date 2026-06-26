@@ -49,12 +49,6 @@
                 <th nowrap>Price Group</th>
                 <th nowrap>
                     <div class="d-flex flex-row gap-2">
-                        <div>Added Date</div>
-                        <div><x-master.date-filter class="float-end" /></div>
-                    </div>
-                </th>
-                <th nowrap>
-                    <div class="d-flex flex-row gap-2">
                         <div>HES Status</div>
                         <div>
                             @php
@@ -98,7 +92,6 @@
                             @endif
                         </td>
                         <td>{{ $consumer->priceGroup?->code }}</td>
-                        <td>{{ dateFormat($consumer->created_at) }}</td>
                         <td>
                             <x-consumer.hes-status :status="$consumer->prepaidData?->hes_status"/>
                         </td>

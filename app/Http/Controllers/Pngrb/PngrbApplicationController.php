@@ -34,4 +34,10 @@ class PngrbApplicationController extends Controller
         $application = PngrbApplications::find($id);
         return view('pngrb.applications.show', ['application' => $application]);
     }
+
+    public function edit(Request $request, $id)
+    {
+        $application = PngrbApplications::find($id);
+        return view('pngrb.applications.edit', ['application' => $application]);
+    }
 }
