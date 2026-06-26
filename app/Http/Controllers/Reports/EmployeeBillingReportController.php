@@ -24,8 +24,8 @@ class EmployeeBillingReportController extends Controller
             // Validation
             $request->validate([
                 'ga_id' => 'required',
-                'date_from' => 'required|date_format:d-m-Y',
-                'date_to' => 'required|date_format:d-m-Y',
+                'bill_date_from' => 'required|date_format:d-m-Y',
+                'bill_date_to' => 'required|date_format:d-m-Y',
             ]);
 
             // Get Report
@@ -44,8 +44,8 @@ class EmployeeBillingReportController extends Controller
                     $q->whereNot('status_id', InvoiceStatus::CANCEL->value)
                         ->where('type_id', InvoiceType::GAS_BILL->value)
                         ->whereBetween('created_at', [
-                            Carbon::createFromFormat('d-m-Y', $request->date_from)->startOfDay(),
-                            Carbon::createFromFormat('d-m-Y', $request->date_to)->endOfDay()
+                            Carbon::createFromFormat('d-m-Y', $request->bill_date_from)->startOfDay(),
+                            Carbon::createFromFormat('d-m-Y', $request->bill_date_to)->endOfDay()
                         ]);
                 })
                 ->whereHas('invoices.consumer', fn ($q) => $q->where('ga_id', $request->ga_id))
@@ -54,8 +54,8 @@ class EmployeeBillingReportController extends Controller
                         $q->whereNot('status_id', InvoiceStatus::CANCEL->value)
                             ->where('type_id', InvoiceType::GAS_BILL->value)
                             ->whereBetween('created_at', [
-                                Carbon::createFromFormat('d-m-Y', $request->date_from)->startOfDay(),
-                                Carbon::createFromFormat('d-m-Y', $request->date_to)->endOfDay()
+                                Carbon::createFromFormat('d-m-Y', $request->bill_date_from)->startOfDay(),
+                                Carbon::createFromFormat('d-m-Y', $request->bill_date_to)->endOfDay()
                             ]);
                     }
                 ])

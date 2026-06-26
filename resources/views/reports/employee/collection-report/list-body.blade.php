@@ -1,6 +1,6 @@
 <div>
     <span class="mb-2"><h5>({{ $employee_collection->count() }}) &nbsp;Records Found.</h5></span>
-    <table class="table table-bordered table-striped" id="employee-report">
+    <table class="table table-bordered table-striped mb-0" id="employee-report">
         <thead class="table-success">
             <tr>
                 <th width="1%">S.No</th>
