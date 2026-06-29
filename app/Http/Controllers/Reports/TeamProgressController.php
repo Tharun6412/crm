@@ -42,7 +42,7 @@ class TeamProgressController extends Controller
             $consumer_team_assign[$assign->team_id][$assign->status] = $assign->total_count;
         }
         // Get Teams List
-        $teams = Team::whereIn('ga_id', $request->geo_area)->get();
+        $teams = Team::whereIn('ga_id', $request->geo_area)->orderBy('department_id', 'asc')->get();
 
         return view('reports.consumer.waiting-report.team-progress', [
             'teams' => $teams,

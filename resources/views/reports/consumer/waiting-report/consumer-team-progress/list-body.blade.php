@@ -6,29 +6,33 @@
     <table class="table table-bordered table-striped align-middle table-hover">
         <thead class="table-success">
             <tr>
-                <th>S.No</th>
-                <th>CRN</th>
-                <th nowrap>Consumer Name</th>
-                <th>GA<x-master.ga-filter class="float-end" /></th>
-                <th nowrap>Charge Area
+                <th rowspan="2">S.No</th>
+                <th colspan="7" class="bg-success-subtle text-center">Consumer Details</th>
+                <th colspan="7" class="bg-primary-subtle text-center">Assigned Data</th>
+            </tr>
+            <tr>
+                <th class="bg-success-subtle">CRN</th>
+                <th class="bg-success-subtle" width="12%" nowrap>Consumer Status</th>
+                <th class="bg-success-subtle" nowrap>Consumer Name</th>
+                <th class="bg-success-subtle">GA<x-master.ga-filter class="float-end" /></th>
+                <th class="bg-success-subtle" nowrap>Charge Area
                     @if (request()->has('geo_area'))
                         <x-master.charge-area-filter class="float-end"/>
                     @endif
                 </th>
-                <th>Area</th>
-                <th>SubArea</th>
-                <th width="12%" nowrap>Consumer Status</th>
-                <th nowrap>Team</th>
-                <th nowrap>Assigned To</th>
-                <th nowrap>Assign Work Status</th>
-                <th width="11%">Status
+                <th class="bg-success-subtle">Area</th>
+                <th class="bg-success-subtle">SubArea</th>
+                <th class="bg-primary-subtle" nowrap>Assigned Date<x-master.date-filter class="float-end"/></th>
+                <th class="bg-primary-subtle" nowrap>Assigned To</th>
+                <th class="bg-primary-subtle">Team</th>
+                <th class="bg-primary-subtle">Work</th>
+                <th class="bg-primary-subtle">Status
                     @php
                         $status_filters = [0 => 'Assigned', 1 => 'Completed'];
                     @endphp
                     <x-admin.status-filter name="status" :data='$status_filters' class="float-end"/>
                 </th>
-                <th nowrap>Assign By</th>
-                <th nowrap>Added Date<x-master.date-filter class="float-end"/></th>
+                <th class="bg-primary-subtle">Assign By</th>
             </tr>
         </thead>
         <tbody>
@@ -41,16 +45,17 @@
                                 {{ $consumer->consumer->crn ?? $consumer->consumer->t_crn}}
                             </a>
                         </td>
+                        <td>
+                            <x-consumer.status :status="$consumer->consumer->status" mode='full' />
+                        </td>
                         <td>{{ $consumer->consumer?->name }}</td>
                         <td>{{ $consumer->consumer->ga->name ?? '' }}</td>
                         <td>{{ $consumer->consumer->ca->name ?? '' }}</td>
                         <td>{{ $consumer->consumer->area->name ?? ''  }}</td>
                         <td>{{ $consumer->consumer->subArea->name ?? '' }}</td>
-                        <td>
-                            <x-consumer.status :status="$consumer->consumer->status" mode='full' />
-                        </td>
-                        <td>{{ $consumer->team->name ?? '' }}</td>
+                        <td>{{ $consumer->created_at?->format('d-m-Y') }}</td>
                         <td>{{ $consumer->assignTo?->name }}</td>
+                        <td>{{ $consumer->team->name ?? '' }}</td>
                         <td>{{ $consumer->assignStatus?->name }}</td>
                         <td>
                             @if(is_null($consumer->status))
@@ -62,7 +67,6 @@
                             @endif
                         </td>
                         <td>{{ $consumer->createdBy?->name ?? '' }}</td>
-                        <td>{{ $consumer->created_at?->format('d-m-Y') }}</td>
                     </tr>
                 @endforeach
             @else

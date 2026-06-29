@@ -88,23 +88,34 @@ class PaymentService
         // Use fresh invoice instance
         $invoice = BillInvoice::find($payment->invoice_id);
         // Add to Ledger Record
+        // $ledger_data = [
+        //     'model' => $payment,
+        //     'consumer_id' => $invoice->consumer_id,
+        //     'amount' => $invoice->payable_amount,
+        // ];
         $ledger_data = [
             'model' => $payment,
             'consumer_id' => $invoice->consumer_id,
-            'amount' => $invoice->payable_amount,
+            'amount' => $payment->amount,
         ];
         $add_ledger = LedgerService::create($ledger_data, 'dr');
         // Bill Invoice Update
+        // $invoice->update([
+        //     'paid_amount' => 0,
+        //     'balance_amount' => $invoice->payable_amount,
+        //     'status_id' => InvoiceStatus::NOT_PAID->value,
+        //     'updated_by' => Auth::id(),
+        // ]);
         $invoice->update([
-            'paid_amount' => 0,
-            'balance_amount' => $invoice->payable_amount,
+            'paid_amount' => abs($invoice->payable_amount - $payment->amount),
+            'balance_amount' => $payment->amount,
             'status_id' => InvoiceStatus::NOT_PAID->value,
             'updated_by' => Auth::id(),
         ]);
         // Update Payment record
         $payment->update([
             'amount' => 0,
-            'balance' => $invoice->payable_amount,
+            'balance' => $invoice->balance_amount,
             'status_id' => PaymentStatus::REVERSAL->value,
         ]);
         // Add Payment Reversal record

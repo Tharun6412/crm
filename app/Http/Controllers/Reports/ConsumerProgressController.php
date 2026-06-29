@@ -36,7 +36,7 @@ class ConsumerProgressController extends Controller
                 $q->whereIn('status', $request->status);
             })
             ->whereBetween('created_at', [Carbon::createFromFormat('d-m-Y', $request->date_from)->startOfDay(), Carbon::createFromFormat('d-m-Y', $request->date_to)->endOfDay()])
-            ->paginate(5)->withQueryString();
+            ->paginate(50)->withQueryString();
         if($request->ajax()) {
             return view('reports.consumer.waiting-report.consumer-team-progress.list-body', [
                 'consumers' => $consumers

@@ -33,7 +33,7 @@
                                 </td>
                                 <td class="text-center fs-5"><a href="{{ url('consumers/waiting/pending-consumers') }}?{{ http_build_query(['cns_status' => [$role['status_id']],'target_status' => [$role['status_id']+1], 'ugas' => auth()->user()->ga->pluck('id')->toArray(), 'ucas' => auth()->user()->ca->pluck('id')->toArray(), 'status' => [0], 'user_id' => auth()->id()]) }}" target="_blank">{{ $role['consumers_pending'] }}</a></td>
                                 <td class="text-center fs-5">{{ $role['pending'] }}</td>
-                                <td class="text-center fs-5"><a href="{{ url('consumers/waiting/pending-consumers') }}?{{ http_build_query(['cns_status' => [$role['status_id']],'target_status' => [$role['status_id']+1], 'ugas' => auth()->user()->ga->pluck('id')->toArray(), 'ucas' => auth()->user()->ca->pluck('id')->toArray(), 'status' => [1]]) }}" target="_blank">{{ $role['consumers_completed'] }}</a></td>
+                                <td class="text-center fs-5"><a href="{{ url('consumers/waiting/pending-consumers') }}?{{ http_build_query(['cns_status' => [$role['status_id']],'target_status' => [$role['status_id']+1], 'ugas' => auth()->user()->ga->pluck('id')->toArray(), 'ucas' => auth()->user()->ca->pluck('id')->toArray(), 'status' => [1], 'user_id' => auth()->id()]) }}" target="_blank">{{ $role['consumers_completed'] }}</a></td>
                             </tr>
                             @endforeach
                             <tr class="fs-5">

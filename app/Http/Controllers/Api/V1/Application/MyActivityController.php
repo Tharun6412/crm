@@ -112,6 +112,8 @@ class MyActivityController extends Controller
             [
                 'role_id' => EnumsRole::MARKETING->value,
                 'status' => 'REGISTRATION',
+                'current_status' => EnumsConsumerStatus::PRE_REGISTER->value,
+                'target_status' => EnumsConsumerStatus::REGISTER->value,
                 'pending' => $consumers_count[EnumsConsumerStatus::PRE_REGISTER->value] ?? 0,
                 'assigned' => $assign_list[EnumsConsumerStatus::REGISTER->value][0] ?? 0,
                 'completed' => $assign_list[EnumsConsumerStatus::REGISTER->value][1] ?? 0,
@@ -120,6 +122,8 @@ class MyActivityController extends Controller
             [
                 'role_id' => EnumsRole::MARKETING->value,
                 'status' => 'ACCEPTANCE',
+                'current_status' => EnumsConsumerStatus::REGISTER->value,
+                'target_status' => EnumsConsumerStatus::ACCEPT->value,
                 'pending' => $consumers_count[EnumsConsumerStatus::REGISTER->value] ?? 0,
                 'assigned' => $assign_list[EnumsConsumerStatus::ACCEPT->value][0] ?? 0,
                 'completed' => $assign_list[EnumsConsumerStatus::ACCEPT->value][1] ?? 0,
@@ -128,6 +132,8 @@ class MyActivityController extends Controller
             [
                 'role_id' => EnumsRole::GI_ENGINEER->value,
                 'status' => 'EXECUTION',
+                'current_status' => EnumsConsumerStatus::ACCEPT->value,
+                'target_status' => EnumsConsumerStatus::EXECUTE->value,
                 'pending' => $consumers_count[EnumsConsumerStatus::ACCEPT->value] ?? 0,
                 'assigned' => $assign_list[EnumsConsumerStatus::EXECUTE->value][0] ?? 0,
                 'completed' => $assign_list[EnumsConsumerStatus::EXECUTE->value][1] ?? 0,
@@ -136,6 +142,8 @@ class MyActivityController extends Controller
             [
                 'role_id' => EnumsRole::HSE->value,
                 'status' => 'HSC',
+                'current_status' => EnumsConsumerStatus::EXECUTE->value,
+                'target_status' => EnumsConsumerStatus::HSC->value,
                 'pending' => $consumers_count[EnumsConsumerStatus::EXECUTE->value] ?? 0,
                 'assigned' => $assign_list[EnumsConsumerStatus::HSC->value][0] ?? 0,
                 'completed' => $assign_list[EnumsConsumerStatus::HSC->value][1] ?? 0,
@@ -144,6 +152,8 @@ class MyActivityController extends Controller
             [
                 'role_id' => EnumsRole::ACTIVATION->value,
                 'status' => 'ACTIVATION',
+                'current_status' => EnumsConsumerStatus::HSC->value,
+                'target_status' => EnumsConsumerStatus::ACTIVATE->value,
                 'pending' => $consumers_count[EnumsConsumerStatus::HSC->value] ?? 0,
                 'assigned' => $assign_list[EnumsConsumerStatus::ACTIVATE->value][0] ?? 0,
                 'completed' => $assign_list[EnumsConsumerStatus::ACTIVATE->value][1] ?? 0,
@@ -171,6 +181,7 @@ class MyActivityController extends Controller
             $team_data[] = array(
                 'id' => $team_val->id,
                 'name' => $team_val->name,
+                'status' => $team_val->status,
                 'department' => $team_val->departments?->name,
                 'pending' => $teamCounts[$team_val->id][0] ?? 0,
                 'completed' => $teamCounts[$team_val->id][1] ?? 0,
