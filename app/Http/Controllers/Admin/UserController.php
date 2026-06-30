@@ -52,7 +52,7 @@ class UserController extends Controller
                 return $q->whereIn('role_id', $request->roles);
             });
         })
-        ->when($request->has('status_id'), function($q) use($request) {
+        ->when($request->has('status'), function($q) use($request) {
             return $q->whereIn('status_id', $request->status);
         })
         ->orderBy($sortBy, $sortOr)->paginate(10)->withQueryString();

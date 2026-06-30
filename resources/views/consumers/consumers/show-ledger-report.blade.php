@@ -28,7 +28,7 @@
                         @foreach ($ledger_report as $ledger)
                             @php
                                 if($ledger->type == "Debit") {
-                                    $tot_amt = $ledger->payable_amount + ($ledger->advance_amount ?? 0);
+                                    $tot_amt = $ledger->payable_amount ?? 0;
                                     $balance += $tot_amt;
                                 }else {
                                     $tot_amt = 0;
@@ -46,7 +46,7 @@
                                 @else
                                     <td>Payment against invoice&nbsp;<a href="{{ url('bill/invoice/' . $ledger->inv_id) }}" target="_blank"><span class="text-success">{{ $ledger->invoice_number }}</span></a></td>
                                     <td></td>
-                                    <td class="text-end"><span class="text-success">-{{ $ledger->payable_amount }}</span></td>
+                                    <td class="text-end"><span class="text-success">-{{ $ledger->payable_amount ?? 0 }}</span></td>
                                     <td class="text-end">{{ numberFormat($balance, 2) }}</td>
                                 @endif
                             </tr>

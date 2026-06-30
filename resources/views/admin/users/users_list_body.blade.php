@@ -72,7 +72,7 @@
                     <th>Geo Area<x-master.ga-filter class="float-end"/></th>
                     <th>Department<x-master.department-filter/></th>
                     <th>Role<x-admin.role-filter/></th>
-                    <th width="80" nowrap>Status<x-admin.status-filter name="status" :data="[1 => 'Active', 2 => 'Inactive']"/></th>
+                    <th width="80" nowrap>Status<x-admin.status-filter name="status" :data="[1 => 'Active', 2 => 'Inactive', 3 => 'Registered']"/></th>
                     <th>Actions</th>
                 </thead>
                 </tr>
