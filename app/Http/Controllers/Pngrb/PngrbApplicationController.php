@@ -2,8 +2,16 @@
 
 namespace App\Http\Controllers\Pngrb;
 
+use App\Contracts\PngrbUnifiedPortal\ConsumerApplication;
 use App\Http\Controllers\Controller;
 use App\Models\Consumer\PngrbApplications;
+use App\Models\DocumentCentre\DocumentTypes;
+use App\Models\Master\ConnectionType;
+use App\Models\Master\ConsumerGasRequired;
+use App\Models\Master\ConsumerNomineeRelation;
+use App\Models\Master\Ga;
+use App\Models\Master\Segment;
+use App\Models\Master\Title;
 use Illuminate\Http\Request;
 
 class PngrbApplicationController extends Controller
@@ -35,9 +43,59 @@ class PngrbApplicationController extends Controller
         return view('pngrb.applications.show', ['application' => $application]);
     }
 
+    /**
+     * Consumer Registration from PNGRB application.
+     * @param int $id
+     */
     public function edit(Request $request, $id)
     {
         $application = PngrbApplications::find($id);
-        return view('pngrb.applications.edit', ['application' => $application]);
+        $geo_areas = Ga::all();
+        return view('pngrb.applications.edit', [
+            'geo_areas' => $geo_areas,
+            'districts' => [],
+            'charge_areas' => [],
+            'areas' => [],
+            'subareas' => [],
+            'segments' => Segment::all(),
+            'titles' => Title::all(),
+            'nominee_relations' => ConsumerNomineeRelation::all(),
+            'documents' => DocumentTypes::where('type', 1)->get(),
+            'gas_required_list' => ConsumerGasRequired::all(),
+            'schemes' => [],
+            'connection_types' => ConnectionType::all(),
+            'application' => $application,
+        ]);
+    }
+
+    /**
+     * Store the consumer to TR (in Pulse)
+     * @param int $id
+     */
+    public function update(Request $request, $id)
+    {
+        dd($request->all());
+    }
+
+    /**
+     * Approve Or Reject the PNGRB Application
+     * @param int $id
+     */
+    public function approveApplication(Request $request, $id)
+    {
+        $application = PngrbApplications::find($id);
+        $status_ar[] = [
+            'applicationNumber' => $application->applicationNumber,
+            'status' => "APPROVED",
+            'remarks' => "string",
+            'cgdId' => "CGD-192",
+        ];
+        $response = ConsumerApplication::updateStatus($status_ar);
+        if($response) {
+            // Success reposne
+        }
+        else {
+            // failure response.
+        }
     }
 }

@@ -327,11 +327,11 @@
                                                                     <img src="{{ asset('img/bill/pay-link-qr.png') }}" alt="Payment QR" style="height: 225px; width: 100%;">
                                                                 </td>
                                                                 <td style="padding: 0px !important;">
-                                                                    <img src="{{ asset('img/bill/promotion2.jpg') }}" alt="promotion img" style="height: 250px;width: 100%;">
+                                                                    <img src="{{ asset('img/bill/referral_promotion2.jpeg') }}" alt="promotion img" style="height: 250px;width: 100%;">
                                                                 </td>
                                                             @else
                                                                 <td style="padding: 0px !important;">
-                                                                    <img src="{{ asset('img/bill/promotion1.jpg') }}" alt="promotion img" style="height: 250px;width: 100%;">
+                                                                    <img src="{{ asset('img/bill/referral_promotion1.jpeg') }}" alt="promotion img" style="width: 100%;">
                                                                 </td>
                                                             @endif
                                                         </tr>

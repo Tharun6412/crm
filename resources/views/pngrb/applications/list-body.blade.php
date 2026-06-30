@@ -97,10 +97,11 @@
                                 </button>
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item link-modal" href="{{ url('pngrb/applications/'.$application->id) }}"><i class="bi bi-chevron-right"></i>&nbsp;View</a></li>
-                                    <li><a href="#" target="_self" class="dropdown-item link-modal"><i class="bi bi-chevron-right"></i>&nbsp;Approve</a></li>
-                                    <li><a href="#" target="_self" class="dropdown-item link-modal"><i class="bi bi-chevron-right"></i>&nbsp;Reject</a></li>
                                     @if ($application->applicationStatus == "APPROVED")
                                         <li><a class="dropdown-item" href="{{ url('pngrb/applications/'.$application->id.'/edit') }}" target="_blank"><i class="bi bi-chevron-right"></i>&nbsp;Register</a></li>
+                                    @else
+                                        <li><a href="#" target="_self" class="dropdown-item link-modal"><i class="bi bi-chevron-right"></i>&nbsp;Approve</a></li>
+                                        <li><a href="#" target="_self" class="dropdown-item link-modal"><i class="bi bi-chevron-right"></i>&nbsp;Reject</a></li>
                                     @endif
                                 </ul>
                             </div>
