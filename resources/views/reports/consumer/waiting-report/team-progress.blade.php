@@ -1,6 +1,6 @@
 <div class="table-responsive">
     <table class="table table-bordered table-striped table-hover align-middle">
-        <thead class="table-primary">
+        <thead class="table-success align-middle">
             <tr>
                 <th rowspan="2" width="1%">S.No</th>
                 <th rowspan="2">Team</th>
@@ -9,9 +9,9 @@
                 <th colspan="3" class="text-center">Assigned Consumers</th>
             </tr>
             <tr>
-                <th class="bg-primary bg-opacity-75 text-center">Progress</th>
-                <th class="bg-primary bg-opacity-75 text-center">Completed</th>
-                <th class="bg-primary bg-opacity-75 text-center">Total</th>
+                <th class="bg-success bg-opacity-75 text-center">Progress</th>
+                <th class="bg-success bg-opacity-75 text-center">Completed</th>
+                <th class="bg-success bg-opacity-75 text-center">Total</th>
             </tr>
         </thead>
         <tbody>
@@ -32,26 +32,26 @@
                         $total_count += $total;
                     @endphp
                     <tr>
-                        <td>{{ $loop->iteration }}</td>
+                        <td class="text-center">{{ $loop->iteration }}</td>
                         <td><a href="{{ url('admin/teams/show/'.$team->id) }}" class="link-modal">{{ $team->name }}</a></td>
                         <td>{{ $team->responsibleUser?->name }}</td>
                         <td>{{ $team->departments->name ?? '' }}</td>
-                        <td class="text-center"><a href="{{ url('reports/consumer/progressList') }}?{{ http_build_query(['geo_area' => [$team->ga_id], 'date_from' => request()->team_date_from, 'date_to' => request()->team_date_to, 'team_id' => $team->id, 'status' => [0]]) }}" target="_blank">{{ $progress }}</a></td>
+                        <td class="text-center"><a href="{{ url('reports/consumer/progressList') }}?{{ http_build_query(['geo_area' => [$team->ga_id], 'date_from' => request()->team_date_from, 'date_to' => request()->team_date_to, 'team_id' => $team->id, 'status' => [0]]) }}" class="fs-5" target="_blank">{{ $progress }}</a></td>
                         <td class="text-center">
-                            <a href="{{ url('reports/consumer/teamProgress/employeeProgress/'.$team->id) }}?{{ http_build_query(['date_from' => request()->team_date_from, 'date_to' => request()->team_date_to]) }}" class="link-modal">{{ $complete }}</a>
+                            <a href="{{ url('reports/consumer/teamProgress/employeeProgress/'.$team->id) }}?{{ http_build_query(['date_from' => request()->team_date_from, 'date_to' => request()->team_date_to]) }}" class="link-modal fs-5">{{ $complete }}</a>
                         </td>
                         <td class="text-center">
-                            <a href="{{ url('reports/consumer/progressList') }}?{{ http_build_query(['geo_area' => [$team->ga_id], 'date_from' => request()->team_date_from, 'date_to' => request()->team_date_to, 'team_id' => $team->id, 'status' => [0, 1]]) }}" target="_blank">
+                            <a href="{{ url('reports/consumer/progressList') }}?{{ http_build_query(['geo_area' => [$team->ga_id], 'date_from' => request()->team_date_from, 'date_to' => request()->team_date_to, 'team_id' => $team->id, 'status' => [0, 1]]) }}" class="fs-5" target="_blank">
                                 {{ $total }}
                             </a>
                         </td>
                     </tr>
                 @endforeach
-                    <tr>
-                        <td colspan="4" class="text-end">Totals</td>
-                        <td class="text-center"><a href="{{ url('reports/consumer/progressList') }}?{{ http_build_query(['geo_area' => [$team->ga_id], 'date_from' => request()->team_date_from, 'date_to' => request()->team_date_to, 'status' => [0]]) }}" target="_blank">{{ $progress_count }}</a></td>
-                        <td class="text-center"><a href="{{ url('reports/consumer/progressList') }}?{{ http_build_query(['geo_area' => [$team->ga_id], 'date_from' => request()->team_date_from, 'date_to' => request()->team_date_to, 'status' => [1]]) }}" target="_blank">{{ $completed_count }}</a></td>
-                        <td class="text-center"><a href="{{ url('reports/consumer/progressList') }}?{{ http_build_query(['geo_area' => [$team->ga_id], 'date_from' => request()->team_date_from, 'date_to' => request()->team_date_to, 'status' => [0,1]]) }}" target="_blank">{{ $total_count }}</a></td>
+                    <tr class="bg-info-subtle bg-opacity-10">
+                        <td colspan="4" class="text-end fs-5 fw-bold">Totals</td>
+                        <td class="text-center"><a href="{{ url('reports/consumer/progressList') }}?{{ http_build_query(['geo_area' => [$team->ga_id], 'date_from' => request()->team_date_from, 'date_to' => request()->team_date_to, 'status' => [0]]) }}" class="fs-4" target="_blank">{{ $progress_count }}</a></td>
+                        <td class="text-center"><a href="{{ url('reports/consumer/progressList') }}?{{ http_build_query(['geo_area' => [$team->ga_id], 'date_from' => request()->team_date_from, 'date_to' => request()->team_date_to, 'status' => [1]]) }}" class="fs-4" target="_blank">{{ $completed_count }}</a></td>
+                        <td class="text-center"><a href="{{ url('reports/consumer/progressList') }}?{{ http_build_query(['geo_area' => [$team->ga_id], 'date_from' => request()->team_date_from, 'date_to' => request()->team_date_to, 'status' => [0,1]]) }}" class="fs-4" target="_blank">{{ $total_count }}</a></td>
                     </tr>
             @else
                 <tr class="alert alert-primary">

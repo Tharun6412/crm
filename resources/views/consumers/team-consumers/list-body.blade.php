@@ -1,6 +1,6 @@
 <div class="table-responsive mt-2">
-    <div class="col-auto mt-2">
-        <span class="fw-semibold">({{ $consumers->total() }})</span> Records found
+    <div class="col-auto mt-2 fw-semibold p-1">
+        <strong>No. of records</strong>&nbsp;:&nbsp;{{ $consumers->total() }}
     </div>
     @php
         $sort_by = (request()->has('sortBy')) ? request()->get('sortBy') : 'cns_consumers.created_at';
@@ -22,7 +22,7 @@
                     @endif
                 </th>
                 <th>Area</th>
-                <th>SubArea</th>
+                <th>Sub Area</th>
                 <th width="12%" nowrap>Consumer Status</th>
                 <th>
                     <a href="{{ $consumers->appends(['sortBy' => 'ageing_days','sortOr' => $sort_order_inverse])->url($consumers->currentPage()) }}">
@@ -56,14 +56,14 @@
                             </a>
                         </td>
                         <td>{{ $consumer->name }}</td>
-                        <td>{{ $consumer->ga->name ?? '' }}</td>
+                        <td nowrap>{{ $consumer->ga->name ?? '' }}</td>
                         <td>{{ $consumer->ca->name ?? '' }}</td>
                         <td>{{ $consumer->area->name ?? ''  }}</td>
                         <td>{{ $consumer->subArea->name ?? '' }}</td>
                         <td>
                             <x-consumer.status :status="$consumer->status" mode='full' />
                         </td>
-                        <td>{{ $consumer?->ageing_days }}</td>
+                        <td class="text-center">{{ $consumer?->ageing_days }}</td>
                         <td>{{ $consumer->team_name ?? '' }}</td>
                         <td>{{ $consumer->assign_name ?? '' }}</td>
                         <td>{{ $consumer->status_name ?? '' }}</td>

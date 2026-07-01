@@ -2,7 +2,7 @@
     @if (count($reports) > 0)
         <div class="row align-items-center mb-2">
             <div class="col-auto">
-                <span class="fs-5">({{ $reports->total() }})&nbsp;Records</span>
+                <span class="fs-5"><strong>No. of records</strong>&nbsp;:&nbsp;({{ $reports->total() }})</span>
             </div>
 
             <div class="col text-end">
@@ -16,18 +16,18 @@
             </div>
         </div>
         <div class="table-responsive">
-            <table class="table table-bordered table-striped table-hover">
-                <thead class="table-info">
+            <table class="table table-bordered table-striped table-hover align-middle">
+                <thead class="table-info align-middle">
                     <tr>
                         <th width="1%">S.No</th>
                         <th nowrap>Geo Area</th>
                         <th>CRN</th>
-                        <th>Connection Type</th>
+                        <th nowrap>Connection Type</th>
                         <th>Name</th>
                         <th>Status</th>
-                        <th>Status Date</th>
+                        <th nowrap>Status Date</th>
                         <th>Updated By</th>
-                        <th>Created Date</th>
+                        <th nowrap>Created Date</th>
                     </tr>
                 </thead>
                 <tbody>
