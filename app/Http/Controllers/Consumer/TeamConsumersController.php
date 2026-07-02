@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Consumer;
 
 use App\Enums\ConsumerStatus;
 use App\Enums\Department;
+use App\Exports\Reports\Consumers\ConsumerAssignExport;
 use App\Http\Controllers\Controller;
 use App\Models\Admin\Team;
 use App\Models\Consumer\Consumer;
@@ -118,6 +119,9 @@ class TeamConsumersController extends Controller
             ->when($request->has('charge_area'), function($q) use ($request) {
                 $q->whereIn('cns_consumers.ca_id', $request->charge_area);
             })
+            ->when($request->has('area'), function($q) use ($request) {
+                $q->whereIn('cns_consumers.area_id', $request->area);
+            })
             ->orderBy($sortBy, $sortOr)
             ->paginate($records)->withQueryString();
         // Get Teams List
@@ -223,5 +227,13 @@ class TeamConsumersController extends Controller
     {
         dd($request->all());
         return response()->json('Consumers assigned successfully');
+    }
+
+    /**
+     * Assigned Consumers Export 
+     */
+    public function exportAssignedConsumers(Request $request)
+    {
+        return (new ConsumerAssignExport($request))->download('consumers_assigned.csv');
     }
 }

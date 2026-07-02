@@ -1,7 +1,16 @@
-<div class="table-responsive mt-2">
-    <div class="col-auto mt-2 fw-semibold p-1">
-        <strong>No. of records</strong>&nbsp;:&nbsp;{{ $consumers->total() }}
+<div class="d-flex justify-content-between">
+    <div class="row">
+        <div class="col-auto mt-2 fw-semibold p-1">
+            <strong>No. of records</strong>&nbsp;:&nbsp;{{ $consumers->total() }}
+        </div>
+        <div class="col-auto">
+            <a href="{{ url('consumers/waiting/pending-consumers/exportAssignedConsumers') }}?{{ http_build_query(request()->query())  }}" class="btn btn-outline-primary">
+                <i class="bi bi-file-earmark-excel"></i>&nbsp;Export
+            </a>
+        </div>
     </div>
+</div>
+<div class="table-responsive mt-2">
     @php
         $sort_by = (request()->has('sortBy')) ? request()->get('sortBy') : 'cns_consumers.created_at';
         $sort_order = (request()->has('sortOr')) ? request()->get('sortOr') : 'desc';
@@ -21,7 +30,11 @@
                         <x-master.charge-area-filter class="float-end"/>
                     @endif
                 </th>
-                <th>Area</th>
+                <th>Area
+                    @if (request()->has('charge_area'))
+                        <x-master.area-filter class="float-end"/>
+                    @endif
+                </th>
                 <th>Sub Area</th>
                 <th width="12%" nowrap>Consumer Status</th>
                 <th>
