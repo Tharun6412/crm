@@ -286,19 +286,38 @@
                             </tr>
                         </table>                   
                     </div>
-                </div>                                               
+                </div>
+                <div class="card mt-3">
+                    <div class="card-header fw-semibold bg-body-secondary">LPG Details</div>
+                    <div class="card-body">
+                        <table class="table table-hover">
+                            <tr>
+                                <td class="fw-semibold">LPG Consumer Number</td>
+                                <td>{{ $consumer->consumerData?->lpg_consumer_number }}</td>
+                            </tr>
+                            <tr>
+                                <td class="fw-semibold">LPG ID</td>
+                                <td>{{ $consumer->consumerData?->lpg_id }}</td>
+                            </tr>
+                            <tr>
+                                <td class="fw-semibold">LPG OMC Type&nbsp;</td>
+                                <td>{{ $consumer->consumerData->omcType?->name }}</td>
+                            </tr>
+                            <tr>
+                                <td class="fw-semibold">LPG Registered Mobile</td>
+                                <td>{{ maskNumber($consumer->consumerData?->registered_mobile) }}</td>
+                            </tr>
+                            <tr>
+                                <td class="fw-semibold">No of Connections</td>
+                                <td>{{ $consumer->consumerData?->lpg_connections }}</td>
+                            </tr>
+                        </table>                   
+                    </div>
+                </div>                                              
                 <div class="card mt-3">
                     <div class="card-header fw-semibold bg-body-secondary">Additional Details</div>
                     <div class="card-body">
                         <table class="table table-hover">
-                            <tr>
-                                <td class="fw-semibold">LPG ID</td>
-                                <td>{{ $consumer?->lpg_id }}</td>
-                            </tr>
-                            <tr>
-                                <td class="fw-semibold">LPG Connections</td>
-                                <td>{{ $consumer->lpg_connections }}</td>
-                            </tr>
                             <tr>
                                 <td class="fw-semibold">DCQ</td>
                                 <td>{{ numberFormat($consumer->dcq, 2) }}</td>

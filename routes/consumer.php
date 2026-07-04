@@ -96,4 +96,13 @@ Route::middleware(['auth', ModuleAccess::class])->group(function() {
     Route::put('prepaid/hesSubmit/{id}', [App\Http\Controllers\Consumer\PrepaidConsumerController::class, 'hesSubmit']);
     Route::get('prepaid/consumerRechargeList/{id}', [App\Http\Controllers\Consumer\PrepaidConsumerController::class, 'consumerRechargeList']);
     Route::get('prepaid/balance/{id}', [App\Http\Controllers\Consumer\ConsumerPrepaidBalanceController::class, 'prepaidBalance'])->middleware('throttle:balance-check');
+
+    //Consumer Verification
+    Route::get('verify/verificationExport',[App\Http\Controllers\Consumer\ConsumerVerificationController::class,'verificationExport']);
+    // Route::get('verify/all',[App\Http\Controllers\Consumer\ConsumerVerificationController::class,'index']);
+    Route::get('verify/show/{id}',[App\Http\Controllers\Consumer\ConsumerVerificationController::class,'show']);
+    Route::get('verify/edit/{id}',[App\Http\Controllers\Consumer\ConsumerVerificationController::class,'edit']);
+    Route::post('verify/update/{id}',[App\Http\Controllers\Consumer\ConsumerVerificationController::class,'update']);
+    Route::get('verify/editStatus/{id}',[App\Http\Controllers\Consumer\ConsumerVerificationController::class,'editStatus']);
+    Route::post('verify/updateStatus/{id}',[App\Http\Controllers\Consumer\ConsumerVerificationController::class,'updateStatus']);
 });

@@ -33,6 +33,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('acceptance/{id}', [App\Http\Controllers\Api\V1\Application\ConsumerOnboardingController::class, 'acceptance'])->whereNumber('id');
         Route::post('execution/{id}', [App\Http\Controllers\Api\V1\Application\ConsumerOnboardingController::class, 'execution'])->whereNumber('id');
         Route::post('hscConnect/{id}', [App\Http\Controllers\Api\V1\Application\ConsumerOnboardingController::class, 'hscConnect'])->whereNumber('id');
+        Route::get('getActivate/{id}', [App\Http\Controllers\Api\V1\Application\ConsumerOnboardingController::class, 'getActivate'])->whereNumber('id');
         Route::post('activate/{id}', [App\Http\Controllers\Api\V1\Application\ConsumerOnboardingController::class, 'activate'])->whereNumber('id');
         // Operations
         Route::post('tdisconnect/{id}', [App\Http\Controllers\Api\V1\Application\ConsumerOperationsController::class, 'tdisconnect'])->whereNumber('id');

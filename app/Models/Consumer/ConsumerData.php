@@ -2,6 +2,7 @@
 
 namespace App\Models\Consumer;
 
+use App\Models\Master\LpgOmc;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -23,6 +24,11 @@ class ConsumerData extends Model
         'consumer_id',
         'lat',
         'lng',
+        'lpg_consumer_number',
+        'lpg_id',
+        'lpg_omc_id',
+        'registered_mobile',
+        'lpg_connections',
         'kyc_status',
         'reference_code',
         'referrer_consumer_id',
@@ -42,5 +48,12 @@ class ConsumerData extends Model
     public function referredBy(): BelongsTo
     {
         return $this->belongsTo(Consumer::class, 'referrer_consumer_id');
+    }
+    /**
+     * Relation omc types
+     */
+    public function omcType(): BelongsTo
+    {
+        return $this->belongsTo(LpgOmc::class,'lpg_omc_id');
     }
 }

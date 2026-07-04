@@ -82,8 +82,8 @@ class Consumer extends Model
         'ga_id',
         'state_id',
         'pincode',
-        'lpg_id',
-        'lpg_connections',
+        // 'lpg_id',
+        // 'lpg_connections',
         'dcq',
         'expected_date',
         'distance',
@@ -325,8 +325,13 @@ class Consumer extends Model
     {
         return $this->hasMany(ConsumerGeyser::class,'consumer_id', 'id');
     }
-
-
+    /**
+     * Relation with Verification
+     */
+    public function verification(): HasOne
+    {
+        return $this->hasOne(VerifyConsumer::class, 'consumer_id', 'id');
+    }
     /**
      * #PolyMorphic relation
      * Relation with complaint comments

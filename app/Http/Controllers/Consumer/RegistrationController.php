@@ -22,6 +22,7 @@ use App\Models\Master\ConnectionType;
 use App\Models\Master\ConsumerGasRequired;
 use App\Models\Master\ConsumerNomineeRelation;
 use App\Models\Master\Ga;
+use App\Models\Master\LpgOmc;
 use App\Models\Master\MasterConsumerScheme;
 use App\Models\Master\Segment;
 use App\Models\Master\Title;
@@ -102,8 +103,8 @@ class RegistrationController extends Controller
             'district_id' => $request->district,
             'ga_id' => $request->geo_area,
             'pincode' => $request->pincode,
-            'lpg_id' => $request->lpg_id,
-            'lpg_connections' => $request->lpg_connections,
+            // 'lpg_id' => $request->lpg_id,
+            // 'lpg_connections' => $request->lpg_connections,
             'dcq' => $request->dcq,
             'expected_date' => !empty($request->expected_date) ? Carbon::createFromFormat('d-m-Y', $request->expected_date) : null,
             'distance' => $request->distance,
@@ -201,18 +202,26 @@ class RegistrationController extends Controller
     //lpg 
     public function lpg($id)
     {
-        $consumer = Consumer::findOrFail($id);
-        return view('consumers.registration.lpg-edit',['consumer' => $consumer]);
+        $omcs = LpgOmc::all();
+        $consumer = Consumer::with('consumerData')->findOrFail($id);
+        return view('consumers.registration.lpg-edit',['consumer' => $consumer, 'omcs' => $omcs]);
     }
     //lpg update
     public function lpgUpdate(Request $request,$id)
     {
         $request->validate([
             'lpg_id' => 'required|min:10|max:17',
+            'lpg_consumer_number' => 'required',
+            'lpg_omc_id' => 'required',
+            'registered_mobile' => 'required|max:10',
+            'lpg_connections' => 'required',
         ]);
-        $consumer = Consumer::findOrFail($id);
-        $consumer->update([
+        Consumer::findOrFail($id);
+        ConsumerData::where('consumer_id', $id)->update([
+            'lpg_consumer_number' => $request->lpg_consumer_number,
             'lpg_id' => $request->lpg_id,
+            'lpg_omc_id' => $request->lpg_omc_id,
+            'registered_mobile' => $request->registered_mobile,
             'lpg_connections' => $request->lpg_connections,
         ]);
         return response()->json(['success' => 'Lpg Updated Successfully']);

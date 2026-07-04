@@ -5,21 +5,32 @@
             <h4 class="modal-title">Update LPG Details</h4>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div class="modal-body">
-            
+        <div class="modal-body">   
             <div id="lpg-success"> 
                 <form id="lpg-form" action="{{ url('consumers/register/domestic/lpgUpdate/'.$consumer->id) }}" method="POST">
                     @csrf
                     <div class="row mb-2">
-                        <label class="col-form-label col-sm-4 text-end" for="lpg_no">LPG Connections no (if any)&nbsp;:&nbsp;</label>
                         <div class="col-md-4 col-sm-6 col-xs-12">
-                            <input type="number" name="lpg_connections" id="lpg_connections" class="form-control" placeholder="LPG Connections" value="{{ $consumer->lpg_connections ?? '' }}"/>
+                            <label class="form-label" for="lpg_consumer_number">LPG Consumer Number&nbsp;:<span class="text-danger">*</span></label>
+                            <input name="lpg_consumer_number" id="lpg_consumer_number" class="form-control" placeholder="LPG Consumer Number" value="{{ $consumer->consumerData?->lpg_consumer_number  }}" type="text"/>
+                        </div>
+                        <div class="col-md-4 col-sm-6 col-xs-12">
+                            <label class="form-label" for="lpg_id">LPG ID&nbsp;:<span class="text-danger">*</span></label>
+                            <input name="lpg_id" id="lpg_id" class="form-control" placeholder="LPG ID" value="{{ $consumer->consumerData?->lpg_id }}" type="text"/>
+                        </div>
+                        <div class="col-md-4 col-sm-6 col-xs-12">
+                            <label class="form-label" for="lpg_omc_id">LPG OMC Type&nbsp;:<span class="text-danger">*</span></label>
+                            <select name="lpg_omc_id" id="lpg_omc_id" class="form-select">
+                                <option value="">Select OMC Type</option>
+                                @foreach ($omcs as $omc )
+                                    <option value="{{ $omc->id }}"@selected($consumer->consumerData?->lpg_omc_id == $omc->id)>{{ $omc->name }}</option>                                @endforeach
+                            </select>
                         </div>
                     </div>
                     <div class="row mb-2">
-                        <label class="col-form-label col-sm-4 text-end" for="lpg_id">LPG ID&nbsp;:<span class="text-danger">*</span></label>
                         <div class="col-md-4 col-sm-6 col-xs-12">
-                            <input name="lpg_id" id="lpg_id" class="form-control" placeholder="LPG ID" value="{{ $consumer->lpg_id }}" type="text"/>
+                            <label class="form-label" for="registered_mobile">LPG Registered Mobile&nbsp;:<span class="text-danger">*</span></label>
+                            <input type="text" name="registered_mobile" id="registered_mobile" class="form-control" placeholder="Registered Mobile" value="{{ $consumer->consumerData?->registered_mobile }}"/>
                         </div>
                     </div>
                     <div id="lpg-error"></div>

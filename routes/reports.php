@@ -84,4 +84,7 @@ Route::middleware(['auth', ModuleAccess::class])->group(function() {
     // Referral Report
     Route::get('referrals', [App\Http\Controllers\Reports\ReferralsController::class, 'index']);
     Route::resource('referrals', App\Http\Controllers\Reports\ReferralsController::class);
+
+    //Verification Report
+    Route::get('consumer/verify',[App\Http\Controllers\Reports\VerificationReportController::class,'index']);
 });

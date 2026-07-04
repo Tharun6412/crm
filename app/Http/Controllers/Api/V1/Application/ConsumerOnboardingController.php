@@ -9,9 +9,11 @@ use App\Enums\MeterStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Master\DocumentCentre\DocumentUpload;
 use App\Models\Consumer\Consumer;
+use App\Models\Consumer\ConsumerData;
 use App\Models\Consumer\ConsumerDocument;
 use App\Models\Consumer\ConsumerMeter;
 use App\Models\Consumer\ConsumerStatus;
+use App\Models\Master\LpgOmc;
 use App\Notifications\Consumer\AcceptSmsNotification;
 use App\Notifications\Consumer\ActivateSmsNotification;
 use App\Notifications\Consumer\ExecuteSmsNotification;
@@ -205,17 +207,51 @@ class ConsumerOnboardingController extends Controller
         return response()->json(['success' => 'Consumer HSC successfully completed!'], 200);
     }
     /**
+     * Lpg Related
+     */
+    public function getActivate(Request $request, $id)
+    {
+        // $consumer = Consumer::select('lpg_connections')->where('id',$id)->first();
+        // $consumer->meter_no = $consumer->activeMeter?->meter_no;
+        $consumer = Consumer::select('id', 'lpg_connections')->with(['activeMeter:id,consumer_id,meter_no,meter_serial_no,initial_reading'])->findOrFail($id);
+
+        $consumer->makeHidden(['name']);
+        $omcs = LpgOmc::select(['id','name'])->get();
+        return response()->json(['consumer' => $consumer, 'omcs' => $omcs ],200);
+
+    }
+    /**
      * HSC -> Activate
      */
     public function activate(Request $request, $id)
     {
-        $consumer = Consumer::find($id);
+        $consumer = Consumer::with(['consumerData'])->find($id);
+        $meter = $consumer->activeMeter;
         if($consumer->id == $id AND $consumer->status_id == EnumsConsumerStatus::ACTIVATE->value) {
             // Already Exists
         }else {
             // Validation
             $request->validate([
                 'notes' => 'required|max:255',
+                'lpg_consumer_number' => 'required',
+                'lpg_id' => 'required',
+                'lpg_omc_id' => 'required',
+                'registered_mobile' => 'required',
+                'lpg_connections' => 'required',
+                'meter_no' => ['required',
+                Rule::unique('cns_consumer_meters', 'meter_no')->ignore($meter?->id)->where(function($q) {
+                    $q->where('status', MeterStatus::ACTIVE->value);
+                }),
+            ],
+            'meter_serial_no' => [
+                Rule::requiredIf($consumer->connection_type_id == 2), 
+                'nullable',
+                Rule::unique('cns_consumer_meters', 'meter_serial_no')->ignore($meter?->id)->where(function($q) {
+                    $q->where('status', MeterStatus::ACTIVE->value);
+                }),
+            ],
+            'meter_reading' => 'required|numeric',
+
             ]);
             //Check If Document has been uploaded [optional] 
             if($request->has('dc_file')) {
@@ -232,6 +268,20 @@ class ConsumerOnboardingController extends Controller
             $consumer->update([
                 'status_id' => EnumsConsumerStatus::ACTIVATE->value,
                 'activation_date' => now()->toDateTimeString(),
+                'updated_by' => Auth::id(),
+            ]);
+            ConsumerData::where('consumer_id',$id)->update([
+                'lpg_consumer_number' => $request->lpg_consumer_number,
+                'lpg_id' => $request->lpg_id,
+                'lpg_omc_id' => $request->lpg_omc_id,
+                'registered_mobile' => $request->registered_mobile,
+                'lpg_connections' => $request->lpg_connections,
+            ]);
+            // Consumer Meter
+            ConsumerMeter::where('consumer_id',$id)->where('status',1)->update([
+                'meter_no' => $request->meter_no,
+                'meter_serial_no' => $request->meter_serial_no,
+                'initial_reading' => $request->meter_reading,
                 'updated_by' => Auth::id(),
             ]);
             // Consumer Target Status 

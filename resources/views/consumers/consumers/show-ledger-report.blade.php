@@ -28,7 +28,7 @@
                         @foreach ($ledger_report as $ledger)
                             @php
                                 if($ledger->type == "Debit") {
-                                    $tot_amt = $ledger->payable_amount ?? 0;
+                                    $tot_amt = $ledger->payable_amount + ($ledger->advance_amount ?? 0);
                                     $balance += $tot_amt;
                                 }else {
                                     $tot_amt = 0;

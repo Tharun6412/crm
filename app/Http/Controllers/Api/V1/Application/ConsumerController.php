@@ -86,7 +86,8 @@ class ConsumerController extends Controller
             'sdPayment.paymentType:id,name',
             'activeMeter:id,consumer_id,meter_no,meter_serial_no,initial_reading,status',
             'activeMeter.meterStatus:id,name',
-            'consumerData:id,consumer_id,reference_code,referrer_consumer_id,lat,lng',
+            'consumerData:id,consumer_id,reference_code,referrer_consumer_id,lat,lng,lpg_consumer_number,lpg_id,lpg_omc_id,registered_mobile,lpg_connections',
+            'consumerData.omcType:id,name',
         ])->when((!isApiAdmin() AND !isApiSuperAdmin() AND !isApiFullAccess()), function ($q) use($request) {
             $q->whereIn('ga_id', $request->user()->ga()->pluck('ga_id')->toArray());
         })->find($id);
