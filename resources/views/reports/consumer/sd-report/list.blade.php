@@ -57,6 +57,9 @@
                     </span>
                 </div>
                 <div class="col-auto">
+                    <input type="checkbox" name="conversion_scheme" id="conversion_scheme" />Incl. Conversion Scheme
+                </div>
+                <div class="col-auto">
                     <button type="submit" class="btn btn-success" id="getDetailsBtn">
                         <i class="bi bi-arrow-right-circle"></i>&nbsp;Get Report
                     </button>
@@ -66,7 +69,7 @@
                 </div>
                 <div class="col-auto">
                     <!-- Export -->
-                    <button type="button" id="exportBtn" class="btn btn-outline-info text-end"><i class="bi bi-file-earmark-excel"></i>&nbsp;Export</button>
+                    <button type="button" id="exportSaleBtn" class="btn btn-outline-info text-end"><i class="bi bi-file-earmark-excel"></i>&nbsp;Export</button>
                 </div>
             </div>
         </form>

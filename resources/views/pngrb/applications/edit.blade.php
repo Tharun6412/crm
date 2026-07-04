@@ -9,8 +9,9 @@
 @section('page-content')
     <div class="container-fluid border border-secondary-subtle bg-white rounded-3">
         <div id="add-domestic-success">
-            <form id="add-domestic-form" action="{{ url('consumers/register/domestic') }}" method="POST" enctype="multipart/form-data">
+            <form id="add-domestic-form" action="{{ url('pngrb/applications/'.$application->id) }}" enctype="multipart/form-data">
                 @csrf
+                @method('PUT')
                 <div class="row bg-primary-subtle pb-3 rounded-1 p-2">
                     <div class="col-sm-4 col-md-2">
                         <label>Geo Area&nbsp;:<span class="text-danger">*</span></label>

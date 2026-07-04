@@ -127,7 +127,7 @@
 @include('scripts.bs-popover')
 @include('scripts.export-table', [
     'table' => 'monthly-sale',
-    'button' => 'exportBtn',
+    'button' => 'exportSaleBtn',
     'tabBased' => false,
     'filename' => 'sd_report',
     'sheet'    => 'Report',

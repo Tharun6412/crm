@@ -24,15 +24,17 @@ class SDReportController extends Controller
     {
         // Get GeoAreas
         $geo_areas = Ga::where('status', 1)->orderBy('position')->get();
-        $schemes = MasterConsumerScheme::select('id', 'code','name', 'security', 'consumption', 'total_deposit', 'connection_type_id')
-        ->when($request->filled('connection_type_id'), function($q) use($request) {
-            $q->whereIn('connection_type_id', $request->connection_type_id);
-        })->when($request->filled('segments'), function($q) use($request) {
-            $q->whereIn('segment_id', $request->segments);
-        })->get();
-        $prepaidSchemes = $schemes->where('connection_type_id', 2)->values();
-        $postpaidSchemes = $schemes->where('connection_type_id', 1)->values();
         if($request->ajax()) {
+            $schemes = MasterConsumerScheme::select('id', 'code','name', 'security', 'consumption', 'total_deposit', 'connection_type_id')
+            ->when($request->filled('connection_type_id'), function($q) use($request) {
+                $q->whereIn('connection_type_id', $request->connection_type_id);
+            })->when(!$request->filled('conversion_scheme'), function($q) {
+                $q->whereNotIn('id', [12,13,14,15]);
+            })->when($request->filled('segments'), function($q) use($request) {
+                $q->whereIn('segment_id', $request->segments);
+            })->get();
+            $prepaidSchemes = $schemes->where('connection_type_id', 2)->values();
+            $postpaidSchemes = $schemes->where('connection_type_id', 1)->values();
             // Validation
             if(($request->filter_name == "show") AND empty($request->date_from) AND empty($request->date_to)) {
                 $request->validate([
