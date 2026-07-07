@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Lms;
 
 use App\Enums\Department as EnumsDepartment;
 use App\Enums\Role as EnumsRole;
@@ -8,7 +8,7 @@ use App\Enums\UserStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Admin\Role;
 use App\Models\Admin\RoleAction;
-use App\Models\Admin\Team;
+use App\Models\Lms\Team;
 use App\Models\Admin\User;
 use App\Models\Admin\UserStatusHistory;
 use App\Models\Admin\UserType;

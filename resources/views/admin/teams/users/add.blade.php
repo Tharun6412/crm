@@ -7,7 +7,7 @@
         </div>
         <div class="modal-body">
             <div id="user-add-success">
-                <form action="{{ url('admin/teams/user/storeUser') }}" method="POST" id="user-add-form">
+                <form action="{{ url('lms/teams/user/storeUser') }}" method="POST" id="user-add-form">
                     @csrf
                     <div class="row mb-2">
                         <label for="emp_id" class="col-sm-2 text-end">Emp ID</label>

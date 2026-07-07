@@ -10,6 +10,7 @@ use App\Models\Admin\Role;
 use App\Models\Admin\User;
 use App\Models\Admin\UserStatusHistory;
 use App\Models\Admin\UserType;
+use App\Models\Master\Area;
 use App\Models\Master\Ca;
 use App\Models\Spot\SpotRoles;
 use Carbon\Carbon;
@@ -267,5 +268,26 @@ class UserController extends Controller
         $user->cas()->sync($request->ca_id ?? []);
         return response()->json(['success' => 'Charge Areas Added Successfully']);
         
+    }
+
+    /**
+     *Manage user by ca edit
+     */
+    public function editUserAreas($id)
+    {
+        $user = User::with(['cas','ga'])->findOrFail($id);
+        $cas = $user->cas->pluck('id');
+        $areas = Area::with(['ca'])->whereIn('ca_id',$cas)->get()->groupBy('ca.name');
+        return view('admin.users.manage-areas',['user' => $user,'areas' => $areas]);
+    }
+
+    /**
+     * Manage user by ca update
+     */
+    public function updateUserAreas(Request $request,$id)
+    {
+        $user = User::findOrFail($id);
+        $user->area()->sync($request->area_id ?? []);
+        return response()->json(['success' => 'Areas Added Successfully']);   
     }
 }

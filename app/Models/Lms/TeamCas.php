@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Admin;
+namespace App\Models\Lms;
 
 use App\Models\Master\Ca;
 use Illuminate\Database\Eloquent\Model;
@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class TeamCas extends Model
 {
-    protected $table = 'adm_team_cas';
+    protected $table = 'lms_team_cas';
     protected $fillable = [
         'team_id',
         'ca_id',

@@ -14,8 +14,9 @@ Route::middleware([ModuleAccess::class, 'auth'])->group(function() {
     //user cas
     Route::get('users/editUserCas/{id}',[App\Http\Controllers\Admin\UserController::class,'editUserCas']);
     Route::post('users/updateUserCas/{id}',[App\Http\Controllers\Admin\UserController::class,'updateUserCas']);
-
-
+    // user areas
+    Route::get('users/editUserAreas/{id}',[App\Http\Controllers\Admin\UserController::class,'editUserAreas']);
+    Route::post('users/updateUserAreas/{id}',[App\Http\Controllers\Admin\UserController::class,'updateUserAreas']);
     // Module administration
     Route::get('modules/createSub/{id}', [App\Http\Controllers\Admin\ModuleController::class, 'createSub']);
     Route::resource('modules', App\Http\Controllers\Admin\ModuleController::class);
@@ -23,24 +24,4 @@ Route::middleware([ModuleAccess::class, 'auth'])->group(function() {
 
     // API KEY
     Route::resource('api-keys', App\Http\Controllers\Admin\ApiKeyController::class);
-
-    //Teams
-    Route::get('teams/',[App\Http\Controllers\Admin\TeamController::class,'index']);
-    Route::get('teams/create',[App\Http\Controllers\Admin\TeamController::class,'create']);
-    Route::post('teams/store',[App\Http\Controllers\Admin\TeamController::class,'store']);
-    Route::get('teams/gaCas',[App\Http\Controllers\Admin\TeamController::class,'gaCas']);
-    //Route::get('teams/show',[App\Http\Controllers\Admin\TeamController::class,'show']);
-    Route::get('teams/edit/{id}',[App\Http\Controllers\Admin\TeamController::class,'edit']);
-    Route::put('teams/update/{id}',[App\Http\Controllers\Admin\TeamController::class,'update']);
-    Route::get('teams/show/{id}',[App\Http\Controllers\Admin\TeamController::class,'show']);
-    Route::post('teams/{id}/toggleStatus',[App\Http\Controllers\Admin\TeamController::class,'toggleStatus']);
-    // Team user routes
-    Route::get('teams/user/create/{id}',[App\Http\Controllers\Admin\TeamUserController::class,'create']);
-    Route::post('teams/user/store/{id}',[App\Http\Controllers\Admin\TeamUserController::class,'store']);
-    Route::get('teams/user/createUser',[App\Http\Controllers\Admin\TeamUserController::class,'createUser']);
-    Route::post('teams/user/storeUser',[App\Http\Controllers\Admin\TeamUserController::class,'storeUser']);
-
-
-
-
 });

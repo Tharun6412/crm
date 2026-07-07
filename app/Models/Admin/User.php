@@ -10,6 +10,7 @@ use App\Models\Consumer\Consumer;
 use App\Models\Consumer\ConsumerSdPayment;
 use App\Models\Invoice\BillInvoice;
 use App\Models\Invoice\InvoicePayment;
+use App\Models\Master\Area;
 use App\Models\Master\Ca;
 use App\Models\Master\Department;
 use App\Models\Master\Designation;
@@ -227,5 +228,13 @@ class User extends Authenticatable
     public function designation():BelongsTo
     {
         return $this->belongsTo(Designation::class);
+    }
+
+    /**
+     * Relation with charge area table pivote user_ca
+     */
+    public function area(): BelongsToMany
+    {
+        return $this->belongsToMany(Area::class,'adm_user_areas','user_id','area_id');
     }
 }

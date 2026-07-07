@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Models\Admin;
+namespace App\Models\Lms;
 
 use App\Models\Admin\User;
 use App\Models\Consumer\Consumer;
+use App\Models\Master\Area;
 use App\Models\Master\Ca;
 use App\Models\Master\Department;
 use App\Models\Master\Ga;
@@ -13,11 +14,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Team extends Model
 {
-    protected $table = 'adm_teams';
+    protected $table = 'lms_teams';
     protected $fillable = [
         'name',
         'ga_id',
         'department_id',
+        'du_id',
         'status',
         'responsible_user_id',
         'created_by',
@@ -34,8 +36,17 @@ class Team extends Model
      */
     public function cas(): BelongsToMany
     {
-        return $this->belongsToMany(Ca::class,'adm_team_cas','team_id','ca_id');
+        return $this->belongsToMany(Ca::class,'lms_team_cas','team_id','ca_id');
     }
+
+    /**
+     * Relation with Areas
+     */
+    public function areas(): BelongsToMany
+    {
+        return $this->belongsToMany(Area::class,'lms_team_areas','team_id','area_id');
+    }
+
     /**
      * Relation with departments
      */
@@ -55,7 +66,7 @@ class Team extends Model
      */
     public function users(): BelongsToMany
     {
-        return $this->belongsToMany(User::class,'adm_team_users','team_id','user_id');
+        return $this->belongsToMany(User::class,'lms_team_users','team_id','user_id');
     }
     /**
      * Relation with user

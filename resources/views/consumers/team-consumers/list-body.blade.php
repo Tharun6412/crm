@@ -10,7 +10,9 @@
         </div>
     </div>
 </div>
+{{-- <div id="batch-assign"></div> --}}
 <div class="table-responsive mt-2">
+    <input type="hidden" name="cns_status" id="cns_status" value="{{ request()->cns_status[0] }}"/>
     @php
         $sort_by = (request()->has('sortBy')) ? request()->get('sortBy') : 'cns_consumers.created_at';
         $sort_order = (request()->has('sortOr')) ? request()->get('sortOr') : 'desc';
@@ -21,6 +23,9 @@
     <table class="table table-bordered table-striped align-middle table-hover page-sort">
         <thead class="table-success">
             <tr>
+                <th>
+                    <input type="checkbox" id="check_all"/>&nbsp;All
+                </th>
                 <th>S.No</th>
                 <th>CRN</th>
                 <th nowrap>Consumer Name</th>
@@ -35,7 +40,11 @@
                         <x-master.area-filter class="float-end"/>
                     @endif
                 </th>
-                <th>Sub Area</th>
+                <th>Sub Area
+                    @if (request()->has('area'))
+                        <x-master.sub-area-filter class="float-end"/>
+                    @endif
+                </th>
                 <th width="12%" nowrap>Consumer Status</th>
                 <th>
                     <a href="{{ $consumers->appends(['sortBy' => 'ageing_days','sortOr' => $sort_order_inverse])->url($consumers->currentPage()) }}">
@@ -62,6 +71,11 @@
             @if($consumers->count() > 0)
                 @foreach ($consumers as $consumer )
                     <tr>
+                        <td>
+                            @if (is_null($consumer->team_status))
+                                <input type="checkbox" name="consumer_ids[]" value="{{ $consumer->id }}"/>
+                            @endif
+                        </td>
                         <td class="text-center" width="1%">{{ $i++ }}</td>
                         <td>
                             <a href="{{ url('consumers/' . $consumer->id) }}" target="_blank">
@@ -122,6 +136,103 @@
             @endif
         </tbody>
     </table>
+    @if ( request()->has('status') && !in_array(0, request()->status) && !in_array(1, request()->status))
+        <div class="mb-3">
+            <button type="button" id="bulkAssignBtn" class="btn btn-primary">
+                <i class="bi bi-people-fill"></i> Bulk Assign
+            </button>
+        </div>
+    @endif
+</div>
+<div id="bulkAssignSection" class="card shadow-sm border-0 d-none">
+    <div class="card-header bg-light">
+        <strong>Bulk Team Assignment</strong>
+    </div>
+    <div class="card-body">
+        <div class="row mb-3 align-items-center">
+            <label for="team_id" class="col-md-3 col-form-label text-md-end">
+                Select Team :
+            </label>
+            <div class="col-md-6">
+                <select name="team_id" id="team_id" class="form-select" onchange="getEmployeesByTeam(this.value)">
+                    <option value="">Select Team</option>
+                    @foreach ($teams as $team)
+                        <option value="{{ $team->id }}">
+                            {{ $team->name }} - {{ $team->departments->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="row mb-3 align-items-center">
+                <label for="team_id" class="col-md-3 col-form-label text-md-end">Select Employee :</label>
+                <div class="col-md-6">
+                    <select name="assign_to" id="assign_to" class="form-select">
+                        <option value="">Select Employee</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div id="bulk-assign-error"></div>
+        <div class="row">
+            <div class="offset-md-3 col-md-6">
+                <button type="button" onclick="consumersBatchAssign()" class="btn btn-success">
+                    <i class="bi bi-save"></i> Assign Bulk
+                </button>
+            </div>
+        </div>
+    </div>
 </div>
 <div>{{ $consumers->links('utils.paginator',['modDiv' => 'team-consumers-list'])}}</div>
 @include('scripts.link-modal')
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script type="text/javascript">
+    $(document).on('change', '#check_all', function () {
+        $('input[name="consumer_ids[]"]').prop('checked', this.checked);
+    });
+    // Show/Hide Bulk Assign section
+    $(document).on('click', '#bulkAssignBtn', function () {
+        $('#bulkAssignSection').toggleClass('d-none');
+    });
+
+    // Get Team Employees
+    function getEmployeesByTeam(team_id)
+    {
+        $.get("{{ url('consumers/waiting/pending-consumers/getEmployeesByTeam') }}", {'team_id' : team_id}, function(data) {
+            $('#assign_to').empty();
+            let options = '<option value = "">Select Employee</option>'
+            if(data.users && data.users.length > 0) {
+                data.users.forEach(function(user) {
+                    options += `<option value="${user.id}">${user.name}</option>`;
+                });
+            }
+            $('#assign_to').html(options);
+        });
+    }
+
+    // Assign Batch
+    function consumersBatchAssign()
+    {
+        let consumer_ids = [];
+        $('input[name="consumer_ids[]"]:checked').each(function () {
+            consumer_ids.push($(this).val());
+        });
+
+        let team_id = $('#team_id').val();
+
+        if (consumer_ids.length === 0) {
+            $('#bulk-assign-error').html('<div class="alert alert-danger mb-0">Please select consumers</div>');
+            return;
+        }
+        $.post("{{ url('consumers/waiting/pending-consumers/consumersBatchAssign') }}", {
+            _token: "{{ csrf_token() }}",
+            consumer_ids: consumer_ids,
+            team_id: team_id,
+            status:$('#cns_status').val(),
+            assign_to:$('#assign_to').val(),
+        }, function (data) {
+            $('#bulkAssignSection').html('<div class="alert alert-success">'+data.message+'<br/>Selected Consumers :'+data.total+'<br/>Successfully Assigned :'+data.inserted+'</div>');
+        }).fail(function(response){
+            $('#bulk-assign-error').html('<div class="alert alert-danger mb-0">' + response.responseJSON.message + '</div>');
+        });
+    }
+</script>

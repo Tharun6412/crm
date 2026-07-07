@@ -1,17 +1,20 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Lms;
 
 use App\Enums\Department as EnumsDepartment;
 use App\Enums\Role;
 use App\Http\Controllers\Controller;
-use App\Models\Admin\Team;
+use App\Models\Lms\Team;
 use App\Models\Admin\User;
+use App\Models\Lms\DeliveryUnit;
+use App\Models\Master\Area;
 use App\Models\Master\Ca;
 use App\Models\Master\Department;
 use App\Models\Master\Ga;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class TeamController extends Controller
 {
@@ -72,22 +75,25 @@ class TeamController extends Controller
     {
         $request->validate([
             'name' => 'required',
-            'ga_id' => 'required',
             'department_id' => 'required',
-            'ca_id' => 'required',
+            'ga_id' => 'required',
+            // 'ca_id' => 'required',
             'responsible_user_id' => 'required',
+            'du_id' => 'required',
         ]);
 
         $team = Team::create([
             'name' => $request->name,
             'ga_id' => $request->ga_id,
             'department_id' => $request->department_id,
+            'du_id' => $request->du_id,
             'status' => 1,
             'responsible_user_id' => $request->responsible_user_id,
             'created_by' => Auth::id(),
         ]);
 
-        $team->cas()->sync($request->ca_id ?? []);
+        // $team->cas()->sync($request->ca_id ?? []);
+        $team->areas()->sync($request->area_id ?? []);
         return response()->json(['success' => 'Team Created Successfully']);
 
     }
@@ -102,6 +108,31 @@ class TeamController extends Controller
         })->get();
         return response()->json(['cas' => $cas,'users' => $users]);
     }
+
+    /**
+     * get Delivery Units based on the Department and GA
+     */
+    public function getDeliveryUnits(Request $request)
+    {
+        $delivery_units = DeliveryUnit::where('ga_id', $request->ga_id)->where('dept_id', $request->dept_id)->where('status', 1)->get();
+        return response()->json(['delivery_units' => $delivery_units]);
+    }
+
+    /**
+     * get Delivery Units based on the Department and GA
+     */
+    public function getDeliveryUnitAreas(Request $request)
+    {
+        $du = DeliveryUnit::find($request->du_id);
+        $area_ids = $du->areas->pluck('id')->toArray();
+        // Assigned Areas
+        // Areas already assigned to teams
+        $allocated_area_ids = DB::table('lms_team_areas')->whereIn('area_id', $area_ids)->pluck('area_id');
+        $areas = Area::select('id', 'name', 'ca_id')->whereIn('id', $area_ids)->get();
+        $cas = $areas->pluck('ca_id')->unique()->toArray();
+        $charge_areas = Ca::select('id', 'name')->whereIn('id', $cas)->get();
+        return response()->json(['charge_areas' => $charge_areas,'areas' => $areas, 'allocated_areas' => $allocated_area_ids]);
+    }
     /**
      * team edit
      */
@@ -110,32 +141,39 @@ class TeamController extends Controller
         $team = Team::when((!isAdmin() AND !isSuperAdmin() AND !isFullAccess()), function($q) {
             $q->whereIn('ga_id', session('user')['gas']);
         })->with(['cas','ga','departments','responsibleUser'])->findOrFail($id);
-        // $geo_areas = Ga::all();
-        // $departments = Department::all();
         $cas = Ca::where('ga_id', $team->ga_id)->get();
-        $role_id = [];
-        switch($team->department_id) {
-            case EnumsDepartment::MARKETING->value:
-                $role_id[] = Role::MARKETING->value;break;
-            case EnumsDepartment::MDPE->value:
-                $role_id[] = Role::MDPE->value;break;
-            case EnumsDepartment::STEEL->value:
-                $role_id[] = Role::STEEL->value;break;
-            case EnumsDepartment::GI->value:
-                $role_id[] = Role::GI_ENGINEER->value;break;
-            case EnumsDepartment::HSE->value:
-                $role_id[] = Role::HSE->value; break;
-            case EnumsDepartment::ACTIVATION->value:
-                $role_id[] = Role::ACTIVATION->value;break;
-            default: $role_id = []; break;
-        }
+        // $role_id = [];
+        // switch($team->department_id) {
+        //     case EnumsDepartment::MARKETING->value:
+        //         $role_id[] = Role::MARKETING->value;break;
+        //     case EnumsDepartment::MDPE->value:
+        //         $role_id[] = Role::MDPE->value;break;
+        //     case EnumsDepartment::STEEL->value:
+        //         $role_id[] = Role::STEEL->value;break;
+        //     case EnumsDepartment::GI->value:
+        //         $role_id[] = Role::GI_ENGINEER->value;break;
+        //     case EnumsDepartment::HSE->value:
+        //         $role_id[] = Role::HSE->value; break;
+        //     case EnumsDepartment::ACTIVATION->value:
+        //         $role_id[] = Role::ACTIVATION->value;break;
+        //     default: $role_id = []; break;
+        // }
         $users = User::whereHas('ga', function($q) use ($team){
             $q->where('ga_id',$team->ga_id);
-        })->whereHas('roles', function($q) use($role_id) {
-            $q->whereIn('adm_roles.id', array_unique($role_id));
         })
+        // ->whereHas('roles', function($q) use($role_id) {
+            //     $q->whereIn('adm_roles.id', array_unique($role_id));
+            // })
+        ->orderBy('first_name', 'asc')
         ->get();
-        return view('admin.teams.edit',['team' => $team,'cas' => $cas,'users' => $users]);
+        // Delivery Unit
+        $delivery_units = DeliveryUnit::where('ga_id', $team->ga_id)->where('dept_id', $team->department_id)->get();
+        $delivery_unit = DeliveryUnit::find($team->du_id);
+        $area_ids = $delivery_unit?->areas?->pluck('id')->toArray() ?? [];
+        $areas = Area::select('id', 'name', 'ca_id')->whereIn('id', $area_ids)->get();
+        $ca_ids = $areas->pluck('ca_id')->unique()->toArray();
+        $cas = Ca::select('id', 'name')->whereIn('id', $ca_ids)->get();
+        return view('admin.teams.edit',['team' => $team,'cas' => $cas,'users' => $users, 'areas' => $areas, 'delivery_units' => $delivery_units]);
     }
     /**
      * team update
@@ -144,7 +182,7 @@ class TeamController extends Controller
     {
         $request->validate([
             'name' => 'required',
-            'ca_id' => 'required',
+            'area_id' => 'required',
         ]);
 
         $team = Team::findOrFail($id);
@@ -152,11 +190,13 @@ class TeamController extends Controller
         $team->update([
             'name' => $request->name,
             'ga_id' => $request->ga_id,
-            'responsible_user_id' => $request->responsible_user_id,
             'department_id' => $request->department_id,
+            'du_id' => $request->du_id,
+            'responsible_user_id' => $request->responsible_user_id,
         ]);
 
-        $team->cas()->sync($request->ca_id ?? []);
+        // $team->cas()->sync($request->ca_id ?? []);
+        $team->areas()->sync($request->area_id ?? []);
 
         return response()->json([
             'success' => 'Team Updated Successfully'

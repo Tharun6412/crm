@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Models\Admin;
+namespace App\Models\Lms;
 
 use App\Models\Admin\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class TeamUser extends Model
 {
-    protected $table = 'adm_team_users';
+    protected $table = 'lms_team_users';
     protected $fillable = [
         'team_id',
         'user_id',

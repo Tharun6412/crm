@@ -7,7 +7,7 @@
         </div>
         <div class="modal-body">
             <div id="team-success">
-                <form id="team-form" method="POST" action="{{ url('admin/teams/update/' . $team->id) }}">
+                <form id="team-form" method="POST" action="{{ url('lms/teams/update/' . $team->id) }}">
                     @csrf
                     @method('PUT')
                     {{-- Team Name --}}
@@ -39,46 +39,37 @@
                             </select>
                         </div>
                     </div>
-                        {{-- Department --}}
-                        {{-- <label for="department_id" class="col-sm-2 col-form-label text-end">Department :</label>
+                    <div class="row mb-3">
+                        <label for="du_id" class="col-sm-2 col-form-label text-end">Delivery Unit : </label>
                         <div class="col-sm-4">
-                            <select name="department_id" id="department_id" class="form-select">
-                                <option value=""> Select Department</option>
-                                @foreach ($departments as $department)
-                                    <option value="{{ $department->id }}"@selected($team->department_id == $department->id)>{{ $department->name }}</option>
-                                @endforeach
-                            </select>
-                        </div> --}}
-                        
-
-                    {{-- Geo Area --}}
-                    {{-- <div class="row mb-3">
-                        <label for="ga_id" class="col-sm-2 col-form-label text-end">Geo Area :</label>
-                        <div class="col-sm-4">
-                            <select name="ga_id" id="ga_id" class="form-select">
-                                <option value="">Select Geo Area</option>
-                                @foreach ($geo_areas as $ga)
-                                    <option value="{{ $ga->id }}"@selected($team->ga_id == $ga->id)>{{ $ga->name }}</option>
+                            <select name="du_id" id="du_id" class="form-select">
+                                <option value="">Select Delivery Unit</option>
+                                @foreach($delivery_units as $du)
+                                    <option value="{{ $du->id }}"@selected($du->id == $team->du_id)>{{ $du->name }}</option>
                                 @endforeach
                             </select>
                         </div>
                     </div>
-                    <hr> --}}
                     {{-- Charge Areas --}}
                     <div class="row mb-3">
-                        <div class="col-sm-12">
-                            <h4>Charge Areas :</h4>
-                        </div>
-                        <div class="col-sm-12">
-                            <div id="ca_id" class="row row-cols-4 border rounded p-3">
+                        <div class="col-12">
+                            <h4>Charge Areas and Areas :</h4>
+                            <div id="area_id" class="border rounded p-3">
                                 @php
-                                    $teamCas = $team->cas->pluck('id')->toArray();
+                                    $teamAreas = $team->areas->pluck('id')->toArray();
                                 @endphp
                                 @foreach ($cas as $ca)
-                                    <div class="col mb-2">
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="ca_id[]" value="{{ $ca->id }}" id="ca_{{ $ca->id }}"@checked(in_array($ca->id, $teamCas))>
-                                            <label class="form-check-label" for="ca_{{ $ca->id }}">{{ $ca->name }}</label>
+                                    <div class="mb-3">
+                                        <h6 class="fw-bold text-primary border-bottom pb-2">{{ $ca->name }}</h6>
+                                        <div class="row">
+                                            @foreach ($areas->where('ca_id', $ca->id) as $area)
+                                                <div class="col-lg-3 col-md-4 col-sm-6 mb-2">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" name="area_id[]" value="{{ $area->id }}" id="area_{{ $area->id }}" @checked(in_array($area->id, $teamAreas))>
+                                                        <label class="form-check-label" for="area_{{ $area->id }}">{{ $area->name }}</label>
+                                                    </div>
+                                                </div>
+                                            @endforeach
                                         </div>
                                     </div>
                                 @endforeach
@@ -100,5 +91,49 @@
         </div>
     </div>
 </div>
-
+<script type="text/javascript">
+    $("#du_id").on('change', function () {
+        $.get("{{ url('lms/teams/getDeliveryUnitAreas') }}", {
+            du_id: $(this).val()
+        }, function (response) {
+            let html = '';
+            if (response.charge_areas.length) {
+                const allocated = response.allocated_areas.map(Number);
+                response.charge_areas.forEach(function (chargeArea) {
+                html += `
+                    <div class="mb-3">
+                        <div class="fw-bold text-primary border-bottom pb-2">${chargeArea.name}</div>
+                        <div class="row">`;
+                            response.areas.forEach(function (area) {
+                            const disabled = allocated.includes(area.id);
+                            if (area.ca_id == chargeArea.id) {
+                                html += `
+                                    <div class="col-lg-3 col-md-4 col-sm-6 mb-2">
+                                        <div class="form-check">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                name="area_id[]"
+                                                value="${area.id}"
+                                                id="area_${area.id}"
+                                                ${disabled ? 'disabled' : ''}>
+                                            <label class="form-check-label" for="area_${area.id}">
+                                                ${area.name}
+                                            </label>
+                                        </div>
+                                    </div>
+                                `;
+                            }
+                        });
+                    html += `
+                            </div>
+                        </div>
+                    `;
+                });
+            } else {
+                html = '<span class="text-danger">No Areas Found</span>';
+            }
+            $('#area_id').html(html);
+        });
+    });
+</script>
 @include('scripts.ajax-form-submit', ['form' => 'team'])

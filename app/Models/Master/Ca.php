@@ -69,6 +69,6 @@ class Ca extends Model
      */
     public function user() : BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'adm_user_ca', 'ga_id', 'user_id');
+        return $this->belongsToMany(User::class, 'adm_user_ca', 'ca_id', 'user_id');
     }
 }

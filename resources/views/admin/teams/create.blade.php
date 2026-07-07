@@ -7,7 +7,7 @@
         </div>
         <div class="modal-body">
             <div id="team-success">
-                <form id="team-form" method="POST" action="{{ url('admin/teams/store') }}">
+                <form id="team-form" method="POST" action="{{ url('lms/teams/store') }}">
                     @csrf
                     <div class="row mb-3">
                         {{-- Team Name --}}
@@ -44,10 +44,22 @@
                             </select>
                         </div>
                     </div>
+                    <div class="row mb-3">
+                        {{-- Department --}}
+                        <label for="department_id" class="col-sm-2 col-form-label text-end">Delivery Unit :</label>
+                        <div class="col-sm-4">
+                            <select name="du_id" id="du_id" class="form-select">
+                                <option value="">Select Delivery unit</option>
+                                {{-- @foreach ($departments as $department)
+                                    <option value="{{ $department->id }}">{{ $department->name }}</option>
+                                @endforeach --}}
+                            </select>
+                        </div>
+                    </div>
                         
                     <hr>
                     {{-- Charge Areas --}}
-                    <div class="row mb-3">
+                    {{-- <div class="row mb-3">
                         <div class="col-sm-12">
                             <h4>Charge Areas :</h4>
                         </div>
@@ -55,6 +67,18 @@
                             <div id="ca_id" class="row row-cols-4 border rounded p-3">
                                 <div class="col-12">
                                     <span class="text-muted"> Select GA to get Charge Areas</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div> --}}
+                    <div class="row mb-3">
+                        <div class="col-sm-12">
+                            <h4>Charge Areas and Areas :</h4>
+                        </div>
+                        <div class="col-sm-12">
+                            <div id="area_id" class="border rounded p-3">
+                                <div class="col-12">
+                                    <span class="text-muted"> Select Delivery Unit to get Areas</span>
                                 </div>
                             </div>
                         </div>
@@ -77,20 +101,27 @@
 <script type="module">
     $(function(){
         $("#ga_id").on('change', function(e) {
-            $.get("{{ url('admin/teams/gaCas') }}",{'ga_id': e.target.value},function(response){
+            // Reset Areas
+            $('#area_id').html(`
+                <div class="col-12">
+                    <span class="text-muted">Select Delivery Unit to get Areas</span>
+                </div>
+            `);
+            // Get Charge Areas
+            $.get("{{ url('lms/teams/gaCas') }}",{'ga_id': e.target.value},function(response){
                 //for charge areas
-                let options = '';
-                if(response.cas && response.cas.length > 0) {
-                    response.cas.forEach(function(ca) {
-                    options += `<div class="form-check" style="display:inline-block; width:220px; margin-bottom:10px;">
-                    <input class="form-check-input" type="checkbox" name="ca_id[]" value="${ca.id}" id="ca_${ca.id}">
-                    <label class="form-check-label" for="ca_${ca.id}">${ca.name}</label>
-                    </div>`;
-                    });
-                } else {
-                    options = `<span class="text-danger">No Charge Areas Found</span>`;
-                }
-                $('#ca_id').html(options);
+                // let options = '';
+                // if(response.cas && response.cas.length > 0) {
+                //     response.cas.forEach(function(ca) {
+                //     options += `<div class="form-check" style="display:inline-block; width:220px; margin-bottom:10px;">
+                //     <input class="form-check-input" type="checkbox" name="ca_id[]" value="${ca.id}" id="ca_${ca.id}">
+                //     <label class="form-check-label" for="ca_${ca.id}">${ca.name}</label>
+                //     </div>`;
+                //     });
+                // } else {
+                //     options = `<span class="text-danger">No Charge Areas Found</span>`;
+                // }
+                // $('#ca_id').html(options);
                 //for users
                 let userOptions = '<option value="">Select Coordinator</option>';
                 if(response.users && response.users.length > 0) {
@@ -100,6 +131,76 @@
                 }
                 $('#responsible_user_id').html(userOptions);
                 
+            });
+
+            // Get Delivery Units
+            let dept = $('#department_id').val();
+            $.get("{{ url('lms/teams/getDeliveryUnits') }}",{'ga_id': e.target.value, 'dept_id' : dept },function(response){
+                //for users
+                let userOptions = '<option value="">Select Delivery Unit</option>';
+                if(response.delivery_units && response.delivery_units.length > 0) {
+                    response.delivery_units.forEach(function(du) {
+                        userOptions += `<option value="${du.id}">${du.name}</option>`;
+                    });
+                }
+                $('#du_id').html(userOptions);
+            });
+        });
+
+        $("#du_id").on('change', function () {
+            $.get("{{ url('lms/teams/getDeliveryUnitAreas') }}", {
+                du_id: $(this).val()
+            }, function (response) {
+
+                let html = '';
+
+                if (response.charge_areas.length) {
+                    const allocated = response.allocated_areas.map(Number);
+                    response.charge_areas.forEach(function (chargeArea) {
+
+                        html += `
+                            <div class="card mb-3">
+                                <div class="card-header bg-primary text-white">
+                                    <strong>${chargeArea.name}</strong>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                        `;
+                        response.areas.forEach(function (area) {
+                            const disabled = allocated.includes(area.id);
+                            if (area.ca_id == chargeArea.id) {
+
+                                html += `
+                                    <div class="col-lg-3 col-md-4 col-sm-6 mb-2">
+                                        <div class="form-check">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                name="area_id[]"
+                                                value="${area.id}"
+                                                id="area_${area.id}"
+                                                ${disabled ? 'disabled' : ''}>
+                                            <label class="form-check-label" for="area_${area.id}">
+                                                ${area.name}
+                                            </label>
+                                        </div>
+                                    </div>
+                                `;
+                            }
+
+                        });
+
+                        html += `
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    });
+
+                } else {
+                    html = '<span class="text-danger">No Areas Found</span>';
+                }
+
+                $('#area_id').html(html);
             });
         });
     });

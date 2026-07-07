@@ -2,39 +2,39 @@
 <div class="modal-dialog modal-lg">
     <div class="modal-content">
         <div class="modal-header">
-            <h4 class="modal-title">Manage Employees - {{ $team->name }}</h4>
+            <h4 class="modal-title">Manage Teams - {{ $delivery_unit->name }}</h4>
             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
-            <div id="team-user-success">
+            <div id="du-team-success">
                 <div>
-                    <x-admin.teams-details :teams="$team" class="bg-info-subtle" />
+                    <x-lms.du-details :du="$delivery_unit" class="bg-info-subtle" />
                 </div>
-                <form id="team-user-form" method="POST" action="{{ url('lms/teams/user/store/'.$team->id) }}">
+                <form id="du-team-form" method="POST" action="{{ url('lms/deliveryUnits/updateDuTeams/'.$delivery_unit->id) }}">
                     @csrf
                     @php
-                        $teamUsers = $team->users->pluck('id')->toArray();
+                        $du_teams = $delivery_unit->teams->pluck('id')->toArray();
                     @endphp
                     {{-- Users --}}
                     <div class="row mb-3">
                         <div class="col-sm-12">
-                            <h4>Employees :</h4>
+                            <h4>Teams :</h4>
                         </div>
                         <div class="col-sm-12">
                             <div class="row row-cols-3 border rounded p-3">
-                                @if($users->count() > 0)
-                                    @foreach ($users as $user)
+                                @if($teams->count() > 0)
+                                    @foreach ($teams as $team)
                                         <div class="col mb-2">
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" name="user_id[]" value="{{ $user->id }}" id="user_{{ $user->id }}"@checked(in_array($user->id, $teamUsers))>
-                                                <label class="form-check-label" for="user_{{ $user->id }}">{{ $user->emp_id }} - {{ $user->first_name }}{{ $user->last_name }} - {{ $user?->department?->name }}</label>
+                                                <input class="form-check-input" type="checkbox" name="team_id[]" value="{{ $team->id }}" id="team_{{ $team->id }}"@checked(in_array($team->id, $du_teams))>
+                                                <label class="form-check-label" for="team_{{ $team->id }}">{{ $team->name }}</label>
                                             </div>
                                         </div>
                                     @endforeach
                                 @else
                                     <div class="col-12">
                                         <div class="alert alert-danger mb-0">
-                                            No Users Found
+                                            No Teams Found
                                         </div>
                                     </div>
                                 @endif
@@ -42,8 +42,8 @@
                         </div>
                     </div>
                     {{-- Error --}}
-                    <div class="mt-3" id="team-user-error"></div>
-                        @if ($users->count() > 0)
+                    <div class="mt-3" id="du-team-error"></div>
+                        @if ($teams->count() > 0)
                             {{-- Submit --}}
                             <div class="text-center mt-4"><button type="submit" class="btn btn-success"><i class="bi bi-save"></i>&nbsp;Save Users</button></div>
                         @endif
@@ -55,4 +55,4 @@
         </div>
     </div>
 </div>
-@include('scripts.ajax-form-submit', ['form' => 'team-user'])
+@include('scripts.ajax-form-submit', ['form' => 'du-team'])

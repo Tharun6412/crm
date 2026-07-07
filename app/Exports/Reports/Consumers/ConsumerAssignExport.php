@@ -127,6 +127,9 @@ class ConsumerAssignExport implements FromQuery, WithHeadings, WithMapping
             ->when($this->request->has('area'), function($q) {
                 $q->whereIn('cns_consumers.area_id', $this->request->area);
             })
+            ->when($this->request->has('subarea'), function($q) {
+                $q->whereIn('cns_consumers.subarea_id', $this->request->subarea);
+            })
             ->orderBy($sortBy, $sortOr);
         return $consumers;
     }

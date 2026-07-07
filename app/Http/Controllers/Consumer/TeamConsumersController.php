@@ -122,6 +122,9 @@ class TeamConsumersController extends Controller
             ->when($request->has('area'), function($q) use ($request) {
                 $q->whereIn('cns_consumers.area_id', $request->area);
             })
+            ->when($request->has('subarea'), function($q) use ($request) {
+                $q->whereIn('cns_consumers.subarea_id', $request->subarea);
+            })
             ->orderBy($sortBy, $sortOr)
             ->paginate($records)->withQueryString();
         // Get Teams List
@@ -225,8 +228,61 @@ class TeamConsumersController extends Controller
      */
     public function consumersBatchAssign(Request $request)
     {
-        dd($request->all());
-        return response()->json('Consumers assigned successfully');
+        $request->validate([
+            'team_id' => 'required',
+            'assign_to' => 'required',
+        ]);
+        $consumer_data = [];
+        $team = Team::find($request->team_id);
+        $inserted = 0;
+        switch($request->status){
+            case ConsumerStatus::PRE_REGISTER->value:
+                $statusId = ConsumerStatus::REGISTER->value;
+                break;
+            case ConsumerStatus::REGISTER->value:
+                $statusId = ConsumerStatus::ACCEPT->value;
+                break; 
+            case ConsumerStatus::ACCEPT->value:
+                $statusId = ConsumerStatus::EXECUTE->value;
+                break;
+            case ConsumerStatus::EXECUTE->value:
+                $statusId = ConsumerStatus::HSC->value;
+                break;
+            case ConsumerStatus::HSC->value:
+                $statusId = ConsumerStatus::ACTIVATE->value;
+                break;
+            default :
+                $statusId = Null;
+                break;
+        }
+        foreach($request->consumer_ids as $key => $consumer_id) {
+            $consumer = Consumer::find($consumer_id);
+            if(in_array($consumer->ca_id, $team->cas->pluck('id')->toArray())) {
+                $consumer_data[] = array(
+                    'consumer_id' => $consumer_id,
+                    'status_id' => $statusId,
+                    'team_id' => $request->team_id,
+                    'assign_to' => $request->assign_to,
+                    'status' => 0,
+                    'created_by' => Auth::id(),
+                );
+                $inserted++;
+            }
+        }
+        TeamConsumer::upsert($consumer_data, ['consumer_id', 'status_id', 'team_id'], [
+            'consumer_id',
+            'status_id',
+            'team_id',
+            'assign_to',
+            'status',
+            'created_by',
+        ]);
+        // dd($inserted);
+        return response()->json([
+            'total' => count($request->consumer_ids),
+            'inserted' => $inserted,
+            'message' => 'Bulk assignment completed successfully.',
+        ]);
     }
 
     /**
