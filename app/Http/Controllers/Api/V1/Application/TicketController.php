@@ -8,6 +8,7 @@ use App\Models\Tickets\Ticket;
 use App\Models\Tickets\TicketStatusHistory;
 use Illuminate\Http\Request;
 use App\Traits\ApiResponse;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
 class TicketController extends Controller
@@ -59,7 +60,7 @@ class TicketController extends Controller
             'category:id,name,department_id',
             'category.departments:id,name',
             'status:id,name',
-            'createdBy:id,first_name,last_name',
+            'createdBy:id,first_name,last_name,mobile',
         ])->select('id','code','category_id','status_id','created_at','created_by')->where('consumer_id',$id)->orderBy('created_at','desc')->paginate(10);
         $tickets = $this->apiPagination($ticket_s);
         return response()->json(['tickets' => $tickets],200);
@@ -78,4 +79,46 @@ class TicketController extends Controller
         ])->select(['id','code','category_id','description','status_id','created_at','created_by'])->where('id',$id)->first();
         return response()->json(['tickets' => $tickets],200);
     }
+    /**
+     * All tickets
+     */
+    public function index(Request $request)
+    {
+        $ticket = Ticket::with([
+            'consumer:id,crn,fname,lname',
+            'category:id,name',
+            'status:id,name',
+            'createdBy:id,first_name,last_name,mobile',
+        ])
+        ->when((!isApiAdmin() && !isApiSuperAdmin() && !isApiFullAccess()), function ($q) {
+            $q->whereHas('consumer', function ($consumer) {
+                $consumer->whereIn('ga_id', session('user')['gas']);
+            });
+        })
+        ->when($request->filled('key'), function ($q) use ($request) {
+            $q->where(function ($query) use ($request) {
+                $query->where('code', 'like', "%{$request->key}%")
+                    ->orWhereHas('consumer', function ($consumer) use ($request) {
+                        $consumer->where('crn', 'like', "%{$request->key}%");
+                    });
+            });
+        })
+        ->when($request->has('status'), function ($q) use ($request) {
+            $q->whereIn('status_id', $request->status);
+        })
+        ->when($request->has('category'), function($q) use ($request) {
+            $q->whereIn('category_id', $request->category);
+        })
+        ->when(!empty($request->date_from) && !empty($request->date_to),function($q) use ($request) {
+            $q->whereBetween('created_at',[Carbon::createFromFormat('d-m-Y',$request->date_from)->startOfDay()->toDateTimeString(), Carbon::createFromFormat('d-m-Y',$request->date_to)->endOfDay()->toDateTimeString()]);
+        })
+        ->when((int) $request->my_tickets === 1, function ($q) {
+            $q->where('created_by', Auth::id());
+        })
+        ->orderByDesc('created_at')->paginate(50);
+        $tickets = $this->apiPagination($ticket);
+
+        return response()->json(['tickets' => $tickets],200);
+    }
+
 }

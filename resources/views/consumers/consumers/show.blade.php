@@ -96,11 +96,11 @@
                 <div class="col-md-12">
                     <div class="shadow-sm">
                         <div class="card-group">
-                            <div class="card bg-{{ ($consumer->scheme->balance > 0) ? 'danger' : 'success' }}-subtle">
+                            <div class="card bg-{{ ($consumer->scheme?->balance > 0) ? 'danger' : 'success' }}-subtle">
                                 <div class="card-body">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div class="row">
-                                            <h4 class="card-title mb-0"><i class="bi bi-currency-rupee"></i>&nbsp;{{ numberFormat($consumer->scheme->balance, 2) }}</h4>
+                                            <h4 class="card-title mb-0"><i class="bi bi-currency-rupee"></i>&nbsp;{{ numberFormat($consumer->scheme?->balance, 2) }}</h4>
                                             <span>Security Deposit Outstanding</span>
                                         </div>
                                         <div class="p-2"><i class="bi bi-piggy-bank fs-3"></i></div>
@@ -110,7 +110,7 @@
                             @php
                                 $gasbill_outstand = $consumer->invoices()->where('type_id', 1)->where('status_id', '!=', 4)->sum('balance_amount');
                                 $invoice_outstand = $consumer->invoices()->where('type_id', '!=', 1)->where('status_id', '!=', 4)->sum('balance_amount');
-                                $total_outstand = ($consumer->scheme->balance + $gasbill_outstand + $invoice_outstand);
+                                $total_outstand = ($consumer->scheme?->balance + $gasbill_outstand + $invoice_outstand);
                             @endphp
                             @if ($consumer->connection_type_id == 1)
                                 <div class="card bg-{{ ($gasbill_outstand > 0) ? 'danger' : 'success' }}-subtle">

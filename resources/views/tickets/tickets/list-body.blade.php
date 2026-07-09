@@ -13,6 +13,23 @@
         <div class="col-auto">
             <a href="{{ url('tickets/') }}" class="btn btn-warning"><i class="bi bi-arrow-clockwise"></i></a>
         </div>
+        <div class="col-auto">
+            <div class="form-control d-flex align-items-center">
+                <div class="form-check form-switch m-0">
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        role="switch"
+                        id="my_tickets"
+                        name="my_tickets"
+                        value="1"
+                        @checked(request()->my_tickets == "1")>
+                    <label class="form-check-label ms-2" for="my_tickets">
+                        My Tickets
+                    </label>
+                </div>
+            </div>
+        </div>
         <div class="col-auto mt-2">
             <span class="fw-semibold">({{ $tickets->total() }})</span>Records Found
         </div>
@@ -66,9 +83,11 @@
                                     <li><a class="dropdown-item link-modal" href={{ url('tickets/show/'.$ticket->id) }}><i class="bi bi-eye"></i>&nbsp;View</a></li>
                                     @switch($ticket->status_id)
                                         @case(\App\Enums\TicketStatus::REGISTER->value)
-                                            <li>
-                                                <a href="{{ url('tickets/edit/'.$ticket->id) }}" class="dropdown-item link-modal"><i class="bi bi-pencil-square"></i>&nbsp;Edit</a>
-                                            </li>
+                                            @if ($ticket->created_by == auth()->id() || isAdmin() || isSuperAdmin())    
+                                                <li>
+                                                    <a href="{{ url('tickets/edit/'.$ticket->id) }}" class="dropdown-item link-modal"><i class="bi bi-pencil-square"></i>&nbsp;Edit</a>
+                                                </li>
+                                            @endif
                                             @if (isAdmin() || isSuperAdmin() || isTicketApproval())
                                                 <li>
                                                     <a href="{{ url('tickets/statusChange/'.$ticket->id.'/'.\App\Enums\TicketStatus::APPROVE->value) }}"class="dropdown-item link-modal"><i class="bi bi-patch-check"></i>&nbsp;Approve</a>

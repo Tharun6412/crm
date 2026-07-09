@@ -41,7 +41,7 @@ class VerificationReportController extends Controller
         ->when($request->has('status'), function ($q) use ($request) {
             $q->whereIn('status', $request->status);
         })
-        ->paginate(5)->withQueryString();
+        ->paginate(50)->withQueryString();
 
         if($request->ajax())
             return view('consumers.verify.list-body',['consumers' => $consumers,'verificationCount' => $verificationCount, 'verification' => $verification]);

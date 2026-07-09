@@ -82,5 +82,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('store/{consumer_id}',[App\Http\Controllers\Api\V1\Application\TicketController::class,'store']);
         Route::get('list/{id}',[App\Http\Controllers\Api\V1\Application\TicketController::class,'list']);
         Route::get('show/{id}',[App\Http\Controllers\Api\V1\Application\TicketController::class,'show']);
+        Route::get('index',[App\Http\Controllers\Api\V1\Application\TicketController::class,'index']);
+
     }); 
 });

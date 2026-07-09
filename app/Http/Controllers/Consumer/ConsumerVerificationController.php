@@ -62,13 +62,15 @@ class ConsumerVerificationController extends Controller
      */
     public function update(Request $request,$id)
     {
-        $request->validate([
-            'status.1' => 'required',
-            'status.2' => 'required',
-            'status.3' => 'required',
-            'status.4' => 'required',
-            'status.5' => 'required',
-        ]);
+        $rules = [];
+        for($i=1;$i<6;$i++){
+            $rules["status.$i"] = 'required';
+
+            if (($request->status[$i] ?? null) == 0) {
+                $rules["remarks.$i"] = 'required';
+            }
+        }
+        $request->validate($rules);
 
         $consumer = Consumer::findOrFail($id);
 
@@ -77,7 +79,7 @@ class ConsumerVerificationController extends Controller
         $verification = VerifyConsumer::create([
             'consumer_id' => $id,
             'status' => $verifyStatus,
-            'remarks' => $request->notes,
+            'remarks' => $request->issues,
             'created_by' => Auth::id(),
         ]);
         foreach ($request->status as $stepId => $status){

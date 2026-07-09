@@ -32,6 +32,10 @@
                             <label class="form-label" for="registered_mobile">LPG Registered Mobile&nbsp;:<span class="text-danger">*</span></label>
                             <input type="text" name="registered_mobile" id="registered_mobile" class="form-control" placeholder="Registered Mobile" value="{{ $consumer->consumerData?->registered_mobile }}"/>
                         </div>
+                        <div class="col-md-4 col-sm-6 col-xs-12">
+                            <label class="form-label" for="lpg_connections">LPG Connections no (if any)&nbsp;:&nbsp;</label>
+                            <input type="number" name="lpg_connections" id="lpg_connections" class="form-control" placeholder="LPG Connections" value="{{ $consumer->consumerData?->lpg_connections }}"/>
+                        </div>
                     </div>
                     <div id="lpg-error"></div>
                     <div class="row">

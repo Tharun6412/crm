@@ -68,7 +68,7 @@ class ConsumerVerificationExport implements  FromQuery, WithMapping, WithHeading
         if($verification->status == 1){
             $status = "Verified Success";
         }else{
-            $status = "Verified Failed";
+            $status = "Verified Issue";
         }
         return[
             $verification->consumer?->crn,

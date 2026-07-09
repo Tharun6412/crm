@@ -25,8 +25,18 @@ class TicketController extends Controller
             'status:id,name',
             'createdBy',
         ])
+        ->when((!isAdmin() && !isSuperAdmin() && !isFullAccess()), function ($q) {
+            $q->whereHas('consumer', function ($consumer) {
+                $consumer->whereIn('ga_id', session('user')['gas']);
+            });
+        })
         ->when($request->filled('key'), function ($q) use ($request) {
-            $q->where('code', 'like', '%' . $request->key . '%');
+            $q->where(function ($query) use ($request) {
+                $query->where('code', 'like', "%{$request->key}%")
+                    ->orWhereHas('consumer', function ($consumer) use ($request) {
+                        $consumer->where('crn', 'like', "%{$request->key}%");
+                    });
+            });
         })
         ->when($request->has('status'), function ($q) use ($request) {
             $q->whereIn('status_id', $request->status);
@@ -36,6 +46,9 @@ class TicketController extends Controller
         })
         ->when(!empty($request->date_from) && !empty($request->date_to),function($q) use ($request) {
             $q->whereBetween('created_at',[Carbon::createFromFormat('d-m-Y',$request->date_from)->startOfDay()->toDateTimeString(), Carbon::createFromFormat('d-m-Y',$request->date_to)->endOfDay()->toDateTimeString()]);
+        })
+        ->when((int) $request->my_tickets === 1, function ($q) {
+            $q->where('created_by', Auth::id());
         })
         ->orderByDesc('created_at')->paginate(50)->withQueryString();
 

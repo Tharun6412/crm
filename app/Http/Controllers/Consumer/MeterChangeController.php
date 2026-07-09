@@ -102,7 +102,7 @@ class MeterChangeController extends Controller
                 }),
             ],
             'prev_reading' => 'required|numeric|in:'.$prev_reading,
-            'end_reading' => 'required|numeric|gt:'.$request->prev_reading,
+            'end_reading' => 'required|numeric|gte:'.$request->prev_reading,
             'initial_reading' => 'required|numeric',
             'request_date' => 'required',
             'release_date' => 'required',

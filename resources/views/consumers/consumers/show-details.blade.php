@@ -301,7 +301,7 @@
                             </tr>
                             <tr>
                                 <td class="fw-semibold">LPG OMC Type&nbsp;</td>
-                                <td>{{ $consumer->consumerData->omcType?->name }}</td>
+                                <td>{{ $consumer->consumerData?->omcType?->name }}</td>
                             </tr>
                             <tr>
                                 <td class="fw-semibold">LPG Registered Mobile</td>
