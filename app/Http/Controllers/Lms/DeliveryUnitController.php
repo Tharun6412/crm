@@ -15,11 +15,12 @@ use App\Models\Master\Department;
 use App\Models\Master\Ga;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class DeliveryUnitController extends Controller
 {
     /**
-     * Teams List Page
+     * Delivery Unit List Page
      */
     public function index(Request $request)
     {
@@ -54,29 +55,38 @@ class DeliveryUnitController extends Controller
             EnumsDepartment::MDPE->value,
             EnumsDepartment::STEEL->value,
         ])->orderBy('name', 'asc')->get();
-        return view('lms.delivery-units.create', ['geo_areas' => $geo_areas, 'departments' => $departments, 'charge_areas' => [], 'users' => []]);
-    }
-
-    /**
-     * get ca based on the ga
-     */
-    public function gaCas(Request $request)
-    {
-        $cas = Ca::where('ga_id',$request->ga_id)->get();
-        $users = User::with(['department'])->whereHas('ga', function($q) use ($request){
-            $q->where('ga_id',$request->ga_id);
-        })->get();
-        return view('lms.delivery-units.get-cas', ['charge_areas' => $cas, 'users' => $users]);
-        // return response()->json(['cas' => $cas,'users' => $users]);
+        // Reesponse
+        return view('lms.delivery-units.create', [
+            'geo_areas' => $geo_areas, 
+            'departments' => $departments, 
+            'charge_areas' => [], 
+            'users' => [],
+            'areas' => [],
+        ]);
     }
     /**
      * Get Areas List By Charge Area
      */
     public function getCaAreas(Request $request)
     {
-        $charge_areas = Ca::whereIn('id', $request->ca_id)->get();
-        $areas = Area::whereIn('ca_id', $request->ca_id)->get();
-        return response()->json(['areas' => $areas, 'charge_areas' => $charge_areas]);
+        $users = User::with(['department'])->whereHas('ga', function($q) use ($request){
+            $q->where('ga_id',$request->ga_id);
+        })->orderBy('first_name', 'asc')->get();
+        $charge_areas = Ca::select('id', 'name', 'ga_id')->where('ga_id', $request->ga_id)->get();
+        // Already assigned area IDs
+        $assigned_areas = DB::table('lms_du_areas')
+            ->join('lms_delivery_units', 'lms_delivery_units.id', '=', 'lms_du_areas.du_id')
+            ->where('lms_delivery_units.ga_id', $request->ga_id)
+            ->where('lms_delivery_units.dept_id', $request->department_id)
+            ->pluck('lms_du_areas.area_id')->toArray();
+        $areas = Area::select('id', 'name', 'ca_id')->whereIn('ca_id', $charge_areas->pluck('id'))->get();
+        // Response
+        return view('lms.delivery-units.get-cas', [
+            'areas' => $areas, 
+            'charge_areas' => $charge_areas, 
+            'users' => $users, 
+            'assigned_areas' => $assigned_areas,
+        ]);
     }
     /**
      * To store the Delivery Unit
@@ -86,21 +96,12 @@ class DeliveryUnitController extends Controller
         // Validation
         $request->validate([
             'name' => 'required',
-            'ga_id' => 'required',
             'department_id' => 'required',
-            'ca_id' => 'required',
-            'du_incharge_id' => 'required',
+            'ga_id' => 'required',
+            'delivery_manager_id' => 'required',
             'area_id' => 'required|array',
             'area_id.*' => 'exists:mst_areas,id',
         ]);
-        $departments = Department::whereIn('id', [
-            EnumsDepartment::ACTIVATION->value,
-            EnumsDepartment::HSE->value,
-            EnumsDepartment::MARKETING->value,
-            EnumsDepartment::GI->value,
-            EnumsDepartment::MDPE->value,
-            EnumsDepartment::STEEL->value,
-        ])->orderBy('name', 'asc')->get();
         switch($request->department_id) {
             case EnumsDepartment::STEEL->value:
                 $responsible_status = ConsumerStatus::REGISTER->value;
@@ -131,7 +132,7 @@ class DeliveryUnitController extends Controller
         }
         $delivery_unit = DeliveryUnit::create([
             'name' => $request->name,
-            'manager_id' => $request->du_incharge_id,
+            'manager_id' => $request->delivery_manager_id,
             'ga_id' => $request->ga_id,
             'dept_id' => $request->department_id,
             'responsible_status_id' => $responsible_status,
@@ -156,19 +157,27 @@ class DeliveryUnitController extends Controller
      */
     public function edit(Request $request, $id)
     {
-        $delivery_unit = DeliveryUnit::find($id);
+        $delivery_unit = DeliveryUnit::with(['ga:id,name', 'department:id,name', 'areas'])->find($id);
         $users = User::with(['department'])->whereHas('ga', function($q) use ($delivery_unit){
             $q->where('ga_id',$delivery_unit->ga_id);
         })->get();
-        $selectedAreas = $delivery_unit->areas->pluck('id')->toArray();
+        // Selected Areas for the selected GA
+        $selected_areas = $delivery_unit->areas->pluck('id')->toArray();
         $charge_areas = Ca::where('ga_id', $delivery_unit->ga_id)->get();
         $areas = Area::whereIn('ca_id', $charge_areas->pluck('id'))->get();
+        // Disable Areas if selected for other DU
+        $disabled_areas = DeliveryUnit::where('ga_id', $delivery_unit->ga_id)->where('dept_id', $delivery_unit->dept_id)
+            ->where('id', '!=', $delivery_unit->id)
+            ->with('areas:id')->get()
+            ->flatMap->areas
+            ->pluck('id')->unique()->toArray();
         return view('lms.delivery-units.edit', [
             'delivery_unit' => $delivery_unit, 
             'users' => $users, 
             'charge_areas' => $charge_areas,
-            'selectedAreas' => $selectedAreas, 
-            'areas' => $areas
+            'selected_areas' => $selected_areas, 
+            'areas' => $areas,
+            'disabled_areas' => $disabled_areas,
         ]);
     }
 
@@ -180,14 +189,14 @@ class DeliveryUnitController extends Controller
         // Validation
         $request->validate([
             'name' => 'required',
-            'du_incharge_id' => 'required',
+            'delivery_manager_id' => 'required',
             'area_id' => 'required|array',
             'area_id.*' => 'required',
         ]);
         $delivery_unit = DeliveryUnit::find($id);
         $delivery_unit->update([
             'name' => $request->name,
-            'manager_id' => $request->du_incharge_id,
+            'manager_id' => $request->delivery_manager_id,
             'updated_by' => Auth::id(),
         ]);
 
@@ -210,25 +219,13 @@ class DeliveryUnitController extends Controller
         $du = DeliveryUnit::findOrFail($id);
         $du->status = !$du->status;
         $du->save();
-
+        // Response
         return response()->json([
             'success' => 'true',
             'message' => 'Status Change Successfully',
             'status' => $du->status ? 'Active' : 'Inactive',
         ]);
     }
-
-    /**
-     * Get Edit CA Areas
-     */
-    // public function getEditCaAreas(Request $request)
-    // {
-    //     $cas = Ca::where('ga_id',$request->ga_id)->get();
-    //     $users = User::with(['department'])->whereHas('ga', function($q) use ($request){
-    //         $q->where('ga_id',$request->ga_id);
-    //     })->get();
-    //     return view('lms.delivery-units.edit-cas', ['charge_areas' => $cas, 'users' => $users]);
-    // }
     /**
      * Show Details of Delivery Unit
      * @param $du_id

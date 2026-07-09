@@ -82,5 +82,13 @@ class Team extends Model
     {
         return $this->belongsTo(Consumer::class,'consumer_id');
     }
+
+    /**
+     * Relation with DU
+     */
+    public function deliveryUnit() : BelongsTo
+    {
+        return $this->belongsTo(DeliveryUnit::class, 'du_id');
+    }
 }
 

@@ -54,7 +54,7 @@ class TeamUserController extends Controller
                     $q->whereIn('adm_roles.id', array_unique($role_id));
                 })
                 ->get();
-        return view('admin.teams.users.create', [
+        return view('lms.teams.users.create', [
             'team' => $team,
             'users' => $users
         ]);
@@ -93,7 +93,7 @@ class TeamUserController extends Controller
             EnumsRole::ACTIVATION_EMPLOYEE->value,
             EnumsRole::HSE_EMPLOYEE->value,
         ])->get();
-        return view('admin.teams.users.add',['geo_areas' => $geo_areas,'departments' => $departments,'roles' => $roles,'types' => $types]);
+        return view('lms.teams.users.add',['geo_areas' => $geo_areas,'departments' => $departments,'roles' => $roles,'types' => $types]);
     }
     /**
      * Store user in Users Table

@@ -12,12 +12,12 @@
                     <div class="row mb-3">
                         {{-- Team Name --}}
                         <label for="name" class="col-sm-2 col-form-label text-end">Name :</label>
-                        <div class="col-sm-2">
+                        <div class="col-sm-4">
                             <input type="text" name="name" id="name" class="form-control" placeholder="Enter Delivery Unit Name">
                         </div>
                         {{-- Department --}}
                         <label for="department_id" class="col-sm-2 col-form-label text-end">Department :</label>
-                        <div class="col-sm-2">
+                        <div class="col-sm-4">
                             <select name="department_id" id="department_id" class="form-select">
                                 <option value="">Select Department</option>
                                 @foreach ($departments as $department)
@@ -25,9 +25,11 @@
                                 @endforeach
                             </select>
                         </div>
+                    </div>
+                    <div class="row mb-3">
                         {{-- Geo Area --}}
                         <label for="ga_id" class="col-sm-2 col-form-label text-end">Geo Area :</label>
-                        <div class="col-sm-2">
+                        <div class="col-sm-4">
                             <select name="ga_id" id="ga_id" class="form-select">
                                 <option value="">Select Geo Area</option>
                                 @foreach ($geo_areas as $ga)
@@ -35,30 +37,16 @@
                                 @endforeach
                             </select>
                         </div>
+                        <div class="col-sm-6"></div>
                     </div>
-                    {{-- Charge Area and User --}}
-                    <div class="row mb-3" id="charge_area">
+                    <div class="row mb-3" id="add-user-cas">
                         @include('lms.delivery-units.get-cas')
-                    </div>
-                    <hr>
-                    {{-- Charge Areas --}}
-                    <div class="row mb-3">
-                        <div class="col-sm-12">
-                            <h4>Charge Areas and Areas :</h4>
-                        </div>
-                        <div class="col-sm-12">
-                            <div id="area_id" class="border rounded p-3">
-                                <div class="col-12">
-                                    <span class="text-muted"> Select Charge Area to get Areas</span>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                     {{-- Error --}}
                     <div class="mb-3" id="team-error"></div>
                     {{-- Submit --}}
                     <div class="text-center">
-                        <button type="submit" class="btn btn-success"><i class="bi bi-save"></i>&nbsp;Save Team</button>
+                        <button type="submit" class="btn btn-success"><i class="bi bi-save"></i>&nbsp;Save</button>
                     </div>
                 </form>
             </div>
@@ -70,12 +58,18 @@
 </div>
 @include('scripts.ajax-form-submit',['form' => 'team'])
 <script type="text/javascript">
-    $(function(){
-        // Get Charge areas
-        $("#ga_id").on('change', function(e) {
-            $.get("{{ url('lms/deliveryUnits/gaCas') }}",{'ga_id': e.target.value},function(response){
-                $('#charge_area').html(response);
+    $(function () {
+        function loadDeliveryUnitData() {
+            let gaId = $('#ga_id').val();
+            let departmentId = $('#department_id').val();
+            // Don't call until both are selected
+            if (!gaId || !departmentId) {
+                return;
+            }
+            $.get("{{ url('lms/deliveryUnits/getCaAreas') }}", {ga_id: gaId, department_id: departmentId}, function (response) {
+                $('#add-user-cas').html(response);
             });
-        });
+        }
+        $('#ga_id, #department_id').on('change', loadDeliveryUnitData);
     });
 </script>

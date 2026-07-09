@@ -26,7 +26,7 @@ class AreaFilter extends Component
         // Pass the charge areas to the view
         if(request()->has('charge_area')) {
             $charge_area = request()->get('charge_area');
-            $areas = Area::whereIn('ca_id', $charge_area)->get();
+            $areas = Area::whereIn('ca_id', $charge_area)->orderBy('name', 'asc')->get();
             return view('components.master.area-filter', ['areas' => $areas]);
         } 
     }

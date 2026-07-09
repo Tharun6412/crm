@@ -25,7 +25,7 @@ class ChargeAreaFilter extends Component
         // Pass the charge areas to the view
         if(request()->has('geo_area')) {
             $geo_area = request()->get('geo_area');
-            $charge_areas = Ca::whereIn('ga_id', $geo_area)->get();
+            $charge_areas = Ca::whereIn('ga_id', $geo_area)->orderBy('name', 'asc')->get();
             return view('components.master.charge-area-filter', ['charge_areas' => $charge_areas]);
         } 
     }

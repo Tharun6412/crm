@@ -2,7 +2,7 @@
 
 namespace App\Models\Consumer;
 
-use App\Models\Admin\Team;
+use App\Models\Lms\Team;
 use App\Models\Admin\User;
 use App\Models\Master\MasterConsumerStatus;
 use Illuminate\Database\Eloquent\Model;

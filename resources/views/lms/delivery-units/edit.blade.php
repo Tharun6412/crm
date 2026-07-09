@@ -2,7 +2,7 @@
 <div class="modal-dialog modal-xl">
     <div class="modal-content">
         <div class="modal-header">
-            <h1 class="modal-title fs-5">Add Delivery Unit</h1>
+            <h1 class="modal-title fs-5">Edit Delivery Unit</h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
@@ -28,9 +28,9 @@
                         <div class="col-sm-4">
                             <span>{{ $delivery_unit->ga?->name }}</span>
                         </div>                
-                        <label for="du_incharge_id" class="col-sm-2 col-form-label text-end">DU Incharge :</label>
+                        <label for="du_incharge_id" class="col-sm-2 col-form-label text-end">Delivery Manager :</label>
                         <div class="col-sm-4">
-                            <select name="du_incharge_id" id="du_incharge_id" class="form-select">
+                            <select name="delivery_manager_id" id="delivery_manager_id" class="form-select">
                                 <option value="">Select</option>
                                 @foreach ($users as $user)
                                     <option value="{{ $user->id }}" @selected($user->id == $delivery_unit?->manager_id)>
@@ -63,7 +63,8 @@
                                                             name="area_id[]"
                                                             value="{{ $area->id }}"
                                                             id="area_{{ $area->id }}"
-                                                            @checked(in_array($area->id, $selectedAreas))
+                                                            @checked(in_array($area->id, $selected_areas))
+                                                            @disabled(in_array($area->id, $disabled_areas))
                                                         >
                                                         <label class="form-check-label" for="area_{{ $area->id }}">
                                                             {{ $area->name }}
@@ -81,7 +82,7 @@
                     <div class="mb-3" id="team-error"></div>
                     {{-- Submit --}}
                     <div class="text-center">
-                        <button type="submit" class="btn btn-success"><i class="bi bi-save"></i>&nbsp;Save Team</button>
+                        <button type="submit" class="btn btn-success"><i class="bi bi-save"></i>&nbsp;Update</button>
                     </div>
                 </form>
             </div>

@@ -73,13 +73,13 @@ class ConsumerAssignExport implements FromQuery, WithHeadings, WithMapping
             ->leftJoinSub($latestStatus, 'latest_status', function($join) {
                 $join->on('cns_consumers.id', '=', 'latest_status.consumer_id')->on('latest_status.status_id', '=', 'cns_consumers.status_id');
             })
-            ->leftJoin('adm_teams', 'adm_teams.id', '=', 'cns_consumer_teams.team_id')
+            ->leftJoin('lms_teams', 'lms_teams.id', '=', 'cns_consumer_teams.team_id')
             ->leftJoin('users', 'users.id', '=', 'cns_consumer_teams.created_by')
             ->leftJoin('users as assign_user', 'assign_user.id', '=', 'cns_consumer_teams.assign_to')
             ->leftJoin('mst_cns_status', 'mst_cns_status.id', '=', 'cns_consumer_teams.status_id')
             ->select(
                 'cns_consumers.id','cns_consumers.fname','cns_consumers.lname','cns_consumers.crn','cns_consumers.t_crn','cns_consumers.ga_id','cns_consumers.ca_id','cns_consumers.area_id','cns_consumers.subarea_id','cns_consumers.status_id',
-                'adm_teams.name as team_name',
+                'lms_teams.name as team_name',
                 'cns_consumer_teams.status as team_status',
                 'mst_cns_status.name as status_name',
                 DB::raw('CONCAT_WS(" ", users.first_name, users.last_name) as team_created_by'),
@@ -91,7 +91,7 @@ class ConsumerAssignExport implements FromQuery, WithHeadings, WithMapping
             ->when($this->request->filled('key'), function($q) {
                 $q->where('cns_consumers.t_crn','like','%'.$this->request->key.'%')->orWhere('cns_consumers.crn','like','%'.$this->request->key.'%');
             })
-            ->when($this->request->has('team_id'), function ($q) {
+            ->when(!empty($this->request->team_id), function ($q) {
                 $q->whereIn('team_id', $this->request->team_id);
             })
             ->when($this->request->has('user_id'), function ($q) {
@@ -117,6 +117,9 @@ class ConsumerAssignExport implements FromQuery, WithHeadings, WithMapping
             })
             ->when($this->request->has('ucas'), function($q) {
                 $q->whereIn('cns_consumers.ca_id', $this->request->ucas);
+            })
+            ->when($this->request->has('area_ids'), function($q) {
+                $q->whereIn('cns_consumers.area_id', $this->request->area_ids);
             })
             ->when($this->request->has('geo_area'), function ($q) {
                 $q->whereIn('cns_consumers.ga_id', $this->request->geo_area);

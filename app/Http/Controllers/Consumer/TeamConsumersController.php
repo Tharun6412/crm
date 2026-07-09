@@ -6,9 +6,9 @@ use App\Enums\ConsumerStatus;
 use App\Enums\Department;
 use App\Exports\Reports\Consumers\ConsumerAssignExport;
 use App\Http\Controllers\Controller;
-use App\Models\Admin\Team;
 use App\Models\Consumer\Consumer;
 use App\Models\Consumer\TeamConsumer;
+use App\Models\Lms\Team;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -18,6 +18,7 @@ class TeamConsumersController extends Controller
 {
     public function index(Request $request)
     {
+        // dd($request->all());
         $sortBy = ($request->get('sortBy')) ? $request->get('sortBy') : 'cns_consumers.created_at';
         $sortOr = ($request->get('sortOr')) ? $request->get('sortOr') : 'desc';
         $records = ($request->get('records')) ? $request->get('records') : 50;
@@ -68,13 +69,13 @@ class TeamConsumersController extends Controller
             ->leftJoinSub($latestStatus, 'latest_status', function($join) use($request) {
                 $join->on('cns_consumers.id', '=', 'latest_status.consumer_id')->on('latest_status.status_id', '=', 'cns_consumers.status_id');
             })
-            ->leftJoin('adm_teams', 'adm_teams.id', '=', 'cns_consumer_teams.team_id')
+            ->leftJoin('lms_teams', 'lms_teams.id', '=', 'cns_consumer_teams.team_id')
             ->leftJoin('users', 'users.id', '=', 'cns_consumer_teams.created_by')
             ->leftJoin('users as assign_user', 'assign_user.id', '=', 'cns_consumer_teams.assign_to')
             ->leftJoin('mst_cns_status', 'mst_cns_status.id', '=', 'cns_consumer_teams.status_id')
             ->select(
                 'cns_consumers.id','cns_consumers.fname','cns_consumers.lname','cns_consumers.crn','cns_consumers.t_crn','cns_consumers.ga_id','cns_consumers.ca_id','cns_consumers.area_id','cns_consumers.subarea_id','cns_consumers.status_id',
-                'adm_teams.name as team_name',
+                'lms_teams.name as team_name',
                 'cns_consumer_teams.status as team_status',
                 'mst_cns_status.name as status_name',
                 DB::raw('CONCAT_WS(" ", users.first_name, users.last_name) as team_created_by'),
@@ -86,7 +87,7 @@ class TeamConsumersController extends Controller
             ->when($request->filled('key'), function($q) use ($request) {
                 $q->where('cns_consumers.t_crn','like','%'.$request->key.'%')->orWhere('cns_consumers.crn','like','%'.$request->key.'%');
             })
-            ->when($request->has('team_id'), function ($q) use($request) {
+            ->when(!empty($request->team_id), function ($q) use($request) {
                 $q->whereIn('team_id', $request->team_id);
             })
             ->when($request->has('user_id'), function ($q) use($request) {
@@ -113,6 +114,9 @@ class TeamConsumersController extends Controller
             ->when($request->has('ucas'), function($q) use ($request) {
                 $q->whereIn('cns_consumers.ca_id', $request->ucas);
             })
+            ->when($request->has('area_ids'), function($q) use ($request) {
+                $q->whereIn('cns_consumers.area_id', $request->area_ids);
+            })
             ->when($request->has('geo_area'), function ($q) use($request) {
                 $q->whereIn('cns_consumers.ga_id', $request->geo_area);
             })
@@ -128,9 +132,12 @@ class TeamConsumersController extends Controller
             ->orderBy($sortBy, $sortOr)
             ->paginate($records)->withQueryString();
         // Get Teams List
-        $teams = Team::whereIn('ga_id',$request->ugas)->whereHas('cas', function($q) use($request) {
-            $q->whereIn('mst_cas.id', $request->ucas);
-        })->where('department_id', $dept_id)->where('status',1)->get();
+        $teams = [];
+        if($request->area) {
+            $teams = Team::where('du_id', $request->du_id)->whereIn('ga_id', $request->ugas)->whereHas('areas', function($q) use($request) {
+                $q->whereIn('mst_areas.id', $request->area);
+            })->where('status', 1)->get();
+        }
         if($request->ajax())
             return view('consumers.team-consumers.list-body', ['consumers' => $consumers, 'teams' => $teams]);
         else
@@ -162,9 +169,7 @@ class TeamConsumersController extends Controller
                 $dept_id = Null;
                 break;
         }
-        $teams = Team::where('ga_id',$team_consumer->ga_id)->whereHas('cas', function($q) use($team_consumer) {
-            $q->where('mst_cas.id', $team_consumer->ca_id);
-        })->where('department_id', $dept_id)->where('status',1)->get();
+        $teams = Team::where('du_id', $request->du_id)->whereIn('ga_id', $request->ugas)->where('status', 1)->get();
         return view('consumers.team-consumers.create',['team_consumer' => $team_consumer,'teams' => $teams]);
     }
 
@@ -257,7 +262,7 @@ class TeamConsumersController extends Controller
         }
         foreach($request->consumer_ids as $key => $consumer_id) {
             $consumer = Consumer::find($consumer_id);
-            if(in_array($consumer->ca_id, $team->cas->pluck('id')->toArray())) {
+            if(in_array($consumer->area_id, $team->areas->pluck('id')->toArray())) {
                 $consumer_data[] = array(
                     'consumer_id' => $consumer_id,
                     'status_id' => $statusId,

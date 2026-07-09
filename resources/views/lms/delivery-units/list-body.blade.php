@@ -14,7 +14,7 @@
         </div>
     </div>
     <div>
-        <a href="{{ url('lms/deliveryUnits/create') }}" class="btn btn-outline-success link-modal"><i class="bi bi-plus-lg"></i>&nbsp;Add Unit</a>
+        <a href="{{ url('lms/deliveryUnits/create') }}" class="btn btn-outline-success link-modal"><i class="bi bi-plus-lg"></i>&nbsp;Add Delivery Unit</a>
     </div>
 </div>
 
@@ -26,9 +26,9 @@
                 <th>Name</th>
                 <th>GA</th>
                 <th>Department</th>
-                <th>DU Incharge</th>
+                <th>Delivery Manager</th>
                 <th>Responsible Status</th>
-                <th>Areas</th>
+                <th>Teams List</th>
                 <th>Status</th>
                 <th>Actions</th>
             </tr>
@@ -45,21 +45,23 @@
                         <td>{{ $du->department?->name }}</td>
                         <td>{{ $du->duIncharge?->name }}</td>
                         <td>{{ $du->responsibleStatus?->name }}</td>
-                        <td>
-                            @if ($du->areas->count() > 0)
-                                @foreach ($du->areas as $area)
-                                    @if ($loop->iteration == 1)
-                                        <div class="btn-group w-100">
-                                            <button type="button" class="btn btn-outline-dark btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                                {{ $area->name }}
-                                            </button>
-                                            <ul class="dropdown-menu">                
-                                    @else
-                                        <li class="dropdown-item"><i class="bi bi-ca-alt-fill"></i>&nbsp;{{ $area->name }}</li>
-                                    @endif
-                                @endforeach
+                        <td class="text-center">
+                            @if($du->teams->count() > 0)
+                                <div class="dropdown">
+                                    <button class="btn btn-sm btn-outline-primary dropdown-toggle w-100" type="button" data-bs-toggle="dropdown"><i class="bi bi-people"></i> Teams {{ $du->teams->count() }}</button>
+                                    <ul class="dropdown-menu">
+                                        @foreach($du->teams as $team)
+                                             <li>
+                                                <a href="{{ url('lms/teams/show/'.$team->id) }}"
+                                                class="dropdown-item link-modal">
+                                                   <i class="bi bi-person"></i> {{ $team->name }} - {{ $team->users_count ?? 0 }}
+                                                </a>
+                                            </li>
+                                        @endforeach
                                     </ul>
                                 </div>
+                            @else
+                                <span class="text-body-tertiary"><i class="bi bi-person-slash"></i></span>
                             @endif
                         </td>
                         <td>

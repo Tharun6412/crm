@@ -10,6 +10,7 @@ use App\Models\Master\MasterConsumerStatus;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class DeliveryUnit extends Model
 {
@@ -84,6 +85,14 @@ class DeliveryUnit extends Model
     {
         return $this->belongsTo(MasterConsumerStatus::class, 'responsible_status_id');
     }
+
+    /**
+     * Relation with Action Status
+     */
+    public function actionStatus():BelongsTo
+    {
+        return $this->belongsTo(MasterConsumerStatus::class, 'action_status_id');
+    }
     /**
      * Relation with Area
      */
@@ -95,8 +104,8 @@ class DeliveryUnit extends Model
     /**
      * Relation with Teams
      */
-    public function teams():BelongsToMany
+    public function teams():HasMany
     {
-        return $this->belongsToMany(Team::class, 'lms_du_teams', 'du_id', 'team_id');
+        return $this->hasMany(Team::class,'du_id', 'id')->orderBy('created_at', 'desc');
     }
 }
