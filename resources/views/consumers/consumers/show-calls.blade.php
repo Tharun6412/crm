@@ -7,14 +7,14 @@
     <div class="p-2">
         @if ($complaints->count() > 0)
             <div class="table-responsive">
-                <table class="table table-bordered table-primary">
-                    <thead class="table-primary">
+                <table class="table table-bordered table-primary align-middle">
+                    <thead class="table-primary align-middle">
                         <tr>
                             <th width="1%" nowrap>S.No</th>
-                            <th>Complaint Number</th>
+                            <th nowrap>Complaint Number</th>
                             <th>Category</th>
-                            <th>Raised Date</th>
-                            <th>Closed Date</th>
+                            <th nowrap>Raised Date</th>
+                            <th nowrap>Closed Date</th>
                             <th>Status</th>
                             <th>Actions</th>
                         </tr>

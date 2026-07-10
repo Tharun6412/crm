@@ -15,24 +15,24 @@
         <a href="{{ url('consumers/meterChange') }}" class="btn btn-warning"><i class="bi bi-arrow-clockwise"></i></a>
     </div>
     <div class="col-auto">
-        ({{ $meterChange->total() }}) Records found
+       <div class="mt-2">({{ $meterChange->total() }}) Records found</div>
     </div>
 </div>
 {{-- Consumers Meter Change list --}}
-<div class="table-responsive mt-2" style="min-height: 500px;">
-    <table class="table table-bordered table-hover">
-        <thead class="table-success">
+<div class="table-responsive mt-2">
+    <table class="table table-bordered table-hover align-middle">
+        <thead class="table-success align-middle">
             <tr>
                 <th width="1%" nowrap>S.No</th>
                 <th>Consumer Number</th>
                 <th class="text-end">Old Meter Number</th>
                 <th class="text-end">Old Meter Consumption</th>
                 <th class="text-end">New Meter Number</th>
-                <th>Request Date</th>
-                <th>Release Date</th>
+                <th nowrap>Request Date</th>
+                <th nowrap>Release Date</th>
                 <th>Status</th>
-                <th>Added By</th>
-                <th>Actions</th>
+                <th nowrap>Added By</th>
+                <th nowrap>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -42,7 +42,7 @@
             @endphp
                 @foreach ($meterChange as $change)
                     <tr>
-                        <td>{{ $i++ }}</td>
+                        <td class="text-center">{{ $i++ }}</td>
                         <td><a href="{{ url('consumers/'.$change->consumer_id) }}" target="_blank">{{ $change->consumer->crn }}</a></td>
                         <td class="text-end">{{ $change->meter?->meter_no }}</td>
                         <td class="text-end">{{ $change->consumption }}</td>
@@ -51,7 +51,7 @@
                         <td>{{ $change?->replace_date?->format('d-m-Y') }}</td>
                         <td>{{ $change->status_id == 1 ? "Pending" : "Completed" }}</td>
                         <td>{{ $change->createdBy?->name }}</td>
-                        <td><a class="btn btn-primary btn-sm link-modal" href="{{ url('consumers/meterChange/'.$change->id) }}"><i class="bi bi-box-arrow-up-right"></i> View</a></td>
+                        <td><a class="btn btn-primary btn-sm d-flex link-modal" href="{{ url('consumers/meterChange/'.$change->id) }}"><i class="bi bi-box-arrow-up-right"></i>&nbsp;View</a></td>
                     </tr>
                 @endforeach
             @else

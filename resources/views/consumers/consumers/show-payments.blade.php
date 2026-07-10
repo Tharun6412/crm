@@ -5,19 +5,19 @@
     </div>
     <div class="p-2">
         @if ($payments->count() > 0)
-            <div class="responsive">
-                <table class="table table-bordered table-hover table-primary">
-                    <thead class="table-primary">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover table-primary align-middle">
+                    <thead class="table-primary align-middle">
                         <tr>
                             <th width="1%" nowrap>S No</th>
-                            <th>Invoice number</th>
+                            <th nowrap>Invoice number</th>
                             <th nowrap>Invoice Date</th>
-                            <th>Payment Type</th>
-                            <th>Transaction Number</th>
-                            <th class="text-end">Amount</th>
-                            <th class="text-end">Balance</th>
-                            <th>Status</th>
-                            <th>Created By</th>
+                            <th nowrap>Payment Type</th>
+                            <th nowrap>Transaction Number</th>
+                            <th nowrap class="text-end">Amount</th>
+                            <th nowrap class="text-end">Balance</th>
+                            <th nowrap>Status</th>
+                            <th nowrap>Created By</th>
                             <th>Actions</th>
                         </tr>
                     </thead>

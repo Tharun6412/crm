@@ -30,9 +30,9 @@
         <x-auth.link :href="url('reports/paymentsReport/paymentsReportExport') . '?' . request()->getQueryString()" class="btn btn-outline-info"><i class="bi bi-file-earmark-excel"></i>&nbsp;Export</x-auth.link>
         {{ $payments->links('utils.cursor', ['modDiv' => 'payments-report-list']) }}
     </div> --}}
-    <div class="d-flex justify-content-between mb-1">
+    <div class="d-flex justify-content-between w-100 mb-1">
         <div class="fs-5 fw-semibold">({{ numberFormat($tRecords ?? 0) }})&nbsp;Records found</div>
-        <div class="d-flex justify-content-end">
+        <div class="d-flex align-items-end">
             <a href="{{ url('reports/paymentsReport/paymentsReportExport') }}?{{ http_build_query(request()->all()) }}" class="btn btn-outline-primary link-modal me-2">
                 <i class="bi bi-filetype-csv"></i>&nbsp;Export
             </a>
@@ -178,10 +178,10 @@
     </table>
 </div>
 <div class="card-group">
-    <div class="card text-bg-primary mb-3" style="max-width: 15rem;">
+    <div class="card border border-3 border-primary mb-3" style="max-width: 15rem;">
         <div class="card-body">
-            <h4 class="card-title">Total Paid Amount</h4>
-            <p class="card-text">{{ numberFormat($tAmount,2) }}</p>
+            <h4 class="card-title text-primary">Total Paid Amount</h4>
+            <p class="card-text fs-4 fw-semibold text-primary">{{ numberFormat($tAmount,2) }}</p>
         </div>
     </div>
 </div>

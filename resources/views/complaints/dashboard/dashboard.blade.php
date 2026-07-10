@@ -42,7 +42,7 @@
                     <div class="p-3 dpng-bg border border-3 border-light shadow-sm rounded-3">
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="p-1 dpng-bg rounded-4 py-2 px-3 shadow-sm"><i class="bi bi-building fs-3"></i></div>
-                            <div class="fs-4 fw-semibold text-center">{{ numberFormat($complaint_segment[ComplaintSegmentType::PNGDOM->value] ?? 0) }}<br/><span class="fs-5">DPNG</span></div>
+                            <div class="fs-4 fw-semibold text-center">{{ numberFormat($complaint_segment[ComplaintSegmentType::PNGDOM->value] ?? 0) }}<br/><span class="fs-6">DPNG</span></div>
                         </div>
                     </div>
                 </a>
@@ -52,7 +52,7 @@
                     <div class="p-3 cpng-bg border border-3 border-light shadow-sm rounded-3">
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="p-1 cpng-bg rounded-4 py-2 px-3 shadow-sm"><i class="bi bi-house fs-3"></i></div>
-                            <div class="fs-4 fw-semibold text-center">{{ numberFormat($complaint_segment[ComplaintSegmentType::PNGCOM->value] ?? 0) }}<br/><span class="fs-5">CPNG</span></div>
+                            <div class="fs-4 fw-semibold text-center">{{ numberFormat($complaint_segment[ComplaintSegmentType::PNGCOM->value] ?? 0) }}<br/><span class="fs-6">CPNG</span></div>
                         </div>
                     </div>
                 </a>
@@ -63,7 +63,7 @@
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="p-1 ipng-bg rounded-4 py-2 px-3 shadow-sm"><i class="bi bi-buildings fs-3"></i></div>
                             <div class="fs-4 fw-semibold text-center">{{ numberFormat($complaint_segment[ComplaintSegmentType::PNGIND->value] ?? 0) }}
-                                <br/><span class="fs-5">IPNG</span>
+                                <br/><span class="fs-6">IPNG</span>
                             </div>
                         </div>
                     </div>
@@ -75,7 +75,7 @@
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="p-1 cng-bg rounded-4 py-2 px-3 shadow-sm"><i class="bi bi-fuel-pump fs-3"></i></div>
                             <span class="fs-4 fw-semibold text-center">{{ numberFormat($complaint_segment[ComplaintSegmentType::CNG->value] ?? 0) }}
-                                <br/><span class="fs-5">CNG</span>
+                                <br/><span class="fs-6">CNG</span>
                             </span>
                         </div>
                     </div>
@@ -87,7 +87,7 @@
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="p-1 general-bg bg-opacity-25 rounded-4 py-2 px-3 shadow-sm"><i class="bi bi-headset fs-3"></i></div>
                             <div class="fs-4 fw-semibold text-center">{{ numberFormat($complaint_segment[ComplaintSegmentType::GENERAL->value] ?? 0) }}
-                                <br/><span class="fs-5">General</span>
+                                <br/><span class="fs-6">General</span>
                             </div>
                         </div>
                     </div>
@@ -229,7 +229,7 @@
                 <a href="{{ url('calls/reports/complaints') }}?tab=ga" target="_blank" class="text-body-secondary">
                     <div class="p-3 reports-bg border border-3 border-light shadow-sm rounded-3">
                         <div class="d-flex align-items-center gap-2">
-                            <div class="p-1 reports-bg rounded-4 py-2 px-3 shadow-sm"><i class="bi bi-geo-alt fs-4"></i></div>
+                            <div class="p-2 reports-bg rounded-4 py-2 px-3 shadow-sm"><i class="bi bi-geo-alt fs-4"></i></div>
                             <div class="fs-6 fw-semibold text-center"><span>GA Report</span></div>
                         </div>
                     </div>
@@ -239,7 +239,7 @@
                 <a href="{{ url('calls/reports/complaints') }}?tab=category" target="_blank" class="text-body-secondary">
                     <div class="p-3 reports-bg border border-3 border-light shadow-sm rounded-3">
                         <div class="d-flex align-items-center gap-2">
-                            <div class="p-1 reports-bg rounded-4 py-2 px-3 shadow-sm"><i class="bi bi-list-check fs-4"></i></div>
+                            <div class="p-2 reports-bg rounded-4 py-2 px-3 shadow-sm"><i class="bi bi-list-check fs-4"></i></div>
                             <div class="fs-6 fw-semibold text-center"><span>Category Report</span></div>
                         </div>
                     </div>
@@ -249,7 +249,7 @@
                 <a href="{{ url('calls/reports/complaints') }}?tab=deviation" target="_blank" class="text-body-secondary">
                     <div class="p-3 reports-bg border border-3 border-light shadow-sm rounded-3">
                         <div class="d-flex align-items-center gap-2">
-                            <div class="p-1 reports-bg rounded-4 py-2 px-3 shadow-sm"><i class="bi bi-box-arrow-up-right fs-4"></i></div>
+                            <div class="p-2 reports-bg rounded-4 py-2 px-3 shadow-sm"><i class="bi bi-box-arrow-up-right fs-4"></i></div>
                             <div class="fs-6 fw-semibold text-center"><span>Deviaton Report</span></div>
                         </div>
                     </div>
@@ -259,7 +259,7 @@
                 <x-auth.link href="{{ url('calls/closeOtps') }}" target="_blank" class="text-body-secondary" action="clsotp">
                     <div class="p-3 reports-bg border border-3 border-light shadow-sm rounded-3">
                         <div class="d-flex align-items-center gap-2">
-                            <div class="p-1 reports-bg rounded-4 py-2 px-3 shadow-sm"><i class="bi bi-phone-vibrate fs-4"></i></div>
+                            <div class="p-2 reports-bg rounded-4 py-2 px-3 shadow-sm"><i class="bi bi-phone-vibrate fs-4"></i></div>
                             <div class="fs-6 fw-semibold text-center"><span>Closing OTPs</span></div>
                         </div>
                     </div>

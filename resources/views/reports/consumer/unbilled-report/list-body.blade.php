@@ -29,22 +29,22 @@
     </div>
 </form>
 <div class="table-responsive">
-    <table class="table table-bordered table-hover page-sort table-striped bg-white" id="unbilled-report">
-        <thead class="table-success">
+    <table class="table table-bordered table-hover page-sort table-striped bg-white align-middle" id="unbilled-report">
+        <thead class="table-success align-middle">
             <tr>
                 <th width="1%" nowrap="nowrap" rowspan="2">S No.</th>
                 <th rowspan="2">GA Name</th>
                 <th colspan="2" class="text-center">Billable</th>
-                <th colspan="4" class="text-center">Unbilled</th>
+                <th colspan="4" class="text-center bg-danger-subtle">Unbilled</th>
                 <th rowspan="2" class="text-center">Billed</th>
             </tr>
             <tr>
-                <th class="text-end">Active</th>
-                <th class="text-end">Billable</th>
-                <th class="text-end">60 - 90 days</th>
-                <th class="text-end">90 - 120 days</th>
-                <th class="text-end">> 120 Days</th>
-                <th class="text-end">Total</th>
+                <th class="text-end bg-success bg-opacity-50">Active</th>
+                <th class="text-end bg-success bg-opacity-50">Billable</th>
+                <th class="text-end bg-danger bg-opacity-50">60 - 90 days</th>
+                <th class="text-end bg-danger bg-opacity-50">90 - 120 days</th>
+                <th class="text-end bg-danger bg-opacity-50">> 120 Days</th>
+                <th class="text-end bg-danger bg-opacity-50">Total</th>
             </tr>
         </thead>
         <tbody>

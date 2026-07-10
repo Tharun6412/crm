@@ -5,7 +5,7 @@
     </button>
 </div>
 <div class="table-responsive mb-3">
-    <table class="table table-bordered align-middle table-striped bg-white" id="refund-report-table">
+    <table class="table table-bordered table-hover align-middle table-striped bg-white" id="refund-report-table">
         <thead class="table-success align-middle">
             <tr>
                 <th rowspan="2" width="1%">S.No</th>
@@ -16,7 +16,7 @@
             </tr>
             <tr>
                 @foreach ($refund_status as $status)
-                    <th class="text-end">{{ $status->name }}</th>
+                    <th class="text-end bg-success bg-opacity-50">{{ $status->name }}</th>
                 @endforeach
             </tr>
         </thead>

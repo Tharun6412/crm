@@ -36,8 +36,8 @@
         $i = (($schemes->currentPage() - 1) * $schemes->perPage())+1;
     @endphp
     <!-- Display prospects list -->
-    <table class="table table-bordered table-hover table-striped bg-white page-sort">
-        <thead class="table-success">
+    <table class="table table-bordered table-hover table-striped bg-white page-sort align-middle">
+        <thead class="table-success align-middle">
             <tr>
                 <th width="1%" nowrap>S No.</th>
                 <th>Code</th>

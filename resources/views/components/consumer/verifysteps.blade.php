@@ -3,7 +3,7 @@
 ])
 <div class="table-responsive">
     <h4>Verified Details :</h4>
-    <table class="table table-bordered">
+    <table class="table table-bordered table-striped">
         <thead class="table-success">
             <tr>
                 <th width="1%">S.NO</th>
@@ -15,17 +15,25 @@
         <tbody>
             @if ($verification->steps->count() > 0)  
             @foreach ($verification->steps as $step )
-                @php
+                {{-- @php
                     if($step->status == 0){
-                        $status = 'No';
+                        $status = '<span class="badge bg-danger">No</span>';
                     }else{
-                        $status = 'Yes';
+                        $status = '<span class="badge bg-success">Yes</span>';
                     }
-                @endphp
+                @endphp --}}
                 <tr>
-                    <td>{{ $loop->iteration }}</td>
+                    <td class="text-center">{{ $loop->iteration }}</td>
                     <td>{{ $step->step->name ?? ''}}</td>
-                    <td>{{ $status ?? '' }}</td>
+                    <td>
+                        <span class="badge {{ $step->status == 1 ? 'bg-success' : 'bg-danger' }}">
+                            @if($step->status == 1)
+                                <i class="bi bi-check fs-6">&nbsp;</i>Yes
+                            @else
+                                <i class="bi bi-x fs-6">&nbsp;</i>No
+                            @endif
+                        </span>
+                    </td>
                     <td>{{ $step->remarks ?? ''}}</td>
                 </tr>
             @endforeach

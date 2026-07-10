@@ -20,8 +20,7 @@
         $cancel = $ticket_status[TicketStatus::CANCEL->value] ?? 0;
         $total = $register+$approve+$processing+$close+$hold+$cancel;
     @endphp
-    <h4>&nbsp;</h4>
-    <div class="row g-2 mb-3 mt-2">
+    <div class="row g-2 mb-3">
         <div class="col-sm-3">
             <a href="{{ url('tickets') }}?{{ http_build_query(['status' => [TicketStatus::REGISTER->value]]) }}" target="_blank" class="text-body-secondary">
                 <div class="py-2 px-2 border border-3 border-light shadow-sm rounded-3 reg-bg">

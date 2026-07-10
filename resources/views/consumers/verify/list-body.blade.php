@@ -18,7 +18,7 @@
         </div>
     </div>
     <div>
-        <a href="{{ url('consumers/verify/verificationExport'). '?' . http_build_query(request()->all()) }}" class="btn btn-outline-secondary">Export</a>
+        <a href="{{ url('consumers/verify/verificationExport'). '?' . http_build_query(request()->all()) }}" class="btn btn-outline-primary">Export</a>
     </div>
 </div>
 <div class="table-responsive mt-2">
@@ -55,13 +55,13 @@
         <tbody>
             @if($verification->count() > 0)
                 @foreach($verification as $key => $verify)
-                @php
+                {{-- @php
                     if($verify->status == 0){
                         $status = 'Verified Issue';
                     }else{
                         $status = 'Verified Success';
                     }
-                @endphp
+                @endphp --}}
                     <tr>
                         <td>{{ $key + 1 }}</td>
                         <td><a href="{{ url('consumers/'.$verify->consumer_id) }}" target="_blank">{{ $verify->consumer->crn ?? '' }}</a></td>
@@ -69,7 +69,12 @@
                         <td>{{ $verify->consumer->ga->name ?? '' }}</td>
                         <td>{{ $verify->consumer->district->name ?? '' }}</td>
                         <td>{{ $verify->consumer->ca->name ?? '' }}</td>
-                        <td>{{ $status }}</td>
+                        <td>
+                            <span class="badge {{ $verify->status == 1 ? 'bg-success' : 'bg-danger' }}">
+                            {!! $verify->status == 1 ? '<i class="bi bi-check-circle">&nbsp;</i>Verified Success' : '<i class="bi bi-gear">&nbsp;</i>Verified Issue' !!}
+                            </span>
+                            {{-- {{ $status }} --}}
+                        </td>
                         <td>{{ $verify->createdBy->name ?? '' }}</td>
                         <td>{{ dateFormat($verify->created_at ?? '') }}</td>
                         <td>

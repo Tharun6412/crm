@@ -402,14 +402,14 @@
                             </div>
                             <!-- Content -->
                             <div class="d-flex gap-3 my-4">
-                            <div class="card border border-warning-subtle shadow-sm" style="width: 350px;">
+                            <div class="card border border-secondary-subtle shadow-sm" style="width: 350px;">
                                 <div class="card-body lh-lg p-3">
-                                    <div class="row">
+                                    <div class="row pb-2">
                                         <div class="col-4"><x-consumer.status :status="$history->status" /></div>
-                                        <div class="col-8 lh-sm"><i class="bi bi-person"></i>&nbsp;{{ $history->createdBy?->first_name }} {{ $history->createdBy?->last_name }}</div>
+                                        <div class="col-8 lh-sm text-end text-muted"><i class="bi bi-person"></i>&nbsp;{{ $history->createdBy?->first_name }} {{ $history->createdBy?->last_name }}</div>
                                     </div>
                                     <span>
-                                        <i class="bi bi-chat-square-text fs-5" title="Notes"></i>&nbsp;{{ $history->notes ?? '' }}<br/>
+                                        <i class="bi bi-chat-square-text fs-6" title="Notes"></i>&nbsp;{{ $history->notes ?? '' }}<br/>
                                     </span>
                                     @if ($documents->isNotEmpty())
                                         <div class="d-flex flex-wrap gap-2">

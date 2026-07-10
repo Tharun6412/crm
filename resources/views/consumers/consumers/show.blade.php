@@ -103,7 +103,7 @@
                                             <h4 class="card-title mb-0"><i class="bi bi-currency-rupee"></i>&nbsp;{{ numberFormat($consumer->scheme?->balance, 2) }}</h4>
                                             <span>Security Deposit Outstanding</span>
                                         </div>
-                                        <div class="p-2"><i class="bi bi-piggy-bank fs-3"></i></div>
+                                        <div class="p-2"><i class="bi bi-piggy-bank fs-3 text-success"></i></div>
                                     </div>
                                 </div>
                             </div>
@@ -120,7 +120,7 @@
                                                 <h4 class="card-title mb-0"><i class="bi bi-currency-rupee"></i>&nbsp;{{ numberFormat($gasbill_outstand, 2) }}</h4>
                                                 <span>Gas Bills Outstanding</span>
                                             </div>
-                                            <div class="p-2"><i class="bi bi-file-text fs-3"></i></div>
+                                            <div class="p-2"><i class="bi bi-file-text fs-3 text-primary"></i></div>
                                         </div>
                                     </div>
                                 </div>
@@ -131,7 +131,7 @@
                                                 <h4 class="card-title mb-0"><i class="bi bi-currency-rupee"></i>&nbsp;{{ numberFormat($invoice_outstand, 2) }}</h4>
                                                 <span>Invoices Outstanding</span>
                                             </div>
-                                            <div class="p-2"><i class="bi bi-file-ruled fs-3"></i></div>
+                                            <div class="p-2"><i class="bi bi-file-ruled fs-3 text-primary"></i></div>
                                         </div>
                                     </div>
                                 </div>
@@ -142,7 +142,7 @@
                                                 <h4 class="card-title mb-0"><i class="bi bi-currency-rupee"></i>&nbsp;{{ numberFormat($total_outstand, 2) }}</h4>
                                                 <span>Total Outstanding</span>
                                             </div>
-                                            <div class="p-2"><i class="bi bi-alarm fs-3"></i></div>
+                                            <div class="p-2"><i class="bi bi-alarm fs-3 text-danger"></i></div>
                                         </div>
                                     </div>
                                 </div>

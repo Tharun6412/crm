@@ -6,20 +6,20 @@
     <button type="button" id="exportBtn" class="btn btn-outline-info"><i class="bi bi-file-earmark-excel"></i>&nbsp;Export</button>
 </div>
 <div class="table-responsive mt-2">
-    <table class="table table-bordered table-hover table-primary" id="conversions_table">
-        <thead class="table-primary">
+    <table class="table table-bordered table-hover align-middle table-striped" id="conversions_table">
+        <thead class="align-middle">
             <tr>
-                <th rowspan="2">GA</th>
-                <th colspan="3" class="text-center">Meter Upgrades</th>
-                <th colspan="3" class="text-center">Reconnections</th>
+                <th rowspan="2" class="table-primary">GA</th>
+                <th colspan="3" class="text-center table-primary">Meter Upgrades</th>
+                <th colspan="3" class="text-center table-success">Reconnections</th>
             </tr>
             <tr>
-                <th class="text-end">Balance</th>
-                <th class="text-end">Cumulative</th>
-                <th class="text-end">Upgraded</th>
-                <th class="text-end">Balance</th>
-                <th class="text-end">Cumulative</th>
-                <th class="text-end">Reconnected</th>
+                <th class="text-end bg-primary bg-opacity-50">Balance</th>
+                <th class="text-end bg-primary bg-opacity-50">Cumulative</th>
+                <th class="text-end bg-primary bg-opacity-50">Upgraded</th>
+                <th class="text-end bg-success bg-opacity-50">Balance</th>
+                <th class="text-end bg-success bg-opacity-50">Cumulative</th>
+                <th class="text-end bg-success bg-opacity-50">Reconnected</th>
             </tr>
         </thead>
         <tbody>
@@ -74,8 +74,8 @@
             @endforeach
         </tbody>
         <tfoot>
-            <tr class="fw-semibold">
-                <td>Totals</td>
+            <tr class="fw-semibold bg-info-subtle bg-opacity-10">
+                <td class="text-end">Totals</td>
                 <td class="text-end">{{ numberFormat(array_sum($conversion_balance)) }}</td>
                 <td class="text-end">{{ numberFormat(array_sum($conversion_cumulative)) }}</td>
                 <td class="text-end">

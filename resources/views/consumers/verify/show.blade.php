@@ -7,18 +7,22 @@
         <div class="modal-body">
             <div>
                 <x-consumer.basic-details :consumer="$verification->consumer" class="bg-info-subtle" />
-                @php
+                {{-- @php
                     if($verification->status == 1){
                         $status = "Verified Success";
                     }else{
                         $status = "Verified Issue";
                     }
-                @endphp
+                @endphp --}}
                  <div class="row g-2 pb-2 my-2 p-2 bg-warning-subtle rounded">
                     <div class="col-sm-2 text-end fw-semibold">Verified By : </div>
                     <div class="col-sm-4">{{ $verification->createdBy->name ?? ''}}</div>
                     <div class="col-sm-2 text-end fw-semibold">Verified Status : </div>
-                    <div class="col-sm-4">{{ $status ?? ''}}</div>
+                    <div class="col-sm-4">
+                        <span class="badge {{ $verification->status == 1 ? 'bg-success' : 'bg-danger' }}">
+                            {!! $verification->status == 1 ? '<i class="bi bi-check-circle">&nbsp;</i>Verified Success' : '<i class="bi bi-gear">&nbsp;</i>Verified Issue' !!}
+                        </span>
+                    </div>
                     <div class="col-sm-2 text-end fw-semibold">Verified Date : </div>
                     <div class="col-sm-4">{{ $verification->created_at->format('d-m-Y H:i')}}</div>
                     <div class="col-sm-2 text-end fw-semibold">Issues : </div>

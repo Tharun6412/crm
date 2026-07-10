@@ -14,24 +14,24 @@
             <a href="{{ url('tickets/') }}" class="btn btn-warning"><i class="bi bi-arrow-clockwise"></i></a>
         </div>
         <div class="col-auto">
-            <div class="form-control d-flex align-items-center">
-                <div class="form-check form-switch m-0">
+            <div class="align-items-center">
+                <div class="form-check form-switch ms-4 mt-1">
                     <input
-                        class="form-check-input"
+                        class="form-check-input fs-4 border border-2 border-info"
                         type="checkbox"
                         role="switch"
                         id="my_tickets"
                         name="my_tickets"
                         value="1"
                         @checked(request()->my_tickets == "1")>
-                    <label class="form-check-label ms-2" for="my_tickets">
+                    <label class="form-check-label mt-1 fw-semibold" for="my_tickets">
                         My Tickets
                     </label>
                 </div>
             </div>
         </div>
-        <div class="col-auto mt-2">
-            <span class="fw-semibold">({{ $tickets->total() }})</span>Records Found
+        <div class="col-auto mt-2 text-end">
+            &nbsp;|&nbsp;<span class="fw-semibold">({{ $tickets->total() }})</span> Records Found
         </div>
     </div>
 </div>

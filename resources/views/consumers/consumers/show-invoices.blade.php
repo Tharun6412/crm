@@ -6,17 +6,17 @@
     </div>
     <div class="p-2">
         @if ($invoices->count() > 0)
-            <div class="responsive">
-                <table class="table table-bordered table-hover table-primary">
-                    <thead class="table-primary">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover table-primary align-middle">
+                    <thead class="table-primary align-middle">
                         <tr>
                             <th width="1%" nowrap>S No</th>
-                            <th>Invoice Type</th>
-                            <th>Invoice number</th>
+                            <th nowrap>Invoice Type</th>
+                            <th nowrap>Invoice number</th>
                             <th nowrap>Invoice Date</th>
                             <th nowrap>Due Date</th>
-                            <th class="text-end">Amount</th>
-                            <th class="text-end">Balance</th>
+                            <th nowrap class="text-end">Amount</th>
+                            <th nowrap class="text-end">Balance</th>
                             <th>Status</th>
                             <th>Created By</th>
                             <th>Actions</th>

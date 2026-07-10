@@ -66,24 +66,26 @@
                         @endif
                     </a>
                 </th>
-                <th>Segment<x-master.segmentFilter class="float-end" /></th>
-                <th>Status<x-consumer.statusFilter class="float-end" /></th>
-                <th>GA<x-master.gaFilter class="float-end" /></th>
+                <th><div class="d-flex gap-1">Segment<x-master.segmentFilter class="float-end" /></div></th>
+                <th><div class="d-flex gap-1">Status<x-consumer.statusFilter class="float-end" /></div></th>
+                <th><div class="d-flex gap-2">GA<x-master.gaFilter class="float-end" /></div></th>
                 <th>District
                     @if (request()->has('geo_area'))
                         <x-master.district-filter class="float-end"/>
                     @endif
                 </th>
-                <th>Scheme<x-master.scheme-filter class="float-end"/></th>
-                <th nowrap width="13%">
-                    <a href="{{ $consumers->appends(['sortBy' => 'created_at','sortOr' => $sort_order_inverse])->url($consumers->currentPage()) }}">
-                        Created Date
-                        @if ($sort_by == 'created_at')
-                            <i class="bi {{ $sort_icon }}"></i>
-                        @endif
-                    </a><x-master.date-filter />
+                <th><div class="d-flex">Scheme<x-master.scheme-filter class="float-end"/></div></th>
+                <th nowrap>
+                    <div class="d-flex">
+                        <a href="{{ $consumers->appends(['sortBy' => 'created_at','sortOr' => $sort_order_inverse])->url($consumers->currentPage()) }}">
+                            Created Date
+                            @if ($sort_by == 'created_at')
+                                <i class="bi {{ $sort_icon }}"></i>
+                            @endif
+                        </a><x-master.date-filter />
+                    </div>
                 </th>
-                <th width="2%" nowrap>Actions</th>
+                <th nowrap>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -103,7 +105,7 @@
                         <td>
                             <x-consumer.status :status="$consumer->status" mode='full' />
                         </td>
-                        <td>{{ $consumer->ga->name }}</td>
+                        <td nowrap>{{ $consumer->ga->name }}</td>
                         <td>{{ $consumer->district->name }}</td>
                         <td>
                             @if ($consumer->scheme?->scheme?->id != null)

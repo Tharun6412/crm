@@ -28,8 +28,10 @@
                     }
             @endphp
             @if (!empty($invoice))
-                <x-consumer.invoice-details :invoice="$invoice" type="3" class="bg-info-subtle mt-2" />
-                <input type="hidden" id="inv_end_reading" name="inv_end_reading" value={{ $invEndReading }} >
+                <div class="p-2">
+                    <x-consumer.invoice-details :invoice="$invoice" type="3" class="bg-info-subtle mt-2" />
+                    <input type="hidden" id="inv_end_reading" name="inv_end_reading" value={{ $invEndReading }} >
+                </div>
                 <div class="bg-secondary-subtle rounded m-2 p-2">
                     <div class="row">
                         <div class="col-sm-2 text-end fw-semibold">Scheme Name : </div>
@@ -160,7 +162,6 @@
                 </div>
                 <input type="hidden" name="cust_err_msg" id="cust_err_msg">
                 <div id="add-gas-bill-error"></div>
-                
             @endif
         @else
             <div class="alert alert-danger  m-2 text-center">Please update the Meter number / Initial meter reading.</div>
