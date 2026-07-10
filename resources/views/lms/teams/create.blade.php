@@ -1,8 +1,8 @@
 {{-- Team Create Modal --}}
 <div class="modal-dialog modal-xl">
     <div class="modal-content">
-        <div class="modal-header">
-            <h1 class="modal-title fs-5">Add Team</h1>
+         <div class="modal-header bg-secondary-subtle">
+            <h4 class="modal-title fw-semibold">Add Team</h4>
             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
@@ -11,13 +11,13 @@
                     @csrf
                     <div class="row mb-3">
                         {{-- Team Name --}}
-                        <label for="name" class="col-sm-2 col-form-label text-end">Team Name :</label>
                         <div class="col-sm-4">
+                            <label for="name" class="form-label fw-semibold">Team Name :</label>
                             <input type="text" name="name" id="name" class="form-control" placeholder="Enter Team Name">
                         </div>
                         {{-- Department --}}
-                        <label for="department_id" class="col-sm-2 col-form-label text-end">Department :</label>
                         <div class="col-sm-4">
+                            <label for="department_id" class="form-label fw-semibold">Department :</label>
                             <select name="department_id" id="department_id" class="form-select">
                                 <option value="">Select Department</option>
                                 @foreach ($departments as $department)
@@ -25,11 +25,9 @@
                                 @endforeach
                             </select>
                         </div>
-                    </div>
-                    {{-- Geo Area --}}
-                    <div class="row mb-3">
-                        <label for="ga_id" class="col-sm-2 col-form-label text-end">Geo Area :</label>
+                        {{-- Geo Area --}}
                         <div class="col-sm-4">
+                            <label for="ga_id" class="form-label fw-semibold">Geo Area :</label>
                             <select name="ga_id" id="ga_id" class="form-select">
                                 <option value="">Select Geo Area</option>
                                 @foreach ($geo_areas as $ga)
@@ -37,36 +35,35 @@
                                 @endforeach
                             </select>
                         </div>
-                        <label for="responsible_user_id" class="col-sm-2 col-form-label text-end">Coordinator :</label>
+                    </div>
+                    <div class="row mb-3">
                         <div class="col-sm-4">
+                            <label for="responsible_user_id" class="form-label fw-semibold">Team Lead :</label>
                             <select name="responsible_user_id" id="responsible_user_id" class="form-select">
                                 <option value="">Select</option>
                             </select>
                         </div>
-                    </div>
-                    <div class="row mb-3">
-                        {{-- Department --}}
-                        <label for="du_id" class="col-sm-2 col-form-label text-end">Delivery Unit :</label>
                         <div class="col-sm-4">
+                            <label for="du_id" class="form-label fw-semibold">Delivery Unit :</label>
                             <select name="du_id" id="du_id" class="form-select">
                                 <option value="">Select Delivery unit</option>
                             </select>
                         </div>
-                    </div>
-                        
-                    <hr>
-                    <div class="row mb-3">
-                        <div class="col-sm-12">
-                            <h4>Charge Areas and Areas :</h4>
-                        </div>
-                        <div class="col-sm-12">
-                            <div id="area_id" class="border rounded p-3">
-                                <div class="col-12">
-                                    <span class="text-muted"> Select Delivery Unit to get Areas</span>
+                    </div>                        
+                    <hr class="border-2 border-warning">
+                     {{-- Charge Areas Table --}}
+                    <div class="card border shadow-sm mt-2">
+                        <div class="card-header bg-info-subtle fw-semibold"><i class="bi bi-pin-map-fill text-secondary"></i>&nbsp;Charge Areas and Areas List</div>                   
+                        <div class="row mb-3">
+                            <div class="col-sm-12">
+                                <div id="area_id" class="p-2">
+                                    <div class="col-12">
+                                        <div class="alert alert-warning" role="alert"> Select Delivery Unit to get Areas</div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div>    
                     {{-- Error --}}
                     <div class="mb-3" id="team-error"></div>
                     {{-- Submit --}}
@@ -88,13 +85,13 @@
             // Reset Areas
             $('#area_id').html(`
                 <div class="col-12">
-                    <span class="text-muted">Select Delivery Unit to get Areas</span>
+                    <div class='alert alert-warning' role='alert'>Select Delivery Unit to get Areas</div>
                 </div>
             `);
             // Get Charge Areas
             $.get("{{ url('lms/teams/gaCas') }}",{'ga_id': e.target.value},function(response){
                 //for users
-                let userOptions = '<option value="">Select Coordinator</option>';
+                let userOptions = '<option value="">Select Team Lead</option>';
                 if(response.users && response.users.length > 0) {
                     response.users.forEach(function(user) {
                         userOptions += `<option value="${user.id}">${user.emp_id} - ${user.name} - ${user.department?.name ?? ''}</option>`;
@@ -127,46 +124,35 @@
 
                 if (response.charge_areas.length) {
                     const allocated = response.allocated_areas.map(Number);
-                    response.charge_areas.forEach(function (chargeArea) {
-
-                        html += `
-                            <div class="card mb-3">
-                                <div class="card-header bg-primary text-white">
-                                    <strong>${chargeArea.name}</strong>
+                    html +=`<div class="row mx-1">`;
+                        response.charge_areas.forEach(function (chargeArea) {
+                            html += `
+                                <div class="col-12 mt-3 ">
+                                    <h4 class="text-primary border-bottom pb-2">${chargeArea.name}</h4>
                                 </div>
-                                <div class="card-body">
-                                    <div class="row">
-                        `;
-                        response.areas.forEach(function (area) {
-                            const disabled = allocated.includes(area.id);
-                            if (area.ca_id == chargeArea.id) {
-
-                                html += `
-                                    <div class="col-lg-3 col-md-4 col-sm-6 mb-2">
-                                        <div class="form-check">
-                                            <input class="form-check-input"
-                                                type="checkbox"
-                                                name="area_id[]"
-                                                value="${area.id}"
-                                                id="area_${area.id}"
-                                                ${disabled ? 'disabled' : ''}>
-                                            <label class="form-check-label" for="area_${area.id}">
-                                                ${area.name}
-                                            </label>
+                            `;
+                            response.areas.forEach(function (area) {
+                                const disabled = allocated.includes(area.id);
+                                if (area.ca_id == chargeArea.id) {
+                                    html += `
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-2">
+                                            <div class="form-check">
+                                                <input class="form-check-input border-1 border-dark"
+                                                    type="checkbox"
+                                                    name="area_id[]"
+                                                    value="${area.id}"
+                                                    id="area_${area.id}"
+                                                    ${disabled ? 'disabled' : ''}>
+                                                <label class="form-check-label" for="area_${area.id}">
+                                                    ${area.name}
+                                                </label>
+                                            </div>
                                         </div>
-                                    </div>
-                                `;
-                            }
-
+                                    `;
+                                }
+                            });
                         });
-
-                        html += `
-                                    </div>
-                                </div>
-                            </div>
-                        `;
-                    });
-
+                    html += `</div>`;
                 } else {
                     html = '<span class="text-danger">No Areas Found</span>';
                 }

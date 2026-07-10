@@ -1,8 +1,8 @@
 {{-- Team Create Modal --}}
 <div class="modal-dialog modal-xl">
     <div class="modal-content">
-        <div class="modal-header">
-            <h1 class="modal-title fs-5">Add Team</h1>
+         <div class="modal-header bg-secondary-subtle">
+            <h4 class="modal-title fw-semibold">Add Team</h4>
             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
@@ -37,7 +37,7 @@
                                 @endforeach
                             </select>
                         </div>
-                        <label for="responsible_user_id" class="col-sm-2 col-form-label text-end">Coordinator :</label>
+                        <label for="responsible_user_id" class="col-sm-2 col-form-label text-end">Team Lead :</label>
                         <div class="col-sm-4">
                             <select name="responsible_user_id" id="responsible_user_id" class="form-select">
                                 <option value="">Select</option>

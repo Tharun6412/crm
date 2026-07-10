@@ -48,6 +48,7 @@ class MyActivityController extends Controller
         })
         ->groupBy('status_id')
         ->get();
+        $consumers_count = [];
         foreach($consumers_list_data as $list) {
             $consumers_count[$list->status_id] = $list->consumer_count;
         }

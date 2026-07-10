@@ -83,8 +83,8 @@
                     <tbody>
                         @foreach ($teams as $team_id => $team)
                             @php
-                                $du_cas = $team?->deliveryUnit->areas->pluck('ca_id')->filter()->unique()->values()->toArray();
-                                $du_areas = $team?->deliveryUnit->areas->pluck('id')->unique()->toArray();
+                                $du_cas = $team?->deliveryUnit?->areas?->pluck('ca_id')->filter()->unique()->values()->toArray();
+                                $du_areas = $team?->deliveryUnit?->areas?->pluck('id')->unique()->toArray();
                             @endphp
                             <tr>
                                 <td width="1%">{{ $loop->iteration }}</td>

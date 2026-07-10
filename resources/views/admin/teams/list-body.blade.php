@@ -10,7 +10,9 @@
             <a href="{{ url('admin/teams') }}" class="btn btn-warning"><i class="bi bi-arrow-clockwise"></i></a>
         </div>
         <div class="col-auto">
-            <span class="fw-semibold">({{ $teams->total() }})</span> Records found
+            <div class="mt-2">
+                <span class="fw-semibold">({{ $teams->total() }})</span> Records found
+            </div>
         </div>
     </div>
     <div>
@@ -40,7 +42,7 @@
             @if($teams->count()>0)
                 @foreach ($teams as $team)
                     <tr>
-                        <td>{{ $loop->iteration }}</td>
+                        <td class="text-center">{{ $loop->iteration }}</td>
                         <td><a class="link-modal" href="{{ url('lms/teams/show/'.$team->id) }}">{{ $team->name }}</a></td>
                         <td>{{ $team->ga->name ?? '' }}</td>
                         <td><a href="{{ url('lms/deliveryUnits/'.$team->du_id) }}" class="link-modal">{{ $team->deliveryUnit?->name }}</a></td>
@@ -53,7 +55,7 @@
                             @endif
                         </td> 
                         <td>{{ $team->responsibleUser->name ?? ''}}</td>
-                        <td>{{ $team->users_count }}</td>                       
+                        <td class="text-center">{{ $team->users_count }}</td>                       
                         <td>{{ dateFormat($team->created_at) }}</td>
                         <td>
                             <div class="dropdown">

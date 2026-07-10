@@ -1,8 +1,30 @@
 <div class="d-flex justify-content-between">
-    <div class="row">
-        <div class="col-auto mt-2 fw-semibold p-1">
-            <strong>No. of records</strong>&nbsp;:&nbsp;{{ $consumers->total() }}
+    <div class="d-flex justify-content-between mb-1">
+        <div class="row gx-1">
+            <div class="col-auto">
+                <input type="text" name="key" class="form-control" placeholder="Search..." value="{{ request()->key }}"/>
+            </div>
+            @foreach(request()->except(['key', 'page', 'geo_area', 'charge_area', 'status']) as $name => $value)
+                @if(is_array($value))
+                    @foreach($value as $item)
+                        <input type="hidden" name="{{ $name }}[]" value="{{ $item }}">
+                    @endforeach
+                @else
+                    <input type="hidden" name="{{ $name }}" value="{{ $value }}">
+                @endif
+            @endforeach
+            <div class="col-auto">
+                <button type="submit" class="btn btn-success"><i class="bi bi-search"></i></button>
+            </div>
+            <div class="col-auto">
+                <a href="{{ url('consumers/waiting/pending-consumers') }}?{{ http_build_query(request()->except(['key', 'geo_area', 'charge_area'])) }}" class="btn btn-warning"><i class="bi bi-arrow-clockwise"></i></a>
+            </div>
+            <div class="col-auto mt-1 fw-semibold p-1">
+               <span>Records Found:</span>&nbsp;{{ $consumers->total() }}
+            </div>
         </div>
+    </div>
+    <div class="row">
         <div class="col-auto">
             <a href="{{ url('consumers/waiting/pending-consumers/exportAssignedConsumers') }}?{{ http_build_query(request()->query())  }}" class="btn btn-outline-primary">
                 <i class="bi bi-file-earmark-excel"></i>&nbsp;Export
@@ -11,7 +33,7 @@
     </div>
 </div>
 {{-- <div id="batch-assign"></div> --}}
-<div class="table-responsive mt-2">
+<div class="table-responsive mt-2 mb-2">
     <input type="hidden" name="consumer_status" id="consumer_status" value="{{ request()->cns_status[0] }}"/>
     @php
         $sort_by = (request()->has('sortBy')) ? request()->get('sortBy') : 'cns_consumers.created_at';
@@ -25,7 +47,7 @@
             <tr>
                 @if (in_array(2, request()->status))
                     <th>
-                        <input type="checkbox" id="check_all"/>&nbsp;All
+                       All<input class="form-check-input border-1 border-primary" type="checkbox" id="check_all"/>
                     </th>
                 @endif
                 <th>S.No</th>
@@ -74,8 +96,8 @@
                 @foreach ($consumers as $consumer )
                     <tr>
                         @if (is_null($consumer->team_status))
-                            <td>
-                                <input type="checkbox" name="consumer_ids[]" value="{{ $consumer->id }}"/>
+                            <td class="text-center">
+                                <input class="form-check-input border-1 border-primary" type="checkbox" name="consumer_ids[]" value="{{ $consumer->id }}"/>
                             </td>
                         @endif
                         <td class="text-center" width="1%">{{ $i++ }}</td>
@@ -146,40 +168,38 @@
         </div>
     @endif
 </div>
-<div id="bulkAssignSection" class="card shadow-sm border-0 d-none">
-    <div class="card-header bg-light">
-        <strong>Bulk Team Assignment</strong>
-    </div>
-    <div class="card-body">
-        <div class="row mb-3 align-items-center">
-            <label for="team_id" class="col-md-3 col-form-label text-md-end">
-                Select Team :
-            </label>
-            <div class="col-md-6">
-                <select name="team_id" id="team_id" class="form-select" onchange="getEmployeesByTeam(this.value)">
-                    <option value="">Select Team</option>
-                    @foreach ($teams as $team)
-                        <option value="{{ $team->id }}">
-                            {{ $team->name }} - {{ $team->departments->name }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
+<div class="p-2">
+    <div id="bulkAssignSection" class="card shadow-sm border-0 d-none">
+        <div class="card-header bg-info-subtle">
+            <strong>Bulk Team Assignment</strong>
+        </div>
+        <div class="card-body">
             <div class="row mb-3 align-items-center">
-                <label for="team_id" class="col-md-3 col-form-label text-md-end">Select Employee :</label>
                 <div class="col-md-6">
+                    <label for="team_id" class="form-label fw-semibold">Select Team :</label>
+                    <select name="team_id" id="team_id" class="form-select" onchange="getEmployeesByTeam(this.value)">
+                        <option value="">Select Team</option>
+                        @foreach ($teams as $team)
+                            <option value="{{ $team->id }}">
+                                {{ $team->name }} - {{ $team->departments->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label for="assign_to" class="form-label fw-semibold">Select Employee :</label>
                     <select name="assign_to" id="assign_to" class="form-select">
                         <option value="">Select Employee</option>
                     </select>
                 </div>
             </div>
-        </div>
-        <div id="bulk-assign-error"></div>
-        <div class="row">
-            <div class="offset-md-3 col-md-6">
-                <button type="button" onclick="consumersBatchAssign()" class="btn btn-success">
-                    <i class="bi bi-save"></i> Assign Bulk
-                </button>
+            <div id="bulk-assign-error"></div>
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <button type="button" onclick="consumersBatchAssign()" class="btn btn-success">
+                        <i class="bi bi-save"></i> Assign Bulk
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -226,7 +246,7 @@
             status:$('#consumer_status').val(),
             assign_to:$('#assign_to').val(),
         }, function (data) {
-            $('#team-consumers-list').html('<div class="alert alert-success">'+data.message+'<br/>Selected Consumers :'+data.total+'<br/>Successfully Assigned :'+data.inserted+'</div>');
+            $('#team-consumers-list').html('<div class="alert alert-success">'+data.message+'<br/>Selected Consumers : <span class="fw-bold fs-5">'+data.total+'</span><br/>Successfully Assigned : <span class="fw-bold fs-5">'+data.inserted+'</span></div>');
         }).fail(function(response){
             $('#bulk-assign-error').html('<div class="alert alert-danger mb-0">' + response.responseJSON.message + '</div>');
         });

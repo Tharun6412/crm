@@ -1,8 +1,8 @@
 {{-- Team Create Modal --}}
 <div class="modal-dialog modal-xl">
     <div class="modal-content">
-        <div class="modal-header">
-            <h1 class="modal-title fs-5">Add Delivery Unit</h1>
+        <div class="modal-header bg-secondary-subtle">
+            <h4 class="modal-title fw-semibold">Add Delivery Unit</h4>
             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
@@ -11,13 +11,13 @@
                     @csrf
                     <div class="row mb-3">
                         {{-- Team Name --}}
-                        <label for="name" class="col-sm-2 col-form-label text-end">Name :</label>
                         <div class="col-sm-4">
+                            <label for="name" class="form-label">Name :</label>
                             <input type="text" name="name" id="name" class="form-control" placeholder="Enter Delivery Unit Name">
                         </div>
                         {{-- Department --}}
-                        <label for="department_id" class="col-sm-2 col-form-label text-end">Department :</label>
                         <div class="col-sm-4">
+                            <label for="department_id" class="form-label">Department :</label>
                             <select name="department_id" id="department_id" class="form-select">
                                 <option value="">Select Department</option>
                                 @foreach ($departments as $department)
@@ -25,11 +25,9 @@
                                 @endforeach
                             </select>
                         </div>
-                    </div>
-                    <div class="row mb-3">
                         {{-- Geo Area --}}
-                        <label for="ga_id" class="col-sm-2 col-form-label text-end">Geo Area :</label>
                         <div class="col-sm-4">
+                            <label for="ga_id" class="form-label">Geo Area :</label>
                             <select name="ga_id" id="ga_id" class="form-select">
                                 <option value="">Select Geo Area</option>
                                 @foreach ($geo_areas as $ga)
@@ -37,10 +35,9 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="col-sm-6"></div>
-                    </div>
-                    <div class="row mb-3" id="add-user-cas">
-                        @include('lms.delivery-units.get-cas')
+                        <div class="col-sm-12 mt-2" id="add-user-cas">
+                            @include('lms.delivery-units.get-cas')
+                        </div>
                     </div>
                     {{-- Error --}}
                     <div class="mb-3" id="team-error"></div>

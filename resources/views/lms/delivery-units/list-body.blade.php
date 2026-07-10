@@ -9,7 +9,7 @@
         <div class="col-auto">
             <a href="{{ url('lms/deliveryUnits') }}" class="btn btn-warning"><i class="bi bi-arrow-clockwise"></i></a>
         </div>
-        <div class="col-auto">
+        <div class="col-auto mt-1">
             <span class="fw-semibold">({{ $delivery_units->total() }})</span> Records found
         </div>
     </div>

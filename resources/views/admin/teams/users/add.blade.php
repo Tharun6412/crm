@@ -105,7 +105,7 @@
                             @foreach ($geo_areas as $ga)
                                 <div class="col">
                                     <div class="form-check">
-                                        <input type="checkbox" name="geo_areas[{{ $ga->id }}]" id="add_ga_{{ $ga->id }}" class="form-check-input" value="{{ $ga->id }}">
+                                        <input type="checkbox" name="geo_areas[{{ $ga->id }}]" id="add_ga_{{ $ga->id }}" class="form-check-input  border-1 border-dark" value="{{ $ga->id }}">
                                         <label for="add_ga_{{ $ga->id }}" class="form-check-label">{{ $ga->name }}</label>
                                     </div>
                                 </div>
