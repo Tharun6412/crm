@@ -41,6 +41,11 @@ class VerificationReportController extends Controller
         ->when($request->has('status'), function ($q) use ($request) {
             $q->whereIn('status', $request->status);
         })
+        ->when($request->has('verify_steps'), function ($q) use ($request) {
+            $q->whereHas('steps', function ($q1) use ($request) {
+                $q1->whereIn('verify_step_id', $request->verify_steps)->where('status', 0);
+            });
+        })
         ->paginate(50)->withQueryString();
 
         if($request->ajax())

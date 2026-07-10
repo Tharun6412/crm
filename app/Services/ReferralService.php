@@ -43,10 +43,10 @@ class ReferralService
             if ($ref_request) {
                 $matched = false;
                 $ref_redeems_count = $ref_request->referralConsumers()->count();
-                if ($ref_redeems_count >= 5) {
+                if ($ref_redeems_count >= 10) {
                     // return response()->json(['error' => 'Referral redemption limit of 5 has been reached.'], 422);
                     throw ValidationException::withMessages([
-                        'referral_code' => ['Referral redemption limit of 5 has been reached.'],
+                        'referral_code' => ['Referral redemption limit of 10 has been reached.'],
                     ]);
                 }
                 else {

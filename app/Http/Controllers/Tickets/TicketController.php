@@ -21,7 +21,8 @@ class TicketController extends Controller
     {
         $tickets = Ticket::with([
             'consumer:id,crn,fname,lname',
-            'category:id,name',
+            'category:id,name,department_id',
+            'category.departments:id,name',
             'status:id,name',
             'createdBy',
         ])
@@ -43,6 +44,11 @@ class TicketController extends Controller
         })
         ->when($request->has('category'), function($q) use ($request) {
             $q->whereIn('category_id', $request->category);
+        })
+        ->when($request->has('departments'), function ($q) use ($request) {
+            $q->whereHas('category', function ($q1) use ($request) {
+                $q1->whereIn('department_id', $request->departments);
+            });
         })
         ->when(!empty($request->date_from) && !empty($request->date_to),function($q) use ($request) {
             $q->whereBetween('created_at',[Carbon::createFromFormat('d-m-Y',$request->date_from)->startOfDay()->toDateTimeString(), Carbon::createFromFormat('d-m-Y',$request->date_to)->endOfDay()->toDateTimeString()]);

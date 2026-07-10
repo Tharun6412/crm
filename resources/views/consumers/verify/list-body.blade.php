@@ -11,13 +11,14 @@
             <button type="submit" class="btn btn-success"><i class="bi bi-search"></i></button>
         </div>
         <div class="col-auto">
-            <a href="{{ url('consumers/verify/all') }}" class="btn btn-warning"><i class="bi bi-arrow-clockwise"></i></a>
+            <a href="{{ url('reports/consumer/verify') }}" class="btn btn-warning"><i class="bi bi-arrow-clockwise"></i></a>
         </div>
         <div class="col-auto mt-1">
            <span class="fw-semibold">({{ numberFormat($verification->total()) }})</span> Records found
         </div>
     </div>
-    <div>
+    <div class="d-flex align-items-center gap-2">
+        <x-consumer.verify-steps-filter />
         <a href="{{ url('consumers/verify/verificationExport'). '?' . http_build_query(request()->all()) }}" class="btn btn-outline-primary">Export</a>
     </div>
 </div>

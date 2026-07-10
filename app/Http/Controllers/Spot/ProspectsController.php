@@ -48,6 +48,9 @@ class ProspectsController extends Controller
         $sortBy = ($request->get('sortBy')) ? $request->get('sortBy') : 'created_at';
         $sortOr = ($request->get('sortOr')) ? $request->get('sortOr') : 'desc';
         $records = ($request->get('records')) ? $request->get('records') : 10;
+        //month wise prospects data
+        $currentMonth = $request->filled('expected_date_from') ? Carbon::createFromFormat('d-m-Y', $request->expected_date_from): now();
+
         $query = Prospects::with(['ga','segment','industrialArea','fuelType','stage', 'statusType'])->when($request->has('search_key'), function($q) use($request) {
             $q->where(function($q) use($request) {
                 $q->where('name', 'like', '%'.$request->get('search_key').'%');
@@ -123,9 +126,9 @@ class ProspectsController extends Controller
                 $q->whereBetween('created_at', [Carbon::createFromFormat('d-m-Y', $request->date_from)->startOfDay()->toDateTimeString(), Carbon::createFromFormat('d-m-Y', $request->date_to)->endOfDay()->toDateTimeString()]);
             })->groupBy('stage_id')->get()->pluck('potential_val', 'stage_id');
         if($request->ajax()) {
-            return view('spot.prospects.list-body', ['prospects' => $prospects, 'stages' => $stages, 'status_list' => $status, 'potential' => $potential]);
+            return view('spot.prospects.list-body', ['prospects' => $prospects, 'stages' => $stages, 'status_list' => $status, 'potential' => $potential,'currentMonth'   => $currentMonth]);
         }
-        return view('spot.prospects.list', ['prospects' => $prospects, 'stages' => $stages, 'status_list' => $status, 'potential' => $potential]);
+        return view('spot.prospects.list', ['prospects' => $prospects, 'stages' => $stages, 'status_list' => $status, 'potential' => $potential,'currentMonth'   => $currentMonth]);
     }
 
     /**

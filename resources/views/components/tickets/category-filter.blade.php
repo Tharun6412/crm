@@ -17,7 +17,9 @@
             @foreach ($category_filter as $item)
                 <li class="list-group-item">
                     <input type="checkbox" class="form-check-input" name="category[{{ $item->id }}]" id="category_{{ $item->id }}" value="{{ $item->id }}" @checked(in_array($item->id, $ticket_category_checked))>
-                    <label for="category_{{ $item->id }}" class="form-check-label">{{ $item->name }}</label>
+                    <label for="category_{{ $item->id }}" class="form-check-label">
+                        {{ $item->name }} / {{ $item->departments->name }}
+                    </label>                
                 </li>
             @endforeach
         </ul>

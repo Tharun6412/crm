@@ -50,7 +50,7 @@
                 <th>Code</th>
                 <th>CRN No</th>
                 <th>Consumer Name</th>
-                <th>Category<x-tickets.category-filter class="float-end"/></th>
+                <th>Category / Department<x-tickets.category-filter class="float-end"/></th>
                 <th>Status<x-tickets.status-filter class="float-end"/></th>
                 <th>Created By</th>
                 <th nowrap>
@@ -72,7 +72,7 @@
                         <td><a href="{{ url('tickets/show/'.$ticket->id) }}" class="link-modal">{{ $ticket->code }}</a></td>
                         <td><a href="{{ url('consumers/'.$ticket->consumer_id) }}" target="_blank">{{ $ticket->consumer->crn ?? ''}}</a></td>
                         <td>{{ $ticket->consumer->name ?? '' }}</td>
-                        <td>{{ $ticket->category->name}}</td>
+                        <td>{{ $ticket->category->name}} / {{ $ticket->category->departments->name ?? ''}}</td>
                         <td><x-tickets.status-change :status="$ticket->status" /></td>
                         <td>{{ $ticket->createdBy->name ?? '' }}</td>
                         <td>{{ dateFormat($ticket->created_at )}}</td>

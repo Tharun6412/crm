@@ -13,7 +13,7 @@
     <div class="d-flex align-items-center justify-content-between pb-2 flex-wrap">
         <div class="d-flex align-items-center gap-1 flex-wrap">
             <div>
-                <input type="text" name="search_key" id="search_key" class="form-control" placeholder="search here..." value="{{ request()->get('search_key') }}">
+                <input type="text" name="search_key" id="search_key" class="form-control" placeholder="search here..." value="{{ request()->get('search_key') }}"> 
             </div>
             <button type="submit" class="btn btn-primary" title="Search">
                 <i class="bi bi-search"></i>
@@ -25,6 +25,27 @@
         </div>
         {{-- Right Section --}}
         <div class="d-flex align-items-center gap-2">
+            @if(request('date_type') == 'monthly')
+                <div class="d-flex justify-content-center align-items-center">
+                    <div class="input-group">
+                        <input type="hidden" name="date_type" value="{{ request('date_type') }}">
+                        <button type="button" class="btn btn-light border shadow-sm"
+                                onclick="changeMonth(0)"
+                                title="Previous Month">
+                            <i class="bi bi-calendar-minus"></i>
+                        </button>
+                        <span class="btn btn-outline-success p-2">
+                            {{ strtoupper($currentMonth->format('M Y')) }}
+                        </span>
+                        <button type="button"
+                                class="btn btn-light border shadow-sm"
+                                onclick="changeMonth(1)"
+                                title="Next Month">
+                            <i class="bi bi-calendar-plus"></i>
+                        </button>
+                    </div>
+                </div>
+            @endif
             @if ($prospects->count() > 0)    
                 <a href="{{ url('spot/prospects/prospectsExport') . '?' . http_build_query(request()->query()) }}" class="btn btn-outline-primary" action="exprt">
                     <i class="bi bi-file-earmark-excel"></i>&nbsp;Export
@@ -346,5 +367,24 @@
 @include('scripts.link-modal')
 @include('scripts.ajax-form-search', ['form' => 'prospects'])
 @include('scripts.ajax-link-id-change', ['mod' => 'unhold_status', 'msg' => 'Are you sure you want to unhold the status.', 'callback' => 'reloadProspects()'])
+<script>
+    function changeMonth(type = 0) {
+        const [day, month, year] = $('input[name="expected_date_from"]').val().split('-').map(Number);
+        let date = new Date(year, month - 1, day);
+        if (type == 1) {
+            date.setMonth(date.getMonth() + 1);
+        } else {
+            date.setMonth(date.getMonth() - 1);
+        }
+        let firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+        let lastDay  = new Date(date.getFullYear(), date.getMonth() + 1, 0);
 
+        const from = String(firstDay.getDate()).padStart(2, '0') + '-' + String(firstDay.getMonth() + 1).padStart(2, '0') + '-' + firstDay.getFullYear();
 
+        const to = String(lastDay.getDate()).padStart(2, '0') + '-' + String(lastDay.getMonth() + 1).padStart(2, '0') + '-' + lastDay.getFullYear();
+
+        $('input[name="expected_date_from"]').val(from);
+        $('input[name="expected_date_to"]').val(to);
+        $('#prospects-search-form').submit();
+    }
+</script>
