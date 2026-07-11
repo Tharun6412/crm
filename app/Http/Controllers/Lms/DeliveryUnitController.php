@@ -160,7 +160,7 @@ class DeliveryUnitController extends Controller
         $delivery_unit = DeliveryUnit::with(['ga:id,name', 'department:id,name', 'areas'])->find($id);
         $users = User::with(['department'])->whereHas('ga', function($q) use ($delivery_unit){
             $q->where('ga_id',$delivery_unit->ga_id);
-        })->get();
+        })->orderBy('first_name', 'asc')->get();
         // Selected Areas for the selected GA
         $selected_areas = $delivery_unit->areas->pluck('id')->toArray();
         $charge_areas = Ca::where('ga_id', $delivery_unit->ga_id)->get();

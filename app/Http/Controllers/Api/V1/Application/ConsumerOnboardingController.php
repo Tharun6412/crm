@@ -233,24 +233,24 @@ class ConsumerOnboardingController extends Controller
             // Validation
             $request->validate([
                 'notes' => 'required|max:255',
-                'lpg_consumer_number' => 'required',
-                'lpg_id' => 'required',
-                'lpg_omc_id' => 'required',
-                'registered_mobile' => 'required',
-                'lpg_connections' => 'required',
-                'meter_no' => ['required',
-                Rule::unique('cns_consumer_meters', 'meter_no')->ignore($meter?->id)->where(function($q) {
-                    $q->where('status', MeterStatus::ACTIVE->value);
-                }),
-            ],
-            'meter_serial_no' => [
-                Rule::requiredIf($consumer->connection_type_id == 2), 
-                'nullable',
-                Rule::unique('cns_consumer_meters', 'meter_serial_no')->ignore($meter?->id)->where(function($q) {
-                    $q->where('status', MeterStatus::ACTIVE->value);
-                }),
-            ],
-            'meter_reading' => 'required|numeric',
+                // 'lpg_consumer_number' => 'required',
+                // 'lpg_id' => 'required',
+                // 'lpg_omc_id' => 'required',
+                // 'registered_mobile' => 'required',
+                // 'lpg_connections' => 'trim',
+            //     'meter_no' => ['required',
+            //     Rule::unique('cns_consumer_meters', 'meter_no')->ignore($meter?->id)->where(function($q) {
+            //         $q->where('status', MeterStatus::ACTIVE->value);
+            //     }),
+            // ],
+            // 'meter_serial_no' => [
+            //     Rule::requiredIf($consumer->connection_type_id == 2), 
+            //     'nullable',
+            //     Rule::unique('cns_consumer_meters', 'meter_serial_no')->ignore($meter?->id)->where(function($q) {
+            //         $q->where('status', MeterStatus::ACTIVE->value);
+            //     }),
+            // ],
+            // 'meter_reading' => 'required|numeric',
 
             ]);
             //Check If Document has been uploaded [optional] 
@@ -270,20 +270,20 @@ class ConsumerOnboardingController extends Controller
                 'activation_date' => now()->toDateTimeString(),
                 'updated_by' => Auth::id(),
             ]);
-            ConsumerData::where('consumer_id',$id)->update([
-                'lpg_consumer_number' => $request->lpg_consumer_number,
-                'lpg_id' => $request->lpg_id,
-                'lpg_omc_id' => $request->lpg_omc_id,
-                'registered_mobile' => $request->registered_mobile,
-                'lpg_connections' => $request->lpg_connections,
-            ]);
-            // Consumer Meter
-            ConsumerMeter::where('consumer_id',$id)->where('status',1)->update([
-                'meter_no' => $request->meter_no,
-                'meter_serial_no' => $request->meter_serial_no,
-                'initial_reading' => $request->meter_reading,
-                'updated_by' => Auth::id(),
-            ]);
+            // ConsumerData::where('consumer_id',$id)->update([
+            //     'lpg_consumer_number' => $request->lpg_consumer_number ?? null,
+            //     'lpg_id' => $request->lpg_id ?? null,
+            //     'lpg_omc_id' => $request->lpg_omc_id ?? null,
+            //     'registered_mobile' => $request->registered_mobile ??null ,
+            //     'lpg_connections' => $request->lpg_connections ?? null,
+            // ]);
+            // // Consumer Meter
+            // ConsumerMeter::where('consumer_id',$id)->where('status',1)->update([
+            //     'meter_no' => $request->meter_no ?? null,
+            //     'meter_serial_no' => $request->meter_serial_no ?? null,
+            //     'initial_reading' => $request->meter_reading ?? null,
+            //     'updated_by' => Auth::id(),
+            // ]);
             // Consumer Target Status 
             $target_status = ConsumerStatusService::update($id, EnumsConsumerStatus::ACTIVATE->value);
             // Status History

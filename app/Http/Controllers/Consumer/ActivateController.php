@@ -56,11 +56,11 @@ class ActivateController extends Controller
         // Validation
         $request->validate([
             'notes' => 'required|max:255',
-            'lpg_consumer_number' => 'required',
-            'lpg_id' => 'required',
-            'lpg_omc_id' => 'required',
-            'registered_mobile' => 'required|digits:10',
-            'lpg_connections' => 'required|max:17',
+            // 'lpg_consumer_number' => 'trim',
+            // 'lpg_id' => 'trim',
+            // 'lpg_omc_id' => 'trim',
+            // 'registered_mobile' => 'trim|digits:10',
+            // 'lpg_connections' => 'trim|max:17',
             'meter_no' => ['required',
                 Rule::unique('cns_consumer_meters', 'meter_no')->ignore($meter?->id)->where(function($q) {
                     $q->where('status', MeterStatus::ACTIVE->value);
