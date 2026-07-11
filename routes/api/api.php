@@ -28,13 +28,14 @@ Route::middleware([ApiKeyMiddleware::class])->group(function(){
  * 
  * OAuth 2.0
  * OAuth token generation API - /oauth/token [grant_type, client_id, client_secret]
+ * 
+ * Reference with the PNGRB technical document
  */
 Route::middleware([CustomCheckToken::class])->group(function() {
-    Route::get('/test', function  () {
-        return response()->json(['success' => 'success']);
-    });
-    // Receive PNGRB application
+    // Receive PNGRB application Ref 4.2
     Route::post('v1/png-application', [App\Http\Controllers\Api\Pngrb\V1\PngApplicationController::class, 'store']);
-    // Update application status
+    // Update application status Ref 4.3
     Route::post('v1/png-application/update', [App\Http\Controllers\Api\Pngrb\V1\PngApplicationController::class, 'update']);
+    // Update application status Ref 4.4
+    Route::post('v1/png-application/document', [App\Http\Controllers\Api\Pngrb\V1\PngApplicationController::class, 'document']);
 });

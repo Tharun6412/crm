@@ -34,7 +34,7 @@ Route::middleware('auth')->group(function(){
     Route::post('logout', [App\Http\Controllers\Auth\Authentication::class, 'destroy']);
 });
 
-Route::middleware('guest')->prefix('authorize')->group(function () {
+Route::middleware('guest')->group(function () {
     Route::prefix('v1')->group(function() {
         Route::post('png-application/token', [App\Http\Controllers\Api\Pngrb\V1\AuthorizationController::class, 'authorize']);
     });

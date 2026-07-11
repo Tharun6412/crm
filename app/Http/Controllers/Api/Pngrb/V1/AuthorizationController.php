@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api\Pngrb\V1;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
+
 
 /**
  * Customized OAuth 2.0 authorization implementation
@@ -12,6 +14,10 @@ use Illuminate\Support\Facades\Validator;
  * 
  * Extends Passport authentication to provide
  * customized token validation and API responses
+ * 
+ * 03/07/2026
+ * client_id, client_secret parameters should be passed through
+ * Basic Authorization with base64_encoded formats - Ref PNGRB Doc V1.14
  */
 class AuthorizationController extends Controller
 {
@@ -20,11 +26,9 @@ class AuthorizationController extends Controller
      */
     public function authorize(Request $request)
     {
-        // Validations
+        // 1.Validations
         $validator = Validator::make($request->all(), [
             'grant_type' => 'required|in:client_credentials',
-            'client_id' => 'required',
-            'client_secret' => 'required',
         ]);
 
         // Check validations
@@ -47,11 +51,43 @@ class AuthorizationController extends Controller
             ], 400);
         }
 
+        // 2. Pull Authorization header
+        $authHeader = $request->header('Authorization', '');
+        
+        if (!Str::startsWith($authHeader, 'Basic ')) {
+            return response()->json([
+                'status' =>false,
+                'statusCode' => 401,
+                'message' => 'Unauthorized - Authorization missing',
+                'errors' => [
+                    ['field' => 'client_credentials', 'message' => 'Invalid client credentials'],
+                ],
+            ], 401);
+        }
+
+        // 3. Decode base64(client_id:client_secret)
+        $encoded = Str::after($authHeader, 'Basic ');
+        $decoded = base64_decode($encoded, true);
+
+        if ($decoded === false || !Str::contains($decoded, ':')) {
+            return response()->json([
+                'status' =>false,
+                'statusCode' => 401,
+                'message' => 'Unauthorized - Invalid Encryption',
+                'errors' => [
+                    ['field' => 'client_credentials', 'message' => 'Invalid client credentials'],
+                ],
+            ], 401);
+        }
+
+        [$clientId, $clientSecret] = explode(':', $decoded, 2);
+        // echo  $clientId .':'. $clientSecret;
+        // exit;
         // Generate Token using default passport route
         $passportRequest = Request::create('/oauth/token', 'POST', [
             'grant_type'    => 'client_credentials',
-            'client_id'     => $request->client_id,
-            'client_secret' => $request->client_secret,
+            'client_id'     => $clientId,
+            'client_secret' => $clientSecret,
         ]);
 
         // Handle response
@@ -66,9 +102,8 @@ class AuthorizationController extends Controller
                 'success' => false,
                 'statusCode' => $response->getStatusCode(),
                 'message' => $data['error_description'] ?? 'Unauthorized',
-                'error' => [
-                    'field' => 'client_credentials',
-                    'message' => $data['error'] ?? null,
+                'errors' => [
+                    ['field' => 'client_credentials', 'message' => $data['error'] ?? null],
                 ],
             ], $response->getStatusCode());
         }

@@ -3,6 +3,8 @@ namespace App\Http\Controllers\Api\Pngrb\V1;
 
 use App\Helpers\ApiLogger;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Master\DocumentCentre\DocumentUpload;
+use App\Models\Consumer\PngrbApplicationFiles;
 use App\Models\Consumer\PngrbApplications;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -249,6 +251,104 @@ class PngApplicationController extends Controller
                 'message' => $message,
                 'errors' => $errors
             ], $httpCode);
+        }
+    }
+
+    /**
+     * Upload the PNG Application document
+     */
+    public function document(Request $request)
+    {
+        // 1. Validate file
+        $fileValidator = Validator::make($request->all(), [
+            'file' => [
+                'required',
+                'file',
+                'mimes:pdf,jpg,jpeg,png',
+                'max:1024', // 1 MB, in KB
+            ],
+        ]);
+
+        if ($fileValidator->fails()) {
+            return response()->json([
+                'status' => false,
+                'statusCode' => 400,
+                'message' => 'Bad Request validation_failed',
+                'errors' => [$fileValidator->errors()],
+            ], 400);
+        }
+
+        // 2. Decode the metadata JSON string
+        $rawMetadata = $request->input('metadata');
+        $metadata = json_decode($rawMetadata, true);
+
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            return response()->json([
+                'status' => false,
+                'statusCode' => 400,
+                'message' => 'Bad Request invalid metadata',
+                'errors' => [
+                    ['field' => 'metadata', 'message' => 'metadata must be valid JSON',]
+                ]
+            ], 400);
+        }
+
+        // 3. Validate the decoded metadata fields
+        $metaValidator = Validator::make($metadata, [
+            'applicationNumber' => ['required'],
+            'cgdId'             => ['required'],
+            'gaId'              => ['required'],
+            'documentType'      => ['required'],
+            'documentCategory'  => ['required', 'in:IDENTITY_PROOF,ADDRESS_PROOF'],
+        ]);
+
+        if ($metaValidator->fails()) {
+            return response()->json([
+                'status' => false,
+                'statusCode' => 400,
+                'message' => 'Bad Request validation_failed',
+                'errors' => [$metaValidator->errors()],
+            ], 400);
+        }
+
+        $validatedMeta = $metaValidator->validated();
+        $file = $request->file('file');
+        // Check Applicaion and status
+        $application = PngrbApplications::where('applicationNumber', $validatedMeta['applicationNumber'])->first();
+        if($application) {
+            // Upload document
+            $document = DocumentUpload::file($file, ['package' => 'pngrbApplications', 'tag' => 'pngrb', 'description' => '']);
+            
+            // Insert into application documents
+            $application_file = PngrbApplicationFiles::create([
+                'application_id' => $application->id,
+                'file_id' => $document['file_id'],
+                'type' => $validatedMeta['documentType'],
+                'category' => $validatedMeta['documentCategory'],
+            ]);
+
+            // Response success
+            return response()->json([
+                'status' => true,
+                'statusCode' => 200,
+                'message' => 'Document uploaded successfully.',
+                'applicationNumber' => $validatedMeta['applicationNumber'],
+                'data' => [
+                    'documentType' => $validatedMeta['documentType'],
+                    'documentCategory' => $validatedMeta['documentCategory'],
+                ]
+            ]);
+        }
+        else {
+            // Failed
+            return response()->json([
+                'status' => false,
+                'statusCode' => 400,
+                'message' => 'Bad Request validation_failed',
+                'errors' => [
+                    ['field' => 'applicationNumber', 'message' => 'Application details not found']
+                ],
+            ], 400);
         }
     }
 }

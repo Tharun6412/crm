@@ -13,7 +13,7 @@ class DocumentUpload extends Controller
     /**
      * Upload file from multiple modules
      */
-    static function upload($request, $package = 'crm')
+    static function upload(Request $request, $package = 'crm')
     {
         // Validation
         $request->validate([
@@ -55,7 +55,7 @@ class DocumentUpload extends Controller
     /**
      * Multiple Files Upload
      */
-    static function uploadBulk($request, $package = 'crm')
+    static function uploadBulk(Request $request, $package = 'crm')
     {
         // Validations
         $request->validate([
@@ -110,7 +110,7 @@ class DocumentUpload extends Controller
     /**
      * Optional Bulk Documents
      */
-    static function uploadIfPresent($request, $package = 'crm')
+    static function uploadIfPresent(Request $request, $package = 'crm')
     {
         // Validations
         $request->validate([
@@ -158,7 +158,7 @@ class DocumentUpload extends Controller
 
     /**
      * Delete file from external packages
-     * @var int dc_file_id
+     * @param int $id dc_file_id
      * @return array
      */
     static function delete($id)
@@ -186,6 +186,43 @@ class DocumentUpload extends Controller
         }
         else {
             return ['status' => 2, 'msg' => 'Invalid document!'];
+        }
+    }
+
+    /**
+     * Upload file
+     * @param object $file
+     * @param array $fileData
+     */
+    static function file($file, $fileData)
+    {
+        // Upload process
+        if($file) {
+            $file_name = $file->getClientOriginalName();
+            $upload_path = $fileData['package'] . '/' . date('ym');
+            // Upload to AWS S3 bucket only in production
+            if(config('app.env') == 'production') {
+                $file_path = Storage::disk('s3')->put($upload_path, $file);
+            } else {
+                $file_path = $file_name;
+            }
+            
+            // Create a DB record in Document Centre package
+            $dc_insert = Documents::create([
+                'disk' => 's3',
+                'file_name' => $file_name,
+                'file_path' => $file_path,
+                'status' => 1,
+                'tags' => $fileData['tag'],
+                'description' => $fileData['description'],
+                'created_by' => Auth::id(),
+            ]);
+            $doc_number = 'DC' . str_pad($dc_insert->id, 9, '0', STR_PAD_LEFT);
+            $dc_update = Documents::where('id', $dc_insert->id)->update(['doc_number' => $doc_number]);
+            return ['file_id' => $dc_insert->id, 'doc_number' => $doc_number];
+        }
+        else {
+            return ['file_id' => null];
         }
     }
 }
