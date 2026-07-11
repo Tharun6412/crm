@@ -42,7 +42,7 @@ class TeamController extends Controller
         })
         ->orderByDesc('created_at')
         ->paginate(20)->withQueryString();
-
+        // Response
         if($request->ajax())
             return view('lms.teams.list-body',['teams' => $teams]);
         else
@@ -56,6 +56,7 @@ class TeamController extends Controller
         $geo_areas = Ga::when((!isAdmin() AND !isSuperAdmin() AND !isFullAccess()), function($q) {
             $q->whereIn('id',session('user')['gas']);
         })->get();
+        // Get Departments
         $departments = Department::whereIn('id', [
             EnumsDepartment::ACTIVATION->value,
             EnumsDepartment::HSE->value,
@@ -89,7 +90,7 @@ class TeamController extends Controller
             'responsible_user_id' => $request->responsible_user_id,
             'created_by' => Auth::id(),
         ]);
-
+        // Areas Sync
         $team->areas()->sync($request->area_id ?? []);
         return response()->json(['success' => 'Team Created Successfully']);
 
@@ -124,7 +125,8 @@ class TeamController extends Controller
         $area_ids = $du->areas->pluck('id')->toArray();
         // Assigned Areas
         // Areas already assigned to teams
-        $allocated_area_ids = DB::table('lms_team_areas')->whereIn('area_id', $area_ids)->pluck('area_id');
+        $allocated_area_ids = DB::table('lms_team_areas as ta')->join('lms_teams as t', 't.id', '=', 'ta.team_id')->whereIn('ta.area_id', $area_ids)
+            ->where('t.department_id', $request->dept_id)->pluck('ta.area_id');
         $areas = Area::select('id', 'name', 'ca_id')->whereIn('id', $area_ids)->get();
         $cas = $areas->pluck('ca_id')->unique()->toArray();
         $charge_areas = Ca::select('id', 'name')->whereIn('id', $cas)->get();
@@ -164,7 +166,7 @@ class TeamController extends Controller
         //     })
         ->orderBy('first_name', 'asc')
         ->get();
-        // Delivery Unit
+        // Delivery Unit Areas
         $delivery_units = DeliveryUnit::where('ga_id', $team->ga_id)->where('dept_id', $team->department_id)->get();
         $delivery_unit = DeliveryUnit::find($team->du_id);
         $area_ids = $delivery_unit?->areas?->pluck('id')->toArray() ?? [];
@@ -197,6 +199,7 @@ class TeamController extends Controller
         // validation
         $request->validate([
             'name' => 'required',
+            'responsible_user_id' => 'required',
             'area_id' => 'required',
         ]);
 

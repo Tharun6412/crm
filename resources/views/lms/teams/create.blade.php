@@ -116,8 +116,10 @@
         });
 
         $("#du_id").on('change', function () {
+            let dept = $('#department_id').val();
             $.get("{{ url('lms/teams/getDeliveryUnitAreas') }}", {
-                du_id: $(this).val()
+                du_id: $(this).val(),
+                dept_id : dept,
             }, function (response) {
 
                 let html = '';
