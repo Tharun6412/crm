@@ -50,7 +50,7 @@
                                     </a>
                                 </td>
                                 <td class="text-end">
-                                    <a href="{{ url('spot/prospects?'. http_build_query(['segments' => [$segment->id]]) .'&expected_date_from='. $date->copy()->startOfMonth()->format('d-m-Y') .'&expected_date_to='. $date->copy()->endOfMonth()->format('d-m-Y') . '&' . http_build_query(['sub_stage_id' => [19]])) }}" target="_blank">
+                                    <a href="{{ url('spot/prospects?'. http_build_query(['segments' => [$segment->id]]) .'&expected_date_from='. $date->copy()->startOfMonth()->format('d-m-Y') .'&expected_date_to='. $date->copy()->endOfMonth()->format('d-m-Y') . '&' . http_build_query(['sub_stage_id' => [19]]). '&date_type=monthly') }}" target="_blank">
                                         {{ $achieved[$segment->id][$date->format('m')] ?? '' }}
                                     </a>
                                 </td>

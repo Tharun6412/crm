@@ -1,9 +1,9 @@
 {{-- Consumer Verification Steps filter --}}
 
 <div {{ $attributes->merge(['class' => 'dropdown']) }}>
-    <button type="button" class="btn btn-outline-warning btn-md" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
-        <i class="bi bi-funnel{{ (request()->has('verify_steps')) ? '-fill' : '' }}"></i>
-        @isset(request()->verify_steps)            
+    <button type="button" class="btn btn-outline-info" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+        Issue Areas&nbsp;<i class="bi bi-sliders2{{ (request()->has('verify_steps')) ? '-fill' : '' }}"></i>
+        @isset(request()->verify_steps)        
             <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                 {{ sizeof(request()->get('verify_steps')) }}
             </span>

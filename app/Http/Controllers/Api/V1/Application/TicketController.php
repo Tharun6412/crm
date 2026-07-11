@@ -71,7 +71,8 @@ class TicketController extends Controller
     public function show($id)
     {
         $tickets = Ticket::with([
-            'category:id,name',
+            'category:id,name,department_id',
+            'category.departments:id,name',
             'status:id,name',
             'createdBy:id,first_name,last_name',
             'statusHistory',
@@ -86,7 +87,8 @@ class TicketController extends Controller
     {
         $ticket = Ticket::with([
             'consumer:id,crn,fname,lname',
-            'category:id,name',
+            'category:id,name,department_id',
+            'category.departments:id,name',
             'status:id,name',
             'createdBy:id,first_name,last_name,mobile',
         ])

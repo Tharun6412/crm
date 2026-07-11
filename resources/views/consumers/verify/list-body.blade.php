@@ -8,6 +8,9 @@
             </div>
         </div>
         <div class="col-auto">
+            <x-consumer.verify-steps-filter />
+        </div>
+        <div class="col-auto">
             <button type="submit" class="btn btn-success"><i class="bi bi-search"></i></button>
         </div>
         <div class="col-auto">
@@ -17,9 +20,8 @@
            <span class="fw-semibold">({{ numberFormat($verification->total()) }})</span> Records found
         </div>
     </div>
-    <div class="d-flex align-items-center gap-2">
-        <x-consumer.verify-steps-filter />
-        <a href="{{ url('consumers/verify/verificationExport'). '?' . http_build_query(request()->all()) }}" class="btn btn-outline-primary">Export</a>
+    <div class="d-flex align-items-center">
+        <a href="{{ url('consumers/verify/verificationExport'). '?' . http_build_query(request()->all()) }}" class="btn btn-outline-primary"><i class="bi bi-filetype-csv"></i>&nbsp;Export</a>
     </div>
 </div>
 <div class="table-responsive mt-2">

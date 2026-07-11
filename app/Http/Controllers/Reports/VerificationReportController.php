@@ -46,7 +46,7 @@ class VerificationReportController extends Controller
                 $q1->whereIn('verify_step_id', $request->verify_steps)->where('status', 0);
             });
         })
-        ->paginate(50)->withQueryString();
+        ->orderByDesc('created_at')->paginate(50)->withQueryString();
 
         if($request->ajax())
             return view('consumers.verify.list-body',['consumers' => $consumers,'verificationCount' => $verificationCount, 'verification' => $verification]);
