@@ -103,7 +103,8 @@ class ReferralCredit
                 }
             }
         }
-
+        // print_r($results);
+        print "Processed Rewards : ".json_encode($results);
         return $results;
 
     }
