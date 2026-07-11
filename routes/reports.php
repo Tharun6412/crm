@@ -80,6 +80,8 @@ Route::middleware(['auth', ModuleAccess::class])->group(function() {
     Route::get('consumer/activity',[App\Http\Controllers\Reports\ActivityController::class,'activity']);
     Route::get('consumer/employee/activity/getUserAssignedTeams', [App\Http\Controllers\Reports\EmployeeActivityController::class, 'getUserAssignedTeams']);
     Route::get('consumer/employee/activity',[App\Http\Controllers\Reports\EmployeeActivityController::class,'index']);
+    // Delivery Unit Report
+    Route::get('deliveryUnits',[App\Http\Controllers\Reports\DeliveryUnitReportController::class,'index']);
     
     // Referral Report
     Route::get('referrals', [App\Http\Controllers\Reports\ReferralsController::class, 'index']);

@@ -163,7 +163,7 @@
     @if ( request()->has('status') && !in_array(0, request()->status) && !in_array(1, request()->status))
         <div class="mb-3">
             <button type="button" id="bulkAssignBtn" class="btn btn-primary">
-                <i class="bi bi-people-fill"></i> Bulk Assign
+                <i class="bi bi-people-fill"></i> Batch Assign
             </button>
         </div>
     @endif
@@ -171,7 +171,7 @@
 <div class="p-2">
     <div id="bulkAssignSection" class="card shadow-sm border-0 d-none">
         <div class="card-header bg-info-subtle">
-            <strong>Bulk Team Assignment</strong>
+            <strong>Assign Multiple</strong>
         </div>
         <div class="card-body">
             <div class="row mb-3 align-items-center">
@@ -194,6 +194,8 @@
                 </div>
             </div>
             <div id="bulk-assign-error"></div>
+
+            <span class="text-danger opacity-75">Note : Select Area Filter to enable teams list</span>
             <div class="row">
                 <div class="col-md-12 text-center">
                     <button type="button" onclick="consumersBatchAssign()" class="btn btn-success">
@@ -247,6 +249,10 @@
             assign_to:$('#assign_to').val(),
         }, function (data) {
             $('#team-consumers-list').html('<div class="alert alert-success">'+data.message+'<br/>Selected Consumers : <span class="fw-bold fs-5">'+data.total+'</span><br/>Successfully Assigned : <span class="fw-bold fs-5">'+data.inserted+'</span></div>');
+            // Reload page after 5 seconds
+            setTimeout(function () {
+                location.reload();
+            }, 5000);
         }).fail(function(response){
             $('#bulk-assign-error').html('<div class="alert alert-danger mb-0">' + response.responseJSON.message + '</div>');
         });

@@ -38,6 +38,7 @@
                 <div class="nav nav-tabs bg-white" id="nav-tab2" role="tablist">
                     <button class="nav-link active fs-5 border border-bottom-0 me-2 text-nowrap" id="nav-consumers-wait-tab" data-bs-toggle="tab" data-bs-target="#nav-consumers-wait" type="button" role="tab" aria-controls="nav-consumers" aria-selected="true"><i class="bi bi-pin-map"></i>&nbsp;GA Wise&nbsp;<span class="badge text-bg-success">{{ numberFormat($wait_list) }}</span></button>
                     <button class="nav-link fs-5 border border-bottom-0 me-2 text-nowrap" id="nav-emp-activity-tab" data-bs-toggle="tab" data-bs-target="#nav-emp-activity" type="button" role="tab" aria-controls="nav-emp-activity" aria-selected="true"><i class="bi bi-person-workspace me-1"></i>&nbsp;Employee Wise</button>  
+                    <button class="nav-link fs-5 border border-bottom-0 me-2 text-nowrap" id="nav-du-activity-tab" data-bs-toggle="tab" data-bs-target="#nav-du-activity" type="button" role="tab" aria-controls="nav-du-activity" aria-selected="true"><i class="bi bi-person-workspace me-1"></i>&nbsp;Delivery Unit Wise</button>  
                 </div>
             </nav>
             <div class="tab-content" id="nav-tabContentCns">
@@ -105,6 +106,42 @@
                         </div>
                     </form>
                     <div id="report-emp-activity-list">
+                        <div class="alert alert-info mb-0 fw-semibold">
+                            Please Select GA.
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="nav-du-activity" role="tabpanel" aria-labelledby="nav-du-activity-tab" tabindex="0">
+                    <form action="{{ url('reports/deliveryUnits') }}" id="report-du-activity-search-form" method="GET">
+                        <div class="d-flex justify-content-between align-items-center border my-2 bg-light p-2 bg-secondary-subtle rounded">
+                            <h4 class="mb-0 ms-2">Connection Progress - Delivery Unit</h4>
+                            <div class="row gx-1 mb-0">
+                                <div class="col-auto">
+                                    <div class="form-control"> 
+                                        GA&nbsp;<x-master.ga-filter class="float-end"/>
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    @if (request()->geo_area)
+                                        <div class="form-control"> 
+                                            Charge Area&nbsp;<x-master.charge-area-filter class="float-end"/>
+                                        </div>
+                                    @endif
+                                </div>
+                                <div class="col-auto">
+                                    <div class="form-control"> 
+                                        Department&nbsp;<x-master.department-filter class="float-end"/>
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <div>
+                                        <button type="submit" class="btn btn-success"><i class="bi bi-search"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="report-du-activity-list">
                         <div class="alert alert-info mb-0 fw-semibold">
                             Please Select GA.
                         </div>
@@ -375,5 +412,6 @@
     @include('scripts.ajax-form-search', ['form' => 'report-status-activity'])
     @include('scripts.ajax-form-search', ['form' => 'report-emp-activity'])
     @include('scripts.ajax-form-search', ['form' => 'report-team-progress'])
+    @include('scripts.ajax-form-search', ['form' => 'report-du-activity'])
     @include('scripts.datepicker', ['list' => ['date_from', 'date_to', 'status_date', 'conv_date_from', 'conv_date_to', 'team_date_from', 'team_date_to']])
 @endpush

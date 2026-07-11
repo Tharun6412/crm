@@ -28,6 +28,5 @@ enum Role: int
     case GI_EMPLOYEE = 25;
     case HSE_EMPLOYEE = 26;
     case ACTIVATION_EMPLOYEE = 27;
-    case MDPE_EMPLOYEE = 28;
-    case STEEL_EMPLOYEE = 29;
+    case DELIVERY_MANAGER = 29;
 }

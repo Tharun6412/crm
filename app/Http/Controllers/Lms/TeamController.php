@@ -159,9 +159,9 @@ class TeamController extends Controller
         $users = User::whereHas('ga', function($q) use ($team){
             $q->where('ga_id',$team->ga_id);
         })
-        ->whereHas('roles', function($q) use($role_id) {
-                $q->whereIn('adm_roles.id', array_unique($role_id));
-            })
+        // ->whereHas('roles', function($q) use($role_id) {
+        //         $q->whereIn('adm_roles.id', array_unique($role_id));
+        //     })
         ->orderBy('first_name', 'asc')
         ->get();
         // Delivery Unit
