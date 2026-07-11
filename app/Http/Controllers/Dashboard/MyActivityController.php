@@ -48,6 +48,7 @@ class MyActivityController extends Controller
             }
         }
         // Assigned List
+        
         $assign_list = [];
         $assigned_consumers = TeamConsumer::join('cns_consumers', 'cns_consumers.id', '=', 'cns_consumer_teams.consumer_id')
             ->join('lms_teams', 'lms_teams.id', '=', 'cns_consumer_teams.team_id')
@@ -123,6 +124,11 @@ class MyActivityController extends Controller
     {
         // Get data
         $reports = ConsumerStatus::where('created_by', $request->user_id)->where('status_id', $request->status_id)->orderBy('created_at', 'desc')->paginate(50)->withQueryString();      
-        return view('dashboard.consumers-status-list', ['reports' => $reports]);
+        // Response
+        if($request->ajax() and $request->page < 1) {
+            return view('dashboard.consumers-status-list', ['reports' => $reports]);
+        }else {
+            return view('dashboard.consumers-status-list-body', ['reports' => $reports]);
+        }
     }
 }
