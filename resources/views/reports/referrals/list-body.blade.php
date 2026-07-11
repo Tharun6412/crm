@@ -109,7 +109,7 @@
                         <td rowspan="{{ $rowspan }}">{{ maskNumber($referral->phone) }}</td>
                         {{-- First consumer inline in the same <tr> --}}
                         @if ($firstCon)
-                            <td>
+                            <td nowrap ><i class="bi bi-{{ ($firstCon->consumer->connection_type_id == 1) ? 'speedometer2' : 'wifi'}}"></i>
                                  <a href="{{ url('consumers/' . $firstCon->consumer->id) }}" target="_blank">
                                     {{ $firstCon->consumer?->crn ?? $firstCon->consumer?->t_crn }}
                                  </a>
@@ -126,7 +126,7 @@
                     {{-- Remaining consumers each in their own <tr> --}}
                     @foreach ($consumers->skip(1) as $con)
                         <tr>
-                            <td>
+                            <td nowrap><i class="bi bi-{{ ($con->consumer->connection_type_id == 1) ? 'speedometer2' : 'wifi'}}"></i>
                                  <a href="{{ url('consumers/' . $con->consumer->id) }}" target="_blank">
                                     {{ $con->consumer?->crn ?? $con->consumer?->t_crn }}
                                  </a>

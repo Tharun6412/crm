@@ -29,6 +29,7 @@ return new class extends Migration
             $table->morphs('advancable');
             $table->double('amount')->nullable();
             $table->double('balance')->nullable();
+            $table->double('transaction_no')->nullable();
             $table->timestamps();
         });
 

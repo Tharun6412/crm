@@ -27,6 +27,8 @@ return new class extends Migration
             $table->date('conversion_date')->nullable();
             $table->dateTime('hes_date')->nullable();
             $table->boolean('hes_status')->nullable();
+            $table->dateTime('commission_date')->nullable();
+            $table->boolean('commission_status')->nullable();
             $table->decimal('bonus', 11, 2)->nullable();
             $table->boolean('bonus_status')->nullable();
             $table->boolean('bonus_date')->nullable();

@@ -28,7 +28,13 @@ class ReferralCredit
             ])
             ->where('status', ReferralStatus::EARNED->value)
             ->where(fn($q) => $q->where('referrer_redeem_status', 1))
-            ->where(fn($q) => $q->whereHas('request.consumer', fn($q) => $q->where('status_id', ConsumerStatus::ACTIVATE->value)))
+            ->where(fn($q) => $q->whereHas('request.consumer', function ($q) {
+                $q->where('status_id', ConsumerStatus::ACTIVATE->value)
+                ->where(function ($q) {
+                    $q->where('connection_type_id', 1) // postpaid — no commission gate
+                        ->orWhereHas('prepaidData', fn($q) => $q->where('hes_status', 1)->where('commission_status', 1));
+                });
+            }))
             ->get();
         // Fetching the referral consumers
         $eligibleReferrals = ReferralConsumer::with([
@@ -36,7 +42,13 @@ class ReferralCredit
             ])
             ->where('status', ReferralStatus::EARNED->value)
             ->where(fn($q) => $q->where('referral_redeem_status', 1))
-            ->where(fn($q) => $q->whereHas('consumer', fn($q) => $q->where('status_id', ConsumerStatus::ACTIVATE->value)))
+            ->where(fn($q) => $q->whereHas('consumer', function ($q) {
+                $q->where('status_id', ConsumerStatus::ACTIVATE->value)
+                ->where(function ($q) {
+                    $q->where('connection_type_id', 1) // postpaid — no commission gate
+                        ->orWhereHas('prepaidData', fn($q) => $q->where('hes_status', 1)->where('commission_status', 1));
+                });
+            }))
             ->get();
 
         if($eligibleReferrers->isNotEmpty()) {
@@ -139,6 +151,7 @@ class ReferralCredit
                 'consumer_id' => $consumerId,
                 'amount'      => $amount,
                 'balance' => $closingBalance,
+                'transaction_no' => "Referral reward - ".$consumerId,
                 // add any other PayAdvanceTransaction columns here
             ]);
             return true;

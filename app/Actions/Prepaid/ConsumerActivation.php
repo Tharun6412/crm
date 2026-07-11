@@ -18,6 +18,13 @@ class ConsumerActivation
         if (!$consumer) {
             return self::error('Invalid Consumer/MeterNumber/Data not sent to HES');
         }
+        
+        // update the commission data in prepaid table.
+        $consumer->prepaidData->update([
+            'commission_date' => now()->toDateTimeString(),
+            'commission_status' => 1,
+        ]);
+        
         switch ($consumer->status_id) {
             case EnumsConsumerStatus::ACTIVATE->value:
                 return self::error('This consumer is already in activated state');

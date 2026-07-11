@@ -28,7 +28,8 @@ class PayAdvanceTransaction extends Model
         'advancable_type',
         'advancable_id',
         'amount',
-        'balance',        
+        'balance',   
+        'transaction_no',     
     ];
 
     /**

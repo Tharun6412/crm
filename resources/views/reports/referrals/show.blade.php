@@ -55,7 +55,7 @@
                             @foreach ($referral->referralConsumers as $consumer)
                                 <tr>
                                     <td>{{ $li++ }}</td>
-                                    <td><a href="{{ url('consumers/'.$consumer->consumer->id) }}" target="_blank">{{ $consumer->consumer->crn ?? $consumer->consumer->t_crn}}</a></td>
+                                    <td><i class="bi bi-{{ ($consumer->consumer->connection_type_id == 1) ? 'speedometer2' : 'wifi'}}"></i><a href="{{ url('consumers/'.$consumer->consumer->id) }}" target="_blank">{{ $consumer->consumer->crn ?? $consumer->consumer->t_crn}}</a></td>
                                     <td>{{ $consumer->consumer->name ?? '' }}</td>
                                     <td><x-consumer.status :status="$consumer->consumer->status" /></td>
                                     <td><x-referrals.status :status="$consumer->status" /></td>
