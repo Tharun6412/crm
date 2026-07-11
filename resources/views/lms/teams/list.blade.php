@@ -7,7 +7,7 @@
 @section('page-content')
     <form action="{{ url('lms/teams') }}" id="teams-search-form" method="GET">
         <div id="teams-list" class="current-page-reload" >
-            @include('admin.teams.list-body')
+            @include('lms.teams.list-body')
         </div>
     </form>
 @endsection

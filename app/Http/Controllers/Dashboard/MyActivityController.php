@@ -30,37 +30,33 @@ class MyActivityController extends Controller
         $user = Auth::user();
         // Consumer Waiting List for the Responsible User
         $delivery_units = DeliveryUnit::with(['areas'])->where('manager_id', $user->id)->get();
-        $consumers_list_data = Consumer::select(
-            'status_id',
-            DB::raw('COUNT(id) as consumer_count')
-        )
-        ->whereIn('ga_id', $user->ga->pluck('id'))
-        ->where(function ($query) use ($delivery_units) {
-            foreach ($delivery_units as $du) {
-                $areaIds = $du->areas->pluck('id');
-                if ($areaIds->isNotEmpty()) {
-                    $query->orWhere(function ($sub) use ($areaIds, $du) {
-                        $sub->whereIn('area_id', $areaIds)
-                            ->where('status_id', $du->responsible_status_id);
-                    });
+        $consumers_count = [];
+        $user_gas = $user->ga->pluck('id');
+        foreach ($delivery_units as $du) {
+            $areaIds = $du->areas->pluck('id');
+            // Run only if areas available
+            if ($areaIds->isNotEmpty()) {
+                $consumers_list_data = Consumer::select('status_id', DB::raw('COUNT(id) as consumer_count'))
+                    ->whereIn('ga_id', $user_gas)
+                    ->whereIn('area_id', $areaIds)
+                    ->where('status_id', $du->responsible_status_id)
+                    ->groupBy('status_id')
+                    ->get();
+                foreach ($consumers_list_data as $list) {
+                    $consumers_count[$du->id][$list->status_id] = $list->consumer_count;
                 }
             }
-        })
-        ->groupBy('status_id')
-        ->get();
-        $consumers_count = [];
-        foreach($consumers_list_data as $list) {
-            $consumers_count[$list->status_id] = $list->consumer_count;
         }
-        // print "<pre>"; print_r($consumers_count);
         // Assigned List
         $assign_list = [];
         $assigned_consumers = TeamConsumer::join('cns_consumers', 'cns_consumers.id', '=', 'cns_consumer_teams.consumer_id')
-            ->whereIn('cns_consumers.ga_id', $user->ga->pluck('id')->toArray())
+            ->join('lms_teams', 'lms_teams.id', '=', 'cns_consumer_teams.team_id')
+            ->join('lms_delivery_units', 'lms_delivery_units.id', '=', 'lms_teams.du_id')
+            ->whereIn('cns_consumers.ga_id', $user_gas)
             ->where('cns_consumer_teams.created_by', $user->id)
-            ->select('cns_consumer_teams.status_id','cns_consumer_teams.status', DB::raw('COUNT(cns_consumer_teams.id) as assign_count'))->groupBy('status_id', 'status')->get();
+            ->select('lms_delivery_units.id as du_id','cns_consumer_teams.status_id','cns_consumer_teams.status', DB::raw('COUNT(cns_consumer_teams.id) as assign_count'))->groupBy('lms_delivery_units.id','status_id', 'status')->get();
         foreach($assigned_consumers as $assign) {
-            $assign_list[$assign->status_id][$assign->status] = $assign->assign_count;
+            $assign_list[$assign->du_id][$assign->status_id][$assign->status] = $assign->assign_count;
         }
         
         // 2. Teams List and Get the Consumers Count Pending and Completed

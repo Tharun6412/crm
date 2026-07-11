@@ -148,6 +148,7 @@ class TeamConsumersController extends Controller
      */
     public function create(Request $request, $id)
     {
+        // dd($request->all());
         $team_consumer = Consumer::findOrFail($id);
         switch($team_consumer->status_id){
             case ConsumerStatus::PRE_REGISTER->value:
@@ -169,7 +170,9 @@ class TeamConsumersController extends Controller
                 $dept_id = Null;
                 break;
         }
-        $teams = Team::where('du_id', $request->du_id)->whereIn('ga_id', $request->ugas)->where('status', 1)->get();
+        $teams = Team::where('du_id', $request->du_id)->whereIn('ga_id', $request->ugas)->whereHas('areas', function($q) use($team_consumer) {
+            $q->where('mst_areas.id', $team_consumer->area_id);
+        })->where('status', 1)->get();
         return view('consumers.team-consumers.create',['team_consumer' => $team_consumer,'teams' => $teams]);
     }
 

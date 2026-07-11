@@ -25,12 +25,12 @@
                     </div>
                     <div class="col-sm-2 text-end fw-semibold">Verified Date : </div>
                     <div class="col-sm-4">{{ $consumer->verification->created_at->format('d-m-Y H:i')}}</div>
-                    <div class="col-sm-2 text-end fw-semibold text-break">Remarks : </div>
-                    <div class="col-sm-4">{{ $consumer->verification->remarks ?? ''}}</div>
+                    <div class="col-sm-2 text-end fw-semibold">Remarks : </div>
+                    <div class="col-sm-4 text-break">{{ $consumer->verification->remarks ?? ''}}</div>
                     <div class="col-sm-2 text-end fw-semibold">Updated By : </div>
                     <div class="col-sm-4">{{ $consumer->verification->updatedBy->name ?? ''}}</div>
-                    <div class="col-sm-2 text-end fw-semibold text-break">Updated Remarks : </div>
-                    <div class="col-sm-4">{{ $consumer->verification->updated_remarks ?? ''}}</div>
+                    <div class="col-sm-2 text-end fw-semibold">Updated Remarks : </div>
+                    <div class="col-sm-4 text-break">{{ $consumer->verification->updated_remarks ?? ''}}</div>
                     <div class="col-sm-2 text-end fw-semibold">Updated Date : </div>
                     <div class="col-sm-4">{{ $consumer->verification->updated_at->format('d-m-Y H:i')}}</div>
                 </div>

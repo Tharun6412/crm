@@ -6,7 +6,7 @@ use App\Enums\ConsumerStatus as EnumsConsumerStatus;
 use App\Enums\Role as EnumsRole;
 use App\Http\Controllers\Controller;
 use App\Models\Admin\Role;
-use App\Models\Admin\Team;
+use App\Models\Lms\Team;
 use App\Models\Consumer\Consumer;
 use App\Models\Consumer\ConsumerStatus;
 use App\Models\Consumer\TeamConsumer;

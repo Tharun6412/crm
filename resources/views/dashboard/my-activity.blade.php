@@ -24,14 +24,18 @@
                         </tr>
                     </thead>
                     <tbody>
+                        @php
+                            $total = 0;
+                        @endphp
                         @foreach($delivery_units as $id => $du)
                             @php
-                                $current_status = $consumers_count[$du->responsible_status_id] ?? 0;
-                                $assigned = $assign_list[$du->action_status_id][0] ?? 0;
+                                $current_status = $consumers_count[$du->id][$du->responsible_status_id] ?? 0;
+                                $assigned = $assign_list[$du->id][$du->action_status_id][0] ?? 0;
                                 // UnAssigned
+                                $total += $current_status;
                                 $unassigned = abs($current_status - $assigned);
                                 // $total = $assigned + $unassigned;
-                                $completed = $assign_list[$du->action_status_id][1] ?? 0;
+                                $completed = $assign_list[$du->id][$du->action_status_id][1] ?? 0;
                                 // charge Area Ids
                                 $caIds = $du->areas->pluck('ca_id')->filter()->unique()->values()->toArray();
                                 $area_ids = $du->areas->pluck('id')->unique()->toArray();
@@ -49,7 +53,7 @@
                         @endforeach
                             <tr class="fs-5">
                                 <td colspan="5" class="text-end fw-semibold">Total Count</td>
-                                <td class="fw-semibold text-center">{{ numberFormat(array_sum($consumers_count)) }}</td>
+                                <td class="fw-semibold text-center">{{ numberFormat($total) }}</td>
                                 <td></td>
                             </tr>
                     </tbody>
@@ -93,8 +97,8 @@
                                 <td>{{ $team->deliveryUnit?->name }}</td>
                                 <td>{{ $team->deliveryUnit?->duIncharge?->name }}</td>
                                 <td>{{ $team->departments?->name }}</td>
-                                <td class="text-center fs-5"><a href="{{ url('consumers/waiting/pending-consumers') }}?{{ http_build_query(['cns_status' => $cns_status[$team->id] ?? NULL,'target_status' => $cns_status[$team->id] ?? NULL,'ugas' => [$team->deliveryUnit->ga_id], 'ucas' => $du_cas, 'area_ids' => $du_areas, 'status' => [0], 'team_id' => [$team->id]]) }}" target="_blank">{{ $consumers_list[$team->id][0] ?? 0 }}</a></td>
-                                <td class="text-center fs-5"><a href="{{ url('consumers/waiting/pending-consumers') }}?{{ http_build_query(['cns_status' => $cns_status[$team->id] ?? NULL,'target_status' => $cns_status[$team->id] ?? NULL, 'ugas' => [$team->deliveryUnit->ga_id], 'ucas' => $du_cas, 'area_ids' => $du_areas, 'status' => [1], 'team_id' => [$team->id]]) }}" target="_blank">{{ $consumers_list[$team->id][1] ?? 0 }}</a></td>
+                                <td class="text-center fs-5"><a href="{{ url('consumers/waiting/pending-consumers') }}?{{ http_build_query(['cns_status' => [$team->deliveryUnit?->action_status_id],'target_status' => [$team->deliveryUnit?->action_status_id], 'ugas' => [$team->deliveryUnit?->ga_id], 'ucas' => $du_cas, 'area_ids' => $du_areas, 'status' => [0], 'team_id' => [$team->id]]) }}" target="_blank">{{ $consumers_list[$team->id][0] ?? 0 }}</a></td>
+                                <td class="text-center fs-5"><a href="{{ url('consumers/waiting/pending-consumers') }}?{{ http_build_query(['cns_status' => [$team->deliveryUnit?->action_status_id],'target_status' => [$team->deliveryUnit?->action_status_id], 'ugas' => [$team->deliveryUnit?->ga_id], 'ucas' => $du_cas, 'area_ids' => $du_areas, 'status' => [1], 'team_id' => [$team->id]]) }}" target="_blank">{{ $consumers_list[$team->id][1] ?? 0 }}</a></td>
                                 <td class="text-center fs-5">{{ array_sum($consumers_list[$team->id] ?? []) }}</td>
                             </tr>
                         @endforeach

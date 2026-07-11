@@ -7,7 +7,7 @@
             <button type="submit" class="btn btn-success"><i class="bi bi-search"></i></button>
         </div>
         <div class="col-auto">
-            <a href="{{ url('admin/teams') }}" class="btn btn-warning"><i class="bi bi-arrow-clockwise"></i></a>
+            <a href="{{ url('lms/teams') }}" class="btn btn-warning"><i class="bi bi-arrow-clockwise"></i></a>
         </div>
         <div class="col-auto">
             <span class="fw-semibold">({{ $teams->total() }})</span> Records found
