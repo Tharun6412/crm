@@ -39,6 +39,7 @@ class ComplaintExport implements FromQuery, WithHeadings, WithMapping
             ->leftJoin('mst_cmp_categories as sub_cat', 'sub_cat.id', '=', 'cmp_complaints.category_id')
             ->leftJoin('mst_cmp_priorities', 'mst_cmp_priorities.id', '=', 'sub_cat.priority_id')
             ->leftJoin('mst_cmp_irregularities', 'mst_cmp_irregularities.id', '=', 'cmp_complaints.irregularities_id')
+            ->leftJoin('mst_cmp_types', 'mst_cmp_types.id', '=', 'cmp_complaints.type_id')
             ->leftJoin('mst_cmp_categories as parent_cat', 'parent_cat.id', '=', 'sub_cat.parent_id')
             ->leftJoin('mst_gas', 'mst_gas.id', '=', 'cmp_complaints.ga_id')
             ->leftJoin('users', 'users.id', '=', 'cmp_complaints.created_by')
@@ -53,6 +54,7 @@ class ComplaintExport implements FromQuery, WithHeadings, WithMapping
                 'mst_cmp_status.name as status_name',
                 'mst_cmp_priorities.name as priority_name',
                 'mst_cmp_irregularities.name as irregularity_name',
+                'mst_cmp_types.name as type_name',
                 'parent_cat.name as category_name',
                 'sub_cat.name as subcategory_name',
                 'sub_cat.resolution_type',
@@ -108,7 +110,7 @@ class ComplaintExport implements FromQuery, WithHeadings, WithMapping
 
     public function headings(): array
     {
-        return ['S.No', 'GA', 'Complaint Number', 'Category', 'Sub Category', 'CRN', 'Name', 'Segment', 'Raised Date', 'Raised By', 'Estimated Close Date', 'Closed Date', 'Deviation', 'Priority', 'Status', 'Irregularities'];
+        return ['S.No', 'GA', 'Complaint Number', 'Types', 'Category', 'Sub Category', 'CRN', 'Name', 'Segment', 'Raised Date', 'Raised By', 'Estimated Close Date', 'Closed Date', 'Deviation', 'Priority', 'Status', 'Irregularities'];
     }
 
     public function map($row): array
@@ -140,6 +142,7 @@ class ComplaintExport implements FromQuery, WithHeadings, WithMapping
             $this->i,
             $row->ga_name,
             $row->code,
+            $row->type_name,
             $row->category_name,
             $row->subcategory_name,
             $row->crn,

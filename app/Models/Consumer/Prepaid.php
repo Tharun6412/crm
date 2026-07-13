@@ -32,6 +32,8 @@ class Prepaid extends Model
         'balance',
         'balance_date',
         'hes_status',
+        'commissioned_date',
+        'commissioned_status',
         'hes_date',
         'bill_date',
         'bill_qty',

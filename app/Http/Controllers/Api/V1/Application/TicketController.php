@@ -92,9 +92,9 @@ class TicketController extends Controller
             'status:id,name',
             'createdBy:id,first_name,last_name,mobile',
         ])
-        ->when((!isApiAdmin() && !isApiSuperAdmin() && !isApiFullAccess()), function ($q) {
-            $q->whereHas('consumer', function ($consumer) {
-                $consumer->whereIn('ga_id', session('user')['gas']);
+        ->when((!isApiAdmin() && !isApiSuperAdmin() && !isApiFullAccess()), function ($q) use ($request) {
+            $q->whereHas('consumer', function ($consumer) use ($request) {
+                $consumer->whereIn('ga_id', $request->user()->ga()->pluck('ga_id')->toArray());
             });
         })
         ->when($request->filled('key'), function ($q) use ($request) {

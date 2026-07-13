@@ -48,6 +48,7 @@
                         @endif
                     </a>
                 </th>
+                <th>Type</th>
                 <th nowrap>
                     <div class="d-flex">
                         <div>Category &nbsp;</div>
@@ -123,6 +124,7 @@
                         <td nowrap>
                             <a href="{{ url('calls/'.$complaint?->id) }}" class="link-modal">{{ $complaint?->code }}</a>
                         </td>
+                        <td>{{ $complaint->type?->name ?? ''}}</td>
                         <td nowrap>{{ $complaint->category?->parent?->name }}</td>
                         <td nowrap>{{ $complaint->category?->name }}</td>
                         <td nowrap>
