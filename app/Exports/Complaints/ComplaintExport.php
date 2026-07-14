@@ -77,6 +77,8 @@ class ComplaintExport implements FromQuery, WithHeadings, WithMapping
             })
             ->when(!empty($this->request->segment_id), fn($q) =>
                 $q->whereIn('cmp_complaints.segment_id', $this->request->segment_id))
+            ->when(!empty($this->request->types), fn($q) =>
+                $q->whereIn('cmp_complaints.type_id', $this->request->types))
             ->when(!empty($this->request->cmp_status), fn($q) =>
                 $q->whereIn('cmp_complaints.status_id', $this->request->cmp_status))
             ->when(!empty($this->request->subcategory), fn($q) =>

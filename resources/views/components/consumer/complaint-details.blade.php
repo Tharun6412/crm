@@ -70,7 +70,7 @@
                 <div class="col-sm-4">
                     @if ($complaint->complaintDocuments->count() > 0)
                         @foreach ($complaint->complaintDocuments as $document)
-                            <a href="{{ url('dc/documents/' . $document->file_id) }}" title="{{ $document->file->file_name }}" target="_blank"><i class="bi bi-file-earmark-pdf fs-3"></i></a>        
+                            <a href="{{ url('master/dc/documents/' . $document->file_id) }}" title="{{ $document->file->file_name }}" target="_blank"><i class="bi bi-file-earmark-pdf fs-3"></i></a>        
                         @endforeach
                     @endif
                 </div>

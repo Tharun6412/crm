@@ -69,6 +69,9 @@ class ComplaintsController extends Controller
         ->when($request->has('segment_id'), function($q) use($request) {
             $q->whereIn('segment_id', $request->segment_id);
         })
+        ->when($request->has('types'), function($q) use($request) {
+            $q->whereIn('type_id', $request->types);
+        })
         ->when($request->has('cmp_status'), function($q) use($request) {
             $q->whereIn('status_id', $request->cmp_status);
         })

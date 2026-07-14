@@ -86,11 +86,15 @@
                                     <li><a class="dropdown-item link-modal" href="{{ url('consumers/refunds/' . $list->id) }}"><i class="bi bi-chevron-right"></i>&nbsp;View</a></li>
                                     @if ($list->status_id == RefundStatus::REQUEST->value)
                                         <li><x-auth.link class="dropdown-item link-modal" href="{{ url('consumers/refunds/process/' . $list->id) }}" action="prcs"><i class="bi bi-chevron-right"></i>&nbsp;Process</x-auth.link></li>
+                                        <li><x-auth.link class="dropdown-item link-modal" href="{{ url('consumers/refunds/editDocument/'.$list->id) }}" action="doc"><i class="bi bi-chevron-right"></i>&nbsp;Upload Document</x-auth.link></li>
                                     @endif
                                     @if ($list->status_id == RefundStatus::PROCESS->value)
                                         <li><x-auth.link class="dropdown-item link-modal" href="{{ url('consumers/refunds/approve/' . $list->id) }}" action="apprv"><i class="bi bi-chevron-right"></i>&nbsp;Approve</x-auth.link></li>
+                                        <li><x-auth.link class="dropdown-item link-modal" href="{{ url('consumers/refunds/editDocument/'.$list->id) }}" action="doc"><i class="bi bi-chevron-right"></i>&nbsp;Upload Document</x-auth.link></li>
+
                                     @endif
                                     @if ($list->status_id == RefundStatus::APPROVE->value)
+                                        <li><x-auth.link class="dropdown-item link-modal" href="{{ url('consumers/refunds/editDocument/'.$list->id) }}" action="doc"><i class="bi bi-chevron-right"></i>&nbsp;Upload Document</x-auth.link></li>
                                         <li><x-auth.link class="dropdown-item link-modal" href="{{ url('consumers/refunds/close/' . $list->id) }}" action="close"><i class="bi bi-chevron-right"></i>&nbsp;Close</x-auth.link></li>
                                     @endif
                                 </ul>

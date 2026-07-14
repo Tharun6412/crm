@@ -61,6 +61,9 @@ Route::middleware(['auth', ModuleAccess::class])->group(function() {
     Route::post('refunds/approveUpdate/{id}',[App\Http\Controllers\Consumer\RefundController::class, 'approveUpdate']);
     Route::get('refunds/close/{id}',[App\Http\Controllers\Consumer\RefundController::class, 'close']);
     Route::post('refunds/closeRefund/{id}',[App\Http\Controllers\Consumer\RefundController::class, 'closeRefund']);
+    Route::get('refunds/editDocument/{id}',[App\Http\Controllers\Consumer\RefundController::class, 'editDocument']);
+    Route::post('refunds/updateDocument/{id}',[App\Http\Controllers\Consumer\RefundController::class, 'updateDocument']);
+
     Route::resource('refunds', App\Http\Controllers\Consumer\RefundController::class);
     
     // Consumer Meter Change 

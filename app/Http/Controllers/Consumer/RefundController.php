@@ -4,6 +4,7 @@
  */
 namespace App\Http\Controllers\Consumer;
 
+use App\Enums\AwsPath;
 use App\Enums\InvoiceItem;
 use App\Enums\InvoiceStatus;
 use App\Enums\InvoiceType;
@@ -11,7 +12,9 @@ use App\Enums\PaymentStatus;
 use App\Enums\RefundStatus;
 use App\Enums\TaxType;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Master\DocumentCentre\DocumentUpload;
 use App\Models\Consumer\ConsumerRefund;
+use App\Models\Consumer\ConsumerRefundDocument;
 use App\Models\Consumer\ConsumerRefundStatus;
 use App\Models\Consumer\ConsumerScheme;
 use App\Models\Invoice\BillInvoice;
@@ -310,5 +313,33 @@ class RefundController extends Controller
             'created_by' => Auth::id(),
         ]);
         return response()->json(['success' => 'Consumer refund closed successfully']);
+    }
+    /**
+     * Refund Documents
+     */
+    public function editDocument($id)
+    {
+        $consumer_refund = ConsumerRefund::findOrFail($id);
+        return view('consumers.refund.document',['consumer_refund' => $consumer_refund]);
+    }
+    /**
+     * 
+     */
+    public function updateDocument(Request $request,$id)
+    {
+        $request->validate([
+            'notes' => 'required',
+            'dc_file' => 'required',
+        ]);
+
+        $doc_upload = DocumentUpload::upload($request,AwsPath::REFUNDS->value);
+        //
+        ConsumerRefundDocument::create([
+            'request_id' => $id,
+            'file_id' => $doc_upload['file_id'],
+            'notes' => $request->notes,
+            'created_by' => Auth::id(),
+        ]);
+        return response()->json(['success' => 'Document Uploaded Successfully']);
     }
 } 

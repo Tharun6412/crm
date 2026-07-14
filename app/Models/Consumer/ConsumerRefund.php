@@ -93,5 +93,13 @@ class ConsumerRefund extends Model
     {
         return $this->hasMany(ConsumerRefundStatus::class, 'refund_id')->orderBy('created_at', 'desc');
     }
+    /**
+     * Relation with Refund Documents
+     */
+    public function refundDocuments(): HasMany
+    {
+        return $this->hasMany(ConsumerRefundDocument::class,'request_id','id')->orderBy('created_at','desc');
+    }
+    
 
 }

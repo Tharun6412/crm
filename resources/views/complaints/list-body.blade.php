@@ -48,7 +48,9 @@
                         @endif
                     </a>
                 </th>
-                <th>Type</th>
+                <th>Type
+                    <x-master.complaint-type-filter class="float-end"/>
+                </th>
                 <th nowrap>
                     <div class="d-flex">
                         <div>Category &nbsp;</div>

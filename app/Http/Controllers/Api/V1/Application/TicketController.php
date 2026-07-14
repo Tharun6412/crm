@@ -1,9 +1,9 @@
 <?php
 namespace App\Http\Controllers\Api\V1\Application;
 
-use App\Enums\TicketStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Master\TicketCategory;
+use App\Models\Master\TicketStatus;
 use App\Models\Tickets\Ticket;
 use App\Models\Tickets\TicketStatusHistory;
 use Illuminate\Http\Request;
@@ -84,7 +84,9 @@ class TicketController extends Controller
      * All tickets
      */
     public function index(Request $request)
-    {
+    {   
+       $categories = TicketCategory::with(['departments:id,name'])->select('id', 'name', 'department_id')->get();
+       $status = TicketStatus::all();
         $ticket = Ticket::with([
             'consumer:id,crn,fname,lname',
             'category:id,name,department_id',
@@ -106,10 +108,10 @@ class TicketController extends Controller
             });
         })
         ->when($request->has('status'), function ($q) use ($request) {
-            $q->whereIn('status_id', $request->status);
+            $q->where('status_id', $request->status);
         })
         ->when($request->has('category'), function($q) use ($request) {
-            $q->whereIn('category_id', $request->category);
+            $q->where('category_id', $request->category);
         })
         ->when(!empty($request->date_from) && !empty($request->date_to),function($q) use ($request) {
             $q->whereBetween('created_at',[Carbon::createFromFormat('d-m-Y',$request->date_from)->startOfDay()->toDateTimeString(), Carbon::createFromFormat('d-m-Y',$request->date_to)->endOfDay()->toDateTimeString()]);
@@ -120,7 +122,7 @@ class TicketController extends Controller
         ->orderByDesc('created_at')->paginate(50);
         $tickets = $this->apiPagination($ticket);
 
-        return response()->json(['tickets' => $tickets],200);
+        return response()->json(['tickets' => $tickets,'categories' => $categories,'status' => $status],200);
     }
 
 }
