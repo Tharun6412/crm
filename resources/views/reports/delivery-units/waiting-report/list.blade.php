@@ -15,37 +15,35 @@
                 <th rowspan="2">Delivery Manager</th>
                 <th rowspan="2">Geo Area</th>
                 <th rowspan="2">Department</th>
-                <th rowspan="2">Target Status</th>
-                <th colspan="3" class="text-center">Consumers</th>
+                <th colspan="5" class="text-center">Consumers Awaiting Action</th>
             </tr>
             <tr>
-                <td>Progress</td>
-                <td>Completed</td>
-                <td>Total</td>
+                @foreach ($status_list as $list)
+                    <th class="text-center">{{ $list->name }}</th>
+                @endforeach
             </tr>
         </thead>
         <tbody>
             @if ($delivery_units->count() > 0)
-                @foreach ($delivery_units as $du)
-                    @php
-                        $assigned = $assign_list[$du->id][0] ?? 0;
-                        $completed = $assign_list[$du->id][1] ?? 0;
-                        $total_list = $count[$du->id]['total'] ?? 0;
-                        $unassigned = $total_list - $assigned;
-
-                        // Total List
-                        $total_du = $assigned + $completed;
-                    @endphp
+                @foreach ($delivery_units as $du)    
                     <tr>
                         <td>{{ $loop->iteration }}</td>
                         <td><a href="{{ url('lms/deliveryUnits/'.$du->id) }}" class="link-modal">{{ $du->name }}</a>&nbsp;</td>
                         <td>{{ $du->duIncharge?->name }}</td>
                         <td>{{ $du->ga->name }}</td>
                         <td>{{ $du->department?->name }}</td>
-                        <td>{{ $du->actionStatus?->name }}</td>
-                        <td class="text-center"><a href="{{ url('reports/deliveryUnits/getDeliveryUnitTeamsList/'.$du->id) }}?{{ http_build_query(request()->all()) }}" class="link-canvas">{{ $assigned }}</a></td>
-                        <td class="text-center"><a href="{{ url('reports/deliveryUnits/getDeliveryUnitTeamsList/'.$du->id) }}?{{ http_build_query(request()->all()) }}" class="link-canvas">{{ $completed }}</a></td>
-                        <td class="text-center"><a href="{{ url('reports/deliveryUnits/getDeliveryUnitTeamsList/'.$du->id) }}?{{ http_build_query(request()->all()) }}" class="link-canvas">{{ $total_du ?? 0 }}</a></td>
+                        @foreach ($status_list as $list1)
+                            @php
+                                $status_val = $list1->id - 1;
+                            @endphp
+                            @if (isset($count[$du->id]) && $count[$du->id]['status_id'] == $status_val)
+                                <td class="text-center">
+                                    <a href="{{ url('reports/deliveryUnits/getDuTeamsAssigned/'.$du->id) }}?{{ http_build_query(['total' => $count[$du->id]['total'] ?? 0]) }}" class="link-canvas">{{ $count[$du->id]['total'] ?? 0 }}</a>
+                                </td>
+                            @else
+                                <td></td>
+                            @endif
+                        @endforeach
                     </tr>
                 @endforeach
             @else
@@ -60,7 +58,7 @@
     'table' => 'du-report',
     'button' => 'exportBtn',
     'tabBased' => false,
-    'filename' => 'delivery-unit-progress',
+    'filename' => 'delivery-unit-unassigned',
     'sheet'    => 'Report',
 ])
 @include('scripts.link-modal')

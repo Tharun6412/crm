@@ -25,7 +25,12 @@
                         </div>
                     </div>
                 </th>
-                <th class="bg-success bg-opacity-50" nowrap>Area</th>
+                <th class="bg-success bg-opacity-50" nowrap>
+                    @if(request()->has('charge_area'))
+                        <x-master.area-filter/>
+                    @endif
+                    Area
+                </th>
                 <th class="bg-success bg-opacity-50" nowrap>Sub Area</th>
                 <th class="bg-primary bg-opacity-50" nowrap>
                     <div class="d-flex justify-content-between">

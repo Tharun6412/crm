@@ -1,0 +1,43 @@
+<div class="card border shadow-sm mt-2">
+    <div class="card-header bg-info-subtle fw-semibold"><i class="bi bi-pin-map-fill text-secondary"></i>&nbsp;Charge Areas and Areas List</div>                   
+    <div class="row mb-3">
+        <div class="col-sm-12">
+            @if (count($charge_areas) > 0)
+                @foreach($charge_areas as $ca)
+                    <div class="mb-4">
+                        <h4 class="fw-semibold text-primary border-bottom pb-2">
+                            {{ $ca->name }}
+                            <input type="checkbox" name="ca_all" onchange="getSelectAllAreas(this, {{ $ca->id }})"/>
+                        </h4>
+                        <div class="row">
+                            @foreach($areas->where('ca_id', $ca->id) as $area)
+                                <div class="col-lg-3 col-md-4 col-sm-6 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input border-1 border-primary area_{{ $ca->id }}" type="checkbox" name="area_id[]" value="{{ $area->id }}"
+                                            id="area_{{ $area->id }}" @disabled(in_array($area->id, $allocated_areas))>
+                                        <label class="form-check-label text-capitalize" for="area_{{ $area->id }}">{{ $area->name }}</label>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                @endforeach
+            @else
+                <div class="col-12 p-2">
+                    <div class="alert alert-warning" role="alert"> Select Delivery Unit to get Areas</div>
+                </div>
+            @endif
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    function getSelectAllAreas(caCheckbox, caId)
+    {
+        let checked = caCheckbox.checked;
+        document.querySelectorAll('.area_' + caId).forEach(function(area) {
+            if (!area.disabled) {
+                area.checked = checked;
+            }
+        });
+    }
+</script>

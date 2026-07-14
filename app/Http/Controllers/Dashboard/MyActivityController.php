@@ -48,7 +48,6 @@ class MyActivityController extends Controller
             }
         }
         // Assigned List
-        
         $assign_list = [];
         $assigned_consumers = TeamConsumer::join('cns_consumers', 'cns_consumers.id', '=', 'cns_consumer_teams.consumer_id')
             ->join('lms_teams', 'lms_teams.id', '=', 'cns_consumer_teams.team_id')

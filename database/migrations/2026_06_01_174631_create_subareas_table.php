@@ -30,7 +30,7 @@ return new class extends Migration
             $table->foreignId('subarea_id')->nullable()->index()->after('ward')->constrained('mst_sub_areas')->noActionOnDelete()->noActionOnUpdate();
         });
 
-        Schema::table('adm_teams',function(Blueprint $table) {
+        Schema::table('lms_teams',function(Blueprint $table) {
             $table->foreignId('responsible_user_id')->nullable()->index()->after('status')->constrained('users')->noActionOnDelete()->noActionOnUpdate();
         });
     }

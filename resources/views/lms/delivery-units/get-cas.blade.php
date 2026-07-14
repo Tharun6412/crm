@@ -21,12 +21,13 @@
                             <div class="mb-4">
                                 <h4 class="fw-semibold text-primary border-bottom pb-2">
                                     {{ $ca->name }}
+                                    <input type="checkbox" name="ca_all" onchange="getSelectAllAreas(this, {{ $ca->id }})"/>
                                 </h4>
                                 <div class="row">
                                     @foreach($areas->where('ca_id', $ca->id) as $area)
                                         <div class="col-lg-3 col-md-4 col-sm-6 mb-2">
                                             <div class="form-check">
-                                                <input class="form-check-input border-1 border-primary" type="checkbox" name="area_id[]" value="{{ $area->id }}"
+                                                <input class="form-check-input border-1 border-primary area_{{ $ca->id }}" type="checkbox" name="area_id[]" value="{{ $area->id }}"
                                                     id="area_{{ $area->id }}" @disabled(in_array($area->id, $assigned_areas))>
                                                 <label class="form-check-label text-capitalize" for="area_{{ $area->id }}">{{ $area->name }}</label>
                                             </div>
@@ -43,3 +44,14 @@
         </div>
     </div>    
 </div>
+<script type="text/javascript">
+    function getSelectAllAreas(caCheckbox, caId)
+    {
+        let checked = caCheckbox.checked;
+        document.querySelectorAll('.area_' + caId).forEach(function(area) {
+            if (!area.disabled) {
+                area.checked = checked;
+            }
+        });
+    }
+</script>

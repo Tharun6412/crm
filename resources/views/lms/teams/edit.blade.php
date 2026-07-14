@@ -20,12 +20,10 @@
                         <div class="col-sm-4 pt-2">
                             <label class="form-label">Department :</label><br/>
                             <strong>{{ $team->departments->name }}</strong>
-                            <input type="hidden" name="department_id" value="{{ $team->department_id }}">
                         </div>
                         <div class="col-sm-4 pt-2">
                             <label class="form-label">Geo Area :</label><br/>
                             <strong>{{ $team->ga->name }}</strong>
-                            <input type="hidden" name="ga_id" value="{{ $team->ga_id }}">
                         </div>
                     </div>
                     <div class="row mb-3">
@@ -39,13 +37,8 @@
                             </select>
                         </div>
                         <div class="col-sm-4">
-                            <label for="du_id" class="form-label">Delivery Unit : </label>
-                            <select name="du_id" id="du_id" class="form-select">
-                                <option value="">Select Delivery Unit</option>
-                                @foreach($delivery_units as $du)
-                                    <option value="{{ $du->id }}"@selected($du->id == $team->du_id)>{{ $du->name }}</option>
-                                @endforeach
-                            </select>
+                            <label class="form-label">Delivery Unit :</label><br/>
+                            <strong>{{ $team->deliveryUnit?->name }}</strong>
                         </div>
                     </div>
                     {{-- Charge Areas --}}
@@ -60,12 +53,14 @@
                                 @endphp
                                 @foreach ($cas as $ca)
                                     <div class="mb-3">
-                                        <h4 class="fw-bold text-primary border-bottom pb-2">{{ $ca->name }}</h4>
+                                        <h4 class="fw-bold text-primary border-bottom pb-2">{{ $ca->name }}
+                                            <input type="checkbox" name="ca_all" onchange="getSelectAllAreasUpdate(this, {{ $ca->id }})"/>
+                                        </h4>
                                         <div class="row">
                                             @foreach ($areas->where('ca_id', $ca->id) as $area)
                                                 <div class="col-lg-3 col-md-4 col-sm-6 mb-2">
                                                     <div class="form-check">
-                                                        <input class="form-check-input border-1 border-primary" type="checkbox" name="area_id[]" value="{{ $area->id }}" id="area_{{ $area->id }}" @checked(in_array($area->id, $teamAreas)) @disabled(in_array($area->id, $disabled_areas))>
+                                                        <input class="form-check-input border-1 border-primary edit_area_{{ $ca->id }}" type="checkbox" name="area_id[]" value="{{ $area->id }}" id="area_{{ $area->id }}" @checked(in_array($area->id, $teamAreas)) @disabled(in_array($area->id, $disabled_areas))>
                                                         <label class="form-check-label" for="area_{{ $area->id }}">{{ $area->name }}</label>
                                                     </div>
                                                 </div>
@@ -94,48 +89,15 @@
     </div>
 </div>
 <script type="text/javascript">
-    $("#du_id").on('change', function () {
-        $.get("{{ url('lms/teams/getDeliveryUnitAreas') }}", {
-            du_id: $(this).val()
-        }, function (response) {
-            let html = '';
-            if (response.charge_areas.length) {
-                const allocated = response.allocated_areas.map(Number);
-                response.charge_areas.forEach(function (chargeArea) {
-                html += `
-                    <div class="mb-3">
-                        <div class="fw-bold text-primary border-bottom pb-2">${chargeArea.name}</div>
-                        <div class="row">`;
-                            response.areas.forEach(function (area) {
-                            const disabled = allocated.includes(area.id);
-                            if (area.ca_id == chargeArea.id) {
-                                html += `
-                                    <div class="col-lg-3 col-md-4 col-sm-6 mb-2">
-                                        <div class="form-check">
-                                            <input class="form-check-input"
-                                                type="checkbox"
-                                                name="area_id[]"
-                                                value="${area.id}"
-                                                id="area_${area.id}"
-                                                ${disabled ? 'disabled' : ''}>
-                                            <label class="form-check-label" for="area_${area.id}">
-                                                ${area.name}
-                                            </label>
-                                        </div>
-                                    </div>
-                                `;
-                            }
-                        });
-                    html += `
-                            </div>
-                        </div>
-                    `;
-                });
-            } else {
-                html = '<span class="text-danger">No Areas Found</span>';
+    // Get Select All Areas By CA selection
+    function getSelectAllAreasUpdate(caCheckbox, caId)
+    {
+        let checked = caCheckbox.checked;
+        document.querySelectorAll('.edit_area_' + caId).forEach(function(area) {
+            if (!area.disabled) {
+                area.checked = checked;
             }
-            $('#area_id').html(html);
         });
-    });
+    }
 </script>
 @include('scripts.ajax-form-submit', ['form' => 'team'])

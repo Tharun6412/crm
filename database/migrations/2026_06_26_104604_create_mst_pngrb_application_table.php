@@ -49,7 +49,7 @@ return new class extends Migration
         Schema::create('cns_pngrb_application_complaints', function (Blueprint $table) {
             $table->id();
             $table->foreignId('application_id')->nullable()->index()->constrained(table:'cns_pngrb_applications')->noActionOnDelete()->noActionOnUpdate();
-            $table->string('complaint_id', length: 32)->nullable();
+            // $table->string('complaint_id', length: 32)->nullable();
             $table->string('central_complaint_id', length: 64)->nullable();
             $table->string('category', length: 255)->nullable();
             $table->string('sub_category', length: 255)->nullable();

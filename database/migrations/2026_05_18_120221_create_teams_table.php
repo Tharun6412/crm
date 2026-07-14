@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         //adm_teams
-        Schema::create('adm_teams', function (Blueprint $table) {
+        Schema::create('lms_teams', function (Blueprint $table) {
             $table->id();
             $table->string('name',length:255)->nullable();
             $table->foreignId('ga_id')->nullable()->index()->constrained(table:'mst_gas')->noActionOnDelete()->noActionOnUpdate();
@@ -22,16 +22,16 @@ return new class extends Migration
             $table->timestamps();
         });
         //adm_team_users
-        Schema::create('adm_team_users', function (Blueprint $table) {
+        Schema::create('lms_team_users', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('team_id')->nullable()->index()->constrained(table:'adm_teams')->noActionOnDelete()->noActionOnUpdate();
+            $table->foreignId('team_id')->nullable()->index()->constrained(table:'lms_teams')->noActionOnDelete()->noActionOnUpdate();
             $table->foreignId('user_id')->nullable()->index()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();
             $table->timestamps();
         });
         //adm_team_cas table
-        Schema::create('adm_team_cas', function (Blueprint $table) {
+        Schema::create('lms_team_cas', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('team_id')->nullable()->index()->constrained(table:'adm_teams')->noActionOnDelete()->noActionOnUpdate();
+            $table->foreignId('team_id')->nullable()->index()->constrained(table:'lms_teams')->noActionOnDelete()->noActionOnUpdate();
             $table->foreignId('ca_id')->nullable()->index()->constrained(table:'mst_cas')->noActionOnDelete()->noActionOnUpdate();
             $table->timestamps();
         });
@@ -53,7 +53,7 @@ return new class extends Migration
             $table->foreignId('lead_channel_id')->nullable()->index()->after('area_id')->constrained(table:'lms_lead_channels')->noActionOnDelete()->noActionOnUpdate();
         });
         //adm_user_ca
-        Schema::create('adm_user_ca', function (Blueprint $table) {
+        Schema::create('lms_user_ca', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->nullable()->index()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();
             $table->foreignId('ca_id')->nullable()->index()->constrained(table:'mst_cas')->noActionOnDelete()->noActionOnUpdate();
@@ -67,8 +67,8 @@ return new class extends Migration
     {   
         Schema::dropIfExists('adm_user_ca');
         Schema::dropIfExists('adm_user_types');
-        Schema::dropIfExists('adm_team_cas');
-        Schema::dropIfExists('adm_team_users');
-        Schema::dropIfExists('adm_teams');  
+        Schema::dropIfExists('lms_team_cas');
+        Schema::dropIfExists('lms_team_users');
+        Schema::dropIfExists('lms_teams');  
     }
 };

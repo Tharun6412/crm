@@ -87,8 +87,8 @@
                     <tbody>
                         @foreach ($teams as $team_id => $team)
                             @php
-                                $du_cas = $team?->deliveryUnit?->areas?->pluck('ca_id')->filter()->unique()->values()->toArray();
-                                $du_areas = $team?->deliveryUnit?->areas?->pluck('id')->unique()->toArray();
+                                $du_cas = $team?->areas?->pluck('ca_id')->filter()->unique()->values()->toArray();
+                                $du_areas = $team?->areas?->pluck('id')->unique()->toArray();
                             @endphp
                             <tr>
                                 <td width="1%">{{ $loop->iteration }}</td>
@@ -99,7 +99,7 @@
                                 <td>{{ $team->departments?->name }}</td>
                                 <td class="text-center fs-5"><a href="{{ url('consumers/waiting/pending-consumers') }}?{{ http_build_query(['cns_status' => [$team->deliveryUnit?->action_status_id],'target_status' => [$team->deliveryUnit?->action_status_id], 'ugas' => [$team->deliveryUnit?->ga_id], 'ucas' => $du_cas, 'area_ids' => $du_areas, 'status' => [0], 'team_id' => [$team->id]]) }}" target="_blank">{{ $consumers_list[$team->id][0] ?? 0 }}</a></td>
                                 <td class="text-center fs-5"><a href="{{ url('consumers/waiting/pending-consumers') }}?{{ http_build_query(['cns_status' => [$team->deliveryUnit?->action_status_id],'target_status' => [$team->deliveryUnit?->action_status_id], 'ugas' => [$team->deliveryUnit?->ga_id], 'ucas' => $du_cas, 'area_ids' => $du_areas, 'status' => [1], 'team_id' => [$team->id]]) }}" target="_blank">{{ $consumers_list[$team->id][1] ?? 0 }}</a></td>
-                                <td class="text-center fs-5">{{ array_sum($consumers_list[$team->id] ?? []) }}</td>
+                                <td class="text-center fs-5"><a href="{{ url('consumers/waiting/pending-consumers') }}?{{ http_build_query(['cns_status' => [$team->deliveryUnit?->action_status_id],'target_status' => [$team->deliveryUnit?->action_status_id], 'ugas' => [$team->deliveryUnit?->ga_id], 'ucas' => $du_cas, 'area_ids' => $du_areas, 'status' => [0,1], 'team_id' => [$team->id]]) }}" target="_blank">{{ array_sum($consumers_list[$team->id] ?? []) }}</a></td>
                             </tr>
                         @endforeach
                     </tbody>

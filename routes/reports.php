@@ -82,6 +82,9 @@ Route::middleware(['auth', ModuleAccess::class])->group(function() {
     Route::get('consumer/employee/activity',[App\Http\Controllers\Reports\EmployeeActivityController::class,'index']);
     // Delivery Unit Report
     Route::get('deliveryUnits',[App\Http\Controllers\Reports\DeliveryUnitReportController::class,'index']);
+    Route::get('deliveryUnits/getDeliveryUnitProgress', [App\Http\Controllers\Reports\DeliveryUnitReportController::class, 'getDeliveryUnitProgress']);
+    Route::get('deliveryUnits/getDeliveryUnitTeamsList/{du_id}',[App\Http\Controllers\Reports\DeliveryUnitReportController::class,'getDeliveryUnitTeamsList']);
+    Route::get('deliveryUnits/getDuTeamsAssigned/{du_id}',[App\Http\Controllers\Reports\DeliveryUnitReportController::class,'getDuTeamsAssigned']);
     
     // Referral Report
     Route::get('referrals', [App\Http\Controllers\Reports\ReferralsController::class, 'index']);

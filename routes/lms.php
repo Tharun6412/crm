@@ -24,7 +24,7 @@ Route::middleware(['auth',ModuleAccess::class])->group(function(){
     Route::get('teams',[App\Http\Controllers\Lms\TeamController::class,'index']);
     Route::get('teams/create',[App\Http\Controllers\Lms\TeamController::class,'create']);
     Route::post('teams/store',[App\Http\Controllers\Lms\TeamController::class,'store']);
-    Route::get('teams/gaCas',[App\Http\Controllers\Lms\TeamController::class,'gaCas']);
+    // Route::get('teams/gaCas',[App\Http\Controllers\Lms\TeamController::class,'gaCas']);
     //Route::get('teams/show',[App\Http\Controllers\Admin\TeamController::class,'show']);
     Route::get('teams/edit/{id}',[App\Http\Controllers\Lms\TeamController::class,'edit']);
     Route::put('teams/update/{id}',[App\Http\Controllers\Lms\TeamController::class,'update']);

@@ -49,13 +49,14 @@
                                             <div class="mb-4">
                                                 <h4 class="fw-semibold text-primary border-bottom pb-2">
                                                     {{ $ca->name }}
+                                                    <input type="checkbox" name="edit_ca_all" onchange="getAllSelectedAreas(this, {{ $ca->id }})"/>
                                                 </h4>
                                                 <div class="row">
                                                     @foreach($areas->where('ca_id', $ca->id) as $area)
                                                         <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
                                                             <div class="form-check">
                                                                 <input
-                                                                    class="form-check-input border-1 border-primary"
+                                                                    class="form-check-input border-1 border-primary edit_area_{{ $ca->id }}"
                                                                     type="checkbox"
                                                                     name="area_id[]"
                                                                     value="{{ $area->id }}"
@@ -110,6 +111,17 @@
             $('#area_id').html(options); 
         });
     }
+    // Get Select All Areas
+    function getAllSelectedAreas(ca_checkbox, ca_id)
+    {
+        let checked = ca_checkbox.checked;
+        document.querySelectorAll('.edit_area_' + ca_id).forEach(function(area) {
+            if (!area.disabled) {
+                area.checked = checked;
+            }
+        });
+    }
+
     $(function(){
         $("#ga_id").on('change', function(e) {
             $.get("{{ url('lms/teams/editGaCas') }}",{'ga_id': e.target.value},function(response){

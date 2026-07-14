@@ -65,8 +65,12 @@ class TeamController extends Controller
             EnumsDepartment::MDPE->value,
             EnumsDepartment::STEEL->value,
         ])->orderBy('name', 'asc')->get();
-        
-        return view('lms.teams.create',['geo_areas' => $geo_areas,'departments' => $departments]);
+        // Response
+        return view('lms.teams.create',[
+            'geo_areas' => $geo_areas,
+            'departments' => $departments,
+            'charge_areas' => [],
+        ]);
     }
     /**
      * Store Team
@@ -95,17 +99,6 @@ class TeamController extends Controller
         return response()->json(['success' => 'Team Created Successfully']);
 
     }
-    /**
-     * get ca based on the ga
-     */
-    public function gaCas(Request $request)
-    {
-        $cas = Ca::where('ga_id',$request->ga_id)->get();
-        $users = User::with(['department'])->whereHas('ga', function($q) use ($request){
-            $q->where('ga_id',$request->ga_id);
-        })->get();
-        return response()->json(['cas' => $cas,'users' => $users]);
-    }
 
     /**
      * get Delivery Units based on the Department and GA
@@ -113,7 +106,11 @@ class TeamController extends Controller
     public function getDeliveryUnits(Request $request)
     {
         $delivery_units = DeliveryUnit::where('ga_id', $request->ga_id)->where('dept_id', $request->dept_id)->where('status', 1)->get();
-        return response()->json(['delivery_units' => $delivery_units]);
+        $users = User::with(['department'])->whereHas('ga', function($q) use ($request){
+            $q->where('ga_id',$request->ga_id);
+        })->whereIn('department_id', [EnumsDepartment::ACTIVATION->value, EnumsDepartment::MARKETING->value, EnumsDepartment::GI->value, EnumsDepartment::HSE->value, EnumsDepartment::MDPE->value, EnumsDepartment::STEEL->value])
+        ->orderBy('first_name', 'asc')->get();
+        return response()->json(['delivery_units' => $delivery_units, 'users' => $users]);
     }
 
     /**
@@ -126,11 +123,15 @@ class TeamController extends Controller
         // Assigned Areas
         // Areas already assigned to teams
         $allocated_area_ids = DB::table('lms_team_areas as ta')->join('lms_teams as t', 't.id', '=', 'ta.team_id')->whereIn('ta.area_id', $area_ids)
-            ->where('t.department_id', $request->dept_id)->pluck('ta.area_id');
+            ->where('t.department_id', $request->dept_id)->pluck('ta.area_id')->toArray();
         $areas = Area::select('id', 'name', 'ca_id')->whereIn('id', $area_ids)->get();
         $cas = $areas->pluck('ca_id')->unique()->toArray();
         $charge_areas = Ca::select('id', 'name')->whereIn('id', $cas)->get();
-        return response()->json(['charge_areas' => $charge_areas,'areas' => $areas, 'allocated_areas' => $allocated_area_ids]);
+        return view('lms.teams.get-areas', [
+            'charge_areas' => $charge_areas,
+            'areas' => $areas,
+            'allocated_areas' => $allocated_area_ids,
+        ]);
     }
     /**
      * team edit
@@ -141,29 +142,11 @@ class TeamController extends Controller
             $q->whereIn('ga_id', session('user')['gas']);
         })->with(['cas','ga','departments','responsibleUser'])->findOrFail($id);
         $cas = Ca::where('ga_id', $team->ga_id)->get();
-        $role_id = [];
-        switch($team->department_id) {
-            case EnumsDepartment::MARKETING->value:
-                $role_id[] = Role::MARKETING->value;break;
-            case EnumsDepartment::MDPE->value:
-                $role_id[] = Role::MDPE->value;break;
-            case EnumsDepartment::STEEL->value:
-                $role_id[] = Role::STEEL->value;break;
-            case EnumsDepartment::GI->value:
-                $role_id[] = Role::GI_ENGINEER->value;break;
-            case EnumsDepartment::HSE->value:
-                $role_id[] = Role::HSE->value; break;
-            case EnumsDepartment::ACTIVATION->value:
-                $role_id[] = Role::ACTIVATION->value;break;
-            default: $role_id = []; break;
-        }
         // Get Users
         $users = User::whereHas('ga', function($q) use ($team){
             $q->where('ga_id',$team->ga_id);
         })
-        // ->whereHas('roles', function($q) use($role_id) {
-        //         $q->whereIn('adm_roles.id', array_unique($role_id));
-        //     })
+        ->whereIn('department_id', [EnumsDepartment::ACTIVATION->value, EnumsDepartment::MARKETING->value, EnumsDepartment::GI->value, EnumsDepartment::HSE->value, EnumsDepartment::MDPE->value, EnumsDepartment::STEEL->value])
         ->orderBy('first_name', 'asc')
         ->get();
         // Delivery Unit Areas
@@ -207,9 +190,6 @@ class TeamController extends Controller
 
         $team->update([
             'name' => $request->name,
-            'ga_id' => $request->ga_id,
-            'department_id' => $request->department_id,
-            'du_id' => $request->du_id,
             'responsible_user_id' => $request->responsible_user_id,
         ]);
         // Areas Mapping

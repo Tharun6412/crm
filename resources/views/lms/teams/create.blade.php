@@ -40,7 +40,7 @@
                         <div class="col-sm-4">
                             <label for="responsible_user_id" class="form-label fw-semibold">Team Lead :</label>
                             <select name="responsible_user_id" id="responsible_user_id" class="form-select">
-                                <option value="">Select</option>
+                                <option value="">Select Team Lead</option>
                             </select>
                         </div>
                         <div class="col-sm-4">
@@ -51,19 +51,10 @@
                         </div>
                     </div>                        
                     <hr class="border-2 border-warning">
-                     {{-- Charge Areas Table --}}
-                    <div class="card border shadow-sm mt-2">
-                        <div class="card-header bg-info-subtle fw-semibold"><i class="bi bi-pin-map-fill text-secondary"></i>&nbsp;Charge Areas and Areas List</div>                   
-                        <div class="row mb-3">
-                            <div class="col-sm-12">
-                                <div id="area_id" class="p-2">
-                                    <div class="col-12">
-                                        <div class="alert alert-warning" role="alert"> Select Delivery Unit to get Areas</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>    
+                    {{-- Charge Areas Table --}}
+                    <div id="du-areas">
+                        @include('lms.teams.get-areas')
+                    </div>
                     {{-- Error --}}
                     <div class="mb-3" id="team-error"></div>
                     {{-- Submit --}}
@@ -82,14 +73,21 @@
 <script type="module">
     $(function(){
         $("#ga_id").on('change', function(e) {
+            // Reset Delivery Unit
+            $('#du_id').html('<option value="">Select Delivery Unit</option>');
             // Reset Areas
-            $('#area_id').html(`
-                <div class="col-12">
-                    <div class='alert alert-warning' role='alert'>Select Delivery Unit to get Areas</div>
+            $('#du-areas').html(`
+                <div class="card border shadow-sm mt-2">
+                    <div class="card-body">
+                        <div class="alert alert-warning mb-0">
+                            Select Delivery Unit to get Areas
+                        </div>
+                    </div>
                 </div>
             `);
-            // Get Charge Areas
-            $.get("{{ url('lms/teams/gaCas') }}",{'ga_id': e.target.value},function(response){
+            // Get Delivery Units
+            let dept = $('#department_id').val();
+            $.get("{{ url('lms/teams/getDeliveryUnits') }}",{'ga_id': e.target.value, 'dept_id' : dept },function(response){
                 //for users
                 let userOptions = '<option value="">Select Team Lead</option>';
                 if(response.users && response.users.length > 0) {
@@ -98,68 +96,22 @@
                     });
                 }
                 $('#responsible_user_id').html(userOptions);
-                
-            });
-
-            // Get Delivery Units
-            let dept = $('#department_id').val();
-            $.get("{{ url('lms/teams/getDeliveryUnits') }}",{'ga_id': e.target.value, 'dept_id' : dept },function(response){
-                //for users
-                let userOptions = '<option value="">Select Delivery Unit</option>';
+                // For Delivery Units
+                let du_list = '<option value="">Select Delivery Unit</option>';
                 if(response.delivery_units && response.delivery_units.length > 0) {
                     response.delivery_units.forEach(function(du) {
-                        userOptions += `<option value="${du.id}">${du.name}</option>`;
+                        du_list += `<option value="${du.id}">${du.name}</option>`;
                     });
                 }
-                $('#du_id').html(userOptions);
+                $('#du_id').html(du_list);
             });
         });
 
+        // Get Areas By Delivery Unit ID
         $("#du_id").on('change', function () {
             let dept = $('#department_id').val();
-            $.get("{{ url('lms/teams/getDeliveryUnitAreas') }}", {
-                du_id: $(this).val(),
-                dept_id : dept,
-            }, function (response) {
-
-                let html = '';
-
-                if (response.charge_areas.length) {
-                    const allocated = response.allocated_areas.map(Number);
-                    html +=`<div class="row mx-1">`;
-                        response.charge_areas.forEach(function (chargeArea) {
-                            html += `
-                                <div class="col-12 mt-3 ">
-                                    <h4 class="text-primary border-bottom pb-2">${chargeArea.name}</h4>
-                                </div>
-                            `;
-                            response.areas.forEach(function (area) {
-                                const disabled = allocated.includes(area.id);
-                                if (area.ca_id == chargeArea.id) {
-                                    html += `
-                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-2">
-                                            <div class="form-check">
-                                                <input class="form-check-input border-1 border-dark"
-                                                    type="checkbox"
-                                                    name="area_id[]"
-                                                    value="${area.id}"
-                                                    id="area_${area.id}"
-                                                    ${disabled ? 'disabled' : ''}>
-                                                <label class="form-check-label" for="area_${area.id}">
-                                                    ${area.name}
-                                                </label>
-                                            </div>
-                                        </div>
-                                    `;
-                                }
-                            });
-                        });
-                    html += `</div>`;
-                } else {
-                    html = '<span class="text-danger">No Areas Found</span>';
-                }
-
-                $('#area_id').html(html);
+            $.get("{{ url('lms/teams/getDeliveryUnitAreas') }}", {du_id: $(this).val(), dept_id : dept }, function (response) {
+                $('#du-areas').html(response);
             });
         });
     });
