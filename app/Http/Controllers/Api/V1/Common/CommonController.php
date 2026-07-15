@@ -36,6 +36,7 @@ class CommonController extends Controller
             'segment_id' => $request->segment_id,
             'connection_type_id' => $request->type_id,
             'status' => 1,
+            'conversion_scheme' => 0,
         ])->get();
         return response()->json(['schemes' => $schemes], 200);
     }

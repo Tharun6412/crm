@@ -55,7 +55,7 @@
                 <th>Registration</th>
                 <th>Applicable GAs</th>
                 <th>Status</th>
-                <th nowrap>Conversion Scheme</th>
+                <th nowrap>Conversion Status</th>
                 <th width="2%" nowrap class="text-center">Actions</th>
             </tr>
         </thead>
