@@ -58,7 +58,8 @@ class CommonController extends Controller
             $q->where([
                 'segment_id' => $request->segment_id,
                 'connection_type_id' => $request->type_id,
-                'status' => 1
+                'status' => 1,
+                'conversion_scheme' => 0,
             ]);
         })->where('ga_id', $request->ga_id)->get();
         return response()->json(['schemes' => $schemes]);

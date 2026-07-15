@@ -82,6 +82,7 @@ class SchemesController extends Controller
             'min_payment' => $request->min_payment,
             'emi_amount' =>  !empty($request->emi_amount) ? $request->emi_amount : 0.00,
             'rental_amount' =>  !empty($request->rental_amount) ? $request->rental_amount : 0.00,
+            'conversion_scheme' => $request->conversion_scheme,
             'created_by' => Auth::id(),
         ]);
         if($add_scheme)
@@ -144,7 +145,8 @@ class SchemesController extends Controller
             'total_deposit' => ($request->security + $request->consumption),
             'min_payment' => $request->min_payment,
             'emi_amount' =>  !empty($request->emi_amount) ? $request->emi_amount : 0.00,
-            'rental_amount' =>  !empty($request->rental_amount) ? $request->rental_amount : 0.00
+            'rental_amount' =>  !empty($request->rental_amount) ? $request->rental_amount : 0.00,
+            'conversion_scheme' => $request->conversion_scheme,
         ]);
         if($update_scheme)
         {

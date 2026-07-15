@@ -61,6 +61,14 @@
                     @endif</td>
             </tr>
             <tr>
+                <td class="bg-light">Conversion Scheme</td>
+                <td>
+                    @if($scheme->conversion_scheme == 0) <span class="badge bg-success">Regular</span>
+                    @else <span class="badge bg-primary">Conversion</span>
+                    @endif
+                </td>
+            </tr>
+            <tr>
                 <td class="bg-light">Created Date</td>
                 <td>{{ $scheme->created_at->format('d-m-Y') }}</td>
             </tr>

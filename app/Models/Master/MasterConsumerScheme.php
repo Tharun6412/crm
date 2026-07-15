@@ -36,6 +36,7 @@ class MasterConsumerScheme extends Model
         'status',
         'scheme_payment_id',
         'connection_type_id',
+        'conversion_scheme',
         'bonus',
         'created_by',
     ];

@@ -39,6 +39,7 @@ class ConversionController extends Controller
             })
             ->where('connection_type_id', ConnectionType::PREPAID->value)
             ->where('total_deposit', '>=', ($consumer->scheme->paid_deposit ?? 0))
+            ->where('conversion_scheme',1)
             ->get();
 
         // Render output

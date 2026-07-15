@@ -40,6 +40,7 @@ return new class extends Migration
             $table->double('emi_amount')->nullable();
             $table->double('rental_amount')->nullable();
             $table->boolean('status')->default(1);
+            $table->tinyInteger('conversion_scheme')->default(0);
             $table->foreignId('scheme_payment_id')->nullable()->index()->constrained(table:'mst_cns_scheme_payments')->noActionOnDelete()->noActionOnUpdate();
             $table->foreignId('created_by')->nullable()->index()->constrained(table:'users')->noActionOnDelete()->noActionOnUpdate();
             $table->timestamps();

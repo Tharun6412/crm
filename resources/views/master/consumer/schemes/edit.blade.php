@@ -86,6 +86,13 @@
                             <input type="text" class="form-control" id="rental_amount" name="rental_amount" placeholder="Enter Rental Amount" value="{{ $scheme->rental_amount }}">
                         </div>
                     </div>
+                    <div class="row mb-2">
+                        <label for="conversion_scheme" class="col-sm-4 col-form-label text-end">Conversion Scheme&nbsp;:&nbsp;</label>
+                        <div class="col-sm-8 pt-2">
+                            <input type="hidden" name="conversion_scheme" value="0">
+                            <input type="checkbox" name="conversion_scheme" class="form-check-input" id="conversion_scheme" value="1" @checked($scheme->conversion_scheme == 1)> 
+                        </div>
+                    </div>
                     <div class="mb-2 row">
                         <label for="applicable_ga" class="col-sm-12 col-form-label text-start fw-bold">Applicable GAs&nbsp;:&nbsp;<i class="text text-danger">*&nbsp;</i></label>
                         <div class="col-sm-12">

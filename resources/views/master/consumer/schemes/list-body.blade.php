@@ -55,6 +55,7 @@
                 <th>Registration</th>
                 <th>Applicable GAs</th>
                 <th>Status</th>
+                <th nowrap>Conversion Scheme</th>
                 <th width="2%" nowrap class="text-center">Actions</th>
             </tr>
         </thead>
@@ -75,6 +76,11 @@
                         <td>@if ( $scheme->status == 1) <span class="badge bg-success">Enabled</span>
                         @else <span class="badge bg-warning">Disabled</span>
                         @endif</td>
+                        <td>
+                            @if ( $scheme->conversion_scheme == 0) <span class="badge bg-success">Regular</span>
+                            @else <span class="badge bg-primary">Conversion</span>
+                            @endif 
+                        </td>
                         <td>
                             <div class="btn-group">
                                 <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">

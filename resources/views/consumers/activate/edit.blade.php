@@ -27,17 +27,17 @@
                     <div class="mb-1 fs-5 fw-semibold text-primary">LPG Details&nbsp;:</div>
                     <div class="row mb-2 pt-2">
                         <div class="col-md-4 col-sm-6 col-xs-12">
-                            <label for="lpg_consumer_number" class="form-label">LPG Consumer Number&nbsp;:<span class="text-danger">*</span></label>
+                            <label for="lpg_consumer_number" class="form-label">LPG Consumer Number&nbsp;:<span class="text-danger"></span></label>
                             <input type="text" name="lpg_consumer_number" id="lpg_consumer_number" class="form-control" placeholder="Enter LPG Consumer Number">
                             <span class="text-danger validate-err-msg" id="lpg_consumer_number-error"></span>
                         </div>
                         <div class="col-md-4 col-sm-6 col-xs-12">
-                            <label for="lpg_id" class="form-label">LPG ID&nbsp;:<span class="text-danger">*</span></label>
+                            <label for="lpg_id" class="form-label">LPG ID&nbsp;:<span class="text-danger"></span></label>
                             <input type="text" name="lpg_id" id="lpg_id" class="form-control" placeholder="Enter LPG ID">
                             <span class="text-danger validate-err-msg" id="lpg_id-error"></span>
                         </div>
                         <div class="col-md-4 col-sm-6 col-xs-12">
-                            <label for="lpg_omc_id" class="form-label">LPG OMC Type&nbsp;:<span class="text-danger">*</span></label>
+                            <label for="lpg_omc_id" class="form-label">LPG OMC Type&nbsp;:<span class="text-danger"></span></label>
                             <select name="lpg_omc_id" id="lpg_omc_id" class="form-select">
                                 <option value="">Select OMC</option>
                                 @foreach ($omcs as $omc )
@@ -49,12 +49,12 @@
                     </div>
                     <div class="row mb-2 pt-2">
                         <div class="col-md-4 col-sm-6 col-xs-12">
-                            <label for="registered_mobile" class="form-label">LPG Registered Mobile&nbsp;:<span class="text-danger">*</span></label>
+                            <label for="registered_mobile" class="form-label">LPG Registered Mobile&nbsp;:<span class="text-danger"></span></label>
                             <input type="text" name="registered_mobile" id="registered_mobile" class="form-control" placeholder="Enter Registered Mobile">
                             <span class="text-danger validate-err-msg" id="registered_mobile-error"></span>
                         </div>
                         <div class="col-md-4 col-sm-6 col-xs-12">
-                            <label for="lpg_connections" class="form-label">LPG Connections&nbsp;:<span class="text-danger">*</span></label>
+                            <label for="lpg_connections" class="form-label">LPG Connections&nbsp;:<span class="text-danger"></span></label>
                             <input type="text" name="lpg_connections" id="lpg_connections" class="form-control" placeholder="Enter LPG Connections" value="{{ $consumer->lpg_connections ?? '' }}">
                             <span class="text-danger validate-err-msg" id="lpg_connections-error"></span>
                         </div>

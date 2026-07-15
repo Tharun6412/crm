@@ -210,7 +210,7 @@ class RegistrationController extends Controller
     public function lpgUpdate(Request $request,$id)
     {
         $request->validate([
-            'lpg_id' => 'required|min:10|max:17',
+            'lpg_id' => 'required',
             'lpg_consumer_number' => 'required',
             'lpg_omc_id' => 'required',
             'registered_mobile' => 'required|max:10',
