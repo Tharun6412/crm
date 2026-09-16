@@ -59,7 +59,7 @@ class AcceptController extends Controller
             $status_val = "rejected";
         }
         // Consumer Update
-        $consumer = Consumer::find($id)
+        $consumer = Consumer::find($id);
         $consumer->update([
             'status_id' => $con_status,
             'updated_by' => Auth::id(),
