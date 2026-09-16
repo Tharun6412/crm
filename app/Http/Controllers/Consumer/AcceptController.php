@@ -33,7 +33,7 @@ class AcceptController extends Controller
      */
     public function edit(Request $request, $id) 
     {
-        $consumer= Consumer::find($id);
+        $consumer= Consumer::find($id)
         return view('consumers.accept.edit', [
             'consumer' => $consumer, 
             'id' => $id, 
